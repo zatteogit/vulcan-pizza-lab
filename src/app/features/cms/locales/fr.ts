@@ -1350,9 +1350,11 @@ export const FR_LOCALE: CmsContent = {
     unitMetricDesc: "Grammes, millilitres, centimètres et degrés Celsius",
     unitImperial: "Impérial / US",
     unitImperialDesc: "Onces, onces liquides, pouces et degrés Fahrenheit",
-    resetProfile: "Reconfigurer le profil",
+    resetProfile: "Reconfigurer la cuisine",
     resetConfirmMessage:
-      "Vous allez rouvrir la configuration initiale. Vos nouveaux choix remplaceront les préférences actuelles.",
+      "Nous vous redemanderons four, expérience et garde-manger. Les recettes enregistrées et les favoris restent.",
+    resetConfirmTitle: "Reconfigurer la cuisine ?",
+    resetConfirmAction: "Reconfigurer",
     devModeOn: "Mode développeur actif",
     devModeOff: "Activer le mode développeur",
     locationTitle: "Votre position",

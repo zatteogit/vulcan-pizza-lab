@@ -520,6 +520,8 @@ interface CmsProfile {
   unitImperialDesc: string;
   resetProfile: string;
   resetConfirmMessage: string;
+  resetConfirmTitle: string;
+  resetConfirmAction: string;
   devModeOn: string;
   devModeOff: string;
   locationTitle: string;
@@ -2375,8 +2377,10 @@ export const CMS_DEFAULTS: CmsContent = {
     unitMetricDesc: "Grammi, millilitri, centimetri e gradi Celsius",
     unitImperial: "Imperiale / US",
     unitImperialDesc: "Once, once liquide, pollici e gradi Fahrenheit",
-    resetProfile: "Riconfigura profilo",
-    resetConfirmMessage: "Riaprirai la configurazione iniziale. Le nuove scelte sostituiranno le preferenze attuali.",
+    resetProfile: "Riconfigura la cucina",
+    resetConfirmMessage: "Ti richiediamo forno, esperienza e dispensa. Ricette salvate e preferiti restano.",
+    resetConfirmTitle: "Riconfigurare la cucina?",
+    resetConfirmAction: "Riconfigura",
     devModeOn: "Modalità sviluppo attiva",
     devModeOff: "Attiva modalità sviluppo",
     ftuWelcome: "Benvenuto",

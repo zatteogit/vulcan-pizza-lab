@@ -1500,9 +1500,11 @@ export const EN_LOCALE: CmsContent = {
     unitMetricDesc: "Grams, millilitres, centimetres and degrees Celsius",
     unitImperial: "Imperial / US",
     unitImperialDesc: "Ounces, fluid ounces, inches and degrees Fahrenheit",
-    resetProfile: "Reset profile",
+    resetProfile: "Set up your kitchen again",
     resetConfirmMessage:
-      "You’ll reopen the initial setup. Your new choices will replace your current preferences.",
+      "We'll ask about your oven, experience and pantry again. Saved recipes and favourites stay.",
+    resetConfirmTitle: "Set up your kitchen again?",
+    resetConfirmAction: "Set up again",
     devModeOn: "Dev mode active",
     devModeOff: "Enable dev mode",
     locationTitle: "Your location",

@@ -6,7 +6,7 @@ import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 
 import { TOOLS_ENABLED } from "../config/tools";
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
-import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
+import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, RotateCcw, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
 import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { Suspense, lazy, useCallback,useEffect,useId,useMemo,useRef,useState } from "react";
@@ -162,14 +162,36 @@ function loadJson<T>(key: string): T | null {
  *  profilo per scrivere livello, forno e attrezzatura di default come se
  *  fossero scelti (Impara diceva «Livello intermedio» a chi non l'aveva mai
  *  detto). Confronta col valore iniziale: regge il doppio effetto di StrictMode. */
-function useSaveOnChange(value: unknown, save: () => void) {
+function useSaveOnChange(value: unknown, save: () => void, onSaved?: () => void) {
   const initial = useRef(JSON.stringify(value));
   const changed = useRef(false);
   useEffect(() => {
     if (!changed.current && JSON.stringify(value) === initial.current) return;
     changed.current = true;
     save();
+    onSaved?.();
   }, [JSON.stringify(value)]);
+}
+
+/** G5-WP-06 (S16-B-17): un solo «Salvato» per raffica di modifiche (lo
+ *  slider della temperatura ne fa decine), annunciato dopo una breve quiete e
+ *  tolto dopo qualche secondo. Niente al primo render (audit n. 33). */
+function useSavedNotice(): [string, () => void] {
+  const [notice, setNotice] = useState("");
+  const timers = useRef<{ settle?: number; clear?: number }>({});
+  useEffect(() => () => {
+    window.clearTimeout(timers.current.settle);
+    window.clearTimeout(timers.current.clear);
+  }, []);
+  const notify = useCallback(() => {
+    window.clearTimeout(timers.current.settle);
+    window.clearTimeout(timers.current.clear);
+    timers.current.settle = window.setTimeout(() => {
+      setNotice(uiMessage("pages.profile.settingsSaved"));
+      timers.current.clear = window.setTimeout(() => setNotice(""), 3000);
+    }, 600);
+  }, []);
+  return [notice, notify];
 }
 
 function saveJson(key: string, value: unknown) {
@@ -1461,6 +1483,8 @@ export function ProfilePage() {
   }, []);
 
   /* Salvataggio a ogni modifica (non all'apertura: audit n. 33) */
+  const [savedNotice, notifySaved] = useSavedNotice();
+  const [resetOpen, setResetOpen] = useState(false);
   useSaveOnChange([ovens, ovenType, ovenTemp, ovenModelId], () => {
     saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp, ...(ovenModelId ? { modelId: ovenModelId } : {}) });
     try {
@@ -1468,7 +1492,7 @@ export function ProfilePage() {
     } catch (e) {
       // ignore
     }
-  });
+  }, notifySaved);
 
   useSaveOnChange(mixers, () => {
     try {
@@ -1486,13 +1510,13 @@ export function ProfilePage() {
       saveJson(EQUIPMENT_STORAGE_KEY, next);
       return next;
     });
-  });
+  }, notifySaved);
 
-  useSaveOnChange(skillLevel, () => saveJson(SKILL_STORAGE_KEY, skillLevel));
+  useSaveOnChange(skillLevel, () => saveJson(SKILL_STORAGE_KEY, skillLevel), notifySaved);
 
-  useSaveOnChange(dietary, () => saveJson(DIETARY_STORAGE_KEY, dietary));
+  useSaveOnChange(dietary, () => saveJson(DIETARY_STORAGE_KEY, dietary), notifySaved);
 
-  useSaveOnChange(unitSystem, () => savePreferredUnitSystem(unitSystem));
+  useSaveOnChange(unitSystem, () => savePreferredUnitSystem(unitSystem), notifySaved);
   const toggleDietary = (id: string) =>
     setDietary((prev) =>
       prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id],
@@ -2243,6 +2267,38 @@ export function ProfilePage() {
             </p>
           </div>
         </ProfileSection>
+            {/* G5-WP-06 (S16-B-17): le modifiche si salvano da sole; lo diciamo. */}
+            <p role="status" aria-live="polite" data-region="profile-saved" className="type-data-sm profile-page__saved">{savedNotice}</p>
+            {/* G5-WP-06 (S17-A-12, S17-B-11): rilancia forno, esperienza e
+                dispensa, quindi sta qui e non nel tab App; conferma col dialog del DS. */}
+            <div className="profile-page__footer">
+              <button type="button" onClick={() => setResetOpen(true)} className="type-data profile-page__reset">
+                {p.resetProfile}
+              </button>
+            </div>
+            <ConfirmDialog
+              open={resetOpen}
+              onDismiss={() => setResetOpen(false)}
+              ariaLabel={p.resetConfirmTitle}
+              icon={<RotateCcw size={24} aria-hidden="true" />}
+              title={p.resetConfirmTitle}
+              body={p.resetConfirmMessage}
+              initialFocusAction={1}
+              actions={[
+                {
+                  label: p.resetConfirmAction,
+                  variant: "primary",
+                  onClick: () => {
+                    setResetOpen(false);
+                    try {
+                      localStorage.removeItem(PROFILE_COMPLETE_KEY);
+                    } catch { /* */ }
+                    setShowFtu(true);
+                  },
+                },
+                { label: cms.ui.cancel, variant: "secondary", onClick: () => setResetOpen(false) },
+              ]}
+            />
           </div>
         )}
 
@@ -2346,21 +2402,7 @@ export function ProfilePage() {
         </ProfileSection>
         {aboutOpen && <Suspense fallback={null}><AboutDialog onClose={() => setAboutOpen(false)} /></Suspense>}
 
-        {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}
         <div className="profile-page__footer">
-          <button
-            onClick={() => {
-              const ok = window.confirm(p.resetConfirmMessage);
-              if (!ok) return;
-              try {
-                localStorage.removeItem(PROFILE_COMPLETE_KEY);
-              } catch { /* */ }
-              setShowFtu(true);
-            }}
-            className="type-data profile-page__reset"
-          >
-            {p.resetProfile}
-          </button>
 
           {/* Dev mode toggle: solo nelle build con gli strumenti (audit n. 36:
               in produzione era visibile ma non serviva a nulla). */}

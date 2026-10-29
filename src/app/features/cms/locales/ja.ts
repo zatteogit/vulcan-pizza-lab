@@ -1428,9 +1428,11 @@ export const JA_LOCALE: CmsContent = {
     unitImperial: "\u30A4\u30F3\u30DA\u30EA\u30A2\u30EB / US",
     unitImperialDesc: "oz、fl oz、インチ、華氏",
     resetProfile:
-      "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u3092\u30EA\u30BB\u30C3\u30C8",
+      "キッチンを設定し直す",
     resetConfirmMessage:
-      "初期設定を開き直します。新しい選択で現在の設定が置き換わります。",
+      "オーブン、経験、食材をもう一度お聞きします。保存したレシピとお気に入りはそのまま残ります。",
+    resetConfirmTitle: "キッチンを設定し直しますか？",
+    resetConfirmAction: "設定し直す",
     devModeOn: "\u958B\u767A\u30E2\u30FC\u30C9\u6709\u52B9",
     devModeOff:
       "\u958B\u767A\u30E2\u30FC\u30C9\u3092\u6709\u52B9\u306B\u3059\u308B",

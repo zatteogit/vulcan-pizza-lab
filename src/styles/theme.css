@@ -6545,6 +6545,18 @@
     gap: var(--gap-sm);
   }
 
+  /* G5-WP-06: riga «Salvato» del pannello La tua cucina (role=status). */
+  .profile-page__saved {
+    min-block-size: var(--leading-compact);
+    margin-block: var(--space-2) var(--space-0);
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .profile-page__saved:empty {
+    visibility: hidden;
+  }
+
   .profile-page__reset {
     padding-inline: var(--space-4);
     padding-block: var(--space-2);
