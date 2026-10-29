@@ -37,7 +37,7 @@ npm run check:tokens # Design token compliance only
 - `design-system.tsx` — Design token showcase
 - `dev.tsx` — Developer tools (engine test suite, style editor)
 
-All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
+All pages are **lazy-loaded** (`React.lazy` via `page()` in `routes.ts`) for code-splitting. The router is declarative (`<BrowserRouter>` in `App.tsx`), not a data router: no loaders/actions (budget D-059).
 
 ### Code Structure (`src/app/`)
 
@@ -128,10 +128,10 @@ to verify; after legitimately reducing (or relocating) debt, regenerate with
 - Large files (100+ lines) can be split: UI logic in `.tsx`, engine/calculations in `.ts`
 
 ### Route Additions
-Edit `src/app/routes.ts`:
-1. Add new lazy route under the appropriate section (TAB_ROUTES, DETAIL_ROUTES, TOOL_ROUTES)
-2. Import the page in the router config, not at the top (lazy loading)
-3. Add any legacy redirects in the LEGACY_REDIRECTS section
+Edit `APP_ROUTES` in `src/app/routes.ts`:
+1. Add the route under the appropriate section (TAB, DETAIL, TOOL ROUTES) as `{ path, Component: page(() => import("./pages/x"), "XPage") }`
+2. Never import a page at the top (lazy loading); `App.tsx` renders the table
+3. Add legacy redirects as `{ path, redirect: "/new" }` in the LEGACY REDIRECTS section
 
 ### State Management
 - Use React hooks (`useState`, `useCallback`) for local state

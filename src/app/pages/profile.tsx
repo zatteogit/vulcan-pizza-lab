@@ -6,14 +6,14 @@ import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 
 import { TOOLS_ENABLED } from "../config/tools";
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
-import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
+import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Download, Globe, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pencil, RotateCcw, Search, Share2, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
 import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
-import { Suspense, lazy, useCallback,useEffect,useMemo,useRef,useState } from "react";
+import { Suspense, lazy, useCallback,useEffect,useId,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
-import { Chip, ConfirmDialog, CtaButton, Disclosure, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
+import { BottomSheet, Chip, ConfirmDialog, CtaButton, Disclosure, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
 import {
 createFormatter,
 getPreferredUnitSystem,
@@ -47,7 +47,8 @@ isHeatProfileCompatible,
 } from "../data/equipment-data";
 import { OVEN_MODELS, getOvenModel, type OvenModel } from "../data/oven-models";
 import { AboutLinks, neutralityText } from "../components/shared/about-links";
-import { nextSavedOven, profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
+import { profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
+import { planFtuWrites } from "../use-cases/ftu-save";
 import { hasChosenSkill } from "../hooks/use-profile-defaults";
 
 /* FW-07 (S16-A-02): la scala del profilo arriva al forno più caldo del catalogo. */
@@ -58,7 +59,8 @@ OVEN_PRESETS,
 SKILL_LEVELS,
 STYLES_DB,
 } from "../domain/pizza-engine";
-import { normalizeRecipeName } from "../data/saved-recipes";
+import { MAX_RECIPE_NAME_LENGTH, normalizeRecipeName } from "../data/saved-recipes";
+import { noticeDurationMs } from "../features/profile/notice-duration";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../components/media/responsive-images";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
@@ -69,6 +71,7 @@ import {
   importRecipeBook,
   loadSavedRecipes,
   removeRecipe,
+  renameSavedRecipe,
   restoreRecipe,
   toggleFavoriteStyle,
   type SavedRecipe,
@@ -117,7 +120,6 @@ const FTU_FLOURS_SPECIAL = [
   { id: "segale", labelKey: "flourSegale" as const },
   { id: "tipo_1", labelKey: "flourTipo1" as const },
   { id: "tipo_2", labelKey: "flourTipo2" as const },
-  { id: "macinata_pietra", labelKey: "flourMacinataPietra" as const },
 ];
 const FTU_YEASTS = [
   { id: "fresh", labelKey: "yeastFresh" as const },
@@ -162,14 +164,36 @@ function loadJson<T>(key: string): T | null {
  *  profilo per scrivere livello, forno e attrezzatura di default come se
  *  fossero scelti (Impara diceva «Livello intermedio» a chi non l'aveva mai
  *  detto). Confronta col valore iniziale: regge il doppio effetto di StrictMode. */
-function useSaveOnChange(value: unknown, save: () => void) {
+function useSaveOnChange(value: unknown, save: () => void, onSaved?: () => void) {
   const initial = useRef(JSON.stringify(value));
   const changed = useRef(false);
   useEffect(() => {
     if (!changed.current && JSON.stringify(value) === initial.current) return;
     changed.current = true;
     save();
+    onSaved?.();
   }, [JSON.stringify(value)]);
+}
+
+/** G5-WP-06 (S16-B-17): un solo «Salvato» per raffica di modifiche (lo
+ *  slider della temperatura ne fa decine), annunciato dopo una breve quiete e
+ *  tolto dopo qualche secondo. Niente al primo render (audit n. 33). */
+function useSavedNotice(): [string, () => void] {
+  const [notice, setNotice] = useState("");
+  const timers = useRef<{ settle?: number; clear?: number }>({});
+  useEffect(() => () => {
+    window.clearTimeout(timers.current.settle);
+    window.clearTimeout(timers.current.clear);
+  }, []);
+  const notify = useCallback(() => {
+    window.clearTimeout(timers.current.settle);
+    window.clearTimeout(timers.current.clear);
+    timers.current.settle = window.setTimeout(() => {
+      setNotice(uiMessage("pages.profile.settingsSaved"));
+      timers.current.clear = window.setTimeout(() => setNotice(""), 3000);
+    }, 600);
+  }, []);
+  return [notice, notify];
 }
 
 function saveJson(key: string, value: unknown) {
@@ -297,6 +321,46 @@ function ProfileSection({
   );
 }
 
+/* ═══ G5-WP-05: avviso a tempo del ricettario e dei preferiti ═══
+ * Stesso schema per le due sezioni (U-10, F12/F26): portal, il tempo si ferma
+ * con focus o puntatore sopra, durata da noticeDurationMs, e se l'avviso
+ * aveva il focus quando si chiude, il focus torna nella sezione. */
+function useTimedNotice<T>(durationOf: (notice: T) => number) {
+  const [notice, setNotice] = useState<T | null>(null);
+  const [paused, setPaused] = useState(false);
+  const toastRef = useRef<HTMLDivElement>(null);
+  const returnRef = useRef<HTMLElement | null>(null);
+  const durationRef = useRef(durationOf);
+  durationRef.current = durationOf;
+
+  const closeNotice = useCallback(() => {
+    const hadFocus = toastRef.current?.contains(document.activeElement) ?? false;
+    setNotice(null);
+    setPaused(false);
+    if (hadFocus) requestAnimationFrame(() => returnRef.current?.focus({ preventScroll: true }));
+  }, []);
+
+  useEffect(() => {
+    if (notice === null || paused) return;
+    const timer = setTimeout(closeNotice, durationRef.current(notice));
+    return () => clearTimeout(timer);
+  }, [notice, paused, closeNotice]);
+
+  /** La riga sparisce col focus dentro: lo si porta su «Annulla». */
+  const focusAction = useCallback(() => {
+    requestAnimationFrame(() => toastRef.current?.querySelector<HTMLElement>(".ds-snackbar__action")?.focus());
+  }, []);
+
+  const toastProps = {
+    ref: toastRef,
+    onFocus: () => setPaused(true),
+    onBlur: () => setPaused(false),
+    onMouseEnter: () => setPaused(true),
+    onMouseLeave: () => setPaused(false),
+  };
+  return { notice, setNotice, closeNotice, returnRef, focusAction, toastProps };
+}
+
 /* ═══ STILI PREFERITI — chiude il loop del cuore (R31) ═══
  * Il cuore (toggleFavoriteStyle) è da sempre persistito in localStorage ma
  * non era mostrato da nessuna parte: qui i preferiti diventano finalmente
@@ -305,6 +369,21 @@ function FavoriteStylesSection() {
   const { cms } = useCms();
   const p = cms.profile;
   const [favs, setFavs] = useState<string[]>(() => loadFavoriteStyles());
+  /* G5-WP-05 (S17-B-07): togliere un preferito si annulla, come una ricetta. */
+  const { notice: removedId, setNotice: setRemovedId, closeNotice, returnRef, focusAction, toastProps } =
+    useTimedNotice<string>(() => noticeDurationMs("", "removed"));
+
+  const handleRemoveFavorite = (id: string) => {
+    setFavs(toggleFavoriteStyle(id));
+    setRemovedId(id);
+    focusAction();
+  };
+
+  const handleUndoFavorite = () => {
+    if (removedId === null) return;
+    if (!loadFavoriteStyles().includes(removedId)) setFavs(toggleFavoriteStyle(removedId));
+    closeNotice();
+  };
 
   /* Risincronizza quando si torna sulla pagina (i preferiti cambiano altrove). */
   useEffect(() => {
@@ -321,7 +400,29 @@ function FavoriteStylesSection() {
     .map((id) => STYLES_DB[id])
     .filter((s): s is NonNullable<typeof s> => Boolean(s));
 
-  if (styles.length === 0) return null;
+  const toast =
+    typeof document !== "undefined" &&
+    createPortal(
+      <AnimatePresence>
+        {removedId !== null && (
+          <motion.div
+            key={removedId}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={motionSpring.standard}
+            className="profile-saved-recipes__toast"
+            {...toastProps}
+          >
+            <Snackbar message={p.favoriteRemoved} action={p.savedRecipeUndo} onAction={handleUndoFavorite} />
+          </motion.div>
+        )}
+      </AnimatePresence>,
+      document.body,
+    );
+
+  /* Tolto l'ultimo preferito la sezione sparisce, ma «Annulla» resta. */
+  if (styles.length === 0) return <>{toast}</>;
 
   return (
     <ProfileSection
@@ -329,7 +430,7 @@ function FavoriteStylesSection() {
       subtitle={p.favoritesSubtitle}
       delay={motionDelay.profileIntro}
     >
-      <div data-region="collection" className="profile-favorites">
+      <div ref={(el) => { returnRef.current = el; }} tabIndex={-1} data-region="collection" className="profile-favorites">
         {styles.map((style) => (
           <div key={style.id} className="profile-favorites__item">
             <Link
@@ -351,7 +452,8 @@ function FavoriteStylesSection() {
               </div>
             </Link>
             <button
-              onClick={() => setFavs(toggleFavoriteStyle(style.id))}
+              type="button"
+              onClick={() => handleRemoveFavorite(style.id)}
               className="profile-favorites__remove"
               aria-label={t(p.favoriteRemoveAria, { name: style.name })}
               title={p.favoriteRemove}
@@ -361,6 +463,7 @@ function FavoriteStylesSection() {
           </div>
         ))}
       </div>
+      {toast}
     </ProfileSection>
   );
 }
@@ -416,13 +519,17 @@ function SavedRecipesSection() {
   const p = cms.profile;
   const savedFmt = createFormatter(cms.ui, bcp47);
   const [recipes, setRecipes] = useState<SavedRecipe[]>(() => loadSavedRecipes());
-  const [notice, setNotice] = useState<SavedRecipesNotice | null>(null);
   /* U-10 (F26): il tempo per «Annulla» si ferma finché l'avviso ha il focus o
-     il puntatore sopra. */
-  const [noticePaused, setNoticePaused] = useState(false);
-  const toastRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLElement | null>(null);
+     il puntatore sopra (useTimedNotice); G5-WP-05: dura quanto serve a leggerlo. */
+  const { notice, setNotice, closeNotice, returnRef: sectionRef, focusAction, toastProps } =
+    useTimedNotice<SavedRecipesNotice>((n) => noticeDurationMs(n.kind === "message" ? n.text : "", n.kind));
   const fileInputRef = useRef<HTMLInputElement>(null);
+  /* G5-WP-05 (S17-A-09): rinomina dalla lista. Il ref rende idempotente la
+     conferma (Invio smonta il campo, poi arriverebbe anche il blur). */
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameDraft, setRenameDraft] = useState("");
+  const renamingRef = useRef<string | null>(null);
+  const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
 
   useEffect(() => {
     const sync = () => setRecipes(loadSavedRecipes());
@@ -434,27 +541,10 @@ function SavedRecipesSection() {
     };
   }, []);
 
-  /** Chiude l'avviso; se aveva il focus, lo riporta nella sezione (U-10, F12). */
-  const closeNotice = useCallback(() => {
-    const hadFocus = toastRef.current?.contains(document.activeElement) ?? false;
-    setNotice(null);
-    setNoticePaused(false);
-    if (hadFocus) requestAnimationFrame(() => sectionRef.current?.focus({ preventScroll: true }));
-  }, []);
-
-  useEffect(() => {
-    if (!notice || noticePaused) return;
-    const timer = setTimeout(closeNotice, notice.kind === "removed" ? 6000 : 4000);
-    return () => clearTimeout(timer);
-  }, [notice, noticePaused, closeNotice]);
-
   const handleRemove = (recipe: SavedRecipe) => {
     setRecipes(removeRecipe(recipe.id));
     setNotice({ kind: "removed", recipe });
-    // U-10 (F12): la riga sparisce col focus dentro; lo si porta su «Annulla».
-    requestAnimationFrame(() =>
-      toastRef.current?.querySelector<HTMLElement>(".ds-snackbar__action")?.focus(),
-    );
+    focusAction();
   };
 
   const handleUndo = () => {
@@ -463,20 +553,52 @@ function SavedRecipesSection() {
     closeNotice();
   };
 
-  const handleCopyLink = (recipe: SavedRecipe) => {
+  /* G5-WP-05 (S17-B-15): condividi dove c'è il foglio di sistema, altrimenti
+     copia; se nemmeno la copia riesce (contesto non sicuro, permesso negato)
+     l'errore mostra il link, così si copia a mano. */
+  const handleCopyLink = async (recipe: SavedRecipe, title: string) => {
     const url = new URL(buildSavedRecipeUrl(recipe), window.location.origin).toString();
-    navigator.clipboard?.writeText(url).then(
-      () => setNotice({ kind: "message", text: p.savedRecipeLinkCopied, tone: "default" }),
-      () => undefined,
+    if (canShare) {
+      try {
+        await navigator.share({ title, url });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+    try {
+      if (!navigator.clipboard) throw new Error("clipboard");
+      await navigator.clipboard.writeText(url);
+      setNotice({ kind: "message", text: p.savedRecipeLinkCopied, tone: "default" });
+    } catch {
+      setNotice({ kind: "message", text: t(p.savedRecipeLinkCopyFailed, { url }), tone: "error" });
+    }
+  };
+
+  const startRename = (recipe: SavedRecipe) => {
+    renamingRef.current = recipe.id;
+    setRenameDraft(normalizeRecipeName(recipe.name) ?? "");
+    setRenamingId(recipe.id);
+  };
+
+  const endRename = (id: string, save: boolean) => {
+    if (renamingRef.current !== id) return;
+    renamingRef.current = null;
+    setRenamingId(null);
+    if (save) {
+      if (renameSavedRecipe(id, renameDraft)) setRecipes(loadSavedRecipes());
+      else setNotice({ kind: "message", text: p.savedRecipeRenameFailed, tone: "error" });
+    }
+    requestAnimationFrame(() =>
+      sectionRef.current?.querySelector<HTMLElement>(`[data-rename="${CSS.escape(id)}"]`)?.focus(),
     );
   };
 
   const handleExport = () => {
     const day = new Date().toISOString().slice(0, 10);
-    downloadTextFile(
-      `${BRAND.name.toLowerCase()}-${p.savedRecipesExportFileName}-${day}.json`,
-      exportRecipeBook(),
-    );
+    const filename = `${BRAND.name.toLowerCase()}-${p.savedRecipesExportFileName}-${day}.json`;
+    downloadTextFile(filename, exportRecipeBook());
+    setNotice({ kind: "message", text: t(p.savedRecipesExported, { filename }), tone: "default" });
   };
 
   const handleImport = async (file: File | undefined) => {
@@ -551,6 +673,32 @@ function SavedRecipesSection() {
             const snapshot = r.score != null ? t(se.snapshot, { score: savedFmt.number(r.score) }) : null;
             return (
               <li key={r.id} className="profile-saved-recipes__item">
+                {renamingId === r.id ? (
+                  <form
+                    className="profile-saved-recipes__rename"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      endRename(r.id, true);
+                    }}
+                  >
+                    <input
+                      autoFocus
+                      className="profile-saved-recipes__rename-input"
+                      aria-label={t(p.savedRecipeRenameAria, { name: displayName })}
+                      value={renameDraft}
+                      maxLength={MAX_RECIPE_NAME_LENGTH}
+                      placeholder={styleName}
+                      onChange={(event) => setRenameDraft(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                          event.preventDefault();
+                          endRename(r.id, false);
+                        }
+                      }}
+                      onBlur={() => endRename(r.id, true)}
+                    />
+                  </form>
+                ) : (
                 <Link
                   to={buildSavedRecipeUrl(r)}
                   className="profile-saved-recipes__link"
@@ -575,14 +723,25 @@ function SavedRecipesSection() {
                     )}
                   </span>
                 </Link>
+                )}
                 <button
                   type="button"
-                  onClick={() => handleCopyLink(r)}
+                  data-rename={r.id}
+                  onClick={() => startRename(r)}
                   className="profile-saved-recipes__action"
-                  aria-label={t(p.savedRecipeCopyLinkAria, { name: displayName })}
-                  title={p.savedRecipeCopyLink}
+                  aria-label={t(p.savedRecipeRenameAria, { name: displayName })}
+                  title={p.savedRecipeRename}
                 >
-                  <LinkIcon size={16} aria-hidden="true" />
+                  <Pencil size={16} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleCopyLink(r, displayName)}
+                  className="profile-saved-recipes__action"
+                  aria-label={t(canShare ? p.savedRecipeShareAria : p.savedRecipeCopyLinkAria, { name: displayName })}
+                  title={canShare ? p.savedRecipeShare : p.savedRecipeCopyLink}
+                >
+                  {canShare ? <Share2 size={16} aria-hidden="true" /> : <LinkIcon size={16} aria-hidden="true" />}
                 </button>
                 <button
                   type="button"
@@ -649,11 +808,7 @@ function SavedRecipesSection() {
                 exit={{ opacity: 0, y: 12 }}
                 transition={motionSpring.standard}
                 className="profile-saved-recipes__toast"
-                ref={toastRef}
-                onFocus={() => setNoticePaused(true)}
-                onBlur={() => setNoticePaused(false)}
-                onMouseEnter={() => setNoticePaused(true)}
-                onMouseLeave={() => setNoticePaused(false)}
+                {...toastProps}
               >
                 {notice.kind === "removed" ? (
                   <Snackbar
@@ -728,6 +883,10 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const fmt = createFormatter(cms.ui, bcp47, getPreferredUnitSystem()); // FW-14: «Max 250 °C», non «250°C»
   const p = cms.profile;
   const [step, setStep] = useState(0);
+  /* G5-WP-01: il passo più alto confermato con «Avanti»; decide che cosa
+     salva «Salta» (planFtuWrites). */
+  const [confirmedUpTo, setConfirmedUpTo] = useState(-1);
+  const specialFloursId = useId();
   /* Si parte dal forno già salvato (anche quello preimpostato da un'edizione
      partner): «Avanti» non deve riportarlo al forno di casa. */
   const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string; origin?: "edition" }>(OVEN_STORAGE_KEY));
@@ -737,6 +896,12 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const savedModel = getOvenModel(savedOven?.modelId);
   const editionOven = savedOven?.origin === "edition" ? savedModel : undefined;
   const [ovenTemp, setOvenTemp] = useState(savedOven?.maxTemp ?? 250);
+  /* G5-WP-03 (S15-A-02): il modello si cerca anche qui, non solo nel Profilo.
+     Parte da quello salvato; cambiare tipo di forno lo toglie. */
+  const [ftuModelId, setFtuModelId] = useState<string | null>(savedModel?.id ?? null);
+  const ftuModel = getOvenModel(ftuModelId);
+  const [modelSheetOpen, setModelSheetOpen] = useState(false);
+  const ovenListRef = useRef<HTMLDivElement>(null);
   /* FW-07 (S15-V-01, S15-A-06): il livello parte da quello salvato e, se non
      c'è, da nessuno: «Avanti» non sceglie «Principiante» al posto tuo. */
   const [skillLevel, setSkillLevel] = useState<SkillLevel | null>(() => loadJson<SkillLevel>(SKILL_STORAGE_KEY));
@@ -755,45 +920,48 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
    * Strumenti, superfici, dieta e posizione vivono nella pagina Profilo:
    * nessuna domanda tecnica prima di aver mostrato il valore dell'app. */
   const steps = [
-    { num: "01", title: p.ftuOvenTitle, subtitle: p.ftuOvenSubtitle, optional: false },
-    { num: "02", title: p.ftuSkillTitle, subtitle: p.ftuSkillSubtitle, optional: false },
-    { num: "03", title: p.ftuPantryTitle, subtitle: p.ftuPantrySubtitle, optional: true },
-    { num: "04", title: uiMessage("pages.profile.tutto-pronto-0d7ff4fd"), subtitle: uiMessage("pages.profile.creiamo-la-tua-prima-pizza-96bbe504"), optional: false },
+    { title: p.ftuOvenTitle, subtitle: p.ftuOvenSubtitle, optional: false },
+    { title: p.ftuSkillTitle, subtitle: p.ftuSkillSubtitle, optional: false },
+    { title: p.ftuPantryTitle, subtitle: p.ftuPantrySubtitle, optional: true },
+    { title: uiMessage("pages.profile.tutto-pronto-0d7ff4fd"), subtitle: uiMessage("pages.profile.creiamo-la-tua-prima-pizza-96bbe504"), optional: false },
   ];
   const lastStep = steps.length - 1;
+
+  /* G5-WP-02: righe del riepilogo nel congedo (forno, livello, dispensa). */
+  const pantryLabels = [...FTU_FLOURS, ...FTU_FLOURS_SPECIAL, ...FTU_YEASTS]
+    .filter((item) => ftuFlours.includes(item.id) || ftuYeasts.includes(item.id))
+    .map((item) => (p as unknown as Record<string, string>)[item.labelKey] || item.id);
+  const ovenModel = ftuModel && ftuModel.ovenType === ovenType ? `${ftuModel.brand} ${ftuModel.model}` : cms.ovenPresets[ovenType]?.name ?? ovenType;
+  const summaryRows = [
+    { step: 0, label: p.ftuSummaryOven, value: `${ovenModel} · ${fmt.celsius(ovenTemp)}` },
+    { step: 1, label: p.ftuSummarySkill, value: skillLevel !== null ? cms.skillLevels[String(skillLevel)]?.name ?? String(skillLevel) : p.ftuSummaryNotSet },
+    { step: 2, label: p.ftuSummaryPantry, value: pantryLabels.length > 0 ? pantryLabels.join(", ") : p.ftuSummaryNotSet },
+  ];
 
   const toggleArrayItem = (arr: string[], id: string): string[] =>
     arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
 
-  const handleFinish = useCallback(() => {
-    // Il modello resta solo se il forno non è cambiato; confermare il forno
-    // preimpostato dall'edizione lo rende tuo (FW-07, S18-A-01).
-    saveJson(OVEN_STORAGE_KEY, savedOven?.ovenType === ovenType ? nextSavedOven(savedOven, ovenType) : { ovenType, maxTemp: ovenTemp });
-    if (skillLevel !== null) saveJson(SKILL_STORAGE_KEY, skillLevel);
-    if (offerTechnical && ftuTechnical) setDetailLevel("technical");
-    // Pantry: salviamo solo se valorizzata
-    if (ftuFlours.length > 0 || ftuYeasts.length > 0) {
-      saveJson(PANTRY_STORAGE_KEY, { ...(loadJson<Record<string, unknown>>(PANTRY_STORAGE_KEY) ?? {}), flours: ftuFlours, yeasts: ftuYeasts });
-    }
-    try {
-      localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
-    } catch { /* */ }
-    onComplete();
-  }, [savedOven, ovenType, ovenTemp, skillLevel, offerTechnical, ftuTechnical, setDetailLevel, ftuFlours, ftuYeasts, onComplete]);
-
-  /* Audit n. 33 / D-038: il percorso si può saltare. Forno e livello restano
-     «non scelti» (niente valori di default salvati come se li avessi scelti
-     tu): li chiedono Crea e il profilo quando servono. */
-  const handleSkip = useCallback(() => {
+  /* «Vai a Crea» salva tutto; «Salta» salva solo ciò che hai già confermato
+     (G5-WP-01). Al primo passo «Salta» non salva nulla: forno e livello
+     restano «non scelti» (audit n. 33 / D-038). Il modello del forno resta
+     solo se il forno non è cambiato (FW-07, S18-A-01). */
+  const complete = useCallback((mode: "finish" | "skip") => {
+    const writes = planFtuWrites({ confirmedUpTo, mode, savedOven, ovenType, ovenTemp, modelId: ftuModelId, skillLevel, flours: ftuFlours, yeasts: ftuYeasts });
+    if (writes.oven) saveJson(OVEN_STORAGE_KEY, writes.oven);
+    if (writes.skill !== undefined) saveJson(SKILL_STORAGE_KEY, writes.skill);
+    if (writes.pantry) saveJson(PANTRY_STORAGE_KEY, { ...(loadJson<Record<string, unknown>>(PANTRY_STORAGE_KEY) ?? {}), ...writes.pantry });
     /* FW-08: un «sì» esplicito ai dettagli tecnici vale anche se salti. */
     if (offerTechnical && ftuTechnical) setDetailLevel("technical");
     try {
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [offerTechnical, ftuTechnical, setDetailLevel, onComplete]);
+  }, [confirmedUpTo, savedOven, ovenType, ovenTemp, ftuModelId, skillLevel, ftuFlours, ftuYeasts, offerTechnical, ftuTechnical, setDetailLevel, onComplete]);
+  const handleFinish = useCallback(() => complete("finish"), [complete]);
+  const handleSkip = useCallback(() => complete("skip"), [complete]);
 
   const handleNext = useCallback(() => {
+    setConfirmedUpTo((c) => Math.max(c, step));
     if (step < lastStep) setStep((s) => s + 1);
     else handleFinish();
   }, [step, lastStep, handleFinish]);
@@ -843,7 +1011,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
         {/* Step header */}
         <div ref={stepHeaderRef} tabIndex={-1} className="profile-ftu__step-header">
           <span className="type-label-compact profile-ftu__step-label">
-            {steps[step].num} — {p.ftuWelcome}
+            {uiMessage("pages.profile.ftu-step-of", [step + 1, steps.length])}
           </span>
           <Heading level="page" className="profile-ftu__step-title">
             {steps[step].title}
@@ -865,14 +1033,15 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step === 0 && <SettingEffectNote settingId="oven" />}
             {step === 1 && <SettingEffectNote settingId="skill" />}
             {step === 2 && <SettingEffectNote settingId="pantry" />}
-            {step === 0 && editionOven && ovenType === editionOven.ovenType && (
+            {step === 0 && editionOven && ftuModelId === editionOven.id && (
               <p className="type-data-sm profile-ftu__edition-oven" role="note">
                 {uiMessage("pages.profile.ftu.editionOven", [`${editionOven.brand} ${editionOven.model}`])}
                 {neutralityText() && <small data-region="neutrality">{neutralityText()}</small>}
               </p>
             )}
             {step === 0 && (
-              <div className="profile-ftu__option-list">
+              <>
+              <div ref={ovenListRef} className="profile-ftu__option-list">
                 {OVEN_PRESETS.map((preset) => {
                   const Icon = ovenIcon(preset.id);
                   const active = ovenType === preset.id;
@@ -886,6 +1055,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                         if (active) return;
                         setOvenType(preset.id);
                         setOvenTemp(preset.maxTemp);
+                        setFtuModelId(null);
                       }}
                       className="profile-ftu__option"
                       animate={{
@@ -912,11 +1082,14 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                         <div className="profile-ftu__option-name">
                           {cms.ovenPresets[preset.id]?.name ?? preset.name}
                         </div>
+                        {cms.ovenPresets[preset.id]?.hint && (
+                          <small className="profile-ftu__option-hint">{cms.ovenPresets[preset.id]?.hint}</small>
+                        )}
                         <div className="type-data-sm profile-ftu__option-meta">
                           {uiMessage("pages.profile.maxTemp", [fmt.celsius(active ? ovenTemp : preset.maxTemp)])}
                         </div>
-                        {active && savedModel && savedOven?.ovenType === preset.id && (
-                          <div className="type-data-sm profile-ftu__option-model">{`${savedModel.brand} ${savedModel.model}`}</div>
+                        {active && ftuModel && ftuModel.ovenType === preset.id && (
+                          <div className="type-data-sm profile-ftu__option-model">{`${ftuModel.brand} ${ftuModel.model}`}</div>
                         )}
                       </div>
                       {active && (
@@ -932,6 +1105,42 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                   );
                 })}
               </div>
+              <CtaButton
+                type="button"
+                variant="secondary"
+                radius="lg"
+                className="profile-ftu__model-search"
+                aria-haspopup="dialog"
+                onClick={() => setModelSheetOpen(true)}
+              >
+                <Search size={16} aria-hidden="true" />
+                {uiMessage("pages.profile.ftu-search-model")}
+              </CtaButton>
+              <BottomSheet
+                open={modelSheetOpen}
+                onClose={() => setModelSheetOpen(false)}
+                className="profile-ftu__model-sheet"
+                title={uiMessage("pages.profile.ftu-search-model")}
+              >
+                <OvenModelSearch
+                  selectedId={ftuModelId}
+                  formatTemp={(c) => fmt.celsius(c)}
+                  formatOvenType={(type) => cms.ovenPresets[type]?.name ?? type}
+                  onPick={(model) => {
+                    setFtuModelId(model.id);
+                    setOvenType(model.ovenType);
+                    setOvenTemp(model.maxTempC);
+                    setModelSheetOpen(false);
+                    /* Il dialog rimette il focus sul bottone che l'ha aperto:
+                       subito dopo lo portiamo sulla tessera del forno scelto. */
+                    requestAnimationFrame(() => {
+                      ovenListRef.current?.querySelector<HTMLElement>("[aria-pressed='true']")?.focus();
+                    });
+                  }}
+                  onClear={() => setFtuModelId(null)}
+                />
+              </BottomSheet>
+              </>
             )}
 
             {step === 1 && (
@@ -1014,9 +1223,11 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                   <GlossaryTermLinks termIds={["flour_type", "w_alveograph", "manitoba", "semola_rimacinata"]} />
                   {/* Accordion farine speciali */}
                   <button
+                    type="button"
                     onClick={() => setShowSpecialFlours((v) => !v)}
                     className="type-data-sm profile-ftu__pantry-toggle"
                     aria-expanded={showSpecialFlours}
+                    aria-controls={specialFloursId}
                   >
                     <ChevronDown
                       size={14}
@@ -1025,7 +1236,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                     {p.specialFloursOnboarding}
                   </button>
                   {showSpecialFlours && (
-                    <div className="profile-ftu__pantry-chips profile-ftu__pantry-chips--nested">
+                    <div id={specialFloursId} className="profile-ftu__pantry-chips profile-ftu__pantry-chips--nested">
                       {FTU_FLOURS_SPECIAL.map((f) => (
                         <Chip
                           key={f.id}
@@ -1070,47 +1281,27 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step === 3 && (
               <div className="profile-ftu__done">
                 <div className="profile-ftu__done-emoji"><PartyPopper size={32} aria-hidden="true" /></div>
-                <p className="profile-ftu__done-title">
-                  {p.ftuDoneTitle}
-                </p>
-                <ul className="profile-ftu__done-list">
-                  <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji"><Pizza size={20} aria-hidden="true" /></span>
-                    <div className="profile-ftu__done-item-body">
-                      <div className="profile-ftu__done-item-title">
-                        {p.ftuDoneCreateTitle}
-                      </div>
-                      <div
-                        className="type-body-xs profile-ftu__done-item-desc"
-                        dangerouslySetInnerHTML={{ __html: p.ftuDoneCreateDesc }}
-                      />
+                {/* G5-WP-02 (S15-B-06, D-G5-1): al posto di tre card che non
+                    portavano da nessuna parte, il riepilogo delle scelte, ognuna
+                    modificabile. */}
+                <dl data-region="ftu-summary" className="profile-ftu__summary">
+                  {summaryRows.map((row) => (
+                    <div key={row.step} data-region="ftu-summary-row" className="profile-ftu__summary-row">
+                      <dt className="type-label-compact profile-ftu__summary-label">{row.label}</dt>
+                      <dd className="profile-ftu__summary-value">{row.value}</dd>
+                      <dd className="profile-ftu__summary-action">
+                        <button
+                          type="button"
+                          className="type-data-sm profile-ftu__summary-edit"
+                          onClick={() => setStep(row.step)}
+                          aria-label={t(p.ftuSummaryEditAria, { field: row.label })}
+                        >
+                          {p.ftuSummaryEdit}
+                        </button>
+                      </dd>
                     </div>
-                  </li>
-                  <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji"><Compass size={20} aria-hidden="true" /></span>
-                    <div className="profile-ftu__done-item-body">
-                      <div className="profile-ftu__done-item-title">
-                        {p.ftuDoneExploreTitle}
-                      </div>
-                      <div
-                        className="type-body-xs profile-ftu__done-item-desc"
-                        dangerouslySetInnerHTML={{ __html: p.ftuDoneExploreDesc }}
-                      />
-                    </div>
-                  </li>
-                  <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji"><GraduationCap size={20} aria-hidden="true" /></span>
-                    <div className="profile-ftu__done-item-body">
-                      <div className="profile-ftu__done-item-title">
-                        {p.ftuDoneLearnTitle}
-                      </div>
-                      <div
-                        className="type-body-xs profile-ftu__done-item-desc"
-                        dangerouslySetInnerHTML={{ __html: p.ftuDoneLearnDesc }}
-                      />
-                    </div>
-                  </li>
-                </ul>
+                  ))}
+                </dl>
                 <p
                   className="type-body-xs profile-ftu__done-footnote"
                   dangerouslySetInnerHTML={{ __html: p.ftuDoneProfileNote }}
@@ -1140,9 +1331,13 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step < lastStep ? p.ftuNext : p.ftuStart}
             {step < lastStep ? <ChevronRight size={16} /> : <Sparkles size={16} />}
           </CtaButton>
-          <button type="button" onClick={handleSkip} className="profile-ftu__nav-skip">
-            {uiMessage("pages.profile.ftu-skip")}
-          </button>
+          {/* Nel congedo «Salta» sembrava uguale a «Vai a Crea»: non c'è più.
+              Dopo il primo passo dice che salta solo il resto. */}
+          {step < lastStep && (
+            <button type="button" onClick={handleSkip} className="profile-ftu__nav-skip">
+              {uiMessage(step === 0 ? "pages.profile.ftu-skip" : "pages.profile.ftu-skip-rest")}
+            </button>
+          )}
         </div>
       </motion.div>
     </main>
@@ -1459,6 +1654,8 @@ export function ProfilePage() {
   }, []);
 
   /* Salvataggio a ogni modifica (non all'apertura: audit n. 33) */
+  const [savedNotice, notifySaved] = useSavedNotice();
+  const [resetOpen, setResetOpen] = useState(false);
   useSaveOnChange([ovens, ovenType, ovenTemp, ovenModelId], () => {
     saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp, ...(ovenModelId ? { modelId: ovenModelId } : {}) });
     try {
@@ -1466,7 +1663,7 @@ export function ProfilePage() {
     } catch (e) {
       // ignore
     }
-  });
+  }, notifySaved);
 
   useSaveOnChange(mixers, () => {
     try {
@@ -1484,13 +1681,13 @@ export function ProfilePage() {
       saveJson(EQUIPMENT_STORAGE_KEY, next);
       return next;
     });
-  });
+  }, notifySaved);
 
-  useSaveOnChange(skillLevel, () => saveJson(SKILL_STORAGE_KEY, skillLevel));
+  useSaveOnChange(skillLevel, () => saveJson(SKILL_STORAGE_KEY, skillLevel), notifySaved);
 
-  useSaveOnChange(dietary, () => saveJson(DIETARY_STORAGE_KEY, dietary));
+  useSaveOnChange(dietary, () => saveJson(DIETARY_STORAGE_KEY, dietary), notifySaved);
 
-  useSaveOnChange(unitSystem, () => savePreferredUnitSystem(unitSystem));
+  useSaveOnChange(unitSystem, () => savePreferredUnitSystem(unitSystem), notifySaved);
   const toggleDietary = (id: string) =>
     setDietary((prev) =>
       prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id],
@@ -1517,7 +1714,9 @@ export function ProfilePage() {
         size="lg"
         /* D-037: chiudendo si torna da dove si è arrivati (es. Crea). */
         onClick={() => (window.history.state?.idx > 0 ? navigate(-1) : navigate("/"))}
-        aria-label={cms.ui.close}
+        /* G5-WP-01 (S15-B-14): durante l'onboarding la X non lo chiude per
+           sempre, e lo dice. */
+        aria-label={showFtu ? uiMessage("pages.profile.ftu-close-later") : cms.ui.close}
       >
         <X size={20} aria-hidden="true" />
       </IconButton>
@@ -1532,10 +1731,13 @@ export function ProfilePage() {
         onComplete={() => {
           setShowFtu(false);
           /* Reload state from localStorage after FTU writes */
-          const oven = loadJson<{ ovenType: OvenType; maxTemp: number }>(OVEN_STORAGE_KEY);
+          const oven = loadJson<{ ovenType: OvenType; maxTemp: number; modelId?: string }>(OVEN_STORAGE_KEY);
           if (oven) {
             setOvens([oven.ovenType]);
             setOvenTemp(oven.maxTemp);
+            /* G5-WP-03: anche il modello, o il salvataggio automatico del
+               Profilo lo cancellerebbe subito dopo l'onboarding. */
+            setOvenModelId(oven.modelId ?? null);
           }
           const skill = loadJson<SkillLevel>(SKILL_STORAGE_KEY);
           if (skill) setSkillLevel(skill);
@@ -1634,6 +1836,7 @@ export function ProfilePage() {
           <OvenModelSearch
             selectedId={ovenModelId}
             formatTemp={(c) => fmt.celsius(c)}
+            formatOvenType={(type) => cms.ovenPresets[type]?.name ?? type}
             onPick={(model) => {
               setOvenModelId(model.id);
               setOvens([model.ovenType]);
@@ -2239,6 +2442,38 @@ export function ProfilePage() {
             </p>
           </div>
         </ProfileSection>
+            {/* G5-WP-06 (S16-B-17): le modifiche si salvano da sole; lo diciamo. */}
+            <p role="status" aria-live="polite" data-region="profile-saved" className="type-data-sm profile-page__saved">{savedNotice}</p>
+            {/* G5-WP-06 (S17-A-12, S17-B-11): rilancia forno, esperienza e
+                dispensa, quindi sta qui e non nel tab App; conferma col dialog del DS. */}
+            <div className="profile-page__footer">
+              <button type="button" onClick={() => setResetOpen(true)} className="type-data profile-page__reset">
+                {p.resetProfile}
+              </button>
+            </div>
+            <ConfirmDialog
+              open={resetOpen}
+              onDismiss={() => setResetOpen(false)}
+              ariaLabel={p.resetConfirmTitle}
+              icon={<RotateCcw size={24} aria-hidden="true" />}
+              title={p.resetConfirmTitle}
+              body={p.resetConfirmMessage}
+              initialFocusAction={1}
+              actions={[
+                {
+                  label: p.resetConfirmAction,
+                  variant: "primary",
+                  onClick: () => {
+                    setResetOpen(false);
+                    try {
+                      localStorage.removeItem(PROFILE_COMPLETE_KEY);
+                    } catch { /* */ }
+                    setShowFtu(true);
+                  },
+                },
+                { label: cms.ui.cancel, variant: "secondary", onClick: () => setResetOpen(false) },
+              ]}
+            />
           </div>
         )}
 
@@ -2342,21 +2577,7 @@ export function ProfilePage() {
         </ProfileSection>
         {aboutOpen && <Suspense fallback={null}><AboutDialog onClose={() => setAboutOpen(false)} /></Suspense>}
 
-        {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}
         <div className="profile-page__footer">
-          <button
-            onClick={() => {
-              const ok = window.confirm(p.resetConfirmMessage);
-              if (!ok) return;
-              try {
-                localStorage.removeItem(PROFILE_COMPLETE_KEY);
-              } catch { /* */ }
-              setShowFtu(true);
-            }}
-            className="type-data profile-page__reset"
-          >
-            {p.resetProfile}
-          </button>
 
           {/* Dev mode toggle: solo nelle build con gli strumenti (audit n. 36:
               in produzione era visibile ma non serviva a nulla). */}

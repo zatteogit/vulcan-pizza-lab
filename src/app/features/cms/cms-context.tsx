@@ -334,6 +334,8 @@ interface CmsTimeSlot {
 
 interface CmsOvenPreset {
   name: string;
+  /** G5-WP-03: riga descrittiva generica (senza marchi) sotto il nome nell'onboarding. */
+  hint?: string;
   maxTemp: number;
   icon: string;
 }
@@ -478,6 +480,14 @@ interface CmsProfile {
   savedRecipeCopyLink: string;
   savedRecipeCopyLinkAria: string;
   savedRecipeLinkCopied: string;
+  savedRecipeLinkCopyFailed: string;
+  savedRecipeShare: string;
+  savedRecipeShareAria: string;
+  savedRecipeRename: string;
+  savedRecipeRenameAria: string;
+  savedRecipeRenameFailed: string;
+  savedRecipesExported: string;
+  favoriteRemoved: string;
   savedRecipeRemoved: string;
   savedRecipeUndo: string;
   savedRecipesImported: string;
@@ -520,6 +530,8 @@ interface CmsProfile {
   unitImperialDesc: string;
   resetProfile: string;
   resetConfirmMessage: string;
+  resetConfirmTitle: string;
+  resetConfirmAction: string;
   devModeOn: string;
   devModeOff: string;
   locationTitle: string;
@@ -531,7 +543,6 @@ interface CmsProfile {
   locationNone: string;
   locationNoResults: string;
   // FTU
-  ftuWelcome: string;
   ftuOvenTitle: string;
   ftuOvenSubtitle: string;
   ftuSkillTitle: string;
@@ -631,15 +642,14 @@ interface CmsProfile {
   flourSegale: string;
   flourTipo1: string;
   flourTipo2: string;
-  flourMacinataPietra: string;
   // Onboarding Done screen
-  ftuDoneTitle: string;
-  ftuDoneCreateTitle: string;
-  ftuDoneCreateDesc: string;
-  ftuDoneExploreTitle: string;
-  ftuDoneExploreDesc: string;
-  ftuDoneLearnTitle: string;
-  ftuDoneLearnDesc: string;
+  ftuSummaryOven: string;
+  ftuSummarySkill: string;
+  ftuSummaryPantry: string;
+  ftuSummaryEdit: string;
+  /** {field}: nome della riga («Forno»). */
+  ftuSummaryEditAria: string;
+  ftuSummaryNotSet: string;
   ftuDoneProfileNote: string;
   specialFloursOnboarding: string;
   locationRemove: string;
@@ -1566,13 +1576,13 @@ export const CMS_DEFAULTS: CmsContent = {
     weekend:         { label: "Nel weekend",    sublabel: "72+ ore",   emoji: "\u{1F389}", hours: 72 },
   },
   ovenPresets: {
-    coal: { name: "Forno a carbone", maxTemp: 400, icon: "flame" },
-    home:              { name: "Forno di casa",      maxTemp: 250, icon: "home" },
-    electric_standard: { name: "Elettrico standard", maxTemp: 300, icon: "zap" },
-    gas:               { name: "Forno a gas a platea", maxTemp: 350, icon: "flame" },
-    electric_high:     { name: "Elettrico alta temperatura", maxTemp: 450, icon: "thermometer" },
-    gas_pizza:         { name: "Forno a gas da pizza", maxTemp: 500, icon: "flame" },
-    wood:              { name: "Forno a legna",      maxTemp: 500, icon: "flame-kindling" },
+    coal: { name: "Forno a carbone", hint: "Forno professionale a carbone", maxTemp: 400, icon: "flame" },
+    home:              { name: "Forno di casa", hint: "Il forno della cucina",      maxTemp: 250, icon: "home" },
+    electric_standard: { name: "Elettrico standard", hint: "Fornetto elettrico da banco con pietra", maxTemp: 300, icon: "zap" },
+    gas:               { name: "Forno a gas a platea", hint: "Forno professionale a gas con platea", maxTemp: 350, icon: "flame" },
+    electric_high:     { name: "Elettrico alta temperatura", hint: "Forno elettrico da pizza ad alta temperatura", maxTemp: 450, icon: "thermometer" },
+    gas_pizza:         { name: "Forno a gas da pizza", hint: "Forno da pizza portatile a gas", maxTemp: 500, icon: "flame" },
+    wood:              { name: "Forno a legna", hint: "Forno a legna o a pellet",      maxTemp: 500, icon: "flame-kindling" },
   },
   skillLevels: {
     "1": { name: "Principiante", description: "Non ho mai impastato" },
@@ -2329,6 +2339,14 @@ export const CMS_DEFAULTS: CmsContent = {
     savedRecipeCopyLink: "Copia link",
     savedRecipeCopyLinkAria: "Copia il link di {name}",
     savedRecipeLinkCopied: "Link copiato",
+    savedRecipeLinkCopyFailed: "Non riesco a copiare il link. Copialo da qui: {url}",
+    savedRecipeShare: "Condividi",
+    savedRecipeShareAria: "Condividi {name}",
+    savedRecipeRename: "Rinomina",
+    savedRecipeRenameAria: "Rinomina {name}",
+    savedRecipeRenameFailed: "Non riesco a salvare il nuovo nome. Riprova.",
+    savedRecipesExported: "File salvato: {filename}",
+    favoriteRemoved: "Stile tolto dai preferiti",
     savedRecipeRemoved: "Ricetta rimossa",
     savedRecipeUndo: "Annulla",
     savedRecipesImported: "Ricette importate: {n}",
@@ -2376,11 +2394,12 @@ export const CMS_DEFAULTS: CmsContent = {
     unitMetricDesc: "Grammi, millilitri, centimetri e gradi Celsius",
     unitImperial: "Imperiale / US",
     unitImperialDesc: "Once, once liquide, pollici e gradi Fahrenheit",
-    resetProfile: "Riconfigura profilo",
-    resetConfirmMessage: "Riaprirai la configurazione iniziale. Le nuove scelte sostituiranno le preferenze attuali.",
+    resetProfile: "Riconfigura la cucina",
+    resetConfirmMessage: "Ti richiediamo forno, esperienza e dispensa. Ricette salvate e preferiti restano.",
+    resetConfirmTitle: "Riconfigurare la cucina?",
+    resetConfirmAction: "Riconfigura",
     devModeOn: "Modalità sviluppo attiva",
     devModeOff: "Attiva modalità sviluppo",
-    ftuWelcome: "Benvenuto",
     ftuOvenTitle: "Che forno hai?",
     ftuOvenSubtitle: "Il forno definisce gli stili possibili",
     ftuSkillTitle: "Quanta esperienza hai?",
@@ -2420,7 +2439,7 @@ export const CMS_DEFAULTS: CmsContent = {
     mixerHands: "A mano",
     mixerHandsDesc: "Impasto manuale, nessuna attrezzatura",
     mixerStandDomestic: "Planetaria domestica",
-    mixerStandDomesticDesc: "KitchenAid, Kenwood, Smeg — 4-7 L, gancio K",
+    mixerStandDomesticDesc: "KitchenAid, Kenwood, Smeg — 4-7 L, gancio impastatore",
     mixerPlanetary: "Planetaria semi-pro",
     mixerPlanetaryDesc: "10-20 L, gancio a spirale, potenza 500W+",
     mixerSpiral: "Impastatrice a spirale",
@@ -2472,16 +2491,14 @@ export const CMS_DEFAULTS: CmsContent = {
     flourSegale: "Segale",
     flourTipo1: "Tipo 1",
     flourTipo2: "Tipo 2",
-    flourMacinataPietra: "Macinata a pietra",
-    ftuDoneTitle: "Crea, scopri, impara.",
-    ftuDoneCreateTitle: "Crea una ricetta",
-    ftuDoneCreateDesc: "Scegli uno stile e adattalo alla tua cucina.",
-    ftuDoneExploreTitle: "Esplora gli stili",
-    ftuDoneExploreDesc: "Scopri tradizioni, ricette e interpretazioni d’autore.",
-    ftuDoneLearnTitle: "Impara la teoria",
-    ftuDoneLearnDesc: "Capisci le tecniche e trova risposte ai dubbi.",
+    ftuSummaryOven: "Forno",
+    ftuSummarySkill: "Livello",
+    ftuSummaryPantry: "Dispensa",
+    ftuSummaryEdit: "Modifica",
+    ftuSummaryEditAria: "Modifica {field}",
+    ftuSummaryNotSet: "Da indicare",
     ftuDoneProfileNote: "Puoi completare o cambiare le tue preferenze dal Profilo, quando vuoi.",
-    specialFloursOnboarding: "Farine speciali (farro, segale, integrali...)",
+    specialFloursOnboarding: "Altre farine (farro, kamut, segale, tipo 1 e 2…)",
     locationRemove: "Rimuovi posizione",
     ftuSkipMessage: "Nessuna scelta? Va bene: premi Avanti.",
     // FW-16 — effetto delle impostazioni
@@ -3423,6 +3440,13 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ovenPresets.electric_high.maxTemp", label: "Elettrico alta temperatura — Max T", type: "number", min: 350, max: 550 },
       { path: "ovenPresets.wood.name", label: "Legna — Nome", type: "text" },
       { path: "ovenPresets.wood.maxTemp", label: "Legna — Max T", type: "number", min: 400, max: 600 },
+      { path: "ovenPresets.home.hint", label: "Forno domestico — Descrizione", type: "text" },
+      { path: "ovenPresets.electric_standard.hint", label: "Elettrico std — Descrizione", type: "text" },
+      { path: "ovenPresets.gas.hint", label: "Gas — Descrizione", type: "text" },
+      { path: "ovenPresets.electric_high.hint", label: "Elettrico alta temperatura — Descrizione", type: "text" },
+      { path: "ovenPresets.gas_pizza.hint", label: "Gas da pizza — Descrizione", type: "text" },
+      { path: "ovenPresets.wood.hint", label: "Legna — Descrizione", type: "text" },
+      { path: "ovenPresets.coal.hint", label: "Carbone — Descrizione", type: "text" },
       // Skill levels
       { path: "skillLevels.1.name", label: "Skill 1 — Nome", type: "text" },
       { path: "skillLevels.1.description", label: "Skill 1 — Desc", type: "text" },

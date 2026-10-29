@@ -42,18 +42,14 @@ function loadGoogleIdentity(): Promise<GoogleIdApi> {
   });
 }
 
-function roleLabel(role: Role): string {
+function roleLabel(role: Extract<Role, "admin" | "editor" | "tester">): string {
   switch (role) {
     case "admin":
       return uiMessage("features.account.account-panel.roleAdmin");
     case "editor":
       return uiMessage("features.account.account-panel.roleEditor");
-    case "tester":
-      return uiMessage("features.account.account-panel.roleTester");
-    case "demo":
-      return uiMessage("features.account.account-panel.roleDemo");
     default:
-      return uiMessage("features.account.account-panel.roleUser");
+      return uiMessage("features.account.account-panel.roleTester");
   }
 }
 
@@ -118,9 +114,13 @@ export function AccountPanel({ locale }: { locale: string }) {
         </h2>
         <p className="account-panel__meta">
           {session.email && <span data-region="email">{session.email}</span>}
-          <Badge tone={session.role === "admin" ? "cta" : "muted"}>
-            {roleLabel(session.role)}
-          </Badge>
+          {/* G5-WP-06 (S17-A-13): il ruolo si mostra solo se ha un senso
+              operativo; per «user» non dice nulla e il demo ha già il titolo. */}
+          {(session.role === "tester" || session.role === "editor" || session.role === "admin") && (
+            <Badge tone={session.role === "admin" ? "cta" : "muted"}>
+              {roleLabel(session.role)}
+            </Badge>
+          )}
         </p>
         {session.role === "demo" && (
           <p className="account-panel__note">{uiMessage("features.account.account-panel.demoNote")}</p>

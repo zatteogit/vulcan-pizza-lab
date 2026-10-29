@@ -75,9 +75,18 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       dei testi che nessuna pagina legge.
  *  35 → (main) pill delle card su una riga: copy corti (card.*,
  *       diet.cardConflict, allergen.cardTrace/cardOptional) e card.exclusionsCheck.
+ *  36 → G5-WP-04: «Altre farine» senza integrali, via «Macinata a pietra»,
+ *       «gancio impastatore» al posto di «gancio K».
+ *  37 → G5-WP-06: «Riconfigura la cucina» col dialog del DS (titolo, azione,
+ *       testo che dice che ricette e preferiti restano).
+ *  38 → G5-WP-02: «Passo N di M», riepilogo modificabile nel congedo
+ *       (ftuSummary*), tolte le card del congedo e «Benvenuto».
+ *  39 → G5-WP-03: descrizione generica dei forni (ovenPresets.*.hint).
+ *  40 → G5-WP-05: condividi/rinomina dal ricettario, errori di copia e
+ *       rinomina, conferma dell'esportazione, preferito tolto con «Annulla».
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 35;
+export const LOCALE_BUNDLE_REV = 40;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

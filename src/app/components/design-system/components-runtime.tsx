@@ -72,6 +72,10 @@ function RuntimeComponentContractSpec() {
           onAction={() => setFilter("all")}
           variant="success"
         />
+        <Snackbar
+          message={showcaseMessage("components.design-system.components-b.impossibile-salvare-riprova-6b63bb63")}
+          variant="error"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Select
             label={showcaseMessage("components.design-system.components-g.tipo-farina-e8f693c9")}

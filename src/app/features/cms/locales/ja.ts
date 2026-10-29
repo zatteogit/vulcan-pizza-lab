@@ -424,34 +424,34 @@ export const JA_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
-    coal: { name: "石炭窯", maxTemp: 400, icon: "flame" },
+    coal: { name: "石炭窯", hint: "業務用の石炭窯", maxTemp: 400, icon: "flame" },
     home: {
-      name: "\u5BB6\u5EAD\u7528\u30AA\u30FC\u30D6\u30F3",
+      name: "\u5BB6\u5EAD\u7528\u30AA\u30FC\u30D6\u30F3", hint: "キッチンのオーブン",
       maxTemp: 250,
       icon: "home",
     },
     electric_standard: {
-      name: "\u96FB\u6C17\u30AA\u30FC\u30D6\u30F3\uFF08\u6A19\u6E96\uFF09",
+      name: "\u96FB\u6C17\u30AA\u30FC\u30D6\u30F3\uFF08\u6A19\u6E96\uFF09", hint: "石板付きの卓上電気ピザ窯",
       maxTemp: 300,
       icon: "zap",
     },
     gas: {
-      name: "\u30AC\u30B9\u30C7\u30C3\u30AD\u30AA\u30FC\u30D6\u30F3",
+      name: "\u30AC\u30B9\u30C7\u30C3\u30AD\u30AA\u30FC\u30D6\u30F3", hint: "炉床付きの業務用ガス窯",
       maxTemp: 350,
       icon: "flame",
     },
     electric_high: {
-      name: "\u9AD8\u6E29\u96FB\u6C17\u30AA\u30FC\u30D6\u30F3",
+      name: "\u9AD8\u6E29\u96FB\u6C17\u30AA\u30FC\u30D6\u30F3", hint: "高温の電気ピザ窯",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "\u85AA\u7AAF",
+      name: "\u85AA\u7AAF", hint: "薪またはペレットの窯",
       maxTemp: 500,
       icon: "flame-kindling",
     },
     gas_pizza: {
-      name: "\u30AC\u30B9\u5F0F\u30D4\u30B6\u7AAF",
+      name: "\u30AC\u30B9\u5F0F\u30D4\u30B6\u7AAF", hint: "ポータブルのガスピザ窯",
       maxTemp: 500,
       icon: "flame",
     },
@@ -1380,6 +1380,14 @@ export const JA_LOCALE: CmsContent = {
     savedRecipeCopyLink: "リンクをコピー",
     savedRecipeCopyLinkAria: "{name}のリンクをコピー",
     savedRecipeLinkCopied: "リンクをコピーしました",
+    savedRecipeLinkCopyFailed: "リンクをコピーできませんでした。こちらからコピーしてください：{url}",
+    savedRecipeShare: "共有",
+    savedRecipeShareAria: "{name}を共有",
+    savedRecipeRename: "名前を変更",
+    savedRecipeRenameAria: "{name}の名前を変更",
+    savedRecipeRenameFailed: "新しい名前を保存できませんでした。もう一度お試しください。",
+    savedRecipesExported: "ファイルを保存しました：{filename}",
+    favoriteRemoved: "スタイルをお気に入りから外しました",
     savedRecipeRemoved: "レシピを削除しました",
     savedRecipeUndo: "元に戻す",
     savedRecipesImported: "{n}件のレシピを読み込みました",
@@ -1428,9 +1436,11 @@ export const JA_LOCALE: CmsContent = {
     unitImperial: "\u30A4\u30F3\u30DA\u30EA\u30A2\u30EB / US",
     unitImperialDesc: "oz、fl oz、インチ、華氏",
     resetProfile:
-      "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u3092\u30EA\u30BB\u30C3\u30C8",
+      "キッチンを設定し直す",
     resetConfirmMessage:
-      "初期設定を開き直します。新しい選択で現在の設定が置き換わります。",
+      "オーブン、経験、食材をもう一度お聞きします。保存したレシピとお気に入りはそのまま残ります。",
+    resetConfirmTitle: "キッチンを設定し直しますか？",
+    resetConfirmAction: "設定し直す",
     devModeOn: "\u958B\u767A\u30E2\u30FC\u30C9\u6709\u52B9",
     devModeOff:
       "\u958B\u767A\u30E2\u30FC\u30C9\u3092\u6709\u52B9\u306B\u3059\u308B",
@@ -1442,7 +1452,6 @@ export const JA_LOCALE: CmsContent = {
     locationSaved: "位置情報を保存しました",
     locationNone: "後で登録するか、室温を直接設定できます。",
     locationNoResults: "結果がありません",
-    ftuWelcome: "\u3088\u3046\u3053\u305D",
     ftuOvenTitle:
       "\u3069\u3093\u306A\u30AA\u30FC\u30D6\u30F3\u3092\u304A\u6301\u3061\u3067\u3059\u304B\uFF1F",
     ftuOvenSubtitle:
@@ -1495,7 +1504,7 @@ export const JA_LOCALE: CmsContent = {
       "\u624B\u4F5C\u696D\u3001\u8A2D\u5099\u306A\u3057",
     mixerStandDomestic:
       "\u5353\u4E0A\u30DF\u30AD\u30B5\u30FC\uFF08\u5BB6\u5EAD\u7528\uFF09",
-    mixerStandDomesticDesc: "KitchenAid, Kenwood, Smeg — 4-7 L",
+    mixerStandDomesticDesc: "KitchenAid, Kenwood, Smeg — 4-7 L、ドゥフック",
     mixerPlanetary:
       "\u30D7\u30E9\u30CD\u30BF\u30EA\u30FC\u30DF\u30AD\u30B5\u30FC\uFF08\u30BB\u30DF\u30D7\u30ED\uFF09",
     mixerPlanetaryDesc:
@@ -1579,16 +1588,14 @@ export const JA_LOCALE: CmsContent = {
     flourSegale: "ライ麦",
     flourTipo1: "タイプ1",
     flourTipo2: "タイプ2",
-    flourMacinataPietra: "石臼挽き",
-    ftuDoneTitle: "作る、見つける、学ぶ。",
-    ftuDoneCreateTitle: "レシピを作成する",
-    ftuDoneCreateDesc: "スタイルを選び、自分のキッチンに合わせて調整します。",
-    ftuDoneExploreTitle: "スタイルを探索する",
-    ftuDoneExploreDesc: "伝統のスタイルやレシピ、作り手の工夫を探しましょう。",
-    ftuDoneLearnTitle: "理論を学ぶ",
-    ftuDoneLearnDesc: "技法を学び、気になる疑問を解決しましょう。",
+    ftuSummaryOven: "オーブン",
+    ftuSummarySkill: "レベル",
+    ftuSummaryPantry: "食材",
+    ftuSummaryEdit: "変更",
+    ftuSummaryEditAria: "{field}を変更",
+    ftuSummaryNotSet: "未設定",
     ftuDoneProfileNote: "設定はいつでもプロフィールで追加・変更できます。",
-    specialFloursOnboarding: "特殊粉（スペルト、ライ麦、全粒粉など）",
+    specialFloursOnboarding: "その他の粉（スペルト、カムット、ライ麦、タイプ1・2など）",
     locationRemove: "位置情報を削除",
     ftuSkipMessage: "選ぶものがなくても大丈夫です。「次へ」を押してください。",
     // FW-16 — effetto delle impostazioni

@@ -510,7 +510,9 @@ function CookSessionUI({
 }
 
 /* ═══ APP SHELL ═══ */
-export function AppShell() {
+/** `isNotFoundPath` arriva da App.tsx (routes.ts): importarlo qui porterebbe
+ *  le pagine e gli strumenti di sviluppo nel grafo della shell. */
+export function AppShell({ isNotFoundPath }: { isNotFoundPath?: (pathname: string) => boolean } = {}) {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [themeMode, setThemeModeState] = useState<ThemeMode>(loadThemeMode);
   const [darkMode, setDarkModeState] = useState(() => resolveThemeMode(loadThemeMode()));
@@ -776,13 +778,17 @@ export function AppShell() {
             tabIndex={-1}
             className={`app-shell-main${showNav ? " app-shell-main--nav" : ""}`}
           >
-            <RouteTitle />
+            <RouteTitle isNotFoundPath={isNotFoundPath} />
             {/* U-5: la pagina resta montata (stato e scroll salvi) e si nasconde
                 mentre i risultati ne prendono il posto. */}
             <div className="app-shell-page" hidden={searchOpen}>
-              <Outlet
-                context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode, hideNavbar, setHideNavbar } satisfies DarkModeContext}
-              />
+              {/* Pagine React.lazy (routes.ts): il confine resta montato, così
+                  cambiando pagina si vede la precedente finché arriva il chunk. */}
+              <Suspense fallback={null}>
+                <Outlet
+                  context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode, hideNavbar, setHideNavbar } satisfies DarkModeContext}
+                />
+              </Suspense>
             </div>
             {searchMounted && searchOpen && (
               <Suspense fallback={null}>
