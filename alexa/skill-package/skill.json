@@ -1,0 +1,42 @@
+{
+  "manifest": {
+    "manifestVersion": "1.0",
+    "publishingInformation": {
+      "locales": {
+        "it-IT": {
+          "name": "Vulcan Pizza",
+          "summary": "Ricette di pizza con le dosi giuste per il tuo forno e il tuo tempo.",
+          "description": "Vulcan Pizza ti dice che pizza puoi fare con il forno e le ore che hai, ti dà le dosi di farina, acqua, sale e lievito per lo stile che scegli e ti spiega le parole della pizza, come biga, poolish o appretto. I numeri sono quelli del motore di Vulcan, lo stesso dell'app: il procedimento completo è nella scheda dell'app Alexa, con il link alla ricetta su Vulcan. La skill non chiede né salva dati personali.",
+          "examplePhrases": [
+            "Alexa, apri vulcano pizza",
+            "Alexa, chiedi a vulcano pizza la ricetta della focaccia",
+            "Alexa, chiedi a vulcano pizza cos'è la biga"
+          ],
+          "keywords": ["pizza", "ricetta", "impasto", "lievitazione", "focaccia", "napoletana", "teglia", "biga"],
+          "smallIconUri": "file://assets/images/it-IT_smallIconUri.png",
+          "largeIconUri": "file://assets/images/it-IT_largeIconUri.png"
+        }
+      },
+      "isAvailableWorldwide": false,
+      "distributionCountries": ["IT"],
+      "category": "COOKING_AND_RECIPE",
+      "testingInstructions": "Nessun account da collegare. Prova: «apri vulcano pizza»; «chiedi a vulcano pizza che pizza posso fare con sei ore»; «chiedi a vulcano pizza la ricetta della focaccia»; «chiedi a vulcano pizza la ricetta» (la skill chiede lo stile); «chiedi a vulcano pizza cos'è l'appretto». Con il forno di casa la Napoletana non è fattibile: la skill lo dice e propone alternative."
+    },
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "https://vulcan-pizza-lab.zatteo.workers.dev/alexa",
+          "sslCertificateType": "Wildcard"
+        },
+        "interfaces": []
+      }
+    }
+  }
+}

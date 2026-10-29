@@ -23,6 +23,9 @@ const ENTRY_FILES = [
   "src/app/agent/mcp-server.ts",
   // D-046: accesso e ruoli, importato dal Worker.
   "src/server/auth/handler.ts",
+  // D-061: voce per Siri (/api/voice) e Alexa (/alexa), importate dal Worker.
+  "src/server/voice/http.ts",
+  "src/server/alexa/handler.ts",
 ] as const;
 
 function rel(file: string): string {
