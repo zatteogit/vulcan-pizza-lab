@@ -1680,7 +1680,7 @@ export const DE_LOCALE: CmsContent = {
     // FW-09
     notFoundSearch: "Nach einem Rezept suchen",
     searchStopwords: "der die das den dem des ein eine einen und oder mit für von vom im in zu zum zur mein meine pizza",
-    searchSynonyms: "backhefe; frischhefe; hefewürfel; saccharomyces; hefe\nzöliakie; zöliakiekranke; glutenfrei; ohne gluten; gluten\nbackofen; haushaltsbackofen; heimofen\ngeht nicht auf; keine gare\nunten verbrannt; dunkler boden\nklebrig; klebt\nsauerteig; anstellgut; mutterteig\nholzofen; holzbefeuert",
+    searchSynonyms: "backhefe; frischhefe; hefewürfel; saccharomyces; hefe\nzöliakie; zöliakiekranke; glutenfrei; ohne gluten\nbackofen; haushaltsbackofen; heimofen\ngeht nicht auf; keine gare\nunten verbrannt; dunkler boden\nklebrig; klebt\nsauerteig; anstellgut; mutterteig\nholzofen; holzbefeuert",
     searchFlourWheat: "Weizenmehl",
     searchFlourManitoba: "Manitoba",
     searchFlourSemola: "Hartweizenmehl",

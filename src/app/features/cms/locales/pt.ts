@@ -1695,7 +1695,7 @@ export const PT_LOCALE: CmsContent = {
     // FW-09
     notFoundSearch: "Procurar uma receita",
     searchStopwords: "o a os as um uma de do da dos das e ou para com em no na nos nas ao meu minha pizza",
-    searchSynonyms: "fermento de padeiro; fermento fresco; fermento biológico; saccharomyces; fermento\ndoença celíaca; celíaco; celíaca; sem glúten; glúten\nforno de casa; forno doméstico; forno caseiro\nnão cresce; não fermenta; sem fermentação\nqueimada embaixo; fundo queimado; fundo escuro\npegajosa; gruda; pegajoso\nfermento natural; massa madre; levain\nforno a lenha; lenha",
+    searchSynonyms: "fermento de padeiro; fermento fresco; fermento biológico; saccharomyces; fermento\ndoença celíaca; celíaco; celíaca; sem glúten\nforno de casa; forno doméstico; forno caseiro\nnão cresce; não fermenta; sem fermentação\nqueimada embaixo; fundo queimado; fundo escuro\npegajosa; gruda; pegajoso\nfermento natural; massa madre; levain\nforno a lenha; lenha",
     searchFlourWheat: "Trigo brando",
     searchFlourManitoba: "Manitoba",
     searchFlourSemola: "S\u00EAmola",

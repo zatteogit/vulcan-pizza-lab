@@ -1,6 +1,7 @@
 import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
 import { SKILL_WARNING_KEYS } from "../../domain/verdict-summary";
+import { PANTRY_CHECK_KEYS } from "../../use-cases/recommendation-groups";
 
 export interface CardSignal {
   icon: "oven" | "time" | "pan" | "flour" | "check" | "water";
@@ -51,7 +52,10 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   for (const c of [...conditions].sort((a, b) => Number(b.status === "missing") - Number(a.status === "missing"))) {
     // FW-09 (S05-A-06): con la dispensa sconosciuta «Se hai farina…» vale per
     // tutti gli stili; la pagina lo dice una volta sola.
-    if (options.hidePantryChecks && c.status === "unverified" && (c.kind === "flour" || c.kind === "flour_blend" || c.kind === "yeast")) continue;
+    // Per chiave, non per tipo: la verifica delle esclusioni (rifiuto esplicito
+    // dell'utente) ha kind «flour» ma non dipende dalla dispensa e resta.
+    if (options.hidePantryChecks && c.status === "unverified" && PANTRY_CHECK_KEYS.has(c.message.key)) continue;
+    if (c.message.key === "need.checkExclusions") { add("flour", c.message); continue; }
     if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Se hai una teglia"));
     if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Se hai pietra o acciaio"));
     if (c.kind === "flour") add("flour", c.status === "missing"

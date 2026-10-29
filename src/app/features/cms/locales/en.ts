@@ -1864,7 +1864,7 @@ export const EN_LOCALE: CmsContent = {
     // FW-09
     notFoundSearch: "Search for a recipe",
     searchStopwords: "the a an of for with in on and or to my is pizza",
-    searchSynonyms: "baker's yeast; brewer's yeast; fresh yeast; compressed yeast; saccharomyces\ncoeliac; celiac; coeliac disease; celiac disease; gluten free; gluten-free; gluten\nhome oven; domestic oven; kitchen oven\nnot rising; no rise; does not rise; doesn't rise\nburnt bottom; burnt underneath; dark bottom\nsticky; sticks\nsourdough; mother dough; levain; starter\nwood oven; wood-fired; wood fired",
+    searchSynonyms: "baker's yeast; brewer's yeast; fresh yeast; compressed yeast; saccharomyces\ncoeliac; celiac; coeliac disease; celiac disease; gluten free; gluten-free\nhome oven; domestic oven; kitchen oven\nnot rising; no rise; does not rise; doesn't rise\nburnt bottom; burnt underneath; dark bottom\nsticky; sticks\nsourdough; mother dough; levain; starter\nwood oven; wood-fired; wood fired",
     searchFlourWheat: "Soft wheat",
     searchFlourManitoba: "Manitoba",
     searchFlourSemola: "Semolina",

@@ -8,12 +8,14 @@ import type { StyleRecommendation, UserConstraints } from "../domain/pizza-engin
  * Il verdetto del motore non cambia: cambia solo il raggruppamento in pagina. */
 
 /** Verifiche di ingredienti che dipendono solo dal non sapere cosa c'è in
- *  dispensa (stato `unverified`, mai `missing`). */
+ *  dispensa (stato `unverified`, mai `missing`).
+ *  Non c'è «need.checkExclusions»: è la verifica di un rifiuto esplicito
+ *  dell'utente (excluded_flours), che la dispensa vuota non rende ovvia e che
+ *  deve restare visibile e tenere lo stile «Con condizioni». */
 export const PANTRY_CHECK_KEYS: ReadonlySet<string> = new Set([
   "need.checkFlour",
   "need.checkYeast",
   "need.checkBlend",
-  "need.checkExclusions",
 ]);
 
 /** La dispensa non è stata compilata: nessuna farina e inventario non confermato. */
