@@ -57,6 +57,8 @@ describe("durate", () => {
     expect(plain(formatDuration(1728, "it-IT", { days: true }))).toBe("1 giorno 4 h 48 min");
     expect(plain(formatDuration(35, "it-IT"))).toBe("35 min");
     expect(plain(formatDuration(0.5, "it-IT", { seconds: true }))).toBe("30 s");
+    /* Sotto il minuto ma oltre i 59 s arrotondati: «1 min», non «60 s». */
+    expect(plain(formatDuration(59.5 / 60, "it-IT", { seconds: true }))).toBe("1 min");
   });
 });
 
@@ -117,6 +119,9 @@ describe("unità e microdosi (D-J, S17-A-01)", () => {
     expect(plain(formatMass(3, "en-US", "imperial"))).toBe("3 g");
     expect(plain(formatMass(30, "en-US", "imperial"))).toBe("1.1 oz");
     expect(plain(formatMass(600, "en-US", "imperial"))).toBe("1 lb 5.2 oz");
+    /* Arrotondato al decimo prima di passare alle libbre. */
+    expect(plain(formatMass(453, "en-US", "imperial"))).toBe("1 lb");
+    expect(plain(formatMass(906, "en-US", "imperial"))).toBe("2 lb");
   });
 
   it("una microdose esplicita resta in grammi anche sopra soglia", () => {
