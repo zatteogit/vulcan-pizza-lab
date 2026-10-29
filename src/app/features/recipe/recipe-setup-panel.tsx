@@ -450,6 +450,7 @@ export function RecipeSetupPanel({
                     label={cms.ui.nerdYeast}
                     value={yeastBakerPctText(recipe.science.yeast_baker_pct, bcp47)}
                     index={0}
+                    whyNoteId="yeast-dose"
                   />
                   <SpecCell
                     small
@@ -469,6 +470,7 @@ export function RecipeSetupPanel({
                       Number(recipe.science.effective_hours_18c),
                     )}
                     index={2}
+                    whyNoteId="equivalent-hours"
                   />
                   <SpecCell
                     small
@@ -479,6 +481,7 @@ export function RecipeSetupPanel({
                     )}
                     value={uiMessage("format.timesFactor", [fmt.number(roundForEvidence(recipe.science.q10_factor, Q10_NOTE))])}
                     index={3}
+                    whyNoteId="q10-fermentation"
                   />
                   <SpecCell
                     small
@@ -486,6 +489,7 @@ export function RecipeSetupPanel({
                     label={cms.ui.nerdAw}
                     value={fmt.number(roundForEvidence(recipe.science.water_activity, AW_NOTE), { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     index={4}
+                    whyNoteId="water-activity"
                   />
                 </div>
               </NerdAuraBlock>

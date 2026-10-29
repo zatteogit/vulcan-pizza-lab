@@ -61,9 +61,10 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  27 → FW-19: piano temporale unico (pieghe come passo, recupero del forno
  *       fra le cotture, Timeline comoda onesta, niente «contabilità del tempo»;
  *       pieghe in cantina senza frigo, timer di cottura per variante).
+ *  28 → FW-02: nota della scienza «stg-reference» e ipotesi «stg-partial-check».
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 27;
+export const LOCALE_BUNDLE_REV = 28;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

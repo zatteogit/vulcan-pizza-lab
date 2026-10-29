@@ -175,7 +175,7 @@ export function GlossaryWLink({ w }: { w: number }) {
           onClick={() => setOpen(false)}
           className="bits-glossary-w-modal__learn-more"
         >
-          {cms.cooking.learnMore} →
+          {uiMessage("ds.disclosure.openGlossary")} →
         </Link>
       </ModalSheet>
     </>

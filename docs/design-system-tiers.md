@@ -71,6 +71,15 @@ template T6 e monta le implementazioni di produzione.
     spiegazione: li blocca `npm run semantics:check` (regole `native-details`
     e `title-only-explanation`, debito `title=` congelato per file in
     `TITLE_ONLY_BASELINE`, che può solo scendere).
+11. Il foglio «Perché?» (FW-02) è `WhyButton` → `ScienceSheet`
+    (`src/app/features/science/`, guscio `ds/ModalSheet`: foglio dal basso sui
+    telefoni, card centrata sopra; fuoco al titolo, ritorno al pulsante). Lo
+    statuto si mostra con `ds/EvidenceBadge` (T4, context-free, testo dal
+    chiamante), che consuma solo i token T3 `--evidence-{exact,estimate,
+    assumption,editorial}-{fg,bg,border}`, derivati dai ruoli di stato FW-13
+    (stesso contrasto AA in chiaro e scuro); forma (icona, bordo tratteggiato
+    dell'ipotesi) e testo portano il significato, il colore lo rinforza.
+    Pattern registrato nello showcase («Perché?» — scienza a richiesta).
 
 ## Motion
 

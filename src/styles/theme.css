@@ -1091,6 +1091,23 @@
   --status-recommended-bg: color-mix(in srgb, var(--status-recommended) 12%, transparent);
   --status-recommended-border: color-mix(in srgb, var(--status-recommended) 35%, transparent);
   --status-recommended-icon: var(--status-recommended);
+  /* ── B3. FW-02 · Statuto epistemico (D-A) ──
+     Esatto / Stima / Ipotesi / Scelta di Vulcan, per ds/EvidenceBadge. Stesse
+     miscele dei ruoli di stato (contrasto AA misurato da FW-13 in chiaro e
+     scuro); la forma (icona, bordo tratteggiato dell'ipotesi) e il testo
+     portano il significato, il colore lo rinforza soltanto. */
+  --evidence-exact-fg: var(--status-positive);
+  --evidence-exact-bg: color-mix(in srgb, var(--status-positive) 12%, transparent);
+  --evidence-exact-border: color-mix(in srgb, var(--status-positive) 35%, transparent);
+  --evidence-estimate-fg: var(--status-caution);
+  --evidence-estimate-bg: color-mix(in srgb, var(--status-caution) 12%, transparent);
+  --evidence-estimate-border: color-mix(in srgb, var(--status-caution) 35%, transparent);
+  --evidence-assumption-fg: var(--status-neutral);
+  --evidence-assumption-bg: var(--surface-container-low);
+  --evidence-assumption-border: var(--outline-variant);
+  --evidence-editorial-fg: var(--status-recommended);
+  --evidence-editorial-bg: color-mix(in srgb, var(--status-recommended) 12%, transparent);
+  --evidence-editorial-border: color-mix(in srgb, var(--status-recommended) 35%, transparent);
   /* FW-13 (S13-B-15): pressione di una superficie larga quanto lo schermo:
      appena percettibile, non una contrazione del 5%. */
   --press-scale-surface: 0.99;
@@ -10009,37 +10026,6 @@
 
   /* ── Riga panetti/servings ── */
   /* M-11: lievito trasparente */
-  .yeast-explainer {
-    display: grid;
-    gap: var(--space-2);
-    padding-block: var(--space-1) var(--space-3);
-  }
-
-  .yeast-explainer__toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    justify-self: start;
-    min-height: var(--space-11);
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: var(--cta);
-    font-weight: var(--weight-semibold);
-    text-decoration: underline;
-    text-underline-offset: var(--space-1);
-    cursor: pointer;
-  }
-
-  .yeast-explainer__panel {
-    display: grid;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    border-radius: var(--radius-2xl);
-    background: var(--surface-container-low, var(--chip-bg));
-    border: var(--border-width-thin) solid var(--outline-variant);
-  }
-
   .yeast-explainer__text {
     margin: 0;
     line-height: var(--leading-relaxed);
@@ -10285,64 +10271,12 @@
     font-size: var(--font-size-md);
   }
 
-  /* ── Toggle Regola 55 (riga Acqua) ── */
-  .ingredients-rule55-toggle {
-    margin-left: var(--space-1-5);
-    vertical-align: middle;
-    transition: transform var(--duration-fast);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--text-muted);
-    /* FW-03 (S08-B-11): opacità piena (contrasto ≥ 3:1) e area di tocco ≥ 24 px */
-    opacity: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: var(--space-6);
-    min-height: var(--space-6);
-    line-height: var(--leading-none);
-  }
-
-  .ingredients-rule55-toggle--active {
-    color: var(--text-accent);
-  }
-
-  .ingredients-rule55-toggle:active {
-    transform: scale(0.9);
-  }
-
   /* ── ENG-7: acqua al limite pratico (cucina molto fredda o molto calda) ── */
   .ingredients-water-limit {
     margin: var(--space-1) 0 var(--space-2);
     padding-left: var(--space-3);
     color: var(--text-warning);
     line-height: var(--leading-normal);
-  }
-
-  /* ── Tip Regola 55 (espanso) ── */
-  .ingredients-rule55-tip {
-    overflow: hidden;
-    padding-left: var(--space-3);
-    margin-top: var(--space-1);
-    margin-bottom: var(--space-2);
-  }
-
-  .ingredients-rule55-tip__text {
-    color: var(--text-muted);
-    line-height: var(--leading-normal);
-  }
-
-  .ingredients-rule55-tip__desc {
-    color: var(--text-muted);
-    margin-top: var(--space-1);
-    line-height: var(--leading-normal);
-  }
-
-  .ingredients-rule55-tip__friction {
-    color: var(--text-muted);
-    margin-top: var(--space-1);
   }
 
   /* ── Totale impasto ── */
@@ -13263,28 +13197,38 @@
     color: var(--text-default);
   }
 
-  .learning-panel__characteristics {
-    margin-top: var(--space-5);
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: var(--gap-xs);
+  /* FW-02 (S08-B-15): caratteristiche come elenco, non pillole da pulsante;
+     sotto, i «Perché?» delle note che decidono la ricetta dello stile. */
+  .learning-panel__heading {
+    margin-top: var(--space-6);
+    color: var(--text-default);
+    font-size: var(--font-size-xl);
+    font-weight: var(--weight-semibold);
   }
 
-  @media (min-width: 640px) {
-    .learning-panel__characteristics {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .learning-panel__characteristics {
+    margin-top: var(--space-2);
+    display: grid;
+    gap: var(--gap-xs);
+    padding-inline-start: var(--space-5);
+    list-style: disc;
   }
 
   .learning-panel__characteristic {
-    border-radius: var(--radius-2xl);
-    padding-inline: var(--space-4);
-    padding-block: var(--space-3);
-    background: var(--container-bg-low);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
     color: var(--text-default);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
     line-height: var(--leading-normal);
+  }
+
+  .learning-panel__science {
+    margin-top: var(--space-2);
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .learning-panel__science-item .why-button {
+    font-size: var(--font-size-xl);
+    min-height: var(--space-8);
   }
 
   /* ═══ COMPONENT: feedback-analysis (ondata 4) ═══ */
@@ -20182,6 +20126,282 @@
     line-height: var(--leading-body);
   }
 
+  /* ═══ FW-02 — «Perché?»: EvidenceBadge, WhyButton, ScienceSheet ═══ */
+  .ds-evidence-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-0-5) var(--space-2);
+    border-radius: var(--radius-full);
+    border: var(--border-width-thin) solid var(--evidence-exact-border);
+    background: var(--evidence-exact-bg);
+    color: var(--evidence-exact-fg);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    white-space: nowrap;
+  }
+
+  .ds-evidence-badge[data-kind="estimate"] {
+    border-color: var(--evidence-estimate-border);
+    background: var(--evidence-estimate-bg);
+    color: var(--evidence-estimate-fg);
+  }
+
+  .ds-evidence-badge[data-kind="assumption"] {
+    border-style: dashed;
+    border-color: var(--evidence-assumption-border);
+    background: var(--evidence-assumption-bg);
+    color: var(--evidence-assumption-fg);
+  }
+
+  .ds-evidence-badge[data-kind="editorial"] {
+    border-color: var(--evidence-editorial-border);
+    background: var(--evidence-editorial-bg);
+    color: var(--evidence-editorial-fg);
+  }
+
+  .ds-evidence-badge--sm {
+    padding: 0 var(--space-1-5);
+  }
+
+  .ds-evidence-badge__icon {
+    flex: none;
+  }
+
+  .why-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--space-6);
+    padding: 0 var(--space-0-5);
+    border: none;
+    background: transparent;
+    color: var(--cta);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
+  .why-button:focus-visible {
+    outline: var(--space-0-5) solid var(--cta);
+    outline-offset: var(--space-0-5);
+    border-radius: var(--radius-sm);
+  }
+
+  .why-button__icon {
+    flex: none;
+  }
+
+  .science-sheet {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .science-sheet__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    padding: var(--space-5) var(--space-5) var(--space-3);
+  }
+
+  .science-sheet__title {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-5xl);
+    line-height: var(--leading-heading);
+    color: var(--text-default);
+  }
+
+  .science-sheet__title:focus,
+  .science-sheet__heading:focus {
+    outline: none;
+  }
+
+  .science-sheet__body {
+    display: grid;
+    gap: var(--space-5);
+    padding: 0 var(--space-5) var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .science-sheet__header {
+      padding-inline: var(--space-6);
+    }
+
+    .science-sheet__body {
+      padding-inline: var(--space-6);
+    }
+  }
+
+  .science-sheet__level {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .science-sheet__heading {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-spread);
+    text-transform: uppercase;
+  }
+
+  .science-sheet__lead {
+    color: var(--text-default);
+    font-size: var(--font-size-2xl);
+    line-height: var(--leading-relaxed);
+  }
+
+  .science-sheet__text,
+  .science-sheet__level--recipe {
+    color: var(--text-default);
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-reading);
+  }
+
+  .science-sheet__method {
+    display: grid;
+    gap: var(--space-3);
+    color: var(--text-default);
+    font-size: var(--font-size-lg);
+    line-height: var(--leading-relaxed);
+  }
+
+  .science-sheet__facts {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .science-sheet__term {
+    margin-top: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+  }
+
+  .science-sheet__value {
+    margin: 0;
+  }
+
+  .science-sheet__value--evidence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .science-sheet__hint {
+    color: var(--text-muted);
+  }
+
+  .science-sheet__formula,
+  .science-sheet__symbol {
+    font-family: var(--font-mono);
+    overflow-wrap: anywhere;
+  }
+
+  .science-sheet__formula {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--surface-container-low);
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .science-sheet__list {
+    display: grid;
+    gap: var(--space-1-5);
+    padding-inline-start: var(--space-5);
+    list-style: disc;
+  }
+
+  .science-sheet__list--plain,
+  .science-sheet__list--sources {
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  .science-sheet__variable {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .science-sheet__unit {
+    color: var(--text-muted);
+  }
+
+  .science-sheet__subheading {
+    margin-top: var(--space-3);
+    color: var(--text-default);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-semibold);
+  }
+
+  .science-sheet__source {
+    display: grid;
+    gap: var(--space-0-5);
+  }
+
+  .science-sheet__source-title {
+    font-style: normal;
+    color: var(--text-default);
+  }
+
+  a.science-sheet__source-title {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .science-sheet__source-meta,
+  .science-sheet__source-status {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .science-sheet__source[data-status="unverified"] .science-sheet__source-status {
+    color: var(--status-caution-fg);
+  }
+
+  .science-sheet__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    justify-self: start;
+    min-height: var(--space-6);
+    color: var(--cta);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  /* Punti d'ingresso nelle schermate: il pulsante resta lo stesso, cambia solo il posto. */
+  .stat-strip__why {
+    margin-top: var(--space-1);
+  }
+
+  .step-details__why {
+    display: flex;
+    width: fit-content;
+    margin-block: var(--space-2);
+  }
+
+  .troubleshooting-card__why {
+    justify-self: start;
+    margin-top: var(--space-1);
+  }
+  /* ═══ /FW-02 ═══ */
+
   /* ═══ DS COMPONENT: Snackbar ═══ */
   .ds-snackbar {
     display: inline-flex;
@@ -21850,10 +22070,9 @@ html {
   font-weight: var(--weight-semibold);
   margin-block-end: var(--space-1);
 }
-/* FW-03: ds/Disclosure al posto del <details> (bersaglio da 19 px → 44 px) */
-.recipe-reference-note .ds-disclosure__trigger { font-size: var(--font-size-sm); color: var(--text-default); }
-.recipe-reference-note ul { padding-inline-start: var(--space-5); margin-block: var(--space-2); }
-.recipe-reference-note a { text-decoration: underline; text-underline-offset: var(--space-1); }
+/* FW-02: il dettaglio vive nel «Perché?» (ScienceSheet, in portale). */
+.recipe-reference-note__list { padding-inline-start: var(--space-5); list-style: disc; display: grid; gap: var(--space-1); }
+.recipe-reference-note__link { text-decoration: underline; text-underline-offset: var(--space-1); }
 
 /* Il materiale resta leggibile anche senza filtri. La regola è successiva ai
    temi perché la preferenza dell'utente prevale sulla direzione grafica. */

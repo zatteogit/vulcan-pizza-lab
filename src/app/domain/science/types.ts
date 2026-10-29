@@ -71,6 +71,8 @@ export interface ScienceUncertainty {
   relative?: number;
   /** Intervallo plausibile nell'unità del valore mostrato. */
   range?: [number, number];
+  /** FW-02: unità dell'intervallo, per mostrarlo nel «Perché?» («430–485 °C»). */
+  unitKey?: ScienceUnitKey;
   /** Decimali massimi mostrabili: una stima non mostra più cifre di quante ne regge. */
   displayDecimals: number;
 }

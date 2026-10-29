@@ -120,9 +120,6 @@ export function RecipeOutput({
      avviarne una nuova sovrascrive timer e progresso di quella attiva. */
   const [confirmReplace, setConfirmReplace] = useState(false);
   const [confirmPersonalize, setConfirmPersonalize] = useState(false);
-  /* Audit motore 2026-05: spiegazione Regola 55 espandibile per mobile (su
-     desktop c'è già il tooltip via title, ma su touch non è raggiungibile). */
-  const [showRule55Tip, setShowRule55Tip] = useState(false);
 
   const { cms, bcp47 } = useCms();
   const [calendarReference, setCalendarReference] = useState(() => new Date());
@@ -820,8 +817,6 @@ export function RecipeOutput({
             saveYeastSpeedFactor(factor);
             onConstraintsChange({ ...constraints, yeast_speed_factor: factor });
           }}
-          showRule55Tip={showRule55Tip}
-          setShowRule55Tip={setShowRule55Tip}
           rule55Description={rule55Description}
         />
       </div>

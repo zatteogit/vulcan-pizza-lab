@@ -10,6 +10,7 @@ import { TroubleshootingSheet } from "./troubleshooting-panel";
 import type { CmsContent } from "../cms/cms-context";
 import { t } from "../cms/i18n";
 import { getTermById } from "../../data/glossary-data";
+import { WhyButton } from "../science/why-button";
 
 /* ═══ Learning contestuale: ogni fase porta al suo termine nel glossario ═══
    (feedback giugno 2026 — il "come si impara" richiamabile dalla ricetta) */
@@ -25,6 +26,14 @@ const STEP_GLOSSARY: Record<string, { hash: string }> = {
    lievitazione («La puntata», «È andata lunga?» → impasto troppo lievitato),
    quindi lì non si mostrano. */
 const REST_STEP_IDS = new Set(["bulk", "proof"]);
+
+/* FW-02 (S09-B-08): durata e temperatura dei riposi lievitati hanno il loro
+   «Perché?»: la velocità con la temperatura (stima Q10) per la puntata, la
+   quota dell'appretto (ipotesi del modello) per l'appretto. */
+const STEP_SCIENCE_NOTE: Record<string, string> = {
+  bulk: "q10-fermentation",
+  proof: "proof-split",
+};
 
 /* ═══ Dettaglio step collassabile — "come si fa" + consigli al tocco ═══ */
 export function StepDetails({
@@ -63,6 +72,7 @@ export function StepDetails({
     ? preFermentType === "poolish" ? "poolish" : preFermentType === "biga" ? "biga" : undefined
     : learnStepId ? STEP_GLOSSARY[learnStepId]?.hash : undefined;
   const glossaryTerm = glossaryHash ? getTermById(glossaryHash, cms) : undefined;
+  const scienceNoteId = learnStepId ? STEP_SCIENCE_NOTE[learnStepId] : undefined;
 
   const hasDetails = Boolean(longDesc || tips.length);
   const troubleLabel = troubleshooting && cms.cooking.troubleStepLinks?.[troubleshooting.labelKey];
@@ -177,6 +187,7 @@ export function StepDetails({
             )}
             </>
           )}
+          {scienceNoteId && <WhyButton noteId={scienceNoteId} label={cms.science?.notes?.[scienceNoteId]?.title} className="step-details__why" />}
           {troubleAction}
         </motion.div>
       )}

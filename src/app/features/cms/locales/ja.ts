@@ -272,7 +272,6 @@ export const JA_LOCALE: CmsContent = {
     slotNoPreference: "指定なし",
     slotNoPreferenceSub: "スタイルに理想的な時間（数日かかることも）",
     interpretationDisclaimer: "{brand}が公開情報をもとにした解釈です。{who}のオリジナルレシピではなく、{who}の承認も受けていません。",
-    yeastHowToggle: "イースト量の計算方法",
     yeastModelBody: "基準は、粉に対して生イースト{ref}で{refTemp}・{refHours}です。{temp}・{hours}ではイーストは基準の{speed}倍の速さで働くので、量は{pct}になります。",
     yeastDryNote: "ドライイーストは生イーストの3分の1の量です。",
     yeastTempModelNote: "温度による速さの変化（Q10係数2、10 °C未満は1.6）はモデルによる推定で、実際の試作で確かめる必要があります。",
@@ -2036,8 +2035,7 @@ export const JA_LOCALE: CmsContent = {
     totalDuration: "\u5408\u8A08 {duration}",
     finalDoughStageTitle: "\u672C\u3054\u306D",
     rule55Title: "\u6C34\u306E\u6E29\u5EA6",
-    rule55AriaOpen: "\u6C34\u306E\u6E29\u5EA6\u306E\u6C7A\u3081\u65B9",
-    rule55AriaClose: "\u8AAC\u660E\u3092\u9589\u3058\u308B",
+    rule55DescriptionHand: "室温・粉・水の合計を約{sum}にします。目標の生地温度（{ddt}）の3倍の値です。手でこねる場合、ミキサーの摩擦熱を引く必要はありません。だから水の温度はキッチンの温度で変わります。",
     rule55Description:
       "\u5BA4\u6E29\u30FB\u7C89\u30FB\u6C34\u306E\u5408\u8A08\u3092\u7D04{sum}\u306B\u3057\u307E\u3059\u3002\u76EE\u6A19\u306E\u751F\u5730\u6E29\u5EA6\uFF08{ddt}\uFF09\u306E3\u500D\u304B\u3089\u3001\u30DF\u30AD\u30B5\u30FC\u306E\u6469\u64E6\u71B1\uFF08{friction}\uFF09\u3092\u5F15\u3044\u305F\u5024\u3067\u3059\u3002\u3060\u304B\u3089\u6C34\u306E\u6E29\u5EA6\u306F\u30AD\u30C3\u30C1\u30F3\u306E\u6E29\u5EA6\u3067\u5909\u308F\u308A\u307E\u3059\u3002",
     rule55DescriptionPreferment: "室温・粉・水・{preferment}の合計を約{sum}にします。目標の生地温度（{ddt}）の4倍から、ミキサーの摩擦熱（{friction}）を引いた値です。前発酵は熟成温度の約{prefTemp}で加えます（モデルによる推定）。だから本ごねの水の温度はキッチンの温度で変わります。",

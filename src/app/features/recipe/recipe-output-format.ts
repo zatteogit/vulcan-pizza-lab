@@ -836,7 +836,10 @@ export function rule55DescriptionText(
   const friction = recipe.science.friction_factor;
   const values = { ddt: fmt.celsius(ddt), friction: fmt.celsiusDelta(friction) };
   if (!recipe.has_pre_ferment) {
-    return t(cms.cooking.rule55Description, { ...values, sum: fmt.celsius(rule55Sum(ddt, friction, false)) });
+    /* FW-02 (S08-B-12): impastando a mano non c'è il calore dell'impastatrice
+     * da sottrarre: niente «impastatrice (0 °C)» a chi non ce l'ha. */
+    const text = friction > 0 ? cms.cooking.rule55Description : cms.cooking.rule55DescriptionHand;
+    return t(text, { ...values, sum: fmt.celsius(rule55Sum(ddt, friction, false)) });
   }
   const isPoolish = (recipe.pre_ferment_type ?? "").toLowerCase().includes("poolish");
   return t(cms.cooking.rule55DescriptionPreferment, {

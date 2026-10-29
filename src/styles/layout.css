@@ -61,7 +61,7 @@
 /* WCAG 2.2: gli affordance icon-only compatti mantengono l'icona ottica ma
    espongono un hit box semantico minimo. Il token è T2 e resta adattabile dai
    temi senza introdurre dimensioni raw nel layer di prodotto. */
-:where(.match-info-toggle, .ingredients-rule55-toggle, .info-tip__trigger) {
+:where(.match-info-toggle, .info-tip__trigger) {
   display: inline-flex;
   min-inline-size: var(--interactive-target-min);
   min-block-size: var(--interactive-target-min);

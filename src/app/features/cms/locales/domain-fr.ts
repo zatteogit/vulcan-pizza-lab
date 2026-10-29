@@ -666,6 +666,12 @@ export const SCIENCE_FR: CmsScience = {
       l1: "Le cahier des charges dissout le sel dans l'eau avant d'ajouter la farine.",
       l2: "C'est l'ordre du règlement UE de la STG. D'autres méthodes ajoutent le sel plus tard : pour ce style, nous suivons le cahier des charges.",
     },
+    /* FW-02 */
+    "stg-reference": {
+      title: "Recette et cahier des charges",
+      l1: "Nous comparons certaines valeurs de la recette avec le cahier des charges de la Napoletana STG.",
+      l2: "Le cahier des charges (règlement UE 97/2010) fixe la farine, la fermentation, le poids du pâton et la cuisson. Si une valeur sort de ses intervalles, la recette est « inspirée de la STG » et l'écart est indiqué ici. Le score ne certifie pas la conformité.",
+    },
     "flour-w-by-grade": {
       title: "Type de farine et force",
       l1: "00, 0, 1 et complète disent à quel point la farine est raffinée, pas sa force.",
@@ -782,5 +788,7 @@ export const SCIENCE_FR: CmsScience = {
     "comfort-margins-rule-of-thumb": "Les marges, plus larges au frigo qu'à température ambiante, sont des règles pratiques sans source.",
     "comfort-yeast-unchanged": "La dose de levure reste celle calculée pour le planning de départ.",
     "recovery-by-oven-type": "La remontée dépend seulement du type de four, ni du modèle ni de la surface.",
+    /* FW-02 */
+    "stg-partial-check": "Nous ne comparons que certaines valeurs : l'origine des ingrédients, la température de la pâte et l'exécution ne sont pas vérifiées.",
   },
 };

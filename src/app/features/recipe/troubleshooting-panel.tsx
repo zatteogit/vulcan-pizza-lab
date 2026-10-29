@@ -38,6 +38,13 @@ ISSUES_DB
 } from "../../data/troubleshooting-data";
 import { uiMessage } from "../../i18n/ui-messages";
 import type { StyleThresholds } from "../../domain/science/engine-facts";
+import { WhyButton } from "../science/why-button";
+
+/* FW-02 (S13-A-06): una cifra nel testo del problema (soglia, temperatura,
+   percentuale) è una regola pratica della nota troubleshooting-thresholds. */
+function hasNumericThreshold(issue: TroubleshootingIssue): boolean {
+  return /\d/.test([issue.cause, issue.testRapido, issue.fixImmediate, issue.prevention].join(" "));
+}
 
 /* === FW-13 (S13-B-12): icone delle categorie, sul modello del glossario === */
 const TROUBLESHOOTING_CATEGORY_ICONS: Record<string, LucideIcon> = {
@@ -439,6 +446,11 @@ function IssueCard({
               />
               {/* Prevenzione */}
               <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
+              {/* FW-02 (S13-A-06): dove il consiglio dà una soglia numerica, il
+                  «Perché?» dice che è una regola pratica, non tarata sullo stile. */}
+              {hasNumericThreshold(issue) && (
+                <WhyButton noteId="troubleshooting-thresholds" label={cms.science?.notes?.["troubleshooting-thresholds"]?.title} className="troubleshooting-card__why" />
+              )}
             </div>
       </Disclosure>
     </Surface>

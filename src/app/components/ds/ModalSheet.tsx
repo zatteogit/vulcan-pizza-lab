@@ -15,7 +15,7 @@
  *  - `height`   auto (cap max-h) · full (workspace ~92dvh)
  */
 import { AnimatePresence, motion } from "motion/react";
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 import { createPortal } from "react-dom";
 import { useDialogFocus } from "./use-dialog-focus";
 import { motionSpring } from "./motion";
@@ -32,6 +32,8 @@ export interface ModalSheetProps {
   height?: "auto" | "full";
   /** Classi extra sul pannello: padding/overflow del contenuto. */
   panelClassName?: string;
+  /** FW-02: elemento da mettere a fuoco all'apertura (es. il titolo, tabIndex=-1). */
+  initialFocusRef?: RefObject<HTMLElement | null>;
   children: ReactNode;
 }
 
@@ -104,9 +106,10 @@ export function ModalSheet({
   entry = "slide",
   height = "auto",
   panelClassName,
+  initialFocusRef,
   children,
 }: ModalSheetProps) {
-  const dialogRef = useDialogFocus<HTMLElement>({ open, onClose });
+  const dialogRef = useDialogFocus<HTMLElement>({ open, onClose, initialFocusRef });
 
   const slide = entry === "slide";
   const containerClass = slide
