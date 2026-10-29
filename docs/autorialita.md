@@ -95,6 +95,7 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-056 | 2026-10-28 | Prodotto | PizzaNerd diventa un interruttore globale «Mostra i dettagli tecnici», raggiungibile da Profilo, Crea e ricetta; il «Perché?» resta per tutti | legato al livello; PizzaNerd com'è | idem | Matteo | proposta AI, decisione umana |
 | D-057 | 2026-10-28 | Motore | La «Compatibilità con la tua cucina» pesa solo fattibilità e fedeltà allo stile; le altre dimensioni diventano informazioni separate. Effetto sulla classifica misurato e mostrato prima di applicarlo | 5 dimensioni spiegate; rinominare il numero | idem | Matteo | proposta AI, decisione umana |
 | D-058 | 2026-10-28 | Prodotto | Le altre decisioni dell'audit UX e scienza (35 voci, docs/audit-ux-scienza-2026-10-28.md §Decisioni) seguono la raccomandazione dell'audit | rivederle una per una | idem («Accetta le raccomandazioni») | Matteo | proposta AI, accettata in blocco |
+| D-059 | 2026-10-29 | Prestazioni | Il budget JS misura quello che scarica un utente: codice senza lingue ≤ 500 kB e codice + la lingua più pesante ≤ 600 kB; il totale con tutte le lingue resta solo come informazione (docs/budget-prestazioni.md) | alzare il tetto totale a 1.000 kB; recuperare peso prima di unire | idem («Misura per utente») | Matteo | proposta AI, scelta di Matteo |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da
