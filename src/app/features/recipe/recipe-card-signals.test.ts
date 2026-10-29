@@ -9,17 +9,19 @@ const base = generateRecipe(STYLES_DB.focaccia_genovese, constraints);
 const withVerdict = (patch: Partial<GeneratedRecipe["verdict"]>): GeneratedRecipe => ({ ...base, verdict: { ...base.verdict, ...patch } });
 
 describe("card: solo informazioni che aiutano a scegliere", () => {
-  it("la dispensa non compilata espone la condizione sulla W della ricetta", () => {
-    expect(base.verdict.conditions?.some(c => c.kind === "flour")).toBe(true);
-    expect(recipeCardSignals(base)[0].message).toMatchObject({key:"need.checkFlour",params:{w:base.flour_w}});
+  // D-060 (29/10/2026, Matteo): la verifica di dispensa resta nel verdetto
+  // (motore, MCP) ma non è un segnale: valeva per ogni ricetta.
+  it("la dispensa non compilata resta nel verdetto ma non diventa un segnale", () => {
+    expect(base.verdict.conditions?.find(c => c.kind === "flour")).toMatchObject({status:"unverified",message:{key:"need.checkFlour",params:{w:base.flour_w}}});
+    expect(recipeCardSignals(base).map(s => s.message.key)).not.toContain("need.checkFlour");
   });
-  it("Calzone e Chicago con tutte le farine rimosse mostrano la W effettiva", () => {
+  it("Calzone e Chicago: la condizione sulla farina porta la fascia dello stile, non la W puntuale", () => {
     for (const style of [STYLES_DB.calzone_napoletano, STYLES_DB.chicago_deep]) {
       const recipe = generateRecipe(style, {...constraints, oven_type:"wood", oven_max_temp_c:450, has_baking_pan:false});
       expect(recipe.verdict.outcome).not.toBe("not_feasible");
-      expect(recipeCardSignals(recipe)).toContainEqual(expect.objectContaining({
-        icon:"flour",message:expect.objectContaining({key:"need.checkFlour",params:{w:recipe.flour_w}}),
-      }));
+      const [lo, hi] = style.dough.flour_w_range;
+      expect(recipe.verdict.conditions?.find(c => c.kind === "flour")?.message.params).toMatchObject({w:recipe.flour_w,range:`${lo}–${hi}`});
+      expect(recipeCardSignals(recipe).map(s => s.message.key)).not.toContain("need.checkFlour");
     }
   });
   it("Scopri non mostra prerequisiti di dispensa o attrezzatura; Crea li mantiene", () => {
@@ -28,7 +30,7 @@ describe("card: solo informazioni che aiutano a scegliere", () => {
       {kind:"flour",status:"unverified",message:{key:"need.checkFlour",fallback:"",params:{w:285}}},
     ]});
     expect(recipeCardSignals(recipe,"explore")).toEqual([]);
-    expect(recipeCardSignals(recipe,"create").map(signal=>signal.message.key)).toEqual(["card.panCheck","need.checkFlour"]);
+    expect(recipeCardSignals(recipe,"create").map(signal=>signal.message.key)).toEqual(["card.panCheck"]);
     expect(recipe.verdict.conditions).toHaveLength(2);
   });
   it("Scopri conserva gli avvisi sul metodo di cottura", () => {
@@ -79,12 +81,15 @@ describe("FW-10: l'idratazione per chi comincia è un segnale di livello 1", () 
 });
 
 describe("voto e stato operativo distinti", () => {
-  it("una dispensa incompleta non è un adattamento della ricetta", () => {
-    expect(recipePresentationState(base)).toBe("check");
+  it("D-060: le sole verifiche di dispensa non rendono la ricetta «con condizioni»", () => {
+    const onlyPantry = withVerdict({ outcome: "warnings", adaptations: [{key:"need.checkFlour",fallback:""},{key:"need.checkYeast",fallback:""}] });
+    expect(recipePresentationState(onlyPantry)).toBe("ready");
+    const withPan = withVerdict({ outcome: "warnings", adaptations: [{key:"need.checkFlour",fallback:""},{key:"need.checkPan",fallback:""}] });
+    expect(recipePresentationState(withPan)).toBe("check");
   });
   it("una modifica effettiva conserva anche i controlli pendenti nel verdetto", () => {
     const changed = { ...base, hydration_pct: base.hydration_pct - 1 };
-    expect(recipePresentationState(changed)).toBe("check");
+    expect(recipePresentationState(changed)).toBe(recipePresentationState(base));
     expect(changed.verdict.conditions).toEqual(base.verdict.conditions);
   });
   it("il blocco resta prioritario rispetto a un voto alto e alle modifiche", () => {

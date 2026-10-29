@@ -1,5 +1,6 @@
 import { ListChecks, TriangleAlert } from "lucide-react";
 import { recipeCardSignals } from "./recipe-card-signals";
+import { PANTRY_CHECK_KEYS } from "../../use-cases/recommendation-groups";
 import { Badge } from "../../components/ds/index";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
@@ -16,7 +17,8 @@ export function RecipeConditionChips({ recipe, id, compact = false }: { recipe: 
     ? { key: "need.blockedOven", fallback: "Forno insufficiente" }
     : b.kind === "fermentation_temperature" ? { key: "need.blockedMethod", fallback: "Regime non compatibile" }
     : { key: "need.blockedTime", fallback: "Tempo insufficiente" })
-    : (recipe.verdict.conditions ?? []).map(c => c.kind === "deck" && c.status === "missing"
+    // D-060: le verifiche di dispensa non sono condizioni da mostrare.
+    : (recipe.verdict.conditions ?? []).filter(c => !(c.status === "unverified" && PANTRY_CHECK_KEYS.has(c.message.key))).map(c => c.kind === "deck" && c.status === "missing"
       ? { key: "need.deck", fallback: "Serve pietra o acciaio" } : c.message);
   if (!blocked) {
     const keys: Record<string, string> = { "gen.homeBakingMethod": "need.invertedTray", "gen.notCoalOven": "need.withoutCoal", "gen.notWoodOven": "need.withoutWood", "feas.ovenSuboptimal": "need.adaptedBake" };

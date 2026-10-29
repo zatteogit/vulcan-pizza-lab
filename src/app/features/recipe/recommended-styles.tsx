@@ -583,7 +583,6 @@ export function RecommendedStyles({
                     hasSelection={hasSelection}
                     onSelect={() => handleSelect(rec)}
                     index={i}
-                    hidePantryChecks={unknownPantry}
                   />
                 );
               })}
@@ -604,9 +603,7 @@ function StyleCard({
   hasSelection,
   onSelect,
   index,
-  hidePantryChecks = false,
 }: {
-  hidePantryChecks?: boolean;
   rec: RecommendationWithVariant;
   tierColor: string;
   isSelected: boolean;
@@ -720,7 +717,7 @@ function StyleCard({
               </div>
 
               {/* Livello e durata — stessa chip delle card di Scopri */}
-              <StyleMetaChip style={style} cms={cms} recipe={rec.recipe} hidePantryChecks={hidePantryChecks} />
+              <StyleMetaChip style={style} cms={cms} recipe={rec.recipe} />
               {rec.dietary_alternatives?.length ? <span className="recommended-card__subtitle">{cms.engineMessages["diet.variantAvailable"]}</span> : null}
             </div>
           </div>

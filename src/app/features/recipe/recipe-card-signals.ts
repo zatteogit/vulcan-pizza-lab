@@ -1,7 +1,7 @@
 import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
 import { SKILL_WARNING_KEYS } from "../../domain/verdict-summary";
-import { PANTRY_CHECK_KEYS } from "../../use-cases/recommendation-groups";
+import { onlyPantryChecks, PANTRY_CHECK_KEYS } from "../../use-cases/recommendation-groups";
 
 export interface CardSignal {
   icon: "oven" | "time" | "pan" | "flour" | "check" | "water";
@@ -10,9 +10,12 @@ export interface CardSignal {
 }
 const msg = (key: string, fallback: string, params?: EngineMsg["params"]): EngineMsg => ({ key, fallback, params });
 
-/** Card policy: at most two decision signals. Unverified flour is a concrete
- * condition too: an empty inventory never implies the required flour is available. */
-export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "explore" = "create", options: { hidePantryChecks?: boolean } = {}): CardSignal[] {
+/** Card policy: at most two decision signals.
+ * D-060 (29/10/2026, nota di Matteo): «Se hai farina W…» e «Se hai lievito»
+ * non sono segnali. Finché la dispensa non è detta valgono per ogni ricetta e
+ * la farina giusta è già negli ingredienti; Crea lo dice una volta (banner).
+ * Resta il segnale quando la dispensa è detta e manca qualcosa («Serve…»). */
+export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "explore" = "create"): CardSignal[] {
   const { blockers, conditions = [], adaptations } = recipe.verdict;
   if (blockers.length) {
     const b = blockers.find(b => b.kind === "dietary_conflict" && b.filter_id.startsWith("allergen:")) ?? blockers.find(b => b.kind === "dietary_conflict") ?? blockers.find(b => b.kind === "oven_too_cold") ?? blockers[0];
@@ -50,17 +53,16 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   // remain inspectable in the detail and actionable in Create.
   if (context === "explore") return result.slice(0, 2);
   for (const c of [...conditions].sort((a, b) => Number(b.status === "missing") - Number(a.status === "missing"))) {
-    // FW-09 (S05-A-06): con la dispensa sconosciuta «Se hai farina…» vale per
-    // tutti gli stili; la pagina lo dice una volta sola.
+    // D-060: le verifiche di dispensa non sono segnali (vedi sopra).
     // Per chiave, non per tipo: la verifica delle esclusioni (rifiuto esplicito
     // dell'utente) ha kind «flour» ma non dipende dalla dispensa e resta.
-    if (options.hidePantryChecks && c.status === "unverified" && PANTRY_CHECK_KEYS.has(c.message.key)) continue;
+    if (c.status === "unverified" && PANTRY_CHECK_KEYS.has(c.message.key)) continue;
     if (c.message.key === "need.checkExclusions") { add("flour", c.message); continue; }
     if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Se hai una teglia"));
     if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Se hai pietra o acciaio"));
     if (c.kind === "flour") add("flour", c.status === "missing"
-      ? msg("need.flour", "Serve farina W{w}", c.message.params)
-      : msg("need.checkFlour", "Se hai farina W{w}", c.message.params));
+      ? msg("need.flour", "Serve farina W {range}", c.message.params)
+      : msg("need.checkFlour", "Se hai farina W {range}", c.message.params));
     if (c.kind === "flour_blend") add("flour", msg("card.blendCheck", "Se hai le farine del mix"));
     if (c.kind === "ingredient" && c.status === "missing" && !result.some(signal=>signal.message.key==="card.ingredientsMissing")) add("check",msg("card.ingredientsMissing","Ingredienti da procurare"));
     if (c.kind === "yeast" && c.status === "missing") add("flour", msg("card.yeastMissing", "Serve il lievito"));
@@ -71,5 +73,6 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
 /** Operational status is independent of a high numeric affinity. */
 export function recipePresentationState(recipe: GeneratedRecipe): "blocked" | "check" | "ready" {
   if (recipe.verdict.outcome === "not_feasible") return "blocked";
+  if (recipe.verdict.outcome === "warnings" && onlyPantryChecks(recipe.verdict, recipe.dietary_warnings?.length ?? 0)) return "ready";
   return recipe.verdict.outcome === "warnings" ? "check" : "ready";
 }

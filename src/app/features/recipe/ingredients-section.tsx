@@ -34,6 +34,7 @@ import {
   yeastBakerPctText,
 } from "./recipe-output-format";
 import { uiMessage } from "../../i18n/ui-messages";
+import { flourWText } from "../../domain/flour-w-display";
 import { getScienceNote } from "../../data/science-notes";
 import { roundForEvidence } from "../../domain/science/evidence";
 
@@ -187,12 +188,12 @@ export function IngredientsSection({
                   ? (
                       <>
                         {flourUseLabel} · {flourStrengthLabel(recipe.flour_w, cms)} ·{" "}
-                        <GlossaryWLink w={recipe.flour_w} />
+                        <GlossaryWLink w={recipe.flour_w} label={flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)} />
                       </>
                     )
                   : (
                       <>
-                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} /> {uiMessage("features.recipe.ingredients-section.p-l-c4730ae9")}{recipe.flour_pl}
+                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} label={flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)} /> {uiMessage("features.recipe.ingredients-section.p-l-c4730ae9")}{recipe.flour_pl}
                       </>
                     )
             }
