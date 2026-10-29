@@ -15,7 +15,12 @@ export type StgDeparture = "wood" | "bake" | "flour" | "pl" | "fermentation" | "
 export function stgDepartures(recipe: GeneratedRecipe, oven?: OvenType): StgDeparture[] {
   if (recipe.style.id !== "napoletana_stg") return [];
   const result: StgDeparture[] = [];
-  if (oven ? oven !== "wood" : recipe.verdict.adaptations.some(a => a.key === "gen.notWoodOven")) result.push("wood");
+  // D-063: con il forno a temperatura «senza legna» non è più un avviso del
+  // verdetto ma un'informazione dell'autenticità (auth.woodByMethod); per il
+  // disciplinare STG resta comunque uno scostamento.
+  const woodless = recipe.verdict.adaptations.some(a => a.key === "gen.notWoodOven") ||
+    recipe.scores.penalties.some(p => p.key === "auth.notWoodOven" || p.key === "auth.woodByMethod");
+  if (oven ? oven !== "wood" : woodless) result.push("wood");
   if (recipe.cook_time_sec < 60 || recipe.cook_time_sec > 90) result.push("bake");
   if (recipe.flour_w < 220 || recipe.flour_w > 380) result.push("flour");
   if (recipe.flour_pl < 0.5 || recipe.flour_pl > 0.7) result.push("pl");

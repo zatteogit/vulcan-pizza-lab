@@ -2339,7 +2339,10 @@ export function generateRecipe(
     sustainability_category: sustResult.category,
     penalties: authResult.penalties,
     warnings: [
-      ...(style.baking.oven_type_required === "coal" && constraints.oven_type !== "coal"
+      // D-063: legna o carbone sono una condizione solo se il forno non arriva
+      // alla temperatura minima dello stile; sopra resta un'informazione nei
+      // dettagli dell'autenticità (auth.woodByMethod), non nel verdetto.
+      ...(style.baking.oven_type_required === "coal" && constraints.oven_type !== "coal" && ovenTemp < style.baking.temp_c_range[0]
         ? [em("gen.notCoalOven", METHOD_MESSAGES_IT["gen.notCoalOven"])]
         : []),
       ...prerequisites.map(condition => condition.message),
@@ -2349,7 +2352,7 @@ export function generateRecipe(
         ? [em("gen.ovenTooNarrow", METHOD_MESSAGES_IT["gen.ovenTooNarrow"], { max: ovenMouthCm, diameter: pizzaDiameterCm! })]
         : []),
       // D-020: stesso avviso dei consigli sul forno a legna dello stile.
-      ...(style.requires_wood_oven && constraints.oven_type !== "wood"
+      ...(style.requires_wood_oven && constraints.oven_type !== "wood" && ovenTemp < style.baking.temp_c_range[0]
         ? [
             em(
               "gen.notWoodOven",

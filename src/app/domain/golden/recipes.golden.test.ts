@@ -190,15 +190,19 @@ describe("impossibilità dichiarata (M-10)", () => {
     }
   });
 
-  it("forno a legna dello stile: avviso, non blocco (D-020)", () => {
-    // Napoletana STG con un forno a gas da 450 °C: il calore basta, il legno no.
+  it("forno a legna dello stile: mai un blocco (D-020); avviso solo sotto la temperatura dello stile (D-063)", () => {
+    // Napoletana STG con un forno a gas da 450 °C: il calore basta, quindi la
+    // legna è solo un'informazione dell'autenticità, non un avviso del verdetto.
     const c = constraints({ oven_type: "gas", oven_max_temp_c: 450 });
     const recipe = generateRecipe(STYLES_DB.napoletana_stg, c);
-    expect(recipe.verdict.outcome).toBe("warnings");
-    expect(recipe.scores.warnings.map((w) => w.key)).toContain("gen.notWoodOven");
+    expect(recipe.scores.warnings.map((w) => w.key)).not.toContain("gen.notWoodOven");
+    expect(recipe.scores.penalties.map((p) => p.key)).toContain("auth.woodByMethod");
     const rec = recommendStyles(c).find((r) => r.style.id === "napoletana_stg")!;
     expect(rec.tier).not.toBe("not_feasible");
-    expect(rec.warnings.map((w) => w.key)).toContain("gen.notWoodOven");
+    expect(rec.warnings.map((w) => w.key)).not.toContain("gen.notWoodOven");
+    // Sotto la temperatura minima (forno a gas da 400 °C) l'avviso c'è ancora.
+    const cold = generateRecipe(STYLES_DB.napoletana_stg, constraints({ oven_type: "gas", oven_max_temp_c: 400 }));
+    expect(cold.scores.warnings.map((w) => w.key)).toContain("gen.notWoodOven");
   });
 
   it("mix di due farine della dispensa (C-3)", () => {
