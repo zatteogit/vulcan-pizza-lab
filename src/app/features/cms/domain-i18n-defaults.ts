@@ -686,6 +686,7 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "proof-share-default": "Senza indicazioni dello stile, l'appretto è una quota fissa delle ore.",
     "starter-steps-by-hours": "La dose di madre scende a gradini con le ore, senza considerare la temperatura.",
     "starter-not-in-hydration": "Farina e acqua della madre non sono contate nell'idratazione.",
+    "preferment-at-maturation-temp": "Con un prefermento, il prefermento maturo è al punto medio della sua temperatura di maturazione (biga 18–20 °C, poolish 20–22 °C) e il suo impasto, fatto a mano, non scalda per attrito.",
     "flour-at-kitchen-temp": "La farina è alla temperatura della cucina.",
     "mixer-friction-values": "Il calore dell'impastatrice è un valore tipico da verificare; a mano è zero.",
     "coefficients-not-measured": "I coefficienti della formula sono scelti dal modello, non misurati.",

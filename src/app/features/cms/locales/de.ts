@@ -1045,6 +1045,8 @@ export const DE_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Teile jede Einheit in zwei Portionen: 60% für den Boden und 40% für den Deckel. Forme zwei Fladen.",
     "timeline.shape.closedStuffedFried": "Zieh den unteren Fladen aus und lege den zweiten zum Verschließen beiseite.",
     "timeline.shape.foldedLayers": "Roll eine hauchdünne Teigplatte aus und falte sie {folds}-mal wie ein Buch; verteile die Füllung zwischen den Lagen.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "Biga und Poolish werden mit Backhefe angesetzt: Mit nur Sauerteig lässt das Rezept sie weg, denn der Sauerteig ist schon ein Vorteig. Wenn Sie sie möchten, nehmen Sie Backhefe in Ihren Vorrat auf.",
     "diet.singleBase": "Ein Boden aus dem gesamten Teig: Zwiebeln darauf, ohne zweiten Teigkreis oder Verschließen.",
     "topping.geometry": "Fläche {area} cm² · Referenz {reference} cm² · Mengen ×{scale}.",
     "auth.layoutChanged": "Anderes Format als die Vorlage: Diese Variante verändert den Aufbau",
@@ -1187,7 +1189,7 @@ export const DE_LOCALE: CmsContent = {
         "Benutze eine Waage! Mit einer Teigkarte schneiden und jedes St\u00FCck zu einer glatten Kugel formen.",
       tipNerd:
         "Das Teilen erzeugt Oberfl\u00E4chenspannung, die CO\u2082 w\u00E4hrend der Stuckgare einschlie\u00DFt.",
-      longDesc: "St\u00FCrze den Teig auf eine leicht bemehlte Arbeitsfl\u00E4che. Schneide mit einer Teigkarte Portionen mit dem Gewicht ab, das unten bei den Zutaten steht, und wiege sie ab (wichtig f\u00FCr gleichm\u00E4\u00DFiges Backen). Schleife jedes St\u00FCck rund: R\u00E4nder nach unten zur Mitte einschlagen, drehen und formen, bis eine glatte, straffe Kugel entsteht. Setz die Teiglinge mit viel Abstand auf ein bemehltes Blech und deck sie mit Folie ab.",
+      longDesc: "St\u00fcrze den Teig auf eine leicht bemehlte Arbeitsfl\u00e4che. Schneide mit einer Teigkarte Portionen mit dem Gewicht ab, das bei diesem Schritt steht, und wiege sie ab (wichtig f\u00fcr gleichm\u00e4\u00dfiges Backen). Schleife jedes St\u00fcck rund: R\u00e4nder nach unten zur Mitte einschlagen, drehen und formen, bis eine glatte, straffe Kugel entsteht. Setz die Teiglinge mit viel Abstand auf ein bemehltes Blech und deck sie mit Folie ab.",
     },
     proof: {
       title: "Stuckgare",
@@ -1230,7 +1232,7 @@ export const DE_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Teilen",
       desc: "Behutsam teilen, ohne den Teig zu entgasen.",
-      longDesc: "St\u00FCrze den Teig auf eine gut bemehlte Arbeitsfl\u00E4che (bei hoher Hydratation hilft Hartweizengrie\u00DF). Schneide mit einer Teigkarte Portionen mit dem Gewicht ab, das unten bei den Zutaten steht, und wiege sie ab. So wenig wie m\u00F6glich anfassen: F\u00FCr die Teglia brauchst du NICHT das straffe Rundschleifen der runden Pizza \u2014 schlag die R\u00E4nder nach unten ein und forme einen lockeren Strang, ohne die Luft herauszudr\u00FCcken. Die Blasen aus der Stockgare werden sp\u00E4ter zur Porung. Leg jedes St\u00FCck in einen ge\u00F6lten Beh\u00E4lter und deck es ab.",
+      longDesc: "St\u00fcrze den Teig auf eine gut bemehlte Arbeitsfl\u00e4che (bei hoher Hydratation hilft Hartweizengrie\u00df). Schneide mit einer Teigkarte Portionen mit dem Gewicht ab, das bei diesem Schritt steht, und wiege sie ab. So wenig wie m\u00f6glich anfassen: F\u00fcr die Teglia brauchst du NICHT das straffe Rundschleifen der runden Pizza \u2014 schlag die R\u00e4nder nach unten ein und forme einen lockeren Strang, ohne die Luft herauszudr\u00fccken. Die Blasen aus der Stockgare werden sp\u00e4ter zur Porung. Leg jedes St\u00fcck in einen ge\u00f6lten Beh\u00e4lter und deck es ab.",
       tipBeginner: "Sanfte H\u00E4nde! Die Blasen im Teig sind wertvoll: R\u00E4nder nach unten einschlagen, nicht dr\u00FCcken.",
       tipNerd: "Bei Hydratation >75% l\u00E4sst aggressives Teilen die in der Stockgare gebildeten Poren kollabieren: minimale Spannung, kaum Entgasung.",
     },

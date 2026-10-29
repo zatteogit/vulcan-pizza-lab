@@ -21,6 +21,9 @@ optimizeRecipe,
 supportsThickness,
 } from "../../domain/pizza-engine";
 import { SegmentedControl, Select, Stepper, Switch } from "../../components/ds/index";
+import { Disclosure } from "../../components/ds/Disclosure";
+import { maxPreFermentFlourPct } from "../../domain/pre-ferment-split";
+import { onlySourdoughYeast } from "../../domain/recipe-phases";
 import { uiMessage } from "../../i18n/ui-messages";
 import { useDetailLevel } from "../../hooks/use-detail-level";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
@@ -283,6 +286,8 @@ export function RecipeConfigurator({
   const { cms, bcp47 } = useCms();
   const cfg = cms.configurator;
   const preFermentSwitchId = useId();
+  /* FW-17 (D-P): stessa regola del motore (generateRecipe, scelta del lievito). */
+  const sourdoughOnly = onlySourdoughYeast(constraints.pantry_yeasts, constraints.excluded_yeasts);
   const fmt = createFormatter(cms.ui, bcp47);
   /* Temperature di riferimento per i tre regimi di fermentazione (°C),
      formattate secondo il sistema di unità dell'utente. */
@@ -691,18 +696,38 @@ export function RecipeConfigurator({
                 </div>
                 <Switch
                   id={preFermentSwitchId}
-                  checked={usePreFerment}
+                  checked={usePreFerment && !sourdoughOnly}
+                  disabled={sourdoughOnly}
                   aria-label={cfg.preFermentLabel}
                   onCheckedChange={onPreFermentChange}
                 />
               </div>
               )}
+              {/* FW-17 (D-P): col solo lievito madre niente biga né poolish;
+                  il perché al livello 2. */}
+              {showAdvanced && sourdoughOnly && (
+                <div className="config-field config-preferment-sourdough" data-region="preferment-sourdough">
+                  <p className="type-body config-preferment-sourdough__text">
+                    {uiMessage("recipe.phases.sourdoughNoPreferment")}
+                  </p>
+                  <Disclosure variant="inline" summary={uiMessage("recipe.phases.why")}>
+                    <p className="type-body config-preferment-sourdough__text">
+                      {uiMessage("recipe.phases.sourdoughNoPrefermentWhy")}
+                    </p>
+                  </Disclosure>
+                </div>
+              )}
 
               {/* D-043 — biga o poolish e quanta farina ci va (fonti in
                   docs/ricerca/prefermenti-fonti-2026-10-24.md) */}
-              {showAdvanced && usePreFerment && onPreFermentChoiceChange && (() => {
+              {showAdvanced && usePreFerment && !sourdoughOnly && onPreFermentChoiceChange && (() => {
                 const type = preFermentChoice?.type ?? preFermentKind(style);
-                const flourPct = preFermentChoice?.flourPct ?? PRE_FERMENT_FLOUR_PCT[type];
+                /* FW-17 (S08-A-03): la quota del poolish non supera l'idratazione. */
+                const maxFlourPct = Math.max(
+                  PRE_FERMENT_FLOUR_PCT.min,
+                  Math.floor(maxPreFermentFlourPct(type, customHydration, PRE_FERMENT_FLOUR_PCT.max) / 5) * 5,
+                );
+                const flourPct = Math.min(maxFlourPct, preFermentChoice?.flourPct ?? PRE_FERMENT_FLOUR_PCT[type]);
                 return (
                   <div className="config-field config-preferment">
                     <SegmentedControl
@@ -734,12 +759,17 @@ export function RecipeConfigurator({
                         })
                       }
                       min={PRE_FERMENT_FLOUR_PCT.min}
-                      max={PRE_FERMENT_FLOUR_PCT.max}
+                      max={maxFlourPct}
                       step={5}
                       unit="%"
                       gradient={SLIDER_GRADIENTS.fermentation}
-                      optimalValue={PRE_FERMENT_FLOUR_PCT[type]}
+                      optimalValue={Math.min(maxFlourPct, PRE_FERMENT_FLOUR_PCT[type])}
                     />
+                    {maxFlourPct < PRE_FERMENT_FLOUR_PCT.max && (
+                      <p className="type-body config-preferment-sourdough__text" data-region="poolish-max">
+                        {uiMessage("recipe.phases.poolishMaxByHydration", [fmt.percent(customHydration), fmt.percent(maxFlourPct)])}
+                      </p>
+                    )}
                   </div>
                 );
               })()}

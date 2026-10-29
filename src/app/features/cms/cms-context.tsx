@@ -2393,14 +2393,14 @@ export const CMS_DEFAULTS: CmsContent = {
     divide: {
       title: "Staglio",
       desc: "Dividere in panetti del peso corretto. Formare pallina.",
-      longDesc: "Rovescia l'impasto su un piano leggermente infarinato. Con un tarocco taglia porzioni del peso che vedi sotto in Ingredienti, pesandole su una bilancia (\u00E8 importante per cottura uniforme). Per ogni pezzo, fai la \"pirlatura\": piega i lembi verso il basso al centro, ruota e arrotonda fino a una palla liscia e tesa. Disponi i panetti su una teglia infarinata, ben distanziati, copri con pellicola.",
+      longDesc: "Rovescia l'impasto su un piano leggermente infarinato. Con un tarocco taglia porzioni del peso indicato in questo passo, pesandole su una bilancia (\u00e8 importante per cottura uniforme). Per ogni pezzo, fai la \"pirlatura\": piega i lembi verso il basso al centro, ruota e arrotonda fino a una palla liscia e tesa. Disponi i panetti su una teglia infarinata, ben distanziati, copri con pellicola.",
       tipBeginner: "Usa una bilancia! Taglia con un tarocco e arrotonda ogni pezzo in una palla liscia.",
       tipNerd: "Lo staglio crea tensione superficiale che intrappola CO\u2082 durante l'appretto e definisce la struttura alveolare finale.",
     },
     divide_teglia: {
       title: "Staglio",
       desc: "Dividere con delicatezza, senza sgonfiare l'impasto.",
-      longDesc: "Rovescia l'impasto sul piano ben infarinato (con le alte idratazioni aiutati con la semola). Con un tarocco taglia le porzioni del peso indicato sotto in Ingredienti, pesandole su una bilancia. Maneggia il meno possibile: per la teglia NON serve la pirlatura stretta della tonda \u2014 ripiega i lembi sotto formando un filone morbido, senza strizzare fuori l'aria. Le bolle costruite in puntata sono la futura alveolatura. Metti ogni pezzo in un contenitore unto e copri.",
+      longDesc: "Rovescia l'impasto sul piano ben infarinato (con le alte idratazioni aiutati con la semola). Con un tarocco taglia le porzioni del peso indicato in questo passo, pesandole su una bilancia. Maneggia il meno possibile: per la teglia NON serve la pirlatura stretta della tonda \u2014 ripiega i lembi sotto formando un filone morbido, senza strizzare fuori l'aria. Le bolle costruite in puntata sono la futura alveolatura. Metti ogni pezzo in un contenitore unto e copri.",
       tipBeginner: "Mani delicate! Le bolle nell'impasto sono preziose: piega i lembi sotto, senza schiacciare.",
       tipNerd: "Con idratazione >75% lo staglio aggressivo collassa gli alveoli formati in puntata: tensione minima, degassamento quasi nullo.",
     },

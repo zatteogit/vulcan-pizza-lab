@@ -795,6 +795,7 @@ export const SCIENCE_ES: CmsScience = {
     "proof-share-default": "Sin indicaciones del estilo, el apresto es una parte fija de las horas.",
     "starter-steps-by-hours": "La dosis de masa madre baja por escalones con las horas, sin considerar la temperatura.",
     "starter-not-in-hydration": "La harina y el agua de la masa madre no cuentan en la hidratación.",
+    "preferment-at-maturation-temp": "Con un prefermento, el prefermento maduro está en el punto medio de su temperatura de maduración (biga 18–20 °C, poolish 20–22 °C) y mezclarlo a mano no añade calor por fricción.",
     "flour-at-kitchen-temp": "La harina está a la temperatura de la cocina.",
     "mixer-friction-values": "El calor de la amasadora es un valor típico por verificar; a mano es cero.",
     "coefficients-not-measured": "Los coeficientes de la fórmula los elige el modelo, no están medidos.",

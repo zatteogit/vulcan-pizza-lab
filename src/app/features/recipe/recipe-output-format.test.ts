@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip, bakeSecondsPerRound, yeastBakerPctText } from "./recipe-output-format";
+import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip, bakeSecondsPerRound, yeastBakerPctText, stepQuantities } from "./recipe-output-format";
 import { generateRecipe, STYLES_DB, type UserConstraints } from "../../domain/pizza-engine";
 import { CMS_DEFAULTS } from "../cms/cms-context";
+import { createFormatter } from "../cms/i18n";
+import { getToppingForStyle } from "../../data/topping-library";
 
 describe("fine stimata: precisione del riepilogo", () => {
   it("mostra 12:31 come circa 12:30 senza cambiare l'istante del programma", () => {
@@ -148,5 +150,40 @@ describe("lievito in baker's % con la precisione del registro (yeast-dose)", () 
     }
     expect(yeastBakerPctText(0.033, "it-IT").replace(/[\u00a0\u202f ]/g, "")).toBe("0,03%");
     expect(yeastBakerPctText(0.04, "en-US")).toBe("0.04%");
+  });
+});
+
+/* ═══ FW-17 — dosi nei passi dal modello per fasi ═══ */
+describe("stepQuantities (FW-17)", () => {
+  const k: UserConstraints = {
+    oven_type: "home", oven_max_temp_c: 250, skill_level: 3, available_hours: 72, dough_balls: 4,
+    has_mixer: false, has_pizza_stone: false, has_pizza_steel: false, has_baking_pan: true,
+    dietary_filters: [], kitchen_temp_c: 21, pantry_flours: [], pantry_yeasts: [], mixer_type: "hands", surfaces: [],
+  };
+  const fmt = createFormatter(CMS_DEFAULTS.ui, "it-IT");
+  const labels = (rows: { label: string }[]) => rows.map((r) => r.label);
+
+  it("S08-A-02: con la biga l'impasto parte dal prefermento e include lo zucchero", () => {
+    const recipe = generateRecipe(STYLES_DB.new_york, k, { usePreFerment: true, preFerment: { type: "biga", flourPct: 50 } });
+    const mix = stepQuantities("mix", recipe, CMS_DEFAULTS, fmt);
+    expect(mix[0].label).toBe("Biga");
+    expect(labels(mix)).toContain(CMS_DEFAULTS.ui.sugar);
+    expect(labels(mix)).not.toContain(CMS_DEFAULTS.yeastLabels.fresh);
+  });
+
+  it("S10-B-09 / S10-A-21: temperatura dell'acqua nell'impasto e aiuto per le microdosi", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, k);
+    const mix = stepQuantities("mix", recipe, CMS_DEFAULTS, fmt);
+    expect(labels(mix)).toContain("Temperatura dell'acqua");
+    expect(recipe.yeast_g).toBeLessThan(1);
+    expect(mix.find((q) => q.label === CMS_DEFAULTS.yeastLabels.fresh)?.hint).toMatch(/Sciogli/);
+  });
+
+  it("S10-A-06: il passo della salamoia riporta le dosi del condimento", () => {
+    const recipe = generateRecipe(STYLES_DB.focaccia_genovese, k);
+    const topping = getToppingForStyle("focaccia_genovese_classica", STYLES_DB.focaccia_genovese)!;
+    const rows = stepQuantities("spread_salamoia_genovese", recipe, CMS_DEFAULTS, fmt, topping);
+    expect(labels(rows)).toEqual(expect.arrayContaining(["Acqua", "Sale fino"]));
+    expect(rows.find((r) => r.label === "Acqua")?.value).toMatch(/in tutto/);
   });
 });

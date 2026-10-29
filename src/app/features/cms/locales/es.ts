@@ -1064,6 +1064,8 @@ export const ES_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Divide cada unidad en dos porciones: 60% para la base y 40% para la tapa. Forma dos discos.",
     "timeline.shape.closedStuffedFried": "Estira el disco de la base y reserva el segundo para cerrarla.",
     "timeline.shape.foldedLayers": "Estira una lámina finísima y dóblala {folds} veces como un libro, repartiendo el relleno entre los pliegues.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "La biga y el poolish se hacen con levadura de panadería: con solo masa madre la receta no los usa, porque la masa madre ya hace de prefermento. Para usarlos, añade levadura de panadería a tu despensa.",
     "diet.singleBase": "Una base con toda la masa: cebolla encima, sin segundo disco ni cierre.",
     "topping.geometry": "Superficie {area} cm² · referencia {reference} cm² · cantidades ×{scale}.",
     "auth.layoutChanged": "Formato distinto de la referencia: la variante cambia la estructura de la receta",
@@ -1201,7 +1203,7 @@ export const ES_LOCALE: CmsContent = {
         "\u00A1Usa una b\u00E1scula! Corta con una rasqueta y redondea cada trozo en una bola lisa.",
       tipNerd:
         "El boleado crea tensi\u00F3n superficial que atrapa CO\u2082 durante el reposo final y define la estructura alveolar.",
-      longDesc: "Vuelca la masa sobre una superficie ligeramente enharinada. Con una rasqueta, corta porciones del peso que ves abajo en Ingredientes y p\u00E9salas en una b\u00E1scula (es importante para una cocci\u00F3n uniforme). Con cada trozo haz el \u00ABboleado\u00BB: lleva los extremos hacia abajo, al centro, gira y redondea hasta obtener una bola lisa y tensa. Coloca los bollos en una bandeja enharinada, bien separados, y cubre con film.",
+      longDesc: "Vuelca la masa sobre una superficie ligeramente enharinada. Con una rasqueta, corta porciones del peso indicado en este paso y p\u00e9salas en una b\u00e1scula (es importante para una cocci\u00f3n uniforme). Con cada trozo haz el \u00abboleado\u00bb: lleva los extremos hacia abajo, al centro, gira y redondea hasta obtener una bola lisa y tensa. Coloca los bollos en una bandeja enharinada, bien separados, y cubre con film.",
     },
     proof: {
       title: "Reposo final",
@@ -1244,7 +1246,7 @@ export const ES_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Divisi\u00F3n",
       desc: "Dividir con delicadeza, sin desgasificar la masa.",
-      longDesc: "Vuelca la masa sobre la superficie bien enharinada (con hidrataciones altas, ay\u00FAdate con s\u00E9mola). Con una rasqueta, corta porciones del peso indicado abajo en Ingredientes y p\u00E9salas en una b\u00E1scula. Manip\u00FAlala lo menos posible: para la bandeja NO hace falta el boleado apretado de la pizza redonda; dobla los extremos por debajo formando un pan alargado suave, sin expulsar el aire. Las burbujas creadas en la fermentaci\u00F3n en bloque ser\u00E1n el futuro alveolado. Pon cada porci\u00F3n en un recipiente untado y cubre.",
+      longDesc: "Vuelca la masa sobre la superficie bien enharinada (con hidrataciones altas, ay\u00fadate con s\u00e9mola). Con una rasqueta, corta porciones del peso indicado en este paso y p\u00e9salas en una b\u00e1scula. Manip\u00falala lo menos posible: para la bandeja NO hace falta el boleado apretado de la pizza redonda; dobla los extremos por debajo formando un pan alargado suave, sin expulsar el aire. Las burbujas creadas en la fermentaci\u00f3n en bloque ser\u00e1n el futuro alveolado. Pon cada porci\u00f3n en un recipiente untado y cubre.",
       tipBeginner: "\u00A1Manos delicadas! Las burbujas de la masa son valiosas: dobla los extremos por debajo, sin aplastar.",
       tipNerd: "Con hidrataci\u00F3n >75% una divisi\u00F3n agresiva colapsa los alveolos formados en la fermentaci\u00F3n en bloque: tensi\u00F3n m\u00EDnima, desgasificaci\u00F3n casi nula.",
     },

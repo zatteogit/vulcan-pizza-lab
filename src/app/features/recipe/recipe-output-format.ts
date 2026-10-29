@@ -9,10 +9,10 @@ import { engineMsgTexts } from "./engine-msg-text";
 import { formatDuration, formatMass, formatPercent, formatTemp as formatTempLocale } from "../../i18n/format";
 import { getScienceNote } from "../../data/science-notes";
 import { roundForEvidence } from "../../domain/science/evidence";
-import { getActiveUiLocale } from "../../i18n/ui-messages";
+import { getActiveUiLocale, uiMessage } from "../../i18n/ui-messages";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
-import { computePreFermentSplit } from "../../domain/pre-ferment-split";
+import { buildRecipePhases, type PhaseIngredientId, type YeastDilution } from "../../domain/recipe-phases";
 import {
   getBakingTimeByStyle,
   getEquipmentByStyle,
@@ -31,12 +31,15 @@ import {
   getServingUnit,
   isFillingStyle,
   SERVING_UNIT_LABELS,
+  YEAST_LABELS,
 } from "../../domain/pizza-engine";
 import {
   AUTHENTICITY_META,
   type AuthenticityScore,
   type IngredientSection,
   type ToppingIngredient,
+  type ToppingRecipe,
+  scaleToppingAmounts,
 } from "../../data/topping-library";
 
 /* ═══ PARAMETRIC CONTEXT TIPS ═══ */
@@ -909,10 +912,60 @@ export function getToppingIngredientSectionOrder(ingredients: ToppingIngredient[
 /* ═══ Audit totale n. 12 — dosi dentro i passi ═══
  * In modalità cottura i passi non riportavano i grammi (lo staglio rimandava a
  * «ingredienti sotto», che lì non ci sono). Dosi per i passi che le usano:
- * pre-fermento, impasto, staglio. */
+ * pre-fermento, impasto, staglio, condimento.
+ * FW-17: le dosi arrivano da buildRecipePhases (lo stesso modello della scheda
+ * Ricetta e della stampa), con la temperatura dell'acqua della fase
+ * (S10-B-09), l'aiuto per le microdosi di lievito (D-O, S10-A-21) e le dosi
+ * del condimento nei passi del condimento (S10-A-06). */
 export interface StepQuantity {
   label: string;
   value: string;
+  /** FW-17: riga di aiuto sotto il valore (es. diluizione del lievito). */
+  hint?: string;
+}
+
+/** FW-17: nome visibile di un ingrediente del modello per fasi. */
+export function phaseIngredientLabel(
+  id: PhaseIngredientId,
+  recipe: GeneratedRecipe,
+  cms: CmsContent,
+  preFermentName = "",
+): string {
+  const ui = cms.ui;
+  switch (id) {
+    case "flour": return ui.flour;
+    case "water": return ui.water;
+    case "salt": return ui.salt;
+    case "sugar": return ui.sugar;
+    case "yeast": return cms.yeastLabels?.[recipe.yeast_type] || YEAST_LABELS[recipe.yeast_type] || recipe.yeast_type;
+    case "fat": {
+      const fatType = recipe.style.dough.fat_type;
+      return fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
+    }
+    case "preferment": return preFermentName;
+  }
+}
+
+/** FW-17 (D-O): testo della diluizione per le microdosi di lievito. */
+export function yeastDilutionText(d: YeastDilution, fmt: ReturnType<typeof createFormatter>): { title: string; body: string[] } {
+  const body = [
+    uiMessage("recipe.phases.dilutionBody", [fmt.grams(d.stockYeastG), fmt.grams(d.stockWaterG), fmt.grams(d.solutionG), fmt.grams(d.yeastG)]),
+    uiMessage(d.phase === "preferment" ? "recipe.phases.dilutionLessWaterPreferment" : "recipe.phases.dilutionLessWater", [fmt.grams(d.waterToRemoveG)]),
+    uiMessage("recipe.phases.dilutionWhy", [fmt.grams(d.stockYeastG)]),
+  ];
+  if (d.spoonEstimate) body.push(uiMessage(d.spoonEstimate === "eighth" ? "recipe.phases.spoonEighth" : "recipe.phases.spoonQuarter"));
+  return { title: uiMessage("recipe.phases.dilutionTitle"), body };
+}
+
+/** FW-17 (S08-B-14): dose per unità e, se le unità sono più d'una, il totale. */
+export function toppingAmountWithTotal(
+  amount: { value: number; unit: "g" | "ml" | "pcs" },
+  units: number,
+  fmt: ReturnType<typeof createFormatter>,
+): string {
+  const per = formatToppingAmountForLocale(amount.value, amount.unit, fmt);
+  if (units <= 1) return per;
+  return `${per} · ${uiMessage("recipe.phases.toppingTotal", [formatToppingAmountForLocale(amount.value * units, amount.unit, fmt)])}`;
 }
 
 export function stepQuantities(
@@ -920,47 +973,48 @@ export function stepQuantities(
   recipe: GeneratedRecipe,
   cms: CmsContent,
   fmt: ReturnType<typeof createFormatter>,
+  topping?: ToppingRecipe,
 ): StepQuantity[] {
-  const ui = cms.ui;
-  const yeastLabel = cms.yeastLabels?.[recipe.yeast_type] ?? recipe.yeast_type;
-  const fatType = recipe.style.dough.fat_type;
-  const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
-  const split = recipe.has_pre_ferment
-    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type, flourPct: recipe.pre_ferment_flour_pct })
-    : null;
-  const yeast = recipe.yeast_g > 0 ? [{ label: yeastLabel, value: fmt.grams(recipe.yeast_g) }] : [];
+  const model = buildRecipePhases(recipe);
+  const preName = model.preFerment?.name ?? "";
+  const dilution = model.yeastDilution;
+  const phaseRows = (phaseId: "preferment" | "final"): StepQuantity[] => {
+    const phase = model.phases.find((p) => p.id === phaseId);
+    if (!phase) return [];
+    const rows: StepQuantity[] = phase.ingredients
+      .filter((ing) => ing.grams > 0 || ing.note === "allInPreferment")
+      .map((ing) => ({
+        label: phaseIngredientLabel(ing.id, recipe, cms, preName),
+        value: ing.note === "allInPreferment" ? uiMessage("recipe.phases.waterAllInPreferment") : fmt.grams(ing.grams),
+        ...(ing.id === "yeast" && dilution && dilution.phase === phaseId
+          ? { hint: yeastDilutionText(dilution, fmt).body.slice(0, 2).join(" ") }
+          : {}),
+      }));
+    if (phase.waterTempC != null) {
+      const temp = fmt.celsius(phase.waterTempC);
+      rows.push({
+        label: uiMessage("recipe.phases.waterTempLabel"),
+        value: phaseId === "preferment" ? uiMessage("recipe.phases.estimateValue", [temp]) : temp,
+      });
+    }
+    return rows;
+  };
   switch (stepId) {
     case "preferment":
-      return split
-        ? [
-            { label: ui.flour, value: fmt.grams(split.prefermentFlourG) },
-            { label: ui.water, value: fmt.grams(split.prefermentWaterG) },
-            ...yeast,
-          ]
-        : [];
-    case "mix": {
-      const rest = [
-        ...(recipe.salt_g > 0 ? [{ label: ui.salt, value: fmt.grams(recipe.salt_g) }] : []),
-        ...(recipe.sugar_g > 0 ? [{ label: ui.sugar, value: fmt.grams(recipe.sugar_g) }] : []),
-        ...(recipe.fat_g > 0 ? [{ label: fatLabel, value: fmt.grams(recipe.fat_g) }] : []),
-      ];
-      return split
-        ? [
-            { label: split.name, value: fmt.grams(split.prefermentFlourG + split.prefermentWaterG) },
-            { label: ui.flour, value: fmt.grams(split.mainFlourG) },
-            { label: ui.water, value: fmt.grams(split.mainWaterG) },
-            ...rest,
-          ]
-        : [
-            { label: ui.flour, value: fmt.grams(recipe.flour_g) },
-            { label: ui.water, value: fmt.grams(recipe.water_g) },
-            ...yeast,
-            ...rest,
-          ];
-    }
+      return model.preFerment ? phaseRows("preferment") : [];
+    case "mix":
+      return phaseRows("final");
     case "divide":
       return [{ label: `${recipe.dough_balls} ×`, value: fmt.grams(recipe.ball_weight_g) }];
-    default:
-      return [];
+    default: {
+      /* FW-17 (S10-A-06): i passi del condimento riportano le dosi del
+         condimento scelto, per unità e in totale. */
+      if (!topping?.assembly_steps?.some((s) => s.id === stepId)) return [];
+      const scaled = scaleToppingAmounts(topping, recipe.topping_scale ?? recipe.style.topping_scale);
+      return scaled.ingredients.map((ing) => ({
+        label: ing.name,
+        value: toppingAmountWithTotal(ing.amount, recipe.dough_balls, fmt),
+      }));
+    }
   }
 }

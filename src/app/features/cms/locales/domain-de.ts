@@ -806,6 +806,7 @@ export const SCIENCE_DE: CmsScience = {
     "proof-share-default": "Ohne Angabe des Stils ist die Stückgare ein fester Anteil der Stunden.",
     "starter-steps-by-hours": "Die Sauerteigmenge sinkt stufenweise mit den Stunden, ohne die Temperatur zu berücksichtigen.",
     "starter-not-in-hydration": "Mehl und Wasser des Sauerteigs zählen nicht zur Hydration.",
+    "preferment-at-maturation-temp": "Mit Vorteig hat der reife Vorteig die Mitte seiner Reifetemperatur (Biga 18–20 °C, Poolish 20–22 °C), und das Mischen von Hand erzeugt keine Reibungswärme.",
     "flour-at-kitchen-temp": "Das Mehl hat Küchentemperatur.",
     "mixer-friction-values": "Die Knetwärme ist ein typischer, noch zu prüfender Wert; von Hand ist sie null.",
     "coefficients-not-measured": "Die Koeffizienten der Formel wählt das Modell, sie sind nicht gemessen.",

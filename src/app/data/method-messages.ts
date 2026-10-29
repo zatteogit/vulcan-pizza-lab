@@ -1,6 +1,8 @@
 /** Italian source copy shared by the engine and CMS: a method instruction must
  * not drift between the MCP fallback and the localized UI. */
 export const METHOD_MESSAGES_IT: Record<string, string> = {
+  // FW-17 (D-P): niente biga o poolish col solo lievito madre.
+  "preferment.sourdoughInstead": "Biga e poolish si fanno con il lievito di birra: con il solo lievito madre la ricetta non li usa, perché il lievito madre fa già da prefermento. Per averli, aggiungi un lievito di birra alla dispensa.",
   "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
   "topping.geometry": "Superficie {area} cm² · riferimento {reference} cm² · dosi ×{scale}.",
   "auth.layoutChanged": "Formato diverso dal riferimento: la variante modifica la struttura della ricetta",

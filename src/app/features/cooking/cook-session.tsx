@@ -38,7 +38,7 @@ export interface CookSessionStep {
   description: string;
   longDesc?: string;
   /** Audit totale n. 12: dosi del passo (già formattate). */
-  quantities?: { label: string; value: string }[];
+  quantities?: { label: string; value: string; /** FW-17: aiuto sotto il valore. */ hint?: string }[];
   tip?: string;
   duration_minutes: number;
   startMs: number;

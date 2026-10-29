@@ -809,6 +809,7 @@ export const SCIENCE_PT: CmsScience = {
     "proof-share-default": "Sem indicação do estilo, a segunda fermentação é uma parte fixa das horas.",
     "starter-steps-by-hours": "A dose de levain cai em degraus com as horas, sem considerar a temperatura.",
     "starter-not-in-hydration": "A farinha e a água do levain não contam na hidratação.",
+    "preferment-at-maturation-temp": "Com um pré-fermento, o pré-fermento maduro está no ponto médio da sua temperatura de maturação (biga 18–20 °C, poolish 20–22 °C) e misturá-lo à mão não aquece por fricção.",
     "flour-at-kitchen-temp": "A farinha está na temperatura da cozinha.",
     "mixer-friction-values": "O calor da masseira é um valor típico a verificar; à mão é zero.",
     "coefficients-not-measured": "Os coeficientes da fórmula são escolhidos pelo modelo, não medidos.",

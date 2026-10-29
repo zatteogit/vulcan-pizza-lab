@@ -126,11 +126,12 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
   {
     id: "water-temp-rule",
     kind: "exact",
-    formula: "T acqua = 3 × T impasto − T cucina − T farina − attrito",
+    // FW-17 (S08-A-07): con un prefermento la regola ha quattro termini.
+    formula: "T acqua = 3 × T impasto − T cucina − T farina − attrito · con un prefermento: impasto finale 4 × T impasto − T cucina − T farina − T prefermento − attrito; acqua del prefermento 3 × T prefermento − T cucina − T farina",
     variables: [
       { symbol: "T", unitKey: "celsius" },
     ],
-    assumptionIds: ["kitchen-temp-standard", "flour-at-kitchen-temp", "mixer-friction-values"],
+    assumptionIds: ["kitchen-temp-standard", "flour-at-kitchen-temp", "mixer-friction-values", "preferment-at-maturation-temp"],
     sourceIds: ["vulcan-notion-db"],
     engineRef: "Regola 55: desired_dough_temp_c, MIXER_FRICTION_K",
     glossaryTermId: "rule_of_55",

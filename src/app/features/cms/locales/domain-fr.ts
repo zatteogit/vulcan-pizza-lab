@@ -815,6 +815,7 @@ export const SCIENCE_FR: CmsScience = {
     "proof-share-default": "Sans indication du style, l'apprêt est une part fixe des heures.",
     "starter-steps-by-hours": "La dose de levain baisse par paliers avec les heures, sans tenir compte de la température.",
     "starter-not-in-hydration": "La farine et l'eau du levain ne sont pas comptées dans l'hydratation.",
+    "preferment-at-maturation-temp": "Avec un préferment, le préferment mûr est au milieu de sa température de maturation (biga 18–20 °C, poolish 20–22 °C) et son pétrissage à la main ne chauffe pas par friction.",
     "flour-at-kitchen-temp": "La farine est à la température de la cuisine.",
     "mixer-friction-values": "La chauffe du pétrin est une valeur type à vérifier ; à la main, elle est nulle.",
     "coefficients-not-measured": "Les coefficients de la formule sont choisis par le modèle, non mesurés.",

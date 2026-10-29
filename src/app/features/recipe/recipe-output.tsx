@@ -382,7 +382,7 @@ export function RecipeOutput({
           title: loc.title,
           description: loc.description,
           longDesc: loc.longDesc,
-          quantities: stepQuantities(step.id, recipe, cms, fmt),
+          quantities: stepQuantities(step.id, recipe, cms, fmt, activeTopping),
           tip: loc.tip ? (isNerd ? loc.tip.nerd : loc.tip.beginner) : undefined,
           duration_minutes: step.duration_minutes,
           startMs: (stepTimes[i]?.start ?? startTime).getTime(),
@@ -390,7 +390,7 @@ export function RecipeOutput({
           flexible: FLEXIBLE_STEP_IDS.has(step.id),
         };
       }),
-    [recipe, cms, isNerd, stepTimes, startTime],
+    [recipe, cms, isNerd, stepTimes, startTime, activeTopping],
   );
 
   /* Un solo punto di verità per "inizia/riprendi pizzata":
@@ -599,6 +599,7 @@ export function RecipeOutput({
         steps={cookingSteps}
         topping={activeTopping}
         unitLabel={getServingUnitLabel(cms, servingUnit, recipe.dough_balls, true)}
+        unitLabelOne={getServingUnitLabel(cms, servingUnit, 1, cms.locale.id !== "de")}
         readyAt={endDisplayTime}
         readyApproximate={hasFlexiblePhases}
       />

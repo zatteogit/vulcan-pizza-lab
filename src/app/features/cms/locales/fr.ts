@@ -1064,6 +1064,8 @@ export const FR_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Divisez chaque unité en deux portions : 60% pour la base et 40% pour le dessus. Formez deux disques.",
     "timeline.shape.closedStuffedFried": "Abaissez le disque de base et réservez le second pour fermer.",
     "timeline.shape.foldedLayers": "Étalez une feuille de pâte très fine et pliez-la {folds} fois en livre, en répartissant la garniture entre les plis.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "La biga et le poolish se font avec de la levure de boulanger : avec seulement du levain, la recette ne les utilise pas, car le levain sert déjà de préferment. Pour les utiliser, ajoutez de la levure de boulanger à votre garde-manger.",
     "diet.singleBase": "Une seule base avec toute la pâte : oignons dessus, sans second disque ni fermeture.",
     "topping.geometry": "Surface {area} cm² · référence {reference} cm² · quantités ×{scale}.",
     "auth.layoutChanged": "Format différent de la référence : cette variante change la structure",
@@ -1201,7 +1203,7 @@ export const FR_LOCALE: CmsContent = {
         "Utilisez une balance ! Couper avec un coupe-p\u00E2te et arrondir chaque morceau en boule lisse.",
       tipNerd:
         "La division cr\u00E9e une tension superficielle qui emprisonne le CO\u2082 pendant l'appr\u00EAt.",
-      longDesc: "Renversez la p\u00E2te sur un plan l\u00E9g\u00E8rement farin\u00E9. Avec un coupe-p\u00E2te, coupez des portions du poids indiqu\u00E9 plus bas dans Ingr\u00E9dients, en les pesant sur une balance (c'est important pour une cuisson uniforme). Pour chaque morceau, faites le \u00AB boulage \u00BB : rabattez les bords vers le dessous au centre, tournez et arrondissez jusqu'\u00E0 obtenir une boule lisse et tendue. Disposez les p\u00E2tons sur une plaque farin\u00E9e, bien espac\u00E9s, et couvrez de film.",
+      longDesc: "Renversez la p\u00e2te sur un plan l\u00e9g\u00e8rement farin\u00e9. Avec un coupe-p\u00e2te, coupez des portions du poids indiqu\u00e9 dans cette \u00e9tape, en les pesant sur une balance (c'est important pour une cuisson uniforme). Pour chaque morceau, faites le \u00ab boulage \u00bb : rabattez les bords vers le dessous au centre, tournez et arrondissez jusqu'\u00e0 obtenir une boule lisse et tendue. Disposez les p\u00e2tons sur une plaque farin\u00e9e, bien espac\u00e9s, et couvrez de film.",
     },
     proof: {
       title: "Appr\u00EAt",
@@ -1245,7 +1247,7 @@ export const FR_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Division",
       desc: "Diviser d\u00E9licatement, sans d\u00E9gazer la p\u00E2te.",
-      longDesc: "Renversez la p\u00E2te sur le plan bien farin\u00E9 (avec les hydratations \u00E9lev\u00E9es, aidez-vous de semoule). Avec un coupe-p\u00E2te, coupez les portions du poids indiqu\u00E9 plus bas dans Ingr\u00E9dients, en les pesant sur une balance. Manipulez le moins possible : pour la plaque, PAS besoin du boulage serr\u00E9 de la pizza ronde \u2014 rabattez les bords dessous pour former un boudin souple, sans chasser l'air. Les bulles form\u00E9es pendant le pointage sont le futur alv\u00E9olage. Placez chaque morceau dans un r\u00E9cipient huil\u00E9 et couvrez.",
+      longDesc: "Renversez la p\u00e2te sur le plan bien farin\u00e9 (avec les hydratations \u00e9lev\u00e9es, aidez-vous de semoule). Avec un coupe-p\u00e2te, coupez les portions du poids indiqu\u00e9 dans cette \u00e9tape, en les pesant sur une balance. Manipulez le moins possible : pour la plaque, PAS besoin du boulage serr\u00e9 de la pizza ronde \u2014 rabattez les bords dessous pour former un boudin souple, sans chasser l'air. Les bulles form\u00e9es pendant le pointage sont le futur alv\u00e9olage. Placez chaque morceau dans un r\u00e9cipient huil\u00e9 et couvrez.",
       tipBeginner: "Mains d\u00E9licates ! Les bulles dans la p\u00E2te sont pr\u00E9cieuses : rabattez les bords dessous, sans \u00E9craser.",
       tipNerd: "Avec une hydratation >75%, une division agressive fait s'effondrer les alv\u00E9oles form\u00E9es pendant le pointage : tension minimale, d\u00E9gazage quasi nul.",
     },

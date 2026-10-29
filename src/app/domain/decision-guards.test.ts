@@ -6,6 +6,7 @@ import {
   isFriedStyle,
   recommendStyles,
   suggestedTimeSlot,
+  generateRecipe,
   type UserConstraints,
 } from "./pizza-engine";
 import { CMS_DEFAULTS } from "../features/cms/cms-context";
@@ -113,5 +114,19 @@ describe("D-032: le fritte stanno in una sezione a parte dei consigli", () => {
   it("i consigli di Crea usano recommendationSections e la sezione ha un titolo nel CMS", () => {
     expect(source("../features/recipe/recommended-styles.tsx")).toMatch(/recommendationSections\(/);
     expect(CMS_DEFAULTS.tiers.fried?.label).toBeTruthy();
+  });
+});
+
+/* FW-17 — D-P (audit 28/10/2026): niente biga o poolish col lievito madre
+ * finché non c'è una fonte per i parametri; la ricetta lo dice. */
+describe("D-P: biga e poolish solo col lievito di birra", () => {
+  it("col solo lievito madre il prefermento non si calcola e c'è la spiegazione", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_canotto, { ...homeKitchen, pantry_yeasts: ["sourdough"], available_hours: 48 }, {
+      usePreFerment: true,
+      preFerment: { type: "biga" },
+      customFermentationHours: 24,
+    });
+    expect(recipe.has_pre_ferment).toBe(false);
+    expect(recipe.method_changes?.some((m) => m.key === "preferment.sourdoughInstead")).toBe(true);
   });
 });

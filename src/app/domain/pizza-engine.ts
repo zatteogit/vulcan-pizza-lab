@@ -24,6 +24,8 @@ type ToppingRecipe
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, pantryIngredientReferences, type PantryFlourDetails } from "./pantry-ingredients";
 import { BRAND } from "../config/brand";
+import { maxPreFermentFlourPct, PRE_FERMENT_TEMP_C } from "./pre-ferment-split";
+import { roundForDisplay } from "./dose-rounding";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
 import { assessAllergens, allergenWarnings, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
 
@@ -549,6 +551,10 @@ export interface GeneratedRecipe {
   total_dough_g: number;
   ball_weight_g: number;
   water_temp_c: number | null; // Regola 55: temperatura acqua consigliata
+  /** FW-17 (S08-A-07): acqua del prefermento (stima, punto medio della
+   *  temperatura di maturazione). Con un prefermento water_temp_c è l'acqua
+   *  dell'impasto finale, calcolata con la regola a quattro termini. */
+  pre_ferment_water_temp_c?: number | null;
   scores: RecipeScores;
   timeline: TimelineStep[];
   tips: string[];
@@ -2018,7 +2024,9 @@ export function generateRecipe(
   // P/L estimation from W — Audit Maestro P0-1 (VPL-012: accept custom P/L)
   const flourPL = customFlourPL ?? estimatePL(flourW, plRange);
 
-  const hasPreFerment = !style.dough.unleavened &&
+  /* FW-17 (D-P): `let` perché una biga o un poolish col solo lievito madre
+     non si calcolano (vedi la scelta del lievito più sotto). */
+  let hasPreFerment = !style.dough.unleavened &&
     (usePreFerment ?? style.requires_pre_ferment);
   const preFermentType: PreFermentType = preFerment?.type ?? preFermentKind(style);
   const preFermentFlourPct = Math.min(
@@ -2171,7 +2179,10 @@ export function generateRecipe(
     fermentationHours >= 12 &&
     // ADV-11 fix: sourdough is great for ANY long fermentation (≥24h) or pre-ferment styles
     // Previously excluded no-knead long-ferment styles like teglia_romana, bonci, focaccia_genovese
-    (hasPreFerment || style.requires_pre_ferment || fermentationHours >= 24)
+    (hasPreFerment || style.requires_pre_ferment || fermentationHours >= 24) &&
+    // FW-17 (D-P, S08-A-05): biga e poolish si fanno col lievito di birra; con
+    // un lievito commerciale in dispensa il pre-fermento lo usa.
+    !(hasPreFerment && (py.includes("fresh") || py.includes("dry")))
   ) {
     yeastType = "sourdough";
   } else if (py.includes("fresh")) {
@@ -2182,6 +2193,12 @@ export function generateRecipe(
     // Only sourdough in pantry but short ferment — still use it
     yeastType = "sourdough";
   }
+  /* FW-17 (D-P, S08-A-05): una «biga» col lievito madre non è una biga e per
+     un pre-fermento a lievito madre non abbiamo una fonte dei parametri (quota,
+     idratazione, ore). Finché non c'è, la combinazione non si calcola: il
+     lievito madre fa già da pre-fermento e la ricetta lo dice. */
+  const preFermentDroppedForSourdough = hasPreFerment && yeastType === "sourdough";
+  if (preFermentDroppedForSourdough) hasPreFerment = false;
 
   // Yeast calculation (sourdough uses a different model)
   let yeastPct: number;
@@ -2238,14 +2255,13 @@ export function generateRecipe(
   // 0.3g di sale sono gustativamente invisibili — mostrare i decimali era una
   // precisione fittizia (audit precisione, luglio 2026). Il lievito resta a 0.1g
   // sotto, perché lì il sotto-grammo conta davvero.
-  const saltG = Math.round((flourG * effectiveSaltPct) / 100);
-  const fatG = Math.round((flourG * effectiveOilPct) / 100); // Grasso totale (olio O burro)
+  // FW-17 (S08-B-19): sotto i 5 g il mezzo grammo, altrimenti un sale all'1,8 %
+  // su 131 g di farina diventava 2 g (1,5 %). Regola in dose-rounding.ts.
+  const saltG = roundForDisplay("salt", (flourG * effectiveSaltPct) / 100);
+  const fatG = roundForDisplay("fat", (flourG * effectiveOilPct) / 100); // Grasso totale (olio O burro)
   const oilG = style.dough.fat_type === "butter" ? 0 : fatG; // oilG = 0 se è burro
-  const sugarG = Math.round((flourG * effectiveSugarPct) / 100);
-  const yeastG =
-    yeastType === "sourdough"
-      ? Math.round((flourG * yeastPct) / 100)
-      : Math.round(((flourG * yeastPct) / 100) * 10) / 10;
+  const sugarG = roundForDisplay("sugar", (flourG * effectiveSugarPct) / 100);
+  const yeastG = roundForDisplay(yeastType === "sourdough" ? "starter" : "yeast", (flourG * yeastPct) / 100);
 
   // Fat label for UI
   const fatLabel =
@@ -2544,7 +2560,20 @@ export function generateRecipe(
     const mixerData = MIXER_FRICTION_K[constraints.mixer_type];
     if (mixerData) frictionFactor = mixerData;
   }
-  const waterTempRaw = ddt * 3 - kitchenTemp - flourTemp - frictionFactor;
+  /* FW-17 (S08-A-07): con un prefermento nell'impasto finale entra un quarto
+     ingrediente con la sua temperatura (quella di maturazione, punto medio di
+     PRE_FERMENT_TEMP_C): T_acqua = 4 × DDT − T_cucina − T_farina − T_pref − attrito.
+     L'acqua del prefermento, mescolato a mano (attrito 0), mira alla sua
+     temperatura di maturazione: T = 3 × T_pref − T_cucina − T_farina. */
+  const preFermentTempC = hasPreFerment
+    ? (PRE_FERMENT_TEMP_C[preFermentType][0] + PRE_FERMENT_TEMP_C[preFermentType][1]) / 2
+    : null;
+  const waterTempRaw = preFermentTempC != null
+    ? ddt * 4 - kitchenTemp - flourTemp - preFermentTempC - frictionFactor
+    : ddt * 3 - kitchenTemp - flourTemp - frictionFactor;
+  const preFermentWaterTempC = preFermentTempC != null
+    ? Math.round(Math.min(WATER_TEMP_MAX_C, Math.max(WATER_TEMP_MIN_C, preFermentTempC * 3 - kitchenTemp - flourTemp)) * 10) / 10
+    : null;
   // Range pratico 2–40°C. ENG-7 (audit motore 22/10/2026): prima, fuori range,
   // il motore restituiva null e la UI taceva (cucina a 15°C o meno: l'acqua
   // richiesta supera i 40°C). Ora l'acqua si ferma al limite pratico e
@@ -2690,7 +2719,16 @@ export function generateRecipe(
     topping_scale: toppingScale,
     topping_geometry: { reference_area_cm2: referenceArea, area_cm2: toppingArea, area_scale: toppingArea / referenceArea },
     pan_config: panConfig,
-    method_changes: defaultTopping?.method_note ? [defaultTopping.method_note] : undefined,
+    method_changes: (() => {
+      const notes: EngineMsg[] = [
+        ...(defaultTopping?.method_note ? [defaultTopping.method_note] : []),
+        // FW-17 (D-P): la biga o il poolish richiesti non si fanno col lievito madre.
+        ...(preFermentDroppedForSourdough
+          ? [em("preferment.sourdoughInstead", METHOD_MESSAGES_IT["preferment.sourdoughInstead"])]
+          : []),
+      ];
+      return notes.length > 0 ? notes : undefined;
+    })(),
     schema_version: RECIPE_SCHEMA_VERSION,
     dietary_warnings: dietaryWarnings,
     allergens,
@@ -2744,7 +2782,10 @@ export function generateRecipe(
     fermentation_temp_c: fermentationTempC,
     has_pre_ferment: hasPreFerment,
     pre_ferment_type: hasPreFerment ? preFermentType : undefined,
-    pre_ferment_flour_pct: hasPreFerment ? preFermentFlourPct : undefined,
+    // FW-17 (S08-A-03): un poolish non può contenere più acqua della ricetta.
+    pre_ferment_flour_pct: hasPreFerment
+      ? Math.min(preFermentFlourPct, maxPreFermentFlourPct(preFermentType, hydration, PRE_FERMENT_FLOUR_PCT.max))
+      : undefined,
     oven_temp_c: ovenTemp,
     cook_time_sec: cookTime,
     total_dough_g: totalDough,
@@ -2752,6 +2793,7 @@ export function generateRecipe(
     scores,
     timeline,
     water_temp_c: waterTempC,
+    pre_ferment_water_temp_c: preFermentWaterTempC,
     tips,
     science,
     topping_info: (() => {
