@@ -750,6 +750,66 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     flavor_profile: "salty_savory",
     occasions: ["classico", "birra"],
   },
+  /* ═══ D-065 — catalogo italiano, tranche A: condimenti quotidiani ═══
+   * Da docs/progetto-catalogo-italiano.md §4. Un menù prova che il gusto
+   * esiste, non le dosi: le grammature sono di Vulcan, allineate alle ricette
+   * simili già in libreria (stessa base di pomodoro e formaggio per formato). */
+  wurstel_patatine: {
+    id: "wurstel_patatine",
+    name: "Würstel e patatine",
+    description: "Pomodoro, mozzarella, würstel e patatine fritte messe all'uscita dal forno. In molte pizzerie si chiama «Americana».",
+    emoji: "🌭",
+    flavor_profile: "rich",
+    occasions: ["bambini", "famiglia", "serata amici"],
+  },
+  prosciutto_cotto: {
+    id: "prosciutto_cotto",
+    name: "Prosciutto cotto",
+    description: "Pomodoro, mozzarella e prosciutto cotto. Semplice, senza funghi.",
+    emoji: "🥓",
+    flavor_profile: "salty_savory",
+    occasions: ["bambini", "classico", "cena famiglia"],
+  },
+  funghi: {
+    id: "funghi",
+    name: "Funghi",
+    description: "Pomodoro, mozzarella e champignon saltati in padella prima, così non bagnano la pizza.",
+    emoji: "🍄",
+    flavor_profile: "earthy",
+    occasions: ["vegetariano", "classico"],
+  },
+  napoli: {
+    id: "napoli",
+    name: "Napoli",
+    description: "Pomodoro, mozzarella, acciughe e origano. A Roma si chiama «Napoli», a Napoli «Romana»; capperi e olive solo in alcune varianti.",
+    emoji: "🐟",
+    flavor_profile: "salty_savory",
+    occasions: ["classico", "pizzeria"],
+  },
+  parmigiana: {
+    id: "parmigiana",
+    name: "Parmigiana",
+    description: "Pomodoro, melanzane fritte, mozzarella o provola, parmigiano e basilico: la parmigiana di melanzane sulla pizza.",
+    emoji: "🍆",
+    flavor_profile: "rich",
+    occasions: ["vegetariano", "estate", "comfort"],
+  },
+  norma: {
+    id: "norma",
+    name: "Norma",
+    description: "Pomodoro, melanzane fritte e basilico, con ricotta salata grattugiata dopo il forno, come la pasta alla Norma catanese.",
+    emoji: "🍆",
+    flavor_profile: "salty_savory",
+    occasions: ["vegetariano", "estate", "tradizione siciliana"],
+  },
+  bufalina: {
+    id: "bufalina",
+    name: "Bufalina",
+    description: "Pomodoro, mozzarella di bufala campana e basilico. La bufala rilascia molto siero: va sgocciolata e, nei forni lenti, messa all'uscita.",
+    emoji: "🐃",
+    flavor_profile: "creamy",
+    occasions: ["classico", "estate"],
+  },
 };
 
 /* ═══ ToppingRecipe — la realizzazione concreta ═══ */
@@ -3412,6 +3472,384 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     }],
   },
 
+
+  /* ═══ D-065 — catalogo italiano, tranche A: condimenti quotidiani ═══
+   * Grammature di Vulcan per UNA unità dello stile (il motore le scala con
+   * l'area e topping_scale). Napoletana: pelati e fior di latte come la
+   * Capricciosa napoletana; romana: passata e fior di latte come la Capricciosa
+   * romana. Gli ingredienti che il forno rovina vanno in «after_bake». */
+  wurstel_patatine_classica: {
+    id: "wurstel_patatine_classica",
+    concept_ref: "wurstel_patatine",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "napoletana_canotto", "trancio_milanese"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Würstel di suino (carne di suino, acqua, sale, spezie)", components: ["carne di suino", "acqua", "sale", "spezie"], amount: { value: 50, unit: "g" }, notes: "a rondelle; controlla l'etichetta: alcuni contengono latte o glutine" },
+      { name: "Patatine fritte (patate, olio di semi di girasole, sale)", components: ["patate", "olio di semi di girasole", "sale"], amount: { value: 60, unit: "g" }, notes: "fritte poco prima, messe dopo il forno" },
+    ],
+    pre_prep_steps: [{
+      id: "friggere_patatine_wurstel",
+      title: "Friggi le patatine",
+      description: "Friggi le patatine a 170-175 °C finché sono dorate, oppure cuoci quelle surgelate come dice la confezione. Scolale su carta e salale.",
+      duration_minutes: 12,
+      timing: "just_before_assembly",
+      tip: {
+        beginner: "Preparale mentre la pizza cuoce: devono essere calde e croccanti quando la sforni.",
+        nerd: "In forno le patatine già fritte perdono acqua e croccantezza e la mozzarella le ammorbidisce: aggiunte all'uscita restano croccanti.",
+      },
+    }],
+    assembly_steps: [{
+      id: "spread_wurstel_patatine",
+      title: "Pomodoro, mozzarella e würstel",
+      description: "Stendi la passata, distribuisci il fior di latte e le rondelle di würstel. Le patatine non vanno in forno.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }, {
+      id: "finish_wurstel_patatine",
+      title: "Patatine all'uscita",
+      description: "Appena sfornata, distribuisci le patatine fritte calde sulla pizza.",
+      insert_at: "after_bake",
+      duration_minutes: 1,
+    }],
+  },
+
+  prosciutto_cotto_napoletana: {
+    id: "prosciutto_cotto_napoletana",
+    concept_ref: "prosciutto_cotto",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati schiacciati a mano (pomodoro, succo di pomodoro)", components: ["pomodoro", "succo di pomodoro"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Prosciutto cotto a fette (carne di suino, sale, aromi)", components: ["carne di suino", "sale", "aromi"], amount: { value: 40, unit: "g" } },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    assembly_steps: [{
+      id: "spread_prosciutto_cotto_nap",
+      title: "Condimento Prosciutto cotto",
+      description: "Pelati schiacciati e fior di latte. Distribuisci le fette di prosciutto cotto spezzate a mano e un filo d'olio.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+  prosciutto_cotto_romana: {
+    id: "prosciutto_cotto_romana",
+    concept_ref: "prosciutto_cotto",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana", "trancio_milanese"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 90, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Prosciutto cotto a fette (carne di suino, sale, aromi)", components: ["carne di suino", "sale", "aromi"], amount: { value: 45, unit: "g" } },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    assembly_steps: [{
+      id: "spread_prosciutto_cotto_rom",
+      title: "Condimento Prosciutto cotto",
+      description: "Passata e fior di latte. Il prosciutto cotto va sopra la mozzarella; nelle cotture lunghe del forno di casa mettilo negli ultimi 3-4 minuti, così non si secca.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+      tip: {
+        beginner: "Se dopo 10 minuti di forno il prosciutto è già arricciato e scuro, la prossima volta mettilo a fine cottura.",
+        nerd: "Il prosciutto cotto è già cotto e ha poca acqua libera: oltre i 6-8 minuti a 250 °C si disidrata e i bordi caramellano fino ad amareggiare.",
+      },
+    }],
+  },
+
+  funghi_napoletana: {
+    id: "funghi_napoletana",
+    concept_ref: "funghi",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati schiacciati a mano (pomodoro, succo di pomodoro)", components: ["pomodoro", "succo di pomodoro"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Funghi champignon saltati", amount: { value: 60, unit: "g" }, notes: "peso da crudi" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    pre_prep_steps: [{
+      id: "saltare_champignon_funghi_nap",
+      title: "Salta gli champignon",
+      description: "Affetta gli champignon e saltali 5-6 minuti in padella con un filo d'olio finché perdono l'acqua. Sala a fine cottura e lasciali intiepidire.",
+      duration_minutes: 8,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_funghi_nap",
+      title: "Condimento Funghi",
+      description: "Pelati schiacciati e fior di latte. Distribuisci gli champignon saltati e un filo d'olio.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+  funghi_romana: {
+    id: "funghi_romana",
+    concept_ref: "funghi",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana", "trancio_milanese"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 90, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Funghi champignon saltati", amount: { value: 70, unit: "g" }, notes: "peso da crudi" },
+      { name: "Aglio e prezzemolo", components: ["aglio", "prezzemolo"], amount: { value: 3, unit: "g" }, notes: "per saltare i funghi" },
+      { name: "Olio EVO", amount: { value: 8, unit: "ml" }, notes: "per i funghi e a filo" },
+    ],
+    pre_prep_steps: [{
+      id: "saltare_champignon_funghi_rom",
+      title: "Salta gli champignon",
+      description: "Affetta gli champignon. Scalda l'olio con l'aglio in camicia e salta i funghi 8-10 minuti a fiamma vivace finché perdono l'acqua e dorano. Sale e prezzemolo a fine cottura.",
+      duration_minutes: 12,
+      timing: "just_before_assembly",
+      tip: {
+        beginner: "Cuocili prima: crudi rilasciano acqua sulla pizza e la base resta bagnata.",
+        nerd: "Gli champignon sono circa il 92 % acqua: in padella ne perdono circa metà, e la base non riceve quell'acqua in cottura.",
+      },
+    }],
+    assembly_steps: [{
+      id: "spread_funghi_rom",
+      title: "Condimento Funghi",
+      description: "Passata e fior di latte. Distribuisci gli champignon saltati a temperatura ambiente e un filo d'olio.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  napoli_romana: {
+    id: "napoli_romana",
+    concept_ref: "napoli",
+    variant_name: "alla romana",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 90, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Filetti di acciuga sott'olio (acciughe, olio di oliva, sale)", components: ["acciughe", "olio di oliva", "sale"], amount: { value: 15, unit: "g" } },
+      { name: "Origano secco", amount: { value: 1, unit: "g" } },
+      { name: "Capperi dissalati", amount: { value: 5, unit: "g" }, optional: true },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    assembly_steps: [{
+      id: "spread_napoli_rom",
+      title: "Condimento Napoli",
+      description: "Passata e fior di latte. Distribuisci i filetti di acciuga, l'origano e, se li usi, i capperi. Filo d'olio.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+      tip: {
+        beginner: "Le acciughe sono già salate: niente sale sulla passata.",
+        nerd: "I filetti sott'olio portano circa il 15 % di sale sul loro peso: 15 g aggiungono intorno ai 2 g di sale alla pizza.",
+      },
+    }],
+  },
+  napoli_napoletana: {
+    id: "napoli_napoletana",
+    concept_ref: "napoli",
+    variant_name: "«Romana» a Napoli",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati schiacciati a mano (pomodoro, succo di pomodoro)", components: ["pomodoro", "succo di pomodoro"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 70, unit: "g" } },
+      { name: "Filetti di alici sott'olio (alici, olio di oliva, sale)", components: ["alici", "olio di oliva", "sale"], amount: { value: 15, unit: "g" } },
+      { name: "Origano secco", amount: { value: 1, unit: "g" } },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    assembly_steps: [{
+      id: "spread_napoli_nap",
+      title: "Condimento con alici",
+      description: "Pelati schiacciati e fior di latte. Distribuisci i filetti di alici e l'origano. Filo d'olio.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  parmigiana_napoletana: {
+    id: "parmigiana_napoletana",
+    concept_ref: "parmigiana",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati schiacciati a mano (pomodoro, succo di pomodoro)", components: ["pomodoro", "succo di pomodoro"], amount: { value: 70, unit: "g" } },
+      { name: "Provola affumicata", amount: { value: 70, unit: "g" }, notes: "a fette, sgocciolata" },
+      { name: "Melanzane fritte (melanzane, olio di semi di girasole, sale)", components: ["melanzane", "olio di semi di girasole", "sale"], amount: { value: 80, unit: "g" }, notes: "peso dopo la frittura" },
+      { name: "Parmigiano Reggiano grattugiato", amount: { value: 8, unit: "g" } },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, notes: "foglie" },
+    ],
+    pre_prep_steps: [{
+      id: "friggere_melanzane_parmigiana",
+      title: "Friggi le melanzane",
+      description: "Taglia le melanzane a fette di 5 mm. Se sono amare, salale e lasciale 30 minuti in uno scolapasta, poi asciugale. Friggile a 170 °C 2-3 minuti per lato finché sono dorate e scolale su carta.",
+      duration_minutes: 30,
+      timing: "just_before_assembly",
+      tip: {
+        beginner: "Si possono friggere anche il giorno prima e tenerle in frigo: tirale fuori un'ora prima.",
+        nerd: "La melanzana assorbe olio come una spugna finché la superficie non si chiude: olio ben caldo e poche fette per volta, così la temperatura non crolla.",
+      },
+    }],
+    assembly_steps: [{
+      id: "spread_parmigiana_nap",
+      title: "Condimento Parmigiana",
+      description: "Pelati, poi la provola. Sovrapponi le melanzane fritte, cospargi di parmigiano e aggiungi il basilico all'uscita.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+  parmigiana_romana: {
+    id: "parmigiana_romana",
+    concept_ref: "parmigiana",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Melanzane fritte (melanzane, olio di semi di girasole, sale)", components: ["melanzane", "olio di semi di girasole", "sale"], amount: { value: 90, unit: "g" }, notes: "peso dopo la frittura" },
+      { name: "Parmigiano Reggiano grattugiato", amount: { value: 10, unit: "g" } },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, notes: "foglie, dopo il forno" },
+    ],
+    pre_prep_steps: [{
+      id: "friggere_melanzane_parmigiana_rom",
+      title: "Friggi le melanzane",
+      description: "Taglia le melanzane a fette di 5 mm, salale se amare e asciugale. Friggile a 170 °C 2-3 minuti per lato e scolale su carta.",
+      duration_minutes: 30,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_parmigiana_rom",
+      title: "Condimento Parmigiana",
+      description: "Passata e fior di latte, poi le melanzane fritte e il parmigiano. Basilico all'uscita.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  norma_napoletana: {
+    id: "norma_napoletana",
+    concept_ref: "norma",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati schiacciati a mano (pomodoro, succo di pomodoro)", components: ["pomodoro", "succo di pomodoro"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 60, unit: "g" } },
+      { name: "Melanzane fritte a cubetti (melanzane, olio di semi di girasole, sale)", components: ["melanzane", "olio di semi di girasole", "sale"], amount: { value: 70, unit: "g" }, notes: "peso dopo la frittura" },
+      { name: "Ricotta salata grattugiata", amount: { value: 15, unit: "g" }, notes: "dopo il forno; non parmigiano né ricotta fresca" },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, notes: "foglie, dopo il forno" },
+    ],
+    pre_prep_steps: [{
+      id: "friggere_melanzane_norma",
+      title: "Friggi le melanzane a cubetti",
+      description: "Taglia le melanzane a cubetti di 1,5 cm, salale se amare e asciugale. Friggile a 170 °C finché sono dorate e scolale su carta.",
+      duration_minutes: 25,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_norma_nap",
+      title: "Pomodoro, fior di latte e melanzane",
+      description: "Pelati schiacciati, fior di latte e cubetti di melanzana fritta.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }, {
+      id: "finish_norma_nap",
+      title: "Ricotta salata e basilico",
+      description: "Appena sfornata, grattugia sopra la ricotta salata e aggiungi il basilico.",
+      insert_at: "after_bake",
+      duration_minutes: 1,
+      tip: {
+        beginner: "La ricotta salata va a crudo: in forno si scioglie e perde il suo sapore deciso.",
+        nerd: "È una ricotta pressata e stagionata, povera d'acqua e molto salata: grattugiata sulla pizza calda resta in fiocchi e non fonde come la mozzarella.",
+      },
+    }],
+  },
+  norma_romana: {
+    id: "norma_romana",
+    concept_ref: "norma",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 90, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 60, unit: "g" } },
+      { name: "Melanzane fritte a cubetti (melanzane, olio di semi di girasole, sale)", components: ["melanzane", "olio di semi di girasole", "sale"], amount: { value: 80, unit: "g" }, notes: "peso dopo la frittura" },
+      { name: "Ricotta salata grattugiata", amount: { value: 15, unit: "g" }, notes: "dopo il forno" },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, notes: "foglie, dopo il forno" },
+    ],
+    pre_prep_steps: [{
+      id: "friggere_melanzane_norma_rom",
+      title: "Friggi le melanzane a cubetti",
+      description: "Taglia le melanzane a cubetti di 1,5 cm, salale se amare e asciugale. Friggile a 170 °C finché sono dorate e scolale su carta.",
+      duration_minutes: 25,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_norma_rom",
+      title: "Pomodoro, fior di latte e melanzane",
+      description: "Passata, fior di latte e cubetti di melanzana fritta.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }, {
+      id: "finish_norma_rom",
+      title: "Ricotta salata e basilico",
+      description: "Appena sfornata, grattugia sopra la ricotta salata e aggiungi il basilico.",
+      insert_at: "after_bake",
+      duration_minutes: 1,
+    }],
+  },
+
+  bufalina_napoletana: {
+    id: "bufalina_napoletana",
+    concept_ref: "bufalina",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)", components: ["pomodoro", "succo di pomodoro"], amount: { value: 80, unit: "g" } },
+      { name: "Mozzarella di bufala campana DOP", amount: { value: 80, unit: "g" }, notes: "a pezzi, sgocciolata almeno un'ora" },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, notes: "foglie" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    pre_prep_steps: [{
+      id: "sgocciolare_bufala_nap",
+      title: "Sgocciola la bufala",
+      description: "Taglia la mozzarella di bufala a pezzi e lasciala in uno scolapasta in frigo almeno un'ora, così perde il siero.",
+      duration_minutes: 60,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_bufalina_nap",
+      title: "Condimento Bufalina",
+      description: "Pelati schiacciati, bufala sgocciolata a pezzi, basilico e un filo d'olio. Nel forno da 430 °C in su la bufala può cuocere sulla pizza: bastano 60-90 secondi.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+  bufalina_romana: {
+    id: "bufalina_romana",
+    concept_ref: "bufalina",
+    variant_name: "bufala all'uscita",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 90, unit: "g" } },
+      { name: "Mozzarella di bufala campana DOP", amount: { value: 90, unit: "g" }, notes: "a pezzi, dopo il forno" },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, notes: "foglie, dopo il forno" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    assembly_steps: [{
+      id: "spread_bufalina_rom",
+      title: "Solo pomodoro in forno",
+      description: "Stendi la passata con un filo d'olio. La bufala non va in forno.",
+      insert_at: "after_shape",
+      duration_minutes: 2,
+      replaces_generic: true,
+    }, {
+      id: "finish_bufalina_rom",
+      title: "Bufala e basilico all'uscita",
+      description: "Appena sfornata, distribuisci la bufala a pezzi e il basilico.",
+      insert_at: "after_bake",
+      duration_minutes: 2,
+      tip: {
+        beginner: "Nelle cotture lunghe la bufala in forno diventa gommosa e lascia un lago di siero: all'uscita resta morbida.",
+        nerd: "La bufala ha più acqua e più grasso del fior di latte: oltre qualche minuto di calore la cagliata si contrae e spurga il siero, che bagna la base.",
+      },
+    }],
+  },
 };
 
 export function resolveTopping(

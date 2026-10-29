@@ -251,6 +251,35 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       name: "Salsiccia",
       description: "Fenchelwurst in kleinen St\u00FCcken, roh auf So\u00DFe und Mozzarella gelegt: der h\u00E4ufigste Belag in den Pizzerien von Chicago.",
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine: {
+      name: "Würstchen und Pommes",
+      description: "Tomate, Mozzarella, Würstchen und Pommes frites, die erst nach dem Ofen dazukommen. In vielen Pizzerien heißt sie „Americana“.",
+    },
+    prosciutto_cotto: {
+      name: "Kochschinken",
+      description: "Tomate, Mozzarella und Kochschinken. Einfach, ohne Pilze.",
+    },
+    funghi: {
+      name: "Pilze",
+      description: "Tomate, Mozzarella und Champignons, vorher in der Pfanne angebraten, damit sie die Pizza nicht durchweichen.",
+    },
+    napoli: {
+      name: "Napoli",
+      description: "Tomate, Mozzarella, Sardellen und Oregano. In Rom heißt sie „Napoli“, in Neapel „Romana“; Kapern und Oliven nur in manchen Varianten.",
+    },
+    parmigiana: {
+      name: "Parmigiana",
+      description: "Tomate, frittierte Auberginen, Mozzarella oder Provola, Parmigiano und Basilikum: Parmigiana di melanzane auf der Pizza.",
+    },
+    norma: {
+      name: "Norma",
+      description: "Tomate, frittierte Auberginen und Basilikum, dazu nach dem Backen geriebene Ricotta salata, wie bei der Pasta alla Norma aus Catania.",
+    },
+    bufalina: {
+      name: "Bufalina",
+      description: "Tomate, Mozzarella di bufala campana und Basilikum. Büffelmozzarella gibt viel Molke ab: gut abtropfen lassen und in langsamen Öfen erst nach dem Backen auflegen.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2228,6 +2257,263 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
         },
       },
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine_classica: {
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Schweinewürstchen (Schweinefleisch, Wasser, Salz, Gewürze)",
+          notes: "in Scheiben; Etikett prüfen: manche enthalten Milch oder Gluten",
+        },
+        "3": {
+          name: "Pommes frites (Kartoffeln, Sonnenblumenöl, Salz)",
+          notes: "kurz vorher frittiert, nach dem Backen aufgelegt",
+        },
+      },
+    },
+    prosciutto_cotto_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Von Hand zerdrückte geschälte Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Kochschinken in Scheiben (Schweinefleisch, Salz, Aromen)",
+        },
+        "3": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    prosciutto_cotto_romana: {
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Kochschinken in Scheiben (Schweinefleisch, Salz, Aromen)",
+        },
+        "3": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    funghi_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Von Hand zerdrückte geschälte Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Angebratene Champignons",
+          notes: "Rohgewicht",
+        },
+        "3": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    funghi_romana: {
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Angebratene Champignons",
+          notes: "Rohgewicht",
+        },
+        "3": {
+          name: "Knoblauch und Petersilie",
+          notes: "zum Anbraten der Pilze",
+        },
+        "4": {
+          name: "Natives Olivenöl extra",
+          notes: "für die Pilze und zum Beträufeln",
+        },
+      },
+    },
+    napoli_romana: {
+      variant_name: "nach römischer Art",
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Sardellenfilets in Öl (Sardellen, Olivenöl, Salz)",
+        },
+        "3": {
+          name: "Getrockneter Oregano",
+        },
+        "4": {
+          name: "Entsalzte Kapern",
+        },
+        "5": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    napoli_napoletana: {
+      variant_name: "„Romana“ in Neapel",
+      ingredients: {
+        "0": {
+          name: "Von Hand zerdrückte geschälte Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Sardellenfilets in Öl (Sardellen, Olivenöl, Salz)",
+        },
+        "3": {
+          name: "Getrockneter Oregano",
+        },
+        "4": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    parmigiana_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Von Hand zerdrückte geschälte Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Geräucherte Provola",
+          notes: "in Scheiben, abgetropft",
+        },
+        "2": {
+          name: "Frittierte Auberginen (Auberginen, Sonnenblumenöl, Salz)",
+          notes: "Gewicht nach dem Frittieren",
+        },
+        "3": {
+          name: "Geriebener Parmigiano Reggiano",
+        },
+        "4": {
+          name: "Frisches Basilikum",
+          notes: "Blätter",
+        },
+      },
+    },
+    parmigiana_romana: {
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Frittierte Auberginen (Auberginen, Sonnenblumenöl, Salz)",
+          notes: "Gewicht nach dem Frittieren",
+        },
+        "3": {
+          name: "Geriebener Parmigiano Reggiano",
+        },
+        "4": {
+          name: "Frisches Basilikum",
+          notes: "Blätter, nach dem Backen",
+        },
+      },
+    },
+    norma_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Von Hand zerdrückte geschälte Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Gewürfelte frittierte Auberginen (Auberginen, Sonnenblumenöl, Salz)",
+          notes: "Gewicht nach dem Frittieren",
+        },
+        "3": {
+          name: "Geriebene Ricotta salata",
+          notes: "nach dem Backen; kein Parmigiano und keine frische Ricotta",
+        },
+        "4": {
+          name: "Frisches Basilikum",
+          notes: "Blätter, nach dem Backen",
+        },
+      },
+    },
+    norma_romana: {
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Gewürfelte frittierte Auberginen (Auberginen, Sonnenblumenöl, Salz)",
+          notes: "Gewicht nach dem Frittieren",
+        },
+        "3": {
+          name: "Geriebene Ricotta salata",
+          notes: "nach dem Backen",
+        },
+        "4": {
+          name: "Frisches Basilikum",
+          notes: "Blätter, nach dem Backen",
+        },
+      },
+    },
+    bufalina_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Von Hand zerdrückte geschälte San-Marzano-Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "in Stücken, mindestens eine Stunde abgetropft",
+        },
+        "2": {
+          name: "Frisches Basilikum",
+          notes: "Blätter",
+        },
+        "3": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    bufalina_romana: {
+      variant_name: "Büffelmozzarella nach dem Backen",
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "in Stücken, nach dem Backen",
+        },
+        "2": {
+          name: "Frisches Basilikum",
+          notes: "Blätter, nach dem Backen",
+        },
+        "3": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2801,6 +3087,121 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     mortazza_split_fill: {
       title: "Die Baciata öffnen und füllen",
       description: "Die beiden gebackenen Schichten trennen; bei Bedarf mit einem Sägemesser am Rand entlangfahren. Mortadella und gehackte Pistazien auf der unteren Schicht verteilen; Stracciatella nur hinzufügen, wenn ausgewählt. Zuklappen und ohne erneutes Backen servieren."
+    },
+    // D-065 — condimenti quotidiani
+    friggere_patatine_wurstel: {
+      title: "Pommes frittieren",
+      description: "Die Pommes bei 170-175 °C goldgelb frittieren oder TK-Pommes nach Packungsangabe zubereiten. Auf Küchenpapier abtropfen lassen und salzen.",
+      tip_beginner: "Mach sie, während die Pizza backt: Beim Herausnehmen sollen sie heiß und knusprig sein.",
+      tip_nerd: "Im Ofen verlieren bereits frittierte Pommes Wasser und Knusprigkeit, und der Mozzarella weicht sie auf: Nach dem Backen aufgelegt bleiben sie knusprig.",
+    },
+    spread_wurstel_patatine: {
+      title: "Tomate, Mozzarella und Würstchen",
+      description: "Die Passata verstreichen, dann Fior di latte und Würstchenscheiben verteilen. Die Pommes kommen nicht in den Ofen.",
+    },
+    finish_wurstel_patatine: {
+      title: "Pommes nach dem Backen",
+      description: "Direkt nach dem Backen die heißen Pommes auf der Pizza verteilen.",
+    },
+    spread_prosciutto_cotto_nap: {
+      title: "Belag Kochschinken",
+      description: "Zerdrückte geschälte Tomaten und Fior di latte. Den Kochschinken von Hand zerzupfen und verteilen, dazu ein Faden Öl.",
+    },
+    spread_prosciutto_cotto_rom: {
+      title: "Belag Kochschinken",
+      description: "Passata und Fior di latte. Der Kochschinken kommt auf den Mozzarella; bei langen Backzeiten im Haushaltsofen erst in den letzten 3-4 Minuten auflegen, damit er nicht austrocknet.",
+      tip_beginner: "Wenn der Schinken nach 10 Minuten im Ofen schon gewellt und dunkel ist, leg ihn nächstes Mal erst gegen Ende der Backzeit auf.",
+      tip_nerd: "Kochschinken ist bereits gegart und hat wenig freies Wasser: Nach mehr als 6-8 Minuten bei 250 °C trocknet er aus und die Ränder karamellisieren, bis sie bitter werden.",
+    },
+    saltare_champignon_funghi_nap: {
+      title: "Champignons anbraten",
+      description: "Die Champignons in Scheiben schneiden und 5-6 Minuten mit etwas Öl in der Pfanne braten, bis sie ihr Wasser verloren haben. Erst am Ende salzen und etwas abkühlen lassen.",
+    },
+    spread_funghi_nap: {
+      title: "Belag Pilze",
+      description: "Zerdrückte geschälte Tomaten und Fior di latte. Die angebratenen Champignons verteilen, dazu ein Faden Öl.",
+    },
+    saltare_champignon_funghi_rom: {
+      title: "Champignons anbraten",
+      description: "Die Champignons in Scheiben schneiden. Das Öl mit einer ungeschälten Knoblauchzehe erhitzen und die Pilze 8-10 Minuten bei starker Hitze braten, bis sie ihr Wasser verloren haben und goldbraun sind. Salz und Petersilie zum Schluss.",
+      tip_beginner: "Brate sie vorher: Roh geben sie Wasser auf die Pizza ab und der Boden bleibt nass.",
+      tip_nerd: "Champignons bestehen zu etwa 92 % aus Wasser: In der Pfanne verlieren sie etwa die Hälfte davon, und dieses Wasser landet beim Backen nicht im Boden.",
+    },
+    spread_funghi_rom: {
+      title: "Belag Pilze",
+      description: "Passata und Fior di latte. Die zimmerwarmen angebratenen Champignons verteilen, dazu ein Faden Öl.",
+    },
+    spread_napoli_rom: {
+      title: "Belag Napoli",
+      description: "Passata und Fior di latte. Sardellenfilets, Oregano und nach Wunsch die Kapern verteilen. Ein Faden Öl.",
+      tip_beginner: "Sardellen sind schon salzig: kein Salz auf die Passata.",
+      tip_nerd: "Sardellenfilets in Öl enthalten etwa 15 % Salz bezogen auf ihr Gewicht: 15 g bringen rund 2 g Salz auf die Pizza.",
+    },
+    spread_napoli_nap: {
+      title: "Belag mit Sardellen",
+      description: "Zerdrückte geschälte Tomaten und Fior di latte. Sardellenfilets und Oregano verteilen. Ein Faden Öl.",
+    },
+    friggere_melanzane_parmigiana: {
+      title: "Auberginen frittieren",
+      description: "Die Auberginen in 5 mm dicke Scheiben schneiden. Sind sie bitter, salzen und 30 Minuten in einem Sieb ziehen lassen, dann trocken tupfen. Bei 170 °C 2-3 Minuten pro Seite goldbraun frittieren und auf Küchenpapier abtropfen lassen.",
+      tip_beginner: "Du kannst sie auch am Vortag frittieren und im Kühlschrank aufbewahren: Nimm sie eine Stunde vorher heraus.",
+      tip_nerd: "Die Aubergine saugt Öl wie ein Schwamm, bis sich ihre Oberfläche schließt: gut heißes Öl und wenige Scheiben auf einmal, damit die Temperatur nicht einbricht.",
+    },
+    spread_parmigiana_nap: {
+      title: "Belag Parmigiana",
+      description: "Geschälte Tomaten, dann die Provola. Die frittierten Auberginen darüberschichten, mit Parmigiano bestreuen und das Basilikum nach dem Backen dazugeben.",
+    },
+    friggere_melanzane_parmigiana_rom: {
+      title: "Auberginen frittieren",
+      description: "Die Auberginen in 5 mm dicke Scheiben schneiden, bei Bitterkeit salzen und trocken tupfen. Bei 170 °C 2-3 Minuten pro Seite frittieren und auf Küchenpapier abtropfen lassen.",
+    },
+    spread_parmigiana_rom: {
+      title: "Belag Parmigiana",
+      description: "Passata und Fior di latte, dann die frittierten Auberginen und der Parmigiano. Basilikum nach dem Backen.",
+    },
+    friggere_melanzane_norma: {
+      title: "Auberginenwürfel frittieren",
+      description: "Die Auberginen in 1,5 cm große Würfel schneiden, bei Bitterkeit salzen und trocken tupfen. Bei 170 °C goldbraun frittieren und auf Küchenpapier abtropfen lassen.",
+    },
+    spread_norma_nap: {
+      title: "Tomate, Fior di latte und Auberginen",
+      description: "Zerdrückte geschälte Tomaten, Fior di latte und die frittierten Auberginenwürfel.",
+    },
+    finish_norma_nap: {
+      title: "Ricotta salata und Basilikum",
+      description: "Direkt nach dem Backen die Ricotta salata darüberreiben und das Basilikum dazugeben.",
+      tip_beginner: "Die Ricotta salata kommt roh darauf: Im Ofen schmilzt sie und verliert ihren kräftigen Geschmack.",
+      tip_nerd: "Sie ist eine gepresste, gereifte Ricotta, wasserarm und sehr salzig: Über die heiße Pizza gerieben bleibt sie in Flocken und schmilzt nicht wie Mozzarella.",
+    },
+    friggere_melanzane_norma_rom: {
+      title: "Auberginenwürfel frittieren",
+      description: "Die Auberginen in 1,5 cm große Würfel schneiden, bei Bitterkeit salzen und trocken tupfen. Bei 170 °C goldbraun frittieren und auf Küchenpapier abtropfen lassen.",
+    },
+    spread_norma_rom: {
+      title: "Tomate, Fior di latte und Auberginen",
+      description: "Passata, Fior di latte und die frittierten Auberginenwürfel.",
+    },
+    finish_norma_rom: {
+      title: "Ricotta salata und Basilikum",
+      description: "Direkt nach dem Backen die Ricotta salata darüberreiben und das Basilikum dazugeben.",
+    },
+    sgocciolare_bufala_nap: {
+      title: "Büffelmozzarella abtropfen lassen",
+      description: "Den Büffelmozzarella in Stücke schneiden und mindestens eine Stunde in einem Sieb im Kühlschrank lassen, damit die Molke abläuft.",
+    },
+    spread_bufalina_nap: {
+      title: "Belag Bufalina",
+      description: "Zerdrückte geschälte Tomaten, abgetropfter Büffelmozzarella in Stücken, Basilikum und ein Faden Öl. Im Ofen ab 430 °C kann der Büffelmozzarella auf der Pizza mitbacken: 60-90 Sekunden reichen.",
+    },
+    spread_bufalina_rom: {
+      title: "Nur Tomate in den Ofen",
+      description: "Die Passata mit einem Faden Öl verstreichen. Der Büffelmozzarella kommt nicht in den Ofen.",
+    },
+    finish_bufalina_rom: {
+      title: "Büffelmozzarella und Basilikum nach dem Backen",
+      description: "Direkt nach dem Backen den Büffelmozzarella in Stücken und das Basilikum verteilen.",
+      tip_beginner: "Bei langen Backzeiten wird Büffelmozzarella im Ofen gummiartig und hinterlässt einen See aus Molke: Nach dem Backen aufgelegt bleibt er weich.",
+      tip_nerd: "Büffelmozzarella hat mehr Wasser und mehr Fett als Fior di latte: Nach mehr als ein paar Minuten Hitze zieht sich der Bruch zusammen und presst Molke aus, die den Boden durchnässt.",
     },
   },
 };

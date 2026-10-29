@@ -251,6 +251,35 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       name: "Sausage",
       description: "Fennel sausage in small pieces, put on raw over sauce and mozzarella: the most common topping in Chicago pizzerias.",
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine: {
+      name: "Hot dog and fries",
+      description: "Tomato, mozzarella, frankfurters and fries added straight out of the oven. Many pizzerias call it “Americana”.",
+    },
+    prosciutto_cotto: {
+      name: "Cooked ham",
+      description: "Tomato, mozzarella and cooked ham. Simple, no mushrooms.",
+    },
+    funghi: {
+      name: "Mushroom",
+      description: "Tomato, mozzarella and button mushrooms sautéed in a pan first, so they don't make the pizza soggy.",
+    },
+    napoli: {
+      name: "Napoli",
+      description: "Tomato, mozzarella, anchovies and oregano. In Rome it's called “Napoli”, in Naples “Romana”; capers and olives only in some versions.",
+    },
+    parmigiana: {
+      name: "Parmigiana",
+      description: "Tomato, fried aubergine, mozzarella or provola, Parmigiano and basil: aubergine parmigiana on a pizza.",
+    },
+    norma: {
+      name: "Norma",
+      description: "Tomato, fried aubergine and basil, with ricotta salata grated on after baking, like Catania's pasta alla Norma.",
+    },
+    bufalina: {
+      name: "Bufalina",
+      description: "Tomato, buffalo mozzarella from Campania and basil. Buffalo mozzarella releases a lot of whey: drain it and, in slow ovens, add it after baking.",
+    },
   },
 
   recipes: {
@@ -1243,6 +1272,122 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
         },
       },
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine_classica: {
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Pork frankfurters (pork, water, salt, spices)", notes: "sliced into rounds; check the label: some contain milk or gluten" },
+        "3": { name: "French fries (potatoes, sunflower oil, salt)", notes: "fried just before, added after baking" },
+      },
+    },
+    prosciutto_cotto_napoletana: {
+      ingredients: {
+        "0": { name: "Hand-crushed peeled tomatoes (tomatoes, tomato juice)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Sliced cooked ham (pork, salt, flavourings)" },
+        "3": { name: "Extra-virgin olive oil" },
+      },
+    },
+    prosciutto_cotto_romana: {
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Sliced cooked ham (pork, salt, flavourings)" },
+        "3": { name: "Extra-virgin olive oil" },
+      },
+    },
+    funghi_napoletana: {
+      ingredients: {
+        "0": { name: "Hand-crushed peeled tomatoes (tomatoes, tomato juice)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Sautéed button mushrooms", notes: "raw weight" },
+        "3": { name: "Extra-virgin olive oil" },
+      },
+    },
+    funghi_romana: {
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Sautéed button mushrooms", notes: "raw weight" },
+        "3": { name: "Garlic and parsley", notes: "for sautéing the mushrooms" },
+        "4": { name: "Extra-virgin olive oil", notes: "for the mushrooms and to drizzle" },
+      },
+    },
+    napoli_romana: {
+      variant_name: "Roman-style",
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Anchovy fillets in oil (anchovies, olive oil, salt)" },
+        "3": { name: "Dried oregano" },
+        "4": { name: "Desalted capers" },
+        "5": { name: "Extra-virgin olive oil" },
+      },
+    },
+    napoli_napoletana: {
+      variant_name: "“Romana” in Naples",
+      ingredients: {
+        "0": { name: "Hand-crushed peeled tomatoes (tomatoes, tomato juice)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Anchovy fillets in oil (anchovies, olive oil, salt)" },
+        "3": { name: "Dried oregano" },
+        "4": { name: "Extra-virgin olive oil" },
+      },
+    },
+    parmigiana_napoletana: {
+      ingredients: {
+        "0": { name: "Hand-crushed peeled tomatoes (tomatoes, tomato juice)" },
+        "1": { name: "Smoked provola", notes: "sliced, drained" },
+        "2": { name: "Fried aubergines (aubergines, sunflower oil, salt)", notes: "weight after frying" },
+        "3": { name: "Grated Parmigiano Reggiano" },
+        "4": { name: "Fresh basil", notes: "leaves" },
+      },
+    },
+    parmigiana_romana: {
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Fried aubergines (aubergines, sunflower oil, salt)", notes: "weight after frying" },
+        "3": { name: "Grated Parmigiano Reggiano" },
+        "4": { name: "Fresh basil", notes: "leaves, after baking" },
+      },
+    },
+    norma_napoletana: {
+      ingredients: {
+        "0": { name: "Hand-crushed peeled tomatoes (tomatoes, tomato juice)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Diced fried aubergines (aubergines, sunflower oil, salt)", notes: "weight after frying" },
+        "3": { name: "Grated ricotta salata", notes: "after baking; not Parmigiano or fresh ricotta" },
+        "4": { name: "Fresh basil", notes: "leaves, after baking" },
+      },
+    },
+    norma_romana: {
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Diced fried aubergines (aubergines, sunflower oil, salt)", notes: "weight after frying" },
+        "3": { name: "Grated ricotta salata", notes: "after baking" },
+        "4": { name: "Fresh basil", notes: "leaves, after baking" },
+      },
+    },
+    bufalina_napoletana: {
+      ingredients: {
+        "0": { name: "Hand-crushed San Marzano peeled tomatoes (tomatoes, tomato juice)" },
+        "1": { name: "Mozzarella di bufala campana DOP", notes: "in pieces, drained for at least an hour" },
+        "2": { name: "Fresh basil", notes: "leaves" },
+        "3": { name: "Extra-virgin olive oil" },
+      },
+    },
+    bufalina_romana: {
+      variant_name: "buffalo mozzarella after baking",
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Mozzarella di bufala campana DOP", notes: "in pieces, after baking" },
+        "2": { name: "Fresh basil", notes: "leaves, after baking" },
+        "3": { name: "Extra-virgin olive oil" },
+      },
+    },
   },
 
   steps: {
@@ -1960,6 +2105,121 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     mortazza_split_fill: {
       title: "Open and fill the Baciata",
       description: "Separate the two baked layers, using a serrated knife along the edge if needed. Arrange mortadella and chopped pistachios on the bottom layer; add stracciatella only if selected. Close and serve without returning it to the oven."
+    },
+    // D-065 — condimenti quotidiani
+    friggere_patatine_wurstel: {
+      title: "Fry the fries",
+      description: "Fry the potatoes at 170-175 °C until golden, or cook frozen fries as the packet says. Drain them on paper and salt them.",
+      tip_beginner: "Make them while the pizza bakes: they should be hot and crisp when it comes out.",
+      tip_nerd: "In the oven, already-fried fries lose water and crispness, and the mozzarella softens them: added after baking, they stay crisp.",
+    },
+    spread_wurstel_patatine: {
+      title: "Tomato, mozzarella and frankfurters",
+      description: "Spread the passata, then scatter the fior di latte and the frankfurter rounds. The fries don't go in the oven.",
+    },
+    finish_wurstel_patatine: {
+      title: "Fries after baking",
+      description: "As soon as the pizza comes out, scatter the hot fries over it.",
+    },
+    spread_prosciutto_cotto_nap: {
+      title: "Cooked ham topping",
+      description: "Crushed peeled tomatoes and fior di latte. Scatter the cooked ham slices, torn by hand, and add a drizzle of oil.",
+    },
+    spread_prosciutto_cotto_rom: {
+      title: "Cooked ham topping",
+      description: "Passata and fior di latte. The cooked ham goes on top of the mozzarella; with long home-oven bakes, add it in the last 3-4 minutes so it doesn't dry out.",
+      tip_beginner: "If the ham is already curled and dark after 10 minutes in the oven, add it at the end of baking next time.",
+      tip_nerd: "Cooked ham is already cooked and has little free water: beyond 6-8 minutes at 250 °C it dries out and the edges caramelise until they turn bitter.",
+    },
+    saltare_champignon_funghi_nap: {
+      title: "Sauté the mushrooms",
+      description: "Slice the button mushrooms and sauté them for 5-6 minutes in a pan with a drizzle of oil until they release their water. Salt them at the end and let them cool slightly.",
+    },
+    spread_funghi_nap: {
+      title: "Mushroom topping",
+      description: "Crushed peeled tomatoes and fior di latte. Scatter the sautéed mushrooms and add a drizzle of oil.",
+    },
+    saltare_champignon_funghi_rom: {
+      title: "Sauté the mushrooms",
+      description: "Slice the button mushrooms. Heat the oil with an unpeeled garlic clove and sauté the mushrooms for 8-10 minutes over high heat until they release their water and turn golden. Salt and parsley at the end.",
+      tip_beginner: "Cook them first: raw, they release water onto the pizza and the base stays soggy.",
+      tip_nerd: "Button mushrooms are about 92 % water: in the pan they lose about half of it, so the base doesn't take on that water while baking.",
+    },
+    spread_funghi_rom: {
+      title: "Mushroom topping",
+      description: "Passata and fior di latte. Scatter the sautéed mushrooms at room temperature and add a drizzle of oil.",
+    },
+    spread_napoli_rom: {
+      title: "Napoli topping",
+      description: "Passata and fior di latte. Scatter the anchovy fillets, the oregano and, if using, the capers. A drizzle of oil.",
+      tip_beginner: "Anchovies are already salty: no salt on the passata.",
+      tip_nerd: "Anchovy fillets in oil carry about 15 % salt by weight: 15 g add around 2 g of salt to the pizza.",
+    },
+    spread_napoli_nap: {
+      title: "Anchovy topping",
+      description: "Crushed peeled tomatoes and fior di latte. Scatter the anchovy fillets and the oregano. A drizzle of oil.",
+    },
+    friggere_melanzane_parmigiana: {
+      title: "Fry the aubergines",
+      description: "Cut the aubergines into 5 mm slices. If they are bitter, salt them and leave them in a colander for 30 minutes, then pat them dry. Fry at 170 °C for 2-3 minutes per side until golden and drain on paper.",
+      tip_beginner: "You can also fry them the day before and keep them in the fridge: take them out an hour ahead.",
+      tip_nerd: "Aubergine soaks up oil like a sponge until its surface seals: use well-heated oil and only a few slices at a time, so the temperature doesn't crash.",
+    },
+    spread_parmigiana_nap: {
+      title: "Parmigiana topping",
+      description: "Peeled tomatoes, then the provola. Layer the fried aubergines on top, sprinkle with Parmigiano and add the basil after baking.",
+    },
+    friggere_melanzane_parmigiana_rom: {
+      title: "Fry the aubergines",
+      description: "Cut the aubergines into 5 mm slices, salt them if bitter and pat them dry. Fry at 170 °C for 2-3 minutes per side and drain on paper.",
+    },
+    spread_parmigiana_rom: {
+      title: "Parmigiana topping",
+      description: "Passata and fior di latte, then the fried aubergines and the Parmigiano. Basil after baking.",
+    },
+    friggere_melanzane_norma: {
+      title: "Fry the diced aubergines",
+      description: "Cut the aubergines into 1.5 cm cubes, salt them if bitter and pat them dry. Fry at 170 °C until golden and drain on paper.",
+    },
+    spread_norma_nap: {
+      title: "Tomato, fior di latte and aubergines",
+      description: "Crushed peeled tomatoes, fior di latte and the fried aubergine cubes.",
+    },
+    finish_norma_nap: {
+      title: "Ricotta salata and basil",
+      description: "As soon as the pizza comes out, grate the ricotta salata over it and add the basil.",
+      tip_beginner: "Ricotta salata goes on raw: in the oven it melts and loses its sharp flavour.",
+      tip_nerd: "It is a pressed, aged ricotta, low in water and very salty: grated over the hot pizza it stays in flakes and doesn't melt like mozzarella.",
+    },
+    friggere_melanzane_norma_rom: {
+      title: "Fry the diced aubergines",
+      description: "Cut the aubergines into 1.5 cm cubes, salt them if bitter and pat them dry. Fry at 170 °C until golden and drain on paper.",
+    },
+    spread_norma_rom: {
+      title: "Tomato, fior di latte and aubergines",
+      description: "Passata, fior di latte and the fried aubergine cubes.",
+    },
+    finish_norma_rom: {
+      title: "Ricotta salata and basil",
+      description: "As soon as the pizza comes out, grate the ricotta salata over it and add the basil.",
+    },
+    sgocciolare_bufala_nap: {
+      title: "Drain the buffalo mozzarella",
+      description: "Cut the buffalo mozzarella into pieces and leave it in a colander in the fridge for at least an hour, so it loses its whey.",
+    },
+    spread_bufalina_nap: {
+      title: "Bufalina topping",
+      description: "Crushed peeled tomatoes, the drained buffalo mozzarella in pieces, basil and a drizzle of oil. In ovens from 430 °C upwards the buffalo mozzarella can bake on the pizza: 60-90 seconds is enough.",
+    },
+    spread_bufalina_rom: {
+      title: "Only tomato in the oven",
+      description: "Spread the passata with a drizzle of oil. The buffalo mozzarella doesn't go in the oven.",
+    },
+    finish_bufalina_rom: {
+      title: "Buffalo mozzarella and basil after baking",
+      description: "As soon as the pizza comes out, scatter the buffalo mozzarella pieces and the basil.",
+      tip_beginner: "In long bakes, buffalo mozzarella turns rubbery and leaves a pool of whey: added after baking, it stays soft.",
+      tip_nerd: "Buffalo mozzarella has more water and more fat than fior di latte: after more than a few minutes of heat the curd contracts and expels whey, which soaks the base.",
     },
   },
 };

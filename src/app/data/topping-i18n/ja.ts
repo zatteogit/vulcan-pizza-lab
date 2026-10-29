@@ -251,6 +251,35 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
       name: "\u30B5\u30EB\u30B7\u30C3\u30C1\u30E3",
       description: "\u30D5\u30A7\u30F3\u30CD\u30EB\u5165\u308A\u306E\u30BD\u30FC\u30BB\u30FC\u30B8\u3092\u5C0F\u3055\u304F\u3061\u304E\u308A\u3001\u751F\u306E\u307E\u307E\u30BD\u30FC\u30B9\u3068\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9\u306E\u4E0A\u306B\u306E\u305B\u308B\u3002\u30B7\u30AB\u30B4\u306E\u30D4\u30C3\u30C4\u30A7\u30EA\u30A2\u3067\u3044\u3061\u3070\u3093\u591A\u3044\u30C8\u30C3\u30D4\u30F3\u30B0\u3067\u3059\u3002",
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine: {
+      name: "ソーセージとフライドポテト",
+      description: "トマト、モッツァレラ、ソーセージに、焼き上がり後にのせるフライドポテト。多くのピッツェリアでは「Americana」と呼ばれます。",
+    },
+    prosciutto_cotto: {
+      name: "ハム",
+      description: "トマト、モッツァレラ、ハム。きのこなしのシンプルな組み合わせです。",
+    },
+    funghi: {
+      name: "きのこ",
+      description: "トマト、モッツァレラ、先にフライパンでソテーしたマッシュルーム。こうするとピザが水っぽくなりません。",
+    },
+    napoli: {
+      name: "Napoli",
+      description: "トマト、モッツァレラ、アンチョビ、オレガノ。ローマでは「Napoli」、ナポリでは「Romana」と呼ばれます。ケッパーとオリーブは一部のバリエーションだけです。",
+    },
+    parmigiana: {
+      name: "Parmigiana",
+      description: "トマト、揚げナス、モッツァレラまたはプロヴォラ、パルミジャーノ、バジル。ナスのパルミジャーナをピザにのせたものです。",
+    },
+    norma: {
+      name: "Norma",
+      description: "トマト、揚げナス、バジルに、焼き上がり後にすりおろしたリコッタ・サラータ。カターニアのパスタ・アッラ・ノルマと同じ組み合わせです。",
+    },
+    bufalina: {
+      name: "Bufalina",
+      description: "トマト、Mozzarella di bufala campana、バジル。水牛モッツァレラは乳清がたくさん出るので、水切りが必要です。焼成に時間がかかるオーブンでは、焼き上がり後にのせます。",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2228,6 +2257,263 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
         },
       },
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine_classica: {
+      ingredients: {
+        "0": {
+          name: "トマトピューレ（トマト、塩）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "豚肉ソーセージ（豚肉、水、塩、香辛料）",
+          notes: "輪切り。ラベルを確認してください：乳やグルテンを含むものもあります",
+        },
+        "3": {
+          name: "フライドポテト（じゃがいも、ひまわり油、塩）",
+          notes: "直前に揚げて、焼き上がり後にのせる",
+        },
+      },
+    },
+    prosciutto_cotto_napoletana: {
+      ingredients: {
+        "0": {
+          name: "手でつぶしたホールトマト（トマト、トマトジュース）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "スライスハム（豚肉、塩、香料）",
+        },
+        "3": {
+          name: "エキストラバージンオリーブオイル",
+        },
+      },
+    },
+    prosciutto_cotto_romana: {
+      ingredients: {
+        "0": {
+          name: "トマトピューレ（トマト、塩）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "スライスハム（豚肉、塩、香料）",
+        },
+        "3": {
+          name: "エキストラバージンオリーブオイル",
+        },
+      },
+    },
+    funghi_napoletana: {
+      ingredients: {
+        "0": {
+          name: "手でつぶしたホールトマト（トマト、トマトジュース）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "ソテーしたマッシュルーム",
+          notes: "生の状態での重量",
+        },
+        "3": {
+          name: "エキストラバージンオリーブオイル",
+        },
+      },
+    },
+    funghi_romana: {
+      ingredients: {
+        "0": {
+          name: "トマトピューレ（トマト、塩）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "ソテーしたマッシュルーム",
+          notes: "生の状態での重量",
+        },
+        "3": {
+          name: "にんにくとイタリアンパセリ",
+          notes: "きのこのソテー用",
+        },
+        "4": {
+          name: "エキストラバージンオリーブオイル",
+          notes: "きのこのソテー用と仕上げの回しかけ用",
+        },
+      },
+    },
+    napoli_romana: {
+      variant_name: "ローマ風",
+      ingredients: {
+        "0": {
+          name: "トマトピューレ（トマト、塩）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "アンチョビフィレのオイル漬け（アンチョビ、オリーブオイル、塩）",
+        },
+        "3": {
+          name: "乾燥オレガノ",
+        },
+        "4": {
+          name: "塩抜きしたケッパー",
+        },
+        "5": {
+          name: "エキストラバージンオリーブオイル",
+        },
+      },
+    },
+    napoli_napoletana: {
+      variant_name: "ナポリでの「Romana」",
+      ingredients: {
+        "0": {
+          name: "手でつぶしたホールトマト（トマト、トマトジュース）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "アンチョビフィレのオイル漬け（アンチョビ、オリーブオイル、塩）",
+        },
+        "3": {
+          name: "乾燥オレガノ",
+        },
+        "4": {
+          name: "エキストラバージンオリーブオイル",
+        },
+      },
+    },
+    parmigiana_napoletana: {
+      ingredients: {
+        "0": {
+          name: "手でつぶしたホールトマト（トマト、トマトジュース）",
+        },
+        "1": {
+          name: "スモークプロヴォラ",
+          notes: "スライスして水気を切る",
+        },
+        "2": {
+          name: "揚げナス（ナス、ひまわり油、塩）",
+          notes: "揚げた後の重量",
+        },
+        "3": {
+          name: "すりおろしたParmigiano Reggiano",
+        },
+        "4": {
+          name: "生のバジル",
+          notes: "葉",
+        },
+      },
+    },
+    parmigiana_romana: {
+      ingredients: {
+        "0": {
+          name: "トマトピューレ（トマト、塩）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "揚げナス（ナス、ひまわり油、塩）",
+          notes: "揚げた後の重量",
+        },
+        "3": {
+          name: "すりおろしたParmigiano Reggiano",
+        },
+        "4": {
+          name: "生のバジル",
+          notes: "葉、焼き上がり後に",
+        },
+      },
+    },
+    norma_napoletana: {
+      ingredients: {
+        "0": {
+          name: "手でつぶしたホールトマト（トマト、トマトジュース）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "角切りの揚げナス（ナス、ひまわり油、塩）",
+          notes: "揚げた後の重量",
+        },
+        "3": {
+          name: "すりおろしたリコッタ・サラータ",
+          notes: "焼き上がり後に。パルミジャーノやフレッシュリコッタは使いません",
+        },
+        "4": {
+          name: "生のバジル",
+          notes: "葉、焼き上がり後に",
+        },
+      },
+    },
+    norma_romana: {
+      ingredients: {
+        "0": {
+          name: "トマトピューレ（トマト、塩）",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "角切りの揚げナス（ナス、ひまわり油、塩）",
+          notes: "揚げた後の重量",
+        },
+        "3": {
+          name: "すりおろしたリコッタ・サラータ",
+          notes: "焼き上がり後に",
+        },
+        "4": {
+          name: "生のバジル",
+          notes: "葉、焼き上がり後に",
+        },
+      },
+    },
+    bufalina_napoletana: {
+      ingredients: {
+        "0": {
+          name: "手でつぶしたSan Marzanoのホールトマト（トマト、トマトジュース）",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "ちぎって、1時間以上水切りしたもの",
+        },
+        "2": {
+          name: "生のバジル",
+          notes: "葉",
+        },
+        "3": {
+          name: "エキストラバージンオリーブオイル",
+        },
+      },
+    },
+    bufalina_romana: {
+      variant_name: "水牛モッツァレラは焼き上がり後に",
+      ingredients: {
+        "0": {
+          name: "トマトピューレ（トマト、塩）",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "ちぎって、焼き上がり後に",
+        },
+        "2": {
+          name: "生のバジル",
+          notes: "葉、焼き上がり後に",
+        },
+        "3": {
+          name: "エキストラバージンオリーブオイル",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2801,6 +3087,121 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     mortazza_split_fill: {
       title: "バチャータを開いて具を挟む",
       description: "焼いた2層を離します。必要なら縁に沿って波刃ナイフを入れます。下側にモルタデッラと刻んだピスタチオをのせ、ストラッチャテッラは選んだ場合だけ加えます。上側を戻し、オーブンには戻さず提供します。"
+    },
+    // D-065 — condimenti quotidiani
+    friggere_patatine_wurstel: {
+      title: "ポテトを揚げる",
+      description: "じゃがいもを170-175 °Cできつね色になるまで揚げます。冷凍品なら袋の表示どおりに加熱します。紙にとって油を切り、塩をふります。",
+      tip_beginner: "ピザを焼いている間に用意します。焼き上がったとき、熱々でカリッとしているのが理想です。",
+      tip_nerd: "揚げたポテトはオーブンの中で水分とカリッと感を失い、モッツァレラでしんなりします。焼き上がり後にのせれば、カリッとしたままです。",
+    },
+    spread_wurstel_patatine: {
+      title: "トマト、モッツァレラ、ソーセージ",
+      description: "トマトピューレを広げ、Fior di latteと輪切りのソーセージを散らします。ポテトはオーブンに入れません。",
+    },
+    finish_wurstel_patatine: {
+      title: "ポテトは焼き上がり後に",
+      description: "焼き上がったらすぐ、熱々のフライドポテトをピザに散らします。",
+    },
+    spread_prosciutto_cotto_nap: {
+      title: "ハムのトッピング",
+      description: "つぶしたホールトマトとFior di latte。手でちぎったハムを散らし、オリーブオイルを回しかけます。",
+    },
+    spread_prosciutto_cotto_rom: {
+      title: "ハムのトッピング",
+      description: "トマトピューレとFior di latte。ハムはモッツァレラの上にのせます。家庭用オーブンで長く焼くときは、乾かないように最後の3-4分で加えます。",
+      tip_beginner: "焼き始めて10分でハムが反り返って黒ずんでいたら、次回は焼成の最後に加えます。",
+      tip_nerd: "ハムはすでに加熱済みで、自由水が少ない食材です。250 °Cで6-8分を超えると水分が抜け、縁がカラメル化して苦くなります。",
+    },
+    saltare_champignon_funghi_nap: {
+      title: "マッシュルームをソテーする",
+      description: "マッシュルームを薄切りにし、オリーブオイル少々をひいたフライパンで5-6分、水分が抜けるまでソテーします。塩は最後に加え、粗熱を取ります。",
+    },
+    spread_funghi_nap: {
+      title: "きのこのトッピング",
+      description: "つぶしたホールトマトとFior di latte。ソテーしたマッシュルームを散らし、オリーブオイルを回しかけます。",
+    },
+    saltare_champignon_funghi_rom: {
+      title: "マッシュルームをソテーする",
+      description: "マッシュルームを薄切りにします。皮付きのにんにくとオリーブオイルを温め、強火で8-10分、水分が抜けて色づくまでソテーします。塩とイタリアンパセリは最後に加えます。",
+      tip_beginner: "先に加熱しておきます。生のままだとピザの上で水分が出て、生地が湿ったままになります。",
+      tip_nerd: "マッシュルームは約92 %が水分です。フライパンでその約半分が抜けるので、焼成中に生地がその水分を受けません。",
+    },
+    spread_funghi_rom: {
+      title: "きのこのトッピング",
+      description: "トマトピューレとFior di latte。常温にしたソテー済みのマッシュルームを散らし、オリーブオイルを回しかけます。",
+    },
+    spread_napoli_rom: {
+      title: "Napoliのトッピング",
+      description: "トマトピューレとFior di latte。アンチョビフィレ、オレガノ、使う場合はケッパーを散らします。オリーブオイルを回しかけます。",
+      tip_beginner: "アンチョビはもともと塩辛いので、ピューレに塩は加えません。",
+      tip_nerd: "オイル漬けのフィレは自重の約15 %が塩です。15 gでピザに約2 gの塩が加わります。",
+    },
+    spread_napoli_nap: {
+      title: "アンチョビのトッピング",
+      description: "つぶしたホールトマトとFior di latte。アンチョビフィレとオレガノを散らします。オリーブオイルを回しかけます。",
+    },
+    friggere_melanzane_parmigiana: {
+      title: "ナスを揚げる",
+      description: "ナスを5 mm厚さの輪切りにします。苦みがあれば塩をふってザルに30分置き、水気をふき取ります。170 °Cで片面2-3分ずつ、きつね色になるまで揚げ、紙にとって油を切ります。",
+      tip_beginner: "前日に揚げて冷蔵庫に入れておいても大丈夫です。使う1時間前に出しておきます。",
+      tip_nerd: "ナスは表面が固まるまでスポンジのように油を吸います。油をしっかり熱し、一度に揚げる枚数を少なくすれば、温度が下がりすぎません。",
+    },
+    spread_parmigiana_nap: {
+      title: "Parmigianaのトッピング",
+      description: "ホールトマト、次にプロヴォラ。揚げナスを重ねて並べ、パルミジャーノをふります。バジルは焼き上がり後に加えます。",
+    },
+    friggere_melanzane_parmigiana_rom: {
+      title: "ナスを揚げる",
+      description: "ナスを5 mm厚さの輪切りにし、苦みがあれば塩をふって水気をふき取ります。170 °Cで片面2-3分ずつ揚げ、紙にとって油を切ります。",
+    },
+    spread_parmigiana_rom: {
+      title: "Parmigianaのトッピング",
+      description: "トマトピューレとFior di latte、次に揚げナスとパルミジャーノ。バジルは焼き上がり後に加えます。",
+    },
+    friggere_melanzane_norma: {
+      title: "ナスを角切りにして揚げる",
+      description: "ナスを1.5 cmの角切りにし、苦みがあれば塩をふって水気をふき取ります。170 °Cできつね色になるまで揚げ、紙にとって油を切ります。",
+    },
+    spread_norma_nap: {
+      title: "トマト、Fior di latte、ナス",
+      description: "つぶしたホールトマト、Fior di latte、角切りの揚げナス。",
+    },
+    finish_norma_nap: {
+      title: "リコッタ・サラータとバジル",
+      description: "焼き上がったらすぐ、リコッタ・サラータをすりおろしてかけ、バジルを加えます。",
+      tip_beginner: "リコッタ・サラータは焼かずに使います。オーブンに入れると溶けて、しっかりした風味が失われます。",
+      tip_nerd: "圧搾して熟成させたリコッタで、水分が少なく塩分が強めです。熱いピザにすりおろしてもフレーク状のまま残り、モッツァレラのようには溶けません。",
+    },
+    friggere_melanzane_norma_rom: {
+      title: "ナスを角切りにして揚げる",
+      description: "ナスを1.5 cmの角切りにし、苦みがあれば塩をふって水気をふき取ります。170 °Cできつね色になるまで揚げ、紙にとって油を切ります。",
+    },
+    spread_norma_rom: {
+      title: "トマト、Fior di latte、ナス",
+      description: "トマトピューレ、Fior di latte、角切りの揚げナス。",
+    },
+    finish_norma_rom: {
+      title: "リコッタ・サラータとバジル",
+      description: "焼き上がったらすぐ、リコッタ・サラータをすりおろしてかけ、バジルを加えます。",
+    },
+    sgocciolare_bufala_nap: {
+      title: "水牛モッツァレラの水切り",
+      description: "水牛モッツァレラをちぎってザルに入れ、冷蔵庫で1時間以上置いて乳清を切ります。",
+    },
+    spread_bufalina_nap: {
+      title: "Bufalinaのトッピング",
+      description: "つぶしたホールトマト、水切りしてちぎった水牛モッツァレラ、バジル、オリーブオイル少々。430 °C以上のオーブンなら、水牛モッツァレラをのせたまま焼けます：60-90秒で十分です。",
+    },
+    spread_bufalina_rom: {
+      title: "オーブンにはトマトだけ",
+      description: "トマトピューレを広げ、オリーブオイルを回しかけます。水牛モッツァレラはオーブンに入れません。",
+    },
+    finish_bufalina_rom: {
+      title: "水牛モッツァレラとバジルは焼き上がり後に",
+      description: "焼き上がったらすぐ、ちぎった水牛モッツァレラとバジルを散らします。",
+      tip_beginner: "長く焼くと、水牛モッツァレラはゴムのようになり、乳清が水たまりのように出ます。焼き上がり後にのせれば柔らかいままです。",
+      tip_nerd: "水牛モッツァレラはFior di latteより水分も脂肪も多めです。数分以上加熱するとカードが縮んで乳清が出て、それが生地を濡らします。",
     },
   },
 };

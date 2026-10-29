@@ -251,6 +251,35 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       name: "Saucisse",
       description: "Saucisse au fenouil en petits morceaux, pos\u00E9e crue sur la sauce et la mozzarella\u00A0: la garniture la plus courante dans les pizzerias de Chicago.",
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine: {
+      name: "Saucisses et frites",
+      description: "Tomate, mozzarella, saucisses et frites ajoutées à la sortie du four. Dans beaucoup de pizzerias, on l'appelle «Americana».",
+    },
+    prosciutto_cotto: {
+      name: "Jambon blanc",
+      description: "Tomate, mozzarella et jambon blanc. Simple, sans champignons.",
+    },
+    funghi: {
+      name: "Champignons",
+      description: "Tomate, mozzarella et champignons de Paris sautés à la poêle avant, pour qu'ils ne détrempent pas la pizza.",
+    },
+    napoli: {
+      name: "Napoli",
+      description: "Tomate, mozzarella, anchois et origan. À Rome, on l'appelle «Napoli», à Naples «Romana» ; câpres et olives seulement dans certaines variantes.",
+    },
+    parmigiana: {
+      name: "Parmigiana",
+      description: "Tomate, aubergines frites, mozzarella ou provola, parmesan et basilic : la parmigiana d'aubergines sur la pizza.",
+    },
+    norma: {
+      name: "Norma",
+      description: "Tomate, aubergines frites et basilic, avec de la ricotta salata râpée après cuisson, comme les pâtes alla Norma de Catane.",
+    },
+    bufalina: {
+      name: "Bufalina",
+      description: "Tomate, mozzarella di bufala campana et basilic. La bufala rend beaucoup de petit-lait : égouttez-la et, dans les fours lents, ajoutez-la à la sortie du four.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2228,6 +2257,263 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
         },
       },
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine_classica: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Saucisses de porc (viande de porc, eau, sel, épices)",
+          notes: "en rondelles ; vérifiez l'étiquette : certaines contiennent du lait ou du gluten",
+        },
+        "3": {
+          name: "Frites (pommes de terre, huile de tournesol, sel)",
+          notes: "frites juste avant, ajoutées après cuisson",
+        },
+      },
+    },
+    prosciutto_cotto_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelées écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jambon blanc en tranches (viande de porc, sel, arômes)",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    prosciutto_cotto_romana: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jambon blanc en tranches (viande de porc, sel, arômes)",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    funghi_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelées écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Champignons de Paris sautés",
+          notes: "poids cru",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    funghi_romana: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Champignons de Paris sautés",
+          notes: "poids cru",
+        },
+        "3": {
+          name: "Ail et persil",
+          notes: "pour faire sauter les champignons",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+          notes: "pour les champignons et en filet",
+        },
+      },
+    },
+    napoli_romana: {
+      variant_name: "à la romaine",
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Filets d'anchois à l'huile (anchois, huile d'olive, sel)",
+        },
+        "3": {
+          name: "Origan séché",
+        },
+        "4": {
+          name: "Câpres dessalées",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    napoli_napoletana: {
+      variant_name: "«Romana» à Naples",
+      ingredients: {
+        "0": {
+          name: "Tomates pelées écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Filets d'anchois à l'huile (anchois, huile d'olive, sel)",
+        },
+        "3": {
+          name: "Origan séché",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    parmigiana_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelées écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Provola fumée",
+          notes: "en tranches, égouttée",
+        },
+        "2": {
+          name: "Aubergines frites (aubergines, huile de tournesol, sel)",
+          notes: "poids après friture",
+        },
+        "3": {
+          name: "Parmigiano Reggiano râpé",
+        },
+        "4": {
+          name: "Basilic frais",
+          notes: "feuilles",
+        },
+      },
+    },
+    parmigiana_romana: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Aubergines frites (aubergines, huile de tournesol, sel)",
+          notes: "poids après friture",
+        },
+        "3": {
+          name: "Parmigiano Reggiano râpé",
+        },
+        "4": {
+          name: "Basilic frais",
+          notes: "feuilles, après cuisson",
+        },
+      },
+    },
+    norma_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelées écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Aubergines frites en dés (aubergines, huile de tournesol, sel)",
+          notes: "poids après friture",
+        },
+        "3": {
+          name: "Ricotta salata râpée",
+          notes: "après cuisson ; ni parmesan ni ricotta fraîche",
+        },
+        "4": {
+          name: "Basilic frais",
+          notes: "feuilles, après cuisson",
+        },
+      },
+    },
+    norma_romana: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Aubergines frites en dés (aubergines, huile de tournesol, sel)",
+          notes: "poids après friture",
+        },
+        "3": {
+          name: "Ricotta salata râpée",
+          notes: "après cuisson",
+        },
+        "4": {
+          name: "Basilic frais",
+          notes: "feuilles, après cuisson",
+        },
+      },
+    },
+    bufalina_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelées San Marzano écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "en morceaux, égouttée au moins une heure",
+        },
+        "2": {
+          name: "Basilic frais",
+          notes: "feuilles",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    bufalina_romana: {
+      variant_name: "bufala à la sortie du four",
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "en morceaux, après cuisson",
+        },
+        "2": {
+          name: "Basilic frais",
+          notes: "feuilles, après cuisson",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2801,6 +3087,121 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     mortazza_split_fill: {
       title: "Ouvrir et garnir la Baciata",
       description: "Séparez les deux couches cuites, en passant au besoin un couteau à dents le long du bord. Répartissez mortadelle et pistaches concassées sur la couche inférieure ; ajoutez la stracciatella uniquement si elle a été choisie. Refermez et servez sans remettre au four."
+    },
+    // D-065 — condimenti quotidiani
+    friggere_patatine_wurstel: {
+      title: "Préparer les frites",
+      description: "Faites frire les frites à 170-175 °C jusqu'à ce qu'elles soient dorées, ou faites cuire les frites surgelées comme indiqué sur l'emballage. Égouttez-les sur du papier absorbant et salez-les.",
+      tip_beginner: "Préparez-les pendant que la pizza cuit : elles doivent être chaudes et croustillantes quand vous la sortez du four.",
+      tip_nerd: "Au four, les frites déjà frites perdent de l'eau et leur croustillant, et la mozzarella les ramollit : ajoutées à la sortie, elles restent croustillantes.",
+    },
+    spread_wurstel_patatine: {
+      title: "Tomate, mozzarella et saucisses",
+      description: "Étalez le coulis, répartissez le fior di latte et les rondelles de saucisse. Les frites ne vont pas au four.",
+    },
+    finish_wurstel_patatine: {
+      title: "Frites à la sortie du four",
+      description: "Dès la sortie du four, répartissez les frites chaudes sur la pizza.",
+    },
+    spread_prosciutto_cotto_nap: {
+      title: "Garniture Jambon blanc",
+      description: "Tomates pelées écrasées et fior di latte. Répartissez les tranches de jambon blanc déchirées à la main et un filet d'huile.",
+    },
+    spread_prosciutto_cotto_rom: {
+      title: "Garniture Jambon blanc",
+      description: "Coulis et fior di latte. Le jambon blanc se pose sur la mozzarella ; pour les cuissons longues au four domestique, ajoutez-le dans les 3-4 dernières minutes, pour qu'il ne se dessèche pas.",
+      tip_beginner: "Si après 10 minutes de four le jambon est déjà recroquevillé et foncé, la prochaine fois, ajoutez-le en fin de cuisson.",
+      tip_nerd: "Le jambon blanc est déjà cuit et contient peu d'eau libre : au-delà de 6-8 minutes à 250 °C, il se déshydrate et ses bords caramélisent jusqu'à devenir amers.",
+    },
+    saltare_champignon_funghi_nap: {
+      title: "Faire sauter les champignons",
+      description: "Émincez les champignons et faites-les sauter 5-6 minutes à la poêle avec un filet d'huile jusqu'à ce qu'ils rendent leur eau. Salez en fin de cuisson et laissez-les tiédir.",
+    },
+    spread_funghi_nap: {
+      title: "Garniture Champignons",
+      description: "Tomates pelées écrasées et fior di latte. Répartissez les champignons sautés et un filet d'huile.",
+    },
+    saltare_champignon_funghi_rom: {
+      title: "Faire sauter les champignons",
+      description: "Émincez les champignons. Faites chauffer l'huile avec l'ail en chemise et faites sauter les champignons 8-10 minutes à feu vif jusqu'à ce qu'ils rendent leur eau et dorent. Sel et persil en fin de cuisson.",
+      tip_beginner: "Faites-les cuire avant : crus, ils rendent de l'eau sur la pizza et la base reste détrempée.",
+      tip_nerd: "Les champignons de Paris contiennent environ 92 % d'eau : à la poêle, ils en perdent environ la moitié, et la base ne reçoit pas cette eau à la cuisson.",
+    },
+    spread_funghi_rom: {
+      title: "Garniture Champignons",
+      description: "Coulis et fior di latte. Répartissez les champignons sautés à température ambiante et un filet d'huile.",
+    },
+    spread_napoli_rom: {
+      title: "Garniture Napoli",
+      description: "Coulis et fior di latte. Répartissez les filets d'anchois, l'origan et, si vous en mettez, les câpres. Un filet d'huile.",
+      tip_beginner: "Les anchois sont déjà salés : pas de sel sur le coulis.",
+      tip_nerd: "Les filets à l'huile contiennent environ 15 % de sel par rapport à leur poids : 15 g ajoutent environ 2 g de sel à la pizza.",
+    },
+    spread_napoli_nap: {
+      title: "Garniture aux anchois",
+      description: "Tomates pelées écrasées et fior di latte. Répartissez les filets d'anchois et l'origan. Un filet d'huile.",
+    },
+    friggere_melanzane_parmigiana: {
+      title: "Faire frire les aubergines",
+      description: "Coupez les aubergines en tranches de 5 mm. Si elles sont amères, salez-les et laissez-les 30 minutes dans une passoire, puis séchez-les. Faites-les frire à 170 °C 2-3 minutes de chaque côté jusqu'à ce qu'elles soient dorées et égouttez-les sur du papier absorbant.",
+      tip_beginner: "Vous pouvez aussi les faire frire la veille et les garder au frigo : sortez-les une heure avant.",
+      tip_nerd: "L'aubergine absorbe l'huile comme une éponge tant que sa surface n'est pas saisie : une huile bien chaude et peu de tranches à la fois, pour que la température ne chute pas.",
+    },
+    spread_parmigiana_nap: {
+      title: "Garniture Parmigiana",
+      description: "Les tomates pelées, puis la provola. Superposez les aubergines frites, saupoudrez de parmesan et ajoutez le basilic à la sortie du four.",
+    },
+    friggere_melanzane_parmigiana_rom: {
+      title: "Faire frire les aubergines",
+      description: "Coupez les aubergines en tranches de 5 mm, salez-les si elles sont amères et séchez-les. Faites-les frire à 170 °C 2-3 minutes de chaque côté et égouttez-les sur du papier absorbant.",
+    },
+    spread_parmigiana_rom: {
+      title: "Garniture Parmigiana",
+      description: "Coulis et fior di latte, puis les aubergines frites et le parmesan. Basilic à la sortie du four.",
+    },
+    friggere_melanzane_norma: {
+      title: "Faire frire les aubergines en dés",
+      description: "Coupez les aubergines en dés de 1,5 cm, salez-les si elles sont amères et séchez-les. Faites-les frire à 170 °C jusqu'à ce qu'elles soient dorées et égouttez-les sur du papier absorbant.",
+    },
+    spread_norma_nap: {
+      title: "Tomate, fior di latte et aubergines",
+      description: "Tomates pelées écrasées, fior di latte et dés d'aubergine frite.",
+    },
+    finish_norma_nap: {
+      title: "Ricotta salata et basilic",
+      description: "Dès la sortie du four, râpez la ricotta salata par-dessus et ajoutez le basilic.",
+      tip_beginner: "La ricotta salata s'ajoute crue : au four, elle fond et perd son goût prononcé.",
+      tip_nerd: "C'est une ricotta pressée et affinée, pauvre en eau et très salée : râpée sur la pizza chaude, elle reste en flocons et ne fond pas comme la mozzarella.",
+    },
+    friggere_melanzane_norma_rom: {
+      title: "Faire frire les aubergines en dés",
+      description: "Coupez les aubergines en dés de 1,5 cm, salez-les si elles sont amères et séchez-les. Faites-les frire à 170 °C jusqu'à ce qu'elles soient dorées et égouttez-les sur du papier absorbant.",
+    },
+    spread_norma_rom: {
+      title: "Tomate, fior di latte et aubergines",
+      description: "Coulis, fior di latte et dés d'aubergine frite.",
+    },
+    finish_norma_rom: {
+      title: "Ricotta salata et basilic",
+      description: "Dès la sortie du four, râpez la ricotta salata par-dessus et ajoutez le basilic.",
+    },
+    sgocciolare_bufala_nap: {
+      title: "Égoutter la bufala",
+      description: "Coupez la mozzarella di bufala en morceaux et laissez-la dans une passoire au frigo au moins une heure, pour qu'elle perde son petit-lait.",
+    },
+    spread_bufalina_nap: {
+      title: "Garniture Bufalina",
+      description: "Tomates pelées écrasées, bufala égouttée en morceaux, basilic et un filet d'huile. Dans un four à 430 °C ou plus, la bufala peut cuire sur la pizza : 60-90 secondes suffisent.",
+    },
+    spread_bufalina_rom: {
+      title: "Seulement la tomate au four",
+      description: "Étalez le coulis avec un filet d'huile. La bufala ne va pas au four.",
+    },
+    finish_bufalina_rom: {
+      title: "Bufala et basilic à la sortie du four",
+      description: "Dès la sortie du four, répartissez la bufala en morceaux et le basilic.",
+      tip_beginner: "Avec une cuisson longue, la bufala au four devient caoutchouteuse et laisse une mare de petit-lait : ajoutée à la sortie, elle reste fondante.",
+      tip_nerd: "La bufala contient plus d'eau et plus de gras que le fior di latte : après quelques minutes de chaleur, le caillé se contracte et expulse le petit-lait, qui détrempe la base.",
     },
   },
 };

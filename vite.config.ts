@@ -244,18 +244,21 @@ export default defineConfig(({ command }) => ({
            involucri e gzip più efficace: −4 kB sul codice senza lingue.
            Integrazione ondata 2 (FW-04 + D-062/D-063): 6000 (−1,4 kB). */
         experimentalMinChunkSize: 6000,
-        manualChunks: {
-          "vendor-react": [
-            "react",
-            "react-dom",
-            "react-router",
-          ],
+        manualChunks(id) {
+          const file = id.replace(/\\/g, "/");
+          if (/\/node_modules\/(react|react-dom|react-router|scheduler)\//.test(file)) return "vendor-react";
           /* "motion" è un wrapper: senza framer-motion qui, i ~120 kB veri
              finivano nel chunk principale (audit bundle lug 2026). */
-          "vendor-motion": ["motion", "framer-motion"],
+          if (/\/node_modules\/(motion|framer-motion|motion-dom|motion-utils)\//.test(file)) return "vendor-motion";
           /* Catalogo UI italiano (lingua di riserva, sempre caricato): file a
              sé accanto al chunk principale, che altrimenti supera i 100 kB. */
-          "ui-messages-it": [path.resolve(__dirname, "src/app/i18n/ui-messages.it.ts")],
+          if (file.endsWith("/src/app/i18n/ui-messages.it.ts")) return "ui-messages-it";
+          /* Catalogo italiano (D-065): le traduzioni dei condimenti in un chunk
+             per lingua accanto al catalogo della lingua (si caricano insieme).
+             Da sole il giapponese era a 98,5 kB sul tetto di 100 del chunk. */
+          const toppings = file.match(/\/src\/app\/data\/topping-i18n\/([a-z]{2})\.ts$/);
+          if (toppings) return `${toppings[1]}-toppings`;
+          return undefined;
         },
       },
     },
