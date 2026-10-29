@@ -97,6 +97,24 @@ giro: il router senza data router (`createBrowserRouter` pesa ~28 kB) e i
 campi dei dati che nessuna pagina legge (per esempio prezzi e deviazioni in
 `flour-database.ts`), da decidere con chi cura i dati.
 
+### Ondata 3 dell'audit: router dichiarativo (29/10/2026)
+
+Con G5 (onboarding e profilo, 6 pacchetti) il codice senza lingue arrivava a
+500,6 kB (599,1 per utente). Matteo ha scelto un recupero strutturale invece di
+alzare i tetti: il router passa da `createBrowserRouter` (data router) a
+`<BrowserRouter>` + `<Routes>` (`App.tsx`). L'app non usava loader, action né
+fetcher: i soli `loader: redirect()` sono diventati `<Navigate replace>`, il
+`lazy` delle rotte `React.lazy` sotto un `Suspense` già montato attorno
+all'`Outlet` (con le transizioni del router la pagina precedente resta visibile
+finché arriva il chunk), e `useMatches` per la 404 è diventato
+`isNotFoundPath()` in `routes.ts`, che `App.tsx` passa alla shell (importato
+dalla shell porterebbe pagine e strumenti di sviluppo nel suo grafo). Verificate tutte le rotte, i redirect (anche
+con query), il titolo della 404 e il ripristino dello scroll col tasto Indietro.
+
+Risultato: **484,6 kB senza lingue (−16,0), 583,1 kB per utente** (ja 98,5 kB).
+I tetti restano 500/600: il margine serve alle aree G1–G4 dell'ondata 3; dopo
+la loro integrazione si valuta se abbassarli.
+
 ## Perché l'LCP è lento
 
 1. **La home scarica il motore prima che serva.** `use-recipe-state` (187 kB),
