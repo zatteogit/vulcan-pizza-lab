@@ -1,6 +1,7 @@
 import { useCms } from "../cms/cms-context";
 import { formatRange } from "../../i18n/format";
-import { createFormatter } from "../cms/i18n";
+import { createFormatter, t } from "../cms/i18n";
+import { ScoreExplainer, scoreAriaLabel } from "./score-explainer";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { Clock, Droplets, Flame, ScanLine, Wheat } from "lucide-react";
@@ -23,8 +24,9 @@ import { uiMessage } from "../../i18n/ui-messages";
  * starting score, then the resulting score, even when the two are equal. */
 /** FW-03 (S03-A-12): `context="detail"` when the pill already sits in the
  * detail sheet, so the tip never asks to «open the detail» the user is in. */
-export function CompatibilityPill({ now, original, blocked, labelled = false, className, context = "card" }: { now: number; original?: number; blocked?: boolean; labelled?: boolean; className?: string; context?: "card" | "detail" }) {
-  const { cms } = useCms();
+/** FW-06: `recipe` è la ricetta di cui `now` è il punteggio: il suggerimento la spiega (ScoreExplainer). */
+export function CompatibilityPill({ now, original, blocked, labelled = false, className, context = "card", recipe }: { now: number; original?: number; blocked?: boolean; labelled?: boolean; className?: string; context?: "card" | "detail"; recipe?: GeneratedRecipe }) {
+  const { cms, bcp47 } = useCms();
   const [open, setOpen] = useState(false);
   const pinned = useRef(false);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -75,8 +77,19 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
       window.removeEventListener("resize", close);
     };
   }, [open, place]);
-  const score = original === undefined ? `${cms.ui.scoreBasisOriginal} · ${uiMessage("pages.explore.compatibility", [now])}`
-    : `${cms.ui.scoreBasisOriginal} ${original} → ${cms.ui.scoreBasisTailored} ${now}`;
+  /* FW-06 (S03-A-11, S05-A-12, S05-B-04, S07-A-15): un numero con il suo
+     nome. La coppia Riferimento · Su misura solo se i due valori differiscono
+     e lo stile non è bloccato («39 → 39» era rumore); sulle card solo per un
+     miglioramento vero (≥ 5 punti), mai una freccia verso un valore più basso. */
+  const fmt = createFormatter(cms.ui, bcp47);
+  const differs = original !== undefined && !blocked && original !== now;
+  const improves = differs && now - (original ?? now) >= 5;
+  const showPair = labelled ? differs : improves;
+  const pairText = original !== undefined ? t(cms.scoreExplainer.pairAria, {
+    original: cms.ui.scoreBasisOriginal, originalScore: fmt.number(original),
+    tailored: cms.ui.scoreBasisTailored, tailoredScore: fmt.number(now),
+  }) : "";
+  const score = differs ? `${scoreAriaLabel(now, cms, fmt)}. ${pairText}` : scoreAriaLabel(now, cms, fmt);
   /* Lo stato bloccato non si affida al solo colore: lo dice anche il nome. */
   const label = blocked ? `${uiMessage("pages.explore.compatibilityBlocked")} · ${score}` : score;
   return (
@@ -84,21 +97,31 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
     <button ref={trigger} type="button" className={`compat-pill${blocked ? " compat-pill--blocked" : ""}${className ? ` ${className}` : ""}`} aria-label={label} aria-expanded={open} aria-describedby={open ? id : undefined}
       onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide}
       onClick={event => { event.preventDefault(); event.stopPropagation(); cancelClose(); pinned.current = !pinned.current; setOpen(pinned.current); }}>
-      {original !== undefined && <>
-        <span className="compat-pill__original">{original}</span>
+      {showPair && original !== undefined && (labelled ? <>
+        <span className="compat-pill__label">{cms.ui.scoreBasisOriginal}</span>
+        <span className="compat-pill__original">{fmt.number(original)}</span>
+        <span className="compat-pill__arrow" aria-hidden="true">·</span>
+        <span className="compat-pill__label">{cms.ui.scoreBasisTailored}</span>
+      </> : <>
+        <span className="compat-pill__original">{fmt.number(original)}</span>
         <span className="compat-pill__arrow" aria-hidden="true">→</span>
-        {labelled && <span className="compat-pill__label">{cms.ui.scoreBasisTailored}</span>}
-      </>}
+      </>)}
       <RecipeMatchIcon score={now} blocked={blocked} size={14} aria-hidden="true" className="compat-pill__icon" />
-      <span className="compat-pill__now">{now}</span>
+      <span className="compat-pill__now">{fmt.number(now)}</span>
     </button>
     {open && createPortal(<div ref={tip} id={id} role="tooltip" className="score-tip" onMouseEnter={cancelClose} onMouseLeave={hide}
       style={{"--score-tip-left":`${position.left}px`,"--score-tip-top":`${position.top}px`,"--score-tip-width":`${position.width}px`} as CSSProperties}>
-      <p className="score-tip__title">{cms.ui.scoreTipTitle}</p>
-      <div className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisOriginal}</span><strong>{original ?? now}/100</strong></div>
-      <p className="score-tip__description">{cms.ui.scoreTipOriginal}</p>
-      {original !== undefined && <><div className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisTailored}</span><strong>{now}/100</strong></div><p className="score-tip__description">{cms.ui.scoreTipTailored}</p></>}
-      <p className="score-tip__note">{blocked && context === "card" ? cms.ui.scoreTipBlocked : cms.ui.scoreTipGlobal}</p>
+      <p className="score-tip__title">{cms.ui.recipeScore}</p>
+      {differs && original !== undefined ? <>
+        <p className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisOriginal}</span><strong>{fmt.number(original)}/100</strong></p>
+        <p className="score-tip__description">{cms.ui.scoreTipOriginal}</p>
+        <p className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisTailored}</span><strong>{fmt.number(now)}/100</strong></p>
+        <p className="score-tip__description">{now < original ? cms.scoreExplainer.tailoredLower : cms.ui.scoreTipTailored}</p>
+      </> : (
+        <p className="score-tip__row"><span className="score-tip__label">{original !== undefined ? cms.ui.scoreBasisTailored : cms.ui.scoreBasisOriginal}</span><strong>{fmt.number(now)}/100</strong></p>
+      )}
+      {recipe ? <ScoreExplainer scores={recipe.scores} recipe={recipe} variant="compact" />
+        : <p className="score-tip__note">{blocked && context === "card" ? cms.ui.scoreTipBlocked : cms.ui.scoreTipGlobal}</p>}
     </div>, document.body)}
     </>
   );
@@ -113,8 +136,11 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", id }: { 
   /* Fiamma per il forno e per la teglia (nota di Matteo, 29/10/2026: la teglia
      è un requisito di cottura, come pietra o acciaio). */
   const icons = { oven: Flame, time: Clock, pan: Flame, flour: Wheat, check: ScanLine, water: Droplets };
+  // Pill su una riga: è una durata approssimata («≈»), quindi dalle 10 ore
+  // in su all'ora intera («≈ 22 h in tutto»), sotto alla mezz'ora.
+  const totalHours = recipe ? recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 60 : 0;
   const duration = recipe
-    ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
+    ? fmt.durationShort(totalHours >= 10 ? Math.round(totalHours) : Math.round(totalHours * 2) / 2)
     : formatRange(style.dough.fermentation_hours_range[0], style.dough.fermentation_hours_range[1], bcp47, { unit: "hour" });
   return (
     <div id={id} className="style-signals" data-region="meta">
@@ -126,7 +152,20 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", id }: { 
         </Badge>;
       })}
       {signals.length < 2 && recipe?.verdict.outcome !== "not_feasible" && (
-        <Badge tone="muted" className="style-signal"><Clock size={13} aria-hidden="true" /><span data-slot="label">≈ {duration}</span></Badge>
+        /* FW-05 (S03-B-21, S03-A-21): il badge dice che cosa misura (il tempo
+           totale) e, a voce, su quale ricetta: riferimento in Scopri, su misura in Crea. */
+        <Badge
+          tone="muted"
+          className="style-signal"
+          aria-label={recipe
+            ? uiMessage(context === "explore" ? "style.meta.durationAriaReference" : "style.meta.durationAriaTailored", [duration])
+            : undefined}
+        >
+          <Clock size={13} aria-hidden="true" />
+          <span data-slot="label">
+            {recipe ? uiMessage("style.meta.durationTotal", [duration]) : uiMessage("style.meta.durationFermentation", [duration])}
+          </span>
+        </Badge>
       )}
     </div>
   );

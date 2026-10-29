@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_FR } from "../../../i18n/ui-messages.fr";
 import { TOPPING_I18N_FR } from "../../../data/topping-i18n/fr";
 import { INSPIRATION_I18N_FR } from "../../../data/inspiration-i18n/fr";
@@ -20,7 +22,7 @@ export const FR_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "sel de mer fin", "fine": "sel fin", "kosher": "sel casher", "kosher_or_fine": "sel casher ou fin", "coarse_and_fine": "gros sel et sel fin" },
-    saltTiming: { "with_flour": "avec la farine", "after_flour_water": "après la farine et l'eau", "after_flour_water_5min": "après la farine et l'eau (5 min de pétrissage)", "after_hydration": "après l'hydratation", "fine_in_dough_coarse_on_top": "fin dans la pâte, gros en surface" },
+    saltTiming: { "with_flour": "avec la farine", "after_flour_water": "après la farine et l'eau", "dissolved_in_water": "dissous dans l'eau, avant la farine (cahier des charges)", "after_hydration": "après l'hydratation", "fine_in_dough_coarse_on_top": "fin dans la pâte, gros en surface" },
     fold: { "stretch_fold": "rabats (stretch & fold)", "coil_fold": "rabats en spirale (coil fold)", "french_fold": "pliage à la française", "slap_fold": "slap & fold" },
     stretch: {
       napoletana_stg: "Étalée à la main (claque napolitaine)",
@@ -75,10 +77,9 @@ export const FR_LOCALE: CmsContent = {
     "USA": "États-Unis",
   },
   ui: {
-    scoreTipTitle: "Comprendre le score",
     scoreTipOriginal: "Référence du style, pour votre cuisine.",
     scoreTipTailored: "Version avec les adaptations proposées.",
-    scoreTipGlobal: "Le score tient compte de la faisabilité et de l’authenticité. Il ne certifie pas la conformité à un cahier des charges.",
+    scoreTipGlobal: "Le score ne compte que la facilité et l’authenticité, et ne dépasse jamais l’authenticité. Maturation, durabilité et expérimentation sont des informations à part. Il ne certifie pas la conformité à un cahier des charges.",
     scoreTipBlocked: "Certains prérequis ne sont pas remplis : ouvrez le détail.",
     pantrySelectionSummary: "Sélectionnés : {n} · Exclus : {excluded}",
     pantryWValue: "W{w}",
@@ -139,17 +140,9 @@ export const FR_LOCALE: CmsContent = {
     recipeCurrentVersion: "Actuelle",
     recipeOptimizedVersion: "Proposition",
     recipeScoreLabel: "Score",
-    recipeScoreTransition: "Score : {from}/100 → {to}/100",
     scoreBasisOriginal: "Référence",
     scoreBasisTailored: "Sur mesure",
 
-    scoreLimitedAuthenticity: "L’authenticité ({score}/100) limite le score.",
-    scoreLimitedFeasibility: "Une condition essentielle n’est pas remplie. Le motif est indiqué ci-dessous.",
-    scoreWeightedAverage: "Moyenne pondérée des cinq critères",
-    scoreAuthenticityCeiling: "Plafond lié à l’authenticité",
-    scoreFeasibilityCeiling: "Plafond lié à la non-faisabilité",
-    scoreNotWeighted: "Axe informatif : avec ce poids, il ne modifie pas le score global.",
-    scoreReferencePending: "Le profil de variation de ce style reste à vérifier.",
 
     copy: "Copier",
     share: "Partager",
@@ -159,16 +152,12 @@ export const FR_LOCALE: CmsContent = {
     closeDetails: "Fermer les d\u00E9tails",
     closeInsight: "Fermer",
     modify: "Modifier",
-    disable: "D\u00E9sactiver",
     restore: "Restaurer",
     generate: "G\u00E9n\u00E9rer la recette",
-    chooseStyle: "Choisir un style",
     customizeParams: "Personnaliser les param\u00E8tres",
     changeStyle: "Changer de style",
-    newPizza: "Nouvelle pizza",
     ingredients: "Ingr\u00E9dients",
     procedure: "M\u00E9thode",
-    steps_count: "{n} \u00E9tapes",
     doughBalls: "P\u00E2tons",
     timeline: "Planning",
     doughBallsFrom: "de {w} chacun",
@@ -176,8 +165,6 @@ export const FR_LOCALE: CmsContent = {
     startTime: "D\u00E9but",
     endTime: "Fin",
     clipboardBalls: "{n} p\u00E2tons de {w}",
-    clipboardTotal: "Total : {g}",
-    clipboardProcedure: "{style} \u2014 M\u00E9thode",
     flour: "Farine",
     flourMix: "mélange de farines",
     flourEffectiveGluten: "force glutineuse effective",
@@ -185,19 +172,6 @@ export const FR_LOCALE: CmsContent = {
     salt: "Sel",
     sugar: "Sucre",
     oilEvo: "Huile d\u2019olive",
-    compTitle: "Ajustements",
-    compTitleNerd: "Compensations du four",
-    compHydration:
-      "Hydratation augment\u00E9e pour compenser votre four",
-    compOil:
-      "Un peu plus d\u2019huile pour garder la pizza moelleuse",
-    compSugar: "Plus de sucre pour un bon dorage",
-    compCookTime:
-      "Cuisson plus longue pour un r\u00E9sultat parfait",
-    compThickness:
-      "\u00C9talage plus fin pour une cuisson uniforme",
-    compDefault:
-      "Param\u00E8tre ajust\u00E9 \u00E0 votre configuration",
     bakeAdjustmentTitle: "Cuisson",
     relativeToBase: "par rapport à la base",
     ariaReduceBalls: "R\u00E9duire le nombre de p\u00E2tons",
@@ -206,14 +180,11 @@ export const FR_LOCALE: CmsContent = {
     statOven: "Four",
     statRest: "Repos",
     statOil: "Huile",
-    statCookTime: "Cuisson",
     statFermentation: "Fermentation",
     statFlourStrength: "Force de farine",
     fermentEnvAmbient: "ambiante",
     fermentEnvFridge: "frigo",
     statTempSuffix: "\u00E0 {t}\u00B0C",
-    nerdTitle: "Donn\u00E9es techniques",
-    nerdFlourW: "Farine W",
     nerdPL: "P/L",
     nerdYeast: "Levure",
     nerdHoursAt18: "Hrs @{refTemp}",
@@ -229,7 +200,6 @@ export const FR_LOCALE: CmsContent = {
     slotNoPreference: "Pas de préférence",
     slotNoPreferenceSub: "les temps idéaux du style, parfois plusieurs jours",
     interpretationDisclaimer: "Interprétation de {brand} à partir de sources publiques : ce n'est pas la recette originale de {who} et elle n'est pas approuvée par {who}.",
-    yeastHowToggle: "Comment nous calculons la levure",
     yeastModelBody: "On part de {ref} de levure fraîche sur la farine pour {refHours} à {refTemp}. Avec {hours} à {temp}, la levure travaille à {speed}× la vitesse de référence : la dose devient {pct}.",
     yeastDryNote: "Avec de la levure sèche, la dose est un tiers de la fraîche.",
     yeastTempModelNote: "L'effet de la température sur la vitesse (facteur Q10 de 2, 1,6 sous 10 °C) est une estimation du modèle, à confirmer par des essais.",
@@ -265,10 +235,10 @@ export const FR_LOCALE: CmsContent = {
     procedureDirect: "Direct",
     procedurePreferment: "Préferment",
     procedureUnleavened: "Sans levure",
-    flourUseVeryStrong: "Manitoba ou type 0 très forte",
-    flourUseStrong: "Type 0/00 de force pour pizza",
-    flourUseMedium: "Type 0 de force moyenne",
-    flourUseWeak: "Type 00 faible à moyenne",
+    flourUseVeryStrong: "Farine très forte, type manitoba",
+    flourUseStrong: "Farine de force, pour longues maturations",
+    flourUseMedium: "Farine de force moyenne, souvent « pour pizza »",
+    flourUseWeak: "Farine faible, tout usage ou pâtissière",
     verdictTitle: "Ce n'est pas faisable ainsi",
     verdictOvenTooCold: "La cuisson est réglée à {oven} ; cette méthode nécessite au moins {min}.",
     verdictTimeWindow: "Il faut environ {needed} et vous avez {available} : elle serait prête après l'heure choisie.",
@@ -277,26 +247,17 @@ export const FR_LOCALE: CmsContent = {
     verdictAlternatives: "Avec les mêmes contraintes, ceux-ci fonctionnent :",
     verdictRecipeBelow: "Vous pouvez consulter la recette et voir quelles conditions modifier.",
     recipeScore: "Compatibilit\u00E9 avec votre cuisine",
-    nerdToggle: "PizzaNerd",
-    nerdActive: "Activer PizzaNerd",
     scienceTitle: "{brand} Science",
-    ariaCloseScores: "Fermer le détail du score",
-    ariaViewScores: "Voir le détail du score",
-    tapForDetails: "Appuyez pour les d\u00E9tails",
     styleEditorActive: "Style Editor actif",
     cmsActive: "CMS actif",
     fieldsModified: "champs modifi\u00E9s",
     fieldModified: "champ modifi\u00E9",
     editOven: "Modifier le four",
-    weatherCity: "Votre ville",
     weatherOutdoor: "{t}\u00B0C dehors",
-    weatherKitchen: "Temp\u00E9rature cuisine",
     badgeIdeal: "Recommandé",
     badgeRecent: "R\u00C9CENT",
     autoLabel: "Auto",
     cancel: "Annuler",
-    changeOven: "Changer",
-    ovenFallback: "Four",
     pantryFlours: "Farines",
     pantryYeasts: "Levures",
     equipByHand: "\u00C0 la main",
@@ -308,14 +269,6 @@ export const FR_LOCALE: CmsContent = {
     equipSurface: "Surface de cuisson",
     kitchenTitle: "Votre cuisine",
     pantryOptional: "optionnel",
-    specialFlours: "Farines spéciales",
-    brandSuggest: "Connaissez-vous la marque ?",
-    badgeSelected: "Sélectionnée",
-    otherCompatibleFlours: "Autres farines compatibles",
-    flourSelectHint:
-      "Sélectionnez une farine pour mettre à jour automatiquement W et P/L de la recette.",
-    flourSelected: "Appliquée",
-    autolysisSuggested: "Autolyse recommandée",
     dietGlutenFree: "Sans gluten",
     dietLactoseFree: "Sans lactose",
     dietVegan: "V\u00E9gan",
@@ -323,9 +276,7 @@ export const FR_LOCALE: CmsContent = {
     dietHistamine: "Faible en histamine",
     dietNickel: "Faible en nickel",
     adjustByHand: "R\u00E9gler \u00E0 la main",
-    specFermentTemp: "Fermentation",
     personalize: "Personnaliser",
-    adjustByHandQuestion: "Vous pr\u00E9f\u00E9rez d\u00E9cider vous-m\u00EAme ?",
     statIdeal: "id\u00E9al",
   },
   tips: {
@@ -343,7 +294,6 @@ export const FR_LOCALE: CmsContent = {
   },
   hero: {
     title_line1: "Votre",
-    title_line2: "prochaine pizza.",
     subtitle:
       "Choisissez quand vous voulez la servir.",
     /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
@@ -372,11 +322,6 @@ export const FR_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title: "Quand voulez-vous de la pizza ?",
-      description:
-        "S\u00E9lectionnez le moment pour calculer les temps de fermentation",
-    },
     skill: {
       title: "Niveau d\u2019exp\u00E9rience",
       description:
@@ -389,10 +334,6 @@ export const FR_LOCALE: CmsContent = {
     pantry: {
       title: "Gardez-manger",
       description: "Farines et levures que vous avez chez vous",
-    },
-    dietary: {
-      title: "Besoins alimentaires",
-      description: "Filtres optionnels",
     },
     equipment: {
       title: "\u00C9quipement",
@@ -471,15 +412,15 @@ export const FR_LOCALE: CmsContent = {
     },
     "2": {
       name: "Interm\u00E9diaire",
-      description: "J’ai déjà fait quelques pizzas",
+      description: "J’ai fait la pizza quelques fois en suivant une recette",
     },
     "3": {
       name: "Avanc\u00E9",
-      description: "Je maîtrise rabats et fermentation",
+      description: "Je fais souvent la pizza et je sais travailler une pâte molle",
     },
     "4": {
       name: "Expert",
-      description: "J’adapte pâvos, temps et techniques",
+      description: "J’ajuste moi-même les doses et les temps",
     },
   },
   families: {
@@ -510,37 +451,37 @@ export const FR_LOCALE: CmsContent = {
     authenticity: {
       label: "Authenticité",
       short: "Auth",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Ce critère compare la pâte, le procédé et le four au style de référence. Une valeur basse limite le score global ; elle ne certifie pas le respect d’un cahier des charges.",
     },
     feasibility: {
       label: "Facilité",
       short: "Faites",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Estime la difficulté avec votre four, votre farine et votre expérience. Les conditions indispensables sont indiquées à part.",
     },
     digestibility: {
       label: "Maturation estimée",
       short: "Mat",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Estime la maturation selon le temps, la température, la levure et le préferment. Ne mesure pas votre digestion de la pizza.",
     },
     sustainability: {
       label: "Durabilité estimée",
       short: "Dur",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Ce critère compare cuisson, fermentation et ingrédients. Il s’agit d’une estimation relative, pas d’une consommation mesurée ni du bilan carbone de la recette.",
     },
     experimentation: {
       label: "Expérimentation",
       short: "Exp",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "Écart de la pâte, du procédé et de la cuisson par rapport au référentiel. Une valeur élevée indique plus d’expérimentation, pas une meilleure réussite. Certains profils restent à vérifier. Sa contribution au score global est 100 moins cette valeur.",
+        "Écart de la pâte, du procédé et de la cuisson par rapport au référentiel. Une valeur élevée indique plus d’expérimentation, pas une meilleure réussite. Certains profils restent à vérifier. Elle n’entre pas dans le score de compatibilité.",
     },
   },
   recommendationWeights: {
@@ -556,52 +497,33 @@ export const FR_LOCALE: CmsContent = {
       "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
   },
   result: {
-    breadcrumb: "Votre pizza parfaite",
     heading: "Voici votre recette",
-    backLabel: "Retour \u00E0 la s\u00E9lection",
   },
   misc: {
     showAllStyles: "Tout afficher",
-    noFloursInCategory: "Aucune farine dans cette catégorie",
     noTroubleshootingResults: "Aucun problème trouvé pour cette recherche",
     moreInfo: "Plus d’infos",
     changeTiming: "Modifier les temps",
     kitchenTempSubtitle: "La température influence la vitesse de levée",
     techAdjustmentsApplied: "Ajustements techniques appliqués",
-    techDataAria: "Afficher les données techniques (W, P/L, Q10, Aw)",
-    techDataTitle: "Données techniques et calculs de la pâte",
     feedbackYes: "Oui, volontiers",
     feedbackNo: "Non, ça va",
     feedbackPlaceholder: "Qu’avez-vous changé ? Comment était-elle ? Détails utiles...",
     preFermentCompare: "Comparaison rapide",
     scoreExplainer: "Le score combine les critères de la recette. Les conditions non remplies et les écarts avec la référence peuvent le limiter.",
-    companionContext: "La température de la cuisine et le temps disponible guident tout le processus.",
-    companionSetup: "Nous adaptons la recette à votre expérience, votre four et votre garde-manger réel.",
-    companionStyles: "Chaque style a ses paramètres : choisissez celui qui correspond le mieux à vos conditions.",
-    smartLinkOn: "Paramètres liés — déplace un curseur, les autres s’ajustent",
-    smartLinkOff: "Lier tous les paramètres pour un ajustement automatique",
-    smartLinkApplied: "{param} : j'ai réaligné les autres paramètres et la timeline.",
     settingsHelp: "Ces données aident {brand} à adapter les temps et la recette.",
-    versionsLabel: "Versions",
-    versionsHint: "Chaque version a ses plages de référence. Les repères montrent celles de la version sélectionnée.",
     learnHeroTitle1: "Comprenez la pâte,",
     learnHeroTitle2: "améliorez votre pizza.",
-    learnHeroSubtitle: "Techniques, ingrédients et cuisson : apprenez quoi observer et comment agir.",
+    learnHeroSubtitle: "Termes, problèmes, biga et poolish, et notre méthode de calcul : apprenez quoi observer et comment agir.",
     learnResources: "Ressources",
     kitchenTempLabel: "Température de la cuisine",
     kitchenTempDown: "Baisser la température de la cuisine",
     kitchenTempUp: "Augmenter la température de la cuisine",
     current: "Sélectionné",
     noStyleInFamily: "Aucun style de cette famille pour vos paramètres.",
-    notFeasibleExplainer: "Une condition manque pour ces recettes. Ouvrez le détail pour voir quoi modifier.",
     exploreHeroTitle1: "Explorez les styles",
     exploreHeroTitle2: "et les recettes.",
-    badgeBeginnerFriendly: "Débutants",
-    interpretationsLabel: "Interprétations",
-    goToSite: "Aller au site",
     signatureLabel: "Version",
-    noSignature: "aucune inspiration",
-    fineParams: "Paramètres avancés",
     cmsRestoreContent: "Réinitialiser le contenu CMS",
     inspirationLabel: "Version",
     inspirationBase: "Référence",
@@ -667,9 +589,6 @@ export const FR_LOCALE: CmsContent = {
   filters: {
     advancedLabel: "Plus",
     removeFilters: "Supprimer les filtres",
-    brandedFlours: "Farines de marque",
-    settingsOpen: "Param\u00E8tres",
-    settingsClosed: "Vos param\u00E8tres",
     hydrationLabel: "Hydratation",
     hydrationLow: "Basse <60%",
     hydrationMedium: "Moyenne 60-70%",
@@ -685,7 +604,6 @@ export const FR_LOCALE: CmsContent = {
     skillIntermediate: "Interm\u00E9diaire",
     skillAdvanced: "Avanc\u00E9",
     skillExpert: "Expert",
-    timeFast: "rapide",
     ovenLabel: "Cuisson",
     ovenHome: "Four maison",
     ovenWood: "Bois",
@@ -702,10 +620,9 @@ export const FR_LOCALE: CmsContent = {
     noResults: "Aucun terme pour « {query} »",
     allCategories: "Tous",
     formulaLabel: "Formule",
-    rangesLabel: "Plages typiques",
-    whyImportantLabel: "Pourquoi c\u2019est important",
+    rangesLabel: "Valeurs typiques",
+    whyImportantLabel: "Pourquoi cela compte",
     relatedLabel: "Apparent\u00E9s",
-    backToHome: "Retour \u00E0 l\u2019accueil",
     termCount: "{count} termes",
     // FW-09
     termCountOne: "{count} terme",
@@ -730,6 +647,17 @@ export const FR_LOCALE: CmsContent = {
       "Fa\u00E7onnage, \u00E9quipements et mesures",
     catScoring: "Scores",
     catScoringDesc: "Comprendre les scores de {brand}",
+    // FW-04
+    catTechnique: "Gestes et étapes",
+    catTechniqueDesc: "Les mots de la méthode, du pétrissage au four",
+    catFlour: "Farines",
+    catFlourDesc: "Types de farine et comment les lire",
+    rangesValueHeader: "Valeur",
+    rangesMeaningHeader: "Ce que cela indique",
+    technicalLabel: "Définition technique",
+    modelNoteLabel: "Dans le modèle de {brand}",
+    seeAlsoLabel: "Voir aussi",
+    inGlossaryLabel: "Dans le glossaire :",
   },
   engineMessages: {
     "allergen.conflict": "Contient : {allergen}. Ingrédients concernés : {ingredients}.",
@@ -770,14 +698,15 @@ export const FR_LOCALE: CmsContent = {
     "learn.compatiblePath": "Un parcours pratique compatible avec votre cuisine : vérifier les conditions de la recette.",
     "learn.theoryOnly": "Aucune recette vérifiée ne correspond à ces contraintes ; explorer la théorie.",
     "learn.openTheory": "Explorer la théorie",
-    "timeline.preheat.includesProof": "Ce bloc comprend {minutes} minutes de fermentation finale, déjà comptées dans le temps total : ne pas les ajouter à nouveau.",
-    "timeline.preheat.includesRest": "Ce bloc comprend {minutes} minutes de repos, déjà comptées dans le temps total : ne pas les ajouter à nouveau.",
+    "timeline.preheat.includesProof": "Quand le four est prêt, vérifiez la pâte : pressée du doigt, la marque remonte lentement.",
+    "timeline.preheat.includesProofOil": "Quand l'huile est à température, vérifiez la pâte : pressée du doigt, la marque remonte lentement.",
     "auth.hydrationOff":
       "Hydratation hors centre (-{penalty}%)",
     "auth.wOutOfRange": "W farine hors plage (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} hors plage {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Pas un four à bois (-15%)",
+    "auth.notWoodOven": "Pas un four à bois et sous les {min} °C minimum du style : −15 points sur l’axe équipement (35 % de l’authenticité)",
+    "auth.woodByMethod": "Le style prévoit le four à bois (pour la Napoletana STG, le cahier des charges l’exige) : votre four atteint les {min} °C minimum, c’est donc une information et cela ne retire aucun point",
     "auth.tempVsIdeal":
       "Température {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -817,11 +746,8 @@ export const FR_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Fermentation adaptable à ~{hours}",
     "rec.timeInsufficient":
       "Nécessite minimum {fMin}, vous avez {available}",
-    "rec.needsWoodOven": "La référence utilise un four à bois ; avec votre four, la cuisson change.",
-    "rec.ovenAdapted": "Votre four atteint {temp} : température idéale {ideal}, cuisson adaptée",
     "gen.homeBakingMethod": "Cuisson domestique à {temp} sur plaque retournée préchauffée ; résultat différent de la cuisson originale à {ideal}",
     "gen.ovenTooNarrow": "Votre four accepte des pizzas jusqu'à {max} cm et cette recette prévoit {diameter} cm : étalez le disque à {max} cm au maximum.",
-    "rec.needsDeck": "Cette cuisson nécessite une pierre ou un acier préchauffé, non renseigné dans votre cuisine",
     "timeline.homeTray.preheat": "Préchauffez le four au maximum ({temp}) avec une plaque retournée à l’intérieur, jusqu’à ce qu’elle soit bien chaude. Terminez le repos de la pâte.",
     "timeline.homeTray.bake": "Enfournez sur la plaque retournée préchauffée. Vérifiez la coloration de la base et la cuisson avant de sortir.",
     "gen.fermentationTooLong": "La fermentation de {hours} dépasse le maximum de cette recette ({maxHours}). Choisissez une méthode vérifiée pour une durée plus longue.",
@@ -845,7 +771,6 @@ export const FR_LOCALE: CmsContent = {
     "need.withoutWood": "Même sans bois",
     "need.adaptedBake": "Cuisson adaptée",
     "need.deck": "Pierre ou acier nécessaire",
-    "card.pantryCheck": "Vérifiez le placard",
     "card.directDough": "Pâte directe",
     "card.resourceExcluded": "Prérequis exclu",
     "card.panMissing": "Plaque nécessaire",
@@ -876,53 +801,16 @@ export const FR_LOCALE: CmsContent = {
     "change.prefermentDetails": "Préferment : {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Cuisson : {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "La cuisson au charbon définit la méthode originale : un autre combustible en fait une adaptation",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "Sans le four prévu par le style, et sous ses {min} °C minimum, l’authenticité s’arrête à {cap}/100 : c’est une règle de l’app, pas une mesure",
     "gen.notCoalOven": "Le style original utilise le charbon : le four choisi modifie la cuisson et le profil aromatique",
     "timeline.oven.coal": "Four à charbon avec sole préchauffée : surveillez le fond et les bords et tournez pour une cuisson uniforme.",
     "rec.ovenIdeal":
       "Votre four atteint la température idéale ({ideal})",
-    "rec.ovenAdequate":
-      "Four adéquat (compensation automatique temps/température)",
     "rec.ovenTooCold":
       "Four trop froid : {temp} < min {min}",
     "rec.skillMatch": "Adapté à votre niveau",
-    "rec.skillExpert":
-      "Votre niveau permet n'importe quel style",
-    "rec.hydrationNeedsPractice":
-      "L'hydratation élevée nécessite de la pratique",
-    "rec.advancedForBeginner": "Style avancé pour débutants",
-    "rec.noKneadNoMixer": "Pas besoin de pétrin (no-knead)",
-    "rec.handsHighHydration":
-      "Hydratation élevée : pétrissage à la main très difficile",
-    "rec.handsMedHydration":
-      "Hydratation moyenne : pétrissage à la main demande de la pratique",
-    "rec.forkIdealHighH":
-      "Pétrin à fourche idéal pour haute hydratation",
-    "rec.forkLowFriction":
-      "Pétrin à fourche : faible friction thermique",
-    "rec.spiralOptimal":
-      "Spirale professionnelle : pétrissage optimal",
-    "rec.domesticStrugglesHighH":
-      "Pétrin domestique : peut peiner avec >80% d'hydratation",
-    "rec.mixerHelps": "Votre pétrin facilite le processus",
-    "rec.mixerRecommended":
-      "Hydratation élevée : pétrin recommandé",
-    "rec.castIronPerfect": "Fonte parfaite pour ce style",
-    "rec.panFits": "Plaque adaptée à ce style",
-    "rec.needsPan": "Plaque nécessaire pour ce style",
-    "rec.refractoryIdeal":
-      "Pierre réfractaire : idéale pour la napolitaine",
-    "rec.steelPlateCrispy":
-      "Plaque acier : fond croustillant en secondes",
-    "rec.panPerfect": "Votre plaque est parfaite pour ce style",
     "rec.flourMatch": "Farine en stock compatible",
-    "rec.flourPartial":
-      "Farine partiellement adaptée (W non idéal)",
-    "rec.flourNoMatch":
-      "Aucune farine en stock dans la plage W requise",
-    "rec.sourdoughLongFerment":
-      "Levain idéal pour longue maturation",
-    "rec.sourdoughOnlyShort":
-      "Levain seul : fermentation courte difficile",
     "tip.waterTempCold":
       "Utilisez de l'eau froide du r\u00E9frig\u00E9rateur ({temp}) : le p\u00E9trin r\u00E9chauffe la p\u00E2te.",
     "tip.waterTempNormal":
@@ -954,38 +842,18 @@ export const FR_LOCALE: CmsContent = {
     "timeline.preheat.descPanWholeProof": "Allumez le four maintenant \u00E0 {temp}{equipmentNote}. Pendant ce temps, la p\u00E2te fait son appr\u00EAt en plaque.",
     "timeline.preheat.descDuringRest": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons reposent.",
     "tip.waterTemp": "",
-    "hint.flourWeak": "farine faible (00 classique)",
-    "hint.flourMedium": "farine de force moyenne",
-    "hint.flourStrong": "farine forte (pour pizza)",
-    "hint.flourVeryStrong": "farine très forte (manitoba)",
-    "hint.yeastDryPinch": "≈ une pincée",
-    "hint.yeastDryQuarterTsp": "≈ ¼ de cuillère à café",
     "hint.yeastDryHalfTsp": "≈ ½ cuillère à café",
     "hint.yeastDryOneTsp": "≈ 1 cuillère à café rase",
     "hint.yeastDryOneHalfTsp": "≈ 1½ cuillère à café",
-    "hint.yeastFreshPinch": "≈ une pincée",
     "hint.yeastFreshWeighable": "≈ {g} g sur la balance de cuisine",
-    "serving.peopleOne": "≈ {n} personne",
-    "serving.peopleMany": "≈ {n} personnes",
-    "serving.peopleRange": "≈ {min}-{max} personnes",
     "topping.auth.canonical": "Réglementaire",
     "topping.auth.natural": "Traditionnelle",
     "topping.auth.common": "Alternative",
     "topping.auth.experimental": "À essayer",
     "topping.auth.taboo": "Déconseillé",
-    "recipeSetup.dough": "Pâte",
     // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
     "recipeSetup.profileHint": "Choisissez une version de départ ou une inspiration d'auteur : les valeurs restent modifiables.",
     "recipeSetup.styleBase": "style de base",
-    "recipeSetup.temp.fridge": "frigo",
-    "recipeSetup.temp.cool": "frais",
-    "recipeSetup.temp.room": "temp. ambiante",
-    "recipeSetup.versionApplied": "{label} : paramètres de pâte appliqués",
-    "recipeSetup.noSignature": "Aucune inspiration",
-    "recipeSetup.currentParams": "paramètres actuels",
-    "recipeSetup.noSignatureAlreadyActive": "Aucune inspiration déjà active",
-    "recipeSetup.signatureApplied": "{label} : inspiration appliquée",
-    "recipeSetup.signatureRemoved": "Inspiration retirée : paramètres rétablis",
     "version.label.Leggerissima": "Très légère",
     "version.label.Casalingo": "Maison",
     "version.label.Casalinga": "Maison",
@@ -1068,6 +936,8 @@ export const FR_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Divisez chaque unité en deux portions : 60% pour la base et 40% pour le dessus. Formez deux disques.",
     "timeline.shape.closedStuffedFried": "Abaissez le disque de base et réservez le second pour fermer.",
     "timeline.shape.foldedLayers": "Étalez une feuille de pâte très fine et pliez-la {folds} fois en livre, en répartissant la garniture entre les plis.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "La biga et le poolish se font avec de la levure de boulanger : avec seulement du levain, la recette ne les utilise pas, car le levain sert déjà de préferment. Pour les utiliser, ajoutez de la levure de boulanger à votre garde-manger.",
     "diet.singleBase": "Une seule base avec toute la pâte : oignons dessus, sans second disque ni fermeture.",
     "topping.geometry": "Surface {area} cm² · référence {reference} cm² · quantités ×{scale}.",
     "auth.layoutChanged": "Format différent de la référence : cette variante change la structure",
@@ -1101,12 +971,11 @@ export const FR_LOCALE: CmsContent = {
     "timeline.splitFill.desc": "Sortez-la du four. Avec un couteau-scie, coupez-la horizontalement en deux. Garnissez l'intérieur avec les ingrédients choisis et refermez.",
     "timeline.splitFill.tipBeginner": "La couche d'huile étalée avant la cuisson permet d'ouvrir les deux moitiés sans les déchirer.",
     "timeline.splitFill.tipNerd": "Dédoublement après cuisson = recette cold-filled : la matrice d'amidon est déjà stable, les garnitures ne chauffent pas au-delà de 60°C à cœur.",
-    "timeline.bake2.title": "Seconde cuisson (courte)",
     "timeline.bake2.desc": "Remettez au four à {temp} juste pour sécher et lier le tout. Quelques minutes.",
     "timeline.bake.title": "Cuisson",
     "timeline.bake.desc": "Faites cuire à {temp}.",
     "timeline.bake.rounds": "{n} cuissons de {sec}, une à la fois.",
-    "timeline.bake.tipBeginner": "Le four doit être très chaud. Préchauffez-le au moins 30 minutes avant.",
+    "timeline.bake.tipBeginner": "Elle est cuite quand le bord est doré et que, soulevée avec la pelle, le dessous est sec avec quelques points sombres.",
     "timeline.bake.tipNerd": "La réaction de Maillard commence à ~140°C et s'accélère de façon exponentielle. À {temp}, la caramélisation crée ~600 composés aromatiques.",
     "timeline.topPost.title": "Garniture après cuisson",
     "timeline.topPost.desc": "Ajoutez les garnitures froides directement sur la surface cuite.",
@@ -1118,30 +987,32 @@ export const FR_LOCALE: CmsContent = {
     "dig.extremeMaturation": "Fermentation prolongée : vérifier la tenue de la pâte",
     "dig.highYeastDosage": "Dose de levure {pct}% : correction heuristique du score (-{penalty})",
     "dig.coldFermentation": "Maturation au réfrigérateur : durée et développement dépendent de la température",
-    "dig.fodmapReduced": "La réduction des FODMAP ne se détermine pas avec les seules heures",
-    "dig.fodmapHighReduction": "La réduction des FODMAP ne se détermine pas avec les seules heures",
     "hint.yeastPrecisionScale": "Utiliser une balance à 0,01 g",
-    "timeline.batchModel": "Durées estimées pour une personne : étaler et garnir toutes les unités, puis cuire une à une. Service échelonné ; aucune tâche simultanée prévue.",
+    "timeline.batchModel": "Durées estimées pour une personne : étaler et garnir toutes les unités, puis cuire une à une, avec la remontée en température du four entre deux cuissons (estimation). Service échelonné ; aucune tâche simultanée prévue.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Plis",
+    "timeline.folds.desc": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte.",
+    "timeline.folds.descCold": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte à température ambiante. Après la dernière série, mettez le récipient au frigo.",
+    "timeline.folds.descCool": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte à température ambiante. Après la dernière série, remettez le récipient à {temp}, pas au frigo.",
+    "timeline.folds.tipBeginner": "Mouillez-vous les mains, saisissez un pan, étirez-le vers le haut et rabattez-le au centre ; tournez le récipient et répétez sur les quatre côtés. Couvrez entre deux séries.",
+    "timeline.folds.tipNerd": "Les plis alignent et tendent les fibres de gluten et redistribuent les gaz : ils donnent de la force sans travail mécanique.",
+    "timeline.bake.recovery": "Entre deux cuissons, comptez environ {sec} pour défourner, enfourner et laisser le four remonter en température.",
+    "timelineComfort.nightNoPlan": "Étapes à faire la nuit : {n}, la première à {time}. Choisissez un repas ci-dessus.",
+    "timelineComfort.nightNoPlanNoMeal": "Étapes à faire la nuit : {n}, la première à {time}. Décalez le début avec les boutons ci-dessus.",
+    "timelineComfort.doseNote": "Les horaires changent, pas la levure : fiez-vous au volume de la pâte, pas à l'horloge.",
+    "timelineComfort.whyTitle": "Pourquoi est-ce possible ?",
+    "timelineComfort.whyBody": "Nous allongeons ou raccourcissons seulement les attentes, chacune dans une marge : au frigo jusqu'à +{coldPlusPct} (au plus {coldPlus}) ou −{coldMinusPct} (au plus {coldMinus}) ; à température ambiante, apprêt compris, jusqu'à +{roomPlusPct} (au plus {roomPlus}) ou −{roomMinusPct} (au plus {roomMinus}). Nous ne déplaçons pas d'heures du frigo vers la température ambiante et nous ne recalculons pas la levure. Ces marges sont des règles pratiques que nous avons choisies, pas des mesures : c'est pourquoi le volume compte.",
   },
   scienceLabels: {
     yeastBaker: "Levure de boulanger",
     effectiveHours: "Heures effectives",
     q10Factor: "Facteur Q\u2081\u2080",
-    q10Cold: "froid",
-    q10Sourdough: "levain",
-    q10Standard: "standard",
     waterActivity: "Activit\u00E9 de l\u2019eau",
     glutenNetwork: "R\u00E9seau de gluten",
     proteolysis: "Prot\u00E9olyse",
-    starchDegradation: "D\u00E9grad. amidon",
-    fodmapReduction: "R\u00E9duction FODMAP",
-    plEstimated: "P/L estim\u00E9",
     bakingEnergy: "\u00C9nergie de cuisson",
-    waterTemp: "Temp\u00E9rature de l'eau",
     desiredDoughTemp: "Temp\u00E9rature de la p\u00E2te",
     frictionFactor: "Facteur de friction",
-    deviationCategory: "D\u00E9viation",
-    deviationScore: "D\u00E9v. effective",
   },
   timelineLabels: {
     preferment: {
@@ -1167,7 +1038,7 @@ export const FR_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "M\u00E9lange",
-      desc: "M\u00E9langer sans p\u00E9trir jusqu'\u00E0 dissoudre les grumeaux. Puis 3 s\u00E9ries de plis (stretch & fold) toutes les ~30 min.",
+      desc: "Mélangez sans pétrir jusqu'à dissoudre les grumeaux. Les plis et le temps font le reste.",
       tipBeginner:
         "Pas besoin de p\u00E9trir ! M\u00E9langer avec une spatule jusqu'\u00E0 disparition des grumeaux secs.",
       tipNerd:
@@ -1181,7 +1052,7 @@ export const FR_LOCALE: CmsContent = {
         "La p\u00E2te doit doubler de volume. S'il fait chaud, v\u00E9rifier plus souvent !",
       tipNerd:
         "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}. Cela ne mesure ni la réduction des FODMAP ni la digestibilité.",
-      longDesc: "La p\u00E2te repose en une seule masse, dans un r\u00E9cipient huil\u00E9 et couvert d'un film au contact. C'est pendant cette phase que la levure travaille et d\u00E9veloppe ar\u00F4me, structure et digestibilit\u00E9. Si l'hydratation est \u00E9lev\u00E9e, faites 2-3 \u00AB plis de renforcement \u00BB (stretch & fold) pendant les 2 premi\u00E8res heures : soulevez un pan de p\u00E2te, \u00E9tirez-le vers le haut et rabattez-le vers le centre, tournez et r\u00E9p\u00E9tez sur les 4 c\u00F4t\u00E9s. La fermentation est termin\u00E9e quand le volume a doubl\u00E9 et que la surface est bomb\u00E9e et lisse.",
+      longDesc: "La pâte repose en une seule masse, dans un récipient huilé et couvert d'un film au contact. C'est pendant cette phase que la levure travaille et développe arôme, structure et digestibilité. Si le style prévoit des plis, leur nombre et leur intervalle figurent dans une étape ou un conseil à part. La fermentation est terminée quand le volume a doublé et que la surface est bombée et lisse.",
     },
     bulk_cold: {
       title: "Pointage",
@@ -1190,7 +1061,7 @@ export const FR_LOCALE: CmsContent = {
         "Au frigo la p\u00E2te monte lentement mais gagne en saveur. Bien couvrir avec un film au contact.",
       tipNerd:
         "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}. Cela ne mesure ni la réduction des FODMAP ni la digestibilité.",
-      longDesc: "Placez le r\u00E9cipient avec la p\u00E2te au r\u00E9frig\u00E9rateur ({fridgeTemp}). Au frigo, la levure travaille beaucoup plus lentement : il faut bien plus de temps, mais en \u00E9change vous gagnez en complexit\u00E9 aromatique, en digestibilit\u00E9 et en r\u00E9seau de gluten plus d\u00E9velopp\u00E9. Couvrez toujours d'un film au contact pour \u00E9viter que la surface ne s\u00E8che. Une fois sortie, laissez la p\u00E2te s'acclimater 1-2 heures \u00E0 temp\u00E9rature ambiante avant la division.",
+      longDesc: "Placez le récipient avec la pâte au réfrigérateur ({fridgeTemp}). Au frigo, la levure travaille beaucoup plus lentement : il faut bien plus de temps, mais en échange vous gagnez en complexité aromatique, en digestibilité et en réseau de gluten plus développé. Couvrez toujours d'un film au contact pour éviter que la surface ne sèche. Vous pouvez la diviser dès sa sortie du frigo : elle s'acclimate pendant l'apprêt.",
     },
     rest: {
       title: "Repos",
@@ -1205,7 +1076,7 @@ export const FR_LOCALE: CmsContent = {
         "Utilisez une balance ! Couper avec un coupe-p\u00E2te et arrondir chaque morceau en boule lisse.",
       tipNerd:
         "La division cr\u00E9e une tension superficielle qui emprisonne le CO\u2082 pendant l'appr\u00EAt.",
-      longDesc: "Renversez la p\u00E2te sur un plan l\u00E9g\u00E8rement farin\u00E9. Avec un coupe-p\u00E2te, coupez des portions du poids indiqu\u00E9 plus bas dans Ingr\u00E9dients, en les pesant sur une balance (c'est important pour une cuisson uniforme). Pour chaque morceau, faites le \u00AB boulage \u00BB : rabattez les bords vers le dessous au centre, tournez et arrondissez jusqu'\u00E0 obtenir une boule lisse et tendue. Disposez les p\u00E2tons sur une plaque farin\u00E9e, bien espac\u00E9s, et couvrez de film.",
+      longDesc: "Renversez la p\u00e2te sur un plan l\u00e9g\u00e8rement farin\u00e9. Avec un coupe-p\u00e2te, coupez des portions du poids indiqu\u00e9 dans cette \u00e9tape, en les pesant sur une balance (c'est important pour une cuisson uniforme). Pour chaque morceau, faites le \u00ab boulage \u00bb : rabattez les bords vers le dessous au centre, tournez et arrondissez jusqu'\u00e0 obtenir une boule lisse et tendue. Disposez les p\u00e2tons sur une plaque farin\u00e9e, bien espac\u00e9s, et couvrez de film.",
     },
     proof: {
       title: "Appr\u00EAt",
@@ -1249,25 +1120,20 @@ export const FR_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Division",
       desc: "Diviser d\u00E9licatement, sans d\u00E9gazer la p\u00E2te.",
-      longDesc: "Renversez la p\u00E2te sur le plan bien farin\u00E9 (avec les hydratations \u00E9lev\u00E9es, aidez-vous de semoule). Avec un coupe-p\u00E2te, coupez les portions du poids indiqu\u00E9 plus bas dans Ingr\u00E9dients, en les pesant sur une balance. Manipulez le moins possible : pour la plaque, PAS besoin du boulage serr\u00E9 de la pizza ronde \u2014 rabattez les bords dessous pour former un boudin souple, sans chasser l'air. Les bulles form\u00E9es pendant le pointage sont le futur alv\u00E9olage. Placez chaque morceau dans un r\u00E9cipient huil\u00E9 et couvrez.",
+      longDesc: "Renversez la p\u00e2te sur le plan bien farin\u00e9 (avec les hydratations \u00e9lev\u00e9es, aidez-vous de semoule). Avec un coupe-p\u00e2te, coupez les portions du poids indiqu\u00e9 dans cette \u00e9tape, en les pesant sur une balance. Manipulez le moins possible : pour la plaque, PAS besoin du boulage serr\u00e9 de la pizza ronde \u2014 rabattez les bords dessous pour former un boudin souple, sans chasser l'air. Les bulles form\u00e9es pendant le pointage sont le futur alv\u00e9olage. Placez chaque morceau dans un r\u00e9cipient huil\u00e9 et couvrez.",
       tipBeginner: "Mains d\u00E9licates ! Les bulles dans la p\u00E2te sont pr\u00E9cieuses : rabattez les bords dessous, sans \u00E9craser.",
       tipNerd: "Avec une hydratation >75%, une division agressive fait s'effondrer les alv\u00E9oles form\u00E9es pendant le pointage : tension minimale, d\u00E9gazage quasi nul.",
     },
-  },
-  timelineUi: {
-    startLabel: "D\u00E9but",
-    beforeSuffix: "avant",
   },
   parametricTips: {
     pillHydration: "Hydratation",
     pillFlour: "Farine",
     pillPL: "P/L",
     pillFermentation: "Fermentation",
+    pillRest: "Repos",
     pillThickness: "\u00C9paisseur",
     pillLevel: "Niveau",
     pillExperimentation: "Exp\u00E9rimentation",
-    pillLevelBeginner: "D\u00E9butant",
-    pillLevelExpert: "Expert",
     sheetSectionTitle: "Référence du style",
     sheetOvenLabel: "Four id\u00E9al",
     sheetOvenPreheat: "Pr\u00E9chauffage\u00A0: {min} min",
@@ -1278,7 +1144,6 @@ export const FR_LOCALE: CmsContent = {
     sheetFoldLabel: "Pliages",
     sheetFoldInterval: "Toutes les {min} min",
     sheetGenerateBtn: "G\u00E9n\u00E9rer la recette",
-    sheetMatchTitle: "Pourquoi elle convient à votre cuisine",
     sheetTechniquesLabel:
       "Techniques d\u2019auteur compatibles",
     mixBeginner:
@@ -1308,6 +1173,8 @@ export const FR_LOCALE: CmsContent = {
     sheetOilLabel: "Température de l'huile",
     sheetOilHeat: "Porter l'huile à température avant de frire : pas besoin de four.",
     sheetFryTurn: "La retourner à mi-friture",
+    // FW-04
+    pillDoughLoad: "Charge de pâte",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1362,7 +1229,7 @@ export const FR_LOCALE: CmsContent = {
     teglia_romana:
       "Hauteur 2-3cm|Hydratation selon la version|Sans p\u00E9trissage + pliages|Mie nuage",
     tonda_romana:
-      "\u00C9paisseur 1-2mm|Rouleau ou à la main|Croustillance extr\u00EAme|Farine faible W<210",
+      "\u00C9paisseur 1-2mm|Rouleau ou à la main|Croustillance extr\u00EAme|Farine W 200-240",
     pinsa_romana:
       "Mix multi-c\u00E9r\u00E9ales|Forme ovale|Cro\u00FBte vitr\u00E9e|Maturation 24-72h",
     pala_romana:
@@ -1372,13 +1239,13 @@ export const FR_LOCALE: CmsContent = {
     detroit:
       "Couronne de fromage|Moule profond|Fromage aux bords|Cro\u00FBte caram\u00E9lis\u00E9e",
     chicago_deep:
-      "Profondeur 5cm|Beurre 18%|Couches invers\u00E9es|Cuisson 35min",
+      "Profondeur 5cm|Beurre 18%|Couches invers\u00E9es|Cuisson 25-35 min",
     focaccia_genovese:
-      "Huile d\u2019olive g\u00E9n\u00E9reuse|Crat\u00E8res de surface|Saumure huile-eau|Cuisson 15-20min",
+      "Huile d\u2019olive g\u00E9n\u00E9reuse|Crat\u00E8res de surface|Saumure huile-eau|Cuisson 19-24 min",
     sfincione:
       "\u00C9pais et moelleux|Chapelure grill\u00E9e|Oignon + anchois|Caciocavallo",
     grandma_style:
-      "Fine et croustillante|Mozzarella sous sauce|Plaque bien huil\u00E9e|Cuisson 12-16min",
+      "Fine et croustillante|Mozzarella sous sauce|Plaque bien huil\u00E9e|Cuisson 14-17 min",
     focaccia_recco:
       "Feuille quasi transparente|Fourr\u00E9e au stracchino|Bulles dor\u00E9es|Aucune levure",
     padellino_torino:
@@ -1409,23 +1276,14 @@ export const FR_LOCALE: CmsContent = {
   },
   authorNames: {
     bonci_no_knead: "No-Knead Haute Hydratation",
-    martucci_biga_ibrida: "Biga Hybride 50% + Autolyse",
-    martucci_biga_100: "Biga 100% avec Rafra\u00EEchi",
     pepe_sensoriale: "Hydratation Sensorielle",
-    bosco_idrolisi:
-      "M\u00E9thode Hydrolyse (Fermentation Spontan\u00E9e)",
-    capuano_forbici: "M\u00E9thode Ciseaux (Produits laitiers)",
     pepe_sensory_layering: "Cuisson Séparée des Ingrédients",
     bianco_long_ferment: "Fermentation 5 Jours",
     forkish_saturday: "Pizza du Samedi (Fermentation à Froid)",
   },
   authorAuthors: {
     bonci_no_knead: "Gabriele Bonci",
-    martucci_biga_ibrida: "Francesco Martucci",
-    martucci_biga_100: "Francesco Martucci",
     pepe_sensoriale: "Franco Pepe",
-    bosco_idrolisi: "Renato Bosco",
-    capuano_forbici: "Vincenzo Capuano",
     pepe_sensory_layering: "Franco Pepe",
     bianco_long_ferment: "Chris Bianco",
     forkish_saturday: "Ken Forkish",
@@ -1473,7 +1331,6 @@ export const FR_LOCALE: CmsContent = {
     pantryTitle: "Votre garde-manger",
     pantrySubtitle:
       "Farines et levures que vous avez chez vous",
-    pantryStep: "03 — Ingrédients",
     dietTitle: "Préférences alimentaires",
     dietSubtitle:
       "Nous vous prévenons quand une recette contient ce que vous évitez.",
@@ -1503,10 +1360,8 @@ export const FR_LOCALE: CmsContent = {
     locationStep: "05 — Lieu",
     locationPlaceholder: "Rechercher une ville...",
     locationAuto: "Détecter la position",
-    locationAutoDetected: "Détectée automatiquement",
     locationSaved: "Position enregistrée",
     locationNone: "Vous pouvez l’indiquer plus tard ou régler directement la température de la cuisine.",
-    locationSearching: "Recherche...",
     locationNoResults: "Aucun résultat",
     ftuWelcome: "Bienvenue",
     ftuOvenTitle: "Quel four avez-vous ?",
@@ -1558,9 +1413,6 @@ export const FR_LOCALE: CmsContent = {
     mixerFork: "Pétrin à fourche",
     mixerForkDesc:
       "Lent, faible friction — idéal pour haute hydratation",
-    mixerLevelHome: "Maison",
-    mixerLevelSemiPro: "Semi-Pro",
-    mixerLevelPro: "Pro",
     surfaceRefractory: "Brique réfractaire",
     surfaceRefractoryDesc:
       "3 cm, haute masse thermique — four à bois et prosumer",
@@ -1648,6 +1500,8 @@ export const FR_LOCALE: CmsContent = {
     pantryProfileEmpty: "Aucune farine ni levure indiquée : nous partons de ce qui est typique du style.",
     pantryProfileEdit: "Modifier dans Créer",
     ftuSourdoughNote: "Avec un levain, pour les longues fermentations nous pourrons le proposer à la place de la levure de boulanger.",
+    // FW-04
+    ftuFlourTypeNote: "Le type (00, 0, complète) indique à quel point la farine est raffinée, pas sa force. Si le W figure sur le paquet, vous pourrez l’indiquer ensuite dans votre garde-manger.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1670,21 +1524,13 @@ export const FR_LOCALE: CmsContent = {
     navLearn: "Apprendre",
     navProfile: "Profil",
     navSearch: "Rechercher",
-    exploreStepNum: "15 styles \u2014 4 familles",
-    exploreTitle: "Explorer les styles",
-    exploreSubtitle:
-      "De la Napoletana STG \u00E0 la Focaccia di Recco.",
-    learnTitle: "Apprendre",
-    learnSubtitle:
-      "Comprenez la pâte, choisissez vos techniques et apprenez à observer ce qui se passe.",
     learnGlossary: "Glossaire",
-    learnGlossaryDesc: "Les mots de la pâte, expliqués avec des exemples et des repères.",
+    learnGlossaryDesc: "Les mots de la pâte, avec formules et valeurs typiques.",
     learnTroubleshooting: "Probl\u00E8mes et solutions",
     learnTroubleshootingDesc:
       "Identifie le problème et trouve quoi corriger.",
     learnPreFerments: "Biga, poolish et autolyse",
     learnPreFermentsDesc: "Ce qu’ils changent et comment les intégrer à la préparation.",
-    recipeLabel: "Recette",
     recipeBackToStyles: "Styles",
     recipeStyleNotFound: "Style introuvable",
     recipeStyleNotFoundDesc:
@@ -1714,19 +1560,13 @@ export const FR_LOCALE: CmsContent = {
     searchFlourSpecial: "Sp\u00E9ciale",
     skipToContent: "Aller au contenu",
     navMainLabel: "Navigation principale",
-    searchCloseLabel: "Fermer la recherche",
     searchFieldLabel: "Champ de recherche global",
     searchClearLabel: "Effacer la recherche",
-    homeAria: "{brandFull} — Accueil",
     devToolsAria: "Outils d\u00E9veloppeur",
     mottoAria: "Devise {brand}",
     troubleshootSearchPlaceholder: "Rechercher un sympt\u00F4me ou une cause...",
     dietaryWarningsTitle:
       "Avant de commencer",
-    troubleshootingTitle:
-      "Problèmes avec la recette\u00A0?",
-    troubleshootingDesc:
-      "Trouve les causes et solutions pour la pâte, le four et la friture",
     exploreRecipe: "Explorer la recette",
     exploreHeroDesc: "Styles traditionnels et interprétations d’auteur. Choisissez votre point de départ.",
     exploreFilterFeatured: "À la une",
@@ -1734,7 +1574,6 @@ export const FR_LOCALE: CmsContent = {
     exploreFilterRecipes: "Recettes emblématiques",
     learnFilterSubtitle: "Les guides ci-dessous sont généraux et valent aussi pour ce style.",
     learnRemoveFilter: "Supprimer le filtre de style",
-    learnOpenGlossary: "Ouvrir le glossaire",
     learnPathLabel: "Parcours d'apprentissage",
     learnStartPath: "Démarrer le parcours",
     learnTermOfTheDay: "Terme du jour — {category}",
@@ -1747,14 +1586,12 @@ export const FR_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_FR["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_FR["pages.learn.path4.copy"],
     preFermentsSubtitle: "Comment les utiliser et les intégrer à la préparation.",
-    preFermentsDescription: "Biga et poolish se préparent avant la pâte finale. La <strong>biga</strong> est une pâte ferme à 44% d’eau ; le <strong>poolish</strong> contient autant de farine que d’eau. L’<strong>autolyse</strong> est un repos de farine et d’eau, sans levure ni sel : ce n’est pas un préferment.",
+    preFermentsDescription: "Biga et poolish se préparent avant la pâte finale. La <strong>biga</strong> est une pâte ferme à {bigaHydration} d’eau ; le <strong>poolish</strong> contient autant de farine que d’eau. L’<strong>autolyse</strong> est un repos de farine et d’eau, sans levure ni sel : ce n’est pas un préferment.",
     preFermentsChoiceTitle: "Lequel choisir ?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "Quand vous voulez une pâte aromatique et disposez d'environ 16 h à 18–20 °C",
-    preFermentsBigaBest: "Pinsa, Pizza à la coupe, Pala romana",
     preFermentsPoolishTitle: "Poolish",
     preFermentsPoolishWhen: "Quand vous voulez une pâte extensible et disposez de 12–16 h à 20–22 °C",
-    preFermentsPoolishBest: "Teglia Romana, NY Style, Focaccias",
     preFermentsAutolisiTitle: "Autolyse",
     preFermentsAutolisiWhen: "Quand vous voulez une pâte plus facile à étaler",
     preFermentsAutolisiBest: "Tous les styles ; se combine avec la biga et le poolish",
@@ -1763,15 +1600,14 @@ export const FR_LOCALE: CmsContent = {
     noChanges: "aucune modification",
     deactivateCustomStyles: "Désactiver les styles personnalisés",
     deactivate: "Désactiver",
-    passToEasy: "Passer en Easy",
-    activateNerd: "Activer le mode Nerd",
+    // FW-04
+    learnOpenTerm: "Ouvrir la fiche du glossaire",
   },
   configurator: {
     hydrationLabel: "Hydratation",
     hydrationTip:
       "La quantité d’eau par rapport à la farine. En ajouter change la texture et peut compliquer le travail de la pâte.",
     flourWLabel: "Force Farine (W)",
-    flourWLabelBlend: "Force de la farine de blé",
     flourWTip:
       "Le W indique la force de la farine. Il aide à choisir une farine adaptée au procédé et aux temps de la recette.",
     plLabel: "Rapport P/L",
@@ -1789,8 +1625,6 @@ export const FR_LOCALE: CmsContent = {
     preFermentTip:
       "Biga et poolish se préparent à l’avance puis rejoignent la pâte finale. Ils peuvent modifier arômes et structure : suivez les temps et les doses du procédé.",
     ovenLabel: "Four",
-    ovenTip:
-      "Réglez le four et la température de cuisson. Le résultat dépend aussi du style et de la surface de cuisson.",
     panLabel: "Plaque",
     panTipRect:
       "La forme et la taille de la plaque affectent la quantit\u00E9 de p\u00E2te et le r\u00E9sultat final. Le standard pour ce style est rectangulaire.",
@@ -1808,8 +1642,6 @@ export const FR_LOCALE: CmsContent = {
     thicknessThin: "Fine et croustillante",
     thicknessThick: "\u00C9paisse et moelleuse",
     thicknessStandard: "Standard pour ce style",
-    backLabel: "Retour",
-    sliderOptimal: "optimal",
     hintHighHydrationNeedsW: "À {h}% d'hydratation, vous avez besoin de farine forte : W recommandé ≥ {w}",
     hintLowWLimitsHydration: "Avec un W de {w}, l'hydratation maximale recommandée est de ~{h}%",
     hintLongFermentUseFridge: "Avec {hours}h de fermentation, utilisez le réfrigérateur ({fridgeTemp}) pour contrôler la pâte",
@@ -1823,12 +1655,10 @@ export const FR_LOCALE: CmsContent = {
     hintLimitMaxLabel: "max. conseillé",
   },
   cooking: {
-    recipeCanonicalEyebrow: "Référence",
     sectionsAria: "Sections de la recette",
     toppingPrevAria: "Garniture pr\u00E9c\u00E9dente",
     toppingNextAria: "Garniture suivante",
     notPersonalizedAria: "Recette pas encore personnalis\u00E9e",
-    ballEstimateTooltip: "Estimation indicative bas\u00E9e sur le poids traditionnel des p\u00E2tons pour ce style",
     tabRecipe: "Recette",
     tabRecipeTailored: "Recette sur mesure",
     recipeCanonical: "Référence",
@@ -1873,7 +1703,6 @@ export const FR_LOCALE: CmsContent = {
     ceilingCompromise: "La proposition atteint {ceiling}/100 avec des adaptations par rapport à la référence.",
     needFlour: "une farine W {w}",
     makePossible: "La rendre possible",
-    adaptToKitchen: "Adapter \u00E0 ma cuisine",
     optimizeForMe: "Adapter à ma cuisine",
     resetToOriginal: "Revenir à la référence",
     saveVersion: "Enregistrer dans le carnet",
@@ -1885,20 +1714,14 @@ export const FR_LOCALE: CmsContent = {
     fillingTitle: "Farce",
     chooseTopping: "Choisir la garniture",
     learnMore: "En savoir plus",
-    tailoredEyebrow: "Votre recette sur mesure",
-    recipeEyebrow: "Recette",
     start: "Lancer la fourn\u00E9e",
     resume: "Reprendre la fourn\u00E9e",
     startShort: "Commencer",
     inProgressShort: "En cours",
-    followYou: "Gardez {brand} ouvert pour suivre les temps et recevoir les rappels.",
     reopen: "Rouvrir la fourn\u00E9e en cours",
     completed: "Fourn\u00E9e termin\u00E9e",
-    waitOver: "Attente termin\u00E9e : continuez !",
     dueNow: "C'est l'heure : {title}",
-    stepProgress: "{style} \u00B7 \u00E9tape {n}/{total}",
     interrupt: "Interrompre la fourn\u00E9e",
-    abortConfirm: "Voulez-vous vraiment interrompre la fourn\u00E9e en cours ? Tous les minuteurs et la progression seront perdus.",
     abortConfirmTitle: "Interrompre la fourn\u00E9e ?",
     abortBody: "Vous perdrez les minuteurs et la progression de cette {style}. La recette reste, mais la session repart de z\u00E9ro.",
     abortYes: "Oui, interrompre",
@@ -1945,28 +1768,19 @@ export const FR_LOCALE: CmsContent = {
     ovenOptimal: "Temp\u00E9rature du four optimale",
     ovenLimited: "Faisable (temp\u00E9rature limite)",
     ovenNeedsAdaptation: "Adaptation de la temp\u00E9rature n\u00E9cessaire",
-    procedureHeroDescription: "M\u00E9thode guid\u00E9e pour {style} : {steps}, {duration} au total et {oven}.",
     toppingNotesTitle: "Conseils de garniture",
     toppingAmountsNote: "Les quantités sont pour une pizza ou une unité. Les ingrédients suivent l’ordre d’ajout.",
-    toppingPerUnit: "{amount} par {unit}",
     durationLabel: "Dur\u00E9e : {duration}",
-    comfortLabel: "{duration} confort",
-    totalDuration: "{duration} au total",
     finalDoughStageTitle: "P\u00E2te finale",
-    rule55Title: "Temp\u00E9rature de l'eau",
-    rule55AriaOpen: "Comment se calcule la temp\u00E9rature de l'eau",
-    rule55AriaClose: "Masquer l'explication",
+    rule55DescriptionHand: "Ambiante, farine et eau doivent faire environ {sum} au total : trois fois la température de pâte voulue ({ddt}). En pétrissant à la main, il n'y a pas de chaleur du pétrin à retirer. C'est pour cela que l'eau change avec la température de votre cuisine.",
     rule55Description: "Ambiante, farine et eau doivent faire environ {sum} au total : trois fois la temp\u00E9rature de p\u00E2te voulue ({ddt}) moins la chaleur du p\u00E9trin ({friction}). C'est pour cela que l'eau change avec la temp\u00E9rature de votre cuisine.",
+    rule55DescriptionPreferment: "Ambiante, farine, eau et {preferment} doivent faire environ {sum} au total : quatre fois la température de pâte voulue ({ddt}) moins la chaleur du pétrin ({friction}). Le préferment entre à environ {prefTemp}, sa température de maturation (estimation du modèle). C'est pour cela que l'eau de la pâte finale change avec la température de votre cuisine.",
     stepDetailsShow: "Comment faire",
-    stepDetailsHide: "Masquer les d\u00E9tails",
-    matchDetailsShow: "D\u00E9tails du score",
     matchDetails: "D\u00E9tails",
     matchDetailsHide: "Masquer",
     unsavedTitle: "Modifications non enregistr\u00E9es",
     unsavedBody: "Si vous quittez maintenant, votre version de {style} sera perdue. L'enregistrer dans le carnet ?",
     unsavedDiscard: "Quitter sans enregistrer",
-    matchBreakdownLabel: "Moyenne pond\u00E9r\u00E9e",
-    matchAxisWeight: "poids de {pct}% dans le score",
     troubleStepLinks: {
       preferment: "Odeur trop acide ?",
       mix: "P\u00E2te trop collante ?",
@@ -1975,15 +1789,9 @@ export const FR_LOCALE: CmsContent = {
       shape: "Elle se d\u00E9chire \u00E0 l'\u00E9talage ?",
       bake: "Cuisson rat\u00E9e ?",
     },
-    draftResumeEyebrow: "Recette en cours",
-    draftResumeCta: "Reprendre",
-    draftReplaceTitle: "Remplacer la recette en cours ?",
-    draftReplaceBody: "Vous avez d\u00E9j\u00E0 {current} pr\u00EAte et r\u00E9gl\u00E9e sur votre planning. En choisissant {next}, vous la remplacez et ses param\u00E8tres seront perdus.",
-    draftReplaceConfirm: "Passer \u00E0 {next}",
     prefermentSaltNote: "Le sel va dans la pâte finale, pas dans le préferment, où il freinerait la levure.",
     learnedFromAttempts: "J'ai appris de vos {n} essais",
     applyCorrections: "Appliquer les corrections",
-    learnInlineTitle: "En savoir plus : {label}",
     tipsCountOne: "{n} conseil",
     tipsCountMany: "{n} conseils",
     servingUnits: {
@@ -2013,4 +1821,31 @@ export const FR_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_FR as any,
   glossaryTerms: GLOSSARY_TERMS_FR as any,
   science: SCIENCE_FR,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label} : {score} sur 100",
+    meaning: "Dans quelle mesure la recette est réalisable avec votre cuisine et reste fidèle au style.",
+    limitedAuthenticity: "Limité par l’authenticité ({score}/100).",
+    limitedFuel: "Limité par l’authenticité : sans le four prévu par le style et sous sa température minimale, elle s’arrête à {cap}/100.",
+    limitedFeasibility: "Limité par une condition non remplie : selon une règle de l’app, il reste sous {limit}.",
+    countedTitle: "Ce qui entre dans le nombre",
+    weight: "poids {pct}",
+    ruleTitle: "Comment on obtient le nombre",
+    ruleAverage: "Moyenne pondérée des deux critères",
+    ruleAuthenticity: "Plafond : authenticité",
+    ruleFeasibility: "Plafond pour les recettes non réalisables (règle de l’app)",
+    ruleResult: "Score : la plus basse des valeurs ci-dessus",
+    ceilingEditorial: "Choix de produit : une recette que vous ne pouvez pas réaliser reste sous {limit}, même si les autres valeurs sont élevées.",
+    tieBreak: "Choix de produit : à nombre égal, les listes montrent d’abord le style que votre cuisine couvre avec le plus de marge de four et de temps. Le nombre ne change pas.",
+    infoTitle: "Informations à part",
+    infoNote: "Elles n’entrent pas dans le nombre : elles disent autre chose de la recette, pas à quel point elle convient à votre cuisine.",
+    referencePending: "Le profil d’expérimentation de ce style n’a pas encore été vérifié.",
+    whyLabel: "Comment c’est calculé",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Ici, la version sur mesure obtient un peu moins que la référence : la recherche essaie un nombre limité de combinaisons d’heures, d’hydratation et de farine, et la meilleure trouvée ne la dépasse pas.",
+    snapshot: "Compatibilité à l’enregistrement : {score}/100",
+    savedParams: "Hydratation {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} pâton",
+    savedBallsOther: "{n} pâtons",
+  },
 };

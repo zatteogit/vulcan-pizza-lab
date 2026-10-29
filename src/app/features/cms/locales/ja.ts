@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_JA } from "../../../i18n/ui-messages.ja";
 import { TOPPING_I18N_JA } from "../../../data/topping-i18n/ja";
 import { INSPIRATION_I18N_JA } from "../../../data/inspiration-i18n/ja";
@@ -30,7 +32,7 @@ export const JA_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "細粒の海塩", "fine": "細粒塩", "kosher": "コーシャーソルト", "kosher_or_fine": "コーシャーソルトまたは細粒塩", "coarse_and_fine": "粗塩と細粒塩" },
-    saltTiming: { "with_flour": "粉と一緒に", "after_flour_water": "粉と水を混ぜた後", "after_flour_water_5min": "粉と水を混ぜた後（5分こねてから）", "after_hydration": "加水後", "fine_in_dough_coarse_on_top": "生地に細粒塩、表面に粗塩" },
+    saltTiming: { "with_flour": "粉と一緒に", "after_flour_water": "粉と水を混ぜた後", "dissolved_in_water": "粉より先に水に溶かす（規格書）", "after_hydration": "加水後", "fine_in_dough_coarse_on_top": "生地に細粒塩、表面に粗塩" },
     fold: { "stretch_fold": "ストレッチ&フォールド", "coil_fold": "コイルフォールド", "french_fold": "フレンチフォールド", "slap_fold": "スラップ&フォールド" },
     stretch: {
       napoletana_stg: "手で伸ばす（ナポリ式のたたき伸ばし）",
@@ -100,10 +102,9 @@ export const JA_LOCALE: CmsContent = {
     "Connecticut": "コネチカット",
   },
   ui: {
-    scoreTipTitle: "スコアの見方",
     scoreTipOriginal: "あなたのキッチンでのスタイル基準。",
     scoreTipTailored: "提案された調整を反映したバージョン。",
-    scoreTipGlobal: "スコアは実現性と本来のスタイルへの忠実さを示します。規定への適合を認証するものではありません。",
+    scoreTipGlobal: "スコアは作りやすさと忠実度だけで決まり、忠実度を超えることはありません。熟成・環境負荷・アレンジ度は参考情報です。規定への適合を認証するものではありません。",
     scoreTipBlocked: "満たされていない条件があります。詳細を開いてください。",
     pantrySelectionSummary: "選択：{n}・除外：{excluded}",
     pantryWValue: "W{w}",
@@ -164,17 +165,9 @@ export const JA_LOCALE: CmsContent = {
     recipeCurrentVersion: "現在",
     recipeOptimizedVersion: "提案",
     recipeScoreLabel: "スコア",
-    recipeScoreTransition: "スコア：{from}/100 → {to}/100",
     scoreBasisOriginal: "基準",
     scoreBasisTailored: "調整済み",
 
-    scoreLimitedAuthenticity: "元のスタイルへの忠実度（{score}/100）が総合点の上限になっています。",
-    scoreLimitedFeasibility: "必要な条件を満たしていません。下に示す理由を確認してください。",
-    scoreWeightedAverage: "5つの基準の加重平均",
-    scoreAuthenticityCeiling: "忠実度による上限",
-    scoreFeasibilityCeiling: "実行不可による上限",
-    scoreNotWeighted: "参考情報の軸です。この重みでは総合スコアに影響しません。",
-    scoreReferencePending: "このスタイルの変更度の基準はまだ確認されていません。",
 
     // Actions
     copy: "\u30B3\u30D4\u30FC",
@@ -185,22 +178,16 @@ export const JA_LOCALE: CmsContent = {
     closeDetails: "\u8A73\u7D30\u3092\u9589\u3058\u308B",
     closeInsight: "\u9589\u3058\u308B",
     modify: "\u7DE8\u96C6",
-    disable: "\u7121\u52B9\u5316",
     restore: "\u5FA9\u5143",
     generate: "\u30EC\u30B7\u30D4\u3092\u4F5C\u6210",
-    chooseStyle: "\u30B9\u30BF\u30A4\u30EB\u3092\u9078\u3076",
     customizeParams:
       "\u30D1\u30E9\u30E1\u30FC\u30BF\u3092\u30AB\u30B9\u30BF\u30DE\u30A4\u30BA",
     adjustByHand: "\u624B\u52D5\u3067\u8ABF\u6574",
     personalize: "カスタマイズ",
-    specFermentTemp: "発酵温度",
-    adjustByHandQuestion: "\u81EA\u5206\u3067\u6C7A\u3081\u305F\u3044\uFF1F",
     changeStyle: "\u30B9\u30BF\u30A4\u30EB\u5909\u66F4",
-    newPizza: "\u65B0\u3057\u3044\u30D4\u30B6",
     // Recipe output
     ingredients: "\u6750\u6599",
     procedure: "\u4F5C\u308A\u65B9",
-    steps_count: "{n}\u30B9\u30C6\u30C3\u30D7",
     doughBalls: "\u751F\u5730\u7389",
     timeline: "タイムライン",
     doughBallsFrom: "\u5404{w}",
@@ -210,8 +197,6 @@ export const JA_LOCALE: CmsContent = {
     // Recipe output — clipboard/share text
     clipboardBalls:
       "{n}\u500B\u306E\u751F\u5730\u7389\uFF08\u5404{w}\uFF09",
-    clipboardTotal: "\u5408\u8A08: {g}",
-    clipboardProcedure: "{style} \u2014 \u4F5C\u308A\u65B9",
     // Recipe output — ingredient names
     flour: "\u5C0F\u9EA6\u7C89",
     flourMix: "\u30D6\u30EC\u30F3\u30C9\u7C89",
@@ -221,20 +206,6 @@ export const JA_LOCALE: CmsContent = {
     sugar: "\u7802\u7CD6",
     oilEvo: "\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB",
     // Recipe output — compensations
-    compTitle: "\u8ABF\u6574",
-    compTitleNerd: "\u30AA\u30FC\u30D6\u30F3\u88DC\u6B63",
-    compHydration:
-      "\u30AA\u30FC\u30D6\u30F3\u306B\u5408\u308F\u305B\u3066\u52A0\u6C34\u7387\u3092\u4E0A\u3052\u307E\u3057\u305F",
-    compOil:
-      "\u30D4\u30B6\u3092\u67D4\u3089\u304B\u304F\u4FDD\u3064\u305F\u3081\u3001\u5C11\u3057\u591A\u3081\u306E\u30AA\u30A4\u30EB",
-    compSugar:
-      "\u826F\u3044\u7126\u3052\u8272\u306E\u305F\u3081\u306B\u7802\u7CD6\u3092\u8FFD\u52A0",
-    compCookTime:
-      "\u5B8C\u74A7\u306A\u7D50\u679C\u306E\u305F\u3081\u306B\u713C\u304D\u6642\u9593\u3092\u5EF6\u9577",
-    compThickness:
-      "\u5747\u4E00\u306A\u713C\u304D\u4E0A\u304C\u308A\u306E\u305F\u3081\u306B\u8584\u304F\u4F38\u3070\u3059",
-    compDefault:
-      "\u3042\u306A\u305F\u306E\u8A2D\u5099\u306B\u5408\u308F\u305B\u305F\u8ABF\u6574",
     bakeAdjustmentTitle: "焼き時間・温度",
     relativeToBase: "基本レシピ基準",
     // Recipe output — aria labels
@@ -246,7 +217,6 @@ export const JA_LOCALE: CmsContent = {
     statOven: "\u30AA\u30FC\u30D6\u30F3",
     statRest: "休ませ",
     statOil: "油",
-    statCookTime: "\u713C\u304D\u6642\u9593",
     statFermentation: "\u767A\u9175",
     statFlourStrength: "小麦粉の強さ",
     fermentEnvAmbient: "常温",
@@ -254,8 +224,6 @@ export const JA_LOCALE: CmsContent = {
     statTempSuffix: "{t}\u00B0C\u3067",
     statIdeal: "\u7406\u60F3",
     // Nerd row
-    nerdTitle: "\u6280\u8853\u30C7\u30FC\u30BF",
-    nerdFlourW: "\u5C0F\u9EA6\u7C89 W",
     nerdPL: "P/L",
     nerdYeast: "\u30A4\u30FC\u30B9\u30C8",
     nerdHoursAt18: "\u6642\u9593 @{refTemp}",
@@ -272,7 +240,6 @@ export const JA_LOCALE: CmsContent = {
     slotNoPreference: "指定なし",
     slotNoPreferenceSub: "スタイルに理想的な時間（数日かかることも）",
     interpretationDisclaimer: "{brand}が公開情報をもとにした解釈です。{who}のオリジナルレシピではなく、{who}の承認も受けていません。",
-    yeastHowToggle: "イースト量の計算方法",
     yeastModelBody: "基準は、粉に対して生イースト{ref}で{refTemp}・{refHours}です。{temp}・{hours}ではイーストは基準の{speed}倍の速さで働くので、量は{pct}になります。",
     yeastDryNote: "ドライイーストは生イーストの3分の1の量です。",
     yeastTempModelNote: "温度による速さの変化（Q10係数2、10 °C未満は1.6）はモデルによる推定で、実際の試作で確かめる必要があります。",
@@ -308,10 +275,10 @@ export const JA_LOCALE: CmsContent = {
     procedureDirect: "ストレート法",
     procedurePreferment: "中種",
     procedureUnleavened: "イーストなし",
-    flourUseVeryStrong: "マニトバ、またはかなり強いタイプ0",
-    flourUseStrong: "ピザ用の強いタイプ0/00",
-    flourUseMedium: "中程度の強さのタイプ0",
-    flourUseWeak: "弱め〜中程度のタイプ00",
+    flourUseVeryStrong: "非常に強い粉（マニトバなど）",
+    flourUseStrong: "強い粉（長時間熟成向け）",
+    flourUseMedium: "中程度の粉（「ピッツァ用」が多い）",
+    flourUseWeak: "弱い粉（汎用・菓子用）",
     verdictTitle: "このままでは作れません",
     verdictOvenTooCold: "焼成温度は{oven}に設定されています。この製法には少なくとも{min}が必要です。",
     verdictTimeWindow: "約{needed}かかりますが、使えるのは{available}です。選んだ時刻より後に仕上がります。",
@@ -321,15 +288,7 @@ export const JA_LOCALE: CmsContent = {
     verdictRecipeBelow: "レシピを読みながら、変更が必要な条件を確認できます。",
     // Score dashboard
     recipeScore: "あなたのキッチンとの相性",
-    nerdToggle: "PizzaNerd",
-    nerdActive: "PizzaNerd\u3092\u6709\u52B9\u5316",
     scienceTitle: "{brand} Science",
-    ariaCloseScores:
-      "点数の詳細を閉じる",
-    ariaViewScores:
-      "点数の詳細を見る",
-    tapForDetails:
-      "\u30BF\u30C3\u30D7\u3067\u8A73\u7D30\u8868\u793A",
     // Banners
     styleEditorActive: "Style Editor \u6709\u52B9",
     cmsActive: "CMS \u6709\u52B9",
@@ -338,15 +297,11 @@ export const JA_LOCALE: CmsContent = {
     fieldModified:
       "\u30D5\u30A3\u30FC\u30EB\u30C9\u5909\u66F4\u6E08\u307F",
     editOven: "\u30AA\u30FC\u30D6\u30F3\u3092\u7DE8\u96C6",
-    weatherCity: "\u3042\u306A\u305F\u306E\u8857",
     weatherOutdoor: "\u5916\u6C17{t}\u00B0C",
-    weatherKitchen: "\u30AD\u30C3\u30C1\u30F3\u6E29\u5EA6",
     badgeIdeal: "おすすめ",
     badgeRecent: "\u6700\u8FD1",
     autoLabel: "\u81EA\u52D5",
     cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB",
-    changeOven: "\u5909\u66F4",
-    ovenFallback: "\u30AA\u30FC\u30D6\u30F3",
     pantryFlours: "\u5C0F\u9EA6\u7C89",
     pantryYeasts: "\u30A4\u30FC\u30B9\u30C8",
     equipByHand: "\u624B\u3054\u306D",
@@ -361,17 +316,6 @@ export const JA_LOCALE: CmsContent = {
     kitchenTitle:
       "\u3042\u306A\u305F\u306E\u30AD\u30C3\u30C1\u30F3",
     pantryOptional: "\u4EFB\u610F",
-    specialFlours: "\u7279\u6B8A\u5C0F\u9EA6\u7C89",
-    brandSuggest:
-      "\u30D6\u30E9\u30F3\u30C9\u3092\u77E5\u3063\u3066\u3044\u307E\u3059\u304B\uFF1F",
-    badgeSelected: "\u9078\u629E\u6E08\u307F",
-    otherCompatibleFlours:
-      "\u305D\u306E\u4ED6\u306E\u4E92\u63DB\u5C0F\u9EA6\u7C89",
-    flourSelectHint:
-      "\u5C0F\u9EA6\u7C89\u3092\u9078\u629E\u3059\u308B\u3068\u3001\u30EC\u30B7\u30D4\u306EW\u3068P/L\u304C\u81EA\u52D5\u66F4\u65B0\u3055\u308C\u307E\u3059\u3002",
-    flourSelected: "\u9069\u7528\u6E08\u307F",
-    autolysisSuggested:
-      "\u30AA\u30FC\u30C8\u30EA\u30FC\u30BA\u63A8\u5968",
     dietGlutenFree:
       "\u30B0\u30EB\u30C6\u30F3\u30D5\u30EA\u30FC",
     dietLactoseFree:
@@ -396,7 +340,6 @@ export const JA_LOCALE: CmsContent = {
   },
   hero: {
     title_line1: "\u3042\u306A\u305F\u306E",
-    title_line2: "次の一枚。",
     subtitle:
       "食べたい時間を選んでください。",
     /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
@@ -428,12 +371,6 @@ export const JA_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title:
-        "\u3044\u3064\u30D4\u30B6\u3092\u98DF\u3079\u305F\u3044\uFF1F",
-      description:
-        "\u767A\u9175\u6642\u9593\u3092\u8A08\u7B97\u3059\u308B\u305F\u3081\u306B\u30BF\u30A4\u30DF\u30F3\u30B0\u3092\u9078\u629E",
-    },
     skill: {
       title: "\u7D4C\u9A13\u30EC\u30D9\u30EB",
       description:
@@ -447,11 +384,6 @@ export const JA_LOCALE: CmsContent = {
       title: "\u30D1\u30F3\u30C8\u30EA\u30FC",
       description:
         "\u304A\u5BB6\u306B\u3042\u308B\u5C0F\u9EA6\u7C89\u3068\u30A4\u30FC\u30B9\u30C8",
-    },
-    dietary: {
-      title: "\u98DF\u4E8B\u5236\u9650",
-      description:
-        "\u30AA\u30D7\u30B7\u30E7\u30F3\u306E\u30D5\u30A3\u30EB\u30BF\u30FC",
     },
     equipment: {
       title: "\u8A2D\u5099",
@@ -531,15 +463,15 @@ export const JA_LOCALE: CmsContent = {
     },
     "2": {
       name: "\u4E2D\u7D1A\u8005",
-      description: "何度かピザを作ったことがある",
+      description: "レシピを見ながら何度かピザを作ったことがある",
     },
     "3": {
       name: "\u4E0A\u7D1A\u8005",
-      description: "折りたたみと発酵を管理できる",
+      description: "よくピザを作り、やわらかい生地も扱える",
     },
     "4": {
       name: "\u30A8\u30AD\u30B9\u30D1\u30FC\u30C8",
-      description: "生地・時間・技法を調整できる",
+      description: "分量や時間を自分で調整する",
     },
   },
   families: {
@@ -574,37 +506,37 @@ export const JA_LOCALE: CmsContent = {
     authenticity: {
       label: "スタイルへの忠実度",
       short: "忠実度",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "生地、工程、オーブンを元のスタイルと比較します。低い場合は総合点の上限になりますが、規定への適合を認証するものではありません。",
     },
     feasibility: {
       label: "作りやすさ",
       short: "\u5B9F\u73FE",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "オーブン、粉、経験に応じた作りやすさの目安です。必須の条件は別に示します。",
     },
     digestibility: {
       label: "熟成の推定",
       short: "熟成",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "時間、温度、イースト、前発酵の生地から熟成を推定します。食べた人の消化を測るものではありません。",
     },
     sustainability: {
       label: "持続可能性の推定",
       short: "持続性",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "焼成、発酵、材料を比較した相対的な目安です。実測した消費エネルギーやカーボンフットプリントではありません。",
     },
     experimentation: {
       label: "アレンジ度",
       short: "変更度",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "基準に対する生地、工程、焼成の変更度です。値が高いほど変更が多く、成功度が高いわけではありません。一部のスタイルは基準が未確認です。 総合点への寄与は100からこの値を引いたものです。",
+        "基準に対する生地、工程、焼成の変更度です。値が高いほど変更が多く、成功度が高いわけではありません。一部のスタイルは基準が未確認です。相性スコアには含まれません。",
     },
   },
   recommendationWeights: {
@@ -620,54 +552,34 @@ export const JA_LOCALE: CmsContent = {
       "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
   },
   result: {
-    breadcrumb:
-      "\u3042\u306A\u305F\u306E\u7406\u60F3\u306E\u30D4\u30B6",
     heading:
       "\u30EC\u30B7\u30D4\u304C\u3067\u304D\u307E\u3057\u305F",
-    backLabel: "\u9078\u629E\u306B\u623B\u308B",
   },
   misc: {
     showAllStyles: "すべて表示",
-    noFloursInCategory: "このカテゴリーに小麦粉はありません",
     noTroubleshootingResults: "この検索に該当する問題は見つかりません",
     moreInfo: "詳細",
     changeTiming: "時間を変更",
     kitchenTempSubtitle: "温度は発酵の速さに影響します",
     techAdjustmentsApplied: "技術的な調整を適用しました",
-    techDataAria: "技術データを表示 (W, P/L, Q10, Aw)",
-    techDataTitle: "生地のデータと計算",
     feedbackYes: "はい、ぜひ",
     feedbackNo: "いいえ、大丈夫です",
     feedbackPlaceholder: "何を変えましたか？仕上がりは？役立つ詳細...",
     preFermentCompare: "クイック比較",
     scoreExplainer: "点数はレシピの複数の評価項目をまとめたものです。満たさない条件や基準レシピとの違いで、上限が決まる場合があります。",
-    companionContext: "キッチンの温度と使える時間が全工程を左右します。",
-    companionSetup: "あなたの経験・オーブン・実際の在庫に合わせてレシピを調整します。",
-    companionStyles: "各スタイルには固有のパラメータがあります。自分の条件に最も合うものを選びましょう。",
-    smartLinkOn: "パラメータ連動 — スライダーを動かすと他も自動調整されます",
-    smartLinkOff: "すべてのパラメータを連動させて自動調整",
-    smartLinkApplied: "{param}：他のパラメータとタイムラインを再調整しました。",
     settingsHelp: "これらの情報をもとに{brand}が時間とレシピを調整します。",
-    versionsLabel: "バージョン",
-    versionsHint: "各バージョンには目安の範囲があります。調整欄の目盛りは、選択中のバージョンの範囲を示します。",
     learnHeroTitle1: "生地を知って、",
     learnHeroTitle2: "ピザをもっとおいしく。",
-    learnHeroSubtitle: "技法、材料、焼き方。変化を見分け、調整する方法を学びましょう。",
+    learnHeroSubtitle: "用語、トラブル、予備発酵、計算の仕組み。変化を見分け、調整する方法を学びましょう。",
     learnResources: "リソース",
     kitchenTempLabel: "キッチンの温度",
     kitchenTempDown: "キッチンの温度を下げる",
     kitchenTempUp: "キッチンの温度を上げる",
     current: "選択中",
     noStyleInFamily: "あなたの条件に合うこのファミリーのスタイルはありません。",
-    notFeasibleExplainer: "これらのレシピは必要な条件を満たしていません。詳細を開くと、変更が必要な点を確認できます。",
     exploreHeroTitle1: "スタイルとレシピを",
     exploreHeroTitle2: "見つける。",
-    badgeBeginnerFriendly: "初心者向け",
-    interpretationsLabel: "解釈",
-    goToSite: "サイトへ",
     signatureLabel: "バージョン",
-    noSignature: "インスピレーションなし",
-    fineParams: "詳細設定",
     cmsRestoreContent: "CMSコンテンツを復元",
     inspirationLabel: "バージョン",
     inspirationBase: "基準",
@@ -739,9 +651,6 @@ export const JA_LOCALE: CmsContent = {
     advancedLabel: "\u8A73\u7D30\u30D5\u30A3\u30EB\u30BF\u30FC",
     removeFilters:
       "\u30D5\u30A3\u30EB\u30BF\u30FC\u3092\u89E3\u9664",
-    brandedFlours: "\u30D6\u30E9\u30F3\u30C9\u5C0F\u9EA6\u7C89",
-    settingsOpen: "\u8A2D\u5B9A",
-    settingsClosed: "\u3042\u306A\u305F\u306E\u8A2D\u5B9A",
     hydrationLabel: "\u52A0\u6C34\u7387",
     hydrationLow: "\u4F4E <60%",
     hydrationMedium: "\u4E2D 60-70%",
@@ -760,7 +669,6 @@ export const JA_LOCALE: CmsContent = {
     skillIntermediate: "\u4E2D\u7D1A",
     skillAdvanced: "\u4E0A\u7D1A",
     skillExpert: "\u30A8\u30AD\u30B9\u30D1\u30FC\u30C8",
-    timeFast: "\u77ED\u6642\u9593",
     ovenLabel: "\u713C\u304D\u65B9",
     ovenHome: "\u5BB6\u5EAD\u7528\u30AA\u30FC\u30D6\u30F3",
     ovenWood: "\u85AA\u7AAF",
@@ -777,10 +685,9 @@ export const JA_LOCALE: CmsContent = {
     noResults: "「{query}」の用語はありません",
     allCategories: "\u3059\u3079\u3066",
     formulaLabel: "\u5F0F",
-    rangesLabel: "\u4EE3\u8868\u7684\u306A\u7BC4\u56F2",
-    whyImportantLabel: "\u306A\u305C\u91CD\u8981\u304B",
+    rangesLabel: "代表的な値",
+    whyImportantLabel: "なぜ重要か",
     relatedLabel: "\u95A2\u9023",
-    backToHome: "\u30DB\u30FC\u30E0\u306B\u623B\u308B",
     termCount: "{count}\u7528\u8A9E",
     // FW-09
     termCountOne: "{count}用語",
@@ -806,6 +713,17 @@ export const JA_LOCALE: CmsContent = {
       "\u52A0\u5DE5\u3001\u8A2D\u5099\u3001\u8A08\u6E2C",
     catScoring: "\u30B9\u30B3\u30A2",
     catScoringDesc: "{brand}の点数の読み方",
+    // FW-04
+    catTechnique: "作業と工程",
+    catTechniqueDesc: "こね上げからオーブンまで、工程で使う言葉",
+    catFlour: "粉",
+    catFlourDesc: "粉の種類と読み方",
+    rangesValueHeader: "値",
+    rangesMeaningHeader: "意味",
+    technicalLabel: "専門的な定義",
+    modelNoteLabel: "{brand}のモデルでは",
+    seeAlsoLabel: "関連ページ",
+    inGlossaryLabel: "用語集：",
   },
   engineMessages: {
     "allergen.conflict": "{allergen}を含む材料：{ingredients}。",
@@ -846,14 +764,15 @@ export const JA_LOCALE: CmsContent = {
     "learn.compatiblePath": "お使いのキッチンに合う実践コースです。レシピの条件を確認してください。",
     "learn.theoryOnly": "この条件に合う検証済みレシピはありません。理論を学べます。",
     "learn.openTheory": "理論を学ぶ",
-    "timeline.preheat.includesProof": "この工程には、合計時間に計上済みの最終発酵が{minutes}分含まれます。重複して加算しないでください。",
-    "timeline.preheat.includesRest": "この工程には、合計時間に計上済みの休ませ時間が{minutes}分含まれます。重複して加算しないでください。",
+    "timeline.preheat.includesProof": "オーブンの準備ができたら生地を確かめましょう。指で押して、くぼみがゆっくり戻れば準備完了です。",
+    "timeline.preheat.includesProofOil": "油が適温になったら生地を確かめましょう。指で押して、くぼみがゆっくり戻れば準備完了です。",
     "auth.hydrationOff":
       "加水率が中心から外れています (-{penalty}%)",
     "auth.wOutOfRange": "小麦粉Wが範囲外 (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl}が範囲{plMin}-{plMax}外 (-{penalty}%)",
-    "auth.notWoodOven": "薪窯ではありません (-15%)",
+    "auth.notWoodOven": "薪窯ではなく、スタイルの最低温度{min} °Cにも届きません：設備の軸で−15点（忠実度の35%）",
+    "auth.woodByMethod": "このスタイルは薪窯を前提にしています（ナポレターナSTGでは規定で定められています）。お使いの窯は最低温度{min} °Cに届くため、これは情報であり減点はありません",
     "auth.tempVsIdeal":
       "\u6E29\u5EA6{temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin": "温度が最低値以下 (-{penalty}%)",
@@ -884,11 +803,8 @@ export const JA_LOCALE: CmsContent = {
     "rec.timeAdaptable": "発酵は~{hours}に調整可能",
     "rec.timeInsufficient":
       "最低{fMin}必要、{available}しかありません",
-    "rec.needsWoodOven": "基準レシピは薪窯を使います。別のオーブンでは焼き方が変わります。",
-    "rec.ovenAdapted": "オーブンの最高温度は{temp}、理想温度は{ideal}です。焼成を調整します",
     "gen.homeBakingMethod": "予熱した裏返しの天板で{temp}で焼きます。標準の{ideal}での焼成とは仕上がりが異なります",
     "gen.ovenTooNarrow": "お使いのオーブンに入るピザは最大{max} cmですが、このレシピは{diameter} cmです。生地は{max} cm以内に伸ばしてください。",
-    "rec.needsDeck": "この焼成には予熱したピザストーンまたはスチールが必要ですが、キッチンに登録されていません",
     "timeline.homeTray.preheat": "裏返しの天板を入れてオーブンを最高温度（{temp}）に予熱し、天板も十分熱くします。その間に生地を休ませます。",
     "timeline.homeTray.bake": "予熱した裏返しの天板で焼きます。取り出す前に底の焼き色と火の通りを確認してください。",
     "gen.fermentationTooLong": "発酵時間{hours}はこのレシピの上限（{maxHours}）を超えています。より長時間に対応した確認済みの方法を選んでください。",
@@ -912,7 +828,6 @@ export const JA_LOCALE: CmsContent = {
     "need.withoutWood": "薪なしでも可能",
     "need.adaptedBake": "調整した焼成",
     "need.deck": "石板または鋼板が必要",
-    "card.pantryCheck": "食材を確認",
     "card.directDough": "ストレート法",
     "card.resourceExcluded": "除外した条件",
     "card.panMissing": "天板が必要",
@@ -943,41 +858,16 @@ export const JA_LOCALE: CmsContent = {
     "change.prefermentDetails": "前発酵種：{fromType} {from}% → {toType} {to}%",
     "change.cooking": "焼成：{fromTemp}・{fromSeconds} s → {toTemp}・{toSeconds} s",
     "auth.notCoalOven": "元の製法は石炭窯による焼成です。別の燃料を使う場合はアレンジになります",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "スタイルが想定する窯がなく、最低温度{min} °Cにも届かない場合、忠実度は{cap}/100で止まります。これは測定値ではなく、アプリのルールです",
     "gen.notCoalOven": "本来のスタイルは石炭窯を使います。選んだ窯では焼き方と香りが変わります",
     "timeline.oven.coal": "炉床を予熱した石炭窯：底と縁の焼き色を確認し、均一に焼けるよう回転させます。",
     "rec.ovenIdeal":
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3\u306F\u7406\u60F3\u6E29\u5EA6\u306B\u5230\u9054 ({ideal})",
-    "rec.ovenAdequate": "オーブンは適切 (自動時間/温度補正)",
     "rec.ovenTooCold":
       "\u30AA\u30FC\u30D6\u30F3\u6E29\u5EA6\u4E0D\u8DB3: {temp} < \u6700\u4F4E{min}",
     "rec.skillMatch": "あなたのレベルに適しています",
-    "rec.skillExpert": "あなたのレベルならどのスタイルも可能",
-    "rec.hydrationNeedsPractice": "高加水は練習が必要です",
-    "rec.advancedForBeginner": "初心者には上級スタイル",
-    "rec.noKneadNoMixer": "ミキサー不要 (no-knead)",
-    "rec.handsHighHydration": "高加水: 手ごねは非常に困難",
-    "rec.handsMedHydration": "中〜高加水: 手ごねは練習が必要",
-    "rec.forkIdealHighH": "フォークミキサーは高加水に最適",
-    "rec.forkLowFriction": "フォークミキサー: 低い摩擦熱",
-    "rec.spiralOptimal": "プロ用スパイラル: 最適なミキシング",
-    "rec.domesticStrugglesHighH":
-      "家庭用ミキサー: 加水率>80%では困難な場合あり",
-    "rec.mixerHelps": "ミキサーがプロセスを容易にします",
-    "rec.mixerRecommended": "高加水: ミキサー推奨",
-    "rec.castIronPerfect": "鋳鉄はこのスタイルに最適",
-    "rec.panFits": "天板はこのスタイルに適合",
-    "rec.needsPan": "このスタイルには天板が必要",
-    "rec.refractoryIdeal": "耐火石: ナポリピッツァに最適",
-    "rec.steelPlateCrispy":
-      "スチールプレート: 秒でカリカリの底",
-    "rec.panPerfect": "あなたの天板はこのスタイルに最適",
     "rec.flourMatch": "ストックの小麦粉が適合",
-    "rec.flourPartial":
-      "小麦粉は部分的に適合 (Wが理想的でない)",
-    "rec.flourNoMatch":
-      "必要なW範囲のストック小麦粉がありません",
-    "rec.sourdoughLongFerment": "天然酵母は長期熟成に最適",
-    "rec.sourdoughOnlyShort": "天然酵母のみ: 短時間発酵は困難",
     "tip.waterTempCold":
       "\u51B7\u8535\u5EAB\u306E\u51B7\u6C34\uFF08{temp}\uFF09\u3092\u4F7F\u3063\u3066\u304F\u3060\u3055\u3044\u3002\u30DF\u30AD\u30B5\u30FC\u3067\u751F\u5730\u304C\u6E29\u307E\u308A\u307E\u3059\u3002",
     "tip.waterTempNormal":
@@ -1007,33 +897,18 @@ export const JA_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に型の中で生地の最終発酵を仕上げます。",
     "timeline.preheat.descPanWholeProof": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に型の中で生地を最終発酵させます。",
     "timeline.preheat.descDuringRest": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に生地を休ませます。",
-    "hint.flourWeak": "\u5F31\u529B\u306A\u5C0F\u9EA6\u7C89\uFF08\u30AF\u30E9\u30B7\u30C3\u30AF\u306A00\uFF09",
-    "hint.flourMedium": "\u4E2D\u7A0B\u5EA6\u306E\u5F37\u3055\u306E\u5C0F\u9EA6\u7C89",
-    "hint.flourStrong": "\u5F37\u529B\u306A\u30D4\u30B6\u7528\u5C0F\u9EA6\u7C89",
-    "hint.flourVeryStrong": "\u3068\u3066\u3082\u5F37\u529B\u306A\u5C0F\u9EA6\u7C89\uFF08\u30DE\u30CB\u30C8\u30D0\uFF09",
-    "hint.yeastDryPinch": "\u2248 \u3054\u304F\u5C11\u91CF",
-    "hint.yeastDryQuarterTsp": "\u2248 \u5C0F\u3055\u3058\u00BC",
     "hint.yeastDryHalfTsp": "\u2248 \u5C0F\u3055\u3058\u00BD",
     "hint.yeastDryOneTsp": "\u2248 \u5C0F\u3055\u30581\uFF08\u3059\u308A\u304D\u308A\uFF09",
     "hint.yeastDryOneHalfTsp": "\u2248 \u5C0F\u3055\u30581\u00BD",
-    "hint.yeastFreshPinch": "\u2248 \u3072\u3068\u3064\u307E\u307F",
     "hint.yeastFreshWeighable": "\u2248 \u30AD\u30C3\u30C1\u30F3\u30B9\u30B1\u30FC\u30EB\u3067\u7D04{g}g",
-    "serving.peopleOne": "\u2248 {n}\u4EBA\u5206",
-    "serving.peopleMany": "\u2248 {n}\u4EBA\u5206",
-    "serving.peopleRange": "\u2248 {min}\u301C{max}\u4EBA\u5206",
     "topping.auth.canonical": "\u898F\u5B9A\u306B\u6E96\u62E0",
     "topping.auth.natural": "\u4F1D\u7D71\u7684",
     "topping.auth.common": "\u4EE3\u66FF",
     "topping.auth.experimental": "\u8A66\u3059\u4FA1\u5024\u3042\u308A",
     "topping.auth.taboo": "\u975E\u63A8\u5968",
-    "recipeSetup.dough": "\u751F\u5730",
     // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
     "recipeSetup.profileHint": "出発点のバージョンか、作り手のインスピレーションを選んでください。数値はあとから変更できます。",
     "recipeSetup.styleBase": "\u57FA\u672C\u30B9\u30BF\u30A4\u30EB",
-    "recipeSetup.temp.fridge": "\u51B7\u8535",
-    "recipeSetup.temp.cool": "\u6DBC\u3057\u3044\u5834\u6240",
-    "recipeSetup.temp.room": "\u5BA4\u6E29",
-    "recipeSetup.versionApplied": "{label}: \u751F\u5730\u30D1\u30E9\u30E1\u30FC\u30BF\u3092\u9069\u7528\u3057\u307E\u3057\u305F",
     "version.label.Leggerissima": "\u3068\u3066\u3082\u8EFD\u3044",
     "version.label.Casalingo": "\u5BB6\u5EAD\u5411\u3051",
     "version.label.Casalinga": "\u5BB6\u5EAD\u5411\u3051",
@@ -1117,6 +992,8 @@ export const JA_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "1個分の生地を底用60%、ふた用40%に分け、2枚の円盤にします。",
     "timeline.shape.closedStuffedFried": "底の生地を円盤に伸ばし、ふた用の生地は残しておきます。",
     "timeline.shape.foldedLayers": "生地を極薄に伸ばし、本のように{folds}回折りたたみながら、層の間に具を広げます。",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "ビガとポーリッシュはパン酵母で作ります。サワー種だけの場合、サワー種自体が中種の役割を果たすため、レシピでは使いません。使う場合は、パントリーにパン酵母を追加してください。",
     "diet.singleBase": "生地をすべて使って1枚の土台にし、上に玉ねぎをのせる。2枚目の生地や縁を閉じる工程はない。",
     "topping.geometry": "面積 {area} cm² · 基準 {reference} cm² · 分量 ×{scale}。",
     "auth.layoutChanged": "基準とは異なる形です。このバージョンでは構造も変わります",
@@ -1150,21 +1027,15 @@ export const JA_LOCALE: CmsContent = {
     "timeline.splitFill.desc": "オーブンから取り出します。波刃ナイフで水平に2枚に切り分けます。中に好みの具を詰めて閉じます。",
     "timeline.splitFill.tipBeginner": "焼く前に塗った油の層のおかげで、2枚を破らずに開けます。",
     "timeline.splitFill.tipNerd": "焼成後に開く＝コールドフィルドのレシピです。でんぷんの構造はすでに安定しており、具は内部温度60°Cを超えて加熱されません。",
-    "timeline.bake2.title": "2回目の焼成（短時間）",
     "timeline.bake2.desc": "{temp}のオーブンに戻し、水分を飛ばしてなじませます。数分で十分です。",
     "timeline.bake.title": "焼成",
     "timeline.bake.desc": "{temp}で焼きます。",
     "timeline.bake.rounds": "{sec}の焼成を{n}回、1枚ずつ。",
-    "timeline.bake.tipBeginner": "オーブンは十分に熱くしておく必要があります。焼く30分以上前から予熱しましょう。",
+    "timeline.bake.tipBeginner": "縁がきつね色になり、ピールで持ち上げたとき底が乾いて黒い点が少しあれば焼き上がりです。",
     "timeline.bake.tipNerd": "メイラード反応は~140°Cで始まり、指数関数的に加速します。{temp}ではカラメル化によって約600種類の香り成分が生まれます。",
     "timeline.topPost.title": "焼成後のトッピング",
     "timeline.topPost.desc": "冷たい具材を、焼き上がった表面に直接のせます。",
     "tip.waterTemp": "",
-    "recipeSetup.noSignature": "インスピレーションなし",
-    "recipeSetup.currentParams": "現在のパラメータ",
-    "recipeSetup.noSignatureAlreadyActive": "インスピレーションなしはすでに有効です",
-    "recipeSetup.signatureApplied": "{label}：インスピレーションを適用しました",
-    "recipeSetup.signatureRemoved": "インスピレーションを解除：パラメータを元に戻しました",
     "rec.fried": "\u934B\u3067\u63DA\u3052\u308B\u306E\u3067\u30AA\u30FC\u30D6\u30F3\u306F\u4E0D\u8981",
     "rec.flourMix": "\u624B\u6301\u3061\u306E\u7C89\u3092\u6DF7\u305C\u308B\u3068\uFF1A{weak} {weakPct}%\u3001{strong} {strongPct}%\u3001W {w}\u524D\u5F8C",
     "dig.fermentTooShort": "休ませる時間が非常に短く、熟成指数は低めです",
@@ -1172,31 +1043,33 @@ export const JA_LOCALE: CmsContent = {
     "dig.extremeMaturation": "長時間発酵：生地の状態を確認してください",
     "dig.highYeastDosage": "酵母量{pct}%：経験的なスコア補正（-{penalty}）",
     "dig.coldFermentation": "冷蔵熟成：時間と進み方は温度によって変わります",
-    "dig.fodmapReduced": "時間だけではFODMAP削減率を算出できません",
-    "dig.fodmapHighReduction": "時間だけではFODMAP削減率を算出できません",
     "hint.yeastPrecisionScale": "0.01 g単位のはかりを使ってください",
-    "timeline.batchModel": "1人での作業を想定した目安時間です。すべてを成形・トッピングしてから1枚ずつ焼きます。焼き上がりは順次提供し、作業の重複は想定していません。",
+    "timeline.batchModel": "1人での作業を想定した目安時間です。すべてを成形・トッピングしてから1枚ずつ焼き、焼成の合間にオーブンの温度回復の時間を見込みます（推定）。焼き上がりは順次提供し、作業の重複は想定していません。",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "折りたたみ",
+    "timeline.folds.desc": "{interval}おきに折りたたみを{count}回。合間は生地に覆いをしておきます。",
+    "timeline.folds.descCold": "室温で{interval}おきに折りたたみを{count}回。合間は覆いをし、最後の回が終わったら容器を冷蔵庫に入れます。",
+    "timeline.folds.descCool": "室温で{interval}おきに折りたたみを{count}回。合間は覆いをし、最後の回が終わったら容器を{temp}の場所に戻します（冷蔵庫には入れません）。",
+    "timeline.folds.tipBeginner": "手を濡らし、生地の端をつかんで持ち上げ、中心へ折りたたみます。容器を回して4辺で繰り返し、回の合間は覆いをします。",
+    "timeline.folds.tipNerd": "折りたたみはグルテンの繊維をそろえて張らせ、ガスを分散させます。機械でこねずに生地に力をつけます。",
+    "timeline.bake.recovery": "焼成と焼成の間に、取り出し・投入とオーブンの温度回復のため約{sec}を見込みます。",
+    "timelineComfort.nightNoPlan": "夜間の作業：{n}件、最初は{time}。上で食事の時間を選んでください。",
+    "timelineComfort.nightNoPlanNoMeal": "夜間の作業：{n}件、最初は{time}。上のボタンで開始時刻をずらしてください。",
+    "timelineComfort.doseNote": "時間は変わりますが、イーストの量は変わりません。時計ではなく生地の膨らみで判断してください。",
+    "timelineComfort.whyTitle": "なぜ大丈夫なの？",
+    "timelineComfort.whyBody": "待ち時間だけを、それぞれの範囲内で延ばしたり縮めたりします。冷蔵庫では最大+{coldPlusPct}（上限{coldPlus}）または−{coldMinusPct}（上限{coldMinus}）、室温（最終発酵を含む）では最大+{roomPlusPct}（上限{roomPlus}）または−{roomMinusPct}（上限{roomMinus}）。冷蔵庫と室温の間で時間を移すことはせず、イーストも計算し直しません。これらの範囲は私たちが決めた目安で、測定値ではありません。だから生地の膨らみが大切です。",
   },
   scienceLabels: {
     yeastBaker: "\u30D1\u30F3\u7528\u30A4\u30FC\u30B9\u30C8",
     effectiveHours: "\u6709\u52B9\u6642\u9593",
     q10Factor: "Q\u2081\u2080\u4FC2\u6570",
-    q10Cold: "\u4F4E\u6E29",
-    q10Sourdough: "\u5929\u7136\u9175\u6BCD",
-    q10Standard: "\u6A19\u6E96",
     waterActivity: "\u6C34\u5206\u6D3B\u6027",
     glutenNetwork:
       "\u30B0\u30EB\u30C6\u30F3\u30CD\u30C3\u30C8\u30EF\u30FC\u30AF",
     proteolysis: "\u30BF\u30F3\u30D1\u30AF\u5206\u89E3",
-    starchDegradation: "\u30C7\u30F3\u30D7\u30F3\u5206\u89E3",
-    fodmapReduction: "FODMAP\u524A\u6E1B",
-    plEstimated: "P/L\u63A8\u5B9A\u5024",
     bakingEnergy: "\u713C\u6210\u30A8\u30CD\u30EB\u30AE\u30FC",
-    waterTemp: "\u6C34\u6E29",
     desiredDoughTemp: "\u751F\u5730\u6E29\u5EA6",
     frictionFactor: "\u6469\u64E6\u4FC2\u6570",
-    deviationCategory: "\u504F\u5DEE",
-    deviationScore: "\u5B9F\u52B9\u504F\u5DEE",
   },
   timelineLabels: {
     preferment: {
@@ -1222,7 +1095,7 @@ export const JA_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "\u6DF7\u305C\u308B",
-      desc: "\u3053\u306D\u305A\u306B\u7C89\u306E\u30C0\u30DE\u304C\u306A\u304F\u306A\u308B\u307E\u3067\u6DF7\u305C\u308B\u3002\u305D\u306E\u5F8C\u3001\u7D0430\u5206\u304A\u304D\u306B3\u56DE\u30B9\u30C8\u30EC\u30C3\u30C1&\u30D5\u30A9\u30FC\u30EB\u30C9\u3002",
+      desc: "こねずに粉のダマがなくなるまで混ぜます。あとは折りたたみと時間に任せます。",
       tipBeginner:
         "\u3053\u306D\u308B\u5FC5\u8981\u306F\u3042\u308A\u307E\u305B\u3093\uFF01\u30D8\u30E9\u3067\u4E7E\u3044\u305F\u7C89\u304C\u306A\u304F\u306A\u308B\u307E\u3067\u6DF7\u305C\u3066\u304F\u3060\u3055\u3044\u3002",
       tipNerd:
@@ -1236,7 +1109,7 @@ export const JA_LOCALE: CmsContent = {
         "\u751F\u5730\u304C2\u500D\u306B\u81A8\u3089\u3080\u307E\u3067\u5F85\u3061\u307E\u3057\u3087\u3046\u3002\u6696\u304B\u3044\u5834\u6240\u3067\u306F\u3053\u307E\u3081\u306B\u78BA\u8A8D\uFF01",
       tipNerd:
         "{temp}では、モデル上の発酵速度は{refTemp}に対して{factor}倍です。FODMAP削減率や消化のしやすさの測定値ではありません。",
-      longDesc: "\u751F\u5730\u3092\u3072\u3068\u307E\u3068\u3081\u306E\u307E\u307E\u3001\u30AA\u30A4\u30EB\u3092\u5857\u3063\u305F\u5BB9\u5668\u306B\u5165\u308C\u3001\u30E9\u30C3\u30D7\u3092\u751F\u5730\u306B\u5BC6\u7740\u3055\u305B\u3066\u8986\u3044\u307E\u3059\u3002\u3053\u306E\u6BB5\u968E\u3067\u30A4\u30FC\u30B9\u30C8\u304C\u50CD\u304D\u3001\u9999\u308A\u3001\u69CB\u9020\u3001\u6D88\u5316\u306E\u826F\u3055\u304C\u80B2\u3061\u307E\u3059\u3002\u52A0\u6C34\u7387\u304C\u9AD8\u3044\u5834\u5408\u306F\u3001\u6700\u521D\u306E2\u6642\u9593\u306B2-3\u56DE\u300C\u30B9\u30C8\u30EC\u30C3\u30C1&\u30D5\u30A9\u30FC\u30EB\u30C9\u300D\u3092\u884C\u3044\u307E\u3059\u3002\u751F\u5730\u306E\u7AEF\u3092\u6301\u3061\u4E0A\u3052\u3066\u4E0A\u306B\u5F15\u304D\u4F38\u3070\u3057\u3001\u4E2D\u5FC3\u306B\u5411\u3051\u3066\u6298\u308A\u305F\u305F\u307F\u3001\u5BB9\u5668\u3092\u56DE\u3057\u30664\u8FBA\u3067\u7E70\u308A\u8FD4\u3057\u307E\u3059\u3002\u4F53\u7A4D\u304C2\u500D\u306B\u306A\u308A\u3001\u8868\u9762\u304C\u3075\u3063\u304F\u3089\u3068\u6ED1\u3089\u304B\u306B\u306A\u3063\u305F\u3089\u767A\u9175\u5B8C\u4E86\u3067\u3059\u3002",
+      longDesc: "生地をひとまとめのまま、オイルを塗った容器に入れ、ラップを生地に密着させて覆います。この段階でイーストが働き、香り、構造、消化の良さが育ちます。スタイルに折りたたみがある場合、回数と間隔は別の工程かヒントに記載しています。体積が2倍になり、表面がふっくらと滑らかになったら発酵完了です。",
     },
     bulk_cold: {
       title: "\u4E00\u6B21\u767A\u9175",
@@ -1245,7 +1118,7 @@ export const JA_LOCALE: CmsContent = {
         "\u51B7\u8535\u5EAB\u3067\u306F\u751F\u5730\u304C\u3086\u3063\u304F\u308A\u81A8\u3089\u307F\u307E\u3059\u304C\u3001\u98A8\u5473\u304C\u5897\u3057\u307E\u3059\u3002\u5BC6\u7740\u30E9\u30C3\u30D7\u3067\u3057\u3063\u304B\u308A\u8986\u3063\u3066\u304F\u3060\u3055\u3044\u3002",
       tipNerd:
         "{temp}では、モデル上の発酵速度は{refTemp}に対して{factor}倍です。FODMAP削減率や消化のしやすさの測定値ではありません。",
-      longDesc: "\u751F\u5730\u306E\u5165\u3063\u305F\u5BB9\u5668\u3092\u51B7\u8535\u5EAB\uFF08{fridgeTemp}\uFF09\u306B\u79FB\u3057\u307E\u3059\u3002\u51B7\u8535\u5EAB\u3067\u306F\u30A4\u30FC\u30B9\u30C8\u306E\u50CD\u304D\u304C\u305A\u3063\u3068\u9045\u304F\u306A\u308B\u305F\u3081\u6642\u9593\u306F\u304B\u304B\u308A\u307E\u3059\u304C\u3001\u305D\u306E\u5206\u3001\u9999\u308A\u306E\u8907\u96D1\u3055\u3001\u6D88\u5316\u306E\u826F\u3055\u3001\u3088\u304F\u767A\u9054\u3057\u305F\u30B0\u30EB\u30C6\u30F3\u306E\u7DB2\u76EE\u304C\u5F97\u3089\u308C\u307E\u3059\u3002\u8868\u9762\u304C\u4E7E\u304B\u306A\u3044\u3088\u3046\u3001\u5FC5\u305A\u30E9\u30C3\u30D7\u3092\u5BC6\u7740\u3055\u305B\u3066\u8986\u3063\u3066\u304F\u3060\u3055\u3044\u3002\u53D6\u308A\u51FA\u3057\u305F\u3089\u3001\u5206\u5272\u306E\u524D\u306B\u5E38\u6E29\u30671-2\u6642\u9593\u306A\u3058\u307E\u305B\u307E\u3059\u3002",
+      longDesc: "生地の入った容器を冷蔵庫（{fridgeTemp}）に移します。冷蔵庫ではイーストの働きがずっと遅くなるため時間はかかりますが、その分、香りの複雑さ、消化の良さ、よく発達したグルテンの網目が得られます。表面が乾かないよう、必ずラップを密着させて覆ってください。冷蔵庫から出したらすぐに分割してかまいません。最終発酵の間に室温になじみます。",
     },
     rest: {
       title: "休ませる",
@@ -1260,7 +1133,7 @@ export const JA_LOCALE: CmsContent = {
         "\u306F\u304B\u308A\u3092\u4F7F\u3044\u307E\u3057\u3087\u3046\uFF01\u30B9\u30B1\u30C3\u30D1\u30FC\u3067\u5207\u308A\u3001\u305D\u308C\u305E\u308C\u6ED1\u3089\u304B\u306A\u7403\u306B\u4E38\u3081\u307E\u3059\u3002",
       tipNerd:
         "\u5206\u5272\u306B\u3088\u308A\u8868\u9762\u5F35\u529B\u304C\u751F\u307E\u308C\u3001\u6700\u7D42\u767A\u9175\u4E2D\u306BCO\u2082\u3092\u9589\u3058\u8FBC\u3081\u307E\u3059\u3002",
-      longDesc: "\u8EFD\u304F\u6253\u3061\u7C89\u3092\u3057\u305F\u53F0\u306B\u751F\u5730\u3092\u51FA\u3057\u307E\u3059\u3002\u30B9\u30B1\u30C3\u30D1\u30FC\u3067\u300C\u6750\u6599\u300D\u306B\u8868\u793A\u3055\u308C\u305F\u91CD\u3055\u306B\u5207\u308A\u5206\u3051\u3001\u306F\u304B\u308A\u3067\u91CF\u308A\u307E\u3059\uFF08\u5747\u4E00\u306B\u713C\u304F\u305F\u3081\u306B\u5927\u5207\u3067\u3059\uFF09\u3002\u305D\u308C\u305E\u308C\u3092\u4E38\u3081\u307E\u3059\u3002\u751F\u5730\u306E\u7AEF\u3092\u4E0B\u306E\u4E2D\u5FC3\u306B\u5411\u3051\u3066\u6298\u308A\u8FBC\u307F\u3001\u56DE\u3057\u306A\u304C\u3089\u3001\u8868\u9762\u304C\u5F35\u3063\u305F\u6ED1\u3089\u304B\u306A\u7389\u306B\u3057\u307E\u3059\u3002\u751F\u5730\u7389\u3092\u6253\u3061\u7C89\u3092\u3057\u305F\u5929\u677F\u306B\u9593\u9694\u3092\u3042\u3051\u3066\u4E26\u3079\u3001\u30E9\u30C3\u30D7\u3067\u8986\u3044\u307E\u3059\u3002",
+      longDesc: "\u8efd\u304f\u6253\u3061\u7c89\u3092\u3057\u305f\u53f0\u306b\u751f\u5730\u3092\u51fa\u3057\u307e\u3059\u3002\u30b9\u30b1\u30c3\u30d1\u30fc\u3067\u3053\u306e\u624b\u9806\u306b\u8868\u793a\u3055\u308c\u305f\u91cd\u3055\u306b\u5207\u308a\u5206\u3051\u3001\u306f\u304b\u308a\u3067\u91cf\u308a\u307e\u3059\uff08\u5747\u4e00\u306b\u713c\u304f\u305f\u3081\u306b\u5927\u5207\u3067\u3059\uff09\u3002\u305d\u308c\u305e\u308c\u3092\u4e38\u3081\u307e\u3059\u3002\u751f\u5730\u306e\u7aef\u3092\u4e0b\u306e\u4e2d\u5fc3\u306b\u5411\u3051\u3066\u6298\u308a\u8fbc\u307f\u3001\u56de\u3057\u306a\u304c\u3089\u3001\u8868\u9762\u304c\u5f35\u3063\u305f\u6ed1\u3089\u304b\u306a\u7389\u306b\u3057\u307e\u3059\u3002\u751f\u5730\u7389\u3092\u6253\u3061\u7c89\u3092\u3057\u305f\u5929\u677f\u306b\u9593\u9694\u3092\u3042\u3051\u3066\u4e26\u3079\u3001\u30e9\u30c3\u30d7\u3067\u8986\u3044\u307e\u3059\u3002",
     },
     proof: {
       title: "\u6700\u7D42\u767A\u9175",
@@ -1304,25 +1177,20 @@ export const JA_LOCALE: CmsContent = {
     divide_teglia: {
       title: "\u5206\u5272",
       desc: "\u751F\u5730\u3092\u3057\u307C\u307E\u305B\u306A\u3044\u3088\u3046\u3001\u3084\u3055\u3057\u304F\u5206\u5272\u3059\u308B\u3002",
-      longDesc: "\u305F\u3063\u3077\u308A\u6253\u3061\u7C89\u3092\u3057\u305F\u53F0\u306B\u751F\u5730\u3092\u51FA\u3057\u307E\u3059\uFF08\u9AD8\u52A0\u6C34\u306E\u5834\u5408\u306F\u30BB\u30E2\u30EA\u30CA\u3092\u4F7F\u3046\u3068\u6271\u3044\u3084\u3059\u304F\u306A\u308A\u307E\u3059\uFF09\u3002\u30B9\u30B1\u30C3\u30D1\u30FC\u3067\u300C\u6750\u6599\u300D\u306B\u8868\u793A\u3055\u308C\u305F\u91CD\u3055\u306B\u5207\u308A\u5206\u3051\u3001\u306F\u304B\u308A\u3067\u91CF\u308A\u307E\u3059\u3002\u89E6\u308B\u306E\u306F\u6700\u5C0F\u9650\u306B\u3057\u307E\u3057\u3087\u3046\u3002\u5929\u677F\u30D4\u30B6\u3067\u306F\u3001\u4E38\u3044\u30D4\u30B6\u306E\u3088\u3046\u306B\u304D\u3064\u304F\u4E38\u3081\u308B\u5FC5\u8981\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u7AEF\u3092\u4E0B\u306B\u6298\u308A\u8FBC\u3093\u3067\u67D4\u3089\u304B\u306A\u68D2\u72B6\u306B\u307E\u3068\u3081\u3001\u7A7A\u6C17\u3092\u62BC\u3057\u51FA\u3055\u306A\u3044\u3088\u3046\u306B\u3057\u307E\u3059\u3002\u4E00\u6B21\u767A\u9175\u3067\u3067\u304D\u305F\u6C17\u6CE1\u304C\u3001\u713C\u304D\u4E0A\u304C\u308A\u306E\u6C17\u6CE1\u306B\u306A\u308A\u307E\u3059\u3002\u305D\u308C\u305E\u308C\u3092\u30AA\u30A4\u30EB\u3092\u5857\u3063\u305F\u5BB9\u5668\u306B\u5165\u308C\u3001\u8986\u3044\u307E\u3059\u3002",
+      longDesc: "\u305f\u3063\u3077\u308a\u6253\u3061\u7c89\u3092\u3057\u305f\u53f0\u306b\u751f\u5730\u3092\u51fa\u3057\u307e\u3059\uff08\u9ad8\u52a0\u6c34\u306e\u5834\u5408\u306f\u30bb\u30e2\u30ea\u30ca\u3092\u4f7f\u3046\u3068\u6271\u3044\u3084\u3059\u304f\u306a\u308a\u307e\u3059\uff09\u3002\u30b9\u30b1\u30c3\u30d1\u30fc\u3067\u3053\u306e\u624b\u9806\u306b\u8868\u793a\u3055\u308c\u305f\u91cd\u3055\u306b\u5207\u308a\u5206\u3051\u3001\u306f\u304b\u308a\u3067\u91cf\u308a\u307e\u3059\u3002\u89e6\u308b\u306e\u306f\u6700\u5c0f\u9650\u306b\u3057\u307e\u3057\u3087\u3046\u3002\u5929\u677f\u30d4\u30b6\u3067\u306f\u3001\u4e38\u3044\u30d4\u30b6\u306e\u3088\u3046\u306b\u304d\u3064\u304f\u4e38\u3081\u308b\u5fc5\u8981\u306f\u3042\u308a\u307e\u305b\u3093\u3002\u7aef\u3092\u4e0b\u306b\u6298\u308a\u8fbc\u3093\u3067\u67d4\u3089\u304b\u306a\u68d2\u72b6\u306b\u307e\u3068\u3081\u3001\u7a7a\u6c17\u3092\u62bc\u3057\u51fa\u3055\u306a\u3044\u3088\u3046\u306b\u3057\u307e\u3059\u3002\u4e00\u6b21\u767a\u9175\u3067\u3067\u304d\u305f\u6c17\u6ce1\u304c\u3001\u713c\u304d\u4e0a\u304c\u308a\u306e\u6c17\u6ce1\u306b\u306a\u308a\u307e\u3059\u3002\u305d\u308c\u305e\u308c\u3092\u30aa\u30a4\u30eb\u3092\u5857\u3063\u305f\u5bb9\u5668\u306b\u5165\u308c\u3001\u8986\u3044\u307e\u3059\u3002",
       tipBeginner: "\u3084\u3055\u3057\u304F\u6271\u3044\u307E\u3057\u3087\u3046\uFF01\u751F\u5730\u306E\u4E2D\u306E\u6C17\u6CE1\u306F\u5927\u5207\u3067\u3059\u3002\u62BC\u3057\u3064\u3076\u3055\u305A\u306B\u3001\u7AEF\u3092\u4E0B\u306B\u6298\u308A\u8FBC\u3093\u3067\u304F\u3060\u3055\u3044\u3002",
       tipNerd: "\u52A0\u6C34\u7387>75%\u3067\u306F\u3001\u5F37\u3044\u5206\u5272\u306F\u4E00\u6B21\u767A\u9175\u3067\u3067\u304D\u305F\u6C17\u6CE1\u3092\u3064\u3076\u3057\u307E\u3059\u3002\u5F35\u308A\u306F\u6700\u5C0F\u9650\u306B\u3001\u30AC\u30B9\u629C\u304D\u306F\u307B\u307C\u30BC\u30ED\u306B\u3057\u307E\u3059\u3002",
     },
-  },
-  timelineUi: {
-    startLabel: "\u958B\u59CB",
-    beforeSuffix: "\u524D",
   },
   parametricTips: {
     pillHydration: "\u6C34\u5206\u91CF",
     pillFlour: "\u5C0F\u9EA6\u7C89",
     pillPL: "P/L",
     pillFermentation: "\u767A\u9175",
+    pillRest: "休ませ時間",
     pillThickness: "\u539A\u3055",
     pillLevel: "\u30EC\u30D9\u30EB",
     pillExperimentation: "\u5B9F\u9A13\u6027",
-    pillLevelBeginner: "\u521D\u5FC3\u8005",
-    pillLevelExpert: "\u4E0A\u7D1A\u8005",
     sheetSectionTitle: "スタイルの基準",
     sheetOvenLabel:
       "\u7406\u60F3\u306E\u30AA\u30FC\u30D6\u30F3",
@@ -1334,7 +1202,6 @@ export const JA_LOCALE: CmsContent = {
     sheetFoldLabel: "\u6298\u308A\u305F\u305F\u307F",
     sheetFoldInterval: "{min}\u5206\u3054\u3068",
     sheetGenerateBtn: "\u30EC\u30B7\u30D4\u3092\u751F\u6210",
-    sheetMatchTitle: "あなたのキッチンに合う理由",
     sheetTechniquesLabel:
       "\u5BFE\u5FDC\u3059\u308B\u8457\u540D\u6280\u6CD5",
     mixBeginner:
@@ -1366,6 +1233,8 @@ export const JA_LOCALE: CmsContent = {
     sheetOilLabel: "油の温度",
     sheetOilHeat: "揚げる前に油を適温にします。オーブンは不要です。",
     sheetFryTurn: "揚げ時間の半分で裏返します",
+    // FW-04
+    pillDoughLoad: "生地量（面積あたり）",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1420,7 +1289,7 @@ export const JA_LOCALE: CmsContent = {
     teglia_romana:
       "\u9AD8\u30552-3cm|製法により加水率が異なります|\u6298\u308A\u305F\u305F\u307F\u306E\u307F|\u96F2\u30AF\u30E9\u30E0",
     tonda_romana:
-      "\u539A\u30551-2mm|麺棒または手|\u6975\u9650\u30AB\u30EA\u30AB\u30EA|\u5F31\u3044\u5C0F\u9EA6\u7C89W<210",
+      "\u539A\u30551-2mm|麺棒または手|\u6975\u9650\u30AB\u30EA\u30AB\u30EA|\u5C0F\u9EA6\u7C89W200-240",
     pinsa_romana:
       "\u30DE\u30EB\u30C1\u7A40\u7269\u30DF\u30C3\u30AF\u30B9|\u6955\u5186\u5F62|\u30AC\u30E9\u30B9\u8CEA\u30AF\u30E9\u30B9\u30C8|\u719F\u621024-72h",
     pala_romana:
@@ -1430,13 +1299,13 @@ export const JA_LOCALE: CmsContent = {
     detroit:
       "\u30C1\u30FC\u30BA\u30AF\u30E9\u30A6\u30F3|\u6DF1\u3044\u30D1\u30F3|\u7AEF\u306E\u30C1\u30FC\u30BA|\u30AB\u30E9\u30E1\u30EB\u30AF\u30E9\u30B9\u30C8",
     chicago_deep:
-      "\u6DF1\u30555cm|\u30D0\u30BF\u30FC18%|\u9006\u5C64|\u713C\u304D35\u5206",
+      "\u6DF1\u30555cm|\u30D0\u30BF\u30FC18%|\u9006\u5C64|\u713C\u304D25-35\u5206",
     focaccia_genovese:
-      "\u305F\u3063\u3077\u308A\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB|\u8868\u9762\u304F\u307C\u307F|\u30AA\u30A4\u30EB\u6C34\u5869\u6C34|\u713C\u304D15-20\u5206",
+      "\u305F\u3063\u3077\u308A\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB|\u8868\u9762\u304F\u307C\u307F|\u30AA\u30A4\u30EB\u6C34\u5869\u6C34|\u713C\u304D19-24\u5206",
     sfincione:
       "\u539A\u304F\u3075\u308F\u3075\u308F|\u30C8\u30FC\u30B9\u30C8\u30D1\u30F3\u7C89|\u7389\u306D\u304E+\u30A2\u30F3\u30C1\u30E7\u30D3|\u30AB\u30C1\u30E7\u30AB\u30F4\u30A1\u30C3\u30ED",
     grandma_style:
-      "\u8584\u304F\u30AB\u30EA\u30AB\u30EA|\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9\u306E\u4E0B\u306B\u30BD\u30FC\u30B9|\u305F\u3063\u3077\u308A\u6CB9\u306E\u5929\u677F|\u713C\u304D12-16\u5206",
+      "\u8584\u304F\u30AB\u30EA\u30AB\u30EA|\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9\u306E\u4E0B\u306B\u30BD\u30FC\u30B9|\u305F\u3063\u3077\u308A\u6CB9\u306E\u5929\u677F|\u713C\u304D14-17\u5206",
     focaccia_recco:
       "\u307B\u307C\u900F\u660E\u306A\u30B7\u30FC\u30C8|\u30B9\u30C8\u30E9\u30C3\u30AD\u30FC\u30CE\u5165\u308A|\u91D1\u8272\u306E\u6CE1|\u767A\u9175\u306A\u3057",
     padellino_torino:
@@ -1470,16 +1339,8 @@ export const JA_LOCALE: CmsContent = {
   authorNames: {
     bonci_no_knead:
       "\u6298\u308A\u305F\u305F\u307F\u9AD8\u6C34\u5206",
-    martucci_biga_ibrida:
-      "\u30CF\u30A4\u30D6\u30EA\u30C3\u30C9\u30D3\u30AC50% + \u30AA\u30FC\u30C8\u30EA\u30FC\u30BA",
-    martucci_biga_100:
-      "\u30D3\u30AC100%\u30EA\u30D5\u30EC\u30C3\u30B7\u30E5\u4ED8\u304D",
     pepe_sensoriale:
       "\u611F\u899A\u7684\u6C34\u5206\u8ABF\u6574",
-    bosco_idrolisi:
-      "\u52A0\u6C34\u5206\u89E3\u6CD5\uFF08\u81EA\u7136\u767A\u9175\uFF09",
-    capuano_forbici:
-      "\u30CF\u30B5\u30DF\u6CD5\uFF08\u4E73\u88FD\u54C1\uFF09",
     pepe_sensory_layering:
       "\u98DF\u6750\u5225\u713C\u304D\u5206\u3051\u6CD5",
     bianco_long_ferment: "5\u65E5\u9593\u767A\u9175",
@@ -1489,16 +1350,8 @@ export const JA_LOCALE: CmsContent = {
   authorAuthors: {
     bonci_no_knead:
       "\u30AC\u30D6\u30EA\u30A8\u30EC\u30FB\u30DC\u30F3\u30C1",
-    martucci_biga_ibrida:
-      "\u30D5\u30E9\u30F3\u30C1\u30A7\u30B9\u30B3\u30FB\u30DE\u30EB\u30C8\u30A5\u30C3\u30C1",
-    martucci_biga_100:
-      "\u30D5\u30E9\u30F3\u30C1\u30A7\u30B9\u30B3\u30FB\u30DE\u30EB\u30C8\u30A5\u30C3\u30C1",
     pepe_sensoriale:
       "\u30D5\u30E9\u30F3\u30B3\u30FB\u30DA\u30DA",
-    bosco_idrolisi:
-      "\u30EC\u30CA\u30FC\u30C8\u30FB\u30DC\u30B9\u30B3",
-    capuano_forbici:
-      "\u30F4\u30A3\u30F3\u30C1\u30A7\u30F3\u30C4\u30A9\u30FB\u30AB\u30D7\u30A2\u30FC\u30CE",
     pepe_sensory_layering:
       "\u30D5\u30E9\u30F3\u30B3\u30FB\u30DA\u30DA",
     bianco_long_ferment:
@@ -1554,7 +1407,6 @@ export const JA_LOCALE: CmsContent = {
       "\u3042\u306A\u305F\u306E\u30D1\u30F3\u30C8\u30EA\u30FC",
     pantrySubtitle:
       "\u81EA\u5B85\u306B\u3042\u308B\u5C0F\u9EA6\u7C89\u3068\u30A4\u30FC\u30B9\u30C8",
-    pantryStep: "03 \u2014 \u6750\u6599",
     dietTitle: "\u98DF\u4E8B\u306E\u597D\u307F",
     dietSubtitle:
       "避けたいものがレシピに含まれるとお知らせします。",
@@ -1587,10 +1439,8 @@ export const JA_LOCALE: CmsContent = {
     locationStep: "05 — 位置",
     locationPlaceholder: "都市を検索...",
     locationAuto: "位置情報を検出",
-    locationAutoDetected: "自動検出",
     locationSaved: "位置情報を保存しました",
     locationNone: "後で登録するか、室温を直接設定できます。",
-    locationSearching: "検索中...",
     locationNoResults: "結果がありません",
     ftuWelcome: "\u3088\u3046\u3053\u305D",
     ftuOvenTitle:
@@ -1658,9 +1508,6 @@ export const JA_LOCALE: CmsContent = {
       "\u30D5\u30A9\u30FC\u30AF\u30DF\u30AD\u30B5\u30FC",
     mixerForkDesc:
       "\u4F4E\u901F\u3001\u4F4E\u6469\u64E6 — \u9AD8\u52A0\u6C34\u306B\u6700\u9069",
-    mixerLevelHome: "\u5BB6\u5EAD",
-    mixerLevelSemiPro: "\u30BB\u30DF\u30D7\u30ED",
-    mixerLevelPro: "\u30D7\u30ED",
     surfaceRefractory: "\u8010\u706B\u30EC\u30F3\u30AC",
     surfaceRefractoryDesc:
       "3 cm\u3001\u9AD8\u84C4\u71B1 — \u85AA\u7AAF\u30FB\u30D7\u30ED\u30B7\u30E5\u30FC\u30DE\u30FC",
@@ -1761,6 +1608,8 @@ export const JA_LOCALE: CmsContent = {
     pantryProfileEmpty: "粉やイーストの指定がありません：スタイルの標準から始めます。",
     pantryProfileEdit: "「作る」で編集",
     ftuSourdoughNote: "天然酵母があれば、長時間発酵ではパン用イーストの代わりに提案することがあります。",
+    // FW-04
+    ftuFlourTypeNote: "タイプ（00、0、全粒粉）は粉の精製度を表し、強さは表しません。袋にWが書かれていれば、あとでパントリーに入力できます。",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1783,17 +1632,9 @@ export const JA_LOCALE: CmsContent = {
     navLearn: "\u5B66\u3076",
     navProfile: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB",
     navSearch: "\u691C\u7D22",
-    exploreStepNum:
-      "15\u30B9\u30BF\u30A4\u30EB \u2014 4\u30D5\u30A1\u30DF\u30EA\u30FC",
-    exploreTitle: "\u30B9\u30BF\u30A4\u30EB\u3092\u63A2\u7D22",
-    exploreSubtitle:
-      "\u30CA\u30DD\u30EA\u30BF\u30FCNA STG\u304B\u3089\u30D5\u30A9\u30AB\u30C3\u30C1\u30E3\u30FB\u30C7\u30A3\u30FB\u30EC\u30C3\u30B3\u307E\u3067\u3002",
-    learnTitle: "\u5B66\u3076",
-    learnSubtitle:
-      "生地を知り、技法を選び、変化を見分ける力を身につけましょう。",
     learnGlossary: "\u7528\u8A9E\u96C6",
     learnGlossaryDesc:
-      "生地の用語を、具体例や目安とともに解説します。",
+      "生地の用語を、式や目安の値とともに解説します。",
     learnTroubleshooting:
       "\u554F\u984C\u3068\u89E3\u6C7A\u7B56",
     learnTroubleshootingDesc:
@@ -1801,7 +1642,6 @@ export const JA_LOCALE: CmsContent = {
     learnPreFerments: "ビガ・ポーリッシュ・オートリーズ",
     learnPreFermentsDesc:
       "それぞれの違いと、仕込みへの取り入れ方。",
-    recipeLabel: "\u30EC\u30B7\u30D4",
     recipeBackToStyles: "\u30B9\u30BF\u30A4\u30EB",
     recipeStyleNotFound:
       "\u30B9\u30BF\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093",
@@ -1837,20 +1677,14 @@ export const JA_LOCALE: CmsContent = {
       "\u30B3\u30F3\u30C6\u30F3\u30C4\u3078\u30B9\u30AD\u30C3\u30D7",
     navMainLabel:
       "\u30E1\u30A4\u30F3\u30CA\u30D3\u30B2\u30FC\u30B7\u30E7\u30F3",
-    searchCloseLabel: "\u691C\u7D22\u3092\u9589\u3058\u308B",
     searchFieldLabel:
       "\u30B0\u30ED\u30FC\u30D0\u30EB\u691C\u7D22\u30D5\u30A3\u30FC\u30EB\u30C9",
     searchClearLabel: "\u691C\u7D22\u3092\u30AF\u30EA\u30A2",
-    homeAria: "{brandFull} — \u30DB\u30FC\u30E0",
     devToolsAria: "\u958B\u767A\u8005\u30C4\u30FC\u30EB",
     mottoAria: "{brand} \u30E2\u30C3\u30C8\u30FC",
     troubleshootSearchPlaceholder: "\u75C7\u72B6\u3084\u539F\u56E0\u3092\u691C\u7D22...",
     dietaryWarningsTitle:
       "作り始める前に",
-    troubleshootingTitle:
-      "\u30EC\u30B7\u30D4\u306B\u554F\u984C\u304C\u3042\u308A\u307E\u3059\u304B\uFF1F",
-    troubleshootingDesc:
-      "生地・焼成・揚げ調理の原因と対処法を確認",
     exploreRecipe: "レシピを見る",
     exploreHeroDesc: "伝統のスタイルと作り手の工夫。作りたい一枚を見つけましょう。",
     exploreFilterFeatured: "おすすめ",
@@ -1858,7 +1692,6 @@ export const JA_LOCALE: CmsContent = {
     exploreFilterRecipes: "代表的なレシピ",
     learnFilterSubtitle: "以下のガイドは一般的な内容で、このスタイルにも当てはまります。",
     learnRemoveFilter: "スタイルフィルターを解除",
-    learnOpenGlossary: "用語集を開く",
     learnPathLabel: "学習ロードマップ",
     learnStartPath: "ロードマップを開始",
     learnTermOfTheDay: "本日の用語 — {category}",
@@ -1871,14 +1704,12 @@ export const JA_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_JA["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_JA["pages.learn.path4.copy"],
     preFermentsSubtitle: "使い方と、仕込みへの取り入れ方。",
-    preFermentsDescription: "ビガとポーリッシュは本生地の前に仕込みます。<strong>ビガ</strong>は加水44%の固めの生地、<strong>ポーリッシュ</strong>は粉と水が同量の生地です。<strong>オートリーズ</strong>はイーストも塩も加えずに粉と水を休ませる工程で、前発酵ではありません。",
+    preFermentsDescription: "ビガとポーリッシュは本生地の前に仕込みます。<strong>ビガ</strong>は加水{bigaHydration}の固めの生地、<strong>ポーリッシュ</strong>は粉と水が同量の生地です。<strong>オートリーズ</strong>はイーストも塩も加えずに粉と水を休ませる工程で、前発酵ではありません。",
     preFermentsChoiceTitle: "どれを選ぶべき？",
     preFermentsBigaTitle: "ビガ",
     preFermentsBigaWhen: "香り高い生地にしたく、18〜20 °Cで約16時間とれるとき",
-    preFermentsBigaBest: "ピンサ、ピッツァ・アル・タリオ、パーラ・ロマーナ",
     preFermentsPoolishTitle: "ポーリッシュ",
     preFermentsPoolishWhen: "伸びの良い生地にしたく、20〜22 °Cで12〜16時間とれるとき",
-    preFermentsPoolishBest: "テグリア・ロマーナ、NYスタイル、フォカッチャ",
     preFermentsAutolisiTitle: "オートリーズ",
     preFermentsAutolisiWhen: "生地を伸ばしやすくしたいとき",
     preFermentsAutolisiBest: "すべてのスタイル。ビガやポーリッシュと併用可能",
@@ -1887,15 +1718,14 @@ export const JA_LOCALE: CmsContent = {
     noChanges: "変更なし",
     deactivateCustomStyles: "カスタムスタイルを解除",
     deactivate: "解除",
-    passToEasy: "Easyモードに切替",
-    activateNerd: "Nerdモードを有効化",
+    // FW-04
+    learnOpenTerm: "用語集で詳しく見る",
   },
   configurator: {
     hydrationLabel: "\u6C34\u5206\u91CF",
     hydrationTip:
       "粉に対する水の割合です。増やすと食感が変わり、生地を扱いにくくなることがあります。",
     flourWLabel: "\u5C0F\u9EA6\u7C89\u306E\u529B (W)",
-    flourWLabelBlend: "\u5C0F\u9EA6\u7C89\u306E\u529B (W)",
     flourWTip:
       "Wは粉の強さを表します。製法や所要時間に合う粉を選ぶ目安になります。",
     plLabel: "P/L\u6BD4",
@@ -1913,8 +1743,6 @@ export const JA_LOCALE: CmsContent = {
     preFermentTip:
       "ビガとポーリッシュは先に仕込み、後で本生地に加えます。香りや構造に影響するため、工程の時間と分量に従ってください。",
     ovenLabel: "\u30AA\u30FC\u30D6\u30F3",
-    ovenTip:
-      "オーブンと焼成温度を設定します。仕上がりはスタイルや焼く面の素材にも左右されます。",
     panLabel: "\u5929\u677F",
     panTipRect:
       "\u5929\u677F\u306E\u5F62\u3068\u30B5\u30A4\u30BA\u306F\u751F\u5730\u306E\u91CF\u3068\u4ED5\u4E0A\u304C\u308A\u306B\u5F71\u97FF\u3057\u307E\u3059\u3002\u3053\u306E\u30B9\u30BF\u30A4\u30EB\u306E\u6A19\u6E96\u306F\u9577\u65B9\u5F62\u3067\u3059\u3002",
@@ -1933,8 +1761,6 @@ export const JA_LOCALE: CmsContent = {
     thicknessThick: "\u3075\u3093\u308F\u308A\u539A\u3081",
     thicknessStandard:
       "\u3053\u306E\u30B9\u30BF\u30A4\u30EB\u306E\u6A19\u6E96",
-    backLabel: "戻る",
-    sliderOptimal: "最適",
     hintHighHydrationNeedsW: "加水率が {h}% の場合、強力粉が必要です：推奨 W ≥ {w}",
     hintLowWLimitsHydration: "W値が {w} の場合、推奨最大加水率は約 {h}% です",
     hintLongFermentUseFridge: "発酵時間が {hours}時間 の場合、生地のコントロールに冷蔵庫（{fridgeTemp}）を使用するのが最適です",
@@ -1952,7 +1778,6 @@ export const JA_LOCALE: CmsContent = {
     tabRecipe: "\u30EC\u30B7\u30D4",
     tabRecipeTailored: "\u3042\u306A\u305F\u7528\u306E\u30EC\u30B7\u30D4",
     recipeCanonical: "基準",
-    recipeCanonicalEyebrow: "基準",
     preCookTitle: "始める前に",
     preCookBody:
       "基準レシピを表示しています。作る前に条件を確認するか、自分のキッチンに合わせて調整してください。",
@@ -1996,7 +1821,6 @@ export const JA_LOCALE: CmsContent = {
     ceilingCompromise: "提案の点数は{ceiling}/100です。基準レシピからの調整が必要です。",
     needFlour: "W {w}\u306E\u7C89",
     makePossible: "\u5B9F\u73FE\u53EF\u80FD\u306B\u3059\u308B",
-    adaptToKitchen: "\u79C1\u306E\u30AD\u30C3\u30C1\u30F3\u306B\u5408\u308F\u305B\u308B",
     optimizeForMe: "自分のキッチンに合わせる",
     resetToOriginal: "基準に戻す",
     saveVersion: "レシピ帳に保存",
@@ -2007,8 +1831,6 @@ export const JA_LOCALE: CmsContent = {
     toppingTitle: "\u30C8\u30C3\u30D4\u30F3\u30B0",
     chooseTopping: "\u30C8\u30C3\u30D4\u30F3\u30B0\u3092\u9078\u3076",
     learnMore: "\u8A73\u3057\u304F\u898B\u308B",
-    tailoredEyebrow: "\u3042\u306A\u305F\u7528\u306B\u8ABF\u6574\u3057\u305F\u30EC\u30B7\u30D4",
-    recipeEyebrow: "\u30EC\u30B7\u30D4",
     start: "\u30D4\u30B6\u4F5C\u308A\u3092\u958B\u59CB",
     resume: "\u30D4\u30B6\u4F5C\u308A\u3092\u518D\u958B",
     startShort: "\u958B\u59CB",
@@ -2020,31 +1842,21 @@ export const JA_LOCALE: CmsContent = {
       "\u53EF\u80FD\u3067\u3059\u304C\u6E29\u5EA6\u306E\u4E0A\u9650\u306B\u8FD1\u3044\u3067\u3059",
     ovenNeedsAdaptation:
       "\u6E29\u5EA6\u306B\u5408\u308F\u305B\u305F\u8ABF\u6574\u304C\u5FC5\u8981",
-    procedureHeroDescription:
-      "{style}\u306E\u624B\u9806\uFF1A{steps}\u3001\u5408\u8A08{duration}\u3001{oven}\u3002",
     toppingNotesTitle: "\u30C8\u30C3\u30D4\u30F3\u30B0\u306E\u6CE8\u610F",
     toppingAmountsNote:
       "分量はピザ1枚、または1単位分です。材料は加える順に並んでいます。",
-    toppingPerUnit: "{unit}\u3042\u305F\u308A{amount}",
     durationLabel: "\u6240\u8981\u6642\u9593\uFF1A{duration}",
-    comfortLabel: "\u4F59\u88D5\u3042\u308A {duration}",
-    totalDuration: "\u5408\u8A08 {duration}",
     finalDoughStageTitle: "\u672C\u3054\u306D",
-    rule55Title: "\u6C34\u306E\u6E29\u5EA6",
-    rule55AriaOpen: "\u6C34\u306E\u6E29\u5EA6\u306E\u6C7A\u3081\u65B9",
-    rule55AriaClose: "\u8AAC\u660E\u3092\u9589\u3058\u308B",
+    rule55DescriptionHand: "室温・粉・水の合計を約{sum}にします。目標の生地温度（{ddt}）の3倍の値です。手でこねる場合、ミキサーの摩擦熱を引く必要はありません。だから水の温度はキッチンの温度で変わります。",
     rule55Description:
       "\u5BA4\u6E29\u30FB\u7C89\u30FB\u6C34\u306E\u5408\u8A08\u3092\u7D04{sum}\u306B\u3057\u307E\u3059\u3002\u76EE\u6A19\u306E\u751F\u5730\u6E29\u5EA6\uFF08{ddt}\uFF09\u306E3\u500D\u304B\u3089\u3001\u30DF\u30AD\u30B5\u30FC\u306E\u6469\u64E6\u71B1\uFF08{friction}\uFF09\u3092\u5F15\u3044\u305F\u5024\u3067\u3059\u3002\u3060\u304B\u3089\u6C34\u306E\u6E29\u5EA6\u306F\u30AD\u30C3\u30C1\u30F3\u306E\u6E29\u5EA6\u3067\u5909\u308F\u308A\u307E\u3059\u3002",
+    rule55DescriptionPreferment: "室温・粉・水・{preferment}の合計を約{sum}にします。目標の生地温度（{ddt}）の4倍から、ミキサーの摩擦熱（{friction}）を引いた値です。前発酵は熟成温度の約{prefTemp}で加えます（モデルによる推定）。だから本ごねの水の温度はキッチンの温度で変わります。",
     stepDetailsShow: "\u624B\u9806\u3092\u898B\u308B",
-    stepDetailsHide: "\u8A73\u7D30\u3092\u9589\u3058\u308B",
-    matchDetailsShow: "\u30B9\u30B3\u30A2\u306E\u8A73\u7D30",
     matchDetails: "詳細",
     matchDetailsHide: "閉じる",
     unsavedTitle: "未保存の変更",
     unsavedBody: "今離れると、{style}のあなたのバージョンは失われます。レシピ帳に保存しますか？",
     unsavedDiscard: "保存せずに戻る",
-    matchBreakdownLabel: "\u52A0\u91CD\u5E73\u5747",
-    matchAxisWeight: "総合点に占める重み：{pct}%",
     troubleStepLinks: {
       preferment: "\u9178\u3063\u3071\u3044\u306B\u304A\u3044\u304C\u3059\u308B\uFF1F",
       mix: "\u751F\u5730\u304C\u30D9\u30BF\u3064\u304D\u3059\u304E\uFF1F",
@@ -2053,17 +1865,10 @@ export const JA_LOCALE: CmsContent = {
       shape: "\u4F38\u3070\u3059\u3068\u7834\u308C\u308B\uFF1F",
       bake: "\u713C\u304D\u4E0A\u304C\u308A\u306B\u5931\u6557\uFF1F",
     },
-    draftResumeEyebrow: "\u4F5C\u6210\u4E2D\u306E\u30EC\u30B7\u30D4",
-    draftResumeCta: "\u518D\u958B",
-    draftReplaceTitle: "\u4F5C\u6210\u4E2D\u306E\u30EC\u30B7\u30D4\u3092\u7F6E\u304D\u63DB\u3048\u307E\u3059\u304B\uFF1F",
-    draftReplaceBody:
-      "{current}\u306F\u3059\u3067\u306B\u3042\u306A\u305F\u306E\u4E88\u5B9A\u306B\u5408\u308F\u305B\u3066\u8ABF\u6574\u6E08\u307F\u3067\u3059\u3002{next}\u3092\u9078\u3076\u3068\u7F6E\u304D\u63DB\u3048\u3089\u308C\u3001\u8A2D\u5B9A\u306F\u5931\u308F\u308C\u307E\u3059\u3002",
-    draftReplaceConfirm: "{next}\u306B\u5207\u308A\u66FF\u3048\u308B",
     prefermentSaltNote:
       "塩は前発酵ではなく本捏ねで加えます。前発酵に入れると酵母の働きが鈍ります。",
     learnedFromAttempts: "\u3053\u308C\u307E\u3067\u306E{n}\u56DE\u306E\u8A18\u9332\u304B\u3089\u5B66\u3073\u307E\u3057\u305F",
     applyCorrections: "\u88DC\u6B63\u3092\u9069\u7528",
-    learnInlineTitle: "\u8A73\u3057\u304F\uFF1A{label}",
     tipsCountOne: "{n}件のアドバイス",
     tipsCountMany: "{n}件のアドバイス",
     servingUnits: {
@@ -2076,16 +1881,11 @@ export const JA_LOCALE: CmsContent = {
     toppingPrevAria: "\u524D\u306E\u30C8\u30C3\u30D4\u30F3\u30B0",
     toppingNextAria: "\u6B21\u306E\u30C8\u30C3\u30D4\u30F3\u30B0",
     notPersonalizedAria: "\u307E\u3060\u3042\u306A\u305F\u7528\u306B\u8ABF\u6574\u3055\u308C\u3066\u3044\u306A\u3044\u30EC\u30B7\u30D4",
-    ballEstimateTooltip: "\u3053\u306E\u30B9\u30BF\u30A4\u30EB\u306E\u4F1D\u7D71\u7684\u306A\u751F\u5730\u7389\u306E\u91CD\u3055\u306B\u3082\u3068\u3065\u304F\u76EE\u5B89\u3067\u3059",
     fillingTitle: "\u30D5\u30A3\u30EA\u30F3\u30B0",
-    followYou: "時間の確認やリマインダーの受信には、{brand}を開いたままにしてください。",
     reopen: "\u9032\u884C\u4E2D\u306E\u30D4\u30B6\u4F5C\u308A\u3092\u958B\u304F",
     completed: "\u30D4\u30B6\u4F5C\u308A\u5B8C\u4E86",
-    waitOver: "\u5F85\u3061\u6642\u9593\u7D42\u4E86\uFF1A\u7D9A\u3051\u307E\u3057\u3087\u3046\uFF01",
     dueNow: "\u6642\u9593\u3067\u3059\uFF1A{title}",
-    stepProgress: "{style} \u00B7 \u30B9\u30C6\u30C3\u30D7 {n}/{total}",
     interrupt: "\u30D4\u30B6\u4F5C\u308A\u3092\u4E2D\u6B62",
-    abortConfirm: "\u9032\u884C\u4E2D\u306E\u30D4\u30B6\u4F5C\u308A\u3092\u4E2D\u6B62\u3057\u3066\u3082\u3088\u308D\u3057\u3044\u3067\u3059\u304B\uFF1F\u30BF\u30A4\u30DE\u30FC\u3068\u9032\u884C\u72B6\u6CC1\u306F\u3059\u3079\u3066\u5931\u308F\u308C\u307E\u3059\u3002",
     abortConfirmTitle: "\u30D4\u30B6\u4F5C\u308A\u3092\u4E2D\u6B62\u3057\u307E\u3059\u304B\uFF1F",
     abortBody: "\u3053\u306E{style}\u306E\u30BF\u30A4\u30DE\u30FC\u3068\u9032\u884C\u72B6\u6CC1\u306F\u5931\u308F\u308C\u307E\u3059\u3002\u30EC\u30B7\u30D4\u306F\u6B8B\u308A\u307E\u3059\u304C\u3001\u30BB\u30C3\u30B7\u30E7\u30F3\u306F\u6700\u521D\u304B\u3089\u3084\u308A\u76F4\u3057\u306B\u306A\u308A\u307E\u3059\u3002",
     abortYes: "\u306F\u3044\u3001\u4E2D\u6B62\u3057\u307E\u3059",
@@ -2132,4 +1932,31 @@ export const JA_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_JA as any,
   glossaryTerms: GLOSSARY_TERMS_JA as any,
   science: SCIENCE_JA,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label}：100点中{score}点",
+    meaning: "あなたのキッチンでどれだけ作りやすいか、そしてスタイルにどれだけ忠実かを示します。",
+    limitedAuthenticity: "忠実度（{score}/100）が上限になっています。",
+    limitedFuel: "忠実度が上限です：スタイルが想定する窯がなく最低温度にも届かない場合、{cap}/100で止まります。",
+    limitedFeasibility: "満たしていない条件があります：アプリのルールにより{limit}未満にとどまります。",
+    countedTitle: "数値に含まれるもの",
+    weight: "重み {pct}",
+    ruleTitle: "数値の決まり方",
+    ruleAverage: "2つの基準の加重平均",
+    ruleAuthenticity: "上限：忠実度",
+    ruleFeasibility: "作れないレシピの上限（アプリのルール）",
+    ruleResult: "スコア：上の値のうち最も低いもの",
+    ceilingEditorial: "製品上の判断です：作れないレシピは、ほかの値が高くても{limit}未満にとどまります。",
+    tieBreak: "製品上の判断です：数値が同じ場合、窯と時間の余裕がより大きいスタイルを一覧の先に表示します。数値自体は変わりません。",
+    infoTitle: "参考情報",
+    infoNote: "数値には含まれません。レシピについての別の情報で、キッチンとの相性ではありません。",
+    referencePending: "このスタイルのアレンジ度のプロファイルはまだ確認中です。",
+    whyLabel: "計算方法",
+    pairAria: "{original} {originalScore}、{tailored} {tailoredScore}",
+    tailoredLower: "ここでは調整版が基準より少し低くなっています。探索は時間・加水率・粉の組み合わせを限られた数だけ試すため、見つかった最良の組み合わせでも基準を上回りません。",
+    snapshot: "保存時の相性：{score}/100",
+    savedParams: "加水率 {hydration}・{hours}・{balls}",
+    savedBallsOne: "生地玉{n}個",
+    savedBallsOther: "生地玉{n}個",
+  },
 };

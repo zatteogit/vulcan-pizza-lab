@@ -461,6 +461,19 @@ di impatto:
 9. D.P.R. 187/2001 per la definizione dei tipi di farina.
 10. Focaccia genovese: fonte scritta sull'ordine fra ditatura, salamoia e lievitazione finale.
 
+### Piano temporale (FW-19, 29/10/2026)
+
+Parametri del piano che l'app usa per gli orari del Procedimento e della
+modalità cottura (`src/app/use-cases/cook-plan.ts`, `pizza-engine.ts`).
+Nessuno ha una fonte letta: sono dichiarati nel registro con il loro statuto.
+
+| Dato | Codice | Nota del registro | Stato | Cosa è cambiato (FW-19) |
+|---|---|---|---|---|
+| Recupero del forno fra due cotture in serie: 5 min forno di casa, elettrico e gas a platea; 2 min elettrico ad alta temperatura e gas da pizza; 30 s legna e carbone | `BAKE_ROUND_RECOVERY_SEC` | `bake-round-recovery` | **da verificare** (ipotesi, nessuna misura) | Prima il recupero non c'era: 4 cotture nel forno di casa finivano 15 min prima del vero. Ora è sommato fra un giro e l'altro e dichiarato nel passo e nel banner del modello |
+| Margini della Timeline comoda: frigo +50 % (max 6 h) / −25 % (max 4 h); ambiente e appretto +30 % (max 2 h) / −20 % (max 90 min) | `COMFORT_TOLERANCES` | `comfort-tolerances` | **scelta di Vulcan** senza fonte | Prima l'appretto a 18 °C usava i margini del frigo e la Timeline comoda poteva spostare 4 h dal frigo all'appretto. Ora (D-Q) ogni attesa usa i margini della sua temperatura, nessuno scambio frigo ↔ ambiente, lievito invariato e detto in pagina |
+| Pieghe: numero × intervallo da `FOLDING_DB`, a temperatura ambiente prima della puntata in frigo | `stylePlanFolds`, `foldWindowMinutes` | `equivalent-hours`, `yeast-dose` | numero e intervallo **da verificare** (dati di `parametric-databases`, senza fonte scritta) | Prima i testi dicevano «ogni ~30 min» e «ogni 45 minuti» e la puntata andava subito in frigo. Ora le pieghe sono un passo; con la puntata in frigo contano come ore a 18 °C nel lievito |
+| Finestra notturna 23–7 | `NIGHT_WINDOW` | — | **scelta di Vulcan** | Prima 22–7 per l'orario proposto e 23–7 per l'avviso |
+
 ## Valori da correggere
 
 Sono proposte: la decisione spetta a Matteo. Per la pinsa vale D-013.

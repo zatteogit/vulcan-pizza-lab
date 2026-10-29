@@ -8,8 +8,9 @@ import { ToppingSection } from "./topping-section";
 import { ProcedureHeroControls } from "./procedure-hero";
 import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
-import { addMinutes, countNightActives, localizeStep, stepQuantities, optimizeComfort,
-  defaultMealStart, startForDeadline, readyTimeForDisplay, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
+import { addMinutes, localizeStep, stepQuantities,
+  startForDeadline, readyTimeForDisplay, getServingUnitLabel, toppingSectionLabel, rule55DescriptionText } from "./recipe-output-format";
+import { defaultMealStart, nightActions, optimizeComfort, recipeFingerprint } from "../../use-cases/cook-plan";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { PrintSheet, type PrintSections } from "./print-sheet";
@@ -119,9 +120,6 @@ export function RecipeOutput({
      avviarne una nuova sovrascrive timer e progresso di quella attiva. */
   const [confirmReplace, setConfirmReplace] = useState(false);
   const [confirmPersonalize, setConfirmPersonalize] = useState(false);
-  /* Audit motore 2026-05: spiegazione Regola 55 espandibile per mobile (su
-     desktop c'è già il tooltip via title, ma su touch non è raggiungibile). */
-  const [showRule55Tip, setShowRule55Tip] = useState(false);
 
   const { cms, bcp47 } = useCms();
   const [calendarReference, setCalendarReference] = useState(() => new Date());
@@ -138,15 +136,10 @@ export function RecipeOutput({
   }, [calendarReference]);
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
-  /* Audit totale n. 4: la spiegazione usa i numeri del motore (metodo delle
-   * tre temperature: 3 × impasto obiettivo − attrito), non una somma fissa a 55. */
-  const ddt = recipe.science.desired_dough_temp_c;
-  const friction = recipe.science.friction_factor;
-  const rule55Description = t(cms.cooking.rule55Description, {
-    sum: fmt.celsius(ddt * 3 - friction),
-    ddt: fmt.celsius(ddt),
-    friction: fmt.celsiusDelta(friction),
-  });
+  /* Audit totale n. 4: la spiegazione usa i numeri del motore (3 × impasto
+   * obiettivo − attrito; con un prefermento 4 ×, FW-17 S08-A-07), non una
+   * somma fissa a 55. */
+  const rule55Description = rule55DescriptionText(recipe, cms, fmt);
 
   /* Label contestuale per il selettore di porzioni ("Panetti" / "Teglie" / ...). */
   const servingUnit = getServingUnit(recipe.style);
@@ -216,7 +209,8 @@ export function RecipeOutput({
       const eatingTime = new Date(mealTargetAt ?? Date.now() + constraints.available_hours * 3600_000);
       return startForDeadline(eatingTime, totalDurationMinStatic);
     }
-    return defaultMealStart(totalDurationMinStatic);
+    // FW-19 (S09-A-04): il primo pasto il cui piano non chiede azioni di notte.
+    return defaultMealStart(recipe.timeline);
   });
 
   const [editingTime, setEditingTime] = useState(false);
@@ -306,20 +300,10 @@ export function RecipeOutput({
     },
     [activeTabView, forcedTab, onTabChange],
   );
-  /* Swipe: trascina il pannello per cambiare sezione */
-  const onPanelDragEnd = React.useCallback(
-    (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
-      if (forcedTab) return;
-      const ids = pagerTabs.map((t) => t.id);
-      const i = ids.indexOf(activeTabView);
-      if ((info.offset.x < -70 || info.velocity.x < -500) && i < ids.length - 1) {
-        switchTab(ids[i + 1]);
-      } else if ((info.offset.x > 70 || info.velocity.x > 500) && i > 0) {
-        switchTab(ids[i - 1]);
-      }
-    },
-    [activeTabView, forcedTab, pagerTabs, switchTab],
-  );
+  /* Budget D-059 (integrazione ondata 2): tolto lo swipe dei pannelli
+     (`drag` di motion). RecipeOutput si monta solo da recipe-view.tsx, sempre
+     con `forcedTab`, e con `forcedTab` il trascinamento era spento: il gesto
+     non poteva mai partire. Le sezioni si cambiano con le schede. */
 
   /* Piano comfort: calcolato in base alla timeline e start time */
   const [comfortToggled, setComfortToggled] = React.useState(false);
@@ -382,16 +366,34 @@ export function RecipeOutput({
           title: loc.title,
           description: loc.description,
           longDesc: loc.longDesc,
-          quantities: stepQuantities(step.id, recipe, cms, fmt),
+          quantities: stepQuantities(step.id, recipe, cms, fmt, activeTopping),
           tip: loc.tip ? (isNerd ? loc.tip.nerd : loc.tip.beginner) : undefined,
-          duration_minutes: step.duration_minutes,
+          /* FW-19 (S10-A-03): la durata pianificata, con le estensioni della
+             Timeline comoda: il primo «Fatto» non deve cancellarle. */
+          duration_minutes: effDuration(i),
           startMs: (stepTimes[i]?.start ?? startTime).getTime(),
           endMs: (stepTimes[i]?.end ?? startTime).getTime(),
           flexible: FLEXIBLE_STEP_IDS.has(step.id),
+          ...(step.rounds && step.round_seconds
+            ? {
+                rounds: step.rounds,
+                roundSec: step.round_seconds,
+                ...(step.recovery_seconds ? { recoverySec: step.recovery_seconds } : {}),
+                ...(step.turns !== undefined ? { turns: step.turns } : {}),
+                ...(step.variant ? { variant: step.variant } : {}),
+              }
+            : {}),
         };
       }),
-    [recipe, cms, isNerd, stepTimes, startTime],
+    [recipe, cms, isNerd, stepTimes, startTime, activeTopping, effDuration],
   );
+  /* FW-19 (S10-B-21): impronta di ciò che si cucina (passi, testi, dosi e
+     durate, non gli orari): se cambia, «Inizia» lo dice. */
+  const recipeKey = React.useMemo(
+    () => recipeFingerprint(cookingSteps.flatMap((s) => [s.id, s.duration_minutes, s.description, ...(s.quantities ?? []).map((q) => `${q.label}=${q.value}`)])),
+    [cookingSteps],
+  );
+  const [confirmChanged, setConfirmChanged] = useState(false);
 
   /* Un solo punto di verità per "inizia/riprendi pizzata":
      - stessa ricetta già in corso → riapri la modalità cucina
@@ -400,15 +402,16 @@ export function RecipeOutput({
   const handleStartCooking = React.useCallback(() => {
     if (recipe.verdict.outcome === "not_feasible" && !isThisSession) return;
     if (isThisSession) {
-      openOverlay();
+      if (session?.recipeKey && session.recipeKey !== recipeKey) setConfirmChanged(true);
+      else openOverlay();
     } else if (!isPersonalized) {
       setConfirmPersonalize(true);
     } else if (conflictingSession) {
       setConfirmReplace(true);
     } else {
-      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level));
+      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level), recipeKey);
     }
-  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps]);
+  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps, session?.recipeKey, recipeKey]);
 
   React.useEffect(() => {
     const handler = () => handleStartCooking();
@@ -429,8 +432,9 @@ export function RecipeOutput({
     if (recipe.verdict.outcome === "not_feasible") return;
     setConfirmReplace(false);
     setConfirmPersonalize(false);
-    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level));
-  }, [startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps]);
+    setConfirmChanged(false);
+    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level), recipeKey);
+  }, [startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps, recipeKey]);
 
   const handlePersonalizeBeforeCooking = React.useCallback(() => {
     setConfirmPersonalize(false);
@@ -599,6 +603,7 @@ export function RecipeOutput({
         steps={cookingSteps}
         topping={activeTopping}
         unitLabel={getServingUnitLabel(cms, servingUnit, recipe.dough_balls, true)}
+        unitLabelOne={getServingUnitLabel(cms, servingUnit, 1, cms.locale.id !== "de")}
         readyAt={endDisplayTime}
         readyApproximate={hasFlexiblePhases}
       />
@@ -629,6 +634,32 @@ export function RecipeOutput({
             label: t(cms.cooking.replaceResume, { style: session?.styleName ?? "" }),
             onClick: () => {
               setConfirmReplace(false);
+              openOverlay();
+            },
+            variant: "secondary",
+          },
+        ]}
+      />
+
+      {/* FW-19 (S10-B-21): la pizzata in corso è di questo stile, ma la
+          ricetta nel frattempo è cambiata (panetti, dosi, tempi). */}
+      <ConfirmDialog
+        open={confirmChanged}
+        onDismiss={() => setConfirmChanged(false)}
+        ariaLabel={uiMessage("cooking.changed.title")}
+        icon={<Flame size={26} />}
+        title={uiMessage("cooking.changed.title")}
+        body={uiMessage("cooking.changed.body", [session?.styleName ?? ""])}
+        actions={[
+          {
+            label: uiMessage("cooking.changed.restart"),
+            onClick: confirmStartCooking,
+            variant: "cta",
+          },
+          {
+            label: uiMessage("cooking.changed.resume"),
+            onClick: () => {
+              setConfirmChanged(false);
               openOverlay();
             },
             variant: "secondary",
@@ -743,10 +774,6 @@ export function RecipeOutput({
         animate="center"
         exit="exit"
         transition={motionSpring.panel}
-        drag={forcedTab ? false : "x"}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
-        onDragEnd={onPanelDragEnd}
         className="recipe-output-panel recipe-output-panel--ricetta"
       >
       <ScrollToTopOnMount />
@@ -776,8 +803,6 @@ export function RecipeOutput({
             saveYeastSpeedFactor(factor);
             onConstraintsChange({ ...constraints, yeast_speed_factor: factor });
           }}
-          showRule55Tip={showRule55Tip}
-          setShowRule55Tip={setShowRule55Tip}
           rule55Description={rule55Description}
         />
       </div>
@@ -794,10 +819,6 @@ export function RecipeOutput({
         animate="center"
         exit="exit"
         transition={motionSpring.panel}
-        drag={forcedTab ? false : "x"}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
-        onDragEnd={onPanelDragEnd}
         className="recipe-output-panel recipe-output-panel--procedura"
       >
       <ScrollToTopOnMount />
@@ -819,7 +840,7 @@ export function RecipeOutput({
           handleEndTimeInput={handleEndTimeInput}
           mealSlots={mealSlots}
           comfortToggled={comfortToggled}
-          nightActivesLeft={countNightActives(recipe.timeline, startTime.getTime(), stretch)}
+          nightActionsLeft={nightActions(recipe.timeline, startTime.getTime(), stretch)}
           setComfortToggled={setComfortToggled}
           currentComfortPlan={currentComfortPlan}
           preComfortStart={preComfortStart}
@@ -855,10 +876,6 @@ export function RecipeOutput({
         animate="center"
         exit="exit"
         transition={motionSpring.panel}
-        drag={forcedTab ? false : "x"}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
-        onDragEnd={onPanelDragEnd}
         className="recipe-output-panel recipe-output-panel--condimento"
       >
       <ScrollToTopOnMount />

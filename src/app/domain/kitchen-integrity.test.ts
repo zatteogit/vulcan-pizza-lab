@@ -102,9 +102,9 @@ describe("round 3: method and calendar integrity",()=>{
   for(const [lang,copy] of [["it-IT",CMS_DEFAULTS.cooking],["en-GB",EN_LOCALE.cooking]] as const){
    for(const [date,suffix] of [[start,copy.dayTomorrow],[new Date(2026,9,28,16,3),copy.dayAfterTomorrow],[new Date(2026,9,29,0,8),copy.dayOffset.replace('{n}','3')]] as const){
     expect(daySuffix(reference,date,copy).trim()).toBe(suffix);
-    expect(displayStepTime("proof",date,reference,lang,copy)).toContain(suffix);
+    expect(displayStepTime(true,date,reference,lang,copy)).toContain(suffix);
    }
-   expect(displayStepTime("bake",new Date(2026,9,27,0,5),reference,lang,copy)).toContain(copy.dayTomorrow);
+   expect(displayStepTime(false,new Date(2026,9,27,0,5),reference,lang,copy)).toContain(copy.dayTomorrow);
   }
  });
 });

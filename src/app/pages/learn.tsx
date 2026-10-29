@@ -36,6 +36,8 @@ import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { hasChosenSkill, loadSkill, useProfileDefaults } from "../hooks/use-profile-defaults";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { useDetailLevel } from "../hooks/use-detail-level";
+import { METHOD_PATH } from "../features/method/method-link";
 
 /* ── Percorsi consigliati per livello ── */
 const PATH_STYLE_IDS: Record<SkillLevel, string> = {
@@ -56,6 +58,7 @@ function termOfTheDay() {
 export function LearnPage() {
   const { cms, bcp47 } = useCms();
   const { constraints } = useProfileDefaults();
+  const { level: detailLevel } = useDetailLevel();
   const pg = cms.pages;
   /* FW-12 (S11-B-14): i link card hanno come nome il titolo e come
      descrizione il testo, non l'intero contenuto della card. */
@@ -160,6 +163,17 @@ export function LearnPage() {
       to: "/learn/pre-ferments",
     },
   ];
+  /* FW-15 (S11-A-03/B-01, D-D): l'ingresso a «Metodo e fonti». Con i dettagli
+     tecnici attivi (D-C) va in testa alle risorse. */
+  const methodSection = {
+    id: "method",
+    label: uiMessage("pages.method.title"),
+    desc: uiMessage("pages.learn.methodDesc"),
+    illustration: Bowl,
+    to: METHOD_PATH,
+  };
+  if (detailLevel === "technical") SECTIONS.unshift(methodSection);
+  else SECTIONS.push(methodSection);
 
   return (
     <main id="main-content" className="learn-page" data-page="learn">
@@ -286,8 +300,9 @@ export function LearnPage() {
             {t(pg.learnTermOfTheDay, { category: glossaryCategoryLabel(term.category, cms.glossary) })}
           </h2>
 
+          {/* FW-04 (S11-A-06, S11-B-05): la card apre la voce, non la cima del glossario. */}
           <Link
-            to="/learn/glossary"
+            to={`/learn/glossary#${term.id}`}
             className="learn-term__card"
             aria-labelledby={`${cardIds}-term-name`}
             aria-describedby={`${cardIds}-term-def`}
@@ -309,20 +324,21 @@ export function LearnPage() {
                   }
                 >
                   {term.name}
-                  {term.symbol && (
+                  {/* FW-04 (S11-A-12): il simbolo non si ripete se è già nel nome. */}
+                  {term.symbol && !term.name.includes(term.symbol) && (
                     /*  : il simbolo resta agganciato all'ultima parola del
                        termine — mai da solo su una riga (vedova). */
-                    <span className="learn-term__symbol">
+                    <span className="learn-term__symbol" aria-hidden="true">
                       {"\u00A0"}
                       {term.symbol}
                     </span>
                   )}
                 </h3>
-                <p id={`${cardIds}-term-def`} className="learn-term__definition">{term.definition}</p>
+                <p id={`${cardIds}-term-def`} className="learn-term__definition">{term.plainDefinition ?? term.definition}</p>
               </div>
             </div>
             <footer className="learn-term__footer">
-              <span className="learn-term__footer-label">{pg.learnOpenGlossary}</span>
+              <span className="learn-term__footer-label">{pg.learnOpenTerm}</span>
               <ChevronRight size={14} className="learn-term__footer-icon" />
             </footer>
           </Link>

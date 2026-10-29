@@ -9,10 +9,10 @@ import { engineMsgTexts } from "./engine-msg-text";
 import { formatDuration, formatMass, formatPercent, formatTemp as formatTempLocale } from "../../i18n/format";
 import { getScienceNote } from "../../data/science-notes";
 import { roundForEvidence } from "../../domain/science/evidence";
-import { getActiveUiLocale } from "../../i18n/ui-messages";
+import { getActiveUiLocale, uiMessage } from "../../i18n/ui-messages";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
-import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
-import { computePreFermentSplit } from "../../domain/pre-ferment-split";
+import { preFermentMaturationTempC, rule55Sum } from "../../domain/pre-ferment-split";
+import { buildRecipePhases, KITCHEN_SCALE_ERROR_G, type PhaseIngredient, type PhaseIngredientId, type YeastDilution } from "../../domain/recipe-phases";
 import {
   getBakingTimeByStyle,
   getEquipmentByStyle,
@@ -31,12 +31,15 @@ import {
   getServingUnit,
   isFillingStyle,
   SERVING_UNIT_LABELS,
+  YEAST_LABELS,
 } from "../../domain/pizza-engine";
 import {
   AUTHENTICITY_META,
   type AuthenticityScore,
   type IngredientSection,
   type ToppingIngredient,
+  type ToppingRecipe,
+  scaleToppingAmounts,
 } from "../../data/topping-library";
 
 /* ═══ PARAMETRIC CONTEXT TIPS ═══ */
@@ -57,6 +60,8 @@ export interface ParametricTipContext {
   ovenType?: OvenType;
   /** FW-07: passo di frittura, senza forno né rotazioni. */
   frying?: boolean;
+  /** FW-19: il piano ha il passo «Pieghe»: la puntata non le ripete. */
+  foldsInPlan?: boolean;
 }
 
 /** FW-07: forni con la fiamma o il calore da un lato, dove la pizza si
@@ -95,6 +100,8 @@ export function getParametricTip(
         : t(pt.mixBeginner, { mixer, time: eq.mixingTime_min, equipment: "" }).trim();
     }
     case "bulk": {
+      // FW-19 (S09-A-07): numero e intervallo stanno nel passo «Pieghe».
+      if (ctx?.foldsInPlan) return null;
       const fold = getFoldingByStyle(styleId);
       if (!fold || fold.foldCount === 0) return null;
       const foldName = text?.fold?.[fold.foldType] ?? fold.foldType.replace(/_/g, " ");
@@ -162,27 +169,8 @@ export function getParametricTip(
 
 /* ═══ CLOCK HELPERS ═══ */
 
-/** Audit totale n. 2: senza un pasto scelto il piano partiva «adesso» e la
- *  pizza usciva alle 3 di notte. Ora si ancora al primo pranzo (12:30) o
- *  cena (20:00) raggiungibile, come gli slot di Crea, e si parte
- *  all'indietro. */
-export function defaultMealStart(totalMinutes: number, now: Date = new Date()): Date {
-  let firstReachable: Date | null = null;
-  for (let day = 0; day < 8; day++) {
-    for (const [h, m] of [[12, 30], [20, 0]] as const) {
-      const meal = new Date(now);
-      meal.setDate(meal.getDate() + day);
-      meal.setHours(h, m, 0, 0);
-      const start = new Date(meal.getTime() - totalMinutes * 60_000);
-      if (start.getTime() < now.getTime()) continue;
-      firstReachable ??= start;
-      // Anche l'impasto va fatto di giorno: si scarta un inizio fra le 22 e le 7.
-      const sh = start.getHours();
-      if (sh >= 7 && sh < 22) return start;
-    }
-  }
-  return firstReachable ?? roundToQuarter(now);
-}
+/* FW-19: l'orario proposto senza pasto scelto (defaultMealStart), la notte
+ * e la Timeline comoda vivono in use-cases/cook-plan.ts, puri e testati. */
 
 export function roundToQuarter(date: Date): Date {
   const d = new Date(date);
@@ -247,20 +235,19 @@ function clockWithDay(
   return hhmm + daySuffix(reference, date, copy);
 }
 
-/** Tutte le viste usano gli stessi istanti. «ca.» indica la variabilità
- * biologica delle fasi flessibili, senza spostarle rispetto alla fase prima. */
+/** Tutte le viste usano gli stessi istanti. FW-19 (S09-A-10): «ca.» va
+ * sull'orario incerto, cioè sull'inizio del passo che segue un'attesa
+ * biologica (approxStartAt in use-cases/cook-plan.ts), non sull'inizio
+ * dell'attesa, che è preciso. */
 export function displayStepTime(
-  stepId: string,
+  approximate: boolean,
   date: Date,
   reference: Date,
   bcp47: string,
   copy?: CmsContent["cooking"],
 ): string {
-  const approx = copy?.approxPrefix ?? "ca. ";
-  if (!FLEXIBLE_STEP_IDS.has(stepId)) {
-    return clockWithDay(date, reference, bcp47, copy);
-  }
-  return `${approx}${clockWithDay(date, reference, bcp47, copy)}`;
+  const clock = clockWithDay(date, reference, bcp47, copy);
+  return approximate ? `${copy?.approxPrefix ?? "ca. "}${clock}` : clock;
 }
 
 function normalizeTemperatureUnitSuffixes(text: string): string {
@@ -272,113 +259,8 @@ export function normalizeMeasureUnitSuffixes(text: string): string {
     .replace(/(\d+(?:[.,]\d+)?\s*g)\s*g\b/g, "$1");
 }
 
-/* ═══ OTTIMIZZATORE COMODITÀ (feedback giugno 2026) ═══
- * "A volte non fa niente se l'impasto resta in frigo un'ora in più, ma magari
- * non ti devi alzare alle 5." Le fasi flessibili si stirano/accorciano entro
- * tolleranze tecniche per portare le fasi ATTIVE in orari umani, tenendo
- * fisso l'orario del pasto (la fine non si tocca). */
-
-const ACTIVE_STEP_IDS = new Set([
-  "mix", "divide", "shape", "top", "bake", "preheat",
-  "stack", "fill_internal", "split_fill", "top_post", "bake2",
-]);
-
-function isNightHour(h: number): boolean {
-  return h >= 23 || h < 7;
-}
-
-export function countNightActives(
-  timeline: TimelineStep[],
-  startMs: number,
-  stretch: Record<number, number>,
-): number {
-  let cursor = startMs;
-  let count = 0;
-  timeline.forEach((step, i) => {
-    if (ACTIVE_STEP_IDS.has(step.id) && isNightHour(new Date(cursor).getHours())) count++;
-    cursor += (step.duration_minutes + (stretch[i] ?? 0)) * 60_000;
-  });
-  return count;
-}
-
-interface ComfortPlan {
-  stretch: Record<number, number>;
-  newStart: Date;
-  nightCount: number;
-  totalExtra: number;
-}
-
-export function optimizeComfort(
-  timeline: TimelineStep[],
-  startTime: Date,
-  fermentTempC: number,
-  now: Date = new Date(),
-): ComfortPlan | null {
-  const baseNight = countNightActives(timeline, startTime.getTime(), {});
-  if (baseNight === 0) return null;
-
-  const flexIdx = timeline
-    .map((s, i) => ({ s, i }))
-    .filter(({ s }) => FLEXIBLE_STEP_IDS.has(s.id) && s.duration_minutes >= 45)
-    .map(({ i }) => i);
-  if (flexIdx.length === 0) return null;
-
-  const cold = fermentTempC <= 6;
-  const optionsFor = (i: number): number[] => {
-    const dur = timeline[i].duration_minutes;
-    /* In frigo la maturazione tollera molto: fino a +50% (max 6h) e -25%
-     * (max 4h) — su 14h di frigo, ±2-3h non cambiano la pizza. A temperatura
-     * ambiente i margini sono stretti: +30% (max 2h), -20% (max 90').
-     * Passi da 30'. */
-    const maxExtra = Math.min(cold ? dur * 0.5 : dur * 0.3, cold ? 360 : 120);
-    const maxShrink = cold
-      ? Math.min(dur * 0.25, 240)
-      : Math.min(dur * 0.2, 90);
-    const opts: number[] = [];
-    for (let e = -Math.floor(maxShrink / 30) * 30; e <= maxExtra; e += 30) opts.push(e);
-    return opts;
-  };
-
-  /* Cartesiano sui (pochi) step flessibili */
-  let combos: Record<number, number>[] = [{}];
-  for (const i of flexIdx) {
-    const next: Record<number, number>[] = [];
-    for (const c of combos) {
-      for (const e of optionsFor(i)) next.push({ ...c, [i]: e });
-    }
-    combos = next;
-    if (combos.length > 25_000) break;
-  }
-
-  const totalBase = timeline.reduce((s, st) => s + st.duration_minutes, 0);
-  const endMs = startTime.getTime() + totalBase * 60_000; // il pasto NON si sposta
-  let best: ComfortPlan | null = null;
-  let bestScore = Infinity;
-
-  for (const c of combos) {
-    const totalExtra = Object.values(c).reduce((a, b) => a + b, 0);
-    // Inizio su quarti d'ora: gli orari proposti devono essere umani
-    const newStartMs =
-      Math.round((endMs - (totalBase + totalExtra) * 60_000) / 900_000) * 900_000;
-    if (newStartMs < now.getTime() - 5 * 60_000) continue; // non si parte nel passato
-    const night = countNightActives(timeline, newStartMs, c);
-    const score = night * 100_000 + Math.abs(totalExtra);
-    if (score < bestScore) {
-      bestScore = score;
-      best = { stretch: c, newStart: new Date(newStartMs), nightCount: night, totalExtra };
-    }
-  }
-
-  /* Onestà prima di tutto: proponiamo il piano solo se AZZERA le fasi attive
-   * notturne. Un miglioramento parziale ("ti svegli alle 2:30 invece che
-   * alle 3") non mantiene la promessa "sistemalo per me". */
-  if (!best || best.nightCount > 0) return null;
-  best.stretch = Object.fromEntries(
-    Object.entries(best.stretch).filter(([, v]) => v !== 0),
-  ) as Record<number, number>;
-  if (Object.keys(best.stretch).length === 0) return null;
-  return best;
-}
+/* FW-19: l'ottimizzatore della Timeline comoda è in use-cases/cook-plan.ts
+ * (optimizeComfort, con le tolleranze dichiarate e la regola D-Q). */
 
 /** Vista Semplice: la forza farina in parole, non in sigle (audit roleplay). */
 export function engineMessage(cms: CmsContent | undefined, key: string, fallback: string): string {
@@ -399,23 +281,10 @@ export function toppingSectionLabel(style: PizzaStyle, cms: CmsContent): string 
 /** Audit n. 11 (B-24): una sola scala della forza (W) per tutta l'app; prima
  *  il selettore semplice chiamava «Media» la W 300 che gli ingredienti
  *  chiamavano «forte». */
-export type FlourStrength = "weak" | "medium" | "strong" | "veryStrong";
+/* FW-05: la scala vive nel motore (engine-facts), condivisa con il glossario
+ * e il selettore della farina. */
+export { flourStrength, type FlourStrength } from "../../domain/flour-strength";
 
-export function flourStrength(w: number): FlourStrength {
-  if (w < 220) return "weak";
-  if (w < 280) return "medium";
-  if (w < 330) return "strong";
-  return "veryStrong";
-}
-
-export function flourStrengthLabel(w: number, cms: CmsContent | undefined): string {
-  switch (flourStrength(w)) {
-    case "weak": return engineMessage(cms, "hint.flourWeak", "farina debole (00 classica)");
-    case "medium": return engineMessage(cms, "hint.flourMedium", "farina di media forza");
-    case "strong": return engineMessage(cms, "hint.flourStrong", "farina forte (per pizza)");
-    default: return engineMessage(cms, "hint.flourVeryStrong", "farina molto forte (manitoba)");
-  }
-}
 
 /** Delta in grammi di una compensazione forno espressa in % sulla farina
  * (idratazione/olio/zucchero) — rende dinamico il "+X%" mostrando anche la
@@ -429,6 +298,14 @@ export function compGramsSuffix(
   const g = Math.round((flourG * (c.compensated - c.original)) / 100);
   /* FW-11: grammi con lo spazio e i decimali della lingua. */
   return g > 0 ? ` · ≈ +${formatMass(g, getActiveUiLocale())}` : "";
+}
+
+/** FW-17 (S08-A-09/B-07): baker's % di una riga dei totali, uguale a schermo
+ *  (Ricetta, livello nerd) e in stampa. Il valore è quello dichiarato dal
+ *  motore (buildRecipePhases.totals → baker_pcts), non ricalcolato dai grammi
+ *  arrotondati; il lievito con due decimali, gli altri con uno. */
+export function phaseBakerPctText(row: Pick<PhaseIngredient, "id" | "bakerPct">, locale: string): string {
+  return `${new Intl.NumberFormat(locale, { maximumFractionDigits: row.id === "yeast" ? 2 : 1 }).format(row.bakerPct)}%`;
 }
 
 const YEAST_NOTE = getScienceNote("yeast-dose");
@@ -909,10 +786,92 @@ export function getToppingIngredientSectionOrder(ingredients: ToppingIngredient[
 /* ═══ Audit totale n. 12 — dosi dentro i passi ═══
  * In modalità cottura i passi non riportavano i grammi (lo staglio rimandava a
  * «ingredienti sotto», che lì non ci sono). Dosi per i passi che le usano:
- * pre-fermento, impasto, staglio. */
+ * pre-fermento, impasto, staglio, condimento.
+ * FW-17: le dosi arrivano da buildRecipePhases (lo stesso modello della scheda
+ * Ricetta e della stampa), con la temperatura dell'acqua della fase
+ * (S10-B-09), l'aiuto per le microdosi di lievito (D-O, S10-A-21) e le dosi
+ * del condimento nei passi del condimento (S10-A-06). */
 export interface StepQuantity {
   label: string;
   value: string;
+  /** FW-17: riga di aiuto sotto il valore (es. diluizione del lievito). */
+  hint?: string;
+}
+
+/** FW-17: nome visibile di un ingrediente del modello per fasi. */
+export function phaseIngredientLabel(
+  id: PhaseIngredientId,
+  recipe: GeneratedRecipe,
+  cms: CmsContent,
+  preFermentName = "",
+): string {
+  const ui = cms.ui;
+  switch (id) {
+    case "flour": return ui.flour;
+    case "water": return ui.water;
+    case "salt": return ui.salt;
+    case "sugar": return ui.sugar;
+    case "yeast": return cms.yeastLabels?.[recipe.yeast_type] || YEAST_LABELS[recipe.yeast_type] || recipe.yeast_type;
+    case "fat": {
+      const fatType = recipe.style.dough.fat_type;
+      return fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
+    }
+    case "preferment": return preFermentName;
+  }
+}
+
+/** Spiegazione della Regola 55 (tip della temperatura dell'acqua) con i numeri
+ *  del motore. FW-17 (S08-A-07): con un prefermento l'acqua dell'impasto finale
+ *  viene dalla regola a quattro termini, e così la spiegazione: cucina +
+ *  farina + acqua + prefermento = 4 × DDT − attrito, col prefermento alla sua
+ *  temperatura di maturazione (ipotesi del modello). */
+export function rule55DescriptionText(
+  recipe: Pick<GeneratedRecipe, "has_pre_ferment" | "pre_ferment_type"> & {
+    science: Pick<GeneratedRecipe["science"], "desired_dough_temp_c" | "friction_factor">;
+  },
+  cms: Pick<CmsContent, "cooking">,
+  fmt: ReturnType<typeof createFormatter>,
+): string {
+  const ddt = recipe.science.desired_dough_temp_c;
+  const friction = recipe.science.friction_factor;
+  const values = { ddt: fmt.celsius(ddt), friction: fmt.celsiusDelta(friction) };
+  if (!recipe.has_pre_ferment) {
+    /* FW-02 (S08-B-12): impastando a mano non c'è il calore dell'impastatrice
+     * da sottrarre: niente «impastatrice (0 °C)» a chi non ce l'ha. */
+    const text = friction > 0 ? cms.cooking.rule55Description : cms.cooking.rule55DescriptionHand;
+    return t(text, { ...values, sum: fmt.celsius(rule55Sum(ddt, friction, false)) });
+  }
+  const isPoolish = (recipe.pre_ferment_type ?? "").toLowerCase().includes("poolish");
+  return t(cms.cooking.rule55DescriptionPreferment, {
+    ...values,
+    sum: fmt.celsius(rule55Sum(ddt, friction, true)),
+    preferment: isPoolish ? "Poolish" : "Biga",
+    prefTemp: fmt.celsius(preFermentMaturationTempC(isPoolish ? "poolish" : "biga")),
+  });
+}
+
+/** FW-17 (D-O): testo della diluizione per le microdosi di lievito. */
+export function yeastDilutionText(d: YeastDilution, fmt: ReturnType<typeof createFormatter>): { title: string; body: string[] } {
+  const body = [
+    uiMessage("recipe.phases.dilutionBody", [fmt.grams(d.stockYeastG), fmt.grams(d.stockWaterG), fmt.grams(d.solutionG), fmt.grams(d.yeastG)]),
+    uiMessage(d.phase === "preferment" ? "recipe.phases.dilutionLessWaterPreferment" : "recipe.phases.dilutionLessWater", [fmt.grams(d.waterToRemoveG)]),
+    /* La dose ha l'incertezza di due pesate con la bilancia da cucina (D-O):
+       la si dice, calcolata dal motore (recipe-phases, dilutionUncertaintyPct). */
+    uiMessage("recipe.phases.dilutionWhy", [fmt.grams(d.stockYeastG), fmt.grams(d.solutionG), fmt.grams(KITCHEN_SCALE_ERROR_G), fmt.percent(d.uncertaintyPct)]),
+  ];
+  if (d.spoonEstimate) body.push(uiMessage(d.spoonEstimate === "eighth" ? "recipe.phases.spoonEighth" : "recipe.phases.spoonQuarter"));
+  return { title: uiMessage("recipe.phases.dilutionTitle"), body };
+}
+
+/** FW-17 (S08-B-14): dose per unità e, se le unità sono più d'una, il totale. */
+export function toppingAmountWithTotal(
+  amount: { value: number; unit: "g" | "ml" | "pcs" },
+  units: number,
+  fmt: ReturnType<typeof createFormatter>,
+): string {
+  const per = formatToppingAmountForLocale(amount.value, amount.unit, fmt);
+  if (units <= 1) return per;
+  return `${per} · ${uiMessage("recipe.phases.toppingTotal", [formatToppingAmountForLocale(amount.value * units, amount.unit, fmt)])}`;
 }
 
 export function stepQuantities(
@@ -920,47 +879,48 @@ export function stepQuantities(
   recipe: GeneratedRecipe,
   cms: CmsContent,
   fmt: ReturnType<typeof createFormatter>,
+  topping?: ToppingRecipe,
 ): StepQuantity[] {
-  const ui = cms.ui;
-  const yeastLabel = cms.yeastLabels?.[recipe.yeast_type] ?? recipe.yeast_type;
-  const fatType = recipe.style.dough.fat_type;
-  const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
-  const split = recipe.has_pre_ferment
-    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type, flourPct: recipe.pre_ferment_flour_pct })
-    : null;
-  const yeast = recipe.yeast_g > 0 ? [{ label: yeastLabel, value: fmt.grams(recipe.yeast_g) }] : [];
+  const model = buildRecipePhases(recipe);
+  const preName = model.preFerment?.name ?? "";
+  const dilution = model.yeastDilution;
+  const phaseRows = (phaseId: "preferment" | "final"): StepQuantity[] => {
+    const phase = model.phases.find((p) => p.id === phaseId);
+    if (!phase) return [];
+    const rows: StepQuantity[] = phase.ingredients
+      .filter((ing) => ing.grams > 0 || ing.note === "allInPreferment")
+      .map((ing) => ({
+        label: phaseIngredientLabel(ing.id, recipe, cms, preName),
+        value: ing.note === "allInPreferment" ? uiMessage("recipe.phases.waterAllInPreferment") : fmt.grams(ing.grams),
+        ...(ing.id === "yeast" && dilution && dilution.phase === phaseId
+          ? { hint: yeastDilutionText(dilution, fmt).body.slice(0, 2).join(" ") }
+          : {}),
+      }));
+    if (phase.waterTempC != null) {
+      const temp = fmt.celsius(phase.waterTempC);
+      rows.push({
+        label: uiMessage("recipe.phases.waterTempLabel"),
+        value: phaseId === "preferment" ? uiMessage("recipe.phases.estimateValue", [temp]) : temp,
+      });
+    }
+    return rows;
+  };
   switch (stepId) {
     case "preferment":
-      return split
-        ? [
-            { label: ui.flour, value: fmt.grams(split.prefermentFlourG) },
-            { label: ui.water, value: fmt.grams(split.prefermentWaterG) },
-            ...yeast,
-          ]
-        : [];
-    case "mix": {
-      const rest = [
-        ...(recipe.salt_g > 0 ? [{ label: ui.salt, value: fmt.grams(recipe.salt_g) }] : []),
-        ...(recipe.sugar_g > 0 ? [{ label: ui.sugar, value: fmt.grams(recipe.sugar_g) }] : []),
-        ...(recipe.fat_g > 0 ? [{ label: fatLabel, value: fmt.grams(recipe.fat_g) }] : []),
-      ];
-      return split
-        ? [
-            { label: split.name, value: fmt.grams(split.prefermentFlourG + split.prefermentWaterG) },
-            { label: ui.flour, value: fmt.grams(split.mainFlourG) },
-            { label: ui.water, value: fmt.grams(split.mainWaterG) },
-            ...rest,
-          ]
-        : [
-            { label: ui.flour, value: fmt.grams(recipe.flour_g) },
-            { label: ui.water, value: fmt.grams(recipe.water_g) },
-            ...yeast,
-            ...rest,
-          ];
-    }
+      return model.preFerment ? phaseRows("preferment") : [];
+    case "mix":
+      return phaseRows("final");
     case "divide":
       return [{ label: `${recipe.dough_balls} ×`, value: fmt.grams(recipe.ball_weight_g) }];
-    default:
-      return [];
+    default: {
+      /* FW-17 (S10-A-06): i passi del condimento riportano le dosi del
+         condimento scelto, per unità e in totale. */
+      if (!topping?.assembly_steps?.some((s) => s.id === stepId)) return [];
+      const scaled = scaleToppingAmounts(topping, recipe.topping_scale ?? recipe.style.topping_scale);
+      return scaled.ingredients.map((ing) => ({
+        label: ing.name,
+        value: toppingAmountWithTotal(ing.amount, recipe.dough_balls, fmt),
+      }));
+    }
   }
 }

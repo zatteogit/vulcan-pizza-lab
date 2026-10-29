@@ -803,7 +803,7 @@
                 "value": "thickness factor",
                 "synonyms": [
                   "fattore di spessore",
-                  "thickness factor"
+                  "carico d’impasto"
                 ]
               }
             },
@@ -856,6 +856,78 @@
                   "maturazione stimata",
                   "d-score"
                 ]
+              }
+            },
+            {
+              "id": "dough_division",
+              "name": {
+                "value": "staglio"
+              }
+            },
+            {
+              "id": "ball_shaping",
+              "name": {
+                "value": "pirlatura"
+              }
+            },
+            {
+              "id": "gluten_development",
+              "name": {
+                "value": "incordatura"
+              }
+            },
+            {
+              "id": "folds",
+              "name": {
+                "value": "pieghe"
+              }
+            },
+            {
+              "id": "poke_test",
+              "name": {
+                "value": "prova del dito"
+              }
+            },
+            {
+              "id": "cornicione",
+              "name": {
+                "value": "cornicione"
+              }
+            },
+            {
+              "id": "oven_floor_dome",
+              "name": {
+                "value": "platea e cielo"
+              }
+            },
+            {
+              "id": "pre_ferment",
+              "name": {
+                "value": "prefermento"
+              }
+            },
+            {
+              "id": "sourdough",
+              "name": {
+                "value": "lievito madre"
+              }
+            },
+            {
+              "id": "flour_type",
+              "name": {
+                "value": "tipo di farina"
+              }
+            },
+            {
+              "id": "manitoba",
+              "name": {
+                "value": "manitoba"
+              }
+            },
+            {
+              "id": "semola_rimacinata",
+              "name": {
+                "value": "semola rimacinata"
               }
             }
           ]

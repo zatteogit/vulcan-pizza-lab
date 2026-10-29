@@ -53,7 +53,7 @@ const totalMinutes = (recipe: GeneratedRecipe) =>
   recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0);
 const fermentationMinutes = (recipe: GeneratedRecipe) =>
   recipe.timeline
-    .filter((step) => ["preferment", "bulk", "proof", "preheat"].includes(step.id))
+    .filter((step) => ["preferment", "folds", "bulk", "proof", "preheat"].includes(step.id))
     .reduce((sum, step) => sum + step.duration_minutes, 0);
 const hasWarning = (recipe: GeneratedRecipe, key: string) =>
   recipe.scores.warnings.some((warning) => warning.key === key);

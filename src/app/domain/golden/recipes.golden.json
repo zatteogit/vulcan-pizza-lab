@@ -12,7 +12,7 @@
     "fermentation_c": 22,
     "oven_c": 485,
     "cook_s": 75,
-    "timeline_min": 672
+    "timeline_min": 674
   },
   "napoletana_stg/home": {
     "flour_g": 470,
@@ -27,7 +27,7 @@
     "fermentation_c": 22,
     "oven_c": 250,
     "cook_s": 345,
-    "timeline_min": 690
+    "timeline_min": 705
   },
   "napoletana_canotto/ideal": {
     "flour_g": 695,
@@ -42,13 +42,13 @@
     "fermentation_c": 4,
     "oven_c": 450,
     "cook_s": 120,
-    "timeline_min": 2955
+    "timeline_min": 2970
   },
   "napoletana_canotto/home": {
     "flour_g": 598,
     "water_g": 466,
     "salt_g": 15,
-    "yeast_g": 1.3,
+    "yeast_g": 1.2,
     "fat_g": 0,
     "sugar_g": 0,
     "hydration_pct": 78,
@@ -57,13 +57,13 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 440,
-    "timeline_min": 1537
+    "timeline_min": 1552
   },
   "teglia_romana/ideal": {
     "flour_g": 1296,
     "water_g": 1037,
     "salt_g": 32,
-    "yeast_g": 1.7,
+    "yeast_g": 1.6,
     "fat_g": 32,
     "sugar_g": 0,
     "hydration_pct": 80,
@@ -72,13 +72,13 @@
     "fermentation_c": 4,
     "oven_c": 310,
     "cook_s": 720,
-    "timeline_min": 2269
+    "timeline_min": 2284
   },
   "teglia_romana/home": {
     "flour_g": 1269,
     "water_g": 1065,
     "salt_g": 32,
-    "yeast_g": 2.2,
+    "yeast_g": 2.1,
     "fat_g": 32,
     "sugar_g": 0,
     "hydration_pct": 83.9,
@@ -87,7 +87,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 1063,
-    "timeline_min": 1572
+    "timeline_min": 1587
   },
   "tonda_romana/ideal": {
     "flour_g": 443,
@@ -102,7 +102,7 @@
     "fermentation_c": 22,
     "oven_c": 380,
     "cook_s": 120,
-    "timeline_min": 979
+    "timeline_min": 994
   },
   "tonda_romana/home": {
     "flour_g": 382,
@@ -117,7 +117,7 @@
     "fermentation_c": 22,
     "oven_c": 250,
     "cook_s": 279,
-    "timeline_min": 990
+    "timeline_min": 1005
   },
   "pinsa_romana/ideal": {
     "flour_g": 536,
@@ -132,7 +132,7 @@
     "fermentation_c": 4,
     "oven_c": 300,
     "cook_s": 240,
-    "timeline_min": 2967
+    "timeline_min": 2982
   },
   "pinsa_romana/home": {
     "flour_g": 525,
@@ -147,7 +147,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 332,
-    "timeline_min": 1534
+    "timeline_min": 1549
   },
   "new_york/ideal": {
     "flour_g": 668,
@@ -162,7 +162,7 @@
     "fermentation_c": 4,
     "oven_c": 290,
     "cook_s": 600,
-    "timeline_min": 2087
+    "timeline_min": 2102
   },
   "new_york/home": {
     "flour_g": 657,
@@ -177,13 +177,13 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 778,
-    "timeline_min": 1559
+    "timeline_min": 1574
   },
   "detroit/ideal": {
     "flour_g": 1350,
     "water_g": 979,
     "salt_g": 27,
-    "yeast_g": 3.1,
+    "yeast_g": 3,
     "fat_g": 41,
     "sugar_g": 0,
     "hydration_pct": 72.5,
@@ -192,13 +192,13 @@
     "fermentation_c": 4,
     "oven_c": 270,
     "cook_s": 780,
-    "timeline_min": 1091
+    "timeline_min": 1106
   },
   "detroit/home": {
     "flour_g": 1350,
     "water_g": 979,
     "salt_g": 27,
-    "yeast_g": 3.1,
+    "yeast_g": 3,
     "fat_g": 41,
     "sugar_g": 0,
     "hydration_pct": 72.5,
@@ -207,7 +207,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 888,
-    "timeline_min": 1099
+    "timeline_min": 1114
   },
   "chicago_deep/ideal": {
     "flour_g": 1051,
@@ -222,7 +222,7 @@
     "fermentation_c": 4,
     "oven_c": 225,
     "cook_s": 1800,
-    "timeline_min": 1287
+    "timeline_min": 1302
   },
   "chicago_deep/home": {
     "flour_g": 1051,
@@ -237,7 +237,7 @@
     "fermentation_c": 4,
     "oven_c": 225,
     "cook_s": 1800,
-    "timeline_min": 1287
+    "timeline_min": 1302
   },
   "focaccia_genovese/ideal": {
     "flour_g": 1656,
@@ -252,7 +252,7 @@
     "fermentation_c": 22,
     "oven_c": 230,
     "cook_s": 1320,
-    "timeline_min": 875
+    "timeline_min": 890
   },
   "focaccia_genovese/home": {
     "flour_g": 1656,
@@ -267,7 +267,7 @@
     "fermentation_c": 22,
     "oven_c": 230,
     "cook_s": 1320,
-    "timeline_min": 875
+    "timeline_min": 890
   },
   "sfincione/ideal": {
     "flour_g": 1874,
@@ -282,7 +282,7 @@
     "fermentation_c": 4,
     "oven_c": 220,
     "cook_s": 1380,
-    "timeline_min": 1131
+    "timeline_min": 1146
   },
   "sfincione/home": {
     "flour_g": 1874,
@@ -297,13 +297,13 @@
     "fermentation_c": 4,
     "oven_c": 220,
     "cook_s": 1380,
-    "timeline_min": 1131
+    "timeline_min": 1146
   },
   "pala_romana/ideal": {
     "flour_g": 697,
     "water_g": 547,
     "salt_g": 17,
-    "yeast_g": 1,
+    "yeast_g": 0.9,
     "fat_g": 17,
     "sugar_g": 0,
     "hydration_pct": 78.5,
@@ -312,13 +312,13 @@
     "fermentation_c": 4,
     "oven_c": 350,
     "cook_s": 300,
-    "timeline_min": 2075
+    "timeline_min": 2090
   },
   "pala_romana/home": {
     "flour_g": 677,
     "water_g": 569,
     "salt_g": 17,
-    "yeast_g": 1.2,
+    "yeast_g": 1.1,
     "fat_g": 17,
     "sugar_g": 0,
     "hydration_pct": 84,
@@ -327,7 +327,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 575,
-    "timeline_min": 1554
+    "timeline_min": 1569
   },
   "grandma_style/ideal": {
     "flour_g": 1297,
@@ -342,7 +342,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 900,
-    "timeline_min": 2111
+    "timeline_min": 2126
   },
   "grandma_style/home": {
     "flour_g": 1297,
@@ -357,7 +357,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 900,
-    "timeline_min": 1571
+    "timeline_min": 1586
   },
   "focaccia_recco/ideal": {
     "flour_g": 1042,
@@ -372,7 +372,7 @@
     "fermentation_c": 20,
     "oven_c": 300,
     "cook_s": 360,
-    "timeline_min": 174
+    "timeline_min": 189
   },
   "focaccia_recco/home": {
     "flour_g": 1019,
@@ -387,7 +387,7 @@
     "fermentation_c": 20,
     "oven_c": 250,
     "cook_s": 498,
-    "timeline_min": 184
+    "timeline_min": 199
   },
   "padellino_torino/ideal": {
     "flour_g": 429,
@@ -402,7 +402,7 @@
     "fermentation_c": 4,
     "oven_c": 230,
     "cook_s": 660,
-    "timeline_min": 2091
+    "timeline_min": 2106
   },
   "padellino_torino/home": {
     "flour_g": 429,
@@ -417,13 +417,13 @@
     "fermentation_c": 4,
     "oven_c": 230,
     "cook_s": 660,
-    "timeline_min": 1551
+    "timeline_min": 1566
   },
   "pizza_baciata/ideal": {
     "flour_g": 1728,
     "water_g": 1382,
     "salt_g": 43,
-    "yeast_g": 2.5,
+    "yeast_g": 2.4,
     "fat_g": 43,
     "sugar_g": 0,
     "hydration_pct": 80,
@@ -432,13 +432,13 @@
     "fermentation_c": 4,
     "oven_c": 285,
     "cook_s": 960,
-    "timeline_min": 1957
+    "timeline_min": 1972
   },
   "pizza_baciata/home": {
     "flour_g": 1703,
     "water_g": 1408,
     "salt_g": 43,
-    "yeast_g": 2.9,
+    "yeast_g": 2.8,
     "fat_g": 43,
     "sugar_g": 0,
     "hydration_pct": 82.7,
@@ -447,7 +447,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 1205,
-    "timeline_min": 1614
+    "timeline_min": 1629
   },
   "ciaccino_senese/ideal": {
     "flour_g": 1650,
@@ -462,7 +462,7 @@
     "fermentation_c": 22,
     "oven_c": 250,
     "cook_s": 1020,
-    "timeline_min": 623
+    "timeline_min": 638
   },
   "ciaccino_senese/home": {
     "flour_g": 1650,
@@ -477,13 +477,13 @@
     "fermentation_c": 22,
     "oven_c": 250,
     "cook_s": 1020,
-    "timeline_min": 623
+    "timeline_min": 638
   },
   "pizza_spaccata/ideal": {
     "flour_g": 1512,
     "water_g": 1210,
     "salt_g": 38,
-    "yeast_g": 2.2,
+    "yeast_g": 2.1,
     "fat_g": 38,
     "sugar_g": 0,
     "hydration_pct": 80,
@@ -492,13 +492,13 @@
     "fermentation_c": 4,
     "oven_c": 285,
     "cook_s": 1020,
-    "timeline_min": 1949
+    "timeline_min": 1964
   },
   "pizza_spaccata/home": {
     "flour_g": 1490,
     "water_g": 1232,
     "salt_g": 37,
-    "yeast_g": 2.6,
+    "yeast_g": 2.4,
     "fat_g": 37,
     "sugar_g": 0,
     "hydration_pct": 82.7,
@@ -507,7 +507,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 1281,
-    "timeline_min": 1607
+    "timeline_min": 1622
   },
   "trancio_milanese/ideal": {
     "flour_g": 1357,
@@ -522,7 +522,7 @@
     "fermentation_c": 4,
     "oven_c": 240,
     "cook_s": 960,
-    "timeline_min": 1751
+    "timeline_min": 1766
   },
   "trancio_milanese/home": {
     "flour_g": 1357,
@@ -537,7 +537,7 @@
     "fermentation_c": 4,
     "oven_c": 240,
     "cook_s": 960,
-    "timeline_min": 1571
+    "timeline_min": 1586
   },
   "chicago_tavern/ideal": {
     "flour_g": 940,
@@ -552,7 +552,7 @@
     "fermentation_c": 4,
     "oven_c": 260,
     "cook_s": 720,
-    "timeline_min": 1739
+    "timeline_min": 1754
   },
   "chicago_tavern/home": {
     "flour_g": 940,
@@ -567,13 +567,13 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 768,
-    "timeline_min": 1563
+    "timeline_min": 1578
   },
   "focaccia_barese/ideal": {
     "flour_g": 1104,
     "water_g": 828,
     "salt_g": 22,
-    "yeast_g": 2.5,
+    "yeast_g": 2.4,
     "fat_g": 44,
     "sugar_g": 0,
     "hydration_pct": 75,
@@ -582,13 +582,13 @@
     "fermentation_c": 4,
     "oven_c": 240,
     "cook_s": 1320,
-    "timeline_min": 1123
+    "timeline_min": 1138
   },
   "focaccia_barese/home": {
     "flour_g": 1104,
     "water_g": 828,
     "salt_g": 22,
-    "yeast_g": 2.5,
+    "yeast_g": 2.4,
     "fat_g": 44,
     "sugar_g": 0,
     "hydration_pct": 75,
@@ -597,7 +597,7 @@
     "fermentation_c": 4,
     "oven_c": 240,
     "cook_s": 1320,
-    "timeline_min": 1123
+    "timeline_min": 1138
   },
   "pizza_fritta/ideal": {
     "flour_g": 484,
@@ -702,7 +702,7 @@
     "fermentation_c": 4,
     "oven_c": 430,
     "cook_s": 180,
-    "timeline_min": 1047
+    "timeline_min": 1062
   },
   "calzone_napoletano/home": {
     "flour_g": 592,
@@ -717,7 +717,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 580,
-    "timeline_min": 1074
+    "timeline_min": 1089
   },
   "pizza_al_metro/ideal": {
     "flour_g": 2358,
@@ -732,7 +732,7 @@
     "fermentation_c": 22,
     "oven_c": 340,
     "cook_s": 300,
-    "timeline_min": 627
+    "timeline_min": 629
   },
   "pizza_al_metro/home": {
     "flour_g": 2289,
@@ -747,7 +747,7 @@
     "fermentation_c": 22,
     "oven_c": 250,
     "cook_s": 538,
-    "timeline_min": 643
+    "timeline_min": 658
   },
   "new_haven_apizza/ideal": {
     "flour_g": 722,
@@ -762,7 +762,7 @@
     "fermentation_c": 4,
     "oven_c": 370,
     "cook_s": 300,
-    "timeline_min": 2971
+    "timeline_min": 2973
   },
   "new_haven_apizza/home": {
     "flour_g": 624,
@@ -770,14 +770,14 @@
     "salt_g": 12,
     "yeast_g": 1.1,
     "fat_g": 6,
-    "sugar_g": 4,
+    "sugar_g": 4.5,
     "hydration_pct": 69.1,
     "ball_weight_g": 270,
     "fermentation_h": 24,
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 654,
-    "timeline_min": 1555
+    "timeline_min": 1570
   },
   "fugazzeta/ideal": {
     "flour_g": 1458,
@@ -792,7 +792,7 @@
     "fermentation_c": 22,
     "oven_c": 240,
     "cook_s": 1020,
-    "timeline_min": 627
+    "timeline_min": 642
   },
   "fugazzeta/home": {
     "flour_g": 1458,
@@ -807,7 +807,7 @@
     "fermentation_c": 22,
     "oven_c": 240,
     "cook_s": 1020,
-    "timeline_min": 627
+    "timeline_min": 642
   },
   "california_style/ideal": {
     "flour_g": 550,
@@ -822,7 +822,7 @@
     "fermentation_c": 4,
     "oven_c": 300,
     "cook_s": 360,
-    "timeline_min": 2259
+    "timeline_min": 2274
   },
   "california_style/home": {
     "flour_g": 539,
@@ -830,14 +830,14 @@
     "salt_g": 11,
     "yeast_g": 0.9,
     "fat_g": 11,
-    "sugar_g": 3,
+    "sugar_g": 2.5,
     "hydration_pct": 66,
     "ball_weight_g": 230,
     "fermentation_h": 24,
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 498,
-    "timeline_min": 1549
+    "timeline_min": 1564
   },
   "greek_pan/ideal": {
     "flour_g": 929,
@@ -852,7 +852,7 @@
     "fermentation_c": 22,
     "oven_c": 245,
     "cook_s": 840,
-    "timeline_min": 603
+    "timeline_min": 618
   },
   "greek_pan/home": {
     "flour_g": 929,
@@ -867,6 +867,6 @@
     "fermentation_c": 22,
     "oven_c": 245,
     "cook_s": 840,
-    "timeline_min": 603
+    "timeline_min": 618
   }
 }

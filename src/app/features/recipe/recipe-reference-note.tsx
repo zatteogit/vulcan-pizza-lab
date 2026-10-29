@@ -3,8 +3,11 @@ import { STG_SPECIFICATION_URL, stgDepartures, type StgDeparture } from "../../d
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { uiMessage } from "../../i18n/ui-messages";
-import { Disclosure } from "../../components/ds";
+import { WhyButton } from "../science/why-button";
 
+/* FW-02: «Ricetta e disciplinare» è il «Perché?» della nota stg-reference.
+ * L1/L2 e il L3 (statuto, ipotesi del confronto parziale, fonte) vengono dal
+ * registro; qui restano solo le differenze di questa ricetta e i link. */
 export function RecipeReferenceNote({ recipe, oven }: { recipe: GeneratedRecipe; oven?: OvenType }) {
   const { cms, bcp47 } = useCms();
   if (recipe.method_changes?.length) return <aside className="recipe-reference-note">{engineMsgTexts(recipe.method_changes,cms,bcp47).map((note,i)=><p key={i}>{note}</p>)}</aside>;
@@ -22,15 +25,16 @@ export function RecipeReferenceNote({ recipe, oven }: { recipe: GeneratedRecipe;
   return (
     <aside className="recipe-reference-note">
       <p className="recipe-reference-note__title">{departures.length ? uiMessage("recipe.reference.outside") : uiMessage("recipe.reference.source")}</p>
-      <Disclosure variant="inline" summary={uiMessage("recipe.reference.details")}>
+      {/* L'etichetta resta «Ricetta e disciplinare»: la descrizione dello stile
+          fuori disciplinare rimanda a questo nome. */}
+      <WhyButton noteId="stg-reference" label={uiMessage("recipe.reference.details")}>
+        {departures.length > 0 && <ul className="recipe-reference-note__list">{departures.map(key => <li key={key}>{descriptions[key]}</li>)}</ul>}
         {recipe.style.method_profile?.id === "avpn_disciplinare" && <p>
-          <a href={recipe.style.method_profile.source_url} target="_blank" rel="noreferrer">{uiMessage("recipe.reference.avpn")}</a>
+          <a href={recipe.style.method_profile.source_url} target="_blank" rel="noreferrer" className="recipe-reference-note__link">{uiMessage("recipe.reference.avpn")}</a>
           {recipe.has_pre_ferment && <> · {engineMsgTexts([{key:"auth.directMethod",fallback:cms.engineMessages["auth.directMethod"]}], cms, bcp47)[0]}</>}
         </p>}
-        {departures.length > 0 && <ul>{departures.map(key => <li key={key}>{descriptions[key]}</li>)}</ul>}
-        <p>{uiMessage("recipe.reference.disclaimer")}</p>
-        <a href={STG_SPECIFICATION_URL} target="_blank" rel="noreferrer">{uiMessage("recipe.reference.specification")}</a>
-      </Disclosure>
+        <p><a href={STG_SPECIFICATION_URL} target="_blank" rel="noreferrer" className="recipe-reference-note__link">{uiMessage("recipe.reference.specification")}</a></p>
+      </WhyButton>
     </aside>
   );
 }

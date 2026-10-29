@@ -666,9 +666,6 @@
   --feature-media-height: var(--measure-2xs);
   /* hero media panel cap */
   --feature-media-height-cover: min(var(--viewport-64), var(--measure-sm));
-  --score-bar-basis: var(--measure-4xs);
-  /* match card: score bar min width */
-  --score-bar-basis-compact: var(--measure-5xs);
 
   /* ── Density · Semantica (ATTIVA; sovrascrivibile per tema/breakpoint) ──
      I componenti consumano --gap-* (mai --space-* per le spaziature che
@@ -1091,6 +1088,23 @@
   --status-recommended-bg: color-mix(in srgb, var(--status-recommended) 12%, transparent);
   --status-recommended-border: color-mix(in srgb, var(--status-recommended) 35%, transparent);
   --status-recommended-icon: var(--status-recommended);
+  /* ── B3. FW-02 · Statuto epistemico (D-A) ──
+     Esatto / Stima / Ipotesi / Scelta di Vulcan, per ds/EvidenceBadge. Stesse
+     miscele dei ruoli di stato (contrasto AA misurato da FW-13 in chiaro e
+     scuro); la forma (icona, bordo tratteggiato dell'ipotesi) e il testo
+     portano il significato, il colore lo rinforza soltanto. */
+  --evidence-exact-fg: var(--status-positive);
+  --evidence-exact-bg: color-mix(in srgb, var(--status-positive) 12%, transparent);
+  --evidence-exact-border: color-mix(in srgb, var(--status-positive) 35%, transparent);
+  --evidence-estimate-fg: var(--status-caution);
+  --evidence-estimate-bg: color-mix(in srgb, var(--status-caution) 12%, transparent);
+  --evidence-estimate-border: color-mix(in srgb, var(--status-caution) 35%, transparent);
+  --evidence-assumption-fg: var(--status-neutral);
+  --evidence-assumption-bg: var(--surface-container-low);
+  --evidence-assumption-border: var(--outline-variant);
+  --evidence-editorial-fg: var(--status-recommended);
+  --evidence-editorial-bg: color-mix(in srgb, var(--status-recommended) 12%, transparent);
+  --evidence-editorial-border: color-mix(in srgb, var(--status-recommended) 35%, transparent);
   /* FW-13 (S13-B-15): pressione di una superficie larga quanto lo schermo:
      appena percettibile, non una contrazione del 5%. */
   --press-scale-surface: 0.99;
@@ -2879,45 +2893,60 @@
     letter-spacing: var(--tracking-fine);
   }
 
-  .glossary-ranges__list {
+  /* FW-04 (S12-A-14, S12-B-12): valori tipici in una tabella vera, colonne
+     fisse (valore | che cosa indica), nota in sans sotto il significato. */
+  .glossary-ranges__table {
+    width: 100%;
     margin-top: var(--space-1-5);
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-2xs);
+    border-collapse: separate;
+    border-spacing: 0 var(--space-0-5);
+    font-size: var(--font-size-md);
   }
 
-  .glossary-ranges__row {
-    display: flex;
-    align-items: baseline;
-    gap: var(--gap-sm);
+  .glossary-ranges__table th {
+    padding-inline: var(--space-3);
+    padding-block: var(--space-1);
+    text-align: start;
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+  }
+
+  .glossary-ranges__table td {
     padding-inline: var(--space-3);
     padding-block: var(--space-1-5);
-    border-radius: var(--radius-lg);
-    background: transparent;
+    vertical-align: baseline;
   }
 
-  .glossary-ranges__row:nth-child(odd) {
+  .glossary-ranges__row:nth-child(odd) td {
     background: var(--surface-container);
   }
 
+  .glossary-ranges__row td:first-child {
+    border-start-start-radius: var(--radius-lg);
+    border-end-start-radius: var(--radius-lg);
+  }
+
+  .glossary-ranges__row td:last-child {
+    border-start-end-radius: var(--radius-lg);
+    border-end-end-radius: var(--radius-lg);
+  }
+
   .glossary-ranges__value {
-    flex-shrink: 0;
-    font-size: var(--font-size-md);
+    width: 1%;
+    white-space: nowrap;
     color: var(--text-default);
     font-feature-settings: "tnum";
-    min-width: var(--space-20);
   }
 
   .glossary-ranges__label {
-    font-size: var(--font-size-md);
     color: var(--text-muted);
   }
 
   .glossary-ranges__note {
-    font-family: var(--font-serif);
-    font-style: italic;
+    display: block;
     font-size: var(--font-size-sm);
-    color: var(--text-muted);
+    color: var(--text-subtle);
   }
 
   .glossary-why__text {
@@ -2947,6 +2976,89 @@
 
   .glossary-related__tag:active {
     transform: scale(0.95);
+  }
+
+  /* ═══ FW-04 — glossario come fonte delle definizioni ═══
+     Deep link: la voce atterra sotto la testata (useHashTarget, block start).
+     TermLink: il termine stesso è il pulsante, sottolineato a puntini. */
+  .glossary-card,
+  .preferment-cards > [id],
+  [id^="trouble-"]:not([id$="-toggle"]) {
+    scroll-margin-block-start: var(--space-20);
+  }
+
+  .glossary-section__label {
+    margin: 0;
+    font-weight: var(--weight-regular);
+  }
+
+  .glossary-card__body {
+    padding-top: var(--space-3);
+  }
+
+  .glossary-formula__value {
+    margin-bottom: 0;
+  }
+
+  .glossary-related__tag--page {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .info-tip__trigger.info-tip__trigger--term {
+    width: auto;
+    height: auto;
+    min-height: var(--space-6);
+    border-radius: var(--radius-sm);
+    padding-inline: var(--space-0-5);
+    font: inherit;
+    color: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+    opacity: 1;
+  }
+
+  /* Senza testo del campo la definizione apre il popover: niente filetto. */
+  .info-tip__content > .info-tip__term:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .term-link {
+    text-decoration: underline dotted;
+    text-decoration-thickness: var(--border-width-thin);
+    text-underline-offset: var(--space-1);
+  }
+
+  .info-tip__trigger--term:hover .term-link,
+  .info-tip__trigger--active .term-link {
+    color: var(--text-accent);
+  }
+
+  /* Popover del TermLink nel body: posizione calcolata dal trigger
+     (--tip-left/--tip-top/--tip-bottom), stessa larghezza del calcolo JS. */
+  .info-tip__popover.info-tip__popover--fixed {
+    position: fixed;
+    left: var(--tip-left);
+    top: var(--tip-top, auto);
+    bottom: var(--tip-bottom, auto);
+    max-width: calc(var(--dimension-viewport-width-full) - 2 * var(--space-4));
+  }
+
+  .term-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+    margin-top: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .term-links__label {
+    color: var(--text-subtle);
   }
 
   /* ═══ PAGE: Explore ═══ */
@@ -3554,6 +3666,169 @@
   .compat-pill__original {
     color: var(--text-muted);
   }
+
+  /* ═══ FW-06 — ScoreExplainer: il punteggio spiegato (card, pannello, scheda) ═══ */
+  .score-explainer {
+    display: grid;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+    color: var(--text-default);
+  }
+
+  .score-explainer p {
+    margin: 0;
+  }
+
+  .score-explainer[data-variant="compact"] {
+    margin-top: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: var(--border-width-thin) solid var(--popover-border-color);
+  }
+
+  .score-explainer__meaning,
+  .score-explainer__note {
+    color: var(--text-muted);
+  }
+
+  .score-explainer__limit,
+  .score-explainer__blocker {
+    color: var(--status-caution-fg);
+    font-weight: var(--weight-medium);
+  }
+
+  .score-explainer__heading {
+    margin-top: var(--space-1);
+    font-weight: var(--weight-semibold);
+    color: var(--text-default);
+  }
+
+  .score-explainer__dims {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .score-explainer__dim[data-limiting="true"] .score-explainer__name,
+  .score-explainer__dim[data-limiting="true"] .ds-disclosure__summary {
+    color: var(--status-caution-fg);
+  }
+
+  .score-explainer__dim-head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .score-explainer__name {
+    font-weight: var(--weight-semibold);
+  }
+
+  .score-explainer__weight {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-regular);
+  }
+
+  .score-explainer__dim-head .score-explainer__value {
+    margin-inline-start: auto;
+  }
+
+  .score-explainer__track {
+    display: block;
+    height: var(--space-1-5);
+    margin-top: var(--space-1);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    background: var(--container-bg-high);
+  }
+
+  .score-explainer__fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: var(--text-muted);
+  }
+
+  .score-explainer__fill[data-axis="authenticity"] { background: var(--axis-authenticity); }
+  .score-explainer__fill[data-axis="feasibility"] { background: var(--axis-feasibility); }
+
+  .score-explainer__explain,
+  .score-explainer__penalties {
+    color: var(--text-muted);
+  }
+
+  .score-explainer__penalties {
+    display: grid;
+    gap: var(--space-1);
+    margin: var(--space-1) 0 0;
+    padding-inline-start: var(--space-4);
+  }
+
+  .score-explainer__rule {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .score-explainer__rule-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .score-explainer__rule-row dd {
+    margin: 0;
+    flex-shrink: 0;
+    color: var(--text-default);
+  }
+
+  .score-explainer__rule-row[data-limiting="true"] {
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+  }
+
+  .score-explainer__rule-row[data-result="true"] {
+    padding-top: var(--space-1);
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+  }
+
+  .score-explainer__why {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .match-score-explainer {
+    margin-top: var(--space-3);
+  }
+
+  .style-detail-match__score {
+    margin-top: var(--space-3);
+  }
+
+  /* S06-A-18: nel pannello «Personalizza» il motivo del limite sta sotto il numero. */
+  .setup-match {
+    flex-wrap: wrap;
+  }
+
+  .setup-match__limit {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+    color: var(--status-caution-fg);
+  }
+
+  .setup-match--desktop .setup-match__limit {
+    text-align: end;
+  }
+  /* ═══ /FW-06 ═══ */
 
   .explore-card__caption {
     position: relative;
@@ -6744,6 +7019,11 @@
     color: var(--status-positive-fg);
   }
 
+  /* FW-05 (S06-A-04): farina sotto la W minima dello stile, un avviso. */
+  .config-flour-picker__fit--weak {
+    color: var(--status-caution-fg);
+  }
+
   /* ── GradientSlider ── */
   .config-slider {
     display: flex;
@@ -9329,26 +9609,6 @@
 
   .match-card__context .recipe-condition-chips { padding-block: 0; }
 
-  .match-calculation {
-    display: grid;
-    gap: var(--space-2);
-    margin-top: var(--space-3);
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-  }
-
-  .match-calculation__row {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-3);
-  }
-
-  .match-calculation__row dd {
-    margin: 0;
-    flex-shrink: 0;
-    color: var(--text-default);
-  }
-
   .match-details__intro {
     margin-top: var(--space-3);
     padding-top: var(--space-3);
@@ -9389,166 +9649,11 @@
     font-size: var(--font-size-md);
   }
 
-  .match-bars {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: var(--gap-md);
-    row-gap: var(--gap-sm);
-    margin-top: var(--space-3);
-    width: 100%;
-  }
-
-  /* ── ScoreBar ── */
-  .match-bar--compact {
-    flex-grow: 1;
-    flex-shrink: 0;
-    flex-basis: var(--score-bar-basis-compact);
-    min-width: var(--score-bar-basis-compact);
-  }
-
-  .match-bar--wide {
-    min-width: var(--score-bar-basis);
-    flex: 1;
-  }
-
-  .match-bar--explainable {
-    text-align: left;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: transform var(--duration-fast) var(--ease-standard);
-  }
-
-  .match-bar--explainable:active {
-    transform: scale(0.98);
-  }
-
-  .match-bar__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-semibold);
-    line-height: var(--leading-tight);
-  }
-
-  .match-bar__head--compact {
-    font-size: var(--font-size-sm);
-  }
-
-  .match-bar__head--explained {
-    color: var(--text-default);
-  }
-
-  .match-bar__label {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-  }
-
-  .match-bar__label-icon {
-    flex-shrink: 0;
-    opacity: 0.55;
-  }
-
-  .match-bar__label-icon--explained {
-    opacity: 0.9;
-  }
-
-  /* FW-11 (S07-A-13, S07-B-12): con le etichette lunghe (en, de, fr) il
-     numero non va a capo cifra per cifra; l'etichetta si restringe lei. */
-  .match-bar__head > .match-bar__label {
-    min-width: 0;
-  }
-
-  .match-bar__head > .type-numeric {
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-
   /* FW-11 (S17-A-01, D-J): nota sulle microdosi sotto il sistema di misura. */
   .profile-unit-note {
     margin-top: var(--space-2);
     color: var(--text-muted);
     line-height: var(--leading-normal);
-  }
-
-  .match-bar-track {
-    border-radius: var(--radius-full);
-    overflow: hidden;
-    background: var(--container-bg-high);
-  }
-
-  .match-bar-track--compact {
-    margin-top: var(--space-1);
-    height: var(--space-1-5);
-  }
-
-  .match-bar-track--wide {
-    margin-top: var(--space-1-5);
-    height: var(--space-2);
-  }
-
-  .match-bar-fill {
-    height: 100%;
-    border-radius: var(--radius-full);
-    background: var(--bar-color);
-  }
-
-  /* ── Learn-inline: spiegazione asse ── */
-  .match-explain {
-    overflow: hidden;
-  }
-
-  .match-explain__panel {
-    margin-top: var(--space-2-5);
-    border-radius: var(--radius-xl);
-    padding-inline: var(--space-3);
-    padding-block: var(--space-2-5);
-    background: color-mix(in srgb, var(--container-bg-high) 70%, transparent);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-  }
-
-  .match-explain__head {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    color: var(--text-default);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-bold);
-  }
-
-  .match-explain__axis {
-    color: var(--axis-color);
-  }
-
-  .match-explain__weight {
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-semibold);
-  }
-
-  .match-explain__body {
-    margin: var(--space-1) 0 0;
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-normal);
-  }
-
-  .match-breakdown {
-    margin: var(--space-2-5) 0 0;
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-normal);
-    font-feature-settings: "tnum";
-  }
-
-  .match-breakdown__total {
-    color: var(--text-default);
-    font-weight: var(--weight-semibold);
   }
 
   .recipe-comparison {
@@ -10007,37 +10112,6 @@
 
   /* ── Riga panetti/servings ── */
   /* M-11: lievito trasparente */
-  .yeast-explainer {
-    display: grid;
-    gap: var(--space-2);
-    padding-block: var(--space-1) var(--space-3);
-  }
-
-  .yeast-explainer__toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    justify-self: start;
-    min-height: var(--space-11);
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: var(--cta);
-    font-weight: var(--weight-semibold);
-    text-decoration: underline;
-    text-underline-offset: var(--space-1);
-    cursor: pointer;
-  }
-
-  .yeast-explainer__panel {
-    display: grid;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    border-radius: var(--radius-2xl);
-    background: var(--surface-container-low, var(--chip-bg));
-    border: var(--border-width-thin) solid var(--outline-variant);
-  }
-
   .yeast-explainer__text {
     margin: 0;
     line-height: var(--leading-relaxed);
@@ -10283,64 +10357,12 @@
     font-size: var(--font-size-md);
   }
 
-  /* ── Toggle Regola 55 (riga Acqua) ── */
-  .ingredients-rule55-toggle {
-    margin-left: var(--space-1-5);
-    vertical-align: middle;
-    transition: transform var(--duration-fast);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--text-muted);
-    /* FW-03 (S08-B-11): opacità piena (contrasto ≥ 3:1) e area di tocco ≥ 24 px */
-    opacity: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: var(--space-6);
-    min-height: var(--space-6);
-    line-height: var(--leading-none);
-  }
-
-  .ingredients-rule55-toggle--active {
-    color: var(--text-accent);
-  }
-
-  .ingredients-rule55-toggle:active {
-    transform: scale(0.9);
-  }
-
   /* ── ENG-7: acqua al limite pratico (cucina molto fredda o molto calda) ── */
   .ingredients-water-limit {
     margin: var(--space-1) 0 var(--space-2);
     padding-left: var(--space-3);
     color: var(--text-warning);
     line-height: var(--leading-normal);
-  }
-
-  /* ── Tip Regola 55 (espanso) ── */
-  .ingredients-rule55-tip {
-    overflow: hidden;
-    padding-left: var(--space-3);
-    margin-top: var(--space-1);
-    margin-bottom: var(--space-2);
-  }
-
-  .ingredients-rule55-tip__text {
-    color: var(--text-muted);
-    line-height: var(--leading-normal);
-  }
-
-  .ingredients-rule55-tip__desc {
-    color: var(--text-muted);
-    margin-top: var(--space-1);
-    line-height: var(--leading-normal);
-  }
-
-  .ingredients-rule55-tip__friction {
-    color: var(--text-muted);
-    margin-top: var(--space-1);
   }
 
   /* ── Totale impasto ── */
@@ -11177,6 +11199,27 @@
     color: var(--text-muted);
   }
 
+  /* ═══ FW-19 · Timeline comoda onesta (D-Q, S09-A-05, S09-B-04) ═══
+   * Sotto l'interruttore acceso: «i tempi cambiano, il lievito no» e il
+   * «Perché si può?» con i margini dichiarati come regole pratiche. */
+  .procedure-hero__comfort-note {
+    margin-top: var(--space-2);
+    padding-inline: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .procedure-hero__comfort-dose {
+    color: var(--text-default);
+    line-height: var(--leading-normal);
+  }
+
+  .procedure-hero__comfort-why-body {
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
   /* ═══ ONDATA 3 — COMPONENT: procedure-timeline (PREFIX: procedure-timeline) ═══ */
   /* ═══ PROCEDURE TIMELINE — spina, nodi, durate (ondata 3) ═══
    * Consumato da src/app/features/recipe/procedure-timeline.tsx.
@@ -11401,6 +11444,12 @@
     background: transparent;
     /* originale: custom property comfort-chip-bg mai definita → reso trasparente (bug latente preservato) */
     color: var(--recipe-success);
+  }
+
+  /* ═══ FW-19 · Appretto con gli ultimi minuti durante il preriscaldo (S09-A-11) ═══ */
+  .procedure-timeline-step__parallel {
+    margin-left: var(--space-1-5);
+    color: var(--text-muted);
   }
 
   /* ═══ ONDATA 3 — COMPONENT: recipe-output (PREFIX: recipe-output) ═══ */
@@ -12064,35 +12113,6 @@
     font-size: var(--font-size-xl);
   }
 
-  .step-details__glossary-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1-5);
-    margin-top: var(--gap-sm);
-    background: transparent;
-    border: none;
-    padding: 0;
-    color: var(--text-accent);
-    text-decoration: underline;
-    text-underline-offset: var(--space-0-75);
-    min-height: var(--space-9);
-    cursor: pointer;
-  }
-
-  .step-details__glossary-content {
-    margin-top: var(--gap-xs);
-    border-radius: var(--radius-2xl);
-    padding-inline: var(--space-4);
-    padding-block: var(--space-3);
-    background: var(--container-bg-low);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-    color: var(--text-muted);
-    line-height: var(--leading-normal);
-  }
-
-  .step-details__glossary-why { margin-block-start: var(--space-3); }
-  .step-details__glossary-why h4 { color: var(--text-default); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); margin-block-end: var(--space-1); }
-
   .step-details__trouble-link {
     cursor: pointer;
     display: inline-flex;
@@ -12105,15 +12125,9 @@
     min-height: var(--space-9);
   }
 
-  /* FW-03 (S09-B-12): disclosure in linea con chevron, link a foglio con freccia */
-  .step-details__glossary-chevron {
-    flex-shrink: 0;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .step-details__glossary-toggle[aria-expanded="true"] .step-details__glossary-chevron {
-    transform: rotate(180deg);
-  }
+  /* FW-03 (S09-B-12): link a foglio con freccia. FW-04: le parole del passo
+     sono TermLink (.step-details__terms), non più un accordion «Impara». */
+  .step-details__terms { margin-top: var(--gap-sm); }
 
   .step-details > .step-details__trouble-link { margin-top: 0; }
 
@@ -13238,28 +13252,38 @@
     color: var(--text-default);
   }
 
-  .learning-panel__characteristics {
-    margin-top: var(--space-5);
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: var(--gap-xs);
+  /* FW-02 (S08-B-15): caratteristiche come elenco, non pillole da pulsante;
+     sotto, i «Perché?» delle note che decidono la ricetta dello stile. */
+  .learning-panel__heading {
+    margin-top: var(--space-6);
+    color: var(--text-default);
+    font-size: var(--font-size-xl);
+    font-weight: var(--weight-semibold);
   }
 
-  @media (min-width: 640px) {
-    .learning-panel__characteristics {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .learning-panel__characteristics {
+    margin-top: var(--space-2);
+    display: grid;
+    gap: var(--gap-xs);
+    padding-inline-start: var(--space-5);
+    list-style: disc;
   }
 
   .learning-panel__characteristic {
-    border-radius: var(--radius-2xl);
-    padding-inline: var(--space-4);
-    padding-block: var(--space-3);
-    background: var(--container-bg-low);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
     color: var(--text-default);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
     line-height: var(--leading-normal);
+  }
+
+  .learning-panel__science {
+    margin-top: var(--space-2);
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .learning-panel__science-item .why-button {
+    font-size: var(--font-size-xl);
+    min-height: var(--space-8);
   }
 
   /* ═══ COMPONENT: feedback-analysis (ondata 4) ═══ */
@@ -14828,6 +14852,20 @@
     color: var(--text-default);
   }
 
+  /* ═══ FW-05 — prefermenti: dose della ricetta e stili dal motore ═══ */
+  .preferment-guide-card__context {
+    margin: 0;
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+    line-height: var(--leading-relaxed);
+  }
+
+  .preferment-style-link {
+    color: var(--text-accent);
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-5);
+  }
+
   /* ═══ COMPONENT: condiment-choice-strip (ondata 4) ═══ */
   /* ═══ CONDIMENT CHOICE STRIP — selettore condimenti (ondata 4) ═══ */
 
@@ -15521,6 +15559,366 @@
     line-height: var(--leading-cozy);
     color: var(--text-muted);
   }
+
+  /* ═══ FW-15 — Informazioni, edizione, «Metodo e fonti» ═══
+     Righe-link del dialog Informazioni e del tab App (about-links.tsx), blocco
+     dell'edizione, pagina /learn/metodo, co-branding nella barra laterale e
+     nell'onboarding. Solo token del DS. */
+  .about-edition,
+  .about-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+    text-align: start;
+  }
+
+  .about-edition {
+    padding: var(--space-4);
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-lg);
+    background: var(--container-bg-low);
+  }
+
+  .about-edition__title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-semibold);
+    color: var(--text-default);
+  }
+
+  .about-edition__text,
+  .about-links__note {
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .about-edition__text {
+    font-size: var(--font-size-xl);
+  }
+
+  .about-links__list {
+    display: flex;
+    flex-direction: column;
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .about-links__list > li + li {
+    border-top: var(--border-width-thin) solid var(--container-border);
+  }
+
+  .about-links__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    width: 100%;
+    min-height: var(--dimension-fixed-046);
+    padding: var(--space-3) var(--space-4);
+    border: 0;
+    background: transparent;
+    color: var(--text-default);
+    font: inherit;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .about-links__row:hover {
+    background: var(--container-bg-low);
+  }
+
+  .about-links__row:focus-visible,
+  .about-links__inline:focus-visible,
+  .method-page__link:focus-visible {
+    outline: var(--border-width-strong) solid var(--ring);
+    outline-offset: var(--space-0);
+  }
+
+  .about-links__row [data-region="row-text"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-0);
+  }
+
+  .about-links__label {
+    font-weight: var(--weight-semibold);
+  }
+
+  .about-links__hint {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .about-links__chevron {
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+
+  .about-links__inline {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--dimension-fixed-046);
+    color: var(--text-accent);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .app-shell-rail__partner {
+    max-width: 100%;
+    margin-top: calc(-1 * var(--space-3));
+    margin-bottom: var(--space-4);
+    padding-inline: var(--space-1);
+    color: var(--text-muted);
+    text-align: center;
+    line-height: var(--leading-tight);
+    overflow-wrap: anywhere;
+  }
+
+  .app-shell-brand__lockup {
+    display: grid;
+    justify-items: start;
+    line-height: var(--leading-tight);
+  }
+
+  .app-shell-brand__lockup .app-shell-brand__partner {
+    align-self: auto;
+  }
+
+  .profile-ftu__edition-oven {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--container-bg-low);
+    color: var(--text-default);
+    line-height: var(--leading-normal);
+  }
+
+  .profile-ftu__edition-oven [data-region="neutrality"] {
+    color: var(--text-muted);
+  }
+
+  .profile-ftu__option-model {
+    color: var(--text-default);
+    font-weight: var(--weight-medium);
+  }
+
+  .method-page {
+    min-height: var(--dimension-viewport-height-full);
+    background: var(--container-page);
+    color: var(--text-default);
+  }
+
+  .method-page__shell {
+    max-width: var(--measure-lg);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+    padding-block: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .method-page__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .method-page__toc {
+    padding: var(--space-4);
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-lg);
+    background: var(--container-bg-low);
+  }
+
+  .method-page__toc-title {
+    margin-bottom: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+  }
+
+  .method-page__toc-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+  }
+
+  .method-page__link {
+    color: var(--text-accent);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .method-page__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    scroll-margin-top: var(--space-20);
+  }
+
+  .method-page__lead,
+  .method-page__item-meta {
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .method-page__how {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-inline-start: var(--space-5);
+    list-style: decimal;
+    line-height: var(--leading-cozy);
+  }
+
+  ul.method-page__how {
+    list-style: disc;
+  }
+
+  .method-page__legend {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .method-page__legend-item {
+    display: grid;
+    grid-template-columns: minmax(var(--space-24), auto) 1fr;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .method-page__legend-item dd {
+    color: var(--text-muted);
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-normal);
+  }
+
+  .method-page__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .method-page__group-title {
+    margin-top: var(--space-2);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-semibold);
+  }
+
+  .method-note,
+  .method-source {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-lg);
+    background: var(--container-bg);
+    scroll-margin-top: var(--space-20);
+  }
+
+  .method-note__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .method-note__title {
+    font-size: var(--font-size-2-5xl);
+    font-weight: var(--weight-semibold);
+  }
+
+  .method-note__l1 {
+    line-height: var(--leading-cozy);
+  }
+
+  .method-note__facts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-top: var(--space-2);
+  }
+
+  .method-note__facts dt {
+    margin-top: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+  }
+
+  .method-note__facts dd {
+    line-height: var(--leading-normal);
+  }
+
+  .method-note__formula {
+    font-family: var(--font-mono);
+    overflow-wrap: anywhere;
+    hyphens: manual;
+    font-size: var(--font-size-xl);
+  }
+
+  .method-page__cites {
+    color: var(--text-muted);
+    line-height: var(--leading-cozy);
+  }
+
+  .method-note__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-inline-start: var(--space-5);
+    list-style: disc;
+  }
+
+  .method-note__source {
+    overflow-wrap: anywhere;
+  }
+
+  .method-note__source .badge-base {
+    margin-inline-start: var(--space-2);
+  }
+
+  .method-page__items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .method-page__items > li:not(.method-source) {
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border-width-thin) solid var(--container-border);
+  }
+
+  .method-page__item-text {
+    line-height: var(--leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  .method-page__item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  @media (min-width: 640px) {
+    .method-page__shell {
+      padding-inline: var(--space-8);
+      padding-block: var(--space-12);
+    }
+  }
+  /* ═══ /FW-15 ═══ */
 
   /* ═══ COMPONENT: style-detail-sheet (ondata 4) ═══ */
   /* ═══ COMPONENT: style-detail-sheet ═══ */
@@ -17186,6 +17584,114 @@
 
   .cooking-mode-phase--done .cooking-mode-phase__value {
     color: var(--status-positive-fg);
+  }
+
+  /* ═══ FW-19 · Modalità cottura sul piano unico (S10-A-01/02, S10-B-05/12, S10-A-16) ═══
+   * Un passo attivo oltre il tempo previsto non è «completato»: tono di
+   * attenzione, mai il verde del successo. */
+  .cooking-mode-phase--late {
+    background: var(--status-caution-bg);
+    border-color: var(--status-caution-border);
+  }
+
+  .cooking-mode-phase--late .cooking-mode-phase__icon {
+    color: var(--status-caution-icon);
+  }
+
+  .cooking-mode-phase--late .cooking-mode-phase__value {
+    color: var(--status-caution-fg);
+  }
+
+  .cooking-mode-header__ready {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .cooking-mode-note {
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-xl);
+    padding-inline: var(--space-3);
+    padding-block: var(--space-2);
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+    background: var(--status-neutral-bg);
+    border: var(--border-width-thin) solid var(--status-neutral-border);
+    color: var(--text-default);
+  }
+
+  .cooking-mode-note[data-tone="caution"] {
+    background: var(--status-caution-bg);
+    border-color: var(--status-caution-border);
+  }
+
+  .cooking-mode-confirm__night {
+    display: block;
+    margin-top: var(--space-2);
+    color: var(--status-caution-fg);
+  }
+
+  .cook-rounds {
+    margin-top: var(--space-3);
+    border-radius: var(--radius-2xl);
+    padding-inline: var(--space-5);
+    padding-block: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    background: var(--surface-container-low);
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .cook-rounds[data-phase="out"] {
+    background: var(--status-positive-bg);
+    border-color: var(--status-positive-border);
+  }
+
+  .cook-rounds__count {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .cook-rounds__status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-default);
+  }
+
+  .cook-rounds__clock {
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+  }
+
+  .cook-rounds__icon {
+    flex-shrink: 0;
+    color: var(--text-accent);
+  }
+
+  .cook-rounds__hint {
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+  }
+
+  .cook-rounds__cta {
+    align-self: flex-start;
+  }
+
+  /* Mentre cuoce il pulsante resta (il focus non si perde) ma è inattivo. */
+  .cook-rounds__cta[aria-disabled="true"] {
+    cursor: default;
+    background: var(--container-bg);
+    border: var(--border-width-thin) solid var(--container-border);
+    box-shadow: none;
+    color: var(--text-muted);
+  }
+
+  .cook-rounds__status:focus {
+    outline: none;
   }
 
   .cooking-mode-phase__meta {
@@ -19707,6 +20213,289 @@
     line-height: var(--leading-body);
   }
 
+  /* ═══ FW-02 — «Perché?»: EvidenceBadge, WhyButton, ScienceSheet ═══ */
+  .ds-evidence-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-0-5) var(--space-2);
+    border-radius: var(--radius-full);
+    border: var(--border-width-thin) solid var(--evidence-exact-border);
+    background: var(--evidence-exact-bg);
+    color: var(--evidence-exact-fg);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    white-space: nowrap;
+  }
+
+  .ds-evidence-badge[data-kind="estimate"] {
+    border-color: var(--evidence-estimate-border);
+    background: var(--evidence-estimate-bg);
+    color: var(--evidence-estimate-fg);
+  }
+
+  .ds-evidence-badge[data-kind="assumption"] {
+    border-style: dashed;
+    border-color: var(--evidence-assumption-border);
+    background: var(--evidence-assumption-bg);
+    color: var(--evidence-assumption-fg);
+  }
+
+  .ds-evidence-badge[data-kind="editorial"] {
+    border-color: var(--evidence-editorial-border);
+    background: var(--evidence-editorial-bg);
+    color: var(--evidence-editorial-fg);
+  }
+
+  .ds-evidence-badge--sm {
+    padding: 0 var(--space-1-5);
+  }
+
+  .ds-evidence-badge__icon {
+    flex: none;
+  }
+
+  .why-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--space-6);
+    padding: 0 var(--space-0-5);
+    border: none;
+    background: transparent;
+    color: var(--cta);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
+  .why-button:focus-visible {
+    outline: var(--space-0-5) solid var(--cta);
+    outline-offset: var(--space-0-5);
+    border-radius: var(--radius-sm);
+  }
+
+  .why-button__icon {
+    flex: none;
+  }
+
+  .science-sheet {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .science-sheet__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    padding: var(--space-5) var(--space-5) var(--space-3);
+  }
+
+  .science-sheet__title {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-5xl);
+    line-height: var(--leading-heading);
+    color: var(--text-default);
+  }
+
+  .science-sheet__title:focus,
+  .science-sheet__heading:focus {
+    outline: none;
+  }
+
+  .science-sheet__body {
+    display: grid;
+    gap: var(--space-5);
+    padding: 0 var(--space-5) var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .science-sheet__header {
+      padding-inline: var(--space-6);
+    }
+
+    .science-sheet__body {
+      padding-inline: var(--space-6);
+    }
+  }
+
+  .science-sheet__level {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .science-sheet__heading {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-spread);
+    text-transform: uppercase;
+  }
+
+  .science-sheet__lead {
+    color: var(--text-default);
+    font-size: var(--font-size-2xl);
+    line-height: var(--leading-relaxed);
+  }
+
+  .science-sheet__text,
+  .science-sheet__level--recipe {
+    color: var(--text-default);
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-reading);
+  }
+
+  .science-sheet__method {
+    display: grid;
+    gap: var(--space-3);
+    color: var(--text-default);
+    font-size: var(--font-size-lg);
+    line-height: var(--leading-relaxed);
+  }
+
+  .science-sheet__facts {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .science-sheet__term {
+    margin-top: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+  }
+
+  .science-sheet__value {
+    margin: 0;
+  }
+
+  .science-sheet__value--evidence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .science-sheet__hint {
+    color: var(--text-muted);
+  }
+
+  .science-sheet__formula,
+  .science-sheet__symbol {
+    font-family: var(--font-mono);
+    overflow-wrap: anywhere;
+  }
+
+  .science-sheet__formula {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--surface-container-low);
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .science-sheet__list {
+    display: grid;
+    gap: var(--space-1-5);
+    padding-inline-start: var(--space-5);
+    list-style: disc;
+  }
+
+  .science-sheet__list--plain,
+  .science-sheet__list--sources {
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  .science-sheet__variable {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .science-sheet__unit {
+    color: var(--text-muted);
+  }
+
+  .science-sheet__subheading {
+    margin-top: var(--space-3);
+    color: var(--text-default);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-semibold);
+  }
+
+  .science-sheet__source {
+    display: grid;
+    gap: var(--space-0-5);
+  }
+
+  .science-sheet__source-title {
+    font-style: normal;
+    color: var(--text-default);
+  }
+
+  a.science-sheet__source-title {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .science-sheet__source-meta,
+  .science-sheet__source-status {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .science-sheet__source[data-status="unverified"] .science-sheet__source-status {
+    color: var(--status-caution-fg);
+  }
+
+  .science-sheet__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    justify-self: start;
+    min-height: var(--space-6);
+    color: var(--cta);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  /* Punti d'ingresso nelle schermate: il pulsante resta lo stesso, cambia solo il posto. */
+  .stat-strip__why {
+    margin-top: var(--space-1);
+  }
+
+  .step-details__why {
+    display: flex;
+    width: fit-content;
+    margin-block: var(--space-2);
+  }
+
+  .troubleshooting-card__why {
+    justify-self: start;
+    margin-top: var(--space-1);
+  }
+
+  /* FW-04: la nota del modello nella voce del glossario apre la scienza intera. */
+  .glossary-model__why {
+    display: flex;
+    width: fit-content;
+    margin-block: var(--space-1) var(--space-2);
+  }
+  /* ═══ /FW-02 ═══ */
+
   /* ═══ DS COMPONENT: Snackbar ═══ */
   .ds-snackbar {
     display: inline-flex;
@@ -21375,10 +22164,9 @@ html {
   font-weight: var(--weight-semibold);
   margin-block-end: var(--space-1);
 }
-/* FW-03: ds/Disclosure al posto del <details> (bersaglio da 19 px → 44 px) */
-.recipe-reference-note .ds-disclosure__trigger { font-size: var(--font-size-sm); color: var(--text-default); }
-.recipe-reference-note ul { padding-inline-start: var(--space-5); margin-block: var(--space-2); }
-.recipe-reference-note a { text-decoration: underline; text-underline-offset: var(--space-1); }
+/* FW-02: il dettaglio vive nel «Perché?» (ScienceSheet, in portale). */
+.recipe-reference-note__list { padding-inline-start: var(--space-5); list-style: disc; display: grid; gap: var(--space-1); }
+.recipe-reference-note__link { text-decoration: underline; text-underline-offset: var(--space-1); }
 
 /* Il materiale resta leggibile anche senza filtri. La regola è successiva ai
    temi perché la preferenza dell'utente prevale sulla direzione grafica. */
@@ -21506,3 +22294,64 @@ html {
 .stat-strip [data-region="edition-oven"] { grid-column: 1 / -1; }
 .stat-strip__cell .recipe-oven-model { overflow-wrap: anywhere; }
 [data-slot="oven-preset"] .needs-oven-model { justify-content: center; text-align: center; }
+
+/* ═══ FW-17 — Dosi per fase (scorporo, diluizione, passi, stampa) ═══ */
+.ingredients-totals-note {
+  margin: var(--space-3) 0 0;
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.ingredients-dilution { margin-top: var(--space-1); }
+.ingredients-dilution__text {
+  margin: 0 0 var(--space-1-5);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.ingredients-preferment__title {
+  margin: 0;
+  padding-inline: var(--space-5);
+  padding-block: var(--space-2-5);
+  border-bottom: var(--border-width-thin) solid var(--outline-variant);
+  color: var(--text-default);
+  font-weight: var(--weight-semibold);
+}
+h4.ingredients-preferment__label { margin-top: 0; }
+.ingredients-preferment__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.procedure-timeline-step__quantities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-muted);
+  font-size: var(--font-size-xl);
+}
+.procedure-timeline-step__quantities strong { color: var(--text-default); }
+.cooking-mode-step__quantity .cooking-mode-step__quantity-hint {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-base);
+  font-weight: var(--weight-regular);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.config-preferment-sourdough { margin-top: var(--space-1); }
+.config-preferment-sourdough__text {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.print-sheet__split { margin-top: var(--space-3); }
+.print-sheet__caption {
+  caption-side: top;
+  text-align: left;
+  font-weight: var(--weight-bold);
+  padding-bottom: var(--space-1);
+}
+.print-sheet__sub td:first-child { padding-left: var(--space-5); color: var(--text-muted); }
+/* FW-17: la cella del lievito con l'aiuto alla diluizione prende tutta la riga. */
+.cooking-mode-step__quantity:has(.cooking-mode-step__quantity-hint) { grid-column: 1 / -1; }

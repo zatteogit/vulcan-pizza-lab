@@ -34,9 +34,20 @@ CATEGORY_LABELS,
 getContextualWarnings,
 getLocalizedCategoryLabel,
 getLocalizedIssue,
+ISSUE_GLOSSARY_TERMS,
 ISSUES_DB
 } from "../../data/troubleshooting-data";
 import { uiMessage } from "../../i18n/ui-messages";
+import type { StyleThresholds } from "../../domain/science/engine-facts";
+import { WhyButton } from "../science/why-button";
+
+/* FW-02 (S13-A-06): una cifra nel testo del problema (soglia, temperatura,
+   percentuale) è una regola pratica della nota troubleshooting-thresholds. */
+function hasNumericThreshold(issue: TroubleshootingIssue): boolean {
+  return /\d/.test([issue.cause, issue.testRapido, issue.fixImmediate, issue.prevention].join(" "));
+}
+import { browserRevealEnv, revealWhenStable } from "../../hooks/use-hash-target";
+import { GlossaryTermLinks } from "../glossary/term-link";
 
 /* === FW-13 (S13-B-12): icone delle categorie, sul modello del glossario === */
 const TROUBLESHOOTING_CATEGORY_ICONS: Record<string, LucideIcon> = {
@@ -84,6 +95,8 @@ interface ContextualWarningsProps {
   flourG?: number;
   skillLevel: number;
   usePreFerment: boolean;
+  /** FW-05: soglie dello stile scelto (thresholdFor), per consigli relativi. */
+  style?: StyleThresholds;
 }
 
 export function ContextualWarnings(props: ContextualWarningsProps) {
@@ -190,18 +203,13 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
 
   useEffect(() => {
     if (!initialIssueId || contextIssueIds) return;
-    // Dopo lo stagger di entrata delle card, porta l'issue aperta in vista.
-    // FW-03 (S13-B-11): rispetta «riduci movimento» e sposta il focus sul
-    // pulsante della card aperta, così lo screen reader la annuncia.
-    const timer = window.setTimeout(() => {
-      document
-        .getElementById(`trouble-${initialIssueId}`)
-        ?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-      document
-        .getElementById(`trouble-${initialIssueId}-toggle`)
-        ?.focus({ preventScroll: true });
-    }, 400);
-    return () => window.clearTimeout(timer);
+    // FW-03 (S13-B-11) + FW-04: stesso atterraggio del glossario — aspetta che
+    // lo stagger delle card finisca (posizione ferma), porta la card in cima,
+    // rispetta «riduci movimento» e mette a fuoco il pulsante della card.
+    return revealWhenStable(`trouble-${initialIssueId}`, `trouble-${initialIssueId}-toggle`, {
+      ...browserRevealEnv(),
+      reducedMotion: !!reduceMotion,
+    });
   }, [initialIssueId, contextIssueIds, reduceMotion]);
 
 
@@ -436,6 +444,12 @@ function IssueCard({
               />
               {/* Prevenzione */}
               <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
+              {/* FW-02 (S13-A-06): dove il consiglio dà una soglia numerica, il
+                  «Perché?» dice che è una regola pratica, non tarata sullo stile. */}
+              {hasNumericThreshold(issue) && (
+                <WhyButton noteId="troubleshooting-thresholds" label={cms.science?.notes?.["troubleshooting-thresholds"]?.title} className="troubleshooting-card__why" />
+              )}
+              <GlossaryTermLinks termIds={ISSUE_GLOSSARY_TERMS[issue.id] ?? []} />
             </div>
       </Disclosure>
     </Surface>

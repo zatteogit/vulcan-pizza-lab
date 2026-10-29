@@ -13,15 +13,18 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
   paramHydration: "Hidrata\u00E7\u00E3o",
   paramDuration: "Dura\u00E7\u00E3o",
   paramTemperature: "Temperatura",
-  paramYeast: "Fermento",
+  paramYeast: "Fermento fresco",
   detailFermentation: "Fermenta\u00E7\u00E3o",
   detailFlavor: "Sabor",
   detailCrust: "Crosta",
   detailExtensibility: "Extensibilidade",
   detailIdealStyles: "Estilos ideais",
+  /* FW-05 */
+  techniqueLabel: "Técnica",
+  recipeContextLine: "Nesta receita: {yeast} de fermento sobre {flour} de farinha do pré-fermento ({pct}). Todo o fermento da massa vai no pré-fermento e é dosado pelas horas totais da receita, não só pelas do pré-fermento.",
   compLabels: [
     "Hidratação",
-    "Fermento",
+    "Fermento fresco (sobre a farinha do pré-fermento)",
     "Duração",
     "Temperatura",
     "Sabor",
@@ -34,38 +37,31 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
         "Pré-fermento líquido: farinha e água em partes iguais com pouco fermento, 12–16 h a 20–22 °C.",
       hydration: "100% (farinha e água em partes iguais)",
       consistency: "L\u00EDquida, espumosa",
-      fermentationType:
-        "Rápida: com tanta água, amadurece em poucas horas",
+      fermentationType: "Mais rápido que a biga com o mesmo fermento: com a dose indicada matura em 12–16 h",
       flavor: "Levemente ácido, notas de avelã",
       crustResult:
         "Fina e dourada; cor e manchas dependem do forno e da temperatura",
       extensibility: "Alta (estimativa): fácil de abrir",
-      idealStyles:
-        "Teglia Romana, NY Style, Napolitana contempor\u00E2nea, Focaccia",
       tips: [
         "Pronto quando a superfície está cheia de bolhas e o centro começa a ceder",
         "Mais fermento, menos horas: a 20–22 °C, 0,1% para 15–16 h, 0,3% para 10–12 h",
-        "Farinha no poolish: 30–50% da farinha total",
+        "Farinha no poolish: 30–50% da farinha total; a {brand} parte de {poolishFlourPct}",
       ],
     },
     biga: {
       origin: "Itália",
-      description:
-        "Pré-fermento firme: farinha, 44% de água e 1% de fermento, cerca de 16 h a 18–20 °C.",
-      hydration: "44% (até 50% com farinhas integrais)",
+      description: "Pré-fermento firme: farinha, {bigaHydration} de água e cerca de 1% de fermento fresco sobre a farinha da biga, cerca de 16 h a 18–20 °C.",
+      hydration: "{bigaHydration} (até 50% com farinhas integrais)",
       consistency: "Seca, compacta",
-      fermentationType:
-        "Lenta: com pouca água, amadurece em 16–48 h",
+      fermentationType: "Lenta: com pouca água matura em cerca de 16 h (até 48 h com geladeira)",
       flavor: "Aromático, floral",
       crustResult: "Crocante; a estrutura depende da hidratação e da abertura",
       extensibility:
         "Depende da farinha e da hidratação (a verificar)",
-      idealStyles:
-        "Pinsa, Pizza al taglio, Pala romana, Pão",
       tips: [
         "Pronta quando está estufada em alguns pontos, cheira a iogurte e borbulha de leve; se tiver gosto azedo, passou do ponto",
         "Biga longa: 24 h a 4–5 °C, depois 24 h a 18–20 °C",
-        "Farinha na biga: 20–50% da farinha total, geralmente um terço",
+        "Farinha na biga: em geral 30–40% da farinha total; a {brand} parte de {bigaFlourPct} e você pode mudar entre {flourPctMin} e {flourPctMax}",
         "Não se usa na Napolitana ETG: o regulamento admite só o método direto",
       ],
     },
@@ -91,22 +87,22 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
   },
   compValues: {
     hydration: {
-      biga: "44%",
-      poolish: "100%",
+      biga: "{bigaHydration}",
+      poolish: "{poolishHydration}",
       autolisi: "= receita",
     },
     yeast: {
       biga: "1%",
-      poolish: "0,1–0,3%",
+      poolish: "0,1–0,2%",
       autolisi: "0%",
     },
     duration: {
-      biga: "16–48 h",
+      biga: "16 h (até 48 h com 24 h na geladeira)",
       poolish: "12–16 h",
       autolisi: "20–60 min",
     },
     temperature: {
-      biga: "18–20 °C",
+      biga: "18–20 °C (biga longa: primeiro 24 h a 4–5 °C)",
       poolish: "20–22 °C",
       autolisi: "Ambiente",
     },
@@ -161,44 +157,31 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
 
       P01: {
         symptom: "Massa pegajosa persistente",
-        cause:
-          "Hidrata\u00E7\u00E3o superior \u00E0 capacidade de absor\u00E7\u00E3o da farinha",
-        testRapido:
-          "Compare H% receita vs absor\u00E7\u00E3o farinha (+5% m\u00E1x)",
-        fixImmediate:
-          "Adicione 2-3% de farinha e incorpore com dobras suaves",
-        prevention:
-          "Use H% \u2264 absor\u00E7\u00E3o farinha + 5%",
+        cause: "Mais água do que a farinha consegue absorver",
+        testRapido: "A hidratação da receita passa da absorção indicada na ficha da farinha?",
+        fixImmediate: "Acrescente pouca farinha de cada vez (2–3%) e incorpore com dobras delicadas",
+        prevention: "Fique perto da absorção declarada pelo moinho; se não souber, comece pela parte baixa da hidratação do estilo",
       },
       P02: {
         symptom: "A massa rasga durante a abertura",
-        cause:
-          "P/L muito alto (>0.8) ou fermenta\u00E7\u00E3o insuficiente (<6h)",
-        testRapido: "Estique a bolinha 10cm: rasga?",
-        fixImmediate:
-          "Descanso 60min coberta em temperatura ambiente",
-        prevention:
-          "Escolha farinhas com P/L 0.5-0.6, fermenta\u00E7\u00E3o m\u00EDnima 8h",
+        cause: "Glúten pouco desenvolvido ou ainda não relaxado, massa ainda fria da geladeira; às vezes uma farinha pouco extensível (P/L alto) ou uma massa que passou do ponto",
+        testRapido: "Estique devagar uma borda: ela rasga logo em vez de esticar?",
+        fixImmediate: "Cubra a bola de massa e deixe descansar em temperatura ambiente por 30–60 min; depois tente de novo",
+        prevention: "Respeite os tempos da receita, tire as bolas de massa da geladeira a tempo e use uma farinha com o P/L indicado pelo estilo",
       },
       P03: {
         symptom: "A massa desaba ao tocar",
-        cause:
-          "Sobre-fermentada (volume >150%, marca do dedo n\u00E3o volta)",
-        testRapido: "Pressione 1cm com dedo: volta em 3-5s?",
-        fixImmediate:
-          "Irrevers\u00EDvel. Abra com cuidado e asse imediatamente",
-        prevention:
-          "Controle volume a cada 6h, m\u00E1x +150% de aumento",
+        cause: "Fermentação passou do ponto: tempo demais, calor demais ou fermento demais",
+        testRapido: "Aperte com um dedo: se a marca volta na hora ainda falta, se volta devagar está pronta, se fica e a massa murcha passou do ponto",
+        fixImmediate: "Boleie de novo e deixe recuperar por 1–2 h (vai ter menos alvéolos), ou abra com delicadeza e asse logo",
+        prevention: "Confira a massa a partir do último terço do tempo previsto, não só o relógio",
       },
       P04: {
-        symptom: "Sem crescimento ap\u00F3s 6+ horas",
-        cause:
-          "Fermento morto, temperatura muito baixa, ou sal em contato direto",
-        testRapido:
-          "Teste de vitalidade: 5g fermento + 5g a\u00E7\u00FAcar em 100ml \u00E1gua 35\u00B0C \u2014 espuma ap\u00F3s 15min?",
-        fixImmediate:
-          "Adicione 0.3% fermento fresco dissolvido em \u00E1gua morna, incorpore com dobras",
-        prevention: "Teste o fermento antes de cada uso",
+        symptom: "A massa não cresce no tempo previsto",
+        cause: "Fermento pouco ativo ou vencido, ou massa mais fria do que o previsto. Na geladeira é normal crescer pouco",
+        testRapido: "Estava na geladeira? É normal. Se não, dissolva uma pitada do fermento em água morna com um pouco de açúcar: faz espuma depois de 10–15 min?",
+        fixImmediate: "Primeiro coloque num lugar quente (24–28 °C) por 1–2 h. Se não voltar a crescer, o fermento está inativo: refaça a massa com fermento novo",
+        prevention: "Confira a validade do fermento e a temperatura do ambiente",
       },
       P05: {
         symptom:
@@ -213,12 +196,9 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
       },
       P06: {
         symptom: "Sabor muito \u00E1cido/ac\u00E9tico",
-        cause:
-          "LAB heterofermentativos ativos >48h a >18\u00B0C (especialmente com fermento natural)",
-        testRapido:
-          "pH massa \u2014 deve ser 4.5-5.5, problem\u00E1tico se <4.2",
-        fixImmediate:
-          "O açúcar disfarça o sabor, mas não corrige a fermentação excessiva. Reavalie a massa antes de usar.",
+        cause: "Maturação longa demais ou quente demais: as bactérias lácticas produzem ácidos (acontece mais com fermento natural)",
+        testRapido: "Cheire e prove um pedacinho cru: a acidez é picante, como de vinagre?",
+        fixImmediate: "Dá para comer; da próxima vez encurte a maturação em temperatura ambiente",
         prevention:
           "Escolha tempo, temperatura e fermento conforme o método; não há limite horário universal.",
       },
@@ -235,14 +215,11 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
       },
       P08: {
         symptom: "Buracos gigantes irregulares na pizza",
-        cause:
-          "Desgaseifica\u00E7\u00E3o insuficiente + abertura muito delicada",
-        testRapido:
-          "Alv\u00E9olos >3cm e distribui\u00E7\u00E3o desigual?",
+        cause: "Bolhas grandes que ficaram na bola de massa e abertura muito delicada",
+        testRapido: "As bolhas grandes estão espalhadas também pelo centro, não só na borda?",
         fixImmediate:
           "Pressione levemente a bolinha antes de abrir para redistribuir o g\u00E1s",
-        prevention:
-          "Reduza tempo de fermenta\u00E7\u00E3o em 20%",
+        prevention: "Antes de abrir, desinfle com cuidado as bolhas maiores; na napolitana e na canotto alguns alvéolos grandes na borda são desejados",
       },
       P09: {
         symptom: "Base crua mas borda queimada",
@@ -250,32 +227,22 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
           "Desequil\u00EDbrio t\u00E9rmico: muito calor de cima, pouco de baixo",
         testRapido:
           "Contraste de cor extremo entre cima e baixo?",
-        fixImmediate:
-          "Pr\u00E9-cozimento da base 3min sem cobertura",
-        prevention:
-          "Use assadeira/pedra mais grossa, equilibre calor cima/baixo",
+        fixImmediate: "Asse mais perto do lastro quente e mais longe do teto; se o forno não passar de 300 °C, você pode pré-assar a base por 2–3 min sem cobertura",
+        prevention: "Equilibre o calor: pedra ou aço bem preaquecidos embaixo, menos calor por cima",
       },
       P10: {
         symptom: "Crosta p\u00E1lida, sem dourar",
-        cause:
-          "Temperatura <250\u00B0C, a\u00E7\u00FAcares esgotados, ou umidade excessiva na superf\u00EDcie",
-        testRapido:
-          "O forno atinge pelo menos 250\u00B0C? Fermenta\u00E7\u00E3o >48h?",
-        fixImmediate:
-          "Pincelar azeite+mel antes de assar ou usar grill final 2min",
-        prevention:
-          "Adicione 0,5–1% de açúcar ou malte e use o forno no máximo, com pedra ou aço bem preaquecidos",
+        cause: "Forno ou lastro pouco quentes para o estilo, ou poucos açúcares depois de uma maturação muito longa",
+        testRapido: "O forno chega à temperatura do estilo? A maturação foi muito longa?",
+        fixImmediate: "Use o grill nos últimos 1–2 minutos, se o forno tiver",
+        prevention: "Deixe o forno no máximo com pedra ou aço bem preaquecidos; fora das receitas STG, que não admitem açúcar nem malte, você pode acrescentar 0,5–1% de açúcar ou malte",
       },
       P11: {
         symptom: "Pizza borrachuda, n\u00E3o crocante",
-        cause:
-          "Temperatura do miolo <85\u00B0C, hidrata\u00E7\u00E3o >70%, ou cozimento muito lento",
-        testRapido:
-          "Term\u00F4metro de miolo: atinge 90\u00B0C+?",
-        fixImmediate:
-          "Prolongue cozimento +2min ou aumente temperatura +20\u00B0C",
-        prevention:
-          "H \u2264 65%, temperatura do miolo alvo 95\u00B0C",
+        cause: "Forneamento curto ou baixo demais para a espessura, ou mais água do que o estilo prevê",
+        testRapido: "Ao cortar, o miolo ainda está úmido e grudento?",
+        fixImmediate: "Asse por mais alguns minutos; se o forno ainda tiver margem, aumente a temperatura",
+        prevention: "Fique na hidratação do estilo e asse pelo tempo indicado na receita",
       },
       P14: {
         symptom: "Manchas leopardo na borda (leopard spotting)",
@@ -289,31 +256,26 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
       },
       P15: {
         symptom: "Fundo da pizza escuro/preto",
-        cause: "Pedra ou assadeira muito quente (>450\u00B0C)",
+        cause: "Lastro mais quente do que o estilo precisa, ou farinha ou semolina queimada na pedra",
         testRapido: "Prove: sabor amargo?",
         fixImmediate:
           "Se amargo = problema (baixe temp). Se saboroso = NORMAL",
-        prevention:
-          "Pr\u00E9-aquecimento da pedra controlado, n\u00E3o acima de 400\u00B0C",
+        prevention: "Mantenha o lastro na temperatura do estilo e escove a pedra entre uma pizza e outra",
       },
       P16: {
         symptom: "Borda baixa e plana",
-        cause:
-          "Desgaseifica\u00E7\u00E3o excessiva, W farinha muito baixo, ou uso de rolo",
+        cause: "Desgaseificação excessiva, farinha fraca demais para o estilo ou uso do rolo",
         testRapido: "Altura da borda <1cm?",
         fixImmediate:
           "Abertura mais delicada, n\u00E3o pressionar as bordas",
-        prevention:
-          "W \u2265 240 para napolitana, nunca rolo em estilos com borda",
+        prevention: "Use uma farinha com a força indicada pelo estilo e nada de rolo nos estilos com borda",
       },
       P17: {
         symptom: "Pizza muito seca",
-        cause:
-          "Hidrata\u00E7\u00E3o <55% ou cozimento muito longo (>10min)",
-        testRapido: "H% da receita? Tempo real de cozimento?",
-        fixImmediate: "Adicione azeite abundante na cobertura",
-        prevention:
-          "H \u2265 58%, n\u00E3o ultrapassar tempo de cozimento recomendado",
+        cause: "Menos água do que o estilo prevê ou forneamento mais longo do que o tempo da receita",
+        testRapido: "A hidratação e o tempo de forno são os da receita?",
+        fixImmediate: "Sirva assim que sair do forno; da próxima vez encurte o forneamento",
+        prevention: "Fique na hidratação do estilo e não passe do tempo de forno indicado",
       },
       P18: {
         symptom: "Centro da pizza aguado",
@@ -321,29 +283,23 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
           "Cobertura muito l\u00EDquida ou cozimento muito curto",
         testRapido:
           "Quantidade de molho por pizza? Mussarela muito \u00FAmida?",
-        fixImmediate:
-          "Pr\u00E9-cozimento base 2min, depois adicione cobertura",
+        fixImmediate: "Pré-asse a base por 2–3 min e depois coloque a cobertura",
         prevention:
           "M\u00E1x 80ml molho por pizza 30cm, escorra bem a mussarela",
       },
       P19: {
         symptom: "Imposs\u00EDvel abrir a bolinha",
-        cause:
-          "Farinha Manitoba pura (W >380), massa muito tenaz",
-        testRapido: "Qual farinha voc\u00EA usou? W >350?",
-        fixImmediate:
-          "Mistura 50:50 com farinha W 200 na pr\u00F3xima vez",
-        prevention:
-          "M\u00E1x W 320 para pizza, farinhas com P/L 0.5-0.6",
+        cause: "Farinha bem mais forte do que o estilo prevê: massa tenaz demais",
+        testRapido: "O W da sua farinha passa bem do indicado pelo estilo?",
+        fixImmediate: "Deixe a bola de massa descansar coberta por 20–30 min e tente de novo; na próxima massa, misture a farinha com uma mais fraca",
+        prevention: "Use uma farinha com a força e o P/L indicados pelo estilo",
       },
       P20: {
-        symptom: "Cheiro 'qu\u00EDmico' na massa",
-        cause: "\u00C1gua da torneira com cloro alto",
-        testRapido: "Sente cheiro forte ao abrir a torneira?",
-        fixImmediate:
-          "Use \u00E1gua mineral para a pr\u00F3xima massa",
-        prevention:
-          "Filtre a \u00E1gua ou deixe descansar 12h aberta (o cloro evapora)",
+        symptom: "Cheiro «químico» (álcool, solvente) na massa",
+        cause: "Fermentação que passou do ponto (álcool e ésteres) ou fermento demais; mais raramente o cloro da água",
+        testRapido: "Cheiro de álcool ou de acetona, e massa mole que não volta a crescer?",
+        fixImmediate: "Se estiver mole e não voltar a crescer, trate como massa que passou do ponto: boleie de novo ou asse logo",
+        prevention: "Da próxima vez, menos fermento ou um lugar mais fresco. Se a água da torneira tiver gosto de cloro, use outra: deixar descansar ao ar não elimina as cloraminas",
       },
       P21: {
         symptom: "A fermentação muda de uma massa para outra (geladeira de casa)",
@@ -357,7 +313,7 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
       sticky_dough: {
         message:
           "Hidrata\u00E7\u00E3o {h}% com W {w}: risco de massa pegajosa",
-        tip: "Use farinha com W \u2265 280 ou reduza hidrata\u00E7\u00E3o para 68-70%",
+        tip: "Este estilo prevê W {wMin}–{wMax}: use uma farinha nessa faixa ou reduza um pouco a hidratação",
       },
       high_pl: {
         message:
@@ -366,7 +322,7 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
       },
       sour_risk: {
         message: "{h}h a {t}\u00B0C: risco de sabor \u00E1cido",
-        tip: "Para fermenta\u00E7\u00F5es >24h, use temperatura 4-8\u00B0C",
+        tip: "Se a sua cozinha estiver quente, passe parte da maturação para a geladeira e observe mais a massa do que o relógio",
       },
       pale_crust: {
         message:
@@ -374,19 +330,17 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
         tip: "Verifique volume, elasticidade e resposta à pressão: as horas, por si só, não comprovam a digestibilidade.",
       },
       cold_oven: {
-        message:
-          "Forno a {t}\u00B0C: risco de base crua com borda queimada",
-        tip: "Pr\u00E9-asse a base 3min sem cobertura, depois adicione ingredientes",
+        message: "Forno a {t} °C, abaixo da temperatura do estilo: risco de crosta pálida e pizza seca",
+        tip: "Preaqueça bem a pedra ou o aço e, se o forno tiver grill, use nos últimos minutos",
       },
       beginner_hydration: {
         message:
           "Hidrata\u00E7\u00E3o {h}% \u00E9 desafiadora para iniciantes",
-        tip: "Comece com 60-65% e aumente gradualmente com experi\u00EAncia",
+        tip: "Este estilo prevê {hMin}–{hMax}%: se você está começando, fique perto de {hMin}%",
       },
       high_w: {
-        message:
-          "W {w} muito alto: massa dif\u00EDcil de abrir",
-        tip: "Misture 50:50 com farinha W 200 ou planeje aut\u00F3lise longa",
+        message: "W {w} bem acima do estilo: massa difícil de abrir",
+        tip: "Este estilo prevê W {wMin}–{wMax}: misture uma farinha mais fraca ou planeje uma autólise longa",
       },
       flat_long_ferment: {
         message:
@@ -399,18 +353,19 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
 export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
+      plainDefinition: "A força da farinha: quanto mais alta, mais tempo a massa aguenta a fermentação. Muitas vezes vem escrita no pacote (por exemplo W 280).",
       name: "W (Alve\u00F3grafo de Chopin)",
       definition: "Energia total necess\u00E1ria para expandir uma bolha de massa at\u00E9 ela se romper. Mede a for\u00E7a geral da farinha.",
-      whyImportant: "W descreve a força global da farinha. Tenacidade e extensibilidade são avaliadas com P, L e P/L: um W alto, por si só, não implica uma massa mais tenaz.",
+      whyImportant: "W descreve a força global da farinha. Tenacidade e extensibilidade se avaliam com P, L e P/L: um W alto não significa sozinho uma massa mais tenaz. Estas faixas são as que a {brand} usa em todo o app; cada estilo indica a sua faixa de W.",
       ranges: [
-        { label: "Fraca", value: "90\u2013160", note: "Biscoitos, wafers" },
-        { label: "M\u00E9dia", value: "160\u2013200", note: "P\u00E3o de forma, focaccia" },
-        { label: "M\u00E9dia-forte", value: "200\u2013280", note: "Pizza napolitana" },
-        { label: "Forte", value: "280\u2013350", note: "P\u00E3o de longa fermenta\u00E7\u00E3o" },
-        { label: "Muito forte", value: "350\u2013450", note: "Panettone, croissant" },
+        { label: "Fraca", value: "{wBandWeak}", note: "Farinha de uso geral ou para confeitaria" },
+        { label: "Média", value: "{wBandMedium}", note: "Muitas vezes vendida «para pizza»" },
+        { label: "Forte", value: "{wBandStrong}", note: "Maturações longas e massas muito hidratadas" },
+        { label: "Muito forte", value: "{wBandVeryStrong}", note: "Manitoba e farinhas para grandes massas doces fermentadas" },
       ],
     },
     p_tenacity: {
+      plainDefinition: "Quanto a massa resiste quando você a puxa.",
       name: "P (Tenacidade)",
       definition: "Resist\u00EAncia m\u00E1xima \u00E0 deforma\u00E7\u00E3o. Pico da curva alveogr\u00E1fica \u2014 o quanto a massa resiste ao estiramento.",
       whyImportant: "P alto: massa 'dura', mant\u00E9m a forma no forno. P baixo: massa 'mole', f\u00E1cil de abrir, pode desabar.",
@@ -421,6 +376,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     l_extensibility: {
+      plainDefinition: "Quanto a massa se estica antes de rasgar.",
       name: "L (Extensibilidade)",
       definition: "Comprimento m\u00E1ximo que a bolha atinge antes de se romper. Mede o quanto a massa pode se alongar.",
       whyImportant: "L alto: massa extens\u00EDvel, f\u00E1cil de abrir sem rasgar. L baixo: massa curta, que rasga.",
@@ -430,40 +386,30 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     pl_ratio: {
+      plainDefinition: "Indica se a massa tende a voltar (valor alto) ou a esticar com facilidade (valor baixo).",
       name: "P/L (Rela\u00E7\u00E3o Tenacidade/Extensibilidade)",
       definition: "A relação entre a resistência da massa à deformação e a capacidade de se esticar.",
-      whyImportant: "Descreve o equilíbrio reológico. O valor adequado depende da farinha, hidratação e método; não garante altura ou textura.",
-      ranges: [
-        { label: "<0.4 Muito extens\u00EDvel", value: "Desaba facilmente", note: "Pinsa" },
-        { label: "0.4\u20130.5 Extens\u00EDvel", value: "F\u00E1cil de trabalhar", note: "Napolitana cl\u00E1ssica" },
-        { label: "0.5\u20130.7 Equilibrada", value: "Bom equil\u00EDbrio", note: "Napolitana moderna, p\u00E3o" },
-        { label: "0.7\u20131.0 Tenaz", value: "Resistente", note: "P\u00E3o de longa fermenta\u00E7\u00E3o" },
-        { label: ">1.0 Muito tenaz", value: "El\u00E1stica, encolhe", note: "Croissant" },
-      ],
+      whyImportant: "Descreve um equilíbrio reológico: o valor adequado depende da farinha, da hidratação e do método, e não garante altura nem textura da pizza. Os exemplos são as faixas dos estilos da {brand}; o P/L da sua farinha está na ficha técnica do moinho.",
     },
     falling_number: {
+      plainDefinition: "Indica o quanto estão ativas as enzimas da farinha que transformam o amido em açúcares.",
       name: "Falling Number (Hagberg-Perten)",
       definition: "Tempo que uma haste leva para cair atrav\u00E9s de uma suspens\u00E3o de farinha aquecida. Mede a atividade amil\u00E1sica.",
       whyImportant: "FN baixo (<250): fermenta\u00E7\u00E3o r\u00E1pida, mas massa inst\u00E1vel. FN alto (>300): est\u00E1vel para matura\u00E7\u00F5es longas.",
       ranges: [
-        { label: "<200 Amilase alt\u00EDssima", value: "Massa grudenta", note: "N\u00E3o recomendada para pizza" },
-        { label: "200\u2013250 Alta", value: "Miolo \u00FAmido", note: "P\u00E3o r\u00E1pido" },
-        { label: "250\u2013300 M\u00E9dia", value: "Bom equil\u00EDbrio", note: "Pizza 8-12h" },
-        { label: "300\u2013400 Baixa", value: "Seca, lenta", note: "Pizza 24-48h" },
-        { label: ">400 Muito baixa", value: "Seca", note: "Macarr\u00E3o seco" },
+        { label: "Amilase alt\u00EDssima · Massa grudenta", value: "<200", note: "N\u00E3o recomendada para pizza" },
+        { label: "Alta · Miolo \u00FAmido", value: "200\u2013250", note: "P\u00E3o r\u00E1pido" },
+        { label: "M\u00E9dia · Bom equil\u00EDbrio", value: "250\u2013300", note: "Pizza 8-12h" },
+        { label: "Baixa · Seca, lenta", value: "300\u2013400", note: "Pizza 24-48h" },
+        { label: "Muito baixa · Seca", value: ">400", note: "Macarr\u00E3o seco" },
       ],
     },
     hydration: {
+      plainDefinition: "Quanta água a massa tem em relação à farinha: com 65 % você coloca 65 g de água para cada 100 g de farinha.",
       name: "Hidrata\u00E7\u00E3o (H%)",
       definition: "Porcentagem em peso de \u00E1gua em rela\u00E7\u00E3o \u00E0 farinha na massa.",
-      whyImportant: "H baixa (<55%): crocante, f\u00E1cil. H m\u00E9dia (60-65%): equil\u00EDbrio. H alta (>70%): exige farinha forte (W>280) e habilidade.",
-      ranges: [
-        { label: "Napolitana cl\u00E1ssica", value: "55\u201360%", note: "Macia, trabalh\u00E1vel" },
-        { label: "Napolitana contempor\u00E2nea", value: "60\u201365%", note: "Borda leve" },
-        { label: "Canotto", value: "65\u201370%", note: "Alv\u00E9olos grandes" },
-        { label: "Pinsa romana", value: "75\u201385%", note: "Aberta na assadeira" },
-        { label: "Focaccia/Bonci", value: "85\u2013100%+", note: "Massa quase l\u00EDquida" },
-      ],
+      formula: "H% = (peso da água / peso da farinha) × 100",
+      whyImportant: "Mais água deixa a massa mais macia e mais difícil de manusear, e pede uma farinha mais forte. A crocância depende sobretudo do forneamento e da espessura: até uma pizza de assadeira muito hidratada pode ficar crocante. Os exemplos são as faixas dos estilos da {brand}.",
     },
     absorption: {
       name: "Absor\u00E7\u00E3o de \u00C1gua",
@@ -490,43 +436,48 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "Fermento (Saccharomyces cerevisiae)",
       definition: "Um fungo unicelular que fermenta açúcares, produzindo dióxido de carbono, álcool e compostos aromáticos.",
-      whyImportant: "A atividade depende da estirpe, dose, temperatura e massa. O frio abranda a fermentação; não há limiar universal de paragem imediata.",
+      whyImportant: "A atividade depende da cepa, da dose, da temperatura e da massa. O frio desacelera a fermentação; não existe um limite universal de parada imediata. A dose certa depende das horas e da temperatura: a receita calcula para você.",
       ranges: [
-        { label: "Fresco", value: "0.5\u20132.0%", note: "Umidade 70%, geladeira a 4\u00B0C" },
-        { label: "Seco ativo", value: "0.3\u20131.0%", note: "Hidratar antes" },
-        { label: "Seco instant\u00E2neo", value: "0.2\u20130.8%", note: "Direto na farinha" },
+        { label: "Fresco, {yeastS1Hours} a {yeastS1Temp}", value: "{yeastS1Pct}", note: "Estimativa do modelo" },
+        { label: "Fresco, {yeastS2Hours} a {yeastS2Temp}", value: "{yeastS2Pct}", note: "Estimativa do modelo" },
+        { label: "Fresco, {yeastS3Hours} a {yeastS3Temp}", value: "{yeastS3Pct}", note: "Estimativa do modelo" },
+        { label: "Fresco, {yeastS4Hours} a {yeastS4Temp}", value: "{yeastS4Pct}", note: "Estimativa do modelo" },
+        { label: "Seco (ativo ou instantâneo)", value: "≈ fresco × {yeastDryRatio}", note: "Mesma estimativa do fresco" },
       ],
     },
     lab: {
+      plainDefinition: "As bactérias do fermento natural que dão à massa o sabor levemente ácido.",
       name: "LAB (Bact\u00E9rias L\u00E1ticas)",
       definition: "Bact\u00E9rias que fermentam a\u00E7\u00FAcares produzindo \u00E1cido l\u00E1tico (e ac\u00E9tico). Presentes no fermento natural.",
       whyImportant: "Podem alterar acidez e frutanos conforme estirpes, farinha e processo. A sua presença não certifica massa low FODMAP.",
     },
     q10: {
+      plainDefinition: "Quantas vezes a fermentação acelera quando está {tenDegrees} mais quente.",
       name: "Q\u2081\u2080 (Coeficiente de Temperatura)",
       definition: "Fator multiplicativo da velocidade de uma rea\u00E7\u00E3o bioqu\u00EDmica a cada aumento de 10\u00B0C.",
-      whyImportant: "Com Q\u2081\u2080 = 2, a fermenta\u00E7\u00E3o dobra a cada +10\u00B0C: 24h a 18\u00B0C \u2248 12h a 28\u00B0C. Os valores abaixo s\u00E3o estimativas do modelo do {brand}.",
+      whyImportant: "Com Q₁₀ = {q10ComAbove} a velocidade se multiplica por {q10ComAbove} a cada {tenDegrees}: {q10ExampleRefHours} a {q10RefTemp} ≈ {q10ExampleWarmHours} a {q10ExampleWarmTemp}. Os valores desta entrada são estimativas do modelo da {brand}.",
       ranges: [
-        { label: "Fermento comercial \u226510\u00B0C", value: "2.0", note: "Estimativa do modelo, coerente com os dados de crescimento entre 18 e 25 \u00B0C" },
-        { label: "Fermento comercial <10\u00B0C", value: "1.6", note: "Estimativa do modelo, sem fonte" },
-        { label: "Fermento natural >15\u00B0C", value: "2.2", note: "Estimativa do modelo" },
-        { label: "Fermento natural \u226415\u00B0C", value: "1.9", note: "Estimativa do modelo" },
+        { label: "Fermento comercial ≥ {q10ComBreak}", value: "{q10ComAbove}", note: "Estimativa do modelo, coerente com os dados de crescimento à temperatura ambiente" },
+        { label: "Fermento comercial < {q10ComBreak}", value: "{q10ComBelow}", note: "Estimativa do modelo, sem fonte" },
+        { label: "Fermento natural > {q10SdBreak}", value: "{q10SdAbove}", note: "Estimativa do modelo" },
+        { label: "Fermento natural ≤ {q10SdBreak}", value: "{q10SdBelow}", note: "Estimativa do modelo" },
       ],
     },
     arrhenius: {
       name: "Equa\u00E7\u00E3o de Arrhenius",
-      definition: "Descreve a depend\u00EAncia da velocidade de rea\u00E7\u00E3o em rela\u00E7\u00E3o \u00E0 temperatura absoluta.",
-      whyImportant: "Com \u03B2=0.075 e T_ref=18\u00B0C \u2192 Q\u2081\u2080 \u2248 2.12. Usada no motor do {brand} para calcular a dosagem de fermento e os tempos.",
+      definition: "Relaciona a velocidade de uma reação com a temperatura absoluta (em kelvin) por meio de uma energia de ativação.",
+      formula: "k = A · e^(−Eₐ / (R · T)), com T em kelvin",
+      whyImportant: "A {brand} não usa esta equação. O motor aplica um Q₁₀ por trechos referido a {q10RefTemp}: {q10ComAbove} acima e {q10ComBelow} abaixo de {q10ComBreak} para o fermento comercial, {q10SdAbove} acima e {q10SdBelow} até {q10SdBreak} para o fermento natural. São estimativas do modelo, não valores medidos.",
     },
     biga: {
       name: "Biga",
-      definition: "Pré-fermento firme de farinha, 44% de água (até 50% com farinhas integrais) e 1% de fermento, maturado cerca de 16 h a 18–20 °C; a biga longa leva 24 h a 4–5 °C mais 24 h a 18–20 °C.",
-      whyImportant: "Traz aroma e estrutura à massa final. Geralmente um terço da farinha total (20–50%). Não é admitida na Napolitana ETG, que é de método direto.",
+      definition: "Pré-massa firme de farinha, {bigaHydration} de água (até 50% com farinhas integrais) e cerca de 1% de fermento fresco sobre a farinha da biga, maturada cerca de 16 h a 18–20 °C; a biga longa passa 24 h a 4–5 °C e depois 24 h a 18–20 °C.",
+      whyImportant: "Traz aroma e estrutura à massa final. Em geral 30–40% da farinha total: a {brand} parte de {bigaFlourPct}. Não é admitida na napolitana STG, que é de massa direta.",
     },
     poolish: {
       name: "Poolish",
       definition: "Pré-fermento líquido: farinha e água em partes iguais com pouco fermento, maturado 12–16 h a 20–22 °C (0,1% de fermento para 15–16 h, 0,3% para 10–12 h).",
-      whyImportant: "Amadurece rápido e deixa a massa extensível. Geralmente 30–50% da farinha total. Está pronto quando a superfície fica cheia de bolhas e o centro começa a ceder.",
+      whyImportant: "Matura mais rápido que a biga e deixa a massa extensível. Em geral 30–50% da farinha total: a {brand} parte de {poolishFlourPct}. Está pronto quando a superfície está cheia de bolhas e o centro começa a ceder.",
     },
     autolysis: {
       name: "Aut\u00F3lise",
@@ -566,7 +517,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     thermal_conductivity: {
       name: "Condutividade T\u00E9rmica",
       definition: "Capacidade de um material de conduzir calor.",
-      whyImportant: "A\u00E7o (k=50): ideal para fornos dom\u00E9sticos a 280\u00B0C, cozimento de 6-8 min. Pedra (k=2): ideal para fornos a lenha a 450\u00B0C+, cozimento de 60-90s.",
+      whyImportant: "Quanto maior o k, mais rápido a superfície passa calor para a base: por isso o aço ajuda os fornos domésticos, que aquecem menos. No lastro também conta quanto calor o material acumula: os fornos a lenha usam tijolo refratário ou biscotto.",
       ranges: [
         { label: "Cobre", value: "400" },
         { label: "Alum\u00EDnio", value: "205" },
@@ -590,7 +541,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     gluten: {
       name: "Gl\u00FAten",
       definition: "A gliadina e a glutenina formam, com água e trabalho da massa, uma rede elástica e extensível.",
-      whyImportant: "Elasticidade vinda das gluteninas (liga\u00E7\u00F5es S-S), viscosidade das gliadinas (liga\u00E7\u00F5es H). Prote\u00F3lise longa quebra as liga\u00E7\u00F5es \u2192 massa mais extens\u00EDvel.",
+      whyImportant: "Elasticidade vinda das gluteninas (ligações S-S), viscosidade das gliadinas (ligações H). Uma proteólise longa deixa a massa mais extensível, mas o glúten continua lá: fermentações longas ou com fermento natural não tornam a pizza adequada para celíacos. Alergias e intolerâncias são definidas no Perfil.",
     },
     proteolysis: {
       name: "Prote\u00F3lise",
@@ -598,15 +549,11 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       whyImportant: "Pode alterar a extensibilidade e a resistência da massa. Depende da farinha, dos microrganismos, da temperatura e do processo: não há uma duração ideal universal e não mede a digestibilidade individual.",
     },
     thickness_factor: {
-      name: "Thickness Factor (TF)",
+      plainDefinition: "Quanta massa é preciso para cada centímetro quadrado de pizza: quanto mais alto, mais grossa a pizza.",
+      name: "Carga de massa (Thickness Factor, TF)",
       definition: "Quantidade de massa por unidade de superfície: os gramas de massa por cada cm² de pizza.",
-      whyImportant: "Uma métrica comum nas calculadoras de massa norte-americanas (em oz/in²; 1 oz/in² ≈ 4,39 g/cm²). A {brand} a expressa em g/cm² para dimensionar as bolas de massa; junto com o forno, orienta o tempo de forno e a crocância.",
-      ranges: [
-        { label: "Napolitana", value: "0.30\u20130.36", note: "6-7 mm" },
-        { label: "Romana redonda", value: "0.20\u20130.25", note: "4-5 mm" },
-        { label: "New York", value: "0.40\u20130.50", note: "8-10 mm" },
-        { label: "Chicago deep dish", value: "1.00\u20131.30", note: "20-26 mm" },
-      ],
+      formula: "TF = peso da bola de massa (g) / área da pizza (cm²)",
+      whyImportant: "Métrica comum nas calculadoras de massa norte-americanas (em oz/in²; 1 oz/in² ≈ 4,39 g/cm²). A {brand} a expressa em g/cm² para dimensionar as bolas de massa; junto com o forno, orienta o tempo de forno e a crocância. Os exemplos são calculados a partir do peso da bola de massa e da forma de cada estilo.",
     },
     friction_factor: {
       name: "Atrito da amassadeira",
@@ -621,34 +568,100 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
-      name: "Temperatura da \u00E1gua (tr\u00EAs temperaturas)",
+      name: "Temperatura da água (regra dos 55)",
       definition: "Calcula a que temperatura p\u00F4r a \u00E1gua para a massa chegar \u00E0 temperatura desejada.",
-      whyImportant: "Soma das tr\u00EAs temperaturas = 3 \u00D7 massa desejada \u2212 atrito. Na pizzaria tamb\u00E9m se diz \u00ABregra dos 55\u00BB: com a soma fixa em 55 a massa fica perto de 18 \u00B0C (55 \u00F7 3); aqui se usa a meta do estilo, 22\u201324 \u00B0C.",
+      formula: "T_água = 3 × T_massa − T_ambiente − T_farinha − atrito",
+      whyImportant: "Soma das três temperaturas (cozinha, farinha, água) = 3 × massa desejada − atrito; com um pré-fermento entra também a temperatura dele e a soma dos quatro termos passa a 4 × massa desejada − atrito. Na pizzaria também se diz «regra dos 55»: com a soma fixa em 55 a massa fica perto de 18 °C (55 ÷ 3); aqui a massa desejada é 22 °C se a massa matura na geladeira, 24 °C nos outros casos.",
     },
     a_score: {
       name: "A-Score (Autenticidade)",
       definition: "Pontuação de 0 a 100 sobre a proximidade à referência do estilo. Não certifica o cumprimento de um caderno de especificações.",
+      formula: "A = Ingredientes × {authWIngredients} + Processo × {authWProcess} + Equipamento × {authWEquipment}",
       ranges: [
-        { label: "90-100", value: "Rigorosamente aut\u00EAntica" },
-        { label: "75-89", value: "Substancialmente aut\u00EAntica" },
-        { label: "60-74", value: "Inspirada no estilo" },
-        { label: "<60", value: "Desvio significativo" },
+        { label: "Rigorosamente autêntica", value: "{aBand0}" },
+        { label: "Fiel com adaptações", value: "{aBand1}" },
+        { label: "Inspirada, mas modificada", value: "{aBand2}" },
+        { label: "Livremente interpretada", value: "{aBand3}" },
       ],
+      whyImportant: "Os pesos são uma escolha da {brand}, não uma medida. Regras do produto: se o forno não é o que o estilo pede (lenha ou carvão) e não chega à sua temperatura mínima, a pontuação não passa de {authFuelCap}; abaixo da temperatura mínima do estilo, ela diminui na mesma proporção.",
     },
     f_score: {
       name: "F-Score (Facilidade)",
       definition: "Pontuação de 0 a 100 sobre a facilidade de preparação com o forno, farinha e experiência disponíveis. Os requisitos que bloqueiam a receita são avaliados à parte.",
+      formula: "F = Forno × {feasWOven} + Farinha × {feasWFlour} + Experiência × {feasWSkill}",
       ranges: [
-        { label: "90-100", value: "Muito vi\u00E1vel" },
-        { label: "75-89", value: "Vi\u00E1vel com aten\u00E7\u00E3o" },
-        { label: "60-74", value: "Dif\u00EDcil" },
-        { label: "<60", value: "N\u00E3o recomendado" },
+        { label: "Muito viável", value: "{fBand0}" },
+        { label: "Viável com atenção", value: "{fBand1}" },
+        { label: "Difícil", value: "{fBand2}" },
+        { label: "Risco alto", value: "{fBand3}" },
       ],
+      whyImportant: "Os pesos são uma escolha da {brand}, não uma medida. Se a receita não puder ser feita com a sua cozinha, a compatibilidade não passa de {nonFeasibleCeiling}, quaisquer que sejam as outras pontuações.",
     },
     d_score: {
       name: "D-Score (Maturação estimada)",
       definition: "Estimativa do modelo baseada em tempo, temperatura, levedura e pré-fermentos. Não mede a digestibilidade individual nem calcula os FODMAP.",
-      ranges: [{"label":"85-100","value":"Índice alto"},{"label":"70-84","value":"Índice médio-alto"},{"label":"50-69","value":"Índice médio"},{"label":"<50","value":"Índice baixo"}],
+      ranges: [{ label: "Índice alto", value: "{dBand0}" },{ label: "Índice médio-alto", value: "{dBand1}" },{ label: "Índice médio", value: "{dBand2}" },{ label: "Índice baixo", value: "{dBand3}" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: "Divisão (staglio)",
+      definition: "Dividir a massa em pedaços do mesmo peso, um por pizza, e fechá-los em bolas.",
+      whyImportant: "Bolas do mesmo peso fermentam e assam do mesmo jeito. A receita indica o peso de cada bola.",
+    },
+    ball_shaping: {
+      name: "Boleamento (pirlatura)",
+      definition: "O gesto que fecha o pedaço de massa numa bola lisa e tensa: você a gira sobre si mesma, na bancada ou entre as mãos, até a superfície ficar esticada.",
+      whyImportant: "Uma superfície tensa segura o gás durante a segunda fermentação e dá uma bola que se abre redonda. Se a massa rasgar, você puxou demais: deixe descansar alguns minutos.",
+    },
+    gluten_development: {
+      name: "Ponto de véu (incordatura)",
+      definition: "O momento em que a massa fica lisa e elástica e para de grudar nas mãos ou na tigela: a rede de glúten se formou.",
+      whyImportant: "Uma massa no ponto segura o gás da fermentação. Teste prático: estique um pedacinho entre os dedos; se virar uma película fina sem rasgar logo, está pronta. Sovar demais na máquina, por outro lado, aquece e enfraquece a massa.",
+    },
+    folds: {
+      name: "Dobras",
+      definition: "Você estica uma parte da massa e a dobra sobre o resto, gira a massa e repete em cada lado. Fazem-se em intervalos durante o descanso, em vez de sovar por mais tempo.",
+      whyImportant: "Reforçam a rede de glúten sem aquecer a massa, sobretudo em massas muito hidratadas. O «slap & fold» é uma variante: você levanta a massa, bate na bancada e a dobra sobre si mesma.",
+    },
+    poke_test: {
+      name: "Teste do dedo (poke test)",
+      definition: "Aperte a bola com um dedo enfarinhado, cerca de um centímetro, e veja como a marca volta.",
+      whyImportant: "Se a marca volta devagar e fica um pouco, a bola está pronta. Se volta na hora, precisa de mais tempo. Se fica afundada e a bola murcha, fermentou demais. É uma indicação prática, não uma medida.",
+    },
+    cornicione: {
+      name: "Cornicione (borda)",
+      definition: "A borda da pizza, mais alta e inflada que o centro: no forno o gás da massa se expande e a levanta.",
+      whyImportant: "Para obtê-la, ao abrir a massa empurre o ar do centro para a borda sem amassá-la. Altura e alvéolos dependem do estilo, da hidratação, da fermentação e do calor do forno.",
+    },
+    oven_floor_dome: {
+      name: "Lastro e cúpula",
+      definition: "O lastro é a base do forno onde a pizza fica apoiada; a cúpula é a parte de cima. O lastro assa o fundo por contato; a cúpula assa a cobertura e a borda com o calor que irradia.",
+      whyImportant: "Se o fundo queima e a cobertura fica crua, o lastro está quente demais em relação à cúpula; se acontece o contrário, está frio demais. No forno doméstico a pedra ou o aço fazem o papel de lastro e o grill o de cúpula.",
+    },
+    pre_ferment: {
+      name: "Pré-fermento",
+      definition: "Uma parte da farinha e da água misturada com fermento horas antes da massa final e deixada para maturar. Os mais usados são a biga (firme) e o poolish (líquido).",
+      whyImportant: "Traz aroma e muda como a massa final se trabalha. Na receita é uma fase à parte, e as quantidades dele fazem parte do total: não se somam. A autólise não é um pré-fermento, porque não leva fermento.",
+    },
+    sourdough: {
+      name: "Fermento natural (lievito madre)",
+      definition: "Uma massa de farinha e água onde vivem leveduras selvagens e bactérias láticas, mantida com alimentações de farinha e água. Uma parte é usada no lugar do fermento biológico.",
+      whyImportant: "Fermenta mais devagar que o fermento biológico e dá um sabor levemente ácido. A atividade depende de como você o alimenta: por isso a dose com fermento natural é uma hipótese do modelo, a ajustar ao seu.",
+    },
+    flour_type: {
+      name: "Tipo de farinha (00, 0, 1, 2, integral)",
+      definition: "Na Itália o tipo indica o quanto a farinha de trigo mole é refinada: a 00 é a mais branca, depois 0, 1, 2 e integral, que contém o grão inteiro. É definido pelas cinzas, isto é, os minerais que sobram ao queimar a farinha.",
+      whyImportant: "O tipo não diz o quanto a farinha é forte: uma 00 pode ser fraca ou muito forte. A força é o W, se estiver no pacote. Quando você não o informa, o modelo assume um intervalo típico para esse tipo.",
+    },
+    manitoba: {
+      name: "Manitoba",
+      definition: "Farinha de trigo mole rica em proteínas, originalmente de trigos norte-americanos (o nome vem da província canadense de Manitoba). Hoje, no comércio, indica uma farinha muito forte.",
+      whyImportant: "É usada em fermentações longas ou misturada com uma 00 para aumentar a força. Sozinha dá uma massa tenaz, mais difícil de abrir.",
+    },
+    semola_rimacinata: {
+      name: "Sêmola remoída (semola rimacinata)",
+      definition: "Sêmola de trigo duro moída uma segunda vez, mais fina que a sêmola comum: amarela e um pouco granulosa ao toque.",
+      whyImportant: "É usada para polvilhar a bancada e a pá, porque faz a pizza deslizar e queima menos que a farinha, e em pequena quantidade na massa de alguns estilos. O glúten do trigo duro é menos extensível que o do trigo mole.",
     },
   },
 };
@@ -668,7 +681,7 @@ export const SCIENCE_PT: CmsScience = {
     "equivalent-hours": {
       title: "Horas equivalentes",
       l1: "Suas horas traduzidas nas horas necessárias à temperatura de referência.",
-      l2: "Multiplicamos as horas pela velocidade na sua temperatura. Se você fermenta mais frio do que a referência (geladeira, adega), a fermentação final acontece na temperatura de referência: essas horas contam como são e só as outras são multiplicadas. Por isso a conta «horas × velocidade» sozinha não fecha.",
+      l2: "Multiplicamos as horas pela velocidade na sua temperatura. Se você fermenta mais frio do que a referência (geladeira, adega), a fermentação final e as dobras antes da geladeira acontecem na temperatura de referência: essas horas contam como são e só as outras são multiplicadas. Por isso a conta «horas × velocidade» sozinha não fecha.",
     },
     "kitchen-temp-default": {
       title: "Temperatura da cozinha",
@@ -698,7 +711,7 @@ export const SCIENCE_PT: CmsScience = {
     "water-temp-rule": {
       title: "Temperatura da água",
       l1: "Uma conta exata, que parte de algumas hipóteses sobre a sua cozinha.",
-      l2: "Cozinha, farinha, água e calor da masseira somam três vezes a temperatura de massa desejada. A aritmética é exata; cozinha e farinha são estimativas se você não as mede, e o calor da masseira é um valor típico.",
+      l2: "Cozinha, farinha, água e calor da masseira somam três vezes a temperatura de massa desejada; com um pré-fermento ele também entra e a soma passa a quatro vezes. A aritmética é exata; cozinha e farinha são estimativas se você não as mede, e o calor da masseira é um valor típico.",
     },
     "water-activity": {
       title: "Atividade de água (aw)",
@@ -719,6 +732,12 @@ export const SCIENCE_PT: CmsScience = {
       title: "O sal na Napoletana STG",
       l1: "O regulamento dissolve o sal na água antes de adicionar a farinha.",
       l2: "É a ordem do Regulamento UE da STG. Outros métodos adicionam o sal mais tarde: para este estilo seguimos o regulamento.",
+    },
+    /* FW-02 */
+    "stg-reference": {
+      title: "Receita e especificação",
+      l1: "Comparamos alguns valores da receita com a especificação da Napoletana STG.",
+      l2: "A especificação (Regulamento UE 97/2010) fixa a farinha, a fermentação, o peso da bola de massa e a cozedura. Se um valor sair dos seus intervalos, a receita é «inspirada na STG» e a diferença aparece aqui. A pontuação não certifica a conformidade.",
     },
     "flour-w-by-grade": {
       title: "Tipo de farinha e força",
@@ -778,7 +797,7 @@ export const SCIENCE_PT: CmsScience = {
     "score-weights": {
       title: "Pesos da pontuação",
       l1: "Os pesos das dimensões são uma escolha da {brand}.",
-      l2: "Dizem quanto cada dimensão conta no número final. Não vêm de uma medida: são uma regra do app, igual para todos.",
+      l2: "No número «Compatibilidade com a sua cozinha» contam só a autenticidade e a facilidade: maturação, sustentabilidade e experimentação aparecem à parte e não o alteram. Os pesos não vêm de uma medida: são uma regra do app, igual para todos. A pontuação é então o menor valor entre a média ponderada e a autenticidade.",
     },
     "non-feasible-ceiling": {
       title: "Teto para receitas inviáveis",
@@ -787,8 +806,13 @@ export const SCIENCE_PT: CmsScience = {
     },
     "authenticity-fuel-cap": {
       title: "Teto de autenticidade pelo combustível",
-      l1: "Sem o forno que o estilo pede, a autenticidade tem um teto: é uma escolha da {brand}.",
-      l2: "Quando um estilo exige lenha ou carvão, outro forno pode assar bem, mas não segue o método. O teto é um limite editorial, não uma medida de qualidade.",
+      l1: "Se o forno não é o que o estilo pede (lenha ou carvão) e não chega à temperatura mínima do estilo, a autenticidade tem um teto: é uma escolha da {brand}.",
+      l2: "O teto só vale quando faltam ao mesmo tempo o combustível e o calor: um forno elétrico ou a gás que chega à temperatura mínima do estilo não tem teto. Que o estilo preveja lenha ou carvão (para a Napoletana STG, o caderno de especificações diz) continua escrito nos detalhes da autenticidade, como informação e não como penalidade. O teto é um limite editorial, não uma medida de qualidade.",
+    },
+    "ranking-tiebreak": {
+      title: "Desempate com a mesma pontuação",
+      l1: "Com o mesmo número, vem primeiro o estilo que sua cozinha cobre com mais margem: é uma escolha da {brand}.",
+      l2: "O número não muda: muda só a ordem, e só entre estilos do mesmo grupo com a mesma pontuação. A margem é a média de dois valores entre 0 e 1: quanto o forno passa da temperatura mínima do estilo e quanto as horas disponíveis passam da maturação mínima, cada um em proporção ao mínimo (1 quer dizer o dobro ou mais). Nas fritas conta só o tempo. Vale em Criar, em Descobrir e para os assistentes.",
     },
     digestibility: {
       title: "Índice de digestibilidade",
@@ -800,6 +824,17 @@ export const SCIENCE_PT: CmsScience = {
       l1: "Os limites numéricos dos problemas são indicativos.",
       l2: "São regras práticas sem fonte publicada e não consideram o estilo: uma massa de assadeira, por exemplo, é muito mais hidratada que uma napolitana. Use-os como pista, não como diagnóstico.",
     },
+    /* FW-19: piano temporale. */
+    "comfort-tolerances": {
+      title: "Margens da linha de tempo confortável",
+      l1: "As margens com que a linha de tempo confortável move as esperas são uma escolha nossa, não uma medição.",
+      l2: "Alongamos ou encurtamos as esperas dentro de margens fixas, mais largas na geladeira do que em temperatura ambiente, sem passar horas da geladeira para o ambiente e sem recalcular o fermento. Quanto mais você se afasta do plano inicial, mais conta observar o volume da massa.",
+    },
+    "bake-round-recovery": {
+      title: "Recuperação do forno entre os assamentos",
+      l1: "O tempo entre um assamento e outro é uma hipótese do modelo.",
+      l2: "Entre uma pizza e outra você tira, coloca e o lastro volta à temperatura: o forno doméstico com pedra precisa de minutos, os fornos de pizza de menos, os de lenha quase nada. Usamos um valor fixo por tipo de forno, não medido no seu.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "A temperatura fica constante durante toda a fase.",
@@ -809,6 +844,7 @@ export const SCIENCE_PT: CmsScience = {
     "proof-share-default": "Sem indicação do estilo, a segunda fermentação é uma parte fixa das horas.",
     "starter-steps-by-hours": "A dose de levain cai em degraus com as horas, sem considerar a temperatura.",
     "starter-not-in-hydration": "A farinha e a água do levain não contam na hidratação.",
+    "preferment-at-maturation-temp": "Com um pré-fermento, o pré-fermento maduro está no ponto médio da sua temperatura de maturação (biga 18–20 °C, poolish 20–22 °C) e misturá-lo à mão não aquece por fricção.",
     "flour-at-kitchen-temp": "A farinha está na temperatura da cozinha.",
     "mixer-friction-values": "O calor da masseira é um valor típico a verificar; à mão é zero.",
     "coefficients-not-measured": "Os coeficientes da fórmula são escolhidos pelo modelo, não medidos.",
@@ -820,5 +856,38 @@ export const SCIENCE_PT: CmsScience = {
     "oven-power-steps": "Uma potência típica por faixa de temperatura, igual para todo combustível.",
     "no-health-claim": "Nenhuma alegação de saúde: o índice não mede a digestão de uma pessoa.",
     "thresholds-rules-of-thumb": "Os limites são regras práticas gerais, não ajustadas ao estilo.",
+    /* FW-19: piano temporale. */
+    "comfort-margins-rule-of-thumb": "As margens, mais largas na geladeira do que em temperatura ambiente, são regras práticas sem fonte.",
+    "comfort-yeast-unchanged": "A dose de fermento continua a calculada para o plano inicial.",
+    "recovery-by-oven-type": "A recuperação depende só do tipo de forno, não do modelo nem da superfície.",
+    /* FW-02 */
+    "stg-partial-check": "Comparamos só alguns valores: a origem dos ingredientes, a temperatura da massa e a execução não são verificadas.",
+  },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fresco), t₀ = 24 h, s = 1 fresco / 0,33 seco, k = correção pessoal (0,5–2) · tₑ = h se T ≥ 18 °C; abaixo: tₑ = (h − hₐ) + hₐ ÷ v(T), com hₐ = fermentação final + dobras a 18 °C · v(T): ver «Temperatura e velocidade de fermentação»",
+    "q10-fermentation": "v(T) = Q10ₐ^((T − 18)/10) se T ≥ T_b; abaixo: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · fermento biológico: T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · levain natural: T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
+    "equivalent-hours": "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, com hₐ = fermentação final + dobras a 18 °C",
+    "water-temp-rule": "T_água = 3 × T_massa − T_ambiente − T_farinha − atrito · com um pré-fermento, massa final: T_água = 4 × T_massa − T_ambiente − T_farinha − T_pré-fermento − atrito; água do pré-fermento: 3 × T_pré-fermento − T_ambiente − T_farinha",
+    "water-activity": "Aw ≈ 0,96 + (H − 55) × 0,0005 − sal × 0,006 − açúcar × 0,004",
+    "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, limitado ao intervalo do estilo",
+    "baking-energy": "E = P × t · P = 2, 3 ou 8 kW conforme a temperatura do forno",
+    "thickness-factor": "TF = peso da bola de massa (g) / área da pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+    "score-weights": "C = min(média ponderada de A e F; A) · pesos padrão: Autenticidade (A) 55 %, Facilidade (F) 45 % · não viável: C ≤ 39",
+    "ranking-tiebreak": "M = média de min(1; max(0; (T − T_min) / T_min)) e min(1; max(0; (H − H_min) / H_min)) · T forno, H horas disponíveis · fritas: só H",
+  },
+  sourceNotes: {
+    "internal-db": "base de dados de trabalho interna do projeto, não pública",
+    "demo": "dado de demonstração, marca inventada",
+    "ovens-secondary": "revendedores e avaliações de fornos (fontes secundárias)",
+    "autolyse-calvel": "artigo sobre a autólise (cita R. Calvel, 1974)",
+    "recipes": "receitas",
+    "articles": "artigos",
+    "abstract-only": "lido apenas o resumo",
+    "manufacturer-sheet": "ficha do fabricante",
+    "manufacturer-pages": "páginas de produto do fabricante",
+    "manual": "manual de uso",
+    "faq": "perguntas frequentes",
   },
 };

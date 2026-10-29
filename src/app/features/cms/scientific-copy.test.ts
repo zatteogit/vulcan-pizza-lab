@@ -18,6 +18,10 @@ describe('contenuto scientifico: tutte le sette lingue',()=>{
    expect(fodmap.whyImportant).not.toMatch(/\d+\s*%/);
    expect(getTermById('d_score',cms)!.formula).toBeUndefined();
    expect(getTermById('w_alveograph',cms)!.formula).not.toContain('dt');
+   // FW-05 (S12-A-01/B-02, S12-A-03): niente β inventato, pesi del motore e nessun segnaposto irrisolto.
+   expect(getTermById('arrhenius',cms)!.whyImportant).not.toMatch(/β|0[.,]075/);
+   expect(getTermById('a_score',cms)!.formula).not.toMatch(/Forma|Form\b|\{/);
+   expect(getTermById('f_score',cms)!.formula).not.toMatch(/\{/);
    const warnings=getDietaryWarnings(['low_fodmap','histamine'],[{name:'Farina di grano',gluten:true}]);
    expect(warnings).toHaveLength(2);
    for(const warning of warnings) expect(cms.engineMessages![warning.message.key], `${lang}: ${warning.message.key}`).toBeTruthy();

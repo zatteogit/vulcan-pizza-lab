@@ -3,8 +3,11 @@ import {
   Search,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect,useMemo,useState } from "react";
-import { useLocation } from "react-router";
+import { Fragment, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useHashTarget } from "../hooks/use-hash-target";
+import { getScienceNote, notesForGlossaryTerm } from "../data/science-notes";
+import { WhyButton } from "../features/science/why-button";
 import { useCms } from "../features/cms/cms-context";
 import { t } from "../features/cms/i18n";
 import { Disclosure, EmptyState, FilterChip, Surface } from "../components/ds/index";
@@ -17,6 +20,7 @@ import {
 } from "../features/glossary/glossary-categories";
 import type {
   GlossaryCategory,
+  GlossaryPage,
   GlossaryTerm,
 } from "../data/glossary-data";
 import {
@@ -33,7 +37,7 @@ function foldText(text: string): string {
 }
 
 export function GlossaryPage() {
-  const location = useLocation();
+  const navigate = useNavigate();
   const { cms } = useCms();
   const gl = cms.glossary;
   const [search, setSearch] = useState("");
@@ -49,41 +53,39 @@ export function GlossaryPage() {
     [cms],
   );
 
-  /* Deeplink: auto-expand and scroll to term from hash (e.g. /glossary#w_alveograph) */
-  useEffect(() => {
-    const hash = location.hash.replace("#", "");
-    if (hash) {
-      const term = getTermById(hash, cms);
-      if (term) {
-        setExpandedTerm(hash);
-        setActiveCategory("all");
-        setSearch("");
-        /* Wait for render, then scroll */
-        requestAnimationFrame(() => {
-          const el = document.getElementById(
-            `glossary-${hash}`,
-          );
-          if (el)
-            el.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-        });
-      }
-    }
-  }, [location.hash, cms]);
+  /* FW-04 (S04-A-04, S12-B-01, S12-A-07): #termine apre la voce, aspetta il
+     layout, la porta in cima e mette a fuoco il titolo, in ogni lingua e anche
+     sulla stessa pagina (correlati, ricerca). */
+  useHashTarget({
+    onMatch: (id) => {
+      if (!GLOSSARY_TERMS.some((term) => term.id === id)) return false;
+      setExpandedTerm(id);
+      setActiveCategory("all");
+      setSearch("");
+      return true;
+    },
+    targetId: (id) => `glossary-${id}`,
+    focusId: (id) => `glossary-${id}-toggle`,
+  });
+
+  /* FW-04 (S12-A-06, S12-B-06): filtri, conteggi e lista filtrata usano le
+     voci nella lingua attiva (prima la lista filtrata tornava in italiano). */
+  const localizedTerms = useMemo(
+    () => GLOSSARY_TERMS.map((raw) => ({ raw, term: getLocalizedTerm(raw, cms) })),
+    [cms],
+  );
 
   /* FW-09 (S12-A-19, S12-B-15): la ricerca guarda i testi della lingua
      attiva senza badare agli accenti, e i conteggi dei chip la seguono. */
   const searchedTerms = useMemo(() => {
     const q = foldText(search.trim());
-    if (!q) return GLOSSARY_TERMS;
-    return GLOSSARY_TERMS.filter((raw) => {
-      const term = getLocalizedTerm(raw, cms);
-      return [term.name, term.definition, term.symbol ?? "", raw.name, raw.id.replace(/_/g, " ")]
-        .some((field) => foldText(field).includes(q));
-    });
-  }, [search, cms]);
+    if (!q) return localizedTerms.map(({ term }) => term);
+    return localizedTerms
+      .filter(({ raw, term }) =>
+        [term.name, term.plainDefinition ?? "", term.definition, term.symbol ?? "", raw.name, raw.id.replace(/_/g, " ")]
+          .some((field) => foldText(field).includes(q)))
+      .map(({ term }) => term);
+  }, [search, localizedTerms]);
 
   const filteredTerms = useMemo(
     () => activeCategory === "all" ? searchedTerms : searchedTerms.filter((t) => t.category === activeCategory),
@@ -100,18 +102,10 @@ export function GlossaryPage() {
     return counts;
   }, [searchedTerms]);
 
+  /* FW-04 (S12-B-11): un correlato cambia l'URL (Indietro torna alla voce di
+     partenza, il link si condivide) e passa da useHashTarget: scroll e focus. */
   const handleNavigateToTerm = (termId: string) => {
-    setExpandedTerm(termId);
-    setActiveCategory("all");
-    setSearch("");
-    requestAnimationFrame(() => {
-      const el = document.getElementById(`glossary-${termId}`);
-      if (el)
-        el.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-    });
+    navigate({ hash: termId });
   };
 
   return (
@@ -326,6 +320,7 @@ function TermCard({
   const TermIcon = GLOSSARY_CATEGORY_ICONS[term.category];
   const { cms } = useCms();
   const gl = cms.glossary;
+  const SectionHeading = headingLevel === 2 ? "h3" : "h4";
 
   return (
     <Surface
@@ -355,8 +350,9 @@ function TermCard({
               <span className="glossary-card__name">
                 {term.name}
               </span>
-              {term.symbol && (
-                <span className="glossary-card__symbol">
+              {/* FW-04 (S11-A-12): il simbolo non si ripete se è già nel nome. */}
+              {term.symbol && !term.name.includes(term.symbol) && (
+                <span className="glossary-card__symbol" aria-hidden="true">
                   {term.symbol}
                 </span>
               )}
@@ -366,74 +362,89 @@ function TermCard({
                 </span>
               )}
             </span>
+            {/* FW-04 (S12-B-08): prima la definizione in parole semplici. */}
             <span className="glossary-card__definition">
-              {term.definition}
+              {term.plainDefinition ?? term.definition}
             </span>
           </span>
         </>}
       >
             <div className="glossary-card__body">
-              {term.formula && (
-                <div className="glossary-formula">
-                  <span className="type-label glossary-section__label">
-                    {gl.formulaLabel}
-                  </span>
-                  <div className="type-nerd glossary-formula__value">
-                    {term.formula}
-                  </div>
-                </div>
-              )}
-
-              {term.ranges && term.ranges.length > 0 && (
-                <div className="glossary-ranges">
-                  <span className="type-label glossary-section__label">
-                    {gl.rangesLabel}
-                  </span>
-                  <div className="glossary-ranges__list">
-                    {term.ranges.map((r, i) => (
-                      <div
-                        key={i}
-                        className="glossary-ranges__row"
-                      >
-                        <span className="glossary-ranges__value">
-                          {r.value}
-                        </span>
-                        <span className="glossary-ranges__label">
-                          {r.label}
-                        </span>
-                        {r.note && (
-                          <span className="glossary-ranges__note">
-                            {"— "}
-                            {r.note}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              {/* FW-04: livello 2 (definizione tecnica, perché conta), poi il
+                  livello 3 (formula, valori, modello) e i rimandi. */}
+              {term.plainDefinition && (
+                <section data-region="glossary-technical">
+                  <SectionHeading className="type-label glossary-section__label">{gl.technicalLabel}</SectionHeading>
+                  <p className="glossary-why__text">{term.definition}</p>
+                </section>
               )}
 
               {term.whyImportant && (
-                <div className="glossary-why">
-                  <span className="type-label glossary-section__label">
+                <section className="glossary-why">
+                  <SectionHeading className="type-label glossary-section__label">
                     {gl.whyImportantLabel}
-                  </span>
+                  </SectionHeading>
                   <p className="glossary-why__text">
                     {term.whyImportant}
                   </p>
-                </div>
+                </section>
               )}
+
+              {term.formula && (
+                <section className="glossary-formula">
+                  <SectionHeading className="type-label glossary-section__label">
+                    {gl.formulaLabel}
+                  </SectionHeading>
+                  <p className="type-nerd glossary-formula__value">
+                    {term.formula}
+                  </p>
+                </section>
+              )}
+
+              {/* FW-04 (S12-A-14, S12-B-12): tabella vera, colonne fisse
+                  (valore | che cosa indica), l'esempio sotto il significato. */}
+              {term.ranges && term.ranges.length > 0 && (
+                <section className="glossary-ranges">
+                  <SectionHeading className="type-label glossary-section__label">
+                    {gl.rangesLabel}
+                  </SectionHeading>
+                  <table className="glossary-ranges__table">
+                    <thead>
+                      <tr>
+                        <th scope="col">{gl.rangesValueHeader}</th>
+                        <th scope="col">{gl.rangesMeaningHeader}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {term.ranges.map((r, i) => (
+                        <tr key={i} className="glossary-ranges__row">
+                          <td className="glossary-ranges__value">{r.value}</td>
+                          <td className="glossary-ranges__label">
+                            {r.label}
+                            {r.note && (
+                              <small className="glossary-ranges__note">{r.note}</small>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </section>
+              )}
+
+              <ModelNotes term={term} SectionHeading={SectionHeading} />
 
               {term.relatedTerms &&
                 term.relatedTerms.length > 0 && (
-                  <div className="glossary-related">
-                    <span className="type-label glossary-section__label">
+                  <section className="glossary-related">
+                    <SectionHeading className="type-label glossary-section__label">
                       {gl.relatedLabel}
-                    </span>
+                    </SectionHeading>
                     <div className="glossary-related__list">
                       {term.relatedTerms.map((relId) => {
                         const rel = getTermById(relId, cms);
                         if (!rel) return null;
+                        /* FW-04 (S12-A-17): il nome intero, non solo «W». */
                         return (
                           <button
                             type="button"
@@ -443,15 +454,60 @@ function TermCard({
                             }
                             className="glossary-related__tag"
                           >
-                            {rel.symbol || rel.name}
+                            {rel.name}
                           </button>
                         );
                       })}
                     </div>
-                  </div>
+                  </section>
                 )}
+
+              {term.relatedPages && term.relatedPages.length > 0 && (
+                <section className="glossary-related">
+                  <SectionHeading className="type-label glossary-section__label">{gl.seeAlsoLabel}</SectionHeading>
+                  <div className="glossary-related__list">
+                    {term.relatedPages.map((page) => (
+                      <Link key={page} to={PAGE_LINKS[page].to} className="glossary-related__tag glossary-related__tag--page">
+                        {PAGE_LINKS[page].label(cms)}
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
       </Disclosure>
     </Surface>
+  );
+}
+
+/* FW-04 (S12-A-11): «Vedi anche» — pagine che approfondiscono una voce. */
+const PAGE_LINKS: Record<GlossaryPage, { to: string; label: (cms: ReturnType<typeof useCms>["cms"]) => string }> = {
+  profile: { to: "/profile", label: (cms) => cms.pages.navProfile },
+  "pre-ferments": { to: "/learn/pre-ferments", label: (cms) => cms.pages.learnPreFerments },
+  troubleshooting: { to: "/learn/troubleshooting", label: (cms) => cms.pages.learnTroubleshooting },
+};
+
+/* FW-04 (FW-01): la voce porta alle note del registro della scienza che il
+   motore usa per quel concetto (titolo e «perché» in parole semplici). */
+function ModelNotes({ term, SectionHeading }: { term: GlossaryTerm; SectionHeading: "h3" | "h4" }) {
+  const { cms } = useCms();
+  const ids = [...new Set([...notesForGlossaryTerm(term.id).map((note) => note.id), ...(term.noteIds ?? [])])]
+    .filter((id) => getScienceNote(id) && cms.science.notes[id]);
+  if (ids.length === 0) return null;
+  return (
+    <section data-region="glossary-model">
+      <SectionHeading className="type-label glossary-section__label">{cms.glossary.modelNoteLabel}</SectionHeading>
+      {ids.map((id) => (
+        <Fragment key={id}>
+          <p className="glossary-why__text">
+            <strong>{cms.science.notes[id].title}</strong>
+            {" — "}
+            {cms.science.notes[id].l2}
+          </p>
+          {/* Il «Perché?» apre la nota intera (statuto, conto, fonti: livello 3). */}
+          <WhyButton noteId={id} className="glossary-model__why" />
+        </Fragment>
+      ))}
+    </section>
   );
 }

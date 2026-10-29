@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_ES } from "../../../i18n/ui-messages.es";
 import { TOPPING_I18N_ES } from "../../../data/topping-i18n/es";
 import { INSPIRATION_I18N_ES } from "../../../data/inspiration-i18n/es";
@@ -23,7 +25,7 @@ export const ES_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "sal marina fina", "fine": "sal fina", "kosher": "sal kosher", "kosher_or_fine": "sal kosher o fina", "coarse_and_fine": "sal gruesa y fina" },
-    saltTiming: { "with_flour": "con la harina", "after_flour_water": "después de la harina y el agua", "after_flour_water_5min": "después de la harina y el agua (5 min de amasado)", "after_hydration": "tras la hidratación", "fine_in_dough_coarse_on_top": "fina en la masa, gruesa en la superficie" },
+    saltTiming: { "with_flour": "con la harina", "after_flour_water": "después de la harina y el agua", "dissolved_in_water": "disuelta en el agua, antes de la harina (pliego de condiciones)", "after_hydration": "tras la hidratación", "fine_in_dough_coarse_on_top": "fina en la masa, gruesa en la superficie" },
     fold: { "stretch_fold": "pliegues estirar y doblar", "coil_fold": "pliegues en espiral", "french_fold": "pliegue francés", "slap_fold": "slap & fold" },
     stretch: {
       napoletana_stg: "Estirada a mano (golpe napolitano)",
@@ -76,10 +78,9 @@ export const ES_LOCALE: CmsContent = {
     "USA": "EE. UU.",
   },
   ui: {
-    scoreTipTitle: "Cómo leer la puntuación",
     scoreTipOriginal: "Referencia del estilo, en tu cocina.",
     scoreTipTailored: "Versión con las adaptaciones propuestas.",
-    scoreTipGlobal: "La puntuación considera viabilidad y autenticidad. No certifica el cumplimiento de un pliego de condiciones.",
+    scoreTipGlobal: "La puntuación cuenta solo facilidad y autenticidad, y nunca supera la autenticidad. Maduración, sostenibilidad y experimentación son información aparte. No certifica el cumplimiento de un pliego de condiciones.",
     scoreTipBlocked: "Hay requisitos sin cumplir: abre el detalle.",
     pantrySelectionSummary: "Seleccionados: {n} · Excluidos: {excluded}",
     pantryWValue: "W{w}",
@@ -140,17 +141,9 @@ export const ES_LOCALE: CmsContent = {
     recipeCurrentVersion: "Actual",
     recipeOptimizedVersion: "Propuesta",
     recipeScoreLabel: "Puntuación",
-    recipeScoreTransition: "Puntuación: {from}/100 → {to}/100",
     scoreBasisOriginal: "Referencia",
     scoreBasisTailored: "Adaptada",
 
-    scoreLimitedAuthenticity: "La autenticidad ({score}/100) limita la puntuación.",
-    scoreLimitedFeasibility: "Falta un requisito esencial. Consulta el motivo más abajo.",
-    scoreWeightedAverage: "Media ponderada de los cinco criterios",
-    scoreAuthenticityCeiling: "Límite por autenticidad",
-    scoreFeasibilityCeiling: "Límite por inviabilidad",
-    scoreNotWeighted: "Eje informativo: con este peso no modifica la puntuación global.",
-    scoreReferencePending: "El perfil de desviación de este estilo aún no se ha verificado.",
 
     copy: "Copiar",
     share: "Compartir",
@@ -160,16 +153,12 @@ export const ES_LOCALE: CmsContent = {
     closeDetails: "Cerrar detalles",
     closeInsight: "Cerrar",
     modify: "Editar",
-    disable: "Desactivar",
     restore: "Restaurar",
     generate: "Generar receta",
-    chooseStyle: "Elegir estilo",
     customizeParams: "Personalizar par\u00E1metros",
     changeStyle: "Cambiar estilo",
-    newPizza: "Nueva pizza",
     ingredients: "Ingredientes",
     procedure: "Procedimiento",
-    steps_count: "{n} pasos",
     doughBalls: "Bollos",
     timeline: "Cronograma",
     doughBallsFrom: "de {w} cada uno",
@@ -177,8 +166,6 @@ export const ES_LOCALE: CmsContent = {
     startTime: "Inicio",
     endTime: "Fin",
     clipboardBalls: "{n} bollos de {w}",
-    clipboardTotal: "Total: {g}",
-    clipboardProcedure: "{style} \u2014 Procedimiento",
     flour: "Harina",
     flourMix: "mezcla de harinas",
     flourEffectiveGluten: "fuerza glutínica efectiva",
@@ -186,19 +173,6 @@ export const ES_LOCALE: CmsContent = {
     salt: "Sal",
     sugar: "Az\u00FAcar",
     oilEvo: "Aceite de oliva",
-    compTitle: "Ajustes",
-    compTitleNerd: "Compensaciones del horno",
-    compHydration:
-      "Mayor hidrataci\u00F3n para compensar tu horno",
-    compOil:
-      "Un poco m\u00E1s de aceite para mantener la pizza suave",
-    compSugar: "M\u00E1s az\u00FAcar para un buen dorado",
-    compCookTime:
-      "Tiempo de cocci\u00F3n m\u00E1s largo para un resultado perfecto",
-    compThickness:
-      "Estiramiento m\u00E1s fino para una cocci\u00F3n uniforme",
-    compDefault:
-      "Par\u00E1metro ajustado a tu configuraci\u00F3n",
     bakeAdjustmentTitle: "Cocción",
     relativeToBase: "respecto a la base",
     ariaReduceBalls: "Reducir bollos",
@@ -207,14 +181,11 @@ export const ES_LOCALE: CmsContent = {
     statOven: "Horno",
     statRest: "Reposo",
     statOil: "Aceite",
-    statCookTime: "Cocci\u00F3n",
     statFermentation: "Fermentaci\u00F3n",
     statFlourStrength: "Fuerza de harina",
     fermentEnvAmbient: "ambiente",
     fermentEnvFridge: "nevera",
     statTempSuffix: "a {t}\u00B0C",
-    nerdTitle: "Datos t\u00E9cnicos",
-    nerdFlourW: "Harina W",
     nerdPL: "P/L",
     nerdYeast: "Levadura",
     nerdHoursAt18: "Hrs @{refTemp}",
@@ -230,7 +201,6 @@ export const ES_LOCALE: CmsContent = {
     slotNoPreference: "Sin preferencia",
     slotNoPreferenceSub: "los tiempos ideales del estilo, incluso varios días",
     interpretationDisclaimer: "Interpretación de {brand} a partir de fuentes públicas: no es la receta original de {who} ni está avalada por {who}.",
-    yeastHowToggle: "Cómo calculamos la levadura",
     yeastModelBody: "Partimos de {ref} de levadura fresca sobre la harina para {refHours} a {refTemp}. Con {hours} a {temp} la levadura trabaja a {speed}× la velocidad de referencia: la dosis queda en {pct}.",
     yeastDryNote: "Con levadura seca la dosis es un tercio de la fresca.",
     yeastTempModelNote: "Cómo cambia la velocidad con la temperatura (factor Q10 de 2, 1,6 por debajo de 10 °C) es una estimación del modelo, por confirmar con pruebas.",
@@ -266,10 +236,10 @@ export const ES_LOCALE: CmsContent = {
     procedureDirect: "Directo",
     procedurePreferment: "Prefermento",
     procedureUnleavened: "Sin levadura",
-    flourUseVeryStrong: "Manitoba o tipo 0 muy fuerte",
-    flourUseStrong: "Tipo 0/00 de fuerza para pizza",
-    flourUseMedium: "Tipo 0 de fuerza media",
-    flourUseWeak: "Tipo 00 floja/media",
+    flourUseVeryStrong: "Harina muy fuerte, tipo manitoba",
+    flourUseStrong: "Harina de fuerza, para maduraciones largas",
+    flourUseMedium: "Harina de fuerza media, a menudo «para pizza»",
+    flourUseWeak: "Harina floja, de uso general o repostería",
     verdictTitle: "Así no es viable",
     verdictOvenTooCold: "La cocción está ajustada a {oven}; este método necesita al menos {min}.",
     verdictTimeWindow: "Hacen falta unas {needed} y tienes {available}: estaría lista después de la hora elegida.",
@@ -278,26 +248,17 @@ export const ES_LOCALE: CmsContent = {
     verdictAlternatives: "Con estas condiciones funcionan:",
     verdictRecipeBelow: "Puedes consultar la receta y ver qué requisitos debes cambiar.",
     recipeScore: "Compatibilidad con tu cocina",
-    nerdToggle: "PizzaNerd",
-    nerdActive: "Activar PizzaNerd",
     scienceTitle: "{brand} Science",
-    ariaCloseScores: "Cerrar detalles de la puntuación",
-    ariaViewScores: "Ver detalles de la puntuación",
-    tapForDetails: "Toca para detalles",
     styleEditorActive: "Style Editor activo",
     cmsActive: "CMS activo",
     fieldsModified: "campos modificados",
     fieldModified: "campo modificado",
     editOven: "Editar horno",
-    weatherCity: "Tu ciudad",
     weatherOutdoor: "{t}\u00B0C fuera",
-    weatherKitchen: "Temperatura cocina",
     badgeIdeal: "Recomendado",
     badgeRecent: "RECIENTE",
     autoLabel: "Auto",
     cancel: "Cancelar",
-    changeOven: "Cambiar",
-    ovenFallback: "Horno",
     pantryFlours: "Harinas",
     pantryYeasts: "Levaduras",
     equipByHand: "A mano",
@@ -309,14 +270,6 @@ export const ES_LOCALE: CmsContent = {
     equipSurface: "Superficie de cocción",
     kitchenTitle: "Tu cocina",
     pantryOptional: "opcional",
-    specialFlours: "Harinas especiales",
-    brandSuggest: "¿Conoces la marca?",
-    badgeSelected: "Seleccionada",
-    otherCompatibleFlours: "Otras harinas compatibles",
-    flourSelectHint:
-      "Selecciona una harina para actualizar automáticamente W y P/L de la receta.",
-    flourSelected: "Aplicada",
-    autolysisSuggested: "Autólisis recomendada",
     dietGlutenFree: "Sin gluten",
     dietLactoseFree: "Sin lactosa",
     dietVegan: "Vegano",
@@ -324,9 +277,7 @@ export const ES_LOCALE: CmsContent = {
     dietHistamine: "Baja histamina",
     dietNickel: "Bajo en níquel",
     adjustByHand: "Ajustar a mano",
-    specFermentTemp: "Fermentaci\u00F3n",
     personalize: "Personalizar",
-    adjustByHandQuestion: "\u00BFPrefieres decidir t\u00FA?",
     statIdeal: "ideal",
   },
   tips: {
@@ -344,7 +295,6 @@ export const ES_LOCALE: CmsContent = {
   },
   hero: {
     title_line1: "Tu",
-    title_line2: "próxima pizza.",
     subtitle:
       "Elige cuándo quieres servirla.",
     /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
@@ -373,11 +323,6 @@ export const ES_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title: "\u00BFCu\u00E1ndo quieres pizza?",
-      description:
-        "Selecciona el momento para calcular los tiempos de fermentaci\u00F3n",
-    },
     skill: {
       title: "Nivel de experiencia",
       description:
@@ -390,10 +335,6 @@ export const ES_LOCALE: CmsContent = {
     pantry: {
       title: "Despensa",
       description: "Harinas y levaduras que tienes en casa",
-    },
-    dietary: {
-      title: "Necesidades diet\u00E9ticas",
-      description: "Filtros opcionales",
     },
     equipment: {
       title: "Equipamiento",
@@ -472,15 +413,15 @@ export const ES_LOCALE: CmsContent = {
     },
     "2": {
       name: "Intermedio",
-      description: "Ya he hecho algunas pizzas",
+      description: "He hecho pizza algunas veces siguiendo una receta",
     },
     "3": {
       name: "Avanzado",
-      description: "Manejo pliegues y fermentaciones",
+      description: "Hago pizza a menudo y sé manejar una masa blanda",
     },
     "4": {
       name: "Experto",
-      description: "Adapto masas, tiempos y técnicas",
+      description: "Ajusto yo mismo cantidades y tiempos",
     },
   },
   families: {
@@ -511,37 +452,37 @@ export const ES_LOCALE: CmsContent = {
     authenticity: {
       label: "Autenticidad",
       short: "Aut",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Compara masa, proceso y horno con la referencia del estilo. Un valor bajo limita la puntuación global; no certifica el cumplimiento de un pliego.",
     },
     feasibility: {
       label: "Facilidad",
       short: "Via",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Estima la dificultad con tu horno, harina y experiencia. Los requisitos indispensables se indican aparte.",
     },
     digestibility: {
       label: "Maduración estimada",
       short: "Mad",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Estima la maduración según tiempo, temperatura, levadura y prefermento. No mide cómo digerirás la pizza.",
     },
     sustainability: {
       label: "Sostenibilidad estimada",
       short: "Sost",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Compara cocción, fermentación e ingredientes. Es una estimación relativa, no el consumo medido ni la huella de carbono de la receta.",
     },
     experimentation: {
       label: "Experimentación",
       short: "Exp",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "Desviación de masa, proceso y cocción respecto a la referencia. Un valor alto indica más experimentación, no mayor éxito. Algunos perfiles siguen sin verificar. Su contribución al resultado global es 100 menos este valor.",
+        "Desviación de masa, proceso y cocción respecto a la referencia. Un valor alto indica más experimentación, no mayor éxito. Algunos perfiles siguen sin verificar. No entra en la puntuación de compatibilidad.",
     },
   },
   recommendationWeights: {
@@ -557,52 +498,33 @@ export const ES_LOCALE: CmsContent = {
       "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
   },
   result: {
-    breadcrumb: "Tu pizza perfecta",
     heading: "Aqu\u00ED est\u00E1 tu receta",
-    backLabel: "Volver a la selecci\u00F3n",
   },
   misc: {
     showAllStyles: "Mostrar todas",
-    noFloursInCategory: "No hay harinas en esta categoría",
     noTroubleshootingResults: "No se encontraron problemas para esta búsqueda",
     moreInfo: "Más información",
     changeTiming: "Cambiar los tiempos",
     kitchenTempSubtitle: "La temperatura influye en la velocidad de fermentación",
     techAdjustmentsApplied: "Ajustes técnicos aplicados",
-    techDataAria: "Mostrar datos técnicos (W, P/L, Q10, Aw)",
-    techDataTitle: "Datos técnicos y cálculos de la masa",
     feedbackYes: "Sí, con gusto",
     feedbackNo: "No, así está bien",
     feedbackPlaceholder: "¿Qué cambiaste? ¿Cómo quedó? Detalles útiles...",
     preFermentCompare: "Comparación rápida",
     scoreExplainer: "La puntuación combina los criterios de la receta. Los requisitos incumplidos y la distancia a la referencia pueden limitarla.",
-    companionContext: "La temperatura de la cocina y el tiempo disponible guían todo el proceso.",
-    companionSetup: "Adaptamos la receta a tu experiencia, tu horno y tu despensa real.",
-    companionStyles: "Cada estilo tiene parámetros únicos: elige el que mejor se adapte a tus condiciones.",
-    smartLinkOn: "Parámetros vinculados — mueve un control y los demás se ajustan",
-    smartLinkOff: "Vincula todos los parámetros para ajuste automático",
-    smartLinkApplied: "{param}: he realineado los demás parámetros y la cronología.",
     settingsHelp: "Estos datos ayudan a {brand} a adaptar los tiempos y la receta.",
-    versionsLabel: "Versiones",
-    versionsHint: "Cada versión tiene sus propios rangos de referencia. Las marcas muestran los de la versión seleccionada.",
     learnHeroTitle1: "Conoce la masa,",
     learnHeroTitle2: "mejora tu pizza.",
-    learnHeroSubtitle: "Técnicas, ingredientes y cocción: aprende qué observar y cómo intervenir.",
+    learnHeroSubtitle: "Términos, problemas, prefermentos y cómo calculamos: aprende qué observar y cómo intervenir.",
     learnResources: "Recursos",
     kitchenTempLabel: "Temperatura de la cocina",
     kitchenTempDown: "Bajar la temperatura de la cocina",
     kitchenTempUp: "Subir la temperatura de la cocina",
     current: "Seleccionado",
     noStyleInFamily: "Ningún estilo de esta familia para tus parámetros.",
-    notFeasibleExplainer: "Estas recetas tienen un requisito incumplido. Abre el detalle para ver qué cambiar.",
     exploreHeroTitle1: "Explora estilos",
     exploreHeroTitle2: "y recetas.",
-    badgeBeginnerFriendly: "Principiantes",
-    interpretationsLabel: "Interpretaciones",
-    goToSite: "Ir al sitio",
     signatureLabel: "Versión",
-    noSignature: "sin inspiración",
-    fineParams: "Parámetros avanzados",
     cmsRestoreContent: "Restaurar contenido del CMS",
     inspirationLabel: "Versión",
     inspirationBase: "Referencia",
@@ -668,9 +590,6 @@ export const ES_LOCALE: CmsContent = {
   filters: {
     advancedLabel: "M\u00E1s",
     removeFilters: "Quitar filtros",
-    brandedFlours: "Harinas de marca",
-    settingsOpen: "Ajustes",
-    settingsClosed: "Tus ajustes",
     hydrationLabel: "Hidratación",
     hydrationLow: "Baja <60%",
     hydrationMedium: "Media 60-70%",
@@ -686,7 +605,6 @@ export const ES_LOCALE: CmsContent = {
     skillIntermediate: "Intermedio",
     skillAdvanced: "Avanzado",
     skillExpert: "Experto",
-    timeFast: "rápido",
     ovenLabel: "Cocción",
     ovenHome: "Horno casero",
     ovenWood: "Leña",
@@ -703,10 +621,9 @@ export const ES_LOCALE: CmsContent = {
     noResults: "Ningún término para «{query}»",
     allCategories: "Todos",
     formulaLabel: "F\u00F3rmula",
-    rangesLabel: "Rangos t\u00EDpicos",
-    whyImportantLabel: "Por qu\u00E9 importa",
+    rangesLabel: "Valores típicos",
+    whyImportantLabel: "Por qué importa",
     relatedLabel: "Relacionados",
-    backToHome: "Volver al inicio",
     termCount: "{count} t\u00E9rminos",
     // FW-09
     termCountOne: "{count} término",
@@ -731,6 +648,17 @@ export const ES_LOCALE: CmsContent = {
     catMechanicsDesc: "Procesamiento, equipos y medidas",
     catScoring: "Puntajes",
     catScoringDesc: "Cómo leer las puntuaciones de {brand}",
+    // FW-04
+    catTechnique: "Gestos y fases",
+    catTechniqueDesc: "Las palabras del proceso, del amasado al horno",
+    catFlour: "Harinas",
+    catFlourDesc: "Tipos de harina y cómo leerlos",
+    rangesValueHeader: "Valor",
+    rangesMeaningHeader: "Qué indica",
+    technicalLabel: "Definición técnica",
+    modelNoteLabel: "En el modelo de {brand}",
+    seeAlsoLabel: "Ver también",
+    inGlossaryLabel: "En el glosario:",
   },
   engineMessages: {
     "allergen.conflict": "Contiene {allergen}: {ingredients}.",
@@ -771,15 +699,16 @@ export const ES_LOCALE: CmsContent = {
     "learn.compatiblePath": "Un recorrido práctico compatible con tu cocina: comprueba las condiciones de la receta.",
     "learn.theoryOnly": "No hay una receta verificada para estas condiciones; explora la teoría.",
     "learn.openTheory": "Explora la teoría",
-    "timeline.preheat.includesProof": "Este bloque incluye {minutes} minutos de fermentación final, ya incluidos en el tiempo total: no los sumes otra vez.",
-    "timeline.preheat.includesRest": "Este bloque incluye {minutes} minutos de reposo, ya incluidos en el tiempo total: no los sumes otra vez.",
+    "timeline.preheat.includesProof": "Cuando el horno esté listo, comprueba la masa: al presionarla con un dedo, la marca vuelve despacio.",
+    "timeline.preheat.includesProofOil": "Cuando el aceite esté a temperatura, comprueba la masa: al presionarla con un dedo, la marca vuelve despacio.",
     "auth.hydrationOff":
       "Hidratación fuera de centro (-{penalty}%)",
     "auth.wOutOfRange":
       "W de harina fuera de rango (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} fuera de rango {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "No es horno de leña (-15%)",
+    "auth.notWoodOven": "No es horno de leña y está por debajo de los {min} °C mínimos del estilo: −15 puntos en el eje de equipo (35 % de la autenticidad)",
+    "auth.woodByMethod": "El estilo prevé el horno de leña (para la Napoletana STG lo exige el pliego de condiciones): tu horno llega a los {min} °C mínimos, así que es una información y no resta puntos",
     "auth.tempVsIdeal":
       "Temperatura {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -817,11 +746,8 @@ export const ES_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Fermentación adaptable a ~{hours}",
     "rec.timeInsufficient":
       "Requiere mínimo {fMin}, tienes {available}",
-    "rec.needsWoodOven": "La referencia usa horno de leña; con tu horno cambia la cocción.",
-    "rec.ovenAdapted": "Tu horno alcanza {temp}: temperatura ideal {ideal}, cocción adaptada",
     "gen.homeBakingMethod": "Cocción doméstica a {temp} sobre una bandeja invertida precalentada; resultado distinto de la cocción original a {ideal}",
     "gen.ovenTooNarrow": "Tu horno admite pizzas de hasta {max} cm y esta receta prevé {diameter} cm: estira el disco a {max} cm como máximo.",
-    "rec.needsDeck": "Esta cocción necesita piedra o acero precalentado, no indicado en tu cocina",
     "timeline.homeTray.preheat": "Precalienta el horno al máximo ({temp}) con una bandeja invertida dentro hasta que también esté caliente. Mientras, termina el reposo de la masa.",
     "timeline.homeTray.bake": "Hornea sobre la bandeja invertida precalentada. Comprueba el dorado de la base y la cocción antes de sacar.",
     "gen.fermentationTooLong": "La fermentación de {hours} supera el máximo de esta receta ({maxHours}). Elige un método verificado para una duración mayor.",
@@ -845,7 +771,6 @@ export const ES_LOCALE: CmsContent = {
     "need.withoutWood": "También sin leña",
     "need.adaptedBake": "Cocción adaptada",
     "need.deck": "Hace falta piedra o acero",
-    "card.pantryCheck": "Comprueba la despensa",
     "card.directDough": "Masa directa",
     "card.resourceExcluded": "Requisito excluido",
     "card.panMissing": "Falta bandeja",
@@ -876,53 +801,16 @@ export const ES_LOCALE: CmsContent = {
     "change.prefermentDetails": "Prefermento: {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Cocción: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "La cocción con carbón define el método original: otro combustible supone una adaptación",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "Sin el horno que pide el estilo, y por debajo de sus {min} °C mínimos, la autenticidad se queda en {cap}/100: es una regla de la app, no una medida",
     "gen.notCoalOven": "El estilo original usa carbón: el horno elegido cambia la cocción y el perfil aromático",
     "timeline.oven.coal": "Horno de carbón con solera precalentada: vigila base y bordes y gira para una cocción uniforme.",
     "rec.ovenIdeal":
       "Tu horno alcanza la temperatura ideal ({ideal})",
-    "rec.ovenAdequate":
-      "Horno adecuado (compensación automática tiempo/temperatura)",
     "rec.ovenTooCold":
       "Horno demasiado frío: {temp} < min {min}",
     "rec.skillMatch": "Adecuado a tu nivel",
-    "rec.skillExpert": "Tu nivel permite cualquier estilo",
-    "rec.hydrationNeedsPractice":
-      "La hidratación alta requiere práctica",
-    "rec.advancedForBeginner":
-      "Estilo avanzado para principiantes",
-    "rec.noKneadNoMixer": "No necesitas amasadora (no-knead)",
-    "rec.handsHighHydration":
-      "Hidratación alta: amasado a mano muy difícil",
-    "rec.handsMedHydration":
-      "Hidratación media-alta: amasado a mano requiere práctica",
-    "rec.forkIdealHighH":
-      "Amasadora de horquilla ideal para alta hidratación",
-    "rec.forkLowFriction":
-      "Amasadora de horquilla: bajo rozamiento térmico",
-    "rec.spiralOptimal": "Espiral profesional: amasado óptimo",
-    "rec.domesticStrugglesHighH":
-      "Amasadora doméstica: puede fallar con hidratación >80%",
-    "rec.mixerHelps": "Tu amasadora facilita el proceso",
-    "rec.mixerRecommended":
-      "Hidratación alta: amasadora recomendada",
-    "rec.castIronPerfect":
-      "Hierro fundido perfecto para este estilo",
-    "rec.panFits": "Bandeja adecuada para este estilo",
-    "rec.needsPan": "Se necesita bandeja para este estilo",
-    "rec.refractoryIdeal":
-      "Piedra refractaria: ideal para la napolitana",
-    "rec.steelPlateCrispy":
-      "Placa de acero: base crujiente en segundos",
-    "rec.panPerfect": "Tu bandeja es perfecta para este estilo",
     "rec.flourMatch": "Harina en despensa compatible",
-    "rec.flourPartial":
-      "Harina parcialmente adecuada (W no ideal)",
-    "rec.flourNoMatch":
-      "Ninguna harina en despensa en el rango W requerido",
-    "rec.sourdoughLongFerment":
-      "Masa madre ideal para maduración larga",
-    "rec.sourdoughOnlyShort":
-      "Solo masa madre: fermentación corta difícil",
     "tip.waterTempCold":
       "Usa agua fr\u00EDa de la nevera ({temp}): la amasadora calienta la masa.",
     "tip.waterTempNormal":
@@ -954,38 +842,18 @@ export const ES_LOCALE: CmsContent = {
     "timeline.preheat.descPanWholeProof": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, la masa hace la fermentaci\u00F3n final en la bandeja.",
     "timeline.preheat.descDuringRest": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, los bollos reposan.",
     "tip.waterTemp": "",
-    "hint.flourWeak": "harina floja (00 clásica)",
-    "hint.flourMedium": "harina de fuerza media",
-    "hint.flourStrong": "harina de fuerza (para pizza)",
-    "hint.flourVeryStrong": "harina muy fuerte (manitoba)",
-    "hint.yeastDryPinch": "≈ una pizca",
-    "hint.yeastDryQuarterTsp": "≈ ¼ de cucharadita",
     "hint.yeastDryHalfTsp": "≈ ½ cucharadita",
     "hint.yeastDryOneTsp": "≈ 1 cucharadita rasa",
     "hint.yeastDryOneHalfTsp": "≈ 1½ cucharaditas",
-    "hint.yeastFreshPinch": "≈ una pizca",
     "hint.yeastFreshWeighable": "≈ {g} g en la balanza de cocina",
-    "serving.peopleOne": "≈ {n} persona",
-    "serving.peopleMany": "≈ {n} personas",
-    "serving.peopleRange": "≈ {min}-{max} personas",
     "topping.auth.canonical": "Reglamentario",
     "topping.auth.natural": "Tradicional",
     "topping.auth.common": "Alternativa",
     "topping.auth.experimental": "Por probar",
     "topping.auth.taboo": "No recomendado",
-    "recipeSetup.dough": "Masa",
     // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
     "recipeSetup.profileHint": "Elige una versión de partida o una inspiración de autor: los valores siguen siendo editables.",
     "recipeSetup.styleBase": "estilo base",
-    "recipeSetup.temp.fridge": "nevera",
-    "recipeSetup.temp.cool": "fresco",
-    "recipeSetup.temp.room": "ambiente",
-    "recipeSetup.versionApplied": "{label}: parámetros de masa aplicados",
-    "recipeSetup.noSignature": "Sin inspiración",
-    "recipeSetup.currentParams": "parámetros actuales",
-    "recipeSetup.noSignatureAlreadyActive": "Sin inspiración ya activa",
-    "recipeSetup.signatureApplied": "{label}: inspiración aplicada",
-    "recipeSetup.signatureRemoved": "Inspiración quitada: parámetros restablecidos",
     "version.label.Leggerissima": "Muy ligera",
     "version.label.Casalingo": "Casero",
     "version.label.Casalinga": "Casera",
@@ -1068,6 +936,8 @@ export const ES_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Divide cada unidad en dos porciones: 60% para la base y 40% para la tapa. Forma dos discos.",
     "timeline.shape.closedStuffedFried": "Estira el disco de la base y reserva el segundo para cerrarla.",
     "timeline.shape.foldedLayers": "Estira una lámina finísima y dóblala {folds} veces como un libro, repartiendo el relleno entre los pliegues.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "La biga y el poolish se hacen con levadura de panadería: con solo masa madre la receta no los usa, porque la masa madre ya hace de prefermento. Para usarlos, añade levadura de panadería a tu despensa.",
     "diet.singleBase": "Una base con toda la masa: cebolla encima, sin segundo disco ni cierre.",
     "topping.geometry": "Superficie {area} cm² · referencia {reference} cm² · cantidades ×{scale}.",
     "auth.layoutChanged": "Formato distinto de la referencia: la variante cambia la estructura de la receta",
@@ -1101,12 +971,11 @@ export const ES_LOCALE: CmsContent = {
     "timeline.splitFill.desc": "Sácala del horno. Con un cuchillo de sierra, córtala en horizontal en dos mitades. Rellena el interior con los ingredientes elegidos y vuelve a cerrarla.",
     "timeline.splitFill.tipBeginner": "La capa de aceite que pusiste antes de hornear permite abrir las dos mitades sin romperlas.",
     "timeline.splitFill.tipNerd": "Abrir después de hornear = receta cold-filled: la matriz de almidón ya es estable y el relleno no se calienta por encima de 60°C en el interior.",
-    "timeline.bake2.title": "Segunda cocción (breve)",
     "timeline.bake2.desc": "Vuelve a meterla en el horno a {temp} solo para secar e integrar. Unos pocos minutos.",
     "timeline.bake.title": "Cocción",
     "timeline.bake.desc": "Hornea a {temp}.",
     "timeline.bake.rounds": "{n} horneados de {sec}, de uno en uno.",
-    "timeline.bake.tipBeginner": "El horno debe estar muy caliente. Precalienta al menos 30 minutos antes.",
+    "timeline.bake.tipBeginner": "Está hecha cuando el borde está dorado y, al levantarla con la pala, la base está seca y tiene algunos puntos oscuros.",
     "timeline.bake.tipNerd": "La reacción de Maillard empieza a ~140°C y se acelera exponencialmente. A {temp} la caramelización crea ~600 compuestos aromáticos.",
     "timeline.topPost.title": "Cobertura tras el horneado",
     "timeline.topPost.desc": "Añade los ingredientes en frío directamente sobre la superficie horneada.",
@@ -1118,30 +987,32 @@ export const ES_LOCALE: CmsContent = {
     "dig.extremeMaturation": "Fermentación prolongada: comprueba la resistencia de la masa",
     "dig.highYeastDosage": "Dosis de levadura {pct}%: ajuste heurístico de puntuación (-{penalty})",
     "dig.coldFermentation": "Maduración en frigorífico: tiempo y desarrollo dependen de la temperatura",
-    "dig.fodmapReduced": "La reducción de FODMAP no puede determinarse solo por las horas",
-    "dig.fodmapHighReduction": "La reducción de FODMAP no puede determinarse solo por las horas",
     "hint.yeastPrecisionScale": "Usa una báscula de 0,01 g",
-    "timeline.batchModel": "Tiempos estimados para una persona: estirar y cubrir todas las unidades y después hornear de una en una. Servicio escalonado; sin tareas solapadas.",
+    "timeline.batchModel": "Tiempos estimados para una persona: estirar y cubrir todas las unidades y después hornear de una en una, con la recuperación del horno entre horneados (estimación). Servicio escalonado; sin tareas solapadas.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Pliegues",
+    "timeline.folds.desc": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada.",
+    "timeline.folds.descCold": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada a temperatura ambiente. Tras la última tanda, mete el recipiente en la nevera.",
+    "timeline.folds.descCool": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada a temperatura ambiente. Tras la última tanda, vuelve a dejar el recipiente a {temp}, no en la nevera.",
+    "timeline.folds.tipBeginner": "Mójate las manos, toma un extremo, estíralo hacia arriba y dóblalo al centro; gira el recipiente y repite en los cuatro lados. Tapa entre tanda y tanda.",
+    "timeline.folds.tipNerd": "Los pliegues alinean y tensan las fibras de gluten y redistribuyen los gases: dan fuerza sin trabajo mecánico.",
+    "timeline.bake.recovery": "Entre un horneado y otro, cuenta unos {sec} para sacar, meter y dejar que el horno recupere la temperatura.",
+    "timelineComfort.nightNoPlan": "Pasos que caen de noche: {n}, el primero a las {time}. Elige una comida arriba.",
+    "timelineComfort.nightNoPlanNoMeal": "Pasos que caen de noche: {n}, el primero a las {time}. Mueve el inicio con los botones de arriba.",
+    "timelineComfort.doseNote": "Cambian los tiempos, no la levadura: guíate por el volumen de la masa, no por el reloj.",
+    "timelineComfort.whyTitle": "¿Por qué se puede?",
+    "timelineComfort.whyBody": "Solo alargamos o acortamos las esperas, cada una dentro de un margen: en la nevera hasta +{coldPlusPct} (como mucho {coldPlus}) o −{coldMinusPct} (como mucho {coldMinus}); a temperatura ambiente, fermentación final incluida, hasta +{roomPlusPct} (como mucho {roomPlus}) o −{roomMinusPct} (como mucho {roomMinus}). No pasamos horas de la nevera al ambiente ni recalculamos la levadura. Estos márgenes son reglas prácticas elegidas por nosotros, no mediciones: por eso cuenta el volumen.",
   },
   scienceLabels: {
     yeastBaker: "Levadura de panadero",
     effectiveHours: "Horas efectivas",
     q10Factor: "Factor Q\u2081\u2080",
-    q10Cold: "fr\u00EDo",
-    q10Sourdough: "masa madre",
-    q10Standard: "est\u00E1ndar",
     waterActivity: "Actividad del agua",
     glutenNetwork: "Red de gluten",
     proteolysis: "Prote\u00F3lisis",
-    starchDegradation: "Degradaci\u00F3n almid\u00F3n",
-    fodmapReduction: "Reducci\u00F3n FODMAP",
-    plEstimated: "P/L estimado",
     bakingEnergy: "Energ\u00EDa de cocci\u00F3n",
-    waterTemp: "Temperatura del agua",
     desiredDoughTemp: "Temperatura de la masa",
     frictionFactor: "Factor de fricci\u00F3n",
-    deviationCategory: "Desviaci\u00F3n",
-    deviationScore: "Dev. efectiva",
   },
   timelineLabels: {
     preferment: {
@@ -1167,7 +1038,7 @@ export const ES_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "Amasado",
-      desc: "Mezclar sin amasar hasta deshacer los grumos. Luego 3 tandas de pliegues (stretch & fold) cada ~30 min.",
+      desc: "Mezcla sin amasar hasta deshacer los grumos. Los pliegues y el tiempo hacen el resto.",
       tipBeginner:
         "\u00A1No hace falta amasar! Mezcla con una esp\u00E1tula hasta que no queden grumos de harina seca.",
       tipNerd:
@@ -1181,7 +1052,7 @@ export const ES_LOCALE: CmsContent = {
         "La masa debe duplicar su volumen. \u00A1Si hace calor, revisa m\u00E1s seguido!",
       tipNerd:
         "A {temp}, el modelo estima una velocidad de fermentación de {factor}× respecto a {refTemp}. No mide la reducción de FODMAP ni la digestibilidad.",
-      longDesc: "La masa reposa en una sola pieza, dentro de un recipiente untado con aceite y cubierta con film en contacto. Es en esta fase cuando la levadura trabaja y desarrolla aroma, estructura y digestibilidad. Si la hidrataci\u00F3n es alta, haz 2-3 \u00ABpliegues de refuerzo\u00BB (stretch & fold) en las primeras 2 horas: levanta un extremo, est\u00EDralo hacia arriba y d\u00F3blalo hacia el centro; gira el recipiente y repite en los 4 lados. La fermentaci\u00F3n est\u00E1 completa cuando el volumen se ha duplicado y la superficie est\u00E1 abombada y lisa.",
+      longDesc: "La masa reposa en una sola pieza, dentro de un recipiente untado con aceite y cubierta con film en contacto. Es en esta fase cuando la levadura trabaja y desarrolla aroma, estructura y digestibilidad. Si el estilo prevé pliegues, su número y su intervalo están en un paso o un consejo aparte. La fermentación está completa cuando el volumen se ha duplicado y la superficie está abombada y lisa.",
     },
     bulk_cold: {
       title: "Fermentaci\u00F3n en bloque",
@@ -1190,7 +1061,7 @@ export const ES_LOCALE: CmsContent = {
         "En la nevera la masa crece lento pero gana sabor. Cubre bien con film en contacto.",
       tipNerd:
         "A {temp}, el modelo estima una velocidad de fermentación de {factor}× respecto a {refTemp}. No mide la reducción de FODMAP ni la digestibilidad.",
-      longDesc: "Pasa el recipiente con la masa a la nevera ({fridgeTemp}). En fr\u00EDo la levadura trabaja mucho m\u00E1s despacio: hace falta bastante m\u00E1s tiempo, pero a cambio ganas complejidad arom\u00E1tica, digestibilidad y una malla glut\u00EDnica m\u00E1s desarrollada. Cubre siempre con film en contacto para que no se forme costra. Cuando la saques, d\u00E9jala aclimatarse 1-2 horas a temperatura ambiente antes del boleado.",
+      longDesc: "Pasa el recipiente con la masa a la nevera ({fridgeTemp}). En frío la levadura trabaja mucho más despacio: hace falta bastante más tiempo, pero a cambio ganas complejidad aromática, digestibilidad y una malla glutínica más desarrollada. Cubre siempre con film en contacto para que no se forme costra. Puedes dividirla en cuanto la sacas de la nevera: se aclimata durante la fermentación final.",
     },
     rest: {
       title: "Reposo",
@@ -1205,7 +1076,7 @@ export const ES_LOCALE: CmsContent = {
         "\u00A1Usa una b\u00E1scula! Corta con una rasqueta y redondea cada trozo en una bola lisa.",
       tipNerd:
         "El boleado crea tensi\u00F3n superficial que atrapa CO\u2082 durante el reposo final y define la estructura alveolar.",
-      longDesc: "Vuelca la masa sobre una superficie ligeramente enharinada. Con una rasqueta, corta porciones del peso que ves abajo en Ingredientes y p\u00E9salas en una b\u00E1scula (es importante para una cocci\u00F3n uniforme). Con cada trozo haz el \u00ABboleado\u00BB: lleva los extremos hacia abajo, al centro, gira y redondea hasta obtener una bola lisa y tensa. Coloca los bollos en una bandeja enharinada, bien separados, y cubre con film.",
+      longDesc: "Vuelca la masa sobre una superficie ligeramente enharinada. Con una rasqueta, corta porciones del peso indicado en este paso y p\u00e9salas en una b\u00e1scula (es importante para una cocci\u00f3n uniforme). Con cada trozo haz el \u00abboleado\u00bb: lleva los extremos hacia abajo, al centro, gira y redondea hasta obtener una bola lisa y tensa. Coloca los bollos en una bandeja enharinada, bien separados, y cubre con film.",
     },
     proof: {
       title: "Reposo final",
@@ -1248,25 +1119,20 @@ export const ES_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Divisi\u00F3n",
       desc: "Dividir con delicadeza, sin desgasificar la masa.",
-      longDesc: "Vuelca la masa sobre la superficie bien enharinada (con hidrataciones altas, ay\u00FAdate con s\u00E9mola). Con una rasqueta, corta porciones del peso indicado abajo en Ingredientes y p\u00E9salas en una b\u00E1scula. Manip\u00FAlala lo menos posible: para la bandeja NO hace falta el boleado apretado de la pizza redonda; dobla los extremos por debajo formando un pan alargado suave, sin expulsar el aire. Las burbujas creadas en la fermentaci\u00F3n en bloque ser\u00E1n el futuro alveolado. Pon cada porci\u00F3n en un recipiente untado y cubre.",
+      longDesc: "Vuelca la masa sobre la superficie bien enharinada (con hidrataciones altas, ay\u00fadate con s\u00e9mola). Con una rasqueta, corta porciones del peso indicado en este paso y p\u00e9salas en una b\u00e1scula. Manip\u00falala lo menos posible: para la bandeja NO hace falta el boleado apretado de la pizza redonda; dobla los extremos por debajo formando un pan alargado suave, sin expulsar el aire. Las burbujas creadas en la fermentaci\u00f3n en bloque ser\u00e1n el futuro alveolado. Pon cada porci\u00f3n en un recipiente untado y cubre.",
       tipBeginner: "\u00A1Manos delicadas! Las burbujas de la masa son valiosas: dobla los extremos por debajo, sin aplastar.",
       tipNerd: "Con hidrataci\u00F3n >75% una divisi\u00F3n agresiva colapsa los alveolos formados en la fermentaci\u00F3n en bloque: tensi\u00F3n m\u00EDnima, desgasificaci\u00F3n casi nula.",
     },
-  },
-  timelineUi: {
-    startLabel: "Inicio",
-    beforeSuffix: "antes",
   },
   parametricTips: {
     pillHydration: "Hidrataci\u00F3n",
     pillFlour: "Harina",
     pillPL: "P/L",
     pillFermentation: "Fermentaci\u00F3n",
+    pillRest: "Reposo",
     pillThickness: "Grosor",
     pillLevel: "Nivel",
     pillExperimentation: "Experimentaci\u00F3n",
-    pillLevelBeginner: "Principiante",
-    pillLevelExpert: "Experto",
     sheetSectionTitle: "Referencia del estilo",
     sheetOvenLabel: "Horno ideal",
     sheetOvenPreheat: "Precalentar: {min} min",
@@ -1277,7 +1143,6 @@ export const ES_LOCALE: CmsContent = {
     sheetFoldLabel: "Pliegues",
     sheetFoldInterval: "Cada {min} min",
     sheetGenerateBtn: "Generar receta",
-    sheetMatchTitle: "Por qué encaja con tu cocina",
     sheetTechniquesLabel: "T\u00E9cnicas de autor compatibles",
     mixBeginner:
       "{mixer} (~{time} min de amasado).",
@@ -1304,6 +1169,8 @@ export const ES_LOCALE: CmsContent = {
     sheetOilLabel: "Temperatura del aceite",
     sheetOilHeat: "Lleva el aceite a temperatura antes de freír: no hace falta horno.",
     sheetFryTurn: "Dale la vuelta a mitad de fritura",
+    // FW-04
+    pillDoughLoad: "Carga de masa",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1358,7 +1225,7 @@ export const ES_LOCALE: CmsContent = {
     teglia_romana:
       "Altura 2-3cm|Hidratación según la versión|Sin amasado + pliegues|Miga nube",
     tonda_romana:
-      "Grosor 1-2mm|Rodillo o a mano|Crujiente extrema|Harina d\u00E9bil W<210",
+      "Grosor 1-2mm|Rodillo o a mano|Crujiente extrema|Harina W 200-240",
     pinsa_romana:
       "Mezcla multi-cereal|Forma ovalada|Corteza v\u00EDtrea|Maduraci\u00F3n 24-72h",
     pala_romana:
@@ -1368,13 +1235,13 @@ export const ES_LOCALE: CmsContent = {
     detroit:
       "Corona de queso|Bandeja profunda|Queso en bordes|Corteza caramelizada",
     chicago_deep:
-      "Profundidad 5cm|Mantequilla 18%|Capas invertidas|Cocci\u00F3n 35min",
+      "Profundidad 5cm|Mantequilla 18%|Capas invertidas|Cocci\u00F3n 25-35 min",
     focaccia_genovese:
-      "Aceite EVO generoso|Cr\u00E1teres superficiales|Salmuera aceite-agua|Cocci\u00F3n 15-20min",
+      "Aceite EVO generoso|Cr\u00E1teres superficiales|Salmuera aceite-agua|Cocci\u00F3n 19-24 min",
     sfincione:
       "Grueso y esponjoso|Pan rallado tostado|Cebolla + anchoas|Caciocavallo",
     grandma_style:
-      "Fina y crujiente|Mozzarella bajo salsa|Bandeja bien aceitada|Cocci\u00F3n 12-16min",
+      "Fina y crujiente|Mozzarella bajo salsa|Bandeja bien aceitada|Cocci\u00F3n 14-17 min",
     focaccia_recco:
       "L\u00E1mina casi transparente|Rellena de stracchino|Burbujas doradas|Sin levadura",
     padellino_torino:
@@ -1405,13 +1272,7 @@ export const ES_LOCALE: CmsContent = {
   },
   authorNames: {
     bonci_no_knead: "Sin Amasado Alta Hidrataci\u00F3n",
-    martucci_biga_ibrida:
-      "Biga H\u00EDbrida 50% + Aut\u00F3lisis",
-    martucci_biga_100: "Biga 100% con Refresco",
     pepe_sensoriale: "Hidrataci\u00F3n Sensorial",
-    bosco_idrolisi:
-      "M\u00E9todo Hidr\u00F3lisis (Fermentaci\u00F3n Espont\u00E1nea)",
-    capuano_forbici: "M\u00E9todo Tijeras (L\u00E1cteos)",
     pepe_sensory_layering:
       "Cocci\u00F3n Separada de Ingredientes",
     bianco_long_ferment: "Fermentaci\u00F3n 5 D\u00EDas",
@@ -1420,11 +1281,7 @@ export const ES_LOCALE: CmsContent = {
   },
   authorAuthors: {
     bonci_no_knead: "Gabriele Bonci",
-    martucci_biga_ibrida: "Francesco Martucci",
-    martucci_biga_100: "Francesco Martucci",
     pepe_sensoriale: "Franco Pepe",
-    bosco_idrolisi: "Renato Bosco",
-    capuano_forbici: "Vincenzo Capuano",
     pepe_sensory_layering: "Franco Pepe",
     bianco_long_ferment: "Chris Bianco",
     forkish_saturday: "Ken Forkish",
@@ -1471,7 +1328,6 @@ export const ES_LOCALE: CmsContent = {
     skillStep: "02 — Nivel",
     pantryTitle: "Tu despensa",
     pantrySubtitle: "Harinas y levaduras que tienes en casa",
-    pantryStep: "03 — Ingredientes",
     dietTitle: "Preferencias dietéticas",
     dietSubtitle: "Te avisamos cuando una receta contiene lo que evitas.",
     dietStep: "04 — Dieta",
@@ -1500,10 +1356,8 @@ export const ES_LOCALE: CmsContent = {
     locationStep: "05 — Ubicación",
     locationPlaceholder: "Buscar ciudad...",
     locationAuto: "Detectar ubicación",
-    locationAutoDetected: "Detectada automáticamente",
     locationSaved: "Ubicación guardada",
     locationNone: "Puedes indicarla más adelante o introducir directamente la temperatura de tu cocina.",
-    locationSearching: "Buscando...",
     locationNoResults: "Sin resultados",
     ftuWelcome: "Bienvenido",
     ftuOvenTitle: "¿Qué horno tienes?",
@@ -1554,9 +1408,6 @@ export const ES_LOCALE: CmsContent = {
     mixerFork: "Amasadora de tenedor",
     mixerForkDesc:
       "Lenta, baja fricción — ideal para alta hidratación",
-    mixerLevelHome: "Casa",
-    mixerLevelSemiPro: "Semi-Pro",
-    mixerLevelPro: "Pro",
     surfaceRefractory: "Ladrillo refractario",
     surfaceRefractoryDesc:
       "3 cm, alta masa térmica — horno de leña y prosumer",
@@ -1642,6 +1493,8 @@ export const ES_LOCALE: CmsContent = {
     pantryProfileEmpty: "Ninguna harina ni levadura indicada: partimos de lo típico del estilo.",
     pantryProfileEdit: "Editar en Crear",
     ftuSourdoughNote: "Con masa madre, en las fermentaciones largas podremos proponerla en lugar de la levadura de panadería.",
+    // FW-04
+    ftuFlourTypeNote: "El tipo (00, 0, integral) dice lo refinada que es la harina, no lo fuerte que es. Si el paquete indica la W, podrás añadirla después en tu despensa.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1664,23 +1517,15 @@ export const ES_LOCALE: CmsContent = {
     navLearn: "Aprender",
     navProfile: "Perfil",
     navSearch: "Buscar",
-    exploreStepNum: "15 estilos — 4 familias",
-    exploreTitle: "Explora los estilos",
-    exploreSubtitle:
-      "De la Napoletana STG a la Focaccia di Recco.",
-    learnTitle: "Aprende",
-    learnSubtitle:
-      "Entiende la masa, elige las técnicas y aprende a reconocer lo que ocurre.",
     learnGlossary: "Glosario",
     learnGlossaryDesc:
-      "Los términos de la masa, con ejemplos y referencias.",
+      "Los términos de la masa, con fórmulas y valores típicos.",
     learnTroubleshooting: "Problemas y soluciones",
     learnTroubleshootingDesc:
       "Reconoce el problema y descubre qué corregir.",
     learnPreFerments: "Biga, poolish y autólisis",
     learnPreFermentsDesc:
       "Qué cambia y cómo incorporarlos a la preparación.",
-    recipeLabel: "Receta",
     recipeBackToStyles: "Estilos",
     recipeStyleNotFound: "Estilo no encontrado",
     recipeStyleNotFoundDesc:
@@ -1710,17 +1555,12 @@ export const ES_LOCALE: CmsContent = {
     searchFlourSpecial: "Especial",
     skipToContent: "Saltar al contenido",
     navMainLabel: "Navegaci\u00F3n principal",
-    searchCloseLabel: "Cerrar b\u00FAsqueda",
     searchFieldLabel: "Campo de b\u00FAsqueda global",
     searchClearLabel: "Borrar b\u00FAsqueda",
-    homeAria: "{brandFull} — Inicio",
     devToolsAria: "Herramientas de desarrollo",
     mottoAria: "Lema {brand}",
     troubleshootSearchPlaceholder: "Busca s\u00EDntoma o causa...",
     dietaryWarningsTitle: "Antes de prepararla",
-    troubleshootingTitle: "¿Problemas con la receta?",
-    troubleshootingDesc:
-      "Encuentra causas y soluciones para la masa, el horno y la fritura",
     exploreRecipe: "Explorar la receta",
     exploreHeroDesc: "Estilos tradicionales e interpretaciones de autor. Elige por dónde empezar.",
     exploreFilterFeatured: "Destacados",
@@ -1728,7 +1568,6 @@ export const ES_LOCALE: CmsContent = {
     exploreFilterRecipes: "Recetas icónicas",
     learnFilterSubtitle: "Las guías de abajo son generales y valen también para este estilo.",
     learnRemoveFilter: "Eliminar filtro de estilo",
-    learnOpenGlossary: "Abrir el glosario",
     learnPathLabel: "Ruta de aprendizaje",
     learnStartPath: "Iniciar ruta",
     learnTermOfTheDay: "Término del día — {category}",
@@ -1741,14 +1580,12 @@ export const ES_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_ES["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_ES["pages.learn.path4.copy"],
     preFermentsSubtitle: "Cómo usarlos y cuándo incorporarlos a la preparación.",
-    preFermentsDescription: "La biga y el poolish se preparan antes de la masa final. La <strong>biga</strong> es una masa firme con un 44% de agua; el <strong>poolish</strong> lleva harina y agua a partes iguales. La <strong>autólisis</strong> es un reposo de harina y agua sin levadura ni sal: no es un prefermento.",
+    preFermentsDescription: "La biga y el poolish se preparan antes de la masa final. La <strong>biga</strong> es una masa firme con un {bigaHydration} de agua; el <strong>poolish</strong> lleva harina y agua a partes iguales. La <strong>autólisis</strong> es un reposo de harina y agua sin levadura ni sal: no es un prefermento.",
     preFermentsChoiceTitle: "¿Cuál elegir?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "Cuando buscas una masa aromática y tienes unas 16 h a 18–20 °C",
-    preFermentsBigaBest: "Pinsa, Pizza al corte, Pala romana",
     preFermentsPoolishTitle: "Poolish",
     preFermentsPoolishWhen: "Cuando buscas una masa extensible y tienes 12–16 h a 20–22 °C",
-    preFermentsPoolishBest: "Teglia Romana, NY Style, Focaccias",
     preFermentsAutolisiTitle: "Autólisis",
     preFermentsAutolisiWhen: "Cuando quieres una masa más fácil de estirar",
     preFermentsAutolisiBest: "Todos los estilos; se combina con biga y poolish",
@@ -1757,15 +1594,14 @@ export const ES_LOCALE: CmsContent = {
     noChanges: "sin cambios",
     deactivateCustomStyles: "Desactivar estilos personalizados",
     deactivate: "Desactivar",
-    passToEasy: "Pasar a Easy",
-    activateNerd: "Activar modo Nerd",
+    // FW-04
+    learnOpenTerm: "Abrir la entrada del glosario",
   },
   configurator: {
     hydrationLabel: "Hidrataci\u00F3n",
     hydrationTip:
       "El agua respecto a la harina. Aumentarla cambia la textura y puede dificultar el manejo de la masa.",
     flourWLabel: "Fuerza Harina (W)",
-    flourWLabelBlend: "Fuerza de la harina de trigo",
     flourWTip:
       "La W indica la fuerza de la harina. Ayuda a elegir una adecuada al método y los tiempos de la receta.",
     plLabel: "Relaci\u00F3n P/L",
@@ -1783,8 +1619,6 @@ export const ES_LOCALE: CmsContent = {
     preFermentTip:
       "La biga y el poolish se preparan antes y se incorporan a la masa final. Pueden cambiar aromas y estructura: sigue los tiempos y cantidades del procedimiento.",
     ovenLabel: "Horno",
-    ovenTip:
-      "Indica el horno y la temperatura de cocción. El resultado también depende del estilo y la superficie de cocción.",
     panLabel: "Bandeja",
     panTipRect:
       "La forma y tama\u00F1o de la bandeja afectan la cantidad de masa y el resultado final. El est\u00E1ndar para este estilo es rectangular.",
@@ -1802,8 +1636,6 @@ export const ES_LOCALE: CmsContent = {
     thicknessThin: "Fina y crujiente",
     thicknessThick: "Alta y esponjosa",
     thicknessStandard: "Est\u00E1ndar para este estilo",
-    backLabel: "Atrás",
-    sliderOptimal: "óptimo",
     hintHighHydrationNeedsW: "Con una hidratación del {h}%, necesitas harina fuerte: W recomendado ≥ {w}",
     hintLowWLimitsHydration: "Con W {w}, la hidratación máxima recomendada es ~{h}%",
     hintLongFermentUseFridge: "Con {hours}h de fermentación, es mejor usar la nevera ({fridgeTemp}) para controlar la masa",
@@ -1817,12 +1649,10 @@ export const ES_LOCALE: CmsContent = {
     hintLimitMaxLabel: "máx. recomendado",
   },
   cooking: {
-    recipeCanonicalEyebrow: "Referencia",
     sectionsAria: "Secciones de la receta",
     toppingPrevAria: "Cobertura anterior",
     toppingNextAria: "Cobertura siguiente",
     notPersonalizedAria: "Receta a\u00FAn sin personalizar",
-    ballEstimateTooltip: "Estimaci\u00F3n orientativa basada en el peso tradicional del bollo para este estilo",
     tabRecipe: "Receta",
     tabRecipeTailored: "Receta a medida",
     recipeCanonical: "Referencia",
@@ -1867,7 +1697,6 @@ export const ES_LOCALE: CmsContent = {
     ceilingCompromise: "La propuesta llega a {ceiling}/100 y requiere cambios respecto a la referencia.",
     needFlour: "una harina W {w}",
     makePossible: "Hazla posible",
-    adaptToKitchen: "Adaptar a mi cocina",
     optimizeForMe: "Adaptar a mi cocina",
     resetToOriginal: "Volver a la referencia",
     saveVersion: "Guardar en el recetario",
@@ -1879,20 +1708,14 @@ export const ES_LOCALE: CmsContent = {
     fillingTitle: "Relleno",
     chooseTopping: "Elegir cobertura",
     learnMore: "Saber m\u00E1s",
-    tailoredEyebrow: "Tu receta a medida",
-    recipeEyebrow: "Receta",
     start: "Empezar la elaboraci\u00F3n",
     resume: "Reanudar la elaboraci\u00F3n",
     startShort: "Empezar",
     inProgressShort: "En curso",
-    followYou: "Mantén {brand} abierto para seguir los tiempos y recibir avisos.",
     reopen: "Reabrir la elaboraci\u00F3n en curso",
     completed: "Elaboraci\u00F3n completada",
-    waitOver: "Se acab\u00F3 la espera: \u00A1sigue!",
     dueNow: "Ahora toca: {title}",
-    stepProgress: "{style} \u00B7 paso {n}/{total}",
     interrupt: "Detener la elaboraci\u00F3n",
-    abortConfirm: "\u00BFSeguro que quieres detener la elaboraci\u00F3n activa? Se perder\u00E1n todos los temporizadores y el progreso.",
     abortConfirmTitle: "\u00BFDetener la elaboraci\u00F3n?",
     abortBody: "Perder\u00E1s los temporizadores y el progreso de esta {style}. La receta se queda, pero la sesi\u00F3n vuelve a empezar de cero.",
     abortYes: "S\u00ED, detener",
@@ -1939,28 +1762,19 @@ export const ES_LOCALE: CmsContent = {
     ovenOptimal: "Temperatura del horno \u00F3ptima",
     ovenLimited: "Viable (temperatura al l\u00EDmite)",
     ovenNeedsAdaptation: "Requiere adaptar la temperatura",
-    procedureHeroDescription: "Procedimiento guiado para {style}: {steps}, {duration} en total y {oven}.",
     toppingNotesTitle: "Consejos para la cobertura",
     toppingAmountsNote: "Las cantidades son para una pizza o unidad. Los ingredientes siguen el orden en que se añaden.",
-    toppingPerUnit: "{amount} por {unit}",
     durationLabel: "Duraci\u00F3n: {duration}",
-    comfortLabel: "{duration} con margen",
-    totalDuration: "{duration} en total",
     finalDoughStageTitle: "Masa final",
-    rule55Title: "Temperatura del agua",
-    rule55AriaOpen: "C\u00F3mo se calcula la temperatura del agua",
-    rule55AriaClose: "Ocultar la explicaci\u00F3n",
+    rule55DescriptionHand: "Ambiente, harina y agua deben sumar unos {sum}: tres veces la temperatura de masa que quieres ({ddt}). Amasando a mano no hay calor de la amasadora que restar. Por eso el agua cambia con la temperatura de tu cocina.",
     rule55Description: "Ambiente, harina y agua deben sumar unos {sum}: tres veces la temperatura de masa que quieres ({ddt}) menos el calor de la amasadora ({friction}). Por eso el agua cambia con la temperatura de tu cocina.",
+    rule55DescriptionPreferment: "Ambiente, harina, agua y {preferment} deben sumar unos {sum}: cuatro veces la temperatura de masa que quieres ({ddt}) menos el calor de la amasadora ({friction}). El prefermento entra a unos {prefTemp}, su temperatura de maduración (estimación del modelo). Por eso el agua de la masa final cambia con la temperatura de tu cocina.",
     stepDetailsShow: "C\u00F3mo se hace",
-    stepDetailsHide: "Ocultar detalles",
-    matchDetailsShow: "Detalles de la puntuaci\u00F3n",
     matchDetails: "Detalles",
     matchDetailsHide: "Ocultar",
     unsavedTitle: "Cambios sin guardar",
     unsavedBody: "Si sales ahora, tu versi\u00F3n de {style} se perder\u00E1. \u00BFQuieres guardarla en el recetario?",
     unsavedDiscard: "Salir sin guardar",
-    matchBreakdownLabel: "Media ponderada",
-    matchAxisWeight: "peso del {pct}% en la puntuación",
     troubleStepLinks: {
       preferment: "\u00BFHuele demasiado \u00E1cido?",
       mix: "\u00BFMasa demasiado pegajosa?",
@@ -1969,15 +1783,9 @@ export const ES_LOCALE: CmsContent = {
       shape: "\u00BFSe rompe al estirarla?",
       bake: "\u00BFLa cocci\u00F3n no ha salido bien?",
     },
-    draftResumeEyebrow: "Receta en curso",
-    draftResumeCta: "Reanudar",
-    draftReplaceTitle: "\u00BFSustituir la receta en curso?",
-    draftReplaceBody: "Ya tienes {current} lista y ajustada a tus tiempos. Si eliges {next}, la sustituyes y se pierden sus par\u00E1metros.",
-    draftReplaceConfirm: "Cambiar a {next}",
     prefermentSaltNote: "La sal va en la masa final, no en el prefermento, donde frenaría la levadura.",
     learnedFromAttempts: "He aprendido de tus {n} intentos",
     applyCorrections: "Aplicar las correcciones",
-    learnInlineTitle: "Saber m\u00E1s: {label}",
     tipsCountOne: "{n} consejo",
     tipsCountMany: "{n} consejos",
     servingUnits: {
@@ -2007,4 +1815,31 @@ export const ES_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_ES as any,
   glossaryTerms: GLOSSARY_TERMS_ES as any,
   science: SCIENCE_ES,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label}: {score} de 100",
+    meaning: "Cuánto se puede hacer la receta con tu cocina y cuánto se mantiene fiel al estilo.",
+    limitedAuthenticity: "Limitada por la autenticidad ({score}/100).",
+    limitedFuel: "Limitada por la autenticidad: sin el horno que pide el estilo y por debajo de su temperatura mínima se queda en {cap}/100.",
+    limitedFeasibility: "Limitada por un requisito no cumplido: por regla de la app se queda por debajo de {limit}.",
+    countedTitle: "Qué entra en el número",
+    weight: "peso {pct}",
+    ruleTitle: "Cómo se llega al número",
+    ruleAverage: "Media ponderada de los dos criterios",
+    ruleAuthenticity: "Tope: autenticidad",
+    ruleFeasibility: "Tope para recetas no viables (regla de la app)",
+    ruleResult: "Puntuación: el más bajo de los valores de arriba",
+    ceilingEditorial: "Decisión de producto: una receta que no puedes hacer se queda por debajo de {limit}, aunque los demás valores sean altos.",
+    tieBreak: "Decisión de producto: con el mismo número, en las listas va primero el estilo que tu cocina cubre con más margen de horno y de tiempo. El número no cambia.",
+    infoTitle: "Información aparte",
+    infoNote: "No entran en el número: dicen otra cosa de la receta, no cuánto se adapta a tu cocina.",
+    referencePending: "El perfil de experimentación de este estilo aún no se ha verificado.",
+    whyLabel: "Cómo se calcula",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Aquí la versión adaptada puntúa un poco menos que la referencia: la búsqueda prueba un número limitado de combinaciones de horas, hidratación y harina, y la mejor encontrada no la supera.",
+    snapshot: "Compatibilidad al guardar: {score}/100",
+    savedParams: "Hidratación {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} bola",
+    savedBallsOther: "{n} bolas",
+  },
 };

@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_DE } from "../../../i18n/ui-messages.de";
 import { TOPPING_I18N_DE } from "../../../data/topping-i18n/de";
 import { INSPIRATION_I18N_DE } from "../../../data/inspiration-i18n/de";
@@ -20,7 +22,7 @@ export const DE_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "feines Meersalz", "fine": "feines Salz", "kosher": "Koschersalz", "kosher_or_fine": "Koscher- oder feines Salz", "coarse_and_fine": "grobes und feines Salz" },
-    saltTiming: { "with_flour": "mit dem Mehl", "after_flour_water": "nach Mehl und Wasser", "after_flour_water_5min": "nach Mehl und Wasser (5 Min. Kneten)", "after_hydration": "nach der Hydratation", "fine_in_dough_coarse_on_top": "fein im Teig, grob obenauf" },
+    saltTiming: { "with_flour": "mit dem Mehl", "after_flour_water": "nach Mehl und Wasser", "dissolved_in_water": "im Wasser gelöst, vor dem Mehl (Produktspezifikation)", "after_hydration": "nach der Hydratation", "fine_in_dough_coarse_on_top": "fein im Teig, grob obenauf" },
     fold: { "stretch_fold": "Dehnen und Falten", "coil_fold": "Coil Fold", "french_fold": "französisches Falten", "slap_fold": "Slap & Fold" },
     stretch: {
       napoletana_stg: "Von Hand ausgezogen (neapolitanischer Schlag)",
@@ -73,10 +75,9 @@ export const DE_LOCALE: CmsContent = {
     "Argentina": "Argentinien",
   },
   ui: {
-    scoreTipTitle: "So liest du die Bewertung",
     scoreTipOriginal: "Stilreferenz, für deine Küche.",
     scoreTipTailored: "Version mit den vorgeschlagenen Anpassungen.",
-    scoreTipGlobal: "Die Bewertung berücksichtigt Machbarkeit und Authentizität. Sie bestätigt keine Konformität mit einer Spezifikation.",
+    scoreTipGlobal: "Die Wertung zählt nur Einfachheit und Authentizität und liegt nie über der Authentizität. Reifung, Nachhaltigkeit und Experimentierfreude sind zusätzliche Informationen. Sie bestätigt keine Konformität mit einer Spezifikation.",
     scoreTipBlocked: "Einige Voraussetzungen fehlen: öffne die Details.",
     pantrySelectionSummary: "Ausgewählt: {n} · Ausgeschlossen: {excluded}",
     pantryWValue: "W{w}",
@@ -137,17 +138,9 @@ export const DE_LOCALE: CmsContent = {
     recipeCurrentVersion: "Aktuell",
     recipeOptimizedVersion: "Vorschlag",
     recipeScoreLabel: "Bewertung",
-    recipeScoreTransition: "Punktzahl: {from}/100 → {to}/100",
     scoreBasisOriginal: "Referenz",
     scoreBasisTailored: "Angepasst",
 
-    scoreLimitedAuthenticity: "Die Authentizität ({score}/100) begrenzt die Punktzahl.",
-    scoreLimitedFeasibility: "Eine wesentliche Voraussetzung fehlt. Den Grund findest du unten.",
-    scoreWeightedAverage: "Gewichteter Mittelwert der fünf Kriterien",
-    scoreAuthenticityCeiling: "Authentizitätsgrenze",
-    scoreFeasibilityCeiling: "Grenze bei fehlender Machbarkeit",
-    scoreNotWeighted: "Informative Achse: Mit diesem Gewicht verändert sie die Gesamtwertung nicht.",
-    scoreReferencePending: "Das Abweichungsprofil dieses Stils ist noch nicht geprüft.",
 
     copy: "Kopieren",
     share: "Teilen",
@@ -157,20 +150,14 @@ export const DE_LOCALE: CmsContent = {
     closeDetails: "Details schlie\u00DFen",
     closeInsight: "Schlie\u00DFen",
     modify: "Bearbeiten",
-    disable: "Deaktivieren",
     restore: "Wiederherstellen",
     generate: "Rezept erstellen",
-    chooseStyle: "Stil w\u00E4hlen",
     customizeParams: "Parameter anpassen",
     adjustByHand: "Von Hand einstellen",
     personalize: "Anpassen",
-    specFermentTemp: "Gärung",
-    adjustByHandQuestion: "Lieber selbst entscheiden?",
     changeStyle: "Stil \u00E4ndern",
-    newPizza: "Neue Pizza",
     ingredients: "Zutaten",
     procedure: "Zubereitung",
-    steps_count: "{n} Schritte",
     doughBalls: "Teiglinge",
     timeline: "Zeitplan",
     doughBallsFrom: "\u00E0 {w}",
@@ -178,8 +165,6 @@ export const DE_LOCALE: CmsContent = {
     startTime: "Start",
     endTime: "Ende",
     clipboardBalls: "{n} Teiglinge \u00E0 {w}",
-    clipboardTotal: "Gesamt: {g}",
-    clipboardProcedure: "{style} \u2014 Zubereitung",
     flour: "Mehl",
     flourMix: "Mehlmischung",
     flourEffectiveGluten: "effektive Glutenstärke",
@@ -187,17 +172,6 @@ export const DE_LOCALE: CmsContent = {
     salt: "Salz",
     sugar: "Zucker",
     oilEvo: "Oliven\u00F6l",
-    compTitle: "Anpassungen",
-    compTitleNerd: "Ofen-Kompensationen",
-    compHydration:
-      "H\u00F6here Hydration zum Ausgleich deines Ofens",
-    compOil: "Etwas mehr \u00D6l f\u00FCr eine weiche Pizza",
-    compSugar: "Mehr Zucker f\u00FCr eine gute Br\u00E4unung",
-    compCookTime:
-      "L\u00E4ngere Backzeit f\u00FCr ein perfektes Ergebnis",
-    compThickness:
-      "D\u00FCnner ausgerollt f\u00FCr gleichm\u00E4\u00DFiges Backen",
-    compDefault: "Parameter an dein Setup angepasst",
     bakeAdjustmentTitle: "Backen",
     relativeToBase: "im Vergleich zur Basis",
     ariaReduceBalls: "Teiglinge reduzieren",
@@ -206,15 +180,12 @@ export const DE_LOCALE: CmsContent = {
     statOven: "Ofen",
     statRest: "Teigruhe",
     statOil: "Öl",
-    statCookTime: "Backzeit",
     statFermentation: "G\u00E4rung",
     statFlourStrength: "Mehlstärke",
     fermentEnvAmbient: "Raumtemp.",
     fermentEnvFridge: "Kühlschrank",
     statTempSuffix: "bei {t}\u00B0C",
     statIdeal: "ideal",
-    nerdTitle: "Technische Daten",
-    nerdFlourW: "Mehl W",
     nerdPL: "P/L",
     nerdYeast: "Hefe",
     nerdHoursAt18: "Std @{refTemp}",
@@ -230,7 +201,6 @@ export const DE_LOCALE: CmsContent = {
     slotNoPreference: "Keine Vorgabe",
     slotNoPreferenceSub: "ideale Zeiten des Stils, auch mehrere Tage",
     interpretationDisclaimer: "Interpretation von {brand} aus öffentlichen Quellen: nicht das Originalrezept von {who} und nicht von {who} freigegeben.",
-    yeastHowToggle: "So berechnen wir die Hefe",
     yeastModelBody: "Ausgangspunkt sind {ref} Frischhefe auf das Mehl für {refHours} bei {refTemp}. Mit {hours} bei {temp} arbeitet die Hefe mit {speed}× der Referenzgeschwindigkeit, die Menge wird {pct}.",
     yeastDryNote: "Mit Trockenhefe ist die Menge ein Drittel der Frischhefe.",
     yeastTempModelNote: "Wie sich die Geschwindigkeit mit der Temperatur ändert (Q10-Faktor 2, 1,6 unter 10 °C), ist eine Schätzung des Modells, die Versuche bestätigen müssen.",
@@ -266,10 +236,10 @@ export const DE_LOCALE: CmsContent = {
     procedureDirect: "Direkt",
     procedurePreferment: "Vorteig",
     procedureUnleavened: "Ohne Hefe",
-    flourUseVeryStrong: "Manitoba oder sehr starkes Tipo 0",
-    flourUseStrong: "Starkes Tipo 0/00 für Pizza",
-    flourUseMedium: "Tipo 0, mittlere Stärke",
-    flourUseWeak: "Tipo 00, schwach bis mittel",
+    flourUseVeryStrong: "Sehr starkes Mehl, Typ Manitoba",
+    flourUseStrong: "Starkes Mehl, für lange Reifung",
+    flourUseMedium: "Mittelstarkes Mehl, oft als Pizzamehl verkauft",
+    flourUseWeak: "Schwaches Mehl, Allzweck- oder Gebäckmehl",
     verdictTitle: "So klappt es nicht",
     verdictOvenTooCold: "Die Backtemperatur ist auf {oven} eingestellt; diese Methode benötigt mindestens {min}.",
     verdictTimeWindow: "Es dauert etwa {needed}, du hast {available}: Sie wäre erst nach der gewählten Uhrzeit fertig.",
@@ -278,26 +248,17 @@ export const DE_LOCALE: CmsContent = {
     verdictAlternatives: "Mit denselben Vorgaben funktionieren:",
     verdictRecipeBelow: "Du kannst das Rezept lesen und sehen, welche Voraussetzungen sich ändern müssen.",
     recipeScore: "Passt zu deiner K\u00FCche",
-    nerdToggle: "PizzaNerd",
-    nerdActive: "PizzaNerd aktivieren",
     scienceTitle: "{brand} Science",
-    ariaCloseScores: "Punktedetails schließen",
-    ariaViewScores: "Punktedetails ansehen",
-    tapForDetails: "Tippen f\u00FCr Details",
     styleEditorActive: "Style Editor aktiv",
     cmsActive: "CMS aktiv",
     fieldsModified: "Felder ge\u00E4ndert",
     fieldModified: "Feld ge\u00E4ndert",
     editOven: "Ofen bearbeiten",
-    weatherCity: "Deine Stadt",
     weatherOutdoor: "{t}\u00B0C drau\u00DFen",
-    weatherKitchen: "K\u00FCchentemperatur",
     badgeIdeal: "Empfohlen",
     badgeRecent: "ZULETZT",
     autoLabel: "Auto",
     cancel: "Abbrechen",
-    changeOven: "\u00C4ndern",
-    ovenFallback: "Ofen",
     pantryFlours: "Mehle",
     pantryYeasts: "Hefen",
     equipByHand: "Von Hand",
@@ -309,14 +270,6 @@ export const DE_LOCALE: CmsContent = {
     equipSurface: "Backfläche",
     kitchenTitle: "Deine Küche",
     pantryOptional: "optional",
-    specialFlours: "Spezialmehle",
-    brandSuggest: "Kennst du die Marke?",
-    badgeSelected: "Ausgewählt",
-    otherCompatibleFlours: "Weitere kompatible Mehle",
-    flourSelectHint:
-      "Wähle ein Mehl, um W und P/L im Rezept automatisch zu aktualisieren.",
-    flourSelected: "Angewendet",
-    autolysisSuggested: "Autolyse empfohlen",
     dietGlutenFree: "Glutenfrei",
     dietLactoseFree: "Laktosefrei",
     dietVegan: "Vegan",
@@ -339,7 +292,6 @@ export const DE_LOCALE: CmsContent = {
   },
   hero: {
     title_line1: "Deine",
-    title_line2: "nächste Pizza.",
     subtitle:
       "Wähle, wann die Pizza auf den Tisch soll.",
     /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
@@ -368,11 +320,6 @@ export const DE_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title: "Wann m\u00F6chtest du Pizza?",
-      description:
-        "W\u00E4hle den Zeitpunkt zur Berechnung der Gehzeiten",
-    },
     skill: {
       title: "Erfahrungsstufe",
       description:
@@ -385,10 +332,6 @@ export const DE_LOCALE: CmsContent = {
     pantry: {
       title: "Vorratskammer",
       description: "Mehle und Hefen, die du zu Hause hast",
-    },
-    dietary: {
-      title: "Ern\u00E4hrungsbed\u00FCrfnisse",
-      description: "Optionale Filter",
     },
     equipment: {
       title: "Ausstattung",
@@ -459,15 +402,15 @@ export const DE_LOCALE: CmsContent = {
     },
     "2": {
       name: "Fortgeschritten",
-      description: "Ich habe schon einige Pizzen gemacht",
+      description: "Ich habe ein paar Mal Pizza nach Rezept gemacht",
     },
     "3": {
       name: "Erfahren",
-      description: "Ich beherrsche Falten und Teigführung",
+      description: "Ich backe oft Pizza und komme mit weichem Teig zurecht",
     },
     "4": {
       name: "Experte",
-      description: "Ich passe Teige, Zeiten und Techniken an",
+      description: "Ich passe Mengen und Zeiten selbst an",
     },
   },
   families: {
@@ -498,37 +441,37 @@ export const DE_LOCALE: CmsContent = {
     authenticity: {
       label: "Authentizität",
       short: "Auth",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Vergleicht Teig, Ablauf und Ofen mit der Stilreferenz. Ein niedriger Wert begrenzt die Gesamtpunktzahl; er bestätigt keine Konformität mit einem Regelwerk.",
     },
     feasibility: {
       label: "Einfachheit",
       short: "Mach",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Schätzt den Aufwand mit deinem Ofen, Mehl und deiner Erfahrung. Unverzichtbare Voraussetzungen werden gesondert genannt.",
     },
     digestibility: {
       label: "Geschätzte Reifung",
       short: "Reif",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Schätzt die Reife anhand von Zeit, Temperatur, Hefe und Vorteig. Sie misst nicht deine persönliche Verdauung.",
     },
     sustainability: {
       label: "Geschätzte Nachhaltigkeit",
       short: "Nachh",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Vergleicht Backen, Gärung und Zutaten. Es ist eine relative Schätzung, kein gemessener Verbrauch oder CO₂-Fußabdruck.",
     },
     experimentation: {
       label: "Experimentieren",
       short: "Exp",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "Abweichung von Teig, Verfahren und Backweise von der Referenz. Ein hoher Wert bedeutet mehr Experimente, nicht besseres Gelingen. Einige Stilprofile sind noch ungeprüft. In die Gesamtwertung geht 100 minus dieser Wert ein.",
+        "Abweichung von Teig, Verfahren und Backweise von der Referenz. Ein hoher Wert bedeutet mehr Experimente, nicht besseres Gelingen. Einige Stilprofile sind noch ungeprüft. Sie geht nicht in die Passung ein.",
     },
   },
   recommendationWeights: {
@@ -544,52 +487,33 @@ export const DE_LOCALE: CmsContent = {
       "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
   },
   result: {
-    breadcrumb: "Deine perfekte Pizza",
     heading: "Hier ist dein Rezept",
-    backLabel: "Zur\u00FCck zur Auswahl",
   },
   misc: {
     showAllStyles: "Alle anzeigen",
-    noFloursInCategory: "Keine Mehle in dieser Kategorie",
     noTroubleshootingResults: "Keine Probleme für diese Suche gefunden",
     moreInfo: "Mehr Infos",
     changeTiming: "Zeiten ändern",
     kitchenTempSubtitle: "Die Temperatur beeinflusst die Gärgeschwindigkeit",
     techAdjustmentsApplied: "Technische Anpassungen angewendet",
-    techDataAria: "Technische Daten anzeigen (W, P/L, Q10, Aw)",
-    techDataTitle: "Technische Daten und Teigberechnungen",
     feedbackYes: "Ja, gerne",
     feedbackNo: "Nein, passt schon",
     feedbackPlaceholder: "Was hast du geändert? Wie ist sie geworden? Nützliche Details...",
     preFermentCompare: "Schnellvergleich",
     scoreExplainer: "Die Punktzahl kombiniert die Rezeptkriterien. Fehlende Voraussetzungen und Abweichungen von der Referenz können sie begrenzen.",
-    companionContext: "Küchentemperatur und die verfügbare Zeit bestimmen den ganzen Prozess.",
-    companionSetup: "Wir passen das Rezept an deine Erfahrung, deinen Ofen und deinen tatsächlichen Vorrat an.",
-    companionStyles: "Jeder Stil hat eigene Parameter: Wähl den, der am besten zu deinen Bedingungen passt.",
-    smartLinkOn: "Parameter verknüpft — bewege einen Regler, die anderen passen sich an",
-    smartLinkOff: "Alle Parameter für automatische Anpassung verknüpfen",
-    smartLinkApplied: "{param}: Ich habe die anderen Parameter und die Timeline angepasst.",
     settingsHelp: "Diese Angaben helfen {brand}, Zeiten und Rezept anzupassen.",
-    versionsLabel: "Versionen",
-    versionsHint: "Jede Variante hat eigene Richtbereiche. Die Markierungen zeigen die Bereiche der gewählten Variante.",
     learnHeroTitle1: "Verstehe deinen Teig,",
     learnHeroTitle2: "backe bessere Pizza.",
-    learnHeroSubtitle: "Techniken, Zutaten und Backen: lerne, worauf du achten und was du ändern kannst.",
+    learnHeroSubtitle: "Begriffe, Probleme, Vorteige und wie wir rechnen: lerne, worauf du achten und was du ändern kannst.",
     learnResources: "Ressourcen",
     kitchenTempLabel: "Küchentemperatur",
     kitchenTempDown: "Küchentemperatur senken",
     kitchenTempUp: "Küchentemperatur erhöhen",
     current: "Ausgewählt",
     noStyleInFamily: "Kein Stil in dieser Familie für deine Parameter.",
-    notFeasibleExplainer: "Bei diesen Rezepten fehlt eine Voraussetzung. Öffne die Details, um zu sehen, was sich ändern muss.",
     exploreHeroTitle1: "Entdecke Stile",
     exploreHeroTitle2: "und Rezepte.",
-    badgeBeginnerFriendly: "Für Anfänger",
-    interpretationsLabel: "Interpretationen",
-    goToSite: "Zur Website",
     signatureLabel: "Version",
-    noSignature: "keine Inspiration",
-    fineParams: "Erweiterte Einstellungen",
     cmsRestoreContent: "CMS-Inhalte zurücksetzen",
     inspirationLabel: "Version",
     inspirationBase: "Referenz",
@@ -655,9 +579,6 @@ export const DE_LOCALE: CmsContent = {
   filters: {
     advancedLabel: "Mehr",
     removeFilters: "Filter entfernen",
-    brandedFlours: "Markenmehl",
-    settingsOpen: "Einstellungen",
-    settingsClosed: "Deine Einstellungen",
     hydrationLabel: "Hydratation",
     hydrationLow: "Niedrig <60%",
     hydrationMedium: "Mittel 60-70%",
@@ -673,7 +594,6 @@ export const DE_LOCALE: CmsContent = {
     skillIntermediate: "Fortgeschritten",
     skillAdvanced: "Erfahren",
     skillExpert: "Experte",
-    timeFast: "schnell",
     ovenLabel: "Backen",
     ovenHome: "Heimofen",
     ovenWood: "Holzofen",
@@ -690,10 +610,9 @@ export const DE_LOCALE: CmsContent = {
     noResults: "Keine Begriffe für „{query}“",
     allCategories: "Alle",
     formulaLabel: "Formel",
-    rangesLabel: "Typische Bereiche",
-    whyImportantLabel: "Warum wichtig",
+    rangesLabel: "Typische Werte",
+    whyImportantLabel: "Warum es zählt",
     relatedLabel: "Verwandt",
-    backToHome: "Zur\u00FCck zur Startseite",
     termCount: "{count} Begriffe",
     // FW-09
     termCountOne: "{count} Begriff",
@@ -718,6 +637,17 @@ export const DE_LOCALE: CmsContent = {
     catMechanicsDesc: "Verarbeitung, Ger\u00E4te und Messungen",
     catScoring: "Bewertung",
     catScoringDesc: "Die Punktzahlen von {brand} verstehen",
+    // FW-04
+    catTechnique: "Handgriffe und Phasen",
+    catTechniqueDesc: "Die Wörter des Ablaufs, vom Kneten bis zum Ofen",
+    catFlour: "Mehle",
+    catFlourDesc: "Mehltypen und wie man sie liest",
+    rangesValueHeader: "Wert",
+    rangesMeaningHeader: "Bedeutung",
+    technicalLabel: "Technische Definition",
+    modelNoteLabel: "Im Modell von {brand}",
+    seeAlsoLabel: "Siehe auch",
+    inGlossaryLabel: "Im Glossar:",
   },
   engineMessages: {
     "allergen.conflict": "Enthält {allergen}: {ingredients}.",
@@ -758,15 +688,16 @@ export const DE_LOCALE: CmsContent = {
     "learn.compatiblePath": "Ein praktischer Lernpfad passend zu deiner Küche: die Rezeptbedingungen prüfen.",
     "learn.theoryOnly": "Keine geprüfte Rezeptur passt zu diesen Vorgaben. Entdecke die Theorie.",
     "learn.openTheory": "Theorie entdecken",
-    "timeline.preheat.includesProof": "Dieser Block enthält {minutes} Minuten Stückgare, die bereits in der Gesamtzeit enthalten sind: nicht erneut addieren.",
-    "timeline.preheat.includesRest": "Dieser Block enthält {minutes} Minuten Ruhezeit, die bereits in der Gesamtzeit enthalten sind: nicht erneut addieren.",
+    "timeline.preheat.includesProof": "Wenn der Ofen bereit ist, prüfe den Teig: Drückst du mit dem Finger hinein, kommt die Delle langsam zurück.",
+    "timeline.preheat.includesProofOil": "Wenn das Öl auf Temperatur ist, prüfe den Teig: Drückst du mit dem Finger hinein, kommt die Delle langsam zurück.",
     "auth.hydrationOff":
       "Hydration außerhalb der Mitte (-{penalty}%)",
     "auth.wOutOfRange":
       "Mehl-W außerhalb des Bereichs (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} außerhalb {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Kein Holzofen (-15%)",
+    "auth.notWoodOven": "Kein Holzofen und unter den {min} °C Mindesttemperatur des Stils: −15 Punkte auf der Achse Ausstattung (35 % der Authentizität)",
+    "auth.woodByMethod": "Der Stil sieht einen Holzofen vor (bei der Napoletana STG verlangt es die Produktspezifikation): Dein Ofen erreicht die {min} °C Mindesttemperatur, daher ist das eine Information und kostet keine Punkte",
     "auth.tempVsIdeal":
       "Temperatur {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -803,11 +734,8 @@ export const DE_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Gärung anpassbar auf ~{hours}",
     "rec.timeInsufficient":
       "Benötigt mindestens {fMin}, du hast {available}",
-    "rec.needsWoodOven": "Die Referenz nutzt einen Holzofen; mit deinem Ofen ändert sich die Backweise.",
-    "rec.ovenAdapted": "Dein Ofen erreicht {temp}: ideale Temperatur {ideal}, angepasste Backzeit",
     "gen.homeBakingMethod": "Backen zu Hause bei {temp} auf einem vorgeheizten umgedrehten Blech; anderes Ergebnis als beim Original bei {ideal}",
     "gen.ovenTooNarrow": "Dein Ofen fasst Pizzen bis {max} cm, dieses Rezept sieht {diameter} cm vor: zieh den Teig auf höchstens {max} cm aus.",
-    "rec.needsDeck": "Diese Methode braucht einen vorgeheizten Stein oder Backstahl, der in deiner Küche nicht angegeben ist",
     "timeline.homeTray.preheat": "Heize den Ofen auf Maximum ({temp}) mit einem umgedrehten Blech vor, bis auch das Blech heiß ist. Lasse den Teig währenddessen fertig ruhen.",
     "timeline.homeTray.bake": "Backe auf dem vorgeheizten umgedrehten Blech. Prüfe Bodenbräunung und Garzustand vor dem Herausnehmen.",
     "gen.fermentationTooLong": "Die Gehzeit von {hours} überschreitet das Maximum dieses Rezepts ({maxHours}). Wähle für längere Zeiten eine geprüfte Methode.",
@@ -831,7 +759,6 @@ export const DE_LOCALE: CmsContent = {
     "need.withoutWood": "Auch ohne Holz",
     "need.adaptedBake": "Backen angepasst",
     "need.deck": "Stein oder Stahl nötig",
-    "card.pantryCheck": "Vorräte prüfen",
     "card.directDough": "Direkte Teigführung",
     "card.resourceExcluded": "Ausgeschlossen",
     "card.panMissing": "Blech erforderlich",
@@ -862,53 +789,15 @@ export const DE_LOCALE: CmsContent = {
     "change.prefermentDetails": "Vorteig: {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Backen: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "Kohlefeuer gehört zur Originalmethode: Ein anderer Brennstoff bedeutet eine Anpassung",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "Ohne den Ofen, den der Stil vorsieht, und unter seinen {min} °C Mindesttemperatur endet die Authentizität bei {cap}/100: eine Regel der App, keine Messung",
     "gen.notCoalOven": "Der Originalstil wird mit Kohle gebacken: Der gewählte Ofen verändert Backweise und Aroma",
     "timeline.oven.coal": "Kohleofen mit vorgeheiztem Backboden: Boden und Rand beobachten und für gleichmäßiges Backen drehen.",
     "rec.ovenIdeal":
       "Dein Ofen erreicht die ideale Temperatur ({ideal})",
-    "rec.ovenAdequate":
-      "Ofen ausreichend (automatische Zeit/Temperatur-Kompensation)",
     "rec.ovenTooCold": "Ofen zu kalt: {temp} < min {min}",
     "rec.skillMatch": "Passt zu deinem Niveau",
-    "rec.skillExpert": "Dein Niveau erlaubt jeden Stil",
-    "rec.hydrationNeedsPractice":
-      "Hohe Hydration erfordert Übung",
-    "rec.advancedForBeginner":
-      "Fortgeschrittener Stil für Anfänger",
-    "rec.noKneadNoMixer": "Keine Knetmaschine nötig (no-knead)",
-    "rec.handsHighHydration":
-      "Hohe Hydration: Handkneten sehr schwierig",
-    "rec.handsMedHydration":
-      "Mittlere Hydration: Handkneten erfordert Übung",
-    "rec.forkIdealHighH":
-      "Gabelkneter ideal für hohe Hydration",
-    "rec.forkLowFriction":
-      "Gabelkneter: geringe thermische Reibung",
-    "rec.spiralOptimal":
-      "Professionelle Spirale: optimales Kneten",
-    "rec.domesticStrugglesHighH":
-      "Haushaltskneter: kann bei >80% Hydration Schwierigkeiten haben",
-    "rec.mixerHelps":
-      "Deine Knetmaschine erleichtert den Prozess",
-    "rec.mixerRecommended":
-      "Hohe Hydration: Knetmaschine empfohlen",
-    "rec.castIronPerfect": "Gusseisen perfekt für diesen Stil",
-    "rec.panFits": "Blech geeignet für diesen Stil",
-    "rec.needsPan": "Blech für diesen Stil benötigt",
-    "rec.refractoryIdeal":
-      "Schamottstein: ideal für neapolitanische Pizza",
-    "rec.steelPlateCrispy":
-      "Stahlplatte: knuspriger Boden in Sekunden",
-    "rec.panPerfect": "Dein Blech ist perfekt für diesen Stil",
     "rec.flourMatch": "Mehl im Vorrat kompatibel",
-    "rec.flourPartial":
-      "Mehl teilweise geeignet (W nicht ideal)",
-    "rec.flourNoMatch":
-      "Kein Mehl im Vorrat im erforderlichen W-Bereich",
-    "rec.sourdoughLongFerment":
-      "Sauerteig ideal für lange Reifung",
-    "rec.sourdoughOnlyShort":
-      "Nur Sauerteig: kurze Gärung schwierig",
     "tip.waterTempCold":
       "Nimm kaltes Wasser aus dem K\u00FChlschrank ({temp}): Die Maschine erw\u00E4rmt den Teig.",
     "tip.waterTempNormal":
@@ -939,33 +828,18 @@ export const DE_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen beendet der Teig die Gare im Blech.",
     "timeline.preheat.descPanWholeProof": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen macht der Teig die Gare im Blech.",
     "timeline.preheat.descDuringRest": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen ruhen die Teiglinge.",
-    "hint.flourWeak": "schwaches Mehl (klassisches 00)",
-    "hint.flourMedium": "mittelstarkes Mehl",
-    "hint.flourStrong": "starkes Pizzamehl",
-    "hint.flourVeryStrong": "sehr starkes Mehl (Manitoba)",
-    "hint.yeastDryPinch": "≈ eine Messerspitze",
-    "hint.yeastDryQuarterTsp": "≈ ¼ Teelöffel",
     "hint.yeastDryHalfTsp": "≈ ½ Teelöffel",
     "hint.yeastDryOneTsp": "≈ 1 gestrichener Teelöffel",
     "hint.yeastDryOneHalfTsp": "≈ 1½ Teelöffel",
-    "hint.yeastFreshPinch": "≈ eine Messerspitze",
     "hint.yeastFreshWeighable": "≈ {g} g auf der Küchenwaage",
-    "serving.peopleOne": "≈ {n} Person",
-    "serving.peopleMany": "≈ {n} Personen",
-    "serving.peopleRange": "≈ {min}-{max} Personen",
     "topping.auth.canonical": "Nach Regelwerk",
     "topping.auth.natural": "Traditionell",
     "topping.auth.common": "Alternative",
     "topping.auth.experimental": "Ausprobieren",
     "topping.auth.taboo": "Nicht empfohlen",
-    "recipeSetup.dough": "Teig",
     // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
     "recipeSetup.profileHint": "Wähle eine Ausgangsversion oder eine Inspiration eines Pizzaiolo: Die Werte bleiben änderbar.",
     "recipeSetup.styleBase": "Basisstil",
-    "recipeSetup.temp.fridge": "Kühlschrank",
-    "recipeSetup.temp.cool": "kühl",
-    "recipeSetup.temp.room": "Raumtemperatur",
-    "recipeSetup.versionApplied": "{label}: Teigparameter angewendet",
     "version.label.Leggerissima": "Extra leicht",
     "version.label.Casalingo": "Für zu Hause",
     "version.label.Casalinga": "Für zu Hause",
@@ -1049,6 +923,8 @@ export const DE_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Teile jede Einheit in zwei Portionen: 60% für den Boden und 40% für den Deckel. Forme zwei Fladen.",
     "timeline.shape.closedStuffedFried": "Zieh den unteren Fladen aus und lege den zweiten zum Verschließen beiseite.",
     "timeline.shape.foldedLayers": "Roll eine hauchdünne Teigplatte aus und falte sie {folds}-mal wie ein Buch; verteile die Füllung zwischen den Lagen.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "Biga und Poolish werden mit Backhefe angesetzt: Mit nur Sauerteig lässt das Rezept sie weg, denn der Sauerteig ist schon ein Vorteig. Wenn du sie möchtest, nimm Backhefe in deinen Vorrat auf.",
     "diet.singleBase": "Ein Boden aus dem gesamten Teig: Zwiebeln darauf, ohne zweiten Teigkreis oder Verschließen.",
     "topping.geometry": "Fläche {area} cm² · Referenz {reference} cm² · Mengen ×{scale}.",
     "auth.layoutChanged": "Anderes Format als die Vorlage: Diese Variante verändert den Aufbau",
@@ -1082,21 +958,15 @@ export const DE_LOCALE: CmsContent = {
     "timeline.splitFill.desc": "Nimm sie aus dem Ofen. Schneide sie mit einem Wellenschliffmesser waagerecht in zwei Hälften. Fülle das Innere mit den gewählten Zutaten und klapp sie wieder zu.",
     "timeline.splitFill.tipBeginner": "Dank der Ölschicht, die du vor dem Backen aufgetragen hast, lassen sich die beiden Hälften öffnen, ohne zu reißen.",
     "timeline.splitFill.tipNerd": "Aufschneiden nach dem Backen = Cold-filled-Rezept: Die Stärkematrix ist bereits stabil, die Füllung wird innen nicht über 60°C erhitzt.",
-    "timeline.bake2.title": "Zweiter Backgang (kurz)",
     "timeline.bake2.desc": "Schieb sie bei {temp} noch einmal in den Ofen, nur damit alles trocknet und sich verbindet. Wenige Minuten.",
     "timeline.bake.title": "Backen",
     "timeline.bake.desc": "Backe bei {temp}.",
     "timeline.bake.rounds": "{n} Backvorgänge zu je {sec}, einer nach dem anderen.",
-    "timeline.bake.tipBeginner": "Der Ofen muss sehr heiß sein. Heize mindestens 30 Minuten vorher vor.",
+    "timeline.bake.tipBeginner": "Sie ist fertig, wenn der Rand goldbraun ist und der Boden beim Anheben mit dem Schieber trocken ist und ein paar dunkle Punkte hat.",
     "timeline.bake.tipNerd": "Die Maillard-Reaktion beginnt bei ~140°C und beschleunigt sich exponentiell. Bei {temp} entstehen durch die Karamellisierung ~600 Aromastoffe.",
     "timeline.topPost.title": "Belag nach dem Backen",
     "timeline.topPost.desc": "Gib die kalten Zutaten direkt auf die gebackene Oberfläche.",
     "tip.waterTemp": "",
-    "recipeSetup.noSignature": "Keine Inspiration",
-    "recipeSetup.currentParams": "aktuelle Parameter",
-    "recipeSetup.noSignatureAlreadyActive": "Keine Inspiration bereits aktiv",
-    "recipeSetup.signatureApplied": "{label}: Inspiration übernommen",
-    "recipeSetup.signatureRemoved": "Inspiration entfernt: Parameter zurückgesetzt",
     "rec.fried": "Wird im Topf frittiert: kein Ofen n\u00F6tig",
     "rec.flourMix": "Wenn du deine Mehle mischst: {weakPct}% {weak} und {strongPct}% {strong}, etwa W {w}",
     "dig.fermentTooShort": "Sehr kurze Ruhe: niedriger Reifungsindex",
@@ -1104,30 +974,32 @@ export const DE_LOCALE: CmsContent = {
     "dig.extremeMaturation": "Lange Gärung: Teigstabilität prüfen",
     "dig.highYeastDosage": "Hefemenge {pct}%: heuristische Wertkorrektur (-{penalty})",
     "dig.coldFermentation": "Reifung im Kühlschrank: Zeit und Entwicklung hängen von der Temperatur ab",
-    "dig.fodmapReduced": "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
-    "dig.fodmapHighReduction": "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
     "hint.yeastPrecisionScale": "Eine Waage mit 0,01 g Auflösung verwenden",
-    "timeline.batchModel": "Geschätzte Zeiten für eine Person: alle Stücke formen und belegen, danach einzeln backen. Zeitversetztes Servieren; keine parallelen Arbeiten angenommen.",
+    "timeline.batchModel": "Geschätzte Zeiten für eine Person: alle Stücke formen und belegen, danach einzeln backen, mit der Erholzeit des Ofens dazwischen (Schätzung). Zeitversetztes Servieren; keine parallelen Arbeiten angenommen.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Falten",
+    "timeline.folds.desc": "Mache {count} Falt-Runden im Abstand von {interval}; den Teig dazwischen abdecken.",
+    "timeline.folds.descCold": "Mache {count} Falt-Runden im Abstand von {interval}, den Teig abgedeckt bei Raumtemperatur. Nach der letzten Runde den Behälter in den Kühlschrank stellen.",
+    "timeline.folds.descCool": "Mache {count} Falt-Runden im Abstand von {interval}, den Teig abgedeckt bei Raumtemperatur. Nach der letzten Runde den Behälter wieder bei {temp} stellen, nicht in den Kühlschrank.",
+    "timeline.folds.tipBeginner": "Hände anfeuchten, einen Teiglappen greifen, nach oben ziehen und zur Mitte falten; den Behälter drehen und auf allen vier Seiten wiederholen. Zwischen den Runden abdecken.",
+    "timeline.folds.tipNerd": "Falten richten die Glutenstränge aus, dehnen sie und verteilen die Gase neu: Sie geben Kraft ohne mechanische Arbeit.",
+    "timeline.bake.recovery": "Rechne zwischen zwei Backvorgängen mit etwa {sec} zum Herausholen und Einschießen, damit der Ofen wieder auf Temperatur kommt.",
+    "timelineComfort.nightNoPlan": "Schritte in der Nacht: {n}, der erste um {time}. Wähle oben eine Mahlzeit.",
+    "timelineComfort.nightNoPlanNoMeal": "Schritte in der Nacht: {n}, der erste um {time}. Verschiebe den Start mit den Tasten oben.",
+    "timelineComfort.doseNote": "Die Zeiten ändern sich, die Hefe nicht: Richte dich nach dem Teigvolumen, nicht nach der Uhr.",
+    "timelineComfort.whyTitle": "Warum geht das?",
+    "timelineComfort.whyBody": "Wir verlängern oder verkürzen nur die Wartezeiten, jede innerhalb eines Spielraums: im Kühlschrank bis +{coldPlusPct} (höchstens {coldPlus}) oder −{coldMinusPct} (höchstens {coldMinus}); bei Raumtemperatur, Stückgare inklusive, bis +{roomPlusPct} (höchstens {roomPlus}) oder −{roomMinusPct} (höchstens {roomMinus}). Wir verschieben keine Stunden vom Kühlschrank zur Raumtemperatur und berechnen die Hefe nicht neu. Diese Spielräume sind von uns gewählte Faustregeln, keine Messungen: Deshalb zählt das Volumen.",
   },
   scienceLabels: {
     yeastBaker: "B\u00E4ckerhefe",
     effectiveHours: "Effektive Stunden",
     q10Factor: "Q\u2081\u2080-Faktor",
-    q10Cold: "kalt",
-    q10Sourdough: "Sauerteig",
-    q10Standard: "Standard",
     waterActivity: "Wasseraktivit\u00E4t",
     glutenNetwork: "Glutennetzwerk",
     proteolysis: "Proteolyse",
-    starchDegradation: "St\u00E4rkeabbau",
-    fodmapReduction: "FODMAP-Reduktion",
-    plEstimated: "P/L gesch\u00E4tzt",
     bakingEnergy: "Backenergie",
-    waterTemp: "Wassertemperatur",
     desiredDoughTemp: "Teigtemperatur",
     frictionFactor: "Reibungsfaktor",
-    deviationCategory: "Abweichung",
-    deviationScore: "Eff. Abweichung",
   },
   timelineLabels: {
     preferment: {
@@ -1153,7 +1025,7 @@ export const DE_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "Mischen",
-      desc: "Ohne Kneten mischen, bis keine trockenen Klümpchen bleiben. Dann 3 Runden Dehnen & Falten im Abstand von ~30 Min.",
+      desc: "Ohne Kneten mischen, bis keine trockenen Klümpchen bleiben. Den Rest erledigen die Falt-Runden und die Zeit.",
       tipBeginner:
         "Kein Kneten n\u00F6tig! Mit einem Spatel mischen, bis keine trockenen Mehlklumpen mehr vorhanden sind.",
       tipNerd:
@@ -1167,7 +1039,7 @@ export const DE_LOCALE: CmsContent = {
         "Der Teig sollte sein Volumen verdoppeln. Bei W\u00E4rme h\u00E4ufiger kontrollieren!",
       tipNerd:
         "Bei {temp} schätzt das Modell eine Gärgeschwindigkeit von {factor}× gegenüber {refTemp}. Das misst weder FODMAP-Reduktion noch Verträglichkeit.",
-      longDesc: "Der Teig ruht als ein St\u00FCck in einem ge\u00F6lten Beh\u00E4lter, direkt mit Folie abgedeckt. In dieser Phase arbeitet die Hefe und entwickelt Aroma, Struktur und Bek\u00F6mmlichkeit. Bei hoher Hydratation machst du in den ersten 2 Stunden 2-3 St\u00E4rkungsfalten (Stretch & Fold): einen Teiglappen anheben, nach oben ziehen und zur Mitte falten, den Beh\u00E4lter drehen und f\u00FCr alle 4 Seiten wiederholen. Die G\u00E4rung ist abgeschlossen, wenn sich das Volumen verdoppelt hat und die Oberfl\u00E4che gew\u00F6lbt und glatt ist.",
+      longDesc: "Der Teig ruht als ein Stück in einem geölten Behälter, direkt mit Folie abgedeckt. In dieser Phase arbeitet die Hefe und entwickelt Aroma, Struktur und Bekömmlichkeit. Wenn der Stil Falt-Runden vorsieht, stehen Anzahl und Abstand in einem eigenen Schritt oder Tipp. Die Gärung ist abgeschlossen, wenn sich das Volumen verdoppelt hat und die Oberfläche gewölbt und glatt ist.",
     },
     bulk_cold: {
       title: "Stockgare",
@@ -1176,7 +1048,7 @@ export const DE_LOCALE: CmsContent = {
         "Im K\u00FChlschrank w\u00E4chst der Teig langsam, gewinnt aber an Geschmack. Gut mit Kontaktfolie abdecken.",
       tipNerd:
         "Bei {temp} schätzt das Modell eine Gärgeschwindigkeit von {factor}× gegenüber {refTemp}. Das misst weder FODMAP-Reduktion noch Verträglichkeit.",
-      longDesc: "Stell den Beh\u00E4lter mit dem Teig in den K\u00FChlschrank ({fridgeTemp}). Im K\u00FChlschrank arbeitet die Hefe viel langsamer: Es dauert deutlich l\u00E4nger, daf\u00FCr gewinnst du Aromakomplexit\u00E4t, Bek\u00F6mmlichkeit und ein besser entwickeltes Glutennetz. Immer direkt mit Folie abdecken, damit die Oberfl\u00E4che nicht austrocknet. Wenn du ihn herausnimmst, lass ihn vor dem Teilen 1-2 Stunden bei Raumtemperatur akklimatisieren.",
+      longDesc: "Stell den Behälter mit dem Teig in den Kühlschrank ({fridgeTemp}). Im Kühlschrank arbeitet die Hefe viel langsamer: Es dauert deutlich länger, dafür gewinnst du Aromakomplexität, Bekömmlichkeit und ein besser entwickeltes Glutennetz. Immer direkt mit Folie abdecken, damit die Oberfläche nicht austrocknet. Du kannst ihn gleich nach dem Herausnehmen teilen: Er akklimatisiert sich während der Stückgare.",
     },
     rest: {
       title: "Ruhezeit",
@@ -1191,7 +1063,7 @@ export const DE_LOCALE: CmsContent = {
         "Benutze eine Waage! Mit einer Teigkarte schneiden und jedes St\u00FCck zu einer glatten Kugel formen.",
       tipNerd:
         "Das Teilen erzeugt Oberfl\u00E4chenspannung, die CO\u2082 w\u00E4hrend der Stuckgare einschlie\u00DFt.",
-      longDesc: "St\u00FCrze den Teig auf eine leicht bemehlte Arbeitsfl\u00E4che. Schneide mit einer Teigkarte Portionen mit dem Gewicht ab, das unten bei den Zutaten steht, und wiege sie ab (wichtig f\u00FCr gleichm\u00E4\u00DFiges Backen). Schleife jedes St\u00FCck rund: R\u00E4nder nach unten zur Mitte einschlagen, drehen und formen, bis eine glatte, straffe Kugel entsteht. Setz die Teiglinge mit viel Abstand auf ein bemehltes Blech und deck sie mit Folie ab.",
+      longDesc: "St\u00fcrze den Teig auf eine leicht bemehlte Arbeitsfl\u00e4che. Schneide mit einer Teigkarte Portionen mit dem Gewicht ab, das bei diesem Schritt steht, und wiege sie ab (wichtig f\u00fcr gleichm\u00e4\u00dfiges Backen). Schleife jedes St\u00fcck rund: R\u00e4nder nach unten zur Mitte einschlagen, drehen und formen, bis eine glatte, straffe Kugel entsteht. Setz die Teiglinge mit viel Abstand auf ein bemehltes Blech und deck sie mit Folie ab.",
     },
     proof: {
       title: "Stuckgare",
@@ -1234,25 +1106,20 @@ export const DE_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Teilen",
       desc: "Behutsam teilen, ohne den Teig zu entgasen.",
-      longDesc: "St\u00FCrze den Teig auf eine gut bemehlte Arbeitsfl\u00E4che (bei hoher Hydratation hilft Hartweizengrie\u00DF). Schneide mit einer Teigkarte Portionen mit dem Gewicht ab, das unten bei den Zutaten steht, und wiege sie ab. So wenig wie m\u00F6glich anfassen: F\u00FCr die Teglia brauchst du NICHT das straffe Rundschleifen der runden Pizza \u2014 schlag die R\u00E4nder nach unten ein und forme einen lockeren Strang, ohne die Luft herauszudr\u00FCcken. Die Blasen aus der Stockgare werden sp\u00E4ter zur Porung. Leg jedes St\u00FCck in einen ge\u00F6lten Beh\u00E4lter und deck es ab.",
+      longDesc: "St\u00fcrze den Teig auf eine gut bemehlte Arbeitsfl\u00e4che (bei hoher Hydratation hilft Hartweizengrie\u00df). Schneide mit einer Teigkarte Portionen mit dem Gewicht ab, das bei diesem Schritt steht, und wiege sie ab. So wenig wie m\u00f6glich anfassen: F\u00fcr die Teglia brauchst du NICHT das straffe Rundschleifen der runden Pizza \u2014 schlag die R\u00e4nder nach unten ein und forme einen lockeren Strang, ohne die Luft herauszudr\u00fccken. Die Blasen aus der Stockgare werden sp\u00e4ter zur Porung. Leg jedes St\u00fcck in einen ge\u00f6lten Beh\u00e4lter und deck es ab.",
       tipBeginner: "Sanfte H\u00E4nde! Die Blasen im Teig sind wertvoll: R\u00E4nder nach unten einschlagen, nicht dr\u00FCcken.",
       tipNerd: "Bei Hydratation >75% l\u00E4sst aggressives Teilen die in der Stockgare gebildeten Poren kollabieren: minimale Spannung, kaum Entgasung.",
     },
-  },
-  timelineUi: {
-    startLabel: "Start",
-    beforeSuffix: "vorher",
   },
   parametricTips: {
     pillHydration: "Hydratation",
     pillFlour: "Mehl",
     pillPL: "P/L",
     pillFermentation: "G\u00E4rung",
+    pillRest: "Ruhezeit",
     pillThickness: "Dicke",
     pillLevel: "Niveau",
     pillExperimentation: "Experimentell",
-    pillLevelBeginner: "Anf\u00E4nger",
-    pillLevelExpert: "Experte",
     sheetSectionTitle: "Referenz des Stils",
     sheetOvenLabel: "Idealer Ofen",
     sheetOvenPreheat: "Vorheizen: {min} Min.",
@@ -1263,7 +1130,6 @@ export const DE_LOCALE: CmsContent = {
     sheetFoldLabel: "Falten",
     sheetFoldInterval: "Alle {min} Min.",
     sheetGenerateBtn: "Rezept generieren",
-    sheetMatchTitle: "Warum sie zu deiner Küche passt",
     sheetTechniquesLabel: "Kompatible Autortechniken",
     mixBeginner: "{mixer} (~{time} Min. Kneten).",
     bulkBeginner:
@@ -1289,6 +1155,8 @@ export const DE_LOCALE: CmsContent = {
     sheetOilLabel: "Öltemperatur",
     sheetOilHeat: "Bring das Öl vor dem Frittieren auf Temperatur: Ein Ofen ist nicht nötig.",
     sheetFryTurn: "Nach der Hälfte der Frittierzeit wenden",
+    // FW-04
+    pillDoughLoad: "Teig pro Fläche",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1343,7 +1211,7 @@ export const DE_LOCALE: CmsContent = {
     teglia_romana:
       "H\u00F6he 2-3cm|Hydration je nach Variante|Ohne Kneten + Falten|Wolkenkrume",
     tonda_romana:
-      "Dicke 1-2mm|Nudelholz oder von Hand|Extrem knusprig|Schwaches Mehl W<210",
+      "Dicke 1-2mm|Nudelholz oder von Hand|Extrem knusprig|Mehl W 200-240",
     pinsa_romana:
       "Multi-Getreide-Mix|Ovale Form|Glasige Kruste|Reifung 24-72h",
     pala_romana:
@@ -1353,13 +1221,13 @@ export const DE_LOCALE: CmsContent = {
     detroit:
       "K\u00E4sekrone|Tiefe Pfanne|K\u00E4se am Rand|Karamellisierte Kruste",
     chicago_deep:
-      "Tiefe 5cm|Butter 18%|Umgekehrte Schichten|Backzeit 35min",
+      "Tiefe 5cm|Butter 18%|Umgekehrte Schichten|Backzeit 25-35 min",
     focaccia_genovese:
-      "Gro\u00DFz\u00FCgig Oliven\u00F6l|Oberfl\u00E4chenkrater|\u00D6l-Wasser-Sole|Backzeit 15-20min",
+      "Gro\u00DFz\u00FCgig Oliven\u00F6l|Oberfl\u00E4chenkrater|\u00D6l-Wasser-Sole|Backzeit 19-24 min",
     sfincione:
       "Dick und fluffig|Ger\u00F6stete Semmelbr\u00F6sel|Zwiebel + Sardellen|Caciocavallo",
     grandma_style:
-      "D\u00FCnn und knusprig|Mozzarella unter So\u00DFe|Gut ge\u00F6ltes Blech|Backzeit 12-16min",
+      "D\u00FCnn und knusprig|Mozzarella unter So\u00DFe|Gut ge\u00F6ltes Blech|Backzeit 14-17 min",
     focaccia_recco:
       "Fast transparentes Blatt|Stracchino-F\u00FCllung|Goldene Blasen|Keine G\u00E4rung",
     padellino_torino:
@@ -1390,22 +1258,14 @@ export const DE_LOCALE: CmsContent = {
   },
   authorNames: {
     bonci_no_knead: "No-Knead Hohe Hydratation",
-    martucci_biga_ibrida: "Hybrid-Biga 50% + Autolyse",
-    martucci_biga_100: "100% Biga mit Auffrischung",
     pepe_sensoriale: "Sensorische Hydratation",
-    bosco_idrolisi: "Hydrolyse-Methode (Spontang\u00E4rung)",
-    capuano_forbici: "Scheren-Methode (Milchprodukte)",
     pepe_sensory_layering: "Getrennte Zutatenzubereitung",
     bianco_long_ferment: "5-Tage-G\u00E4rung",
     forkish_saturday: "Samstags-Pizza (Kaltg\u00E4rung)",
   },
   authorAuthors: {
     bonci_no_knead: "Gabriele Bonci",
-    martucci_biga_ibrida: "Francesco Martucci",
-    martucci_biga_100: "Francesco Martucci",
     pepe_sensoriale: "Franco Pepe",
-    bosco_idrolisi: "Renato Bosco",
-    capuano_forbici: "Vincenzo Capuano",
     pepe_sensory_layering: "Franco Pepe",
     bianco_long_ferment: "Chris Bianco",
     forkish_saturday: "Ken Forkish",
@@ -1451,7 +1311,6 @@ export const DE_LOCALE: CmsContent = {
     skillStep: "02 — Können",
     pantryTitle: "Deine Vorratskammer",
     pantrySubtitle: "Mehle und Hefen, die du zuhause hast",
-    pantryStep: "03 — Zutaten",
     dietTitle: "Ernährungspräferenzen",
     dietSubtitle: "Wir warnen dich, wenn ein Rezept etwas enthält, das du meidest.",
     dietStep: "04 — Diät",
@@ -1480,10 +1339,8 @@ export const DE_LOCALE: CmsContent = {
     locationStep: "05 — Standort",
     locationPlaceholder: "Stadt suchen...",
     locationAuto: "Standort ermitteln",
-    locationAutoDetected: "Automatisch ermittelt",
     locationSaved: "Standort gespeichert",
     locationNone: "Du kannst den Ort später angeben oder die Küchentemperatur direkt einstellen.",
-    locationSearching: "Suche...",
     locationNoResults: "Keine Ergebnisse",
     ftuWelcome: "Willkommen",
     ftuOvenTitle: "Welchen Ofen hast du?",
@@ -1535,9 +1392,6 @@ export const DE_LOCALE: CmsContent = {
     mixerFork: "Gabelkneter",
     mixerForkDesc:
       "Langsam, geringe Reibung — ideal für hohe Hydration",
-    mixerLevelHome: "Heim",
-    mixerLevelSemiPro: "Semi-Pro",
-    mixerLevelPro: "Pro",
     surfaceRefractory: "Schamottestein",
     surfaceRefractoryDesc:
       "3 cm, hohe thermische Masse — Holz- und Prosumer-Öfen",
@@ -1626,6 +1480,8 @@ export const DE_LOCALE: CmsContent = {
     pantryProfileEmpty: "Kein Mehl und keine Hefe angegeben: Wir gehen vom Stil-Typischen aus.",
     pantryProfileEdit: "In Erstellen bearbeiten",
     ftuSourdoughNote: "Mit Sauerteig schlagen wir ihn bei langen Gärzeiten eventuell statt Backhefe vor.",
+    // FW-04
+    ftuFlourTypeNote: "Der Typ (00, 0, Vollkorn) sagt, wie fein das Mehl ausgemahlen ist, nicht wie stark es ist. Steht der W-Wert auf der Packung, kannst du ihn später in deiner Vorratskammer angeben.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1648,22 +1504,14 @@ export const DE_LOCALE: CmsContent = {
     navLearn: "Lernen",
     navProfile: "Profil",
     navSearch: "Suchen",
-    exploreStepNum: "15 Stile \u2014 4 Familien",
-    exploreTitle: "Stile entdecken",
-    exploreSubtitle:
-      "Von Napoletana STG bis Focaccia di Recco.",
-    learnTitle: "Lernen",
-    learnSubtitle:
-      "Verstehe den Teig, wähle Techniken und lerne, Veränderungen zu erkennen.",
     learnGlossary: "Glossar",
-    learnGlossaryDesc: "Teigbegriffe mit Beispielen und Erläuterungen.",
+    learnGlossaryDesc: "Teigbegriffe mit Formeln und typischen Werten.",
     learnTroubleshooting: "Probleme & L\u00F6sungen",
     learnTroubleshootingDesc:
       "Erkenne das Problem und finde die passende Korrektur.",
     learnPreFerments: "Biga, Poolish und Autolyse",
     learnPreFermentsDesc:
       "Was sie verändern und wie du sie einplanst.",
-    recipeLabel: "Rezept",
     recipeBackToStyles: "Stile",
     recipeStyleNotFound: "Stil nicht gefunden",
     recipeStyleNotFoundDesc:
@@ -1693,17 +1541,12 @@ export const DE_LOCALE: CmsContent = {
     searchFlourSpecial: "Spezial",
     skipToContent: "Zum Inhalt springen",
     navMainLabel: "Hauptnavigation",
-    searchCloseLabel: "Suche schlie\u00DFen",
     searchFieldLabel: "Globales Suchfeld",
     searchClearLabel: "Suche l\u00F6schen",
-    homeAria: "{brandFull} — Start",
     devToolsAria: "Entwicklertools",
     mottoAria: "{brand}-Motto",
     troubleshootSearchPlaceholder: "Symptom oder Ursache suchen...",
     dietaryWarningsTitle: "Vor der Zubereitung",
-    troubleshootingTitle: "Probleme mit dem Rezept?",
-    troubleshootingDesc:
-      "Finde Ursachen und Lösungen für Teig, Backen und Frittieren",
     exploreRecipe: "Rezept anzeigen",
     exploreHeroDesc: "Traditionelle Stile und persönliche Interpretationen. Finde deinen Einstieg.",
     exploreFilterFeatured: "Im Fokus",
@@ -1711,7 +1554,6 @@ export const DE_LOCALE: CmsContent = {
     exploreFilterRecipes: "Kult-Rezepte",
     learnFilterSubtitle: "Die Anleitungen unten sind allgemein und gelten auch für diesen Stil.",
     learnRemoveFilter: "Stilfilter entfernen",
-    learnOpenGlossary: "Glossar öffnen",
     learnPathLabel: "Lernpfad",
     learnStartPath: "Pfad starten",
     learnTermOfTheDay: "Begriff des Tages — {category}",
@@ -1724,14 +1566,12 @@ export const DE_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_DE["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_DE["pages.learn.path4.copy"],
     preFermentsSubtitle: "Wie du sie verwendest und einplanst.",
-    preFermentsDescription: "Biga und Poolish werden vor dem Hauptteig angesetzt. <strong>Biga</strong> ist ein fester Teig mit 44% Wasser; <strong>Poolish</strong> enthält gleich viel Mehl und Wasser. <strong>Autolyse</strong> ist dagegen eine Ruhephase von Mehl und Wasser ohne Hefe und Salz, kein Vorteig.",
+    preFermentsDescription: "Biga und Poolish werden vor dem Hauptteig angesetzt. <strong>Biga</strong> ist ein fester Teig mit {bigaHydration} Wasser; <strong>Poolish</strong> enthält gleich viel Mehl und Wasser. <strong>Autolyse</strong> ist dagegen eine Ruhephase von Mehl und Wasser ohne Hefe und Salz, kein Vorteig.",
     preFermentsChoiceTitle: "Welchen soll ich wählen?",
     preFermentsBigaTitle: "Biga",
-    preFermentsBigaWhen: "Wenn Sie einen aromatischen Teig möchten und etwa 16 h bei 18–20 °C haben",
-    preFermentsBigaBest: "Pinsa, Pizza al taglio, Pala romana",
+    preFermentsBigaWhen: "Wenn du einen aromatischen Teig möchtest und etwa 16 h bei 18–20 °C hast",
     preFermentsPoolishTitle: "Poolish",
-    preFermentsPoolishWhen: "Wenn Sie einen dehnbaren Teig möchten und 12–16 h bei 20–22 °C haben",
-    preFermentsPoolishBest: "Römische Blechpizza, NY-Style, Focaccia",
+    preFermentsPoolishWhen: "Wenn du einen dehnbaren Teig möchtest und 12–16 h bei 20–22 °C hast",
     preFermentsAutolisiTitle: "Autolyse",
     preFermentsAutolisiWhen: "Wenn sich der Teig leichter ausziehen lassen soll",
     preFermentsAutolisiBest: "Alle Stile; kombinierbar mit Biga und Poolish",
@@ -1740,15 +1580,14 @@ export const DE_LOCALE: CmsContent = {
     noChanges: "keine Änderungen",
     deactivateCustomStyles: "Benutzerdefinierte Stile deaktivieren",
     deactivate: "Deaktivieren",
-    passToEasy: "Zu Easy wechseln",
-    activateNerd: "Nerd-Modus aktivieren",
+    // FW-04
+    learnOpenTerm: "Eintrag im Glossar öffnen",
   },
   configurator: {
     hydrationLabel: "Hydratation",
     hydrationTip:
       "Wasser im Verhältnis zum Mehl. Mehr Wasser verändert die Konsistenz und kann die Verarbeitung erschweren.",
     flourWLabel: "Mehlst\u00E4rke (W)",
-    flourWLabelBlend: "St\u00E4rke des Weizenmehls",
     flourWTip:
       "W beschreibt die Mehlstärke. Es hilft, ein Mehl für Methode und Zeitplan auszuwählen.",
     plLabel: "P/L-Verh\u00E4ltnis",
@@ -1766,8 +1605,6 @@ export const DE_LOCALE: CmsContent = {
     preFermentTip:
       "Biga und Poolish werden vorab angesetzt und später in den Hauptteig gegeben. Sie können Aroma und Struktur verändern: halte dich an Zeiten und Mengen.",
     ovenLabel: "Ofen",
-    ovenTip:
-      "Stelle Ofen und Backtemperatur ein. Das Ergebnis hängt auch vom Stil und der Backfläche ab.",
     panLabel: "Backblech",
     panTipRect:
       "Form und Gr\u00F6\u00DFe des Blechs beeinflussen die Teigmenge und das Endergebnis. Der Standard f\u00FCr diesen Stil ist rechteckig.",
@@ -1785,16 +1622,14 @@ export const DE_LOCALE: CmsContent = {
     thicknessThin: "D\u00FCnn und knusprig",
     thicknessThick: "Dick und fluffig",
     thicknessStandard: "Standard f\u00FCr diesen Stil",
-    backLabel: "Zurück",
-    sliderOptimal: "optimal",
-    hintHighHydrationNeedsW: "Bei {h}% Hydratation benötigen Sie starkes Mehl: empfohlenes W ≥ {w}",
+    hintHighHydrationNeedsW: "Bei {h}% Hydratation brauchst du starkes Mehl: empfohlenes W ≥ {w}",
     hintLowWLimitsHydration: "Mit W {w} beträgt die maximal empfohlene Hydratation ~{h}%",
-    hintLongFermentUseFridge: "Bei {hours}h Gärung nutzen Sie den Kühlschrank ({fridgeTemp}), um den Teig zu kontrollieren",
-    hintShortFermentUseWarm: "Bei nur {hours}h fermentieren Sie bei Raumtemperatur ({ambientTemp}), um die Hefe zu aktivieren",
+    hintLongFermentUseFridge: "Bei {hours}h Gärung nutze den Kühlschrank ({fridgeTemp}), um den Teig zu kontrollieren",
+    hintShortFermentUseWarm: "Bei nur {hours}h lass den Teig bei Raumtemperatur ({ambientTemp}) gehen, um die Hefe zu aktivieren",
     hintMediumFermentUseCool: "Bei {hours}h ist ein kühler Ort ({coolTemp}) der ideale Kompromiss zwischen Kontrolle und Aktivität",
     hintHighHydrationNeedsTime: "Bei {h}% Hydratation wird eine Gärung von ≥ {hours}h empfohlen",
     hintLowPLForHighHydration: "Bei hoher Hydratation wird ein P/L-Wert ≤ {pl} für die Dehnbarkeit empfohlen",
-    hintHighWAllowsMoreHydration: "Mit W {w} können Sie bis zu {h}% Hydratation gehen",
+    hintHighWAllowsMoreHydration: "Mit W {w} kannst du bis zu {h}% Hydratation gehen",
     hintAdaptiveLabel: "vorgeschlagen",
     hintLimitMinLabel: "empfohlenes Min.",
     hintLimitMaxLabel: "empfohlenes Max.",
@@ -1804,7 +1639,6 @@ export const DE_LOCALE: CmsContent = {
     tabRecipe: "Rezept",
     tabRecipeTailored: "Rezept nach Ma\u00DF",
     recipeCanonical: "Referenz",
-    recipeCanonicalEyebrow: "Referenz",
     preCookTitle: "Bevor du beginnst",
     preCookBody:
       "Du siehst die Referenz. Prüfe vor der Zubereitung die Voraussetzungen oder passe sie an deine Küche an.",
@@ -1848,7 +1682,6 @@ export const DE_LOCALE: CmsContent = {
     ceilingCompromise: "Der Vorschlag erreicht {ceiling}/100 und erfordert Anpassungen an der Referenz.",
     needFlour: "ein Mehl W {w}",
     makePossible: "Mach sie m\u00F6glich",
-    adaptToKitchen: "An meine K\u00FCche anpassen",
     optimizeForMe: "An meine Küche anpassen",
     resetToOriginal: "Zurück zur Referenz",
     saveVersion: "Im Rezeptbuch speichern",
@@ -1859,8 +1692,6 @@ export const DE_LOCALE: CmsContent = {
     toppingTitle: "Belag",
     chooseTopping: "Belag w\u00E4hlen",
     learnMore: "Mehr erfahren",
-    tailoredEyebrow: "Dein Rezept nach Ma\u00DF",
-    recipeEyebrow: "Rezept",
     start: "Backen starten",
     resume: "Backen fortsetzen",
     startShort: "Start",
@@ -1870,31 +1701,21 @@ export const DE_LOCALE: CmsContent = {
     ovenOptimal: "Ofentemperatur ist ideal",
     ovenLimited: "Machbar, aber nahe an der Temperaturgrenze",
     ovenNeedsAdaptation: "Temperaturanpassung erforderlich",
-    procedureHeroDescription:
-      "Gef\u00FChrte Zubereitung f\u00FCr {style}: {steps}, {duration} gesamt und {oven}.",
     toppingNotesTitle: "Hinweise zum Belag",
     toppingAmountsNote:
       "Die Mengen gelten für eine Pizza oder Einheit. Die Zutaten stehen in der Reihenfolge der Zugabe.",
-    toppingPerUnit: "{amount} pro {unit}",
     durationLabel: "Dauer: {duration}",
-    comfortLabel: "{duration} komfortabel",
-    totalDuration: "{duration} gesamt",
     finalDoughStageTitle: "Hauptteig",
-    rule55Title: "Wassertemperatur",
-    rule55AriaOpen: "Wie die Wassertemperatur berechnet wird",
-    rule55AriaClose: "Erkl\u00E4rung ausblenden",
+    rule55DescriptionHand: "Raum, Mehl und Wasser sollten zusammen etwa {sum} ergeben: dreimal die gewünschte Teigtemperatur ({ddt}). Beim Kneten von Hand gibt es keine Wärme der Knetmaschine abzuziehen. Deshalb ändert sich das Wasser mit der Temperatur deiner Küche.",
     rule55Description:
       "Raum, Mehl und Wasser sollten zusammen etwa {sum} ergeben: dreimal die gew\u00FCnschte Teigtemperatur ({ddt}) minus die W\u00E4rme der Knetmaschine ({friction}). Deshalb \u00E4ndert sich das Wasser mit der Temperatur deiner K\u00FCche.",
+    rule55DescriptionPreferment: "Raum, Mehl, Wasser und {preferment} sollten zusammen etwa {sum} ergeben: viermal die gewünschte Teigtemperatur ({ddt}) minus die Wärme der Knetmaschine ({friction}). Der Vorteig kommt mit etwa {prefTemp} hinein, seiner Reifetemperatur (Schätzung des Modells). Deshalb ändert sich das Wasser des Hauptteigs mit der Temperatur deiner Küche.",
     stepDetailsShow: "So geht es",
-    stepDetailsHide: "Details ausblenden",
-    matchDetailsShow: "Match-Details",
     matchDetails: "Details",
     matchDetailsHide: "Ausblenden",
     unsavedTitle: "Ungespeicherte Änderungen",
     unsavedBody: "Wenn du jetzt gehst, geht deine Version von {style} verloren. Im Rezeptbuch speichern?",
     unsavedDiscard: "Ohne Speichern verlassen",
-    matchBreakdownLabel: "Gewichteter Durchschnitt",
-    matchAxisWeight: "Gewichtung {pct}% in der Punktzahl",
     troubleStepLinks: {
       preferment: "Riecht zu sauer?",
       mix: "Teig zu klebrig?",
@@ -1903,17 +1724,10 @@ export const DE_LOCALE: CmsContent = {
       shape: "Reißt beim Ausziehen?",
       bake: "Backen misslungen?",
     },
-    draftResumeEyebrow: "Rezept in Arbeit",
-    draftResumeCta: "Fortsetzen",
-    draftReplaceTitle: "Laufendes Rezept ersetzen?",
-    draftReplaceBody:
-      "{current} ist bereits auf deinen Zeitplan abgestimmt. Mit {next} ersetzt du es und die Einstellungen gehen verloren.",
-    draftReplaceConfirm: "Zu {next} wechseln",
     prefermentSaltNote:
       "Das Salz kommt in den Hauptteig, nicht in den Vorteig: Dort bremst es die Hefe.",
     learnedFromAttempts: "Ich habe aus deinen {n} Versuchen gelernt",
     applyCorrections: "Korrekturen anwenden",
-    learnInlineTitle: "Mehr erfahren: {label}",
     tipsCountOne: "{n} Tipp",
     tipsCountMany: "{n} Tipps",
     servingUnits: {
@@ -1926,16 +1740,11 @@ export const DE_LOCALE: CmsContent = {
     toppingPrevAria: "Vorheriger Belag",
     toppingNextAria: "N\u00E4chster Belag",
     notPersonalizedAria: "Rezept noch nicht angepasst",
-    ballEstimateTooltip: "Grobe Sch\u00E4tzung auf Basis des traditionellen Teiglingsgewichts dieses Stils",
     fillingTitle: "F\u00FCllung",
-    followYou: "Lass {brand} geöffnet, um Zeiten und Erinnerungen zu verfolgen.",
     reopen: "Laufendes Backen wieder \u00F6ffnen",
     completed: "Backen abgeschlossen",
-    waitOver: "Wartezeit vorbei: weiter geht's!",
     dueNow: "Zeit f\u00FCr: {title}",
-    stepProgress: "{style} \u00B7 Schritt {n}/{total}",
     interrupt: "Backen abbrechen",
-    abortConfirm: "Willst du das laufende Backen wirklich abbrechen? Alle Timer und der Fortschritt gehen verloren.",
     abortConfirmTitle: "Backen abbrechen?",
     abortBody: "Du verlierst Timer und Fortschritt dieser {style}. Das Rezept bleibt, aber die Session beginnt von vorn.",
     abortYes: "Ja, abbrechen",
@@ -1982,4 +1791,31 @@ export const DE_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_DE as any,
   glossaryTerms: GLOSSARY_TERMS_DE as any,
   science: SCIENCE_DE,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label}: {score} von 100",
+    meaning: "Wie gut sich das Rezept mit deiner Küche umsetzen lässt und wie treu es dem Stil bleibt.",
+    limitedAuthenticity: "Begrenzt durch die Authentizität ({score}/100).",
+    limitedFuel: "Begrenzt durch die Authentizität: Ohne den Ofen, den der Stil vorsieht, und unter seiner Mindesttemperatur endet sie bei {cap}/100.",
+    limitedFeasibility: "Begrenzt durch eine nicht erfüllte Voraussetzung: Nach App-Regel bleibt der Wert unter {limit}.",
+    countedTitle: "Was in die Zahl eingeht",
+    weight: "Gewicht {pct}",
+    ruleTitle: "So entsteht die Zahl",
+    ruleAverage: "Gewichteter Mittelwert der beiden Kriterien",
+    ruleAuthenticity: "Obergrenze: Authentizität",
+    ruleFeasibility: "Obergrenze für nicht machbare Rezepte (App-Regel)",
+    ruleResult: "Wertung: der niedrigste der Werte oben",
+    ceilingEditorial: "Produktentscheidung: Ein Rezept, das du nicht umsetzen kannst, bleibt unter {limit}, auch wenn die anderen Werte hoch sind.",
+    tieBreak: "Produktentscheidung: Bei gleicher Zahl steht in den Listen zuerst der Stil, den deine Küche mit mehr Spielraum bei Ofen und Zeit abdeckt. Die Zahl ändert sich nicht.",
+    infoTitle: "Zusätzliche Informationen",
+    infoNote: "Sie gehen nicht in die Zahl ein: Sie sagen etwas anderes über das Rezept, nicht wie gut es zu deiner Küche passt.",
+    referencePending: "Das Experimentierprofil dieses Stils ist noch nicht geprüft.",
+    whyLabel: "So wird gerechnet",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Hier liegt die angepasste Version etwas unter der Referenz: Die Suche probiert nur eine begrenzte Zahl von Kombinationen aus Stunden, Hydration und Mehl, und die beste gefundene übertrifft sie nicht.",
+    snapshot: "Passung beim Speichern: {score}/100",
+    savedParams: "Hydration {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} Teigling",
+    savedBallsOther: "{n} Teiglinge",
+  },
 };

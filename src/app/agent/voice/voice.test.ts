@@ -201,7 +201,8 @@ describe("risposte", () => {
     expect(answer.speech.match(/Il tempo non basta/g)).toHaveLength(1);
     expect(answer.speech).toContain(`servono ${spokenHours(max, it_, true)}.`);
     if (id === "pinsa_romana") expect(max).toBeGreaterThanOrEqual(25);
-    if (id === "napoletana_stg" && oven === "home") expect(answer.speech).toContain("servono 7 ore e mezza.");
+    // Valore del motore dopo il piano temporale unico (FW-19): prima «7 ore e mezza».
+    if (id === "napoletana_stg" && oven === "home") expect(answer.speech).toContain("servono circa 8 ore.");
   });
 
   it("«un giorno e mezzo»: la teglia romana si fa (36 ore, non 24)", () => {

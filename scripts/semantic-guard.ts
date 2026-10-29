@@ -62,6 +62,7 @@ export const SEMANTIC_ENTRY_FILES = [
   "src/app/pages/glossary.tsx",
   "src/app/pages/troubleshooting.tsx",
   "src/app/pages/pre-ferments.tsx",
+  "src/app/pages/method.tsx",
   "src/app/pages/profile.tsx",
   "src/app/pages/recipe.tsx",
   "src/app/pages/not-found.tsx",
@@ -75,6 +76,7 @@ export const ROUTE_CONTRACTS: readonly RouteContract[] = [
   { file: "src/app/pages/glossary.tsx", label: "/learn/glossary", requiredLandmarks: ["main"], requireLevelOneHeading: true },
   { file: "src/app/pages/troubleshooting.tsx", label: "/learn/troubleshooting", requiredLandmarks: ["main"], requireLevelOneHeading: true },
   { file: "src/app/pages/pre-ferments.tsx", label: "/learn/pre-ferments", requiredLandmarks: ["main"], requireLevelOneHeading: true },
+  { file: "src/app/pages/method.tsx", label: "/learn/metodo", requiredLandmarks: ["main"], requireLevelOneHeading: true },
   { file: "src/app/pages/profile.tsx", label: "/profile", requiredLandmarks: ["main"], requireLevelOneHeading: true },
   { file: "src/app/pages/recipe.tsx", label: "/recipe/:styleId", requiredLandmarks: ["main"], requireLevelOneHeading: true },
   { file: "src/app/pages/not-found.tsx", label: "404", requiredLandmarks: ["main"], requireLevelOneHeading: true },
@@ -114,7 +116,6 @@ const DS_SEGMENT = "/src/app/components/ds/";
 export const TITLE_ONLY_BASELINE: Readonly<Record<string, number>> = {
   "src/app/features/recipe/procedure-hero.tsx": 2,
   "src/app/features/recipe/recipe-configurator.tsx": 3,
-  "src/app/features/recipe/recipe-match-card.tsx": 1,
   "src/app/features/recipe/recipe-setup-panel.tsx": 2,
   "src/app/features/recipe/recipe-stat-strip.tsx": 2,
 };

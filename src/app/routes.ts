@@ -52,6 +52,11 @@ export const router = createBrowserRouter([
         path: "learn/pre-ferments",
         lazy: async () => ({ Component: (await import("./pages/pre-ferments")).PreFermentsPage }),
       },
+      /* FW-15 (D-D): «Metodo e fonti», un'ancora per nota del registro (#yeast-dose). */
+      {
+        path: "learn/metodo",
+        lazy: async () => ({ Component: (await import("./pages/method")).MethodPage }),
+      },
       {
         path: "profile",
         lazy: async () => ({ Component: (await import("./pages/profile")).ProfilePage }),

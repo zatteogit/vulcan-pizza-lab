@@ -22,7 +22,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import { formatNumber, formatPercent } from "../../i18n/format";
 import type { CmsContent } from "../cms/cms-context";
 import { placeNameLocalizer } from "../cms/i18n";
-import { PRE_FERMENT_IDS, preFermentName } from "../recipe/pre-ferment-guide";
+import { PRE_FERMENT_IDS, preFermentName, preFermentStyleLinks } from "../recipe/pre-ferment-guide";
 import { STYLE_PHOTOS } from "../recipe/recommended-styles";
 
 /* ═══ U-5 — indice della ricerca a tutta pagina ═══
@@ -200,10 +200,12 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
         id: `glossary-${term.id}`,
         type: "glossary",
         title: term.symbol && !term.name.includes(term.symbol) ? `${term.name} (${term.symbol})` : term.name,
-        subtitle: clip(term.definition, 100),
+        /* FW-04: prima la definizione in parole semplici; il nome italiano
+           resta cercabile in ogni lingua («staglio», «appretto»). */
+        subtitle: clip(term.plainDefinition ?? term.definition, 100),
         link: `/learn/glossary#${term.id}`,
       },
-      `${term.definition} ${term.id.replace(/_/g, " ")}`,
+      `${term.definition} ${raw.name} ${term.id.replace(/_/g, " ")}`,
     );
     if (term.symbol) {
       const symbol = fold(term.symbol);
@@ -224,7 +226,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           subtitle: clip(description, 100),
           link: `/learn/pre-ferments#pf-${id}`,
         },
-        `${description} ${item?.idealStyles ?? ""} ${cms.pages.learnPreFerments}`,
+        `${description} ${id === "autolisi" ? item?.idealStyles ?? "" : preFermentStyleLinks(id).map((link) => link.name).join(" ")} ${cms.pages.learnPreFerments}`,
       ),
     );
   }

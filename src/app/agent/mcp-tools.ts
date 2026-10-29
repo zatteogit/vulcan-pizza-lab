@@ -36,7 +36,9 @@ import { TOPPING_LIBRARY, getToppingForStyle, scaleToppingAmounts } from "../dat
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, pantryIngredientReferences } from "../domain/pantry-ingredients";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../domain/recipe-score";
-import { computePreFermentSplit } from "../domain/pre-ferment-split";
+import { compareByCompatibility, kitchenMargin } from "../domain/kitchen-margin";
+import { computePreFermentSplit, PRE_FERMENT_TEMP_C } from "../domain/pre-ferment-split";
+import { buildRecipePhases } from "../domain/recipe-phases";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../data/glossary-data";
 import { searchOvenModels } from "../data/oven-models";
@@ -236,10 +238,6 @@ function styleSummary(style: PizzaStyle) {
   };
 }
 
-/** Temperatura di maturazione del pre-fermento, °C (fonti:
- *  docs/ricerca/prefermenti-fonti-2026-10-24.md; stessi valori del CMS). */
-const PRE_FERMENT_TEMP_C = { biga: [18, 20], poolish: [20, 22] } as const;
-
 /** Composizione completa del pre-fermento e dell'impasto finale, come nella
  *  ricetta dell'app (verifica di GPT: con solo tipo e quota non è eseguibile). */
 function preFermentData(recipe: GeneratedRecipe) {
@@ -261,7 +259,12 @@ function preFermentData(recipe: GeneratedRecipe) {
     [`yeast_${recipe.yeast_type}_g`]: recipe.yeast_g,
     maturation_minutes: recipe.timeline.find((step) => step.id === "preferment")?.duration_minutes ?? null,
     maturation_temp_c_range: PRE_FERMENT_TEMP_C[type],
+    // FW-17 (S08-A-07): stima per l'acqua del pre-fermento; water_temp_c della
+    // ricetta è quella dell'impasto finale.
+    water_temp_c: recipe.pre_ferment_water_temp_c ?? null,
     final_dough: {
+      // FW-17: il prefermento maturo entra tutto nell'impasto finale (recipe-phases).
+      pre_ferment_g: buildRecipePhases(recipe).preFerment?.massG ?? null,
       flour_g: split.mainFlourG,
       water_g: split.mainWaterG,
       salt_g: recipe.salt_g,
@@ -329,6 +332,9 @@ function recipeData(recipe: GeneratedRecipe) {
       duration_minutes: step.duration_minutes,
       // D-050: cotture ripetute una alla volta; la durata è già il totale.
       ...(step.rounds ? { rounds: step.rounds } : {}),
+      // FW-19: secondi di un giro e recupero del forno fra due giri (ipotesi), già nel totale.
+      ...(step.round_seconds ? { round_seconds: step.round_seconds } : {}),
+      ...(step.recovery_seconds ? { recovery_seconds: step.recovery_seconds } : {}),
       ...(step.parallel_activity ? { parallel_activity: step.parallel_activity } : {}),
       ...(step.work_units ? { work_units: step.work_units, minutes_per_unit: step.minutes_per_unit } : {}),
     })),
@@ -457,6 +463,7 @@ export const MCP_TOOLS: McpTool[] = [
       const includeBlocked = optionalBoolean(args,"include_not_feasible") ?? false;
       const includeRecipe = optionalBoolean(args,"include_recipe") ?? false;
       const candidates = onlyStyle ? {[onlyStyle.id]:onlyStyle} : Object.fromEntries(Object.values(STYLES_DB).filter(s=>!s.dough.unleavened || !["biga","poolish"].includes(String(args.pre_ferment))).map(s=>[s.id,s]));
+      const margins = new Map<string, number>();
       const recs = recommendStyles(constraints, candidates, undefined,
         (style,c)=>recipeForInput(style,c,args).recipe)
         .map(rec => ({...rec, dietary_alternatives: dietaryRecipeAlternatives(rec.recipe, constraints,
@@ -469,6 +476,8 @@ export const MCP_TOOLS: McpTool[] = [
           const tunedArgs: Json = {...args,recipe_mode:"adapted"};
           for (const key of ["hydration_pct","flour_w","flour_pl","salt_pct","flour_blend","compensate_hydration","fermentation_hours","fermentation_temp_c","pre_ferment","pre_ferment_flour_pct"]) delete tunedArgs[key];
           const tuned = scoped ? recipeForInput(rec.style,constraints,tunedArgs).recipe : null;
+          const margin = kitchenMargin(rec.style, constraints);
+          margins.set(rec.style.id, margin);
           const best = Math.max(now, tuned ? tuned.verdict.outcome === "not_feasible" ? now : tuned.scores.composite : kitchenCompatibility(rec.style, constraints).best);
           return {
             ...styleSummary(rec.style),
@@ -476,6 +485,9 @@ export const MCP_TOOLS: McpTool[] = [
             reference_name: rec.style.name,
             compatibility: now,
             compatibility_best: best,
+            // D-062: a pari compatibilità, prima chi ha più margine di forno e
+            // tempo oltre il minimo dello stile (0–1); stesso spareggio dell'app.
+            kitchen_margin: Math.round(margin * 100) / 100,
             tier: rec.tier,
             outcome: rec.verdict.outcome,
             blockers: rec.verdict.blockers,
@@ -497,9 +509,10 @@ export const MCP_TOOLS: McpTool[] = [
             warnings: [...rec.warnings.map(msg), ...evaluated.dietary_warnings.map(w=>w.message)],
           };
         })
-        // Per compatibilità con la cucina, il numero che l'agente mostra;
-        // il limite si applica dopo, se no i migliori restano fuori.
-        .sort((a, b) => b.compatibility - a.compatibility)
+        // Per compatibilità con la cucina, il numero che l'agente mostra; a
+        // pari numero più margine prima (D-062, come Crea). Il limite si
+        // applica dopo, se no i migliori restano fuori.
+        .sort((a, b) => compareByCompatibility({ score: a.compatibility, margin: margins.get(a.id) ?? 0 }, { score: b.compatibility, margin: margins.get(b.id) ?? 0 }))
         .slice(0, limit);
       return {
         summary: recs.map((r) => `${r.name}: ${r.compatibility}/100`).join("; "),
@@ -575,7 +588,8 @@ export const MCP_TOOLS: McpTool[] = [
     },
     run: (args) => {
       const lang = (LANGS as readonly string[]).includes(String(args.lang)) ? (args.lang as Lang) : "it";
-      const source = { glossaryTerms: GLOSSARY_BY_LANG[lang] as GlossaryMessages };
+      // FW-05 (S12-V-01): stessi fatti del motore della UI, numeri nella lingua chiesta.
+      const source = { glossaryTerms: GLOSSARY_BY_LANG[lang] as GlossaryMessages, locale: { id: lang } };
       const terms = GLOSSARY_TERMS.map((term) => getLocalizedTerm(term, source));
       const query = args.term ? String(args.term).toLowerCase() : "";
       if (!query) {

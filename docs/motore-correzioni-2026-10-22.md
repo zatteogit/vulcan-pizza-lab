@@ -584,3 +584,40 @@ passi e server MCP. Misure sul codice, prima (`dedb1fe`) e dopo.
   `mcp-kitchen-parity.test.ts`). Test nuovi in `effective-kitchen.test.ts`,
   `recipe-output-format.test.ts`, `use-profile-defaults.test.ts`,
   `mcp-server.test.ts`.
+
+## FW-19 · piano temporale unico (audit UX/scienza 28/10/2026)
+
+Un solo piano per Procedimento, Timeline comoda, «Inizia ora» e modalità
+cottura (`src/app/use-cases/cook-plan.ts`, test in `cook-plan.test.ts` sulle
+timeline vere di teglia romana, focaccia genovese e napoletana STG). Misure
+sul codice, prima (`116906f`) e dopo, con l'MCP `generate_recipe`
+(4 pezzi, ricetta adattata).
+
+- **Pieghe come passo** (S10-B-10, S09-A-07). Per gli stili con una serie di
+  pieghe in `FOLDING_DB` (numero ≥ 2, intervallo > 0) il passo `folds`
+  (numero × intervallo) è ricavato dall'inizio della puntata se la puntata
+  tiene almeno 2 h oltre le pieghe. Con la puntata sotto i 18 °C le pieghe
+  sono a temperatura ambiente e il lievito le conta come l'appretto
+  (`equivalentFermentationHours`). Totale della fermentazione invariato.
+  - P1 (casa 250 °C, 24 h), teglia romana: `mix 10 · bulk 864` → `mix 10 ·
+    folds 135 · bulk 729`; lievito 2,4 → 2,3 g.
+  - P1 focaccia genovese (22 °C): `bulk 432` → `folds 60 · bulk 372`;
+    lievito invariato (2,1 g).
+  - P3 (Effeuno 509 °C, 48 h), teglia romana: lievito 1,4 → 1,3 g.
+- **Recupero del forno fra le cotture** (S09-A-14, S09-B-13). Ipotesi per
+  tipo di forno (`BAKE_ROUND_RECOVERY_SEC`, nota `bake-round-recovery`):
+  - P1 napoletana, 4 cotture: `bake 23` → `38` min (4 × 5 min 45 s + 3 × 5 min).
+  - P3 napoletana: `bake 5` → `11` min (4 × 75 s + 3 × 2 min).
+  - Durata del procedimento: +15 min con il forno di casa e 4 pezzi, +6 min
+    con i forni da pizza, +2 min con legna e carbone.
+- **Etichetta dei giri** in secondi veri («5 min 45 s», non «6 min»), anche
+  nel testo tradotto (`formatSeconds`).
+- **Golden** (`recipes.golden.json`): esiti invariati per tutti i 29 stili ×
+  3 scenari. Cambiano `timeline_min` (+15 min in casa, +2 a legna) e il
+  lievito degli stili con pieghe e puntata in frigo (teglia, pala, spaccata,
+  baciata, barese, Detroit, canotto: −0,1 g circa).
+- **Classifica `recommendStyles`** per P1 e P3: invariata (P1: montanara,
+  fritta, fritta tonda, focaccia genovese, ciaccino a 87; P3: tonda 91,
+  canotto 90, pinsa 89, teglia 88, New York 88).
+- **Parità MCP ↔ browser:** i passi espongono anche `round_seconds` e
+  `recovery_seconds`; la guida dell'MCP dice che il recupero è compreso.

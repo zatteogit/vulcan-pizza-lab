@@ -5,7 +5,9 @@
   "indexing": "noindex",
   "partner": {
     "name": "Fornace Aurora",
-    "invented": true
+    "invented": true,
+    "relationship": "demo",
+    "neutralityStatement": "same-engine"
   },
   "ovens": {
     "only": ["aurora-"],

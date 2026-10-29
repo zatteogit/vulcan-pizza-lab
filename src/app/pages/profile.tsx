@@ -9,7 +9,7 @@ import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys
 import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
 import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
-import { useCallback,useEffect,useMemo,useRef,useState } from "react";
+import { Suspense, lazy, useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
@@ -45,7 +45,8 @@ syncLegacyFlags,
 compatibleHeatProfiles,
 isHeatProfileCompatible,
 } from "../data/equipment-data";
-import { OVEN_MODELS, type OvenModel } from "../data/oven-models";
+import { OVEN_MODELS, getOvenModel, type OvenModel } from "../data/oven-models";
+import { AboutLinks, neutralityText } from "../components/shared/about-links";
 import { nextSavedOven, profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
 import { hasChosenSkill } from "../hooks/use-profile-defaults";
 
@@ -75,19 +76,23 @@ import {
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
-import { MICRO_DOSE_GRAMS, formatMass } from "../i18n/format";
+import { MICRO_DOSE_GRAMS, formatMass, pluralPick } from "../i18n/format";
 import { AccountPanel } from "../features/account/account-panel";
 import { OvenModelSearch } from "../features/profile/oven-model-search";
 import { SettingEffectNote } from "../features/profile/setting-effect-note";
 import { SkillEffectDetails } from "../features/profile/skill-effect-details";
 import { DietPreferences } from "../features/profile/diet-preferences";
 import { PantrySummary } from "../features/profile/pantry-summary";
+import { GlossaryTermLinks } from "../features/glossary/term-link";
 import { encodePan } from "../features/recipe/pan-url";
 import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { BRAND } from "../config/brand";
 import { DetailLevelSetting, DetailLevelOffer } from "../features/profile/detail-level-setting";
 import { SkillLevelEffect } from "../features/profile/skill-level-effect";
 import { useDetailLevel } from "../hooks/use-detail-level";
+
+/* FW-15 (S17-A-03/B-17): il dialog Informazioni anche dal tab App. */
+const AboutDialog = lazy(() => import("../components/shared/about-dialog").then((m) => ({ default: m.AboutDialog })));
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
@@ -409,6 +414,7 @@ type SavedRecipesNotice =
 function SavedRecipesSection() {
   const { cms, bcp47 } = useCms();
   const p = cms.profile;
+  const savedFmt = createFormatter(cms.ui, bcp47);
   const [recipes, setRecipes] = useState<SavedRecipe[]>(() => loadSavedRecipes());
   const [notice, setNotice] = useState<SavedRecipesNotice | null>(null);
   /* U-10 (F26): il tempo per «Annulla» si ferma finché l'avviso ha il focus o
@@ -529,10 +535,20 @@ function SavedRecipesSection() {
             const meta = [
               name ? styleName : null,
               formatSavedDate(r.createdAt, new Date(), bcp47),
-              r.score != null ? `${r.score}/100` : null,
             ]
               .filter(Boolean)
               .join(" · ");
+            /* FW-06 (S17-A-04, S17-B-03, S17-B-09): le versioni dello stesso
+               stile si distinguono dai parametri; il numero ha un nome e dice
+               che è la fotografia del salvataggio, non il valore di oggi. */
+            const se = cms.scoreExplainer;
+            const balls = pluralPick(r.params.doughBalls, bcp47, { one: se.savedBallsOne, other: se.savedBallsOther });
+            const params = t(se.savedParams, {
+              hydration: savedFmt.percent(r.params.hydration),
+              hours: savedFmt.durationShort(r.params.fermentHours),
+              balls: t(balls, { n: savedFmt.number(r.params.doughBalls) }),
+            });
+            const snapshot = r.score != null ? t(se.snapshot, { score: savedFmt.number(r.score) }) : null;
             return (
               <li key={r.id} className="profile-saved-recipes__item">
                 <Link
@@ -549,6 +565,14 @@ function SavedRecipesSection() {
                     <span className="type-data profile-saved-recipes__meta">
                       {meta}
                     </span>
+                    <span className="type-data profile-saved-recipes__meta" data-slot="params">
+                      {params}
+                    </span>
+                    {snapshot && (
+                      <span className="type-data profile-saved-recipes__meta" data-slot="snapshot">
+                        {snapshot}
+                      </span>
+                    )}
                   </span>
                 </Link>
                 <button
@@ -706,8 +730,12 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const [step, setStep] = useState(0);
   /* Si parte dal forno già salvato (anche quello preimpostato da un'edizione
      partner): «Avanti» non deve riportarlo al forno di casa. */
-  const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string }>(OVEN_STORAGE_KEY));
+  const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string; origin?: "edition" }>(OVEN_STORAGE_KEY));
   const [ovenType, setOvenType] = useState<OvenType>(savedOven?.ovenType ?? "home");
+  /* FW-15 (S18-A-05/B-06, S15-A-10): il modello salvato (anche quello proposto
+     dall'edizione) si nomina sulla tessera; se viene dall'edizione lo si dice. */
+  const savedModel = getOvenModel(savedOven?.modelId);
+  const editionOven = savedOven?.origin === "edition" ? savedModel : undefined;
   const [ovenTemp, setOvenTemp] = useState(savedOven?.maxTemp ?? 250);
   /* FW-07 (S15-V-01, S15-A-06): il livello parte da quello salvato e, se non
      c'è, da nessuno: «Avanti» non sceglie «Principiante» al posto tuo. */
@@ -837,6 +865,12 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step === 0 && <SettingEffectNote settingId="oven" />}
             {step === 1 && <SettingEffectNote settingId="skill" />}
             {step === 2 && <SettingEffectNote settingId="pantry" />}
+            {step === 0 && editionOven && ovenType === editionOven.ovenType && (
+              <p className="type-data-sm profile-ftu__edition-oven" role="note">
+                {uiMessage("pages.profile.ftu.editionOven", [`${editionOven.brand} ${editionOven.model}`])}
+                {neutralityText() && <small data-region="neutrality">{neutralityText()}</small>}
+              </p>
+            )}
             {step === 0 && (
               <div className="profile-ftu__option-list">
                 {OVEN_PRESETS.map((preset) => {
@@ -881,6 +915,9 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                         <div className="type-data-sm profile-ftu__option-meta">
                           {uiMessage("pages.profile.maxTemp", [fmt.celsius(active ? ovenTemp : preset.maxTemp)])}
                         </div>
+                        {active && savedModel && savedOven?.ovenType === preset.id && (
+                          <div className="type-data-sm profile-ftu__option-model">{`${savedModel.brand} ${savedModel.model}`}</div>
+                        )}
                       </div>
                       {active && (
                         <motion.div
@@ -972,6 +1009,9 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                       />
                     ))}
                   </div>
+                  {/* FW-04 (S15-A-09): il tipo non è la forza; i nomi si aprono nel glossario. */}
+                  <p className="type-data-sm profile-ftu__pantry-note">{p.ftuFlourTypeNote}</p>
+                  <GlossaryTermLinks termIds={["flour_type", "w_alveograph", "manitoba", "semola_rimacinata"]} />
                   {/* Accordion farine speciali */}
                   <button
                     onClick={() => setShowSpecialFlours((v) => !v)}
@@ -1012,6 +1052,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                       />
                     ))}
                   </div>
+                  <GlossaryTermLinks termIds={["sourdough"]} />
                 </div>
                 {ftuYeasts.includes("sourdough") && (
                   <p className="type-data-sm profile-ftu__pantry-note" role="status">
@@ -1206,6 +1247,7 @@ export function ProfilePage() {
 
   /* Locale confirmation modal */
   const [pendingLocale, setPendingLocale] = useState<LocaleMeta | null>(null);
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   /* FW-07: il forno del profilo è quello della cucina effettiva
    * (`vulcan_oven_pref`, scritto anche da Crea); `vulcan_ovens` e il vecchio
@@ -2289,6 +2331,16 @@ export function ProfilePage() {
         {/* D-046 / D-047: accesso, ruolo riconosciuto, demo. FW-16 (S17-A-02):
             dopo le preferenze, e solo se c'è un'azione possibile. */}
         <AccountPanel locale={bcp47} />
+
+        {/* FW-15 (S17-A-03/B-17): Informazioni — metodo e fonti, dati, versione. */}
+        <ProfileSection
+          title={uiMessage("profile.info.title")}
+          subtitle={uiMessage("profile.info.subtitle")}
+          delay={motionDelay.deliberate}
+        >
+          <AboutLinks locale={bcp47} about={{ label: cms.ui.aboutLabel, onOpen: () => setAboutOpen(true) }} />
+        </ProfileSection>
+        {aboutOpen && <Suspense fallback={null}><AboutDialog onClose={() => setAboutOpen(false)} /></Suspense>}
 
         {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}
         <div className="profile-page__footer">

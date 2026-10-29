@@ -20,10 +20,16 @@ describe("tre esiti sulla ricetta eseguibile, indipendenti dal punteggio", () =>
     const wood = generateRecipe(style, kitchen({ oven_type: "wood", oven_max_temp_c: 450 }));
     const home = generateRecipe(style, kitchen());
     expect(coal.verdict.outcome).toBe("ok");
-    expect(wood.verdict.outcome).toBe("warnings");
-    expect(wood.verdict.adaptations.map((m) => m.key)).toContain("gen.notCoalOven");
-    expect(wood.scores.authenticity).toBeLessThanOrEqual(75);
-    expect(wood.scores.composite).toBeLessThan(coal.scores.composite);
+    // D-063: a 450 °C il forno arriva alla temperatura dello stile, quindi il
+    // carbone non è più un avviso del verdetto (resta un'informazione).
+    expect(wood.verdict.adaptations.map((m) => m.key)).not.toContain("gen.notCoalOven");
+    // D-063: a 450 °C il forno a legna supera i 340 °C minimi dell'Apizza,
+    // quindi niente tetto del combustibile; il carbone resta un'informazione.
+    expect(wood.scores.authenticity).toBeGreaterThan(75);
+    expect(wood.scores.penalties.map((p) => p.key)).toContain("auth.notCoalOven");
+    expect(wood.scores.penalties.map((p) => p.key)).not.toContain("auth.fuelCap");
+    // Il numero può superare quello del carbone (forno più caldo); la
+    // differenza di dotazione resta nei dettagli dell'autenticità.
     expect(home.verdict.outcome).toBe("not_feasible");
     expect(home.scores.composite).toBeLessThanOrEqual(39);
   });

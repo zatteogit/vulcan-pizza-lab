@@ -35,7 +35,8 @@ import { stgDepartures } from "../domain/recipe-reference";
 import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
-import { canonicalRecipe, kitchenCompatibility, scoreWeightsFromCms, styleWithSelectedTopping } from "../features/recipe/kitchen-compatibility";
+import { compareByCompatibility, kitchenMargin } from "../domain/kitchen-margin";
+import { canonicalRecipe, referenceCompatibility, scoreWeightsFromCms, styleWithSelectedTopping } from "../features/recipe/kitchen-compatibility";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 import { useDetailLevel } from "../hooks/use-detail-level";
@@ -256,21 +257,24 @@ export function ExplorePage() {
 
   /* FW-10 (D-H, S02-A-03): l'anteprima apre con ciò che la tua cucina
      permette. Prima gli stili fattibili, poi per compatibilità decrescente;
-     a parità resta l'ordine del database. La vista completa non cambia. */
+     a pari numero più margine di forno e tempo (D-062), poi l'ordine del
+     database. La vista completa non cambia. */
   const kitchenRank = useMemo(() => {
     const weights = scoreWeightsFromCms(cms);
     const rank = (style: PizzaStyle | undefined) => {
-      if (!style) return { blocked: true, now: 0 };
+      if (!style) return { blocked: true, now: 0, margin: 0 };
       try {
         const recipe = canonicalRecipe(style, profileConstraints, weights);
-        return { blocked: recipe.verdict.outcome === "not_feasible", now: recipe.scores.composite };
+        return { blocked: recipe.verdict.outcome === "not_feasible", now: recipe.scores.composite, margin: kitchenMargin(style, profileConstraints) };
       } catch {
-        return { blocked: true, now: 0 };
+        return { blocked: true, now: 0, margin: 0 };
       }
     };
     const sortBy = <T,>(items: readonly T[], styleOf: (item: T) => PizzaStyle | undefined) => {
       const ranked = items.map((item, index) => ({ item, index, ...rank(styleOf(item)) }));
-      ranked.sort((a, b) => Number(a.blocked) - Number(b.blocked) || b.now - a.now || a.index - b.index);
+      ranked.sort((a, b) => Number(a.blocked) - Number(b.blocked)
+        || compareByCompatibility({ score: a.now, margin: a.margin }, { score: b.now, margin: b.margin })
+        || a.index - b.index);
       return ranked;
     };
     const stylesRanked = sortBy(styles, (style) => style);
@@ -641,7 +645,7 @@ function SignatureRecipeCard({
   const match = useMemo(() => {
     if (!baseStyle) return null;
     try {
-      return kitchenCompatibility(styleWithSelectedTopping(baseStyle, rawRecipe.topping_concept_id), constraints, scoreWeightsFromCms(cms));
+      return referenceCompatibility(styleWithSelectedTopping(baseStyle, rawRecipe.topping_concept_id), constraints, scoreWeightsFromCms(cms));
     } catch {
       return null;
     }
@@ -724,7 +728,7 @@ function SignatureRecipeCard({
       </Surface>
           {match && (
             <div className="explore-card__match">
-              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
+              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} recipe={match.recipe} />
             </div>
           )}
       </TiltCard>
@@ -775,13 +779,11 @@ function StyleCatalogCard({
     cms.media?.stylePhotos?.[style.id] ||
     STYLE_PHOTOS[style.id] ||
     FALLBACK;
-  // Fase 4: match canonico (M_c) sul tuo forno + margine ottimizzabile (M_o − M_c).
-  // La pill "↗+Δ" compare solo se il margine è reale (Δ ≥ 8): auto-regolante,
-  // così il 70-80% delle card resta pulito. (La scia fantasma a 32px era illeggibile.)
+  // FW-06 (S07-A-17): il numero del riferimento sulla tua cucina; nessuna
+  // pill «↗+Δ» (non esiste) e nessuna ottimizzazione per card.
   const match = useMemo(() => {
     try {
-      // D-041: stesso numero di Crea, della scheda e della ricetta aperta.
-      return kitchenCompatibility(style, constraints, scoreWeightsFromCms(cms));
+      return referenceCompatibility(style, constraints, scoreWeightsFromCms(cms));
     } catch {
       return null;
     }
@@ -840,7 +842,7 @@ function StyleCatalogCard({
           {/* Compatibilità con la tua cucina — in alto a destra, come in Crea */}
           {match && (
             <div className="explore-card__match">
-              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
+              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} recipe={match.recipe} />
             </div>
           )}
 

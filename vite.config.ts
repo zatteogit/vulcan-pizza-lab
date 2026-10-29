@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from "vite";
 import path from "path";
 import fs from "fs";
+import { execFileSync } from "child_process";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { fillBrandPlaceholders } from "./src/app/config/brand";
@@ -11,6 +12,27 @@ import { resolveEditionFile } from "./scripts/edition-path.mjs";
    src/app/config/brand.ts. public/ viene copiato così com'è, quindi il
    manifest si riempie dopo la copia (build) e al volo (dev). Il file resta in
    public/ ed è JSON valido anche con i segnaposto (lo legge ds-tier-guard). */
+/* Budget D-059 (integrazione ondata 2): il prodotto non usa il trascinamento
+   di motion (l'unico, lo swipe dei pannelli di RecipeOutput, non poteva mai
+   partire ed è stato tolto), ma il componente `motion` porta comunque con sé
+   i gesti drag e pan (~4 kB gzip). In `vite build` la loro definizione diventa vuota; animazioni, gesti
+   tap/hover/focus e layout condivisi (`layoutId`) restano. Il test
+   src/app/components/ds/motion-no-drag.test.ts fallisce se il prodotto
+   comincia a usare drag o pan: in quel caso togliere questo plugin. */
+function motionWithoutDragPlugin(): Plugin {
+  return {
+    name: "vulcan-motion-without-drag",
+    apply: "build",
+    enforce: "pre",
+    load(id) {
+      if (id.replace(/\\/g, "/").endsWith("framer-motion/dist/es/motion/features/drag.mjs")) {
+        return "export const drag = {};";
+      }
+      return null;
+    },
+  };
+}
+
 function brandPlugin(): Plugin {
   const MANIFEST = "site.webmanifest";
   let outDir = path.resolve(__dirname, "dist");
@@ -151,14 +173,38 @@ function saveAnnotationsPlugin() {
   };
 }
 
-export default defineConfig({
-  plugins: [react(), tailwindcss(), saveAnnotationsPlugin(), brandPlugin()],
+/* FW-15 (S01-B-01): data e commit della build, mostrati in Informazioni e in
+   «Metodo e fonti». Workers Builds espone il commit; altrimenti git, se c'è. */
+function buildInfo(): { date: string; commit: string } {
+  let commit = process.env.WORKERS_CI_COMMIT_SHA?.slice(0, 7) ?? "";
+  if (!commit) {
+    try {
+      commit = execFileSync("git", ["rev-parse", "--short", "HEAD"], { cwd: __dirname, stdio: ["ignore", "pipe", "ignore"] })
+        .toString()
+        .trim();
+    } catch {
+      commit = "";
+    }
+  }
+  return { date: new Date().toISOString().slice(0, 10), commit };
+}
+
+export default defineConfig(({ command }) => ({
+  define: { __VULCAN_BUILD__: JSON.stringify(buildInfo()) },
+  plugins: [react(), tailwindcss(), saveAnnotationsPlugin(), brandPlugin(), motionWithoutDragPlugin()],
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+    alias: [
+      { find: "@", replacement: path.resolve(__dirname, "./src") },
       // Edizione della build (VULCAN_EDITION): docs/ambienti-ed-edizioni.md.
-      "@vulcan/edition": resolveEditionFile(),
-    },
+      { find: "@vulcan/edition", replacement: resolveEditionFile() },
+      /* Budget D-059: gli "exports" di react-router 7 puntano sempre alla
+         build di sviluppo (avvisi e controlli in più). In `vite build` si usa
+         quella di produzione che il pacchetto pubblica accanto (−~3 kB gzip);
+         in sviluppo restano gli avvisi. */
+      ...(command === "build"
+        ? [{ find: /^react-router$/, replacement: path.resolve(__dirname, "node_modules/react-router/dist/production/index.mjs") }]
+        : []),
+    ],
   },
 
   /* === Dev server === */
@@ -185,11 +231,19 @@ export default defineConfig({
     // Keep the existing transfer budget while adding recipe safety metadata.
     // No unsafe transforms or property mangling: public recipe keys stay intact.
     minify: "terser",
-    terserOptions: { compress: { passes: 2 }, format: { comments: false } },
+    /* ecma 2020 = il target della build (Vite "modules"): niente forme ES5
+       né il ripiego per Safari 10, che il target esclude già. */
+    terserOptions: { ecma: 2020, safari10: false, compress: { passes: 2 }, format: { comments: false } },
     /* Limita i warning per bundle size durante il prototipo */
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
+        /* Budget D-059 (ondata 2 dell'audit): i chunk condivisi sotto ~4 kB
+           senza effetti collaterali (icone, piccoli componenti DS) si fondono
+           in un chunk caricato nelle stesse condizioni. Meno file, meno
+           involucri e gzip più efficace: −4 kB sul codice senza lingue.
+           Integrazione ondata 2 (FW-04 + D-062/D-063): 6000 (−1,4 kB). */
+        experimentalMinChunkSize: 6000,
         manualChunks: {
           "vendor-react": [
             "react",
@@ -199,6 +253,9 @@ export default defineConfig({
           /* "motion" è un wrapper: senza framer-motion qui, i ~120 kB veri
              finivano nel chunk principale (audit bundle lug 2026). */
           "vendor-motion": ["motion", "framer-motion"],
+          /* Catalogo UI italiano (lingua di riserva, sempre caricato): file a
+             sé accanto al chunk principale, che altrimenti supera i 100 kB. */
+          "ui-messages-it": [path.resolve(__dirname, "src/app/i18n/ui-messages.it.ts")],
         },
       },
     },
@@ -206,4 +263,4 @@ export default defineConfig({
 
   /* File types to support raw imports. Never add .css, .tsx, or .ts files. */
   assetsInclude: ["**/*.svg", "**/*.csv"],
-});
+}));

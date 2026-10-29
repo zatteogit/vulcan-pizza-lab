@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { handleMcpMessage } from "./mcp-server";
-import { STYLES_DB, generateRecipe, type GeneratedRecipe, type UserConstraints } from "../domain/pizza-engine";
+import { STYLES_DB, generateRecipe, recommendStyles, type GeneratedRecipe, type UserConstraints } from "../domain/pizza-engine";
+import { compareByCompatibility, kitchenMargin } from "../domain/kitchen-margin";
 import { canonicalRecipe, canonicalRecipeEntry, recipeFromEntry, tailoredRecipeEntry, optimizeSelectedRecipe } from "../use-cases/recipe-entry";
 import { getVersions } from "../data/style-versions";
 import { getInterpretationsForStyle } from "../data/interpretation-library";
@@ -22,7 +23,7 @@ function sameRecipe(data: Record<string,any>, recipe: GeneratedRecipe, context: 
   expect(data.blockers,context).toEqual(recipe.verdict.blockers);
   expect(data.conditions,context).toEqual(recipe.verdict.conditions ?? []);
   for (const key of ["hydration_pct","flour_w","flour_pl","fermentation_hours","fermentation_temp_c","oven_temp_c","cook_time_sec","ball_weight_g","total_dough_g"] as const) expect(data[key],`${context}/${key}`).toEqual(recipe[key]);
-  expect(data.steps,context).toEqual(recipe.timeline.map(s=>({id:s.id,title:s.title,description:s.description,duration_minutes:s.duration_minutes,...(s.rounds?{rounds:s.rounds}:{}),...(s.parallel_activity?{parallel_activity:s.parallel_activity}:{}),...(s.work_units?{work_units:s.work_units,minutes_per_unit:s.minutes_per_unit}:{})})));
+  expect(data.steps,context).toEqual(recipe.timeline.map(s=>({id:s.id,title:s.title,description:s.description,duration_minutes:s.duration_minutes,...(s.rounds?{rounds:s.rounds}:{}),...(s.round_seconds?{round_seconds:s.round_seconds}:{}),...(s.recovery_seconds?{recovery_seconds:s.recovery_seconds}:{}),...(s.parallel_activity?{parallel_activity:s.parallel_activity}:{}),...(s.work_units?{work_units:s.work_units,minutes_per_unit:s.minutes_per_unit}:{})})));
   for (const [name,key] of [["flour","flour_g"],["water","water_g"],["salt","salt_g"]] as const) expect(data.ingredients.find((i:{name:string})=>i.name===name)?.grams ?? 0,context).toBe(recipe[key]);
 }
 
@@ -136,9 +137,32 @@ describe("MCP kitchen → browser recipe parity", () => {
     expect(recs.structuredContent.styles.some((s:{id:string})=>s.id==="focaccia_recco")).toBe(false);
   });
 
+  // FW-06 · D-E: con solo facilità e fedeltà allo stile (prima 91 e 87).
   it("reproduces scores actually observed on browser Create cards", () => {
-    expect(call("generate_recipe",{...args,style_id:"tonda_romana",recipe_mode:"adapted",skill_level:1,has_baking_pan:false}).structuredContent.scores.composite).toBe(91);
-    expect(call("generate_recipe",{...args,style_id:"focaccia_genovese",recipe_mode:"adapted",skill_level:1,has_baking_pan:false,oven_type:"home",oven_max_temp_c:250}).structuredContent.scores.composite).toBe(87);
+    expect(call("generate_recipe",{...args,style_id:"tonda_romana",recipe_mode:"adapted",skill_level:1,has_baking_pan:false}).structuredContent.scores.composite).toBe(97);
+    expect(call("generate_recipe",{...args,style_id:"focaccia_genovese",recipe_mode:"adapted",skill_level:1,has_baking_pan:false,oven_type:"home",oven_max_temp_c:250}).structuredContent.scores.composite).toBe(97);
+  });
+
+  // D-062: a pari compatibilità, lo stesso spareggio di Crea (margine di forno e tempo).
+  it("recommend_styles breaks ties by kitchen margin, like the app", () => {
+    const c={...kitchen,available_hours:48};
+    const styles=call("recommend_styles",{...c,recipe_mode:"adapted",include_not_feasible:true,limit:29}).structuredContent.styles as {id:string;compatibility:number;kitchen_margin:number}[];
+    const app=recommendStyles(c,undefined,undefined,(style,cur)=>tailoredRecipeEntry(style,cur,weights).recipe)
+      .map(r=>({id:r.style.id,score:r.recipe.scores.composite,margin:kitchenMargin(r.style,c)}))
+      .sort(compareByCompatibility);
+    expect(styles.map(s=>s.id)).toEqual(app.map(r=>r.id));
+    for (const s of styles) expect(s.kitchen_margin,s.id).toBe(Math.round(kitchenMargin(STYLES_DB[s.id],c)*100)/100);
+    const tie=styles.findIndex((s,i)=>styles[i+1]?.compatibility===s.compatibility && styles[i+1].kitchen_margin<s.kitchen_margin);
+    expect(tie).toBeGreaterThanOrEqual(0);
+  });
+
+  // D-063: un forno elettrico che arriva ai 430 °C della Napoletana non ha il tetto.
+  it("generate_recipe applies the fuel cap only below the style minimum", () => {
+    const at450=call("generate_recipe",{...args,style_id:"napoletana_stg"}).structuredContent;
+    const keys=(at450.scores.penalties as {key:string}[]).map(p=>p.key);
+    expect(at450.scores.authenticity).toBeGreaterThan(75);
+    expect(keys).toContain("auth.woodByMethod");
+    expect(keys).not.toContain("auth.fuelCap");
   });
 
   it("all catalog ingredients fit a complete inventory without duplicate IDs", () => {

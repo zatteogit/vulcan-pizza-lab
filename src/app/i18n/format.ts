@@ -39,8 +39,11 @@ type IntlUnit =
   | "millimeter"
   | "inch";
 
+/* Un decimale; due sotto 0,1 (le microdosi di lievito al centesimo: 0,04 g
+ * non deve diventare «0 g»). */
 function defaultFraction(value: number): number {
-  return Number.isInteger(value) ? 0 : 1;
+  if (Number.isInteger(value)) return 0;
+  return Math.abs(value) < 0.1 ? 2 : 1;
 }
 
 export function formatNumber(
@@ -262,4 +265,27 @@ export function formatMass(
   return formatUnit(ounces, "ounce", locale, {
     maximumFractionDigits: ounces < 1 ? 2 : 1,
   });
+}
+
+/* FW-05 — elenchi nella lingua attiva («A, B e C»), per i nomi di stile che
+ * arrivano dai dati del motore (guida ai prefermenti). */
+type ListFormatCtor = new (locale: string, options: { style: "long"; type: "conjunction" }) => { format(items: readonly string[]): string };
+
+export function formatList(items: readonly string[], locale: string): string {
+  // Intl.ListFormat è nei browser supportati ma non nella lib ES2020 di TypeScript.
+  const ListFormat = (Intl as unknown as { ListFormat?: ListFormatCtor }).ListFormat;
+  return ListFormat ? new ListFormat(locale, { style: "long", type: "conjunction" }).format(items) : items.join(", ");
+}
+
+/* FW-15 — Data di calendario («24 ottobre 2026») per versione e fonti.
+ *  Accetta una data ISO «YYYY-MM-DD», letta come giorno locale (niente fusi). */
+export function formatCalendarDate(isoDate: string, locale: string): string {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  if (!year || !month || !day) return isoDate;
+  return new Date(year, month - 1, day).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
+}
+
+/** FW-15 — Elenco breve («Ooni, Gozney, Effeuno») col separatore della lingua. */
+export function formatShortList(items: readonly string[], locale?: string): string {
+  return items.join(uiMessage("format.listSeparator", [], locale));
 }

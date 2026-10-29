@@ -26,15 +26,25 @@ import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
-import { formatDuration } from "../../i18n/format";
+import { formatAtClock, formatDuration } from "../../i18n/format";
 import { uiMessage } from "../../i18n/ui-messages";
 import {
 currentStepIndex,
 formatEta,
 formatStepClock,
+stepIsWaiting,
 useCookSession,
 type CookSessionStep
 } from "./cook-session";
+import {
+  READY_CHANGE_ANNOUNCE_MS,
+  TIMED_WAIT_STEP_IDS,
+  previewStartNow,
+  sessionNightActions,
+  sessionReadyAt,
+  startNowNeedsConfirm,
+} from "../../use-cases/cook-timing";
+import { BakeRoundsTimer } from "./bake-rounds-timer";
 import { ConfirmDialog, CtaButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import type { EscapeLayerHandle } from "../../components/ds/escape-stack";
@@ -44,9 +54,18 @@ import { StepIllustration } from "./step-illustrations";
 import { resolveStepVisual } from "./step-visual";
 import { STYLES_DB } from "../../domain/styles-db";
 import { isFriedStyle } from "../../domain/pizza-engine";
+import { GlossaryTermLinks } from "../glossary/term-link";
+import { GlossaryNavigationContext } from "../../components/shared/info-tip";
+import { stepGlossaryTerms } from "../glossary/step-terms";
+import { isOilPreheat, preheatText } from "./preheat-copy";
 
 
-/* ── Countdown automatico della fase, ancorato a endMs ── */
+/* ── Countdown della fase ──
+ * FW-19 (S10-B-05, S10-A-02): il countdown di un passo attivo parte da quando
+ * l'utente lo comincia davvero, non dall'orario pianificato; un passo non
+ * ancora cominciato dice solo quanto dura («circa 10 min»). «Tempo
+ * completato» in verde vale solo per un'attesa finita (lievitazione, forno
+ * in temperatura): un passo attivo oltre il tempo previsto è «in ritardo». */
 function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent: boolean }) {
   const { cms, bcp47 } = useCms();
   const [, setTick] = useState(0);
@@ -56,9 +75,19 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
   }, [step.duration_minutes]);
 
   const now = Date.now();
-  const notStarted = now < step.startMs;
+  const waits = stepIsWaiting(step);
+  const timedWait = TIMED_WAIT_STEP_IDS.has(step.id);
+  /* Le fritte scaldano l'olio, non il forno (step.variant "oil" dal motore). */
+  const oil = isOilPreheat(step);
+  const explicitlyStarted = step.actualStartMs !== undefined;
+  const notStarted = now < step.startMs && !explicitlyStarted;
+  /* Un passo attivo arrivato alla sua ora ma non ancora cominciato: niente
+     conto alla rovescia sull'orario pianificato. */
+  const dueNotStarted = !waits && !explicitlyStarted && !notStarted && !step.flexible;
   const remainingMs = Math.max(0, step.endMs - now);
-  const phaseDone = now >= step.endMs;
+  const phaseOver = !notStarted && !dueNotStarted && now >= step.endMs;
+  const waitDone = phaseOver && waits;
+  const activeLate = phaseOver && !waits;
   const totalMs = step.endMs - step.startMs;
   const progress = totalMs > 0 ? Math.min(1, Math.max(0, (now - step.startMs) / totalMs)) : 1;
 
@@ -70,9 +99,10 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
   })();
   const phaseDuration = formatDuration(step.duration_minutes, bcp47);
   const phaseEnd = formatStepClock(step.endMs, step.flexible, bcp47);
+  const toneClass = waitDone ? " cooking-mode-phase--done" : activeLate ? " cooking-mode-phase--late" : "";
 
   return (
-    <div className={`cooking-mode-phase${phaseDone ? " cooking-mode-phase--done" : ""}`}>
+    <div className={`cooking-mode-phase${toneClass}`}>
       <div className="cooking-mode-phase__head">
         <Clock size={18} className="cooking-mode-phase__icon" />
         <div className="cooking-mode-phase__body">
@@ -81,9 +111,15 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
               ? t(cms.cooking.stepStartsIn, {
                   eta: formatEta(step.startMs, Date.now(), bcp47),
                 })
-              : phaseDone
-                ? cms.cooking.phaseDone
-                : t(cms.cooking.phaseRemaining, { time: remainingLabel })}
+              : dueNotStarted
+                ? uiMessage("cooking.phase.about", [phaseDuration])
+                : waitDone
+                  ? timedWait ? preheatText(oil, "ready") : cms.cooking.phaseDone
+                  : activeLate
+                    ? uiMessage("cooking.phase.late")
+                    : timedWait
+                      ? preheatText(oil, "remaining", [remainingLabel])
+                      : t(cms.cooking.phaseRemaining, { time: remainingLabel })}
           </div>
           <div className="cooking-mode-phase__meta">
             {step.flexible
@@ -91,13 +127,15 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
                   duration: phaseDuration,
                   time: phaseEnd,
                 })
-              : t(cms.cooking.activePhaseMeta, {
-                  duration: phaseDuration,
-                  time: phaseEnd,
-                })}
+              : dueNotStarted
+                ? uiMessage("cooking.phase.dueNow")
+                : t(cms.cooking.activePhaseMeta, {
+                    duration: phaseDuration,
+                    time: phaseEnd,
+                  })}
           </div>
         </div>
-        {phaseDone && isCurrent && (
+        {waitDone && isCurrent && (
           <span className="cooking-mode-phase__badge">
             <BellRing size={14} aria-hidden="true" />
             {cms.cooking.yourTurn}
@@ -106,9 +144,9 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
       </div>
       {/* FW-13 (S10-B-13): il cambio di stato si annuncia una volta, non a ogni tick. */}
       <p role="status" className="sr-only">
-        {phaseDone && isCurrent ? cms.cooking.phaseDone : ""}
+        {waitDone && isCurrent ? (timedWait ? preheatText(oil, "ready") : cms.cooking.phaseDone) : ""}
       </p>
-      {!notStarted && !phaseDone && (
+      {!notStarted && !dueNotStarted && !phaseOver && (
         <div className="cooking-mode-phase__track">
           <div
             className="cooking-mode-phase__track-fill"
@@ -116,7 +154,7 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
           />
         </div>
       )}
-      {step.flexible && !phaseDone && (
+      {waits && !phaseOver && (
         <p className="cooking-mode-phase__hint">
           {cms.cooking.passiveCloseHint}
         </p>
@@ -126,7 +164,7 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
 }
 
 export function CookingMode() {
-  const { session, completeStep, closeOverlay, endSession } = useCookSession();
+  const { session, completeStep, startStep, closeOverlay, endSession } = useCookSession();
   const { cms, bcp47 } = useCms();
   const steps = session?.steps ?? [];
   const total = steps.length;
@@ -139,6 +177,10 @@ export function CookingMode() {
   /* Conferma prima di buttare via una pizzata in corso: chiuderla è
      distruttivo (perdi timer e progresso), non un semplice "riduci". */
   const [confirmAbort, setConfirmAbort] = useState(false);
+  /* FW-19 (S10-A-01): cominciare prima dell'orario sposta il pasto: si chiede. */
+  const [confirmStart, setConfirmStart] = useState(false);
+  /* FW-19 (S10-A-02): «È già in temperatura» salta l'attesa del forno: si chiede. */
+  const [confirmHot, setConfirmHot] = useState(false);
 
   useEffect(() => {
     /* Se la sessione avanza da fuori (widget/notifiche), riallinea la vista */
@@ -158,27 +200,53 @@ export function CookingMode() {
   const isCurrent = viewIndex === activeIdx && !allDone;
   const viewingDone = step?.done ?? false;
 
-  /* Tick per il countdown nel bottone (solo quando serve) */
+  /* Tick per il countdown nel bottone e per il passaggio «prima/adesso» */
   const [, setNavTick] = useState(0);
   useEffect(() => {
-    if (!isCurrent || !step?.flexible) return;
+    if (!isCurrent) return;
     const i = setInterval(() => setNavTick((t) => t + 1), 1000);
     return () => clearInterval(i);
-  }, [isCurrent, step?.flexible, step?.id]);
+  }, [isCurrent, step?.id]);
 
-  /* Stato dell'attesa per lo step corrente flessibile */
+  /* FW-19: stato del passo corrente nel piano unico (use-cases/cook-timing.ts).
+     - early: non ancora cominciato e prima del suo orario → «Inizia adesso»
+       con conferma (S10-A-01), mai «Fatto»;
+     - forno: il primo tocco lo accende, poi si aspetta (S10-A-02);
+     - attesa: lievitazioni e forno acceso, «Fatto» solo alla fine. */
   const now = Date.now();
-  const waiting = isCurrent && !!step?.flexible && now < step.endMs;
-  const waitOver = isCurrent && !!step?.flexible && now >= step.endMs;
+  const timedWait = !!step && TIMED_WAIT_STEP_IDS.has(step.id);
+  const oil = isOilPreheat(step);
+  const explicitlyStarted = step?.actualStartMs !== undefined;
+  const early = isCurrent && !viewingDone && !!step && !explicitlyStarted && now < step.startMs;
+  const ovenToStart = isCurrent && timedWait && !explicitlyStarted && !early;
+  const stepWaits = !!step && stepIsWaiting(step);
+  const waiting = isCurrent && !early && stepWaits && now < step.endMs;
+  const waitOver = isCurrent && !early && stepWaits && now >= step.endMs;
 
   const advanceView = useCallback(() => {
     if (viewIndex >= total - 1) setFinished(true);
     else setViewIndex(viewIndex + 1);
   }, [viewIndex, total]);
 
+  const readyApprox = !!session && session.steps.some((s) => !s.done && s.flexible);
+  /* Un anticipo appena confermato (o senza effetti visibili) non si riannuncia: l'utente
+     ha appena letto il nuovo orario. */
+  const confirmedShift = useRef(false);
   const goNext = useCallback(() => {
     if (!session) return;
-    if (isCurrent && !waiting) {
+    if (isCurrent && early) {
+      /* Se l'orario del pasto mostrato non cambia e non arriva niente di
+         notte, non c'è niente da confermare. */
+      if (startNowNeedsConfirm(session.steps, viewIndex, Date.now(), readyApprox)) {
+        setConfirmStart(true);
+      } else {
+        confirmedShift.current = true;
+        startStep(viewIndex);
+      }
+    } else if (isCurrent && ovenToStart) {
+      /* «Ho acceso il forno»: parte l'attesa, il resto slitta da adesso. */
+      startStep(viewIndex);
+    } else if (isCurrent && !waiting) {
       /* Fase attiva fatta, o attesa conclusa: completa e ri-ancora i tempi */
       completeStep(viewIndex);
       advanceView();
@@ -187,14 +255,41 @@ export function CookingMode() {
     } else if (allDone) {
       setFinished(true);
     }
-  }, [session, isCurrent, waiting, viewIndex, total, allDone, completeStep, advanceView]);
+  }, [session, isCurrent, early, ovenToStart, waiting, viewIndex, total, allDone, completeStep, startStep, advanceView, readyApprox]);
 
-  /* "Ho finito prima": chiude l'attesa in anticipo, ri-ancorando il resto */
+  /* "Ho finito prima": chiude l'attesa in anticipo, ri-ancorando il resto.
+     Per il forno chiede conferma: infornare a freddo rovina la pizza. */
   const skipWait = useCallback(() => {
     if (!session || !isCurrent) return;
+    if (timedWait) {
+      setConfirmHot(true);
+      return;
+    }
     completeStep(viewIndex);
     advanceView();
-  }, [session, isCurrent, viewIndex, completeStep, advanceView]);
+  }, [session, isCurrent, timedWait, viewIndex, completeStep, advanceView]);
+
+  /* FW-19 (S10-B-12): l'orario in cui si mangia, sempre visibile; se cambia
+     di più di un quarto d'ora lo si annuncia. */
+  const readyAtMs = session ? sessionReadyAt(session.steps) : 0;
+  const readyLabel = readyAtMs ? formatStepClock(readyAtMs, readyApprox, bcp47) : "";
+  const prevReady = useRef(readyAtMs);
+  const [readyChange, setReadyChange] = useState<{ from: number; to: number } | null>(null);
+  useEffect(() => {
+    if (!readyAtMs) return;
+    const before = prevReady.current;
+    prevReady.current = readyAtMs;
+    const silent = confirmedShift.current;
+    confirmedShift.current = false;
+    if (silent) {
+      setReadyChange(null);
+      return;
+    }
+    if (before && Math.abs(readyAtMs - before) > READY_CHANGE_ANNOUNCE_MS) setReadyChange({ from: before, to: readyAtMs });
+  }, [readyAtMs]);
+  /* FW-19 (S10-A-03): dopo un ri-ancoraggio, le azioni rimaste di notte. */
+  const nightLeft = session ? sessionNightActions(session.steps, now) : [];
+  const startPreview = confirmStart && session ? previewStartNow(session.steps, viewIndex, Date.now()) : null;
 
   const goPrev = useCallback(() => {
     if (finished) setFinished(false);
@@ -257,6 +352,11 @@ export function CookingMode() {
           <div className="cooking-mode-header__title">
             {session.styleName}
           </div>
+          {!finished && readyLabel && (
+            <p className="type-numeric cooking-mode-header__ready">
+              {uiMessage("cooking.chip.readyAt", [readyLabel])}
+            </p>
+          )}
         </div>
         <div className="cooking-mode-header__meta">
           <span className="type-numeric cooking-mode-header__counter">
@@ -316,6 +416,80 @@ export function CookingMode() {
         ]}
       />
 
+      {/* FW-19 (S10-A-01): cominciare prima dell'orario sposta il pasto. */}
+      <ConfirmDialog
+        open={confirmStart && !!startPreview}
+        onDismiss={() => setConfirmStart(false)}
+        ariaLabel={uiMessage("cooking.startEarly.title")}
+        icon={<Clock size={26} />}
+        position="absolute"
+        zIndex={10}
+        title={uiMessage("cooking.startEarly.title")}
+        body={
+          startPreview ? (
+            <>
+              {uiMessage("cooking.startEarly.body", [
+                formatAtClock(step.startMs, bcp47, { nowMs: Date.now() }),
+                formatStepClock(startPreview.readyAtMs, readyApprox, bcp47),
+                readyLabel,
+              ])}
+              {startPreview.nightActions.length > 0 && (
+                <strong className="cooking-mode-confirm__night">
+                  {uiMessage("cooking.night.warning", [
+                    startPreview.nightActions.length,
+                    formatAtClock(startPreview.nightActions[0].atMs, bcp47, { nowMs: Date.now() }),
+                  ])}
+                </strong>
+              )}
+            </>
+          ) : null
+        }
+        actions={[
+          {
+            label: uiMessage("cooking.startEarly.confirm"),
+            onClick: () => {
+              setConfirmStart(false);
+              confirmedShift.current = true;
+              startStep(viewIndex);
+            },
+            variant: "cta",
+          },
+          {
+            label: uiMessage("cooking.startEarly.keep"),
+            onClick: () => setConfirmStart(false),
+            variant: "secondary",
+          },
+        ]}
+      />
+
+      {/* FW-19 (S10-A-02): il forno è davvero già caldo? */}
+      <ConfirmDialog
+        open={confirmHot}
+        onDismiss={() => setConfirmHot(false)}
+        ariaLabel={preheatText(oil, "hotTitle")}
+        icon={<AlertTriangle size={26} />}
+        position="absolute"
+        zIndex={10}
+        title={preheatText(oil, "hotTitle")}
+        body={preheatText(oil, "hotBody")}
+        actions={[
+          {
+            label: preheatText(oil, "hotKeep"),
+            onClick: () => setConfirmHot(false),
+            variant: "cta",
+          },
+          {
+            label: preheatText(oil, "hotConfirm"),
+            onClick: () => {
+              setConfirmHot(false);
+              completeStep(viewIndex);
+              advanceView();
+            },
+            variant: "secondary",
+          },
+        ]}
+      />
+
       {/* ── Progress ── */}
       <div
         className="cooking-mode-progress"
@@ -343,6 +517,23 @@ export function CookingMode() {
       {/* ── Contenuto ── */}
       <div className="cooking-mode-body">
         <div className="cooking-mode-body__inner">
+          {/* FW-19 (S10-B-12): annuncio del nuovo orario di fine. */}
+          <p className="sr-only" role="status" aria-live="polite">
+            {readyChange ? uiMessage("cooking.header.readyChanged", [formatStepClock(readyChange.to, readyApprox, bcp47)]) : ""}
+          </p>
+          {!finished && readyChange && (
+            <p data-tone="caution" className="cooking-mode-note">
+              {uiMessage("cooking.header.readyChangedFrom", [
+                formatStepClock(readyChange.to, readyApprox, bcp47),
+                formatStepClock(readyChange.from, readyApprox, bcp47),
+              ])}
+            </p>
+          )}
+          {!finished && nightLeft.length > 0 && (
+            <p data-tone="caution" className="cooking-mode-note">
+              {uiMessage("cooking.night.warning", [nightLeft.length, formatAtClock(nightLeft[0].atMs, bcp47, { nowMs: now })])}
+            </p>
+          )}
           {!finished && <KeepScreenAwake />}
           {!finished && <CookRemindersRow />}
           <AnimatePresence mode="wait">
@@ -417,7 +608,9 @@ export function CookingMode() {
                     {/* FW-11 (S10-B-18): l'orario dice se è inizio o fine. */}
                     {step.flexible
                       ? uiMessage("cooking.chip.readyAt", [formatStepClock(step.endMs, true, bcp47)])
-                      : isCurrent && !viewingDone && now >= step.startMs
+                      : timedWait && explicitlyStarted
+                        ? preheatText(oil, "waiting", [formatStepClock(step.endMs, false, bcp47)])
+                      : isCurrent && !viewingDone && (now >= step.startMs || explicitlyStarted)
                         ? uiMessage("cooking.chip.now")
                         : uiMessage("cooking.chip.startsAt", [formatStepClock(step.startMs, false, bcp47)])}
                   </span>
@@ -444,6 +637,8 @@ export function CookingMode() {
                       <div key={q.label} className="cooking-mode-step__quantity">
                         <dt>{q.label}</dt>
                         <dd className="type-numeric">{q.value}</dd>
+                        {/* FW-17 (S10-A-21, D-O): aiuto per le microdosi. */}
+                        {q.hint && <dd className="type-body cooking-mode-step__quantity-hint">{q.hint}</dd>}
                       </div>
                     ))}
                   </dl>
@@ -455,10 +650,26 @@ export function CookingMode() {
                   </p>
                 )}
 
+                {/* FW-04 (S10-A-14): le parole del passo aprono il glossario. */}
+                <GlossaryTermLinks termIds={stepGlossaryTerms(step.id, { unleavened: !!STYLES_DB[session.styleId]?.dough.unleavened, variant: step.variant })} />
+
+
                 {/* Countdown di fase ancorato agli orari reali */}
                 {step.duration_minutes > 0 && !viewingDone && (
                   <PhaseCountdown step={step} isCurrent={isCurrent} />
                 )}
+
+                {/* FW-19 (S10-A-16): un timer per ogni cottura. */}
+                {isCurrent && !viewingDone && !early && (step.rounds ?? 0) > 1 && step.roundSec ? (
+                  <BakeRoundsTimer
+                    key={step.id + viewIndex}
+                    rounds={step.rounds!}
+                    roundSec={step.roundSec}
+                    recoverySec={step.recoverySec}
+                    turns={step.turns}
+                    variant={step.variant}
+                  />
+                ) : null}
 
                 {/* Tip */}
                 {step.tip && (
@@ -485,7 +696,7 @@ export function CookingMode() {
                 onClick={skipWait}
                 className="cooking-mode-nav__skip"
               >
-                {cms.cooking.finishedEarly}
+                {timedWait ? preheatText(oil, "alreadyHot") : cms.cooking.finishedEarly}
               </button>
             )}
             <div className="cooking-mode-nav__row">
@@ -506,12 +717,24 @@ export function CookingMode() {
                 elevated={isCurrent && !waiting}
                 className="cooking-mode-nav__cta"
               >
-                {waiting ? (
+                {early ? (
+                  <>
+                    {uiMessage("cooking.startEarly.cta")}
+                    <ChevronRight size={20} />
+                  </>
+                ) : ovenToStart ? (
+                  <>
+                    {preheatText(oil, "start")}
+                    <ChevronRight size={20} />
+                  </>
+                ) : waiting ? (
                   <>
                     <Clock size={18} />
-                    {t(cms.cooking.waitingReadyAt, {
-                      eta: formatEta(step.endMs, Date.now(), bcp47),
-                    })}
+                    {timedWait
+                      ? preheatText(oil, "waiting", [formatEta(step.endMs, Date.now(), bcp47)])
+                      : t(cms.cooking.waitingReadyAt, {
+                          eta: formatEta(step.endMs, Date.now(), bcp47),
+                        })}
                   </>
                 ) : waitOver ? (
                   <>
@@ -537,7 +760,12 @@ export function CookingMode() {
     </motion.div>
   );
 
-  return createPortal(overlay, document.body);
+  /* FW-04: «Apri nel glossario» chiude la vista (la pizzata continua nel
+     widget), altrimenti la voce si aprirebbe dietro lo schermo intero. */
+  return createPortal(
+    <GlossaryNavigationContext.Provider value={closeOverlay}>{overlay}</GlossaryNavigationContext.Provider>,
+    document.body,
+  );
 }
 
 /* ═══ CELEBRATION BURST — coriandoli one-shot per la pizzata completata ═══

@@ -52,12 +52,32 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       FW-07: forno elettrico e a gas «impostato a».
  *  23 → FW-14 (revisione): «Riferimento» al posto di «Originale» nei testi
  *       della ricetta di riferimento.
- *  24 → D-060: la forza della farina come intervallo («W 260–310»).
- *  25 → pill delle card su una riga: copy corti (card.*, diet.cardConflict,
- *       allergen.cardTrace/cardOptional) e card.exclusionsCheck.
+ *  24 → FW-05: glossario, problemi e prefermenti con i fatti del motore
+ *       (segnaposto), scala unica della farina, sale della STG.
+ *  25 → FW-15: sottotitolo di Impara e descrizione del glossario.
+ *  26 → FW-17 (+ revisione): biga/poolish col lievito madre (D-P), staglio
+ *       «in questo passo» invece di «sotto in Ingredienti», Regola 55 a
+ *       quattro termini col prefermento (rule55DescriptionPreferment).
+ *  27 → FW-19: piano temporale unico (pieghe come passo, recupero del forno
+ *       fra le cotture, Timeline comoda onesta, niente «contabilità del tempo»;
+ *       pieghe in cantina senza frigo, timer di cottura per variante).
+ *  28 → FW-02: nota della scienza «stg-reference» e ipotesi «stg-partial-check».
+ *  29 → revisione ondata 2: formule della scienza e note delle fonti nella
+ *       lingua (science.formulas, science.sourceNotes), tedesco sempre «du».
+ *  30 → D-060 (main): la forza della farina come intervallo («W 260–310»).
+ *  31 → FW-06: punteggio spiegabile, pesi D-E presi dal motore, tetto di
+ *       autenticità detto come regola.
+ *  32 → FW-04: voci del glossario per il procedimento e le farine, definizioni
+ *       semplici, formule tradotte, «Valori tipici»/«Perché conta», tabelle
+ *       con il valore nella prima colonna, «Carico d'impasto», TermLink.
+ *  33 → integrazione ondata 2: FW-04 + D-062/D-063 (nota «ranking-tiebreak»,
+ *       tetto del combustibile solo sotto il minimo) e unione dei due tagli
+ *       dei testi che nessuna pagina legge.
+ *  35 → (main) pill delle card su una riga: copy corti (card.*,
+ *       diet.cardConflict, allergen.cardTrace/cardOptional) e card.exclusionsCheck.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 25;
+export const LOCALE_BUNDLE_REV = 35;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

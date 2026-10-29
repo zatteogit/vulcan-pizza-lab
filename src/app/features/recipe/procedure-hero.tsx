@@ -15,14 +15,15 @@ import { useId, useState } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { timeSlotText } from "./time-slot-text";
-import { IconButton, Surface, Switch } from "../../components/ds/index";
+import { Disclosure, IconButton, Surface, Switch } from "../../components/ds/index";
 import type { TimeSlot } from "../../domain/pizza-engine";
 import {
   daySuffix,
   engineMessage,
-  optimizeComfort,
   shiftQuarter,
 } from "./recipe-output-format";
+import { COMFORT_TOLERANCES, type NightAction, type optimizeComfort } from "../../use-cases/cook-plan";
+import { t } from "../cms/i18n";
 import { uiMessage } from "../../i18n/ui-messages";
 
 function localDateTimeValue(date: Date): string {
@@ -47,8 +48,8 @@ interface ProcedureHeroControlsProps {
   handleEndTimeInput: (e: ChangeEvent<HTMLInputElement> | FocusEvent<HTMLInputElement>) => void;
   mealSlots: (TimeSlot & { idealStart: Date; isFeasible: boolean })[];
   comfortToggled: boolean;
-  /** Audit totale n. 2: fasi attive che restano di notte col piano corrente. */
-  nightActivesLeft?: number;
+  /** Audit totale n. 2, FW-19: azioni attive che restano di notte col piano corrente. */
+  nightActionsLeft?: NightAction[];
   setComfortToggled: Dispatch<SetStateAction<boolean>>;
   currentComfortPlan: ReturnType<typeof optimizeComfort>;
   preComfortStart: MutableRefObject<Date | null>;
@@ -72,7 +73,7 @@ export function ProcedureHeroControls({
   handleEndTimeInput,
   mealSlots,
   comfortToggled,
-  nightActivesLeft = 0,
+  nightActionsLeft = [],
   setComfortToggled,
   currentComfortPlan,
   preComfortStart,
@@ -93,11 +94,34 @@ export function ProcedureHeroControls({
   const startDayLabel = daySuffix(calendarReference, startTime, cms.cooking).trim() || cms.cooking.dayToday;
   const endDayLabel = daySuffix(calendarReference, endDisplayTime, cms.cooking).trim() || cms.cooking.dayToday;
 
+  /* FW-19 (S09-A-03, S09-B-03): optimizeComfort restituisce null sia quando
+     non ci sono azioni di notte sia quando non riesce a toglierle. Il secondo
+     caso prima cadeva nello stato neutro («Ottimizza gli orari se serve»)
+     proprio dopo «Inizia ora» la sera: ora si dice quante sono e quando. */
+  const nightActivesLeft = nightActionsLeft.length;
+  const nightWithoutPlan = !comfortToggled && !currentComfortPlan && nightActivesLeft > 0;
+  const firstNight = nightActionsLeft[0];
+  const firstNightLabel = firstNight
+    ? `${fmt.clockTime(new Date(firstNight.atMs))}${daySuffix(calendarReference, new Date(firstNight.atMs), cms.cooking)}`
+    : "";
   const comfortDescClass = comfortToggled
-    ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--success type-data-sm"
-    : currentComfortPlan
+    ? nightActivesLeft > 0
+      ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--warning type-data-sm"
+      : "procedure-hero__comfort-desc procedure-hero__comfort-desc--success type-data-sm"
+    : currentComfortPlan || nightWithoutPlan
       ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--warning type-data-sm"
       : "procedure-hero__comfort-desc procedure-hero__comfort-desc--idle type-data-sm";
+  const tol = COMFORT_TOLERANCES;
+  const comfortWhy = t(engineMessage(cms, "timelineComfort.whyBody", ""), {
+    coldPlus: fmt.durationMinutes(tol.cold.plusMaxMin),
+    coldPlusPct: fmt.percent(tol.cold.plusFraction * 100),
+    coldMinus: fmt.durationMinutes(tol.cold.minusMaxMin),
+    coldMinusPct: fmt.percent(tol.cold.minusFraction * 100),
+    roomPlus: fmt.durationMinutes(tol.room.plusMaxMin),
+    roomPlusPct: fmt.percent(tol.room.plusFraction * 100),
+    roomMinus: fmt.durationMinutes(tol.room.minusMaxMin),
+    roomMinusPct: fmt.percent(tol.room.minusFraction * 100),
+  });
 
   return (
 
@@ -240,7 +264,8 @@ export function ProcedureHeroControls({
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
-                  {hasFlexiblePhases ? "≈ " : ""}
+                  {/* FW-19 (S09-A-10): una sola notazione per «circa». */}
+                  {hasFlexiblePhases ? cms.cooking.approxPrefix : ""}
                   {fmt.clockTime(endDisplayTime)}
                 </span>
               </button>
@@ -342,12 +367,20 @@ export function ProcedureHeroControls({
                 : engineMessage(cms, "timelineComfort.active", "Attiva: evita le fasi notturne.")
               : currentComfortPlan
                 ? engineMessage(cms, "timelineComfort.nightDetected", "Fasi attive di notte rilevate.")
-                : engineMessage(cms, "timelineComfort.idle", "Ottimizza gli orari se serve.")}
+                : nightWithoutPlan
+                  ? t(engineMessage(cms, feasibleMeals.length > 0 ? "timelineComfort.nightNoPlan" : "timelineComfort.nightNoPlanNoMeal", ""), {
+                      n: nightActivesLeft,
+                      time: firstNightLabel,
+                    })
+                  : engineMessage(cms, "timelineComfort.idle", "Ottimizza gli orari se serve.")}
           </div>
         </div>
         <Switch
           aria-labelledby={comfortTitleId}
           aria-describedby={comfortDescId}
+          /* FW-19 (S09-A-03): senza un piano che tolga la notte l'interruttore
+             non può fare nulla; il perché è nella descrizione collegata. */
+          disabled={nightWithoutPlan}
           checked={comfortToggled}
           onCheckedChange={(checked) => {
             setPreciseEndTime(false);
@@ -362,6 +395,23 @@ export function ProcedureHeroControls({
           }}
         />
       </div>
+      {/* FW-19 (D-Q, S09-A-05, S09-B-04): la Timeline comoda sposta solo gli
+          orari; il lievito resta quello calcolato. Lo dice al livello 1 e,
+          a richiesta, spiega con quali margini (regole pratiche, non misure). */}
+      {comfortToggled && (
+        <div data-region="comfort-note" className="procedure-hero__comfort-note">
+          <p className="procedure-hero__comfort-dose type-data-sm">
+            {engineMessage(cms, "timelineComfort.doseNote", "")}
+          </p>
+          <Disclosure
+            variant="inline"
+            summary={engineMessage(cms, "timelineComfort.whyTitle", "")}
+            className="procedure-hero__comfort-why"
+          >
+            <p className="procedure-hero__comfort-why-body type-data-sm">{comfortWhy}</p>
+          </Disclosure>
+        </div>
+      )}
     </Surface>
   );
 }

@@ -214,7 +214,7 @@ describe("risoluzione dei token", () => {
       expect(leftovers, id).toEqual([]);
     }
     const en = resolveBrandTokens(await loadLocaleBundle("en"));
-    expect(en?.pages.homeAria).toBe(`${BRAND.fullName} — Home`);
+    expect(en?.ui.aboutLabel).toBe(`About ${BRAND.name}`);
   });
 });
 

@@ -11,6 +11,7 @@ import {
   recommendStyles,
   feasibleAlternativeStyles,
   fermentationPhases,
+  bakeRoundRecoverySec,
   type UserConstraints,
 } from "./pizza-engine";
 
@@ -431,8 +432,13 @@ describe("cotture una alla volta (D-050)", () => {
     const six = recipe.timeline.find((s) => s.id === "bake")!;
     expect(one.rounds).toBeUndefined();
     expect(six.rounds).toBe(6);
-    // Sui secondi veri, non sul minuto arrondato di una pizza (90 s × 6 = 9 min, non 2 × 6).
-    expect(six.duration_minutes).toBe(Math.round((recipe.cook_time_sec * 6) / 60));
+    // Sui secondi veri, non sul minuto arrondato di una pizza (90 s × 6 = 9 min, non 2 × 6),
+    // più il recupero del forno fra un giro e l'altro (FW-19, S09-A-14).
+    const recovery = bakeRoundRecoverySec(makeConstraints().oven_type);
+    expect(six.duration_minutes).toBe(Math.ceil((recipe.cook_time_sec * 6 + recovery * 5) / 60));
+    expect(six.round_seconds).toBe(recipe.cook_time_sec);
+    expect(six.recovery_seconds).toBe(recovery);
+    expect(six.msg?.description?.find((m) => m.key === "timeline.bake.recovery")?.params?.sec).toBe(recovery);
     expect(six.msg?.description?.find((m) => m.key === "timeline.bake.rounds")?.params?.sec).toBe(recipe.cook_time_sec);
     expect(six.msg?.description?.some((m) => m.key === "timeline.bake.rounds")).toBe(true);
   });

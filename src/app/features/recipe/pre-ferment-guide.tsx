@@ -9,9 +9,25 @@ import { motion } from 'motion/react';
 import { motionSpring } from "../../components/ds/motion";
 import { Disclosure, Surface } from "../../components/ds/index";
 import { Clock, Droplets, Thermometer } from 'lucide-react';
+import { Link } from "react-router";
 import { useCms, type CmsPreFerment } from "../cms/cms-context";
+import { createFormatter } from "../cms/i18n";
 import { Flask } from "../cooking/step-illustrations";
 import { uiMessage } from "../../i18n/ui-messages";
+import { interpolate } from "../../i18n/interpolate";
+import { formatList, formatPercent } from "../../i18n/format";
+import { withBrand } from "../../config/brand";
+import { glossaryFactValues } from "../../data/glossary-data";
+import { stylesDeclaringPreFerment } from "../../domain/science/engine-facts";
+import { STYLES_DB } from "../../domain/styles-db";
+import { GlossaryTermLinks } from "../glossary/term-link";
+
+/* FW-04 (S14-B-15): le parole tecniche della scheda portano al glossario. */
+const PRE_FERMENT_TERMS: Record<PreFermentId, readonly string[]> = {
+  biga: ["pre_ferment", "biga", "l_extensibility", "dough_division"],
+  poolish: ["pre_ferment", "poolish", "l_extensibility"],
+  autolisi: ["autolysis", "l_extensibility"],
+};
 
 /* === PRE-FERMENT IDS ===
  * Audit totale n. 10: i testi e i valori vivono solo nel CMS (7 lingue,
@@ -32,14 +48,46 @@ export function preFermentName(id: PreFermentId): string {
 // mostrati come fatti; crosta e alveolatura dipendono da forno, idratazione e stesura.
 const COMP_KEYS = ['hydration','yeast','duration','temperature','flavor','extensibility'] as const;
 
+/** FW-05: i numeri del motore nei testi della guida (idratazione della biga,
+ *  quota di farina) arrivano come segnaposto da engine-facts. */
+export function fillPreFermentText(text: string, locale: string): string {
+  return withBrand(interpolate(text, glossaryFactValues(locale)));
+}
+
 /** Righe del confronto nella lingua attiva. */
-export function localizedComparisonRows(pf: CmsPreFerment) {
+export function localizedComparisonRows(pf: CmsPreFerment, locale = "it") {
   return COMP_KEYS.map((key, i) => ({
     label: pf.compLabels[i] ?? key,
-    biga: pf.compValues[key]?.biga ?? "",
-    poolish: pf.compValues[key]?.poolish ?? "",
-    autolisi: pf.compValues[key]?.autolisi ?? "",
+    biga: fillPreFermentText(pf.compValues[key]?.biga ?? "", locale),
+    poolish: fillPreFermentText(pf.compValues[key]?.poolish ?? "", locale),
+    autolisi: fillPreFermentText(pf.compValues[key]?.autolisi ?? "", locale),
   }));
+}
+
+/** FW-05 (S14-A-01/B-13): gli stili «ideali» sono quelli che nel motore
+ *  dichiarano il prefermento (process_type), con il link alla ricetta. */
+export function preFermentStyleLinks(kind: "biga" | "poolish") {
+  return stylesDeclaringPreFerment(kind).map((id) => ({
+    id,
+    name: STYLES_DB[id]?.name ?? id,
+    href: `/recipe/${id}?mode=adapted&pf=1&pft=${kind}`,
+  }));
+}
+
+export function PreFermentStyleList({ kind, locale }: { kind: "biga" | "poolish"; locale: string }) {
+  const links = preFermentStyleLinks(kind);
+  /* L'elenco formattato nella lingua attiva, con ogni nome sostituito dal link. */
+  const parts = formatList(links.map((link) => `\u0000${link.id}\u0000`), locale).split("\u0000");
+  return (
+    <>
+      {parts.map((part, i) => {
+        const link = i % 2 === 1 ? links.find((l) => l.id === part) : undefined;
+        return link
+          ? <Link key={link.id} to={link.href} className="preferment-style-link">{link.name}</Link>
+          : part;
+      })}
+    </>
+  );
 }
 
 /* === COMPONENT === */
@@ -49,24 +97,47 @@ interface PreFermentCardProps {
   showComparison?: boolean;
   /** FW-03 (S14-A-11): livello dell'heading che avvolge il pulsante della card. */
   headingLevel?: 2 | 3 | 4;
+  /** FW-05 (S14-A-02): dosi del prefermento della ricetta aperta. */
+  recipeContext?: { flourG: number; yeastG: number };
+  /** FW-04 (S14-B-16): aperta dal deep link (#pf-poolish). */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel }: PreFermentCardProps) {
-  const { cms } = useCms();
+export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext, open, onOpenChange }: PreFermentCardProps) {
+  const { cms, bcp47 } = useCms();
   const pf = cms.preFerment;
   const id: PreFermentId = (PRE_FERMENT_IDS as readonly string[]).includes(preFermentType)
     ? (preFermentType as PreFermentId)
     : "poolish";
+  const fill = (text: string | undefined) => fillPreFermentText(text ?? "", bcp47);
+  const item = pf.items[id];
   const info = {
-    ...pf.items[id],
+    origin: item.origin,
+    description: fill(item.description),
+    hydration: fill(item.hydration),
+    fermentationType: fill(item.fermentationType),
+    flavor: item.flavor,
+    crustResult: item.crustResult,
+    extensibility: item.extensibility,
+    tips: item.tips.map(fill),
     name: preFermentName(id),
-    yeast: pf.compValues.yeast?.[id] ?? "",
-    duration: pf.compValues.duration?.[id] ?? "",
-    temperature: pf.compValues.temperature?.[id] ?? "",
+    yeast: fill(pf.compValues.yeast?.[id]),
+    duration: fill(pf.compValues.duration?.[id]),
+    temperature: fill(pf.compValues.temperature?.[id]),
   };
+  const isTechnique = id === "autolisi";
+  const fmt = createFormatter(cms.ui, bcp47);
+  const contextLine = recipeContext && recipeContext.flourG > 0 && id !== "autolisi"
+    ? interpolate(pf.recipeContextLine, {
+        yeast: fmt.grams(recipeContext.yeastG),
+        flour: fmt.grams(recipeContext.flourG),
+        pct: formatPercent((recipeContext.yeastG / recipeContext.flourG) * 100, bcp47, { maximumFractionDigits: 2 }),
+      })
+    : null;
 
   /* Build localized comparison rows */
-  const compRows = useMemo(() => localizedComparisonRows(pf), [pf]);
+  const compRows = useMemo(() => localizedComparisonRows(pf, bcp47), [pf, bcp47]);
 
   return (
     <Surface
@@ -84,16 +155,19 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
         variant="inline"
         headingLevel={headingLevel}
         id={`pf-card-${id}`}
+        open={open}
+        onOpenChange={onOpenChange}
         className="preferment-guide-card__disclosure"
         triggerClassName="preferment-guide-card__header"
         summary={<>
           <span className="preferment-guide-card__icon">
-            <Flask size={32} />
+            {/* FW-05 (S14-A-05/B-06): l'autolisi non è un prefermento. */}
+            {isTechnique ? <Droplets size={32} aria-hidden="true" /> : <Flask size={32} />}
           </span>
           <span className="preferment-guide-card__title-block">
             <span className="preferment-guide-card__eyebrow-row">
               <span className="preferment-guide-card__eyebrow">
-                {pf.sectionLabel}
+                {isTechnique ? pf.techniqueLabel : pf.sectionLabel}
               </span>
             </span>
             <span className="preferment-guide-card__name">
@@ -108,6 +182,11 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
               <p className="preferment-guide-card__description">
                 {info.description}
               </p>
+              {contextLine && (
+                <p className="preferment-guide-card__context" data-region="note">
+                  {contextLine}
+                </p>
+              )}
 
               {/* Key parameters grid */}
               <div className="preferment-guide-card__params">
@@ -123,7 +202,10 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
                 <DetailLine label={pf.detailFlavor} value={info.flavor} />
                 <DetailLine label={pf.detailCrust} value={info.crustResult} />
                 <DetailLine label={pf.detailExtensibility} value={info.extensibility} />
-                <DetailLine label={pf.detailIdealStyles} value={info.idealStyles} />
+                <DetailLine
+                  label={pf.detailIdealStyles}
+                  value={isTechnique ? (item.idealStyles ?? "") : <PreFermentStyleList kind={id as "biga" | "poolish"} locale={bcp47} />}
+                />
               </div>
 
               {/* Tips */}
@@ -139,6 +221,8 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
                   ))}
                 </ul>
               </div>
+
+              <GlossaryTermLinks termIds={PRE_FERMENT_TERMS[id]} />
 
               {/* Confronto: solo dove la tabella non è già in pagina (S14-A-10) */}
               {showComparison && (
@@ -204,7 +288,7 @@ function ParamBadge({ icon, label, value }: { icon: React.ReactNode; label: stri
 }
 
 /* === DETAIL LINE === */
-function DetailLine({ label, value }: { label: string; value: string }) {
+function DetailLine({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="preferment-guide-detail">
       <span className="preferment-guide-detail__label">

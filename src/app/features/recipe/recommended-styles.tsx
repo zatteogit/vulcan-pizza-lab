@@ -34,6 +34,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import { timeSlotText } from "./time-slot-text";
 import { earliestFeasibleMeal, firstFeasibleSlot } from "../../domain/feasible-slot";
 import { recommendationSections } from "../../domain/create-entry";
+import { compareByCompatibility, kitchenMargin } from "../../domain/kitchen-margin";
 import { pantryUnknown, presentationTier } from "../../use-cases/recommendation-groups";
 
 interface RecommendedStylesProps {
@@ -57,27 +58,19 @@ interface RecommendedStylesProps {
 /** Raccomandazione + la variante (firma/disciplinare) che rende al meglio
  *  coi vincoli dell'utente. */
 type RecommendationWithVariant = StyleRecommendation & {
-  bestInterpretation: Interpretation | null;
   /** D-041: compatibilità con la tua cucina (su misura che si aprirà, 0–100). */
   kitchenNow: number;
   originalScore: number;
+  /** D-062: margine di forno e tempo oltre il minimo dello stile (spareggio). */
+  kitchenMargin: number;
 };
 
+/** Numero mostrato decrescente; a pari numero, più margine prima (D-062). */
 function sortByVisibleMatch(items: RecommendationWithVariant[]): RecommendationWithVariant[] {
-  return [...items].sort((a, b) => {
-    const aScore = a.kitchenNow;
-    const bScore = b.kitchenNow;
-    return bScore - aScore;
-  });
+  return [...items].sort((a, b) =>
+    compareByCompatibility({ score: a.kitchenNow, margin: a.kitchenMargin }, { score: b.kitchenNow, margin: b.kitchenMargin }));
 }
 
-/** Nome breve della variante per la card ("AVPN", "Franco Pepe"). */
-function variantShortName(it: Interpretation): string {
-  if (it.short_name) return it.short_name;
-  const name =
-    it.author ?? it.pizzeria ?? it.organization ?? it.signature_name ?? "";
-  return name.split("—")[0].trim();
-}
 
 export { STYLE_PHOTOS };
 const FALLBACK =
@@ -178,7 +171,7 @@ export function RecommendedStyles({
           kitchenNow: preview.scores.composite,
           originalScore: canonicalRecipe(rec.style, constraints, scoreWeights).scores.composite,
           optimizedComposite: preview.scores.composite,
-          bestInterpretation: null,
+          kitchenMargin: kitchenMargin(rec.style, constraints),
         };
       }),
     [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
@@ -304,7 +297,7 @@ export function RecommendedStyles({
   }, [recommendations, resultsControls, reduceMotion]);
 
   const handleSelect = (rec: RecommendationWithVariant) => {
-    onSelectStyle(rec.style, rec.bestInterpretation);
+    onSelectStyle(rec.style, null);
   };
 
   const FAMILY_FILTERS: { id: FamilyId | "all"; label: string }[] = [
@@ -711,9 +704,6 @@ function StyleCard({
               {/* Subtitle — ALL CAPS, tracked, warm cream */}
               <div className="recommended-card__subtitle">
                 {shortOrigin(style.origin, placeNameLocalizer(cms))}
-                {rec.bestInterpretation
-                  ? ` · ${variantShortName(rec.bestInterpretation)}`
-                  : ""}
               </div>
 
               {/* Livello e durata — stessa chip delle card di Scopri */}
@@ -725,7 +715,7 @@ function StyleCard({
         </TiltCard>
       </motion.button>
       <div className="recommended-card__score">
-        <CompatibilityPill now={displayScore} original={rec.originalScore} blocked={rec.recipe.verdict.outcome === "not_feasible"} />
+        <CompatibilityPill now={displayScore} original={rec.originalScore} blocked={rec.recipe.verdict.outcome === "not_feasible"} recipe={rec.recipe} />
       </div>
     </div>
   );

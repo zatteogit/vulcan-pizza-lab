@@ -18,6 +18,7 @@ import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import { SEARCH_INPUT_ID, SEARCH_RESULTS_ID } from "../../components/shared/search-field";
 import { uiMessage } from "../../i18n/ui-messages";
+import { EDITION, editionSearchSuggestions, type SearchSuggestionId } from "../../config/edition";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import {
   buildSearchIndex,
@@ -60,16 +61,21 @@ const TYPE_ICONS: Record<ResultType, typeof Search> = {
   problem: AlertTriangle,
 };
 
+/* FW-15 (S04-A-08/B-13, S01-A-06): suggerimenti senza marchi né persone,
+   scelti dall'edizione (editionSearchSuggestions). Le chiavi restano letterali
+   per la guardia i18n; l'id è l'ultima parte della chiave. */
 const QUICK_TAG_KEYS = [
   "components.shared.search-overlay.suggestion.napoletana",
   "components.shared.search-overlay.suggestion.teglia",
-  "components.shared.search-overlay.suggestion.caputo",
+  "components.shared.search-overlay.suggestion.homeOven",
   "components.shared.search-overlay.suggestion.hydration",
   "components.shared.search-overlay.suggestion.sourdough",
-  "components.shared.search-overlay.suggestion.detroit",
+  "components.shared.search-overlay.suggestion.biga",
   "components.shared.search-overlay.suggestion.focaccia",
-  "components.shared.search-overlay.suggestion.bonci",
-];
+  "components.shared.search-overlay.suggestion.detroit",
+] as const;
+const QUICK_TAG_IDS = editionSearchSuggestions(EDITION);
+const quickTagOrder = (key: string) => QUICK_TAG_IDS.indexOf(key.slice(key.lastIndexOf(".") + 1) as SearchSuggestionId);
 
 function categoryLabels(pages: CmsContent["pages"]): Record<ResultType, string> {
   return {
@@ -350,16 +356,16 @@ export function SearchResultsView({
             {cms.pages.searchSuggestions}
           </h2>
           <ul className="search-page__tags">
-            {QUICK_TAG_KEYS.map((key) => {
-              const tag = uiMessage(key);
-              return (
+            {QUICK_TAG_KEYS.map((key) => [key, uiMessage(key)] as const)
+              .filter(([key]) => quickTagOrder(key) >= 0)
+              .sort(([a], [b]) => quickTagOrder(a) - quickTagOrder(b))
+              .map(([key, tag]) => (
                 <li key={key}>
                   <button type="button" className="search-page__tag" onClick={() => onQueryChange(tag)}>
                     {tag}
                   </button>
                 </li>
-              );
-            })}
+              ))}
           </ul>
         </section>
       )}

@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_EN } from "../../../i18n/ui-messages.en";
 import { TOPPING_I18N_EN } from "../../../data/topping-i18n/en";
 import { INSPIRATION_I18N_EN } from "../../../data/inspiration-i18n/en";
@@ -30,7 +32,7 @@ export const EN_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "fine sea salt", "fine": "fine salt", "kosher": "kosher salt", "kosher_or_fine": "kosher or fine salt", "coarse_and_fine": "coarse and fine salt" },
-    saltTiming: { "with_flour": "with the flour", "after_flour_water": "after flour and water", "after_flour_water_5min": "after flour and water (5 min of mixing)", "after_hydration": "after hydration", "fine_in_dough_coarse_on_top": "fine in the dough, coarse on top" },
+    saltTiming: { "with_flour": "with the flour", "after_flour_water": "after flour and water", "dissolved_in_water": "dissolved in the water, before the flour (specification)", "after_hydration": "after hydration", "fine_in_dough_coarse_on_top": "fine in the dough, coarse on top" },
     fold: { "stretch_fold": "stretch & fold", "coil_fold": "coil fold", "french_fold": "French fold", "slap_fold": "slap & fold" },
     stretch: {
       napoletana_stg: "Stretched by hand (Neapolitan slap)",
@@ -82,10 +84,9 @@ export const EN_LOCALE: CmsContent = {
     "Italia": "Italy",
   },
   ui: {
-    scoreTipTitle: "How to read the score",
     scoreTipOriginal: "Style reference, on your kitchen.",
     scoreTipTailored: "Version with the proposed adaptations.",
-    scoreTipGlobal: "The score considers feasibility and authenticity. It does not certify compliance with a specification.",
+    scoreTipGlobal: "The score counts only ease and authenticity, and never exceeds authenticity. Maturation, sustainability and experimentation are separate information. It does not certify compliance with a specification.",
     scoreTipBlocked: "Some requirements are unmet: open the details.",
     pantrySelectionSummary: "Selected: {n} · Excluded: {excluded}",
     pantryWValue: "W{w}",
@@ -146,17 +147,9 @@ export const EN_LOCALE: CmsContent = {
     recipeCurrentVersion: "Current",
     recipeOptimizedVersion: "Proposal",
     recipeScoreLabel: "Score",
-    recipeScoreTransition: "Score: {from}/100 → {to}/100",
     scoreBasisOriginal: "Reference",
     scoreBasisTailored: "Tailored",
 
-    scoreLimitedAuthenticity: "Authenticity ({score}/100) limits the score.",
-    scoreLimitedFeasibility: "An essential requirement is not met. Check the reason below.",
-    scoreWeightedAverage: "Weighted average of the five criteria",
-    scoreAuthenticityCeiling: "Authenticity ceiling",
-    scoreFeasibilityCeiling: "Non-feasibility ceiling",
-    scoreNotWeighted: "Informational dimension: at this weight it does not change the overall score.",
-    scoreReferencePending: "The deviation profile for this style has not yet been verified.",
 
     // Actions
     copy: "Copy",
@@ -167,21 +160,15 @@ export const EN_LOCALE: CmsContent = {
     closeDetails: "Close details",
     closeInsight: "Close insight",
     modify: "Edit",
-    disable: "Disable",
     restore: "Restore",
     generate: "Generate recipe",
-    chooseStyle: "Choose style",
     customizeParams: "Customize parameters",
     adjustByHand: "Adjust by hand",
     personalize: "Customize",
-    specFermentTemp: "Ferment",
-    adjustByHandQuestion: "Rather decide yourself?",
     changeStyle: "Change style",
-    newPizza: "New pizza",
     // Recipe output
     ingredients: "Ingredients",
     procedure: "Method",
-    steps_count: "{n} steps",
     doughBalls: "Dough balls",
     timeline: "Timeline",
     doughBallsFrom: "of {w} each",
@@ -190,8 +177,6 @@ export const EN_LOCALE: CmsContent = {
     endTime: "End",
     // Recipe output — clipboard/share text
     clipboardBalls: "{n} dough balls of {w}",
-    clipboardTotal: "Total: {g}",
-    clipboardProcedure: "{style} — Method",
     // Recipe output — ingredient names
     flour: "Flour",
     flourMix: "flour blend",
@@ -201,15 +186,6 @@ export const EN_LOCALE: CmsContent = {
     sugar: "Sugar",
     oilEvo: "Olive oil",
     // Recipe output — compensations
-    compTitle: "Adjustments",
-    compTitleNerd: "Oven compensations",
-    compHydration:
-      "Higher hydration to compensate for your oven",
-    compOil: "A bit more oil to keep the pizza soft",
-    compSugar: "Extra sugar for good browning",
-    compCookTime: "Longer bake time for a perfect result",
-    compThickness: "Thinner stretch for even baking",
-    compDefault: "Parameter adjusted for your setup",
     bakeAdjustmentTitle: "Baking",
     relativeToBase: "relative to base",
     // Recipe output — aria labels
@@ -220,7 +196,6 @@ export const EN_LOCALE: CmsContent = {
     statOven: "Oven",
     statRest: "Rest",
     statOil: "Oil",
-    statCookTime: "Bake time",
     statFermentation: "Fermentation",
     statFlourStrength: "Flour strength",
     fermentEnvAmbient: "room temp",
@@ -228,8 +203,6 @@ export const EN_LOCALE: CmsContent = {
     statTempSuffix: "at {t}\u00B0C",
     statIdeal: "ideal",
     // Nerd row
-    nerdTitle: "Technical data",
-    nerdFlourW: "Flour W",
     nerdPL: "P/L",
     nerdYeast: "Yeast",
     nerdHoursAt18: "Hrs @{refTemp}",
@@ -246,7 +219,6 @@ export const EN_LOCALE: CmsContent = {
     slotNoPreference: "No preference",
     slotNoPreferenceSub: "the style’s ideal timing, even several days",
     interpretationDisclaimer: "{brand}'s interpretation from public sources: it isn't {who}'s original recipe and isn't endorsed by {who}.",
-    yeastHowToggle: "How we work out the yeast",
     yeastModelBody: "We start from {ref} of fresh yeast on the flour for {refHours} at {refTemp}. With {hours} at {temp} the yeast works at {speed}× the reference speed, so the dose becomes {pct}.",
     yeastDryNote: "With dry yeast the dose is a third of fresh.",
     yeastTempModelNote: "How speed changes with temperature (Q10 factor of 2, 1.6 below 10 °C) is a model estimate, to be confirmed by testing.",
@@ -282,10 +254,10 @@ export const EN_LOCALE: CmsContent = {
     procedureDirect: "Direct",
     procedurePreferment: "Pre-ferment",
     procedureUnleavened: "No yeast",
-    flourUseVeryStrong: "Manitoba or very strong type 0",
-    flourUseStrong: "Strong type 0/00 pizza flour",
-    flourUseMedium: "Medium-strength type 0",
-    flourUseWeak: "Weak/medium type 00",
+    flourUseVeryStrong: "Very strong flour, Manitoba type",
+    flourUseStrong: "Strong flour, for long maturations",
+    flourUseMedium: "Medium-strength flour, often sold as pizza flour",
+    flourUseWeak: "Weak flour, general-purpose or pastry",
     verdictTitle: "This won't work as set up",
     verdictOvenTooCold: "Baking is set to {oven}; this method needs at least {min}.",
     verdictTimeWindow: "It takes about {needed} and you have {available}: it would be ready after the time you chose.",
@@ -295,27 +267,18 @@ export const EN_LOCALE: CmsContent = {
     verdictRecipeBelow: "You can still read the recipe and see which requirements need to change.",
     // Score dashboard
     recipeScore: "Fit with your kitchen",
-    nerdToggle: "PizzaNerd",
-    nerdActive: "Activate PizzaNerd",
     scienceTitle: "{brand} Science",
-    ariaCloseScores: "Close score details",
-    ariaViewScores: "View score details",
-    tapForDetails: "Tap for details",
     // Banners
     styleEditorActive: "Style Editor active",
     cmsActive: "CMS active",
     fieldsModified: "fields modified",
     fieldModified: "field modified",
     editOven: "Edit oven",
-    weatherCity: "Your city",
     weatherOutdoor: "{t}\u00B0C outside",
-    weatherKitchen: "Kitchen temperature",
     badgeIdeal: "Recommended",
     badgeRecent: "RECENT",
     autoLabel: "Auto",
     cancel: "Cancel",
-    changeOven: "Change",
-    ovenFallback: "Oven",
     pantryFlours: "Flours",
     pantryYeasts: "Yeasts",
     equipByHand: "By hand",
@@ -327,14 +290,6 @@ export const EN_LOCALE: CmsContent = {
     equipSurface: "Baking surface",
     kitchenTitle: "Your kitchen",
     pantryOptional: "optional",
-    specialFlours: "Special flours",
-    brandSuggest: "Know the brand?",
-    badgeSelected: "Selected",
-    otherCompatibleFlours: "Other compatible flours",
-    flourSelectHint:
-      "Select a flour to automatically update W and P/L in the recipe.",
-    flourSelected: "Applied",
-    autolysisSuggested: "Autolyse recommended",
     dietGlutenFree: "Gluten-free",
     dietLactoseFree: "Lactose-free",
     dietVegan: "Vegan",
@@ -357,7 +312,6 @@ export const EN_LOCALE: CmsContent = {
   },
   hero: {
     title_line1: "Your",
-    title_line2: "next pizza.",
     subtitle:
       "Choose when you want to serve it.",
     /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
@@ -386,11 +340,6 @@ export const EN_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title: "When do you want pizza?",
-      description:
-        "Select the moment to calculate rising times",
-    },
     skill: {
       title: "Experience level",
       description: "Choose the description that fits you.",
@@ -402,10 +351,6 @@ export const EN_LOCALE: CmsContent = {
     pantry: {
       title: "Pantry",
       description: "Flours and yeasts you have at home",
-    },
-    dietary: {
-      title: "Dietary needs",
-      description: "Optional filters",
     },
     equipment: {
       title: "Equipment",
@@ -480,15 +425,15 @@ export const EN_LOCALE: CmsContent = {
     },
     "2": {
       name: "Intermediate",
-      description: "I have made pizza a few times",
+      description: "I have made pizza a few times following a recipe",
     },
     "3": {
       name: "Advanced",
-      description: "I manage folds and fermentation",
+      description: "I make pizza often and can handle a soft dough",
     },
     "4": {
       name: "Expert",
-      description: "I adapt doughs, timing and techniques",
+      description: "I adjust amounts and timings myself",
     },
   },
   families: {
@@ -519,37 +464,37 @@ export const EN_LOCALE: CmsContent = {
     authenticity: {
       label: "Authenticity",
       short: "Auth",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Compares dough, process and oven with the style reference. A low value limits the overall score; it does not certify compliance with a specification.",
     },
     feasibility: {
       label: "Ease",
       short: "Feas",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Estimates how demanding preparation is with your oven, flour and experience. Essential requirements are listed separately.",
     },
     digestibility: {
       label: "Estimated maturation",
       short: "Mat",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Estimates maturation from time, temperature, yeast and preferment. It does not measure how you will digest the pizza.",
     },
     sustainability: {
       label: "Estimated sustainability",
       short: "Sust",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Compares baking, fermentation and ingredients. This is a relative estimate, not measured energy use or the recipe’s carbon footprint.",
     },
     experimentation: {
       label: "Experimentation",
       short: "Exp",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "How much dough, process and baking differ from the reference. A high value means more experimentation, not greater success. Some style profiles remain unverified. Its contribution to the global score is 100 minus this value.",
+        "How much dough, process and baking differ from the reference. A high value means more experimentation, not greater success. Some style profiles remain unverified. It does not go into the fit score.",
     },
   },
   recommendationWeights: {
@@ -565,20 +510,16 @@ export const EN_LOCALE: CmsContent = {
       "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
   },
   result: {
-    breadcrumb: "Your perfect pizza",
     heading: "Here\u2019s your recipe",
-    backLabel: "Back to selection",
   },
   cooking: {
     sectionsAria: "Recipe sections",
     toppingPrevAria: "Previous topping",
     toppingNextAria: "Next topping",
     notPersonalizedAria: "Recipe not yet personalized",
-    ballEstimateTooltip: "Indicative estimate based on the style\u2019s traditional ball weight",
     tabRecipe: "Recipe",
     tabRecipeTailored: "Tailored recipe",
     recipeCanonical: "Reference",
-    recipeCanonicalEyebrow: "Reference",
     preCookTitle: "Before you start",
     preCookBody:
       "You’re viewing the reference. Check its requirements or adapt it to your kitchen before you start.",
@@ -622,7 +563,6 @@ export const EN_LOCALE: CmsContent = {
     ceilingCompromise: "The proposal reaches {ceiling}/100 and requires changes from the reference.",
     needFlour: "a W {w} flour",
     makePossible: "Make it possible",
-    adaptToKitchen: "Adapt to my kitchen",
     optimizeForMe: "Adapt to my kitchen",
     resetToOriginal: "Back to the reference",
     saveVersion: "Save to recipe book",
@@ -634,20 +574,14 @@ export const EN_LOCALE: CmsContent = {
     fillingTitle: "Filling",
     chooseTopping: "Choose topping",
     learnMore: "Learn more",
-    tailoredEyebrow: "Your tailored recipe",
-    recipeEyebrow: "Recipe",
     start: "Start the bake",
     resume: "Resume the bake",
     startShort: "Start",
     inProgressShort: "In progress",
-    followYou: "Keep {brand} open to follow the timing and receive reminders.",
     reopen: "Reopen the active bake",
     completed: "Bake complete",
-    waitOver: "Wait\u2019s over: keep going!",
     dueNow: "Time for: {title}",
-    stepProgress: "{style} \u00b7 step {n}/{total}",
     interrupt: "Stop the bake",
-    abortConfirm: "Are you sure you want to stop the active bake? All timers and progress will be lost.",
     abortConfirmTitle: "Stop the bake?",
     abortBody: "You’ll lose timers and progress for this {style}. The recipe stays, but the session restarts from scratch.",
     abortYes: "Yes, stop",
@@ -692,28 +626,19 @@ export const EN_LOCALE: CmsContent = {
     ovenOptimal: "Oven temperature is ideal",
     ovenLimited: "Feasible, but close to the temperature limit",
     ovenNeedsAdaptation: "Temperature adaptation required",
-    procedureHeroDescription: "Guided method for {style}: {steps}, {duration} total and {oven}.",
     toppingNotesTitle: "Topping notes",
     toppingAmountsNote: "Amounts are for one pizza or unit. Ingredients follow the order in which to add them.",
-    toppingPerUnit: "{amount} per {unit}",
     durationLabel: "Duration: {duration}",
-    comfortLabel: "{duration} comfort",
-    totalDuration: "{duration} total",
     finalDoughStageTitle: "Final dough",
-    rule55Title: "Water temperature",
-    rule55AriaOpen: "How the water temperature is worked out",
-    rule55AriaClose: "Hide the explanation",
+    rule55DescriptionHand: "Room, flour and water should add up to about {sum}: three times the dough temperature you want ({ddt}). Kneading by hand, there is no mixer heat to subtract. That is why the water changes with the temperature of your kitchen.",
     rule55Description: "Room, flour and water should add up to about {sum}: three times the dough temperature you want ({ddt}) minus the heat from the mixer ({friction}). That is why the water changes with the temperature of your kitchen.",
+    rule55DescriptionPreferment: "Room, flour, water and {preferment} should add up to about {sum}: four times the dough temperature you want ({ddt}) minus the heat from the mixer ({friction}). The preferment goes in at about {prefTemp}, its maturation temperature (a model estimate). That is why the final-dough water changes with the temperature of your kitchen.",
     stepDetailsShow: "How to do it",
-    stepDetailsHide: "Hide details",
-    matchDetailsShow: "Score details",
     matchDetails: "Details",
     matchDetailsHide: "Hide",
     unsavedTitle: "Unsaved changes",
     unsavedBody: "If you leave now, your version of {style} will be lost. Save it to your recipe book?",
     unsavedDiscard: "Leave without saving",
-    matchBreakdownLabel: "Weighted average",
-    matchAxisWeight: "{pct}% weight in the score",
     troubleStepLinks: {
       preferment: "Smells too sour?",
       mix: "Dough too sticky?",
@@ -722,17 +647,10 @@ export const EN_LOCALE: CmsContent = {
       shape: "Tearing as you stretch?",
       bake: "Bake gone wrong?",
     },
-    draftResumeEyebrow: "Recipe in progress",
-    draftResumeCta: "Resume",
-    draftReplaceTitle: "Replace the recipe in progress?",
-    draftReplaceBody:
-      "{current} is already dialed in for your schedule. Choosing {next} replaces it and its settings are lost.",
-    draftReplaceConfirm: "Switch to {next}",
     prefermentSaltNote:
       "Salt goes into the final dough, not the preferment, where it would slow the yeast.",
     learnedFromAttempts: "I learned from your {n} attempts",
     applyCorrections: "Apply the corrections",
-    learnInlineTitle: "Learn more: {label}",
     tipsCountOne: "{n} tip",
     tipsCountMany: "{n} tips",
     servingUnits: {
@@ -747,46 +665,29 @@ export const EN_LOCALE: CmsContent = {
   },
   misc: {
     showAllStyles: "Show all",
-    noFloursInCategory: "No flour in this category",
     noTroubleshootingResults: "No issues found for this search",
     moreInfo: "More info",
     changeTiming: "Change the timing",
     kitchenTempSubtitle: "Temperature affects the rising speed",
     techAdjustmentsApplied: "Technical adjustments applied",
-    techDataAria: "Show technical data (W, P/L, Q10, Aw)",
-    techDataTitle: "Technical data and dough calculations",
     feedbackYes: "Yes, gladly",
     feedbackNo: "No, I’m good",
     feedbackPlaceholder: "What did you change? How did it turn out? Useful details...",
     preFermentCompare: "Quick comparison",
     scoreExplainer: "The score combines the recipe criteria. Unmet requirements and differences from the reference can limit it.",
-    companionContext: "Kitchen temperature and the time you have drive the whole process.",
-    companionSetup: "We tailor the recipe to your experience, your oven and your actual pantry.",
-    companionStyles: "Each style has unique parameters: pick the one that best fits your conditions.",
-    smartLinkOn: "Parameters linked — move one slider, the others adapt",
-    smartLinkOff: "Link all parameters for automatic adjustment",
-    smartLinkApplied: "{param}: I've realigned the other parameters and the timeline.",
     settingsHelp: "These details help {brand} adapt the timing and recipe.",
-    versionsLabel: "Versions",
-    versionsHint: "Each version has its own reference ranges. The control markers show the selected version’s ranges.",
     learnHeroTitle1: "Understand your dough,",
     learnHeroTitle2: "make better pizza.",
-    learnHeroSubtitle: "Techniques, ingredients and baking: learn what to look for and what to change.",
+    learnHeroSubtitle: "Terms, problems, preferments and how we calculate: learn what to look for and what to change.",
     learnResources: "Resources",
     kitchenTempLabel: "Kitchen temperature",
     kitchenTempDown: "Lower kitchen temperature",
     kitchenTempUp: "Raise kitchen temperature",
     current: "Selected",
     noStyleInFamily: "No style in this family for your parameters.",
-    notFeasibleExplainer: "These recipes have an unmet requirement. Open the details to see what needs to change.",
     exploreHeroTitle1: "Explore styles",
     exploreHeroTitle2: "and recipes.",
-    badgeBeginnerFriendly: "Beginner-friendly",
-    interpretationsLabel: "Interpretations",
-    goToSite: "Go to site",
     signatureLabel: "Version",
-    noSignature: "no inspiration",
-    fineParams: "Advanced settings",
     cmsRestoreContent: "Restore CMS content",
     inspirationLabel: "Version",
     inspirationBase: "Reference",
@@ -852,9 +753,6 @@ export const EN_LOCALE: CmsContent = {
   filters: {
     advancedLabel: "More",
     removeFilters: "Remove filters",
-    brandedFlours: "Brand-name flours",
-    settingsOpen: "Settings",
-    settingsClosed: "Your settings",
     hydrationLabel: "Hydration",
     hydrationLow: "Low <60%",
     hydrationMedium: "Medium 60-70%",
@@ -870,7 +768,6 @@ export const EN_LOCALE: CmsContent = {
     skillIntermediate: "Intermediate",
     skillAdvanced: "Advanced",
     skillExpert: "Expert",
-    timeFast: "fast",
     ovenLabel: "Baking",
     ovenHome: "Home oven",
     ovenWood: "Wood-fired",
@@ -886,10 +783,9 @@ export const EN_LOCALE: CmsContent = {
     noResults: "No terms for “{query}”",
     allCategories: "All",
     formulaLabel: "Formula",
-    rangesLabel: "Typical ranges",
+    rangesLabel: "Typical values",
     whyImportantLabel: "Why it matters",
     relatedLabel: "Related",
-    backToHome: "Back to home",
     termCount: "{count} terms",
     // FW-09
     termCountOne: "{count} term",
@@ -912,6 +808,17 @@ export const EN_LOCALE: CmsContent = {
     catMechanicsDesc: "Processing, equipment and measurements",
     catScoring: "Scores",
     catScoringDesc: "How to read {brand} scores",
+    // FW-04
+    catTechnique: "Techniques and stages",
+    catTechniqueDesc: "The words of the method, from mixing to the oven",
+    catFlour: "Flours",
+    catFlourDesc: "Flour types and how to read them",
+    rangesValueHeader: "Value",
+    rangesMeaningHeader: "What it means",
+    technicalLabel: "Technical definition",
+    modelNoteLabel: "In the {brand} model",
+    seeAlsoLabel: "See also",
+    inGlossaryLabel: "In the glossary:",
   },
   engineMessages: {
     "allergen.conflict": "Contains {allergen}: {ingredients}.",
@@ -952,13 +859,14 @@ export const EN_LOCALE: CmsContent = {
     "learn.compatiblePath": "A practical path compatible with your kitchen: check the recipe conditions.",
     "learn.theoryOnly": "No validated recipe matches these constraints; explore the theory.",
     "learn.openTheory": "Explore the theory",
-    "timeline.preheat.includesProof": "This block includes {minutes} minutes of proofing, already counted in the total time: do not add them again.",
-    "timeline.preheat.includesRest": "This block includes {minutes} minutes of rest, already counted in the total time: do not add them again.",
+    "timeline.preheat.includesProof": "When the oven is ready, check the dough: pressed with a finger, the dent springs back slowly.",
+    "timeline.preheat.includesProofOil": "When the oil is up to temperature, check the dough: pressed with a finger, the dent springs back slowly.",
     "auth.hydrationOff": "Hydration off-centre (-{penalty}%)",
     "auth.wOutOfRange": "Flour W out of range (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} out of range {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Not a wood-fired oven (-15%)",
+    "auth.notWoodOven": "Not a wood-fired oven and below the style’s {min} °C minimum: −15 points on the equipment axis (35% of authenticity)",
+    "auth.woodByMethod": "The style calls for a wood-fired oven (for Napoletana STG the specification requires it): your oven reaches the {min} °C minimum, so this is information and costs no points",
     "auth.tempVsIdeal":
       "Temperature {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -996,11 +904,8 @@ export const EN_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Fermentation adaptable to ~{hours}",
     "rec.timeInsufficient":
       "Requires at least {fMin}, you have {available}",
-    "rec.needsWoodOven": "The reference uses a wood-fired oven; baking changes with your oven.",
-    "rec.ovenAdapted": "Your oven reaches {temp}: ideal temperature {ideal}, adapted baking",
     "gen.homeBakingMethod": "Home baking at {temp} on a preheated inverted tray; the result differs from the original baking at {ideal}",
     "gen.ovenTooNarrow": "Your oven takes pizzas up to {max} cm and this recipe calls for {diameter} cm: stretch the disc to {max} cm at most.",
-    "rec.needsDeck": "This method needs a preheated stone or steel, not listed in your kitchen",
     "timeline.homeTray.preheat": "Preheat the oven to its maximum ({temp}) with an inverted tray inside until the tray is hot too. Meanwhile, finish resting the dough.",
     "timeline.homeTray.bake": "Bake on the preheated inverted tray. Check the base colour and doneness before removing.",
     "gen.fermentationTooLong": "Fermentation of {hours} exceeds the maximum for this recipe ({maxHours}). Choose a verified method for a longer duration.",
@@ -1024,7 +929,6 @@ export const EN_LOCALE: CmsContent = {
     "need.withoutWood": "Also without wood",
     "need.adaptedBake": "Adapted baking",
     "need.deck": "Stone or steel needed",
-    "card.pantryCheck": "Check your pantry",
     "card.directDough": "Direct dough",
     "card.resourceExcluded": "Excluded item",
     "card.panMissing": "Tray needed",
@@ -1055,45 +959,15 @@ export const EN_LOCALE: CmsContent = {
     "change.prefermentDetails": "Preferment: {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Baking: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "Coal firing defines the original method: another fuel makes this an adaptation",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "Without the oven the style calls for, and below its {min} °C minimum, authenticity stops at {cap}/100: it is an app rule, not a measurement",
     "gen.notCoalOven": "The original style uses coal: the selected oven changes the bake and flavour profile",
     "timeline.oven.coal": "Coal-fired oven with a preheated deck: check the base and edges and rotate for even baking.",
     "rec.ovenIdeal":
       "Your oven reaches ideal temperature ({ideal})",
-    "rec.ovenAdequate":
-      "Oven adequate (automatic time/temp compensation)",
     "rec.ovenTooCold": "Oven too cold: {temp} < min {min}",
     "rec.skillMatch": "Suited to your skill level",
-    "rec.skillExpert": "Your skill level allows any style",
-    "rec.hydrationNeedsPractice":
-      "High hydration requires practice",
-    "rec.advancedForBeginner": "Advanced style for beginners",
-    "rec.noKneadNoMixer": "No mixer needed (no-knead)",
-    "rec.handsHighHydration":
-      "High hydration: hand-kneading very difficult",
-    "rec.handsMedHydration":
-      "Medium-high hydration: hand-kneading requires practice",
-    "rec.forkIdealHighH": "Fork mixer ideal for high hydration",
-    "rec.forkLowFriction": "Fork mixer: low thermal friction",
-    "rec.spiralOptimal": "Professional spiral: optimal mixing",
-    "rec.domesticStrugglesHighH":
-      "Domestic stand mixer: may struggle with >80% hydration",
-    "rec.mixerHelps": "Your mixer makes the process easier",
-    "rec.mixerRecommended": "High hydration: mixer recommended",
-    "rec.castIronPerfect": "Cast iron perfect for this style",
-    "rec.panFits": "Pan suited for this style",
-    "rec.needsPan": "Pan needed for this style",
-    "rec.refractoryIdeal":
-      "Refractory stone: ideal for Neapolitan",
-    "rec.steelPlateCrispy":
-      "Steel plate: crispy base in seconds",
-    "rec.panPerfect": "Your pan is perfect for this style",
     "rec.flourMatch": "Pantry flour compatible",
-    "rec.flourPartial": "Flour partially suited (W not ideal)",
-    "rec.flourNoMatch": "No pantry flour in required W range",
-    "rec.sourdoughLongFerment":
-      "Sourdough ideal for long maturation",
-    "rec.sourdoughOnlyShort":
-      "Sourdough only: short fermentation difficult",
     "tip.waterTempCold":
       "Use cold water from the fridge ({temp}): the mixer warms the dough.",
     "tip.waterTempNormal":
@@ -1124,33 +998,18 @@ export const EN_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "Turn the oven on now to {temp}{equipmentNote}. The dough finishes its final rise in the pan while it heats.",
     "timeline.preheat.descPanWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough does its final rise in the pan while it heats.",
     "timeline.preheat.descDuringRest": "Turn the oven on now to {temp}{equipmentNote}. The dough pieces rest while it heats.",
-    "hint.flourWeak": "weak flour (classic 00)",
-    "hint.flourMedium": "medium-strength flour",
-    "hint.flourStrong": "strong pizza flour",
-    "hint.flourVeryStrong": "very strong flour (Manitoba)",
-    "hint.yeastDryPinch": "≈ a tiny pinch",
-    "hint.yeastDryQuarterTsp": "≈ ¼ teaspoon",
     "hint.yeastDryHalfTsp": "≈ ½ teaspoon",
     "hint.yeastDryOneTsp": "≈ 1 level teaspoon",
     "hint.yeastDryOneHalfTsp": "≈ 1½ teaspoons",
-    "hint.yeastFreshPinch": "≈ a pinch",
     "hint.yeastFreshWeighable": "≈ {g} g on a kitchen scale",
-    "serving.peopleOne": "≈ {n} person",
-    "serving.peopleMany": "≈ {n} people",
-    "serving.peopleRange": "≈ {min}-{max} people",
     "topping.auth.canonical": "By the rulebook",
     "topping.auth.natural": "Traditional",
     "topping.auth.common": "Alternative",
     "topping.auth.experimental": "Worth trying",
     "topping.auth.taboo": "Not recommended",
-    "recipeSetup.dough": "Dough",
     // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
     "recipeSetup.profileHint": "Choose a starting version or an author's inspiration: the values stay editable.",
     "recipeSetup.styleBase": "base style",
-    "recipeSetup.temp.fridge": "fridge",
-    "recipeSetup.temp.cool": "cool room",
-    "recipeSetup.temp.room": "room temp",
-    "recipeSetup.versionApplied": "{label}: dough parameters applied",
     "version.label.Leggerissima": "Extra light",
     "version.label.Casalingo": "Home",
     "version.label.Casalinga": "Home",
@@ -1234,6 +1093,8 @@ export const EN_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Divide each unit into two portions: 60% for the base and 40% for the cover. Shape two discs.",
     "timeline.shape.closedStuffedFried": "Stretch the base disc, keeping the second disc aside to close it.",
     "timeline.shape.foldedLayers": "Roll out a paper-thin sheet and book-fold it {folds} times, spreading the filling between the folds.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "Biga and poolish are made with baker's yeast: with sourdough starter only, the recipe leaves them out, because the starter already works as a pre-ferment. To use them, add baker's yeast to your pantry.",
     "diet.singleBase": "One base using all the dough: onions on top, without a second disc or sealing.",
     "topping.geometry": "Area {area} cm² · reference {reference} cm² · amounts ×{scale}.",
     "auth.layoutChanged": "Different format from the reference: this variant changes the recipe structure",
@@ -1267,21 +1128,15 @@ export const EN_LOCALE: CmsContent = {
     "timeline.splitFill.desc": "Take it out of the oven. Using a serrated knife, slice it horizontally into two halves. Fill the inside with your chosen toppings and close it again.",
     "timeline.splitFill.tipBeginner": "The layer of oil brushed on before baking lets you open the two halves without tearing them.",
     "timeline.splitFill.tipNerd": "Post-bake splitting = cold-filled recipe: the starch matrix is already set, and the fillings never go above 60°C internally.",
-    "timeline.bake2.title": "Second bake (short)",
     "timeline.bake2.desc": "Return to the oven at {temp} just to dry out and bring it all together. A few minutes.",
     "timeline.bake.title": "Baking",
     "timeline.bake.desc": "Bake at {temp}.",
     "timeline.bake.rounds": "{n} bakes of {sec}, one at a time.",
-    "timeline.bake.tipBeginner": "The oven must be very hot. Preheat for at least 30 minutes beforehand.",
+    "timeline.bake.tipBeginner": "It's done when the rim is golden and, lifting it with the peel, the base is dry with a few dark spots.",
     "timeline.bake.tipNerd": "The Maillard reaction starts at ~140°C and accelerates exponentially. At {temp} caramelisation creates ~600 aroma compounds.",
     "timeline.topPost.title": "Post-bake topping",
     "timeline.topPost.desc": "Add the cold toppings directly onto the baked surface.",
     "tip.waterTemp": "",
-    "recipeSetup.noSignature": "No inspiration",
-    "recipeSetup.currentParams": "current parameters",
-    "recipeSetup.noSignatureAlreadyActive": "No inspiration already active",
-    "recipeSetup.signatureApplied": "{label}: inspiration applied",
-    "recipeSetup.signatureRemoved": "Inspiration removed: parameters reset",
     "rec.fried": "Fried in a pot: no oven needed",
     "rec.flourMix": "Mixing your flours: {weakPct}% {weak} and {strongPct}% {strong}, about W {w}",
     "dig.fermentTooShort": "Very short rest: low maturation index",
@@ -1289,30 +1144,32 @@ export const EN_LOCALE: CmsContent = {
     "dig.extremeMaturation": "Extended fermentation: check dough strength",
     "dig.highYeastDosage": "Yeast dose {pct}%: heuristic score adjustment (-{penalty})",
     "dig.coldFermentation": "Refrigerated maturation: timing and development depend on temperature",
-    "dig.fodmapReduced": "FODMAP reduction cannot be determined from hours alone",
-    "dig.fodmapHighReduction": "FODMAP reduction cannot be determined from hours alone",
     "hint.yeastPrecisionScale": "Use a 0.01 g scale",
-    "timeline.batchModel": "Estimated times for one person: shape and top all units, then bake one at a time. Staggered service; no overlapping tasks assumed.",
+    "timeline.batchModel": "Estimated times for one person: shape and top all units, then bake one at a time, with the oven's recovery between bakes (an estimate). Staggered service; no overlapping tasks assumed.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Folds",
+    "timeline.folds.desc": "Do {count} rounds of folds, one every {interval}, keeping the dough covered.",
+    "timeline.folds.descCold": "Do {count} rounds of folds, one every {interval}, keeping the dough covered at room temperature. After the last round, put the container in the fridge.",
+    "timeline.folds.descCool": "Do {count} rounds of folds, one every {interval}, keeping the dough covered at room temperature. After the last round, put the container back at {temp}, not in the fridge.",
+    "timeline.folds.tipBeginner": "Wet your hands, grab a flap, pull it up and fold it to the centre; turn the container and repeat on all four sides. Cover between rounds.",
+    "timeline.folds.tipNerd": "Folds align and stretch the gluten strands and redistribute the gas: they build strength without mechanical work.",
+    "timeline.bake.recovery": "Between bakes, allow about {sec} to unload, load and let the oven come back to temperature.",
+    "timelineComfort.nightNoPlan": "Steps to do at night: {n}, the first at {time}. Choose a meal above.",
+    "timelineComfort.nightNoPlanNoMeal": "Steps to do at night: {n}, the first at {time}. Move the start with the buttons above.",
+    "timelineComfort.doseNote": "The times change, the yeast doesn't: go by the dough's volume, not the clock.",
+    "timelineComfort.whyTitle": "Why is this OK?",
+    "timelineComfort.whyBody": "We only lengthen or shorten the waits, each within a margin: in the fridge up to +{coldPlusPct} (at most {coldPlus}) or −{coldMinusPct} (at most {coldMinus}); at room temperature, final proof included, up to +{roomPlusPct} (at most {roomPlus}) or −{roomMinusPct} (at most {roomMinus}). We never move hours from the fridge to room temperature and we don't recalculate the yeast. These margins are rules of thumb we chose, not measurements: that's why the volume is what counts.",
   },
   scienceLabels: {
     yeastBaker: "Baker's yeast",
     effectiveHours: "Effective hours",
     q10Factor: "Q\u2081\u2080 factor",
-    q10Cold: "cold",
-    q10Sourdough: "sourdough",
-    q10Standard: "std",
     waterActivity: "Water activity",
     glutenNetwork: "Gluten network",
     proteolysis: "Proteolysis",
-    starchDegradation: "Starch degr.",
-    fodmapReduction: "FODMAP reduction",
-    plEstimated: "P/L estimated",
     bakingEnergy: "Baking energy",
-    waterTemp: "Water temperature",
     desiredDoughTemp: "Dough temperature",
     frictionFactor: "Friction factor",
-    deviationCategory: "Deviation",
-    deviationScore: "Effective dev.",
   },
   timelineLabels: {
     preferment: {
@@ -1338,7 +1195,7 @@ export const EN_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "Mixing",
-      desc: "Mix without kneading until no dry lumps remain. Then 3 rounds of stretch & folds at ~30-min intervals.",
+      desc: "Mix without kneading until no dry lumps remain. The folds and time do the rest.",
       tipBeginner:
         "No kneading needed! Mix with a spatula until there are no more dry flour lumps.",
       tipNerd:
@@ -1352,7 +1209,7 @@ export const EN_LOCALE: CmsContent = {
         "The dough should double in volume. If it's warm, check more often!",
       tipNerd:
         "At {temp}, the model estimates a fermentation rate of {factor}× relative to {refTemp}. This does not measure FODMAP reduction or digestibility.",
-      longDesc: "The dough rests as a single mass in an oiled container, with cling film pressed onto the surface. This is when the yeast gets to work, developing flavour, structure and digestibility. If the hydration is high, do 2-3 \"strengthening folds\" (stretch & fold) in the first 2 hours: lift a flap, pull it up and fold it towards the centre, rotate and repeat on all 4 sides. Fermentation is complete when the volume has doubled and the surface is domed and smooth.",
+      longDesc: "The dough rests as a single mass in an oiled container, with cling film pressed onto the surface. This is when the yeast gets to work, developing flavour, structure and digestibility. If the style calls for folds, their number and interval are in a separate step or tip. Fermentation is complete when the volume has doubled and the surface is domed and smooth.",
     },
     bulk_cold: {
       title: "Bulk Fermentation",
@@ -1361,7 +1218,7 @@ export const EN_LOCALE: CmsContent = {
         "In the fridge the dough rises slowly but gains flavour. Cover well with contact wrap.",
       tipNerd:
         "At {temp}, the model estimates a fermentation rate of {factor}× relative to {refTemp}. This does not measure FODMAP reduction or digestibility.",
-      longDesc: "Move the container with the dough into the fridge ({fridgeTemp}). In the fridge the yeast works much more slowly: it takes far longer, but in return you gain more complex flavour, better digestibility and a more developed gluten network. Always cover with cling film pressed onto the surface so the dough doesn't form a dry skin. When you take it out, let it come up to room temperature for 1-2 hours before dividing.",
+      longDesc: "Move the container with the dough into the fridge ({fridgeTemp}). In the fridge the yeast works much more slowly: it takes far longer, but in return you gain more complex flavour, better digestibility and a more developed gluten network. Always cover with cling film pressed onto the surface so the dough doesn't form a dry skin. You can divide it as soon as it comes out of the fridge: it warms up during the final proof.",
     },
     rest: {
       title: "Rest",
@@ -1376,7 +1233,7 @@ export const EN_LOCALE: CmsContent = {
         "Use a scale! Cut with a bench scraper and round each piece into a smooth ball.",
       tipNerd:
         "Dividing creates surface tension that traps CO\u2082 during proofing and defines the final alveolar structure.",
-      longDesc: "Turn the dough out onto a lightly floured surface. Using a bench scraper, cut portions of the weight shown below under Ingredients, weighing them on a scale (it matters for even baking). Ball each piece: fold the edges down and under into the centre, rotate and round it into a smooth, taut ball. Place the dough balls on a floured tray, well spaced, and cover with cling film.",
+      longDesc: "Turn the dough out onto a lightly floured surface. Using a bench scraper, cut portions of the weight shown in this step, weighing them on a scale (it matters for even baking). Ball each piece: fold the edges down and under into the centre, rotate and round it into a smooth, taut ball. Place the dough balls on a floured tray, well spaced, and cover with cling film.",
     },
     proof: {
       title: "Final Proof",
@@ -1419,25 +1276,20 @@ export const EN_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Dividing",
       desc: "Divide gently, without deflating the dough.",
-      longDesc: "Turn the dough out onto a well-floured surface (with high hydrations, use semolina to help). Using a bench scraper, cut portions of the weight shown below under Ingredients, weighing them on a scale. Handle it as little as possible: teglia does NOT need the tight balling of a round pizza \u2014 tuck the edges under to form a soft log, without squeezing out the air. The bubbles built up during bulk fermentation will become the open crumb. Put each piece in an oiled container and cover.",
+      longDesc: "Turn the dough out onto a well-floured surface (with high hydrations, use semolina to help). Using a bench scraper, cut portions of the weight shown in this step, weighing them on a scale. Handle it as little as possible: teglia does NOT need the tight balling of a round pizza \u2014 tuck the edges under to form a soft log, without squeezing out the air. The bubbles built up during bulk fermentation will become the open crumb. Put each piece in an oiled container and cover.",
       tipBeginner: "Gentle hands! The bubbles in the dough are precious: tuck the edges under without pressing down.",
       tipNerd: "With hydration >75%, aggressive dividing collapses the alveoli formed during bulk fermentation: minimal tension, almost no degassing.",
     },
-  },
-  timelineUi: {
-    startLabel: "Start",
-    beforeSuffix: "before",
   },
   parametricTips: {
     pillHydration: "Hydration",
     pillFlour: "Flour",
     pillPL: "P/L",
     pillFermentation: "Fermentation",
+    pillRest: "Rest",
     pillThickness: "Thickness",
     pillLevel: "Level",
     pillExperimentation: "Experimentation",
-    pillLevelBeginner: "Beginner",
-    pillLevelExpert: "Expert",
     sheetSectionTitle: "Style reference",
     sheetOvenLabel: "Ideal oven",
     sheetOvenPreheat: "Preheat: {min} min",
@@ -1448,7 +1300,6 @@ export const EN_LOCALE: CmsContent = {
     sheetFoldLabel: "Folds",
     sheetFoldInterval: "Every {min} min",
     sheetGenerateBtn: "Generate recipe",
-    sheetMatchTitle: "Why it suits your kitchen",
     sheetTechniquesLabel: "Compatible author techniques",
     mixBeginner: "{mixer} (~{time} min mixing).",
     bulkBeginner:
@@ -1474,6 +1325,8 @@ export const EN_LOCALE: CmsContent = {
     sheetOilLabel: "Oil temperature",
     sheetOilHeat: "Bring the oil to temperature before frying: no oven needed.",
     sheetFryTurn: "Turn it halfway through frying",
+    // FW-04
+    pillDoughLoad: "Dough load",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1528,7 +1381,7 @@ export const EN_LOCALE: CmsContent = {
     teglia_romana:
       "Height 2-3cm|Hydration varies by version|No-knead + folds|Cloud crumb",
     tonda_romana:
-      "Thickness 1-2mm|Rolling pin or by hand|Extremely crispy|Weak flour W<210",
+      "Thickness 1-2mm|Rolling pin or by hand|Extremely crispy|Flour W 200-240",
     pinsa_romana:
       "Multi-grain mix|Oval shape|Glassy crust|24-72h maturation",
     pala_romana:
@@ -1538,13 +1391,13 @@ export const EN_LOCALE: CmsContent = {
     detroit:
       "Cheese crown|Deep pan|Cheese to edges|Caramelised crust",
     chicago_deep:
-      "5cm depth|18% butter|Inverted layers|Bake 35min",
+      "5cm depth|18% butter|Inverted layers|Bake 25-35 min",
     focaccia_genovese:
-      "Generous EVO oil|Surface dimples|Oil-water brine|Bake 15-20min",
+      "Generous EVO oil|Surface dimples|Oil-water brine|Bake 19-24 min",
     sfincione:
       "Thick and fluffy|Toasted breadcrumbs|Onion + anchovies|Caciocavallo",
     grandma_style:
-      "Thin and crispy|Mozzarella under sauce|Well-oiled pan|Bake 12-16min",
+      "Thin and crispy|Mozzarella under sauce|Well-oiled pan|Bake 14-17 min",
     focaccia_recco:
       "Almost transparent sheet|Stracchino filling|Golden bubbles|No leavening",
     padellino_torino:
@@ -1575,23 +1428,14 @@ export const EN_LOCALE: CmsContent = {
   },
   authorNames: {
     bonci_no_knead: "No-Knead High Hydration",
-    martucci_biga_ibrida: "Hybrid Biga 50% + Autolyse",
-    martucci_biga_100: "100% Biga with Refresh",
     pepe_sensoriale: "Sensory Hydration",
-    bosco_idrolisi:
-      "Hydrolysis Method (Spontaneous Fermentation)",
-    capuano_forbici: "Scissors Method (Dairy)",
     pepe_sensory_layering: "Separate Ingredient Baking",
     bianco_long_ferment: "5-Day Fermentation",
     forkish_saturday: "Saturday Pizza (Cold Fermentation)",
   },
   authorAuthors: {
     bonci_no_knead: "Gabriele Bonci",
-    martucci_biga_ibrida: "Francesco Martucci",
-    martucci_biga_100: "Francesco Martucci",
     pepe_sensoriale: "Franco Pepe",
-    bosco_idrolisi: "Renato Bosco",
-    capuano_forbici: "Vincenzo Capuano",
     pepe_sensory_layering: "Franco Pepe",
     bianco_long_ferment: "Chris Bianco",
     forkish_saturday: "Ken Forkish",
@@ -1638,7 +1482,6 @@ export const EN_LOCALE: CmsContent = {
     skillStep: "02 — Skill level",
     pantryTitle: "Your pantry",
     pantrySubtitle: "Flours and yeasts you have at home",
-    pantryStep: "03 — Ingredients",
     dietTitle: "Dietary preferences",
     dietSubtitle: "We warn you when a recipe contains something you avoid.",
     dietStep: "04 — Diet",
@@ -1667,10 +1510,8 @@ export const EN_LOCALE: CmsContent = {
     locationStep: "05 — Location",
     locationPlaceholder: "Search city...",
     locationAuto: "Detect location",
-    locationAutoDetected: "Automatically detected",
     locationSaved: "Location saved",
     locationNone: "You can add it later or set your kitchen temperature directly.",
-    locationSearching: "Searching...",
     locationNoResults: "No results",
     ftuWelcome: "Welcome",
     ftuOvenTitle: "What oven do you have?",
@@ -1722,9 +1563,6 @@ export const EN_LOCALE: CmsContent = {
     mixerFork: "Fork mixer",
     mixerForkDesc:
       "Slow, low friction — ideal for high hydration",
-    mixerLevelHome: "Home",
-    mixerLevelSemiPro: "Semi-Pro",
-    mixerLevelPro: "Pro",
     surfaceRefractory: "Refractory brick",
     surfaceRefractoryDesc:
       "3 cm, high thermal mass — wood & prosumer ovens",
@@ -1811,6 +1649,8 @@ export const EN_LOCALE: CmsContent = {
     pantryProfileEmpty: "No flour or yeast listed: we start from what’s typical for the style.",
     pantryProfileEdit: "Edit in Create",
     ftuSourdoughNote: "With a sourdough starter, for long fermentations we may suggest it instead of baker’s yeast.",
+    // FW-04
+    ftuFlourTypeNote: "The type (00, 0, wholemeal) tells you how refined the flour is, not how strong. If the bag shows the W, you can enter it later in your pantry.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1833,21 +1673,13 @@ export const EN_LOCALE: CmsContent = {
     navLearn: "Learn",
     navProfile: "Profile",
     navSearch: "Search",
-    exploreStepNum: "15 styles — 4 families",
-    exploreTitle: "Explore Styles",
-    exploreSubtitle:
-      "From Neapolitan STG to Focaccia di Recco.",
-    learnTitle: "Learn",
-    learnSubtitle:
-      "Understand the dough, choose your techniques and learn what to look for.",
     learnGlossary: "Glossary",
-    learnGlossaryDesc: "Dough terminology, explained with examples and references.",
+    learnGlossaryDesc: "Dough terminology, with formulas and typical values.",
     learnTroubleshooting: "Problems & Solutions",
     learnTroubleshootingDesc:
       "Identify the problem and find what to change.",
     learnPreFerments: "Biga, poolish and autolyse",
     learnPreFermentsDesc: "What they change and how to work them into your recipe.",
-    recipeLabel: "Recipe",
     recipeBackToStyles: "Styles",
     recipeStyleNotFound: "Style not found",
     recipeStyleNotFoundDesc:
@@ -1877,17 +1709,12 @@ export const EN_LOCALE: CmsContent = {
     searchFlourSpecial: "Special",
     skipToContent: "Skip to content",
     navMainLabel: "Main navigation",
-    searchCloseLabel: "Close search",
     searchFieldLabel: "Global search field",
     searchClearLabel: "Clear search",
-    homeAria: "{brandFull} — Home",
     devToolsAria: "Developer Tools",
     mottoAria: "{brand} motto",
     troubleshootSearchPlaceholder: "Search symptom or cause...",
     dietaryWarningsTitle: "Before you start",
-    troubleshootingTitle: "Issues with the recipe?",
-    troubleshootingDesc:
-      "Find causes and fixes for dough, baking and frying",
     exploreRecipe: "Explore recipe",
     exploreHeroDesc: "Traditional styles and signature interpretations. Find your starting point.",
     exploreFilterFeatured: "Featured",
@@ -1895,7 +1722,6 @@ export const EN_LOCALE: CmsContent = {
     exploreFilterRecipes: "Iconic recipes",
     learnFilterSubtitle: "The guides below are general and apply to this style too.",
     learnRemoveFilter: "Remove style filter",
-    learnOpenGlossary: "Open glossary",
     learnPathLabel: "Learning Path",
     learnStartPath: "Start path",
     learnTermOfTheDay: "Term of the Day — {category}",
@@ -1908,14 +1734,12 @@ export const EN_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_EN["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_EN["pages.learn.path4.copy"],
     preFermentsSubtitle: "How to use them and when to plan them in.",
-    preFermentsDescription: "Biga and poolish are prepared before the final dough. <strong>Biga</strong> is a stiff dough with 44% water; <strong>poolish</strong> uses equal weights of flour and water. <strong>Autolyse</strong> is a rest for flour and water without yeast or salt: it is not a preferment.",
+    preFermentsDescription: "Biga and poolish are prepared before the final dough. <strong>Biga</strong> is a stiff dough with {bigaHydration} water; <strong>poolish</strong> uses equal weights of flour and water. <strong>Autolyse</strong> is a rest for flour and water without yeast or salt: it is not a preferment.",
     preFermentsChoiceTitle: "Which one to choose?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "When you want an aromatic dough and have about 16 h at 18–20 °C",
-    preFermentsBigaBest: "Pinsa, Pizza by the slice, Pala romana",
     preFermentsPoolishTitle: "Poolish",
     preFermentsPoolishWhen: "When you want an extensible dough and have 12–16 h at 20–22 °C",
-    preFermentsPoolishBest: "Roman tray pizza, NY Style, Focaccia",
     preFermentsAutolisiTitle: "Autolyse",
     preFermentsAutolisiWhen: "When you want a dough that is easier to stretch",
     preFermentsAutolisiBest: "All styles; combines with biga and poolish",
@@ -1924,15 +1748,14 @@ export const EN_LOCALE: CmsContent = {
     noChanges: "no changes",
     deactivateCustomStyles: "Deactivate custom styles",
     deactivate: "Deactivate",
-    passToEasy: "Switch to Easy",
-    activateNerd: "Activate Nerd Mode",
+    // FW-04
+    learnOpenTerm: "Open the full entry",
   },
   configurator: {
     hydrationLabel: "Hydration",
     hydrationTip:
       "Water as a percentage of flour. More water changes the texture and can make the dough harder to handle.",
     flourWLabel: "Flour Strength (W)",
-    flourWLabelBlend: "Wheat flour strength",
     flourWTip:
       "W indicates flour strength. It helps choose flour suited to the recipe’s method and timing.",
     plLabel: "P/L Ratio",
@@ -1950,8 +1773,6 @@ export const EN_LOCALE: CmsContent = {
     preFermentTip:
       "Biga and poolish are prepared ahead, then added to the final dough. They can change aroma and structure: follow the recipe’s timing and amounts.",
     ovenLabel: "Oven",
-    ovenTip:
-      "Set the oven and baking temperature. Results also depend on the style and baking surface.",
     panLabel: "Pan",
     panTipRect:
       "Pan shape and size affect dough quantity and the final result. The standard for this style is rectangular.",
@@ -1969,8 +1790,6 @@ export const EN_LOCALE: CmsContent = {
     thicknessThin: "Thin and crispy",
     thicknessThick: "Thick and fluffy",
     thicknessStandard: "Standard for this style",
-    backLabel: "Back",
-    sliderOptimal: "optimal",
     hintHighHydrationNeedsW:
       "At {h}% hydration, you need strong flour: recommended W ≥ {w}",
     hintLowWLimitsHydration:
@@ -1995,4 +1814,31 @@ export const EN_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_EN as any,
   glossaryTerms: GLOSSARY_TERMS_EN as any,
   science: SCIENCE_EN,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label}: {score} out of 100",
+    meaning: "How well the recipe can be made in your kitchen and how faithful it stays to the style.",
+    limitedAuthenticity: "Limited by authenticity ({score}/100).",
+    limitedFuel: "Limited by authenticity: without the oven the style calls for and below its minimum temperature, it stops at {cap}/100.",
+    limitedFeasibility: "Limited by a requirement that is not met: by app rule it stays below {limit}.",
+    countedTitle: "What goes into the number",
+    weight: "weight {pct}",
+    ruleTitle: "How the number is reached",
+    ruleAverage: "Weighted average of the two criteria",
+    ruleAuthenticity: "Ceiling: authenticity",
+    ruleFeasibility: "Ceiling for unfeasible recipes (app rule)",
+    ruleResult: "Score: the lowest of the values above",
+    ceilingEditorial: "Product choice: a recipe you cannot make stays below {limit}, even if the other values are high.",
+    tieBreak: "Product choice: at the same number, lists show first the style your kitchen covers with more margin in oven and time. The number does not change.",
+    infoTitle: "Separate information",
+    infoNote: "These do not go into the number: they tell you something else about the recipe, not how well it suits your kitchen.",
+    referencePending: "The experimentation profile of this style has not been checked yet.",
+    whyLabel: "How it is calculated",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Here the tailored version scores a little lower than the reference: the search tries a limited set of combinations of hours, hydration and flour, and the best one found does not beat it.",
+    snapshot: "Fit when saved: {score}/100",
+    savedParams: "Hydration {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} dough ball",
+    savedBallsOther: "{n} dough balls",
+  },
 };

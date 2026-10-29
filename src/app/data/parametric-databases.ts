@@ -92,7 +92,8 @@ export type SaltTypeId = "fine_sea" | "fine" | "kosher" | "kosher_or_fine" | "co
 export type SaltTimingId =
   | "with_flour"
   | "after_flour_water"
-  | "after_flour_water_5min"
+  /* FW-05 (S03-B-03): Reg. UE 97/2010, il sale si scioglie nell'acqua prima della farina. */
+  | "dissolved_in_water"
   | "after_hydration"
   | "fine_in_dough_coarse_on_top";
 
@@ -105,7 +106,7 @@ interface SaltParams {
 }
 
 const SALT_DB: SaltParams[] = [
-  { styleId: "napoletana_stg", saltPct: 2.8, saltType: "fine_sea", additionTiming: "after_flour_water_5min", note: "Disciplinare STG: 40-60 g di sale per litro d'acqua. Aggiungere dopo idratazione iniziale." },
+  { styleId: "napoletana_stg", saltPct: 2.8, saltType: "fine_sea", additionTiming: "dissolved_in_water", note: "Disciplinare STG (Reg. UE 97/2010): 50-55 g di sale per litro d'acqua, sciolto nell'acqua prima della farina. AVPN 2024: 40-60 g/L." },
   { styleId: "napoletana_canotto", saltPct: 2.5, saltType: "fine_sea", additionTiming: "after_flour_water", note: "Leggermente meno per non frenare la lievitazione del canotto." },
   { styleId: "teglia_romana", saltPct: 2.5, saltType: "fine", additionTiming: "with_flour", note: "Sale standard. Puoi aggiungerlo all'inizio senza problemi." },
   { styleId: "tonda_romana", saltPct: 2.5, saltType: "fine", additionTiming: "with_flour", note: "Standard romano." },

@@ -13,7 +13,9 @@ getImpasto,
 mergeImpastoIntoDough,
 type ImpastoRecipe,
 } from "../data/impasto-library";
-import { getToppingByStyle } from "../data/parametric-databases";
+import { getBakingTimeByStyle, getFoldingByStyle, getToppingByStyle } from "../data/parametric-databases";
+import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C } from "./fermentation-constants";
+export { PROOF_MIN_TEMP_C };
 import { isHeatProfileCompatible } from "../data/equipment-data";
 import {
 getToppingForStyle,
@@ -24,6 +26,8 @@ type ToppingRecipe
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, pantryIngredientReferences, type PantryFlourDetails } from "./pantry-ingredients";
 import { BRAND } from "../config/brand";
+import { maxPreFermentFlourPct, preFermentMaturationTempC, rule55Sum } from "./pre-ferment-split";
+import { roundForDisplay } from "./dose-rounding";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
 import { assessAllergens, allergenWarnings, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
 import { flourWText } from "./flour-w-display";
@@ -86,7 +90,7 @@ export interface DoughParameters {
   flour_blend?: { name: string; pct: number; w?: number }[];
 }
 
-interface ShapeParameters {
+export interface ShapeParameters {
   shape_type: ShapeType;
   dough_weight_g: number;
   thickness_factor: number;
@@ -550,6 +554,10 @@ export interface GeneratedRecipe {
   total_dough_g: number;
   ball_weight_g: number;
   water_temp_c: number | null; // Regola 55: temperatura acqua consigliata
+  /** FW-17 (S08-A-07): acqua del prefermento (stima, punto medio della
+   *  temperatura di maturazione). Con un prefermento water_temp_c è l'acqua
+   *  dell'impasto finale, calcolata con la regola a quattro termini. */
+  pre_ferment_water_temp_c?: number | null;
   scores: RecipeScores;
   timeline: TimelineStep[];
   tips: string[];
@@ -594,10 +602,6 @@ export interface YeastModelInfo {
 
 /** Margine stimato della dose di lievito: −30% / +30%. */
 export const YEAST_DOSE_MARGIN: [number, number] = [0.7, 1.3];
-const YEAST_REFERENCE_PCT = 0.1;
-const YEAST_REFERENCE_HOURS = 24;
-const YEAST_TIME_EXPONENT = 0.7;
-const YEAST_DRY_RATIO = 0.33;
 
 /** Correzione personale accettata dal motore. */
 export function clampYeastSpeedFactor(value: number | undefined): number {
@@ -663,6 +667,13 @@ export interface TimelineStep {
   /** D-050: quante volte si ripete la cottura (una pizza o teglia alla volta);
    *  duration_minutes è già il totale. */
   rounds?: number;
+  /** FW-19: secondi di una cottura del giro e recupero del forno fra due giri
+   *  (già compresi in duration_minutes). Servono al timer per giro. */
+  round_seconds?: number;
+  recovery_seconds?: number;
+  /** FW-19: quante volte si gira la pizza in una cottura (BAKING_TIMES_DB:
+   *  0 = non girare, es. Chicago; 3 = napoletana). Serve al timer per giro. */
+  turns?: number;
   /** Passive activity already contained in this timeline block. Never subtract it again. */
   parallel_activity?: { kind: "proof" | "rest"; duration_minutes: number; included_in_fermentation: true };
   /** Lavoro per unità: duration_minutes include già tutte le unità. */
@@ -670,20 +681,26 @@ export interface TimelineStep {
   minutes_per_unit?: number;
 }
 
+/** FW-19 (S09-A-11, S09-B-06): niente «contabilità del tempo» nel passo
+ *  («già inclusi nel tempo totale: non aggiungerli di nuovo»). Il passo dice
+ *  già che i panetti lievitano mentre il forno scalda; qui si ripete il segno
+ *  di prontezza, che va controllato alla fine del preriscaldo. Per il riposo
+ *  di un impasto non lievitato non serve altro. */
 export function passiveActivityMessage(step: TimelineStep): EngineMsg | null {
-  if (!step.parallel_activity) return null;
-  const rest = step.parallel_activity.kind === "rest";
-  return em(rest ? "timeline.preheat.includesRest" : "timeline.preheat.includesProof",
-    rest ? "Questo blocco comprende {minutes} minuti di riposo, già inclusi nel tempo totale: non aggiungerli di nuovo."
-      : "Questo blocco comprende {minutes} minuti di appretto, già inclusi nella fermentazione totale: non aggiungerli di nuovo.",
-    { minutes: step.parallel_activity.duration_minutes });
+  if (!step.parallel_activity || step.parallel_activity.kind === "rest") return null;
+  // Per le fritte si scalda l'olio, non il forno (M-6).
+  return step.variant === "oil"
+    ? em("timeline.preheat.includesProofOil",
+      "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.")
+    : em("timeline.preheat.includesProof",
+      "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.");
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
  *  alle ore di fermentazione. Il preriscaldo è ricavato dentro appretto o
  *  puntata (avviene in parallelo), quindi conta qui. Tutto il resto è overhead
  *  fisso: impasto, staglio, stesura, farcitura, cottura (ENG-4). */
-const FERMENTATION_STEP_IDS = new Set(["preferment", "bulk", "proof", "preheat"]);
+const FERMENTATION_STEP_IDS = new Set(["preferment", "folds", "bulk", "proof", "preheat"]);
 
 /** Minuti della timeline che NON sono fermentazione (overhead fisso). */
 export function timelineOverheadMinutes(timeline: TimelineStep[]): number {
@@ -721,75 +738,25 @@ export {
   shortOrigin,
   styleMatchesFamily,
 } from "./styles-db";
+/* FW-05: costanti e funzioni pure del modello spostate in moduli leggeri, così
+ * testi e glossario le leggono senza caricare tutto il motore (budget D-059).
+ * Il motore le importa e le riesporta: una sola definizione. */
+import {
+  calculateYeastPercentage,
+  fermentationSpeedRatio,
+  getQ10,
+  Q10_REFERENCE_TEMP_C,
+  YEAST_DRY_RATIO,
+  YEAST_REFERENCE_HOURS,
+  YEAST_REFERENCE_PCT,
+  YEAST_TIME_EXPONENT,
+} from "./fermentation-model";
+import { AUTH_AXIS_WEIGHTS, AUTHENTICITY_FUEL_CAP, FEAS_AXIS_WEIGHTS, scoreBandIndex } from "./recipe-score";
+import { FLOUR_W_EXCESS_FACTOR } from "./flour-strength";
+import { PRE_FERMENT_FLOUR_PCT } from "./pre-ferment-split";
+import { doughThicknessGPerCm2, getDefaultShapeArea } from "./shape-geometry";
+export { calculateYeastPercentage, fermentationSpeedRatio, getQ10, Q10_REFERENCE_TEMP_C, doughThicknessGPerCm2, PRE_FERMENT_FLOUR_PCT };
 
-
-// ═══ Q10 MODEL — VARIABLE BY YEAST TYPE & TEMPERATURE ═══
-// Stime del modello, non valori di letteratura (C-4, docs/fonti-dati.md §4).
-// Q10 ≈ 2 tra 18 e 25 °C è coerente con i tassi di crescita di S. cerevisiae
-// (Salvadó et al. 2011). Il valore 1,6 sotto i 10 °C è una scelta del modello
-// senza fonte. Per il lievito madre (batteri lattici + lieviti) i valori sono
-// anch'essi stime da verificare.
-//
-// getQ10 restituisce il Q10 LOCALE del tratto in cui cade la temperatura. Per la
-// velocità rispetto a 18°C si usa fermentationSpeedRatio, che applica i tratti in
-// modo continuo (audit motore 22/10/2026, ENG-2). Prima l'esponente partiva sempre
-// da 18°C con il Q10 del tratto finale: a 10°C c'era un salto non fisico (scaldando
-// da 9,9 a 10°C il lievito saliva). Il vecchio commento diceva che Q10=2 fisso
-// «sovrastima l'attività a bassa T», ma il Q10 più basso sotto i 10°C dà PIÙ
-// attività a freddo, non meno: commento ed effetto si contraddicevano.
-
-export function getQ10(
-  yeastType: "fresh" | "dry" | "sourdough",
-  tempC: number,
-): { q10: number; model: "standard" | "cold_adapted" | "sourdough" } {
-  if (yeastType === "sourdough") {
-    // Lievito madre: LAB dominano sotto 15°C con Q10 più alto
-    return {
-      q10: tempC > 15 ? 2.2 : 1.9,
-      model: "sourdough",
-    };
-  }
-  if (tempC < 10) {
-    // Cold fermentation: Q10 1,6 sotto i 10°C. È una scelta del modello senza
-    // fonte verificata: il riferimento citato prima (PMC7146123) è una review sui
-    // soft sensor di fermentazione e non parla di lievito (verifica del 24/10/2026,
-    // voce C-4). In UI lo mostriamo come stima, non come dato misurato.
-    return { q10: 1.6, model: "cold_adapted" };
-  }
-  return { q10: 2.0, model: "standard" };
-}
-
-/** Temperatura di riferimento del modello cinetico (°C). */
-const Q10_REFERENCE_TEMP_C = 18;
-
-/**
- * Velocità di fermentazione relativa a 18°C con Q10 a tratti CONTINUO
- * (decisione di Matteo, 22/10/2026 — ENG-2).
- *
- * - Lievito commerciale: Q10 2,0 da 18 a 10°C, poi 1,6 sotto i 10°C partendo
- *   dal valore raggiunto a 10°C.
- * - Lievito madre: Q10 2,2 sopra i 15°C, poi 1,9 sotto i 15°C con lo stesso
- *   raccordo (stesso salto, stessa correzione).
- *
- * È la sola fonte del fattore di velocità: dose di lievito, ore equivalenti a
- * 18°C (digeribilità e livello scientifico) e testi della timeline. Funzione
- * crescente e continua in T.
- */
-export function fermentationSpeedRatio(
-  yeastType: "fresh" | "dry" | "sourdough",
-  tempC: number,
-): number {
-  const breakC = yeastType === "sourdough" ? 15 : 10;
-  const q10Above = getQ10(yeastType, breakC + 1).q10;
-  const q10Below = getQ10(yeastType, breakC - 1).q10;
-  if (tempC >= breakC) {
-    return Math.pow(q10Above, (tempC - Q10_REFERENCE_TEMP_C) / 10);
-  }
-  return (
-    Math.pow(q10Above, (breakC - Q10_REFERENCE_TEMP_C) / 10) *
-    Math.pow(q10Below, (tempC - breakC) / 10)
-  );
-}
 
 // ═══ FERMENTATION TEMPERATURE DEFAULT ═══
 // Audit role-play giugno 2026 (finding F4): il vecchio default binario
@@ -1055,6 +1022,10 @@ interface AuthenticityCenter {
   fermentation_hours?: number;
 }
 
+/* FW-06: il tetto del combustibile identitario si definisce in recipe-score
+ * (FW-05, pesi e fasce come dati); qui si riespone per l'interfaccia. */
+export { AUTHENTICITY_FUEL_CAP };
+
 function calculateAuthenticityScore(
   style: PizzaStyle,
   hydration: number,
@@ -1124,9 +1095,17 @@ function calculateAuthenticityScore(
   }
 
   // Equipment axis (35%)
-  if (style.requires_wood_oven && ovenType !== "wood") {
+  // D-063 (Matteo, 29/10/2026): il combustibile pesa solo se il forno non
+  // arriva alla temperatura minima dello stile. Se ci arriva, che lo stile
+  // preveda la legna è un'informazione (livello 2), non una penalità.
+  const styleMinTemp = style.baking.temp_c_range[0];
+  const reachesStyleMin = ovenTemp >= styleMinTemp;
+  if (style.requires_wood_oven && ovenType !== "wood" && reachesStyleMin) {
+    penalties.push(em("auth.woodByMethod", METHOD_MESSAGES_IT["auth.woodByMethod"], { min: styleMinTemp }));
+  }
+  if (style.requires_wood_oven && ovenType !== "wood" && !reachesStyleMin) {
     breakdown.attrezzatura -= 15;
-    penalties.push(em("auth.notWoodOven", "Forno non a legna (-15%)"));
+    penalties.push(em("auth.notWoodOven", METHOD_MESSAGES_IT["auth.notWoodOven"], { min: styleMinTemp }));
     const tempRatio = ovenTemp / style.baking.temp_c_ideal;
     const tempPenalty = (1 - tempRatio) * 25;
     if (tempPenalty > 0) {
@@ -1194,22 +1173,30 @@ function calculateAuthenticityScore(
       0,
       Math.min(
         100,
-        breakdown.ingredienti * 0.35 +
-          breakdown.processo * 0.30 +
-          breakdown.attrezzatura * 0.35,
+        breakdown.ingredienti * AUTH_AXIS_WEIGHTS.ingredients +
+          breakdown.processo * AUTH_AXIS_WEIGHTS.process +
+          breakdown.attrezzatura * AUTH_AXIS_WEIGHTS.equipment,
       ),
     ),
   );
 
-  // Un combustibile identitario sostituito non può restare «rigorosamente
-  // autentico», anche quando fornisce il calore necessario. 75 è il confine
-  // editoriale di «fedele con adattamenti», non una misura fisica di qualità.
-  if ((style.requires_wood_oven && ovenType !== "wood") ||
-    (style.baking.oven_type_required === "coal" && ovenType !== "coal")) {
-    score = Math.min(score, 75);
-    if (style.baking.oven_type_required === "coal") {
-      penalties.push(em("auth.notCoalOven", METHOD_MESSAGES_IT["auth.notCoalOven"]));
+  // Un combustibile identitario sostituito, con un forno che non arriva
+  // nemmeno al minimo dello stile, non può restare «rigorosamente autentico».
+  // 75 è il confine editoriale di «fedele con adattamenti», non una misura
+  // fisica di qualità. D-063 (Matteo, 29/10/2026): se il forno arriva alla
+  // temperatura minima dello stile, il tetto non si applica.
+  const fuelSubstituted = (style.requires_wood_oven && ovenType !== "wood") ||
+    (style.baking.oven_type_required === "coal" && ovenType !== "coal");
+  if (fuelSubstituted && !reachesStyleMin) {
+    // FW-06 (S07-B-02): quando il tetto abbassa davvero il valore lo si dice,
+    // come regola di Vulcan: «−15» sull'asse attrezzatura non spiega da solo 75.
+    if (score > AUTHENTICITY_FUEL_CAP) {
+      penalties.push(em("auth.fuelCap", METHOD_MESSAGES_IT["auth.fuelCap"], { cap: AUTHENTICITY_FUEL_CAP, min: styleMinTemp }));
     }
+    score = Math.min(score, AUTHENTICITY_FUEL_CAP);
+  }
+  if (fuelSubstituted && style.baking.oven_type_required === "coal") {
+    penalties.push(em("auth.notCoalOven", METHOD_MESSAGES_IT["auth.notCoalOven"]));
   }
 
   // ── Cap di VIABILITÀ TERMICA (Audit role-play giugno 2026, finding "ottimismo") ──
@@ -1271,7 +1258,7 @@ function calculateFeasibilityScore(
   if (flourW < wMin) {
     flourScore = Math.max(10, 70 - (wMin - flourW) * 0.5);
     warnings.push(em("feas.wTooLow", `W troppo basso: ${flourW} < ${wMin}`, { w: flourW, wMin }));
-  } else if (flourW > wMax * 1.3) {
+  } else if (flourW > wMax * FLOUR_W_EXCESS_FACTOR) {
     flourScore = Math.max(60, 90 - (flourW - wMax) * 0.2);
     warnings.push(em("feas.wTooHigh", METHOD_MESSAGES_IT["feas.wTooHigh"], { w: flourW }));
   } else {
@@ -1324,7 +1311,7 @@ function calculateFeasibilityScore(
   }
 
   const score = Math.round(
-    ovenScore * 0.4 + flourScore * 0.3 + skillScore * 0.3,
+    ovenScore * FEAS_AXIS_WEIGHTS.oven + flourScore * FEAS_AXIS_WEIGHTS.flour + skillScore * FEAS_AXIS_WEIGHTS.skill,
   );
   return { score, warnings };
 }
@@ -1538,27 +1525,17 @@ function _calculateEffectiveDeviation(
   };
 }
 
+const SCORE_BAND_LABELS: Record<"A" | "F" | "D", readonly [string, string, string, string]> = {
+  A: ["Rigorosamente autentica", "Fedele con adattamenti", "Ispirata ma modificata", "Liberamente interpretata"],
+  F: ["Altamente fattibile", "Fattibile con attenzione", "Difficile", "Alto rischio"],
+  D: ["Eccellente", "Alta", "Media", "Bassa"],
+};
+
 function classifyScore(
   type: "A" | "F" | "D",
   score: number,
 ): string {
-  if (type === "A") {
-    if (score >= 90) return "Rigorosamente autentica";
-    if (score >= 75) return "Fedele con adattamenti";
-    if (score >= 60) return "Ispirata ma modificata";
-    return "Liberamente interpretata";
-  }
-  if (type === "F") {
-    if (score >= 85) return "Altamente fattibile";
-    if (score >= 70) return "Fattibile con attenzione";
-    if (score >= 50) return "Difficile";
-    return "Alto rischio";
-  }
-  // D
-  if (score >= 85) return "Eccellente";
-  if (score >= 70) return "Alta";
-  if (score >= 50) return "Media";
-  return "Bassa";
+  return SCORE_BAND_LABELS[type][scoreBandIndex(type, score)];
 }
 
 // ═══ YEAST CALCULATION (Rule of 55) ═══
@@ -1680,9 +1657,8 @@ export function fermentationPhases(
   return { preferment, bulk: rest - proof, proof };
 }
 
-/** Temperatura dell'appretto: sotto i 18 °C (frigo, cantina) l'appretto si fa
- *  comunque a temperatura ambiente, come dice il passo della timeline. */
-export const PROOF_MIN_TEMP_C = 18;
+/* Temperatura dell'appretto (PROOF_MIN_TEMP_C): FW-19 l'ha spostata in
+ * fermentation-constants.ts, importata e riesportata qui sopra. */
 
 /** Audit totale n. 5 (24/10/2026): ore equivalenti alla temperatura di
  *  fermentazione. Con il frigo la timeline fa l'appretto a 18 °C, che è più
@@ -1696,70 +1672,56 @@ export function equivalentFermentationHours(
   hasPreFerment: boolean,
   preFermentType: PreFermentType = "poolish",
   profile?: MethodProcessProfile,
+  /** FW-19: pieghe dello stile, fatte a temperatura ambiente prima della puntata. */
+  fold?: FoldPlan,
 ): number {
   if (fermentationTempC >= PROOF_MIN_TEMP_C || fermentationHours <= 0) return fermentationHours;
-  const p = fermentationPhases(fermentationHours, hasPreFerment, preFermentType, profile).proof / fermentationHours;
+  const phases = fermentationPhases(fermentationHours, hasPreFerment, preFermentType, profile);
+  // FW-19 (S10-B-10, S09-A-07): con la puntata in frigo le pieghe si fanno
+  // prima, fuori dal frigo: anche quelle ore sono a temperatura ambiente.
+  const roomHours = phases.proof + foldWindowMinutes(phases.bulk * 60, fold) / 60;
+  const p = roomHours / fermentationHours;
   const slow = fermentationSpeedRatio(yeastType, fermentationTempC);
   const proof = fermentationSpeedRatio(yeastType, PROOF_MIN_TEMP_C);
   return fermentationHours * (1 - p) + (fermentationHours * p * proof) / slow;
 }
 
-function calculateYeastPercentage(
-  fermentationHours: number,
-  fermentationTempC: number,
-  yeastType: "fresh" | "dry",
-): number {
-  // Guard: zero/negative fermentation → no yeast needed (sfoglia diretta, es. Focaccia di Recco)
-  if (fermentationHours <= 0) return 0;
-  // ENG-3 (decisione di Matteo, 22/10/2026): tolta la rampa lineare sotto le 2h
-  // (ADV-02, 0,2% per ora). Era nata per la Focaccia di Recco, che oggi è
-  // `unleavened` e non arriva qui (lievito 0 in generateRecipe). Sugli impasti
-  // lievitati la rampa faceva CRESCERE il lievito con le ore (1h → 0,2%,
-  // 2h → 0,4%), l'opposto del resto del modello. Ora vale il modello cinetico
-  // anche sotto le 2h, con il tetto al 3% sotto.
-  // Arrhenius-based model con Q10 variabile — Audit Database V2
-  // Audit motore 2026-05: ricalibrato dopo verifica empirica vs disciplinari.
-  //   - referenceRate 0.25→0.10: il vecchio 0.25 sovrastimava di 2-3x rispetto
-  //     a Caputo/AVPN/Pizzarium/Shawn Randazzo (Detroit). Ora ancorato a Caputo
-  //     standard (0.1% fresh yeast a 18°C per 24h).
-  //   - timeFactor lineare (24/h) → sub-lineare (24/h)^0.7: il lievito si
-  //     RIPRODUCE durante la fermentazione, non si consuma. Curva log-like.
-  //     Verificato su Napoletana 8h, 12h, 24h, Bonci 48h, Detroit 24h.
-  const referenceRate = YEAST_REFERENCE_PCT; // % fresh yeast a 18°C per 24h (Caputo standard)
-  // ENG-2: fattore di velocità a tratti continuo (a 4°C ~+20% di lievito
-  // rispetto al vecchio esponente con Q10 1,6 da 18°C).
-  const tempFactor = fermentationSpeedRatio(yeastType, fermentationTempC);
-  const timeFactor = Math.pow(YEAST_REFERENCE_HOURS / fermentationHours, YEAST_TIME_EXPONENT);
+/* ═══ FW-19 — Pieghe come passo del piano (S10-B-10, S09-A-07) ═══
+ * Il testo dell'impasto chiedeva «3 giri di pieghe a intervalli di ~30 min»,
+ * il consiglio della puntata «ogni 45 minuti», e la puntata andava subito in
+ * frigo: nessun passo, nessun promemoria. Ora le pieghe sono un passo con la
+ * durata che dice FOLDING_DB (numero × intervallo, una sola fonte), ricavato
+ * dall'inizio della puntata: il totale della fermentazione non cambia. Con la
+ * puntata in frigo il passo è a temperatura ambiente e il lievito lo conta
+ * come l'appretto (equivalentFermentationHours). */
+export interface FoldPlan {
+  count: number;
+  intervalMin: number;
+}
 
-  let pct = (referenceRate * timeFactor) / tempFactor;
-  if (yeastType === "dry") pct *= YEAST_DRY_RATIO; // dry = 1/3 of fresh
+/** Margine che la puntata deve tenere oltre alle pieghe (anche dopo aver
+ *  prestato fino a 60 min al preriscaldo). Scelta del modello. */
+const FOLD_MIN_BULK_LEFT_MIN = 120;
 
-  return Math.max(0.01, Math.min(3.0, pct));
+/** Pieghe dello stile, se sono una serie a intervalli (una piega sola o
+ *  intervallo 0 restano un gesto dentro la stesura, non un passo). */
+export function stylePlanFolds(styleId: string): FoldPlan | undefined {
+  const fold = getFoldingByStyle(styleId);
+  if (!fold || fold.foldType === "none" || fold.foldCount < 2 || fold.foldInterval_min <= 0) return undefined;
+  return { count: fold.foldCount, intervalMin: fold.foldInterval_min };
+}
+
+/** Minuti del passo «Pieghe» ricavati da una puntata di `bulkMinutes`:
+ *  0 se la puntata è troppo corta per contenerle con margine. */
+export function foldWindowMinutes(bulkMinutes: number, fold: FoldPlan | undefined): number {
+  if (!fold) return 0;
+  const minutes = fold.count * fold.intervalMin;
+  return bulkMinutes >= minutes + FOLD_MIN_BULK_LEFT_MIN ? minutes : 0;
 }
 
 // ═══ RECIPE GENERATOR ═══
 
 /* ═══ PAN/SHAPE HELPERS ═══ */
-
-/** Calculate default area for a style shape (cm²) */
-function getDefaultShapeArea(shape: ShapeParameters): number {
-  if (shape.shape_type === "rectangular" || shape.shape_type === "oval") {
-    const l = shape.length_cm ?? 30;
-    const w = shape.width_cm ?? 20;
-    return shape.shape_type === "oval" ? Math.PI * (l / 2) * (w / 2) : l * w;
-  }
-  const d = shape.diameter_cm ?? 30;
-  return Math.PI * (d / 2) * (d / 2);
-}
-
-/** Audit n. 11 (B-15): lo spessore reale, peso del panetto sull'area della
- *  forma (g/cm²). `shape.thickness_factor` è solo un indice relativo che il
- *  motore usa come rapporto: mostrarlo come g/cm² dava 0,35 dove il peso
- *  diviso l'area fa 0,51. */
-export function doughThicknessGPerCm2(style: PizzaStyle, weightG = style.shape.dough_weight_g): number {
-  const area = getDefaultShapeArea(style.shape);
-  return area > 0 ? Math.round((weightG / area) * 100) / 100 : 0;
-}
 
 function panArea(style: PizzaStyle, panConfig?: PanConfig): number {
   const defaultArea = getDefaultShapeArea(style.shape);
@@ -1902,9 +1864,6 @@ export interface PreFermentChoice {
   flourPct?: number;
 }
 
-/** Quota di farina nel pre-fermento: default e limiti dalle fonti (biga in
- *  genere 20–50 %, poolish 30–50 %; qui 20–50 per entrambi). */
-export const PRE_FERMENT_FLOUR_PCT = { biga: 40, poolish: 30, min: 20, max: 50 } as const;
 
 /** Tipo di pre-fermento della ricetta: il primo dichiarato dallo stile
  *  («direct|biga|poolish» → biga); poolish per gli stili diretti. Una sola
@@ -2019,7 +1978,9 @@ export function generateRecipe(
   // P/L estimation from W — Audit Maestro P0-1 (VPL-012: accept custom P/L)
   const flourPL = customFlourPL ?? estimatePL(flourW, plRange);
 
-  const hasPreFerment = !style.dough.unleavened &&
+  /* FW-17 (D-P): `let` perché una biga o un poolish col solo lievito madre
+     non si calcolano (vedi la scelta del lievito più sotto). */
+  let hasPreFerment = !style.dough.unleavened &&
     (usePreFerment ?? style.requires_pre_ferment);
   const preFermentType: PreFermentType = preFerment?.type ?? preFermentKind(style);
   const preFermentFlourPct = Math.min(
@@ -2172,7 +2133,10 @@ export function generateRecipe(
     fermentationHours >= 12 &&
     // ADV-11 fix: sourdough is great for ANY long fermentation (≥24h) or pre-ferment styles
     // Previously excluded no-knead long-ferment styles like teglia_romana, bonci, focaccia_genovese
-    (hasPreFerment || style.requires_pre_ferment || fermentationHours >= 24)
+    (hasPreFerment || style.requires_pre_ferment || fermentationHours >= 24) &&
+    // FW-17 (D-P, S08-A-05): biga e poolish si fanno col lievito di birra; con
+    // un lievito commerciale in dispensa il pre-fermento lo usa.
+    !(hasPreFerment && (py.includes("fresh") || py.includes("dry")))
   ) {
     yeastType = "sourdough";
   } else if (py.includes("fresh")) {
@@ -2183,6 +2147,12 @@ export function generateRecipe(
     // Only sourdough in pantry but short ferment — still use it
     yeastType = "sourdough";
   }
+  /* FW-17 (D-P, S08-A-05): una «biga» col lievito madre non è una biga e per
+     un pre-fermento a lievito madre non abbiamo una fonte dei parametri (quota,
+     idratazione, ore). Finché non c'è, la combinazione non si calcola: il
+     lievito madre fa già da pre-fermento e la ricetta lo dice. */
+  const preFermentDroppedForSourdough = hasPreFerment && yeastType === "sourdough";
+  if (preFermentDroppedForSourdough) hasPreFerment = false;
 
   // Yeast calculation (sourdough uses a different model)
   let yeastPct: number;
@@ -2204,7 +2174,7 @@ export function generateRecipe(
     yeastPct = Math.max(
       0.01,
       calculateYeastPercentage(
-        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment, preFermentType, style.method_profile),
+        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment, preFermentType, style.method_profile, stylePlanFolds(style.id)),
         fermentationTempC,
         yeastType as "fresh" | "dry",
       ) /
@@ -2239,14 +2209,13 @@ export function generateRecipe(
   // 0.3g di sale sono gustativamente invisibili — mostrare i decimali era una
   // precisione fittizia (audit precisione, luglio 2026). Il lievito resta a 0.1g
   // sotto, perché lì il sotto-grammo conta davvero.
-  const saltG = Math.round((flourG * effectiveSaltPct) / 100);
-  const fatG = Math.round((flourG * effectiveOilPct) / 100); // Grasso totale (olio O burro)
+  // FW-17 (S08-B-19): sotto i 5 g il mezzo grammo, altrimenti un sale all'1,8 %
+  // su 131 g di farina diventava 2 g (1,5 %). Regola in dose-rounding.ts.
+  const saltG = roundForDisplay("salt", (flourG * effectiveSaltPct) / 100);
+  const fatG = roundForDisplay("fat", (flourG * effectiveOilPct) / 100); // Grasso totale (olio O burro)
   const oilG = style.dough.fat_type === "butter" ? 0 : fatG; // oilG = 0 se è burro
-  const sugarG = Math.round((flourG * effectiveSugarPct) / 100);
-  const yeastG =
-    yeastType === "sourdough"
-      ? Math.round((flourG * yeastPct) / 100)
-      : Math.round(((flourG * yeastPct) / 100) * 10) / 10;
+  const sugarG = roundForDisplay("sugar", (flourG * effectiveSugarPct) / 100);
+  const yeastG = roundForDisplay(yeastType === "sourdough" ? "starter" : "yeast", (flourG * yeastPct) / 100);
 
   // Fat label for UI
   const fatLabel =
@@ -2370,7 +2339,10 @@ export function generateRecipe(
     sustainability_category: sustResult.category,
     penalties: authResult.penalties,
     warnings: [
-      ...(style.baking.oven_type_required === "coal" && constraints.oven_type !== "coal"
+      // D-063: legna o carbone sono una condizione solo se il forno non arriva
+      // alla temperatura minima dello stile; sopra resta un'informazione nei
+      // dettagli dell'autenticità (auth.woodByMethod), non nel verdetto.
+      ...(style.baking.oven_type_required === "coal" && constraints.oven_type !== "coal" && ovenTemp < style.baking.temp_c_range[0]
         ? [em("gen.notCoalOven", METHOD_MESSAGES_IT["gen.notCoalOven"])]
         : []),
       ...prerequisites.map(condition => condition.message),
@@ -2380,7 +2352,7 @@ export function generateRecipe(
         ? [em("gen.ovenTooNarrow", METHOD_MESSAGES_IT["gen.ovenTooNarrow"], { max: ovenMouthCm, diameter: pizzaDiameterCm! })]
         : []),
       // D-020: stesso avviso dei consigli sul forno a legna dello stile.
-      ...(style.requires_wood_oven && constraints.oven_type !== "wood"
+      ...(style.requires_wood_oven && constraints.oven_type !== "wood" && ovenTemp < style.baking.temp_c_range[0]
         ? [
             em(
               "gen.notWoodOven",
@@ -2439,7 +2411,7 @@ export function generateRecipe(
   const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
   const sciSpeedRatio = fermentationSpeedRatio(yeastType, fermentationTempC);
   const effectiveHours18c =
-    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType, style.method_profile) * sciSpeedRatio;
+    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType, style.method_profile, stylePlanFolds(style.id)) * sciSpeedRatio;
 
   // Gluten network score: flour W strength + hydration sweet spot + kneading method
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
@@ -2545,7 +2517,16 @@ export function generateRecipe(
     const mixerData = MIXER_FRICTION_K[constraints.mixer_type];
     if (mixerData) frictionFactor = mixerData;
   }
-  const waterTempRaw = ddt * 3 - kitchenTemp - flourTemp - frictionFactor;
+  /* FW-17 (S08-A-07): con un prefermento nell'impasto finale entra un quarto
+     ingrediente con la sua temperatura (quella di maturazione, punto medio di
+     PRE_FERMENT_TEMP_C): T_acqua = 4 × DDT − T_cucina − T_farina − T_pref − attrito.
+     L'acqua del prefermento, mescolato a mano (attrito 0), mira alla sua
+     temperatura di maturazione: T = 3 × T_pref − T_cucina − T_farina. */
+  const preFermentTempC = hasPreFerment ? preFermentMaturationTempC(preFermentType) : null;
+  const waterTempRaw = rule55Sum(ddt, frictionFactor, preFermentTempC != null) - kitchenTemp - flourTemp - (preFermentTempC ?? 0);
+  const preFermentWaterTempC = preFermentTempC != null
+    ? Math.round(Math.min(WATER_TEMP_MAX_C, Math.max(WATER_TEMP_MIN_C, preFermentTempC * 3 - kitchenTemp - flourTemp)) * 10) / 10
+    : null;
   // Range pratico 2–40°C. ENG-7 (audit motore 22/10/2026): prima, fuori range,
   // il motore restituiva null e la UI taceva (cucina a 15°C o meno: l'acqua
   // richiesta supera i 40°C). Ora l'acqua si ferma al limite pratico e
@@ -2691,7 +2672,16 @@ export function generateRecipe(
     topping_scale: toppingScale,
     topping_geometry: { reference_area_cm2: referenceArea, area_cm2: toppingArea, area_scale: toppingArea / referenceArea },
     pan_config: panConfig,
-    method_changes: defaultTopping?.method_note ? [defaultTopping.method_note] : undefined,
+    method_changes: (() => {
+      const notes: EngineMsg[] = [
+        ...(defaultTopping?.method_note ? [defaultTopping.method_note] : []),
+        // FW-17 (D-P): la biga o il poolish richiesti non si fanno col lievito madre.
+        ...(preFermentDroppedForSourdough
+          ? [em("preferment.sourdoughInstead", METHOD_MESSAGES_IT["preferment.sourdoughInstead"])]
+          : []),
+      ];
+      return notes.length > 0 ? notes : undefined;
+    })(),
     schema_version: RECIPE_SCHEMA_VERSION,
     dietary_warnings: dietaryWarnings,
     allergens,
@@ -2745,7 +2735,10 @@ export function generateRecipe(
     fermentation_temp_c: fermentationTempC,
     has_pre_ferment: hasPreFerment,
     pre_ferment_type: hasPreFerment ? preFermentType : undefined,
-    pre_ferment_flour_pct: hasPreFerment ? preFermentFlourPct : undefined,
+    // FW-17 (S08-A-03): un poolish non può contenere più acqua della ricetta.
+    pre_ferment_flour_pct: hasPreFerment
+      ? Math.min(preFermentFlourPct, maxPreFermentFlourPct(preFermentType, hydration, PRE_FERMENT_FLOUR_PCT.max))
+      : undefined,
     oven_temp_c: ovenTemp,
     cook_time_sec: cookTime,
     total_dough_g: totalDough,
@@ -2753,6 +2746,7 @@ export function generateRecipe(
     scores,
     timeline,
     water_temp_c: waterTempC,
+    pre_ferment_water_temp_c: preFermentWaterTempC,
     tips,
     science,
     topping_info: (() => {
@@ -3490,13 +3484,15 @@ function generateTimeline(
       id: "mix",
       title: "Impasto",
       description:
-        "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min nelle prime 1,5–2 ore.",
+        // FW-19 (S09-A-07): numero e intervallo delle pieghe stanno nel passo
+        // «Pieghe» (FOLDING_DB), non più scritti qui con valori diversi.
+        "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. La forza la danno poi le pieghe e il tempo.",
       duration_minutes: 10,
       icon: "hand",
       timing_label: "Inizio",
       tip: {
         beginner:
-          "Non serve impastare! Mescola finché non ci sono grumi asciutti. Poi, ogni ~30 min, bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro ruotando la ciotola: bastano 3 giri da 4 pieghe.",
+          "Non serve impastare! Mescola finché non ci sono grumi asciutti: alla forza pensano le pieghe e il tempo.",
         nerd: "L'autolisi sviluppa il glutine senza lavoro meccanico; le pieghe a intervalli (stretch & fold) allineano e tendono le fibrille di glutine e redistribuiscono i gas, dando forza senza degassare.",
       },
     });
@@ -3533,7 +3529,11 @@ function generateTimeline(
   const borrowedFromBulk = preheatDuringProof
     ? 0
     : Math.min(bulkMinutesFull, Math.max(0, idealPreheat - proofMinutes));
-  const bulkMinutes = bulkMinutesFull - borrowedFromBulk;
+  // FW-19: le pieghe sono un passo ricavato dall'inizio della puntata (stessa
+  // soglia del calcolo del lievito, equivalentFermentationHours).
+  const foldPlan = isUnleavened ? undefined : stylePlanFolds(style.id);
+  const foldMinutes = foldWindowMinutes(phases.bulk * 60, foldPlan);
+  const bulkMinutes = bulkMinutesFull - borrowedFromBulk - foldMinutes;
   const preheatMinutes = preheatDuringProof ? idealPreheat : proofMinutes + borrowedFromBulk;
   const proofStepMinutes = preheatDuringProof ? proofMinutes - idealPreheat : 0;
   const speedFactorLabel = fermentationSpeedRatio(yeastType, fermentTemp).toFixed(1);
@@ -3544,6 +3544,44 @@ function generateTimeline(
       "Senza lievito l'impasto non cresce: il riposo rilassa il glutine, così la sfoglia si stende sottile senza ritirarsi.",
     nerd: "Il riposo completa l'idratazione della farina e rilassa la maglia glutinica: meno ritorno elastico, sfoglia quasi trasparente.",
   };
+
+  // FW-19 (S10-B-10, S09-A-07): le pieghe che il testo chiede sono un passo,
+  // a temperatura ambiente. Dopo l'ultimo giro: in frigo solo se la puntata è
+  // davvero in frigo (≤ FRIDGE_MAX_TEMP_C, come bulk_cold e le tolleranze
+  // della Timeline comoda); fra 7 e 17 °C (cantina, «fresco») il contenitore
+  // torna a quella temperatura, perché la dose di lievito è calcolata lì.
+  if (foldPlan && foldMinutes > 0) {
+    const foldsKey =
+      fermentTemp <= FRIDGE_MAX_TEMP_C
+        ? "timeline.folds.descCold"
+        : fermentTemp < PROOF_MIN_TEMP_C
+          ? "timeline.folds.descCool"
+          : "timeline.folds.desc";
+    const foldsFallback: Record<typeof foldsKey, string> = {
+      "timeline.folds.descCold":
+        "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro metti il contenitore in frigo.",
+      "timeline.folds.descCool":
+        "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro rimetti il contenitore a {temp}, non in frigo.",
+      "timeline.folds.desc": "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto.",
+    };
+    steps.push(
+      keyedStep(
+        { id: "folds", duration_minutes: foldMinutes, icon: "hand", timing_label: `${foldPlan.count} × ${foldPlan.intervalMin} min` },
+        em("timeline.folds.title", "Pieghe"),
+        [em(
+          foldsKey,
+          foldsFallback[foldsKey],
+          foldsKey === "timeline.folds.descCool"
+            ? { count: foldPlan.count, interval: foldPlan.intervalMin, temp: fermentTemp }
+            : { count: foldPlan.count, interval: foldPlan.intervalMin },
+        )],
+        {
+          beginner: em("timeline.folds.tipBeginner", METHOD_MESSAGES_IT["timeline.folds.tipBeginner"]),
+          nerd: em("timeline.folds.tipNerd", METHOD_MESSAGES_IT["timeline.folds.tipNerd"]),
+        },
+      ),
+    );
+  }
 
   if (bulkMinutes > 0) {
     steps.push({
@@ -3941,7 +3979,8 @@ function generateTimeline(
   const heatStep = steps.find(step => step.id === "preheat");
   if (heatStep && heatStep.duration_minutes > 0) {
     heatStep.parallel_activity = { kind: isUnleavened ? "rest" : "proof", duration_minutes: heatStep.duration_minutes, included_in_fermentation: true };
-    heatStep.description += " " + renderStepIt([passiveActivityMessage(heatStep)!]);
+    const cue = passiveActivityMessage(heatStep);
+    if (cue) heatStep.description += " " + renderStepIt([cue]);
   }
 
   // D-050: pizze e teglie si cuociono una alla volta, quindi la cottura si
@@ -3951,17 +3990,30 @@ function generateTimeline(
     // Secondi di una cottura: quelli veri per la cottura singola (75 s, non
     // «1 min» arrotondato: verifica di GPT), i minuti del passo per la baciata.
     const hasSecondBake = steps.some((step) => step.id === "bake2");
+    // FW-19 (S09-A-14, S09-B-13): fra un giro e l'altro si sforna, si inforna
+    // e la platea torna in temperatura. Ipotesi del modello per tipo di forno
+    // (nota bake-round-recovery), sommata ai secondi reali delle cotture.
+    const recoverySec = bakeRoundRecoverySec(equipment?.ovenType);
+    const turns = Math.max(0, Math.round(getBakingTimeByStyle(style.id)?.turns ?? 1));
     for (const step of steps) {
       if (step.id !== "bake" && step.id !== "bake2") continue;
       const perRoundSec = step.id === "bake" && !hasSecondBake ? effectiveCookSec : step.duration_minutes * 60;
+      const frying = step.variant === "fry";
+      const stepRecoverySec = frying ? 0 : recoverySec;
       // La pianificazione in minuti non deve finire prima dei secondi reali.
-      step.duration_minutes = Math.max(1, Math.ceil((perRoundSec * bakeRounds) / 60));
+      step.duration_minutes = Math.max(1, Math.ceil((perRoundSec * bakeRounds + stepRecoverySec * (bakeRounds - 1)) / 60));
       step.rounds = bakeRounds;
+      step.round_seconds = perRoundSec;
+      step.turns = turns;
+      if (stepRecoverySec > 0) step.recovery_seconds = stepRecoverySec;
       step.timing_label = `${bakeRounds} × ${formatCookTime(perRoundSec)}`;
       if (step.msg?.description) {
         step.msg.description = [
           ...step.msg.description,
           em("timeline.bake.rounds", "{n} cotture da {sec} s, una alla volta.", { n: bakeRounds, sec: perRoundSec }),
+          ...(stepRecoverySec > 0
+            ? [em("timeline.bake.recovery", "Fra una cottura e l'altra conta circa {sec} s per sfornare, infornare e lasciare che il forno torni in temperatura.", { sec: stepRecoverySec })]
+            : []),
         ];
         step.description = renderStepIt(step.msg.description);
       }
@@ -3989,9 +4041,32 @@ function formatDuration(hours: number): string {
   return `${Math.floor(hours)}h ${Math.round((hours % 1) * 60)}min`;
 }
 
+/** FW-19 (S09-A-14): «5 min 45 s», non «6 min»: con «4 × 6 min» e 23 minuti
+ *  totali il conto non tornava. */
 function formatCookTime(seconds: number): string {
   if (seconds < 120) return `${seconds}s`;
-  return `${Math.round(seconds / 60)} min`;
+  const min = Math.floor(seconds / 60);
+  const sec = Math.round(seconds % 60);
+  return sec === 0 ? `${min} min` : `${min} min ${sec} s`;
+}
+
+/** FW-19 (S09-A-14, S09-B-13): secondi fra una cottura e la successiva per
+ *  sfornare, infornare e lasciar tornare in temperatura la platea. Ipotesi
+ *  del modello, senza fonte (nota bake-round-recovery, docs/fonti-dati.md
+ *  §6): il forno di casa con pietra recupera in minuti, i forni da pizza in
+ *  meno, quelli a legna o a carbone quasi subito. */
+export const BAKE_ROUND_RECOVERY_SEC: Readonly<Record<OvenType, number>> = {
+  home: 300,
+  electric_standard: 300,
+  gas: 300,
+  electric_high: 120,
+  gas_pizza: 120,
+  wood: 30,
+  coal: 30,
+};
+
+export function bakeRoundRecoverySec(ovenType: OvenType | undefined): number {
+  return BAKE_ROUND_RECOVERY_SEC[ovenType ?? "home"] ?? BAKE_ROUND_RECOVERY_SEC.home;
 }
 
 function generateTips(
@@ -4139,17 +4214,17 @@ export const SKILL_LEVELS: {
   {
     level: 2,
     name: "Intermedio",
-    description: "Ho già fatto qualche pizza",
+    description: "Ho fatto la pizza qualche volta seguendo una ricetta",
   },
   {
     level: 3,
     name: "Avanzato",
-    description: "Gestisco pieghe e lievitazioni",
+    description: "Faccio la pizza spesso e so gestire un impasto morbido",
   },
   {
     level: 4,
     name: "Esperto",
-    description: "Adatto impasti, tempi e tecniche",
+    description: "Cambio dosi e tempi da solo",
   },
 ];
 

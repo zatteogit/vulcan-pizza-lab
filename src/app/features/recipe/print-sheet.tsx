@@ -8,7 +8,7 @@ import { pantryIngredientId } from "../../domain/pantry-ingredients";
 import { createPortal } from "react-dom";
 import { BRAND } from "../../config/brand";
 import { VulcanMark } from "../../components/shared/vulcan-logo";
-import { computePreFermentSplit } from "../../domain/pre-ferment-split";
+import { buildRecipePhases } from "../../domain/recipe-phases";
 import type { GeneratedRecipe } from "../../domain/pizza-engine";
 import { scaleToppingAmounts, type ToppingRecipe } from "../../data/topping-library";
 import { toppingConcept } from "../../data/topping-i18n/localize";
@@ -16,6 +16,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import type { CmsContent } from "../cms/cms-context";
 import type { createFormatter } from "../cms/i18n";
 import type { CookSessionStep } from "../cooking/cook-session";
+import { phaseBakerPctText, phaseIngredientLabel, formatToppingAmountForLocale, yeastDilutionText } from "./recipe-output-format";
 import { flourWText } from "../../domain/flour-w-display";
 
 /* ═══ D-043 — Scheda di produzione stampabile ═══
@@ -45,6 +46,7 @@ export function PrintSheet({
   steps,
   topping,
   unitLabel,
+  unitLabelOne,
   readyAt,
   readyApproximate,
 }: {
@@ -56,34 +58,31 @@ export function PrintSheet({
   steps: Omit<CookSessionStep, "done">[];
   topping?: ToppingRecipe;
   unitLabel: string;
+  /** FW-17 (S08-A-11): l'unità al singolare, per l'intestazione «Per pizza». */
+  unitLabelOne: string;
   readyAt: Date;
   readyApproximate: boolean;
 }) {
   const ui = cms.ui;
   const ingredientNames=useMemo(()=>pantryIngredientNames(cms),[cms]);
   const unverified=recipe.allergens.unverified.map(i=>i.ingredient==="Olio per frittura"?uiMessage("allergen.fryingOil"):ingredientNames.get(pantryIngredientId(i.ingredient))??i.ingredient);
-  const pct = (g: number) =>
-    `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: 1 }).format((g / recipe.flour_g) * 100)}%`;
+  /* FW-17 (S08-A-09/B-07, S08-B-19): totali e percentuali dal modello per
+     fasi (quelli del motore), come a schermo; il lievito con due decimali. */
+  const model = buildRecipePhases(recipe);
+  const pct = (value: number) =>
+    `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: 1 }).format(value)}%`;
   const time = (ms: number) => new Intl.DateTimeFormat(bcp47, STEP_TIME_FORMAT).format(new Date(ms));
-  const yeastLabel = cms.yeastLabels?.[recipe.yeast_type] ?? recipe.yeast_type;
-  const fatType = recipe.style.dough.fat_type;
-  const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
-  const rows: [string, number][] = [
-    [ui.flour, recipe.flour_g],
-    [ui.water, recipe.water_g],
-    [ui.salt, recipe.salt_g],
-    [yeastLabel, recipe.yeast_g],
-    [ui.sugar, recipe.sugar_g],
-    [fatLabel, recipe.fat_g],
-  ].filter(([, g]) => (g as number) > 0) as [string, number][];
-  const total = rows.reduce((sum, [, g]) => sum + g, 0);
-  const split = recipe.has_pre_ferment
-    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type, flourPct: recipe.pre_ferment_flour_pct })
-    : null;
+  const preName = model.preFerment?.name ?? "";
+  const label = (id: Parameters<typeof phaseIngredientLabel>[0]) => phaseIngredientLabel(id, recipe, cms, preName);
+  const dilution = model.yeastDilution ? yeastDilutionText(model.yeastDilution, fmt) : null;
+  /* Righe dello scorporo: un ingrediente per riga, una colonna per fase. */
+  const splitIds = model.preFerment
+    ? (["preferment", "flour", "water", "yeast", "salt", "sugar", "fat"] as const).filter((id) =>
+        model.phases.some((p) => p.ingredients.some((i) => i.id === id)),
+      )
+    : [];
   const scaledTopping = topping ? scaleToppingAmounts(topping, recipe.topping_scale ?? recipe.style.topping_scale) : undefined;
   const concept = topping ? toppingConcept(topping.concept_ref, cms.toppingI18n) : undefined;
-  const amount = (value: number, unit: string) =>
-    unit === "g" ? fmt.grams(value) : unit === "ml" ? fmt.milliliters(value) : `${value}`;
 
   return createPortal(
     <article className="print-sheet" lang={bcp47}>
@@ -96,7 +95,12 @@ export function PrintSheet({
         <p className="print-sheet__meta">
           {recipe.dough_balls} {unitLabel} · {fmt.grams(recipe.ball_weight_g)} ·{" "}
           {ui.statHydration} {fmt.percent(recipe.hydration_pct)} ·{" "}
-          {uiMessage("features.recipe.recipe-stat-strip.w-value-f64b6332", [flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)])} ·{" "}
+          {uiMessage("features.recipe.recipe-stat-strip.w-value-f64b6332", [flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)])}
+          {/* FW-17 (S08-B-06): con un mix la forza che si impasta è quella efficace. */}
+          {recipe.effective_gluten_w != null
+            ? ` (${ui.flourEffectiveGluten} ${uiMessage("features.recipe.ingredients-section.w-e07879a9")}${recipe.effective_gluten_w})`
+            : ""}{" "}
+          ·{" "}
           {ui.statOven} {fmt.celsius(recipe.oven_temp_c)}
         </p>
         <p className="print-sheet__meta">
@@ -127,34 +131,94 @@ export function PrintSheet({
               </tr>
             </thead>
             <tbody>
-              {rows.map(([label, g]) => (
-                <tr key={label}>
-                  <td>{label}</td>
-                  <td className="print-sheet__num">{fmt.grams(g)}</td>
-                  <td className="print-sheet__num">{pct(g)}</td>
+              {model.totals.map((row) => (
+                <tr key={row.id}>
+                  <td>{label(row.id)}</td>
+                  <td className="print-sheet__num">{fmt.grams(row.grams)}</td>
+                  <td className="print-sheet__num">{phaseBakerPctText(row, bcp47)}</td>
                 </tr>
-              ))}
+              )).flatMap((tr, i) =>
+                /* FW-17 (S08-B-06): il mix di farine sotto la riga Farina, come a
+                   schermo (la soia della pinsa è anche un allergene). */
+                model.totals[i].id === "flour" && model.flourBlend?.length
+                  ? [
+                      tr,
+                      ...model.flourBlend.map((c) => (
+                        <tr key={`blend-${c.name}`} className="print-sheet__sub">
+                          <td>
+                            ↳ {c.name} {c.pct}%
+                            {c.w ? uiMessage("features.recipe.ingredients-section.w-value-f84aef04", [c.w]) : ""}
+                          </td>
+                          <td className="print-sheet__num">{fmt.grams(c.grams)}</td>
+                          <td className="print-sheet__num">{pct(c.pct)}</td>
+                        </tr>
+                      )),
+                    ]
+                  : [tr],
+              )}
             </tbody>
             <tfoot>
               <tr>
                 <th scope="row">{uiMessage("features.recipe.print-sheet.total")}</th>
-                <td className="print-sheet__num">{fmt.grams(total)}</td>
-                <td className="print-sheet__num">{pct(total)}</td>
+                <td className="print-sheet__num">{fmt.grams(model.totalDoughG)}</td>
+                <td className="print-sheet__num" />
               </tr>
             </tfoot>
           </table>
-          {split && (
+          {model.preFerment && (
+            /* FW-17 (S08-A-11): lo scorporo è una tabella, una colonna per fase,
+               con sale, zucchero e grasso nell'impasto finale. */
+            <table className="print-sheet__table print-sheet__split">
+              <caption className="print-sheet__caption">{uiMessage("recipe.phases.splitTitle")}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{uiMessage("features.recipe.print-sheet.ingredient")}</th>
+                  <th scope="col" className="print-sheet__num">{model.preFerment.name}</th>
+                  <th scope="col" className="print-sheet__num">{uiMessage("features.recipe.print-sheet.finalDough")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {splitIds.map((id) => (
+                  <tr key={id}>
+                    <td>{label(id)}</td>
+                    {model.phases.map((phase) => {
+                      const ing = phase.ingredients.find((i) => i.id === id);
+                      return (
+                        <td key={phase.id} className="print-sheet__num">
+                          {!ing
+                            ? "—"
+                            : ing.note === "allInPreferment"
+                              ? uiMessage("recipe.phases.waterAllInPreferment")
+                              : fmt.grams(ing.grams)}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+                <tr>
+                  <td>{uiMessage("recipe.phases.waterTempLabel")}</td>
+                  {model.phases.map((phase) => (
+                    <td key={phase.id} className="print-sheet__num">
+                      {phase.waterTempC == null
+                        ? "—"
+                        : phase.id === "preferment"
+                          ? uiMessage("recipe.phases.estimateValue", [fmt.celsius(phase.waterTempC)])
+                          : fmt.celsius(phase.waterTempC)}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          )}
+          {!model.preFerment && recipe.water_temp_c != null && (
             <p className="print-sheet__note">
-              {split.name}: {ui.flour} {fmt.grams(split.prefermentFlourG)} · {ui.water}{" "}
-              {fmt.grams(split.prefermentWaterG)} · {yeastLabel} {fmt.grams(recipe.yeast_g)}.{" "}
-              {uiMessage("features.recipe.print-sheet.finalDough")}: {ui.flour} {fmt.grams(split.mainFlourG)} ·{" "}
-              {ui.water} {fmt.grams(split.mainWaterG)}
-              {recipe.water_temp_c != null ? ` · ${ui.water} ${fmt.celsius(recipe.water_temp_c)}` : ""}
+              {uiMessage("recipe.phases.waterTempLabel")}: {fmt.celsius(recipe.water_temp_c)}
             </p>
           )}
-          {!split && recipe.water_temp_c != null && (
+          {dilution && (
+            /* FW-17 (D-O, S08-B-04): l'aiuto per le microdosi anche sulla carta. */
             <p className="print-sheet__note">
-              {ui.water} {fmt.celsius(recipe.water_temp_c)}
+              <strong>{dilution.title}.</strong> {dilution.body.join(" ")}
             </p>
           )}
         </section>
@@ -197,7 +261,7 @@ export function PrintSheet({
               <tr>
                 <th scope="col">{uiMessage("features.recipe.print-sheet.ingredient")}</th>
                 <th scope="col" className="print-sheet__num">
-                  {uiMessage("features.recipe.print-sheet.perUnit", [unitLabel])}
+                  {uiMessage("features.recipe.print-sheet.perUnit", [unitLabelOne])}
                 </th>
                 <th scope="col" className="print-sheet__num">{uiMessage("features.recipe.print-sheet.total")}</th>
               </tr>
@@ -205,10 +269,14 @@ export function PrintSheet({
             <tbody>
               {scaledTopping.ingredients.map((ing) => (
                 <tr key={ing.name}>
-                  <td>{ing.name}</td>
-                  <td className="print-sheet__num">{amount(ing.amount.value, ing.amount.unit)}</td>
+                  <td>
+                    {ing.name}
+                    {ing.notes ? ` · ${ing.notes}` : ""}
+                  </td>
+                  {/* FW-17 (S08-A-11): unità comprese («4 pz»), come a schermo. */}
+                  <td className="print-sheet__num">{formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt)}</td>
                   <td className="print-sheet__num">
-                    {amount(Math.round(ing.amount.value * recipe.dough_balls), ing.amount.unit)}
+                    {formatToppingAmountForLocale(ing.amount.value * recipe.dough_balls, ing.amount.unit, fmt)}
                   </td>
                 </tr>
               ))}

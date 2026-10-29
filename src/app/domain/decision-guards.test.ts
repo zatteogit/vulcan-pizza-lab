@@ -6,9 +6,12 @@ import {
   isFriedStyle,
   recommendStyles,
   suggestedTimeSlot,
+  generateRecipe,
   type UserConstraints,
 } from "./pizza-engine";
 import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { AUTHENTICITY_FUEL_CAP, DEFAULT_UI_SCORE_WEIGHTS, explainScore } from "./recipe-score";
+import { compareByCompatibility, kitchenMargin } from "./kitchen-margin";
 
 /* Guardie delle decisioni di Matteo (docs/autorialita.md). Una PR le aveva
  * annullate senza registrarne di nuove (audit 28/10/2026, S05-V-01). Chi
@@ -22,6 +25,8 @@ const SOURCES = import.meta.glob(
     "/src/app/features/recipe/user-needs.tsx",
     "/src/app/features/recipe/oven-first-notice.tsx",
     "/src/app/features/recipe/recommended-styles.tsx",
+    "/src/app/pages/explore.tsx",
+    "/src/app/agent/mcp-tools.ts",
   ],
   { query: "?raw", import: "default", eager: true },
 ) as Record<string, string>;
@@ -113,5 +118,114 @@ describe("D-032: le fritte stanno in una sezione a parte dei consigli", () => {
   it("i consigli di Crea usano recommendationSections e la sezione ha un titolo nel CMS", () => {
     expect(source("../features/recipe/recommended-styles.tsx")).toMatch(/recommendationSections\(/);
     expect(CMS_DEFAULTS.tiers.fried?.label).toBeTruthy();
+  });
+});
+
+/* FW-17 — D-P (audit 28/10/2026): niente biga o poolish col lievito madre
+ * finché non c'è una fonte per i parametri; la ricetta lo dice. */
+describe("D-P: biga e poolish solo col lievito di birra", () => {
+  it("col solo lievito madre il prefermento non si calcola e c'è la spiegazione", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_canotto, { ...homeKitchen, pantry_yeasts: ["sourdough"], available_hours: 48 }, {
+      usePreFerment: true,
+      preFerment: { type: "biga" },
+      customFermentationHours: 24,
+    });
+    expect(recipe.has_pre_ferment).toBe(false);
+    expect(recipe.method_changes?.some((m) => m.key === "preferment.sourdoughInstead")).toBe(true);
+  });
+});
+
+/* FW-06 · D-057 (D-E dell'audit): la «Compatibilità con la tua cucina» pesa solo
+ * fattibilità (facilità) e fedeltà allo stile (autenticità). Le altre
+ * dimensioni restano calcolate e si mostrano a parte, con peso 0. */
+describe("D-057: la compatibilità pesa solo facilità e autenticità", () => {
+  it("pesi dell'app e del CMS: zero per maturazione, sostenibilità e sperimentazione", () => {
+    expect(DEFAULT_UI_SCORE_WEIGHTS.digestibility).toBe(0);
+    expect(DEFAULT_UI_SCORE_WEIGHTS.sustainability).toBe(0);
+    expect(DEFAULT_UI_SCORE_WEIGHTS.experimentation).toBe(0);
+    expect(DEFAULT_UI_SCORE_WEIGHTS.authenticity).toBeGreaterThan(0);
+    expect(DEFAULT_UI_SCORE_WEIGHTS.feasibility).toBeGreaterThan(0);
+    for (const key of ["authenticity", "feasibility", "digestibility", "sustainability", "experimentation"] as const) {
+      expect(CMS_DEFAULTS.scoreDimensions[key].weight).toBe(DEFAULT_UI_SCORE_WEIGHTS[key]);
+    }
+  });
+
+  it("una ricetta con maturazione e sostenibilità a zero non perde punti", () => {
+    const full = { authenticity: 90, feasibility: 80, digestibility: 100, sustainability: 100, experimentation: 0 };
+    const empty = { ...full, digestibility: 0, sustainability: 0, experimentation: 100 };
+    expect(explainScore(empty, DEFAULT_UI_SCORE_WEIGHTS, "ok").score).toBe(explainScore(full, DEFAULT_UI_SCORE_WEIGHTS, "ok").score);
+  });
+});
+
+/* D-062 (Matteo, 29/10/2026): a pari numero mostrato, dentro lo stesso gruppo,
+ * prima lo stile che la cucina copre con più margine di forno e tempo. Il
+ * numero non cambia. Vale in Crea, in Scopri (anteprima per cucina) e in
+ * recommend_styles (MCP). */
+describe("D-062: spareggio per margine della cucina", () => {
+  const pizzaOven: UserConstraints = { ...homeKitchen, oven_type: "electric_high", oven_max_temp_c: 450, available_hours: 48, meal_deadline: false, has_pizza_stone: true };
+
+  it("dentro un gruppo, a pari numero il margine decide e il numero non cambia", () => {
+    const recs = recommendStyles(pizzaOven);
+    const before = new Map(recs.map((r) => [r.style.id, r.recipe.scores.composite]));
+    const score = (r: (typeof recs)[number]) => ({ score: r.recipe.scores.composite, margin: kitchenMargin(r.style, pizzaOven) });
+    const sections = recommendationSections(recs, (items) => [...items].sort((a, b) => compareByCompatibility(score(a), score(b))));
+    let ties = 0;
+    for (const section of sections) {
+      section.items.forEach((item, i) => {
+        expect(item.recipe.scores.composite).toBe(before.get(item.style.id));
+        const next = section.items[i + 1];
+        if (!next) return;
+        expect(Math.round(item.recipe.scores.composite)).toBeGreaterThanOrEqual(Math.round(next.recipe.scores.composite));
+        if (Math.round(item.recipe.scores.composite) === Math.round(next.recipe.scores.composite)) {
+          ties++;
+          expect(kitchenMargin(item.style, pizzaOven)).toBeGreaterThanOrEqual(kitchenMargin(next.style, pizzaOven));
+        }
+      });
+    }
+    expect(ties).toBeGreaterThan(0);
+  });
+
+  it("Crea, Scopri e recommend_styles usano lo stesso confronto", () => {
+    expect(source("../features/recipe/recommended-styles.tsx")).toMatch(/compareByCompatibility\(/);
+    expect(source("../pages/explore.tsx")).toMatch(/compareByCompatibility\(/);
+    expect(source("../agent/mcp-tools.ts")).toMatch(/compareByCompatibility\(/);
+  });
+
+  it("lo spareggio è dichiarato nella spiegazione del punteggio, come scelta", () => {
+    expect(CMS_DEFAULTS.scoreExplainer.tieBreak).toMatch(/Scelta di prodotto/);
+    expect(CMS_DEFAULTS.science.notes["ranking-tiebreak"]?.l1).toMatch(/scelta di \{brand\}/);
+  });
+});
+
+/* D-063 (Matteo, 29/10/2026): il tetto di autenticità per il combustibile vale
+ * solo se il forno non arriva alla temperatura minima dello stile. Con il
+ * forno che ci arriva, la legna prevista è un'informazione, non una penalità. */
+describe("D-063: tetto del combustibile solo sotto il minimo dello stile", () => {
+  const electric = (temp: number): UserConstraints => ({ ...homeKitchen, oven_type: "electric_high", oven_max_temp_c: temp, available_hours: 48, meal_deadline: false, skill_level: 4, has_pizza_stone: true });
+
+  it("Napoletana STG con forno elettrico a 450 °C (≥ 430): niente tetto, niente −15", () => {
+    const style = STYLES_DB.napoletana_stg;
+    expect(450).toBeGreaterThanOrEqual(style.baking.temp_c_range[0]);
+    const recipe = generateRecipe(style, electric(450));
+    const keys = recipe.scores.penalties.map((p) => p.key);
+    expect(recipe.scores.authenticity).toBeGreaterThan(AUTHENTICITY_FUEL_CAP);
+    expect(keys).toContain("auth.woodByMethod");
+    expect(keys).not.toContain("auth.fuelCap");
+    expect(keys).not.toContain("auth.notWoodOven");
+  });
+
+  it("Pizza al Metro con forno elettrico sotto i suoi 300 °C minimi: il tetto resta", () => {
+    const style = STYLES_DB.pizza_al_metro;
+    const recipe = generateRecipe(style, electric(style.baking.temp_c_range[0] - 10));
+    const keys = recipe.scores.penalties.map((p) => p.key);
+    expect(recipe.scores.authenticity).toBeLessThanOrEqual(AUTHENTICITY_FUEL_CAP);
+    expect(keys).toContain("auth.notWoodOven");
+    expect(keys).not.toContain("auth.woodByMethod");
+  });
+
+  it("con il forno a legna nessun messaggio sul combustibile", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, { ...electric(480), oven_type: "wood" });
+    const keys = recipe.scores.penalties.map((p) => p.key);
+    expect(keys.filter((k) => ["auth.woodByMethod", "auth.notWoodOven", "auth.fuelCap"].includes(k))).toEqual([]);
   });
 });

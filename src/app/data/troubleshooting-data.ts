@@ -6,6 +6,7 @@
 import type { TroubleshootingMessageSource } from "../i18n/domain-contracts";
 import { interpolate } from "../i18n/interpolate";
 import type { TimelineStep } from "../domain/pizza-engine";
+import type { StyleThresholds } from "../domain/science/engine-facts";
 
 export interface TroubleshootingIssue {
   id: string;
@@ -23,39 +24,39 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
   {
     id: 'P01', category: 'dough',
     symptom: 'Impasto appiccicoso persistente',
-    cause: 'Idratazione superiore alla capacita di assorbimento della farina',
-    testRapido: 'Confronta H% ricetta vs assorbimento farina (+5% max)',
-    fixImmediate: 'Aggiungi 2-3% di farina e incorpora con pieghe delicate',
-    prevention: 'Usa H% ≤ assorbimento farina + 5%',
+    cause: "Più acqua di quanta la farina riesca ad assorbire",
+    testRapido: "L'idratazione della ricetta supera l'assorbimento indicato sulla scheda della farina?",
+    fixImmediate: "Aggiungi poca farina alla volta (2–3%) e incorpora con pieghe delicate",
+    prevention: "Resta vicino all'assorbimento dichiarato dal mulino; se non lo conosci, parti dal basso dell'idratazione dello stile",
     severity: 'warning',
   },
   {
     id: 'P02', category: 'dough',
     symptom: "L'impasto si strappa durante la stesura",
-    cause: 'P/L troppo alto (>0.8) o fermentazione insufficiente (<6h)',
-    testRapido: 'Stira il panetto di 10cm: si rompe?',
-    fixImmediate: 'Riposo 60min coperto a temperatura ambiente',
-    prevention: 'Scegli farine con P/L 0.5-0.6, fermentazione minima 8h',
+    cause: "Glutine poco sviluppato o non ancora rilassato, impasto ancora freddo dal frigo; a volte una farina poco estensibile (P/L alto) o un impasto andato oltre",
+    testRapido: "Allunga piano un lembo: si strappa subito invece di allungarsi?",
+    fixImmediate: "Copri il panetto e lascialo riposare a temperatura ambiente 30–60 min, poi riprova",
+    prevention: "Rispetta i tempi della ricetta, togli i panetti dal frigo per tempo e usa una farina con il P/L indicato dallo stile",
     severity: 'warning',
   },
   {
     id: 'P03', category: 'dough',
     symptom: "L'impasto collassa quando lo tocchi",
-    cause: 'Over-fermentato (volume >150%, finger dent non torna)',
-    testRapido: 'Premi con dito 1cm: torna in 3-5s?',
-    fixImmediate: 'Irreversibile. Stendi delicatamente e cuoci subito',
-    prevention: 'Controlla volume ogni 6h, max +150% aumento',
-    severity: 'critical',
+    cause: "Lievitazione andata oltre: troppo tempo, troppo caldo o troppo lievito",
+    testRapido: "Premi con un dito: se il segno torna su subito è ancora indietro, se torna piano è pronto, se resta e l'impasto si sgonfia è andato oltre",
+    fixImmediate: "Ripallalo e lascialo riprendere 1–2 h (sarà meno alveolato), oppure stendilo con delicatezza e cuocilo subito",
+    prevention: "Controlla l'impasto dall'ultimo terzo del tempo previsto, non solo l'orologio",
+    severity: 'warning',
   },
   /* === CATEGORIA 2: Fermentazione === */
   {
     id: 'P04', category: 'fermentation',
-    symptom: 'Nessuna lievitazione dopo 6+ ore',
-    cause: 'Lievito morto, temperatura troppo bassa, o sale a contatto diretto',
-    testRapido: 'Test vitalita: 5g lievito + 5g zucchero in 100ml acqua 35°C — schiuma dopo 15min?',
-    fixImmediate: 'Aggiungi 0.3% lievito fresco sciolto in acqua tiepida, incorpora con pieghe',
-    prevention: 'Testa il lievito prima di ogni utilizzo',
-    severity: 'critical',
+    symptom: "L'impasto non cresce nel tempo previsto",
+    cause: "Lievito poco attivo o scaduto, oppure impasto più freddo del previsto. In frigo crescere poco è normale",
+    testRapido: "Era in frigo? È normale. Altrimenti sciogli un pizzico del lievito in acqua tiepida con un po' di zucchero: dopo 10–15 min fa schiuma?",
+    fixImmediate: "Prima mettilo al caldo (24–28 °C) per 1–2 h. Se non riparte, il lievito è inattivo: rifai l'impasto con lievito nuovo",
+    prevention: "Controlla la scadenza del lievito e la temperatura della stanza",
+    severity: 'warning',
   },
   {
     id: 'P05', category: 'fermentation',
@@ -69,9 +70,9 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
   {
     id: 'P06', category: 'fermentation',
     symptom: 'Sapore troppo acido/acetico',
-    cause: 'LAB eterofermentativi attivi >48h a >18°C (specialmente con lievito madre)',
-    testRapido: 'pH impasto — dovrebbe essere 4.5-5.5, problematico se <4.2',
-    fixImmediate: "Lo zucchero maschera il sapore ma non corregge una fermentazione eccessiva. Rivaluta l’impasto prima di usarlo.",
+    cause: "Maturazione troppo lunga o troppo calda: i batteri lattici producono acidi (succede di più con il lievito madre)",
+    testRapido: "Annusa e assaggia un pezzetto crudo: l'acido è pungente, come di aceto?",
+    fixImmediate: "Si può mangiare; la prossima volta accorcia la maturazione a temperatura ambiente",
     prevention: "Scegli tempo, temperatura e lievito secondo il metodo; controlla lo sviluppo senza una soglia oraria universale.",
     severity: 'warning',
   },
@@ -97,10 +98,10 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
   {
     id: 'P08', category: 'shaping',
     symptom: 'Buchi giganti irregolari nella pizza',
-    cause: 'Degassaggio insufficiente + stesura troppo delicata',
-    testRapido: 'Alveoli >3cm e distribuzione disomogenea?',
+    cause: "Bolle grandi rimaste nel panetto e stesura molto delicata",
+    testRapido: "Le bolle grandi sono sparse anche al centro, non solo nel cornicione?",
     fixImmediate: 'Pressa leggermente il panetto prima della stesura per redistribuire il gas',
-    prevention: 'Riduci tempo fermentazione del 20%',
+    prevention: "Prima di stendere sgonfia con delicatezza le bolle più grandi; nella napoletana e nel canotto qualche alveolo grande nel cornicione è voluto",
     severity: 'info',
   },
   /* === CATEGORIA 4: Cottura === */
@@ -109,71 +110,71 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     symptom: 'Base cruda ma cornicione bruciato',
     cause: 'Sbilanciamento termico: troppo calore dal cielo, poco dalla platea',
     testRapido: 'Contrasto colore estremo tra sopra e sotto?',
-    fixImmediate: 'Pre-cottura della base 3min senza topping',
-    prevention: 'Usa teglia/pietra più spessa, bilancia calore cielo/platea',
+    fixImmediate: "Cuoci più vicino alla platea calda e più lontano dal cielo; se il forno non supera i 300 °C puoi precuocere la base 2–3 min senza condimento",
+    prevention: "Bilancia il calore: pietra o acciaio ben preriscaldati sotto, meno calore dall'alto",
     severity: 'critical',
   },
   {
     id: 'P10', category: 'baking',
     symptom: 'Crosta pallida, nessuna doratura',
-    cause: 'Temperatura <250°C, zuccheri esauriti, o umidità eccessiva in superficie',
-    testRapido: 'Il forno raggiunge almeno 250°C? Fermentazione >48h?',
-    fixImmediate: 'Spennella olio+miele pre-cottura oppure usa grill finale 2min',
-    prevention: 'Aggiungi 0,5–1% di zucchero o malto e porta il forno al massimo, con pietra o acciaio ben preriscaldati',
+    cause: "Forno o platea poco caldi per lo stile, oppure pochi zuccheri rimasti dopo una maturazione molto lunga",
+    testRapido: "Il forno arriva alla temperatura indicata dallo stile? La maturazione è stata molto lunga?",
+    fixImmediate: "Negli ultimi 1–2 minuti usa il grill, se il forno lo ha",
+    prevention: "Porta il forno al massimo con pietra o acciaio ben preriscaldati; fuori dalle ricette STG, che non ammettono zucchero né malto, puoi aggiungere 0,5–1% di zucchero o malto",
     severity: 'warning',
   },
   {
     id: 'P11', category: 'baking',
     symptom: 'Pizza gommosa, non croccante',
-    cause: 'Temperatura cuore <85°C, idratazione >70%, o cottura troppo lenta',
-    testRapido: 'Termometro cuore: raggiunge 90°C+?',
-    fixImmediate: 'Prolunga cottura +2min o aumenta temperatura +20°C',
-    prevention: 'H ≤ 65%, temperatura cuore target 95°C',
+    cause: "Cottura troppo breve o troppo bassa per lo spessore, oppure più acqua di quanta ne preveda lo stile",
+    testRapido: "Al taglio il cuore è ancora umido e appiccicoso?",
+    fixImmediate: "Prolunga la cottura di qualche minuto; se il forno ha ancora margine, alza la temperatura",
+    prevention: "Resta nell'idratazione dello stile e cuoci per il tempo indicato dalla ricetta",
     severity: 'warning',
   },
   {
     id: 'P16', category: 'baking',
     symptom: 'Cornicione basso e piatto',
-    cause: 'Degassaggio eccessivo, W farina troppo basso, o uso mattarello',
+    cause: "Degassaggio eccessivo, farina troppo debole per lo stile, o uso del mattarello",
     testRapido: 'Altezza cornicione <1cm?',
     fixImmediate: 'Stesura più delicata, non schiacciare i bordi',
-    prevention: 'W ≥ 240 per napoletana, mai mattarello su stili con cornicione',
+    prevention: "Usa una farina nella forza indicata dallo stile e niente mattarello sugli stili con cornicione",
     severity: 'info',
   },
   {
     id: 'P17', category: 'baking',
     symptom: 'Pizza troppo secca',
-    cause: 'Idratazione <55% o cottura troppo lunga (>10min)',
-    testRapido: 'H% della ricetta? Tempo cottura effettivo?',
-    fixImmediate: 'Aggiungi olio abbondante sul topping',
-    prevention: 'H ≥ 58%, non superare tempo cottura consigliato',
+    cause: "Meno acqua di quella prevista dallo stile o cottura più lunga del tempo della ricetta",
+    testRapido: "Idratazione e tempo di cottura sono quelli della ricetta?",
+    fixImmediate: "Servila appena sfornata; la prossima volta accorcia la cottura",
+    prevention: "Resta nell'idratazione dello stile e non superare il tempo di cottura indicato",
     severity: 'info',
   },
   {
     id: 'P18', category: 'baking',
     symptom: 'Centro della pizza acquoso',
     cause: 'Topping troppo liquido o cottura troppo breve',
-    testRapido: 'Quantita di salsa per pizza? Mozzarella molto umida?',
-    fixImmediate: 'Pre-cottura base 2min, poi aggiungi topping',
+    testRapido: 'Quantità di salsa per pizza? Mozzarella molto umida?',
+    fixImmediate: "Precuoci la base 2–3 min, poi aggiungi il condimento",
     prevention: 'Max 80ml salsa per pizza 30cm, sgocciola bene la mozzarella',
     severity: 'warning',
   },
   {
     id: 'P19', category: 'shaping',
     symptom: 'Impossibile stendere il panetto',
-    cause: 'Farina Manitoba pura (W >380), impasto troppo tenace',
-    testRapido: 'Quale farina hai usato? W >350?',
-    fixImmediate: 'Blend 50:50 con farina W 200 nel prossimo impasto',
-    prevention: 'Max W 320 per pizza, farine con P/L 0.5-0.6',
+    cause: "Farina molto più forte di quanto preveda lo stile: impasto troppo tenace",
+    testRapido: "La W della tua farina supera di molto quella indicata dallo stile?",
+    fixImmediate: "Lascia riposare il panetto coperto 20–30 min e riprova; nel prossimo impasto taglia la farina con una più debole",
+    prevention: "Usa una farina nella forza e nel P/L indicati dallo stile",
     severity: 'warning',
   },
   {
-    id: 'P20', category: 'dough',
-    symptom: "Odore 'chimico' nell'impasto",
-    cause: 'Acqua con cloro alto dal rubinetto',
-    testRapido: "Senti odore forte aprendo il rubinetto dell'acqua?",
-    fixImmediate: 'Usa acqua in bottiglia per il prossimo impasto',
-    prevention: 'Filtra acqua o lasciala riposare 12h aperta (cloro evapora)',
+    id: 'P20', category: 'fermentation',
+    symptom: "Odore 'chimico' (alcol, solvente) nell'impasto",
+    cause: "Fermentazione andata oltre (alcol ed esteri) o troppo lievito; più di rado il cloro dell'acqua",
+    testRapido: "Odore di alcol o di acetone e impasto molle che non risale?",
+    fixImmediate: "Se è molle e non risale, trattalo come un impasto andato oltre: ripallalo o cuocilo subito",
+    prevention: "La prossima volta meno lievito o più fresco. Se l'acqua di rubinetto sa di cloro usane un'altra: il riposo all'aria non elimina le clorammine",
     severity: 'info',
   },
   /* === CATEGORIA 5: Falsi Positivi === */
@@ -183,17 +184,17 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     // FW-01 (S04-A-05, D-F): non è il contatto con la volta né la sola Maillard.
     cause: 'Bolle sottili del cornicione che si scuriscono col calore molto forte del forno (imbrunimento e bruciatura localizzati)',
     testRapido: 'Le macchie sono amare al gusto?',
-    fixImmediate: 'NON e un problema! E la caratteristica desiderata della pizza napoletana',
+    fixImmediate: 'NON è un problema! È la caratteristica desiderata della pizza napoletana',
     prevention: 'Se troppo marcate: ruota pizza ogni 20s durante cottura',
     severity: 'info',
   },
   {
     id: 'P15', category: 'false_positive',
     symptom: 'Fondo pizza scuro/nero sotto',
-    cause: 'Pietra o teglia troppo calda (>450°C)',
+    cause: "Platea più calda di quanto serve allo stile, oppure farina o semola bruciata sulla pietra",
     testRapido: 'Assaggia: sapore amaro?',
     fixImmediate: 'Se amaro = problema (abbassa temp). Se saporito = NORMALE',
-    prevention: 'Pre-riscaldo pietra controllato, non oltre 400°C per pietra',
+    prevention: "Tieni la platea alla temperatura dello stile e spazzola la pietra fra una pizza e l'altra",
     severity: 'info',
   },
   /* Frittura: rimedi qualitativi, la temperatura resta quella della ricetta.
@@ -233,31 +234,75 @@ export interface StepTroubleshooting {
 
 const STEP_TROUBLE: Record<string, StepTroubleshooting> = {
   preferment: { labelKey: 'preferment', issueIds: ['P06', 'P04', 'P05'], initialIssueId: 'P06' },
-  mix: { labelKey: 'mix', issueIds: ['P01', 'P20'], initialIssueId: 'P01' },
-  bulk: { labelKey: 'bulk', issueIds: ['P03', 'P04', 'P05', 'P06', 'P21'], initialIssueId: 'P03' },
-  proof: { labelKey: 'proof', issueIds: ['P03', 'P04', 'P05', 'P06', 'P21'], initialIssueId: 'P03' },
+  // FW-05 (S13-A-02): l'odore «chimico» è prima di tutto sovrafermentazione.
+  mix: { labelKey: 'mix', issueIds: ['P01'], initialIssueId: 'P01' },
+  bulk: { labelKey: 'bulk', issueIds: ['P03', 'P04', 'P05', 'P06', 'P20', 'P21'], initialIssueId: 'P03' },
+  proof: { labelKey: 'proof', issueIds: ['P03', 'P04', 'P05', 'P06', 'P20', 'P21'], initialIssueId: 'P03' },
   shape: { labelKey: 'shape', issueIds: ['P02', 'P07', 'P08', 'P19'], initialIssueId: 'P02' },
 };
 
+/** FW-05 (S13-B-02): sotto questa temperatura la puntata è una maturazione in
+ *  frigo, dove crescere poco è normale (scelta di Vulcan). */
+export const COLD_RETARD_MAX_C = 8;
+
+/** FW-05 (S13-B-14): diagnosi che presumono una rete glutinica (W, P/L,
+ *  glutine da rilassare): fuori bersaglio con un mix senza glutine. */
+const GLUTEN_DEPENDENT_ISSUES = new Set(['P02', 'P07', 'P19']);
+
+function withoutIssues(trouble: StepTroubleshooting, drop: (id: string) => boolean): StepTroubleshooting | undefined {
+  const issueIds = trouble.issueIds.filter((id) => !drop(id));
+  if (issueIds.length === 0) return undefined;
+  const initialIssueId = trouble.initialIssueId && issueIds.includes(trouble.initialIssueId) ? trouble.initialIssueId : undefined;
+  return { ...trouble, issueIds, initialIssueId };
+}
+
 /** Il metodo del singolo passo prevale sul nome condiviso "bake".
- * Nessun fallback a un problema del forno per passi sconosciuti o riposi non lievitati. */
+ * Nessun fallback a un problema del forno per passi sconosciuti o riposi non lievitati.
+ * FW-05: `coldRetard` (puntata in frigo) toglie «non cresce» (S13-B-02: al freddo
+ * crescere poco è normale); `glutenFree` toglie le diagnosi sul glutine. */
 export function getStepTroubleshooting(
   step: Pick<TimelineStep, 'id' | 'variant' | 'msg'>,
-  context: { unleavened?: boolean; filled?: boolean } = {},
+  context: { unleavened?: boolean; filled?: boolean; coldRetard?: boolean; glutenFree?: boolean } = {},
 ): StepTroubleshooting | undefined {
   if (context.unleavened && (step.id === 'bulk' || step.id === 'proof')) return undefined;
-  if (context.unleavened && step.id === 'shape') return { labelKey: 'shape', issueIds: ['P07', 'P19'], initialIssueId: 'P07' };
-  if (step.id === 'bake' || step.id === 'bake2') {
-    return { labelKey: 'bake', issueIds: step.variant === 'fry'
+  let trouble: StepTroubleshooting | undefined;
+  if (context.unleavened && step.id === 'shape') trouble = { labelKey: 'shape', issueIds: ['P07', 'P19'], initialIssueId: 'P07' };
+  else if (step.id === 'bake' || step.id === 'bake2') {
+    trouble = { labelKey: 'bake', issueIds: step.variant === 'fry'
       ? ['FR01', 'FR02', ...(context.filled ? ['FR03'] : [])]
       : ['P09', 'P10', 'P11', 'P17', ...(step.msg?.title?.key === 'timeline.bakeWhite.title' ? [] : ['P18'])] };
-  }
-  return STEP_TROUBLE[step.id];
+  } else trouble = STEP_TROUBLE[step.id];
+  if (!trouble || (!context.coldRetard && !context.glutenFree)) return trouble;
+  return withoutIssues(trouble, (id) =>
+    (!!context.coldRetard && step.id === 'bulk' && id === 'P04') ||
+    (!!context.glutenFree && GLUTEN_DEPENDENT_ISSUES.has(id)));
 }
 
 /* === CATEGORY LABELS === */
 /* FW-13 (S13-B-12): niente emoji (letti dallo screen reader, resi diversi fra
  * piattaforme); le icone Lucide delle categorie vivono nella UI. */
+/* FW-04 (S13-A-07, S13-B-05): le sigle e i termini che la scheda usa
+ * (H%, P/L, LAB, finger dent, platea/cielo, W…) portano alla voce del
+ * glossario. Il test term-link.test.ts verifica che ogni id esista. */
+export const ISSUE_GLOSSARY_TERMS: Record<string, readonly string[]> = {
+  P01: ["hydration", "absorption"],
+  P02: ["pl_ratio", "l_extensibility"],
+  P03: ["poke_test", "ball_fermentation"],
+  P05: ["q10"],
+  P06: ["lab", "sourdough"],
+  P07: ["gluten", "ball_fermentation"],
+  P08: ["cornicione"],
+  P09: ["oven_floor_dome", "thermal_conductivity"],
+  P10: ["maillard"],
+  P11: ["hydration"],
+  P14: ["cornicione", "maillard"],
+  P15: ["oven_floor_dome"],
+  P16: ["cornicione", "w_alveograph"],
+  P17: ["hydration"],
+  P19: ["w_alveograph", "manitoba", "pl_ratio"],
+  P21: ["q10"],
+};
+
 export const CATEGORY_LABELS: Record<string, { label: string }> = {
   dough: { label: 'Impasto' },
   fermentation: { label: 'Fermentazione' },
@@ -314,18 +359,30 @@ export function getContextualWarnings(params: {
   flourG?: number;
   skillLevel: number;
   usePreFerment: boolean;
+  /** FW-05 (S13-V-01, D-I): soglie dello stile scelto (thresholdFor). Senza
+   *  stile i consigli che dipendono dallo stile non compaiono. */
+  style?: StyleThresholds;
 }, cms?: TroubleshootingMessageSource): ContextualWarning[] {
   const warnings: ContextualWarning[] = [];
   const cmsCtx = cms?.troubleshootingI18n?.contextual;
+  const style = params.style;
+  const styleVars: Record<string, string> = style ? {
+    hMin: String(style.hydrationPct[0]), hMax: String(style.hydrationPct[1]),
+    wMin: String(style.flourW[0]), wMax: String(style.flourW[1]),
+  } : {};
 
-  /* Idratazione alta + W basso = rischio P01 */
-  if (params.hydration > 72 && params.flourW < 280) {
+  /* Idratazione alta + W basso = rischio P01, ma non se farina e acqua sono
+   * quelle dello stile (FW-05: la focaccia barese al 75% con W 250 è nel suo). */
+  const inStyle = style
+    && params.flourW >= style.flourW[0] && params.flourW <= style.flourW[1]
+    && params.hydration <= style.hydrationPct[1];
+  if (style && params.hydration > 72 && params.flourW < 280 && !inStyle) {
     const loc = cmsCtx?.sticky_dough;
     warnings.push({
       issueId: 'P01',
       message: loc ? interpolate(loc.message, { h: String(params.hydration), w: String(params.flourW) })
         : `Idratazione ${params.hydration}% con W ${params.flourW}: rischio impasto appiccicoso`,
-      tip: loc?.tip ?? 'Usa farina con W ≥ 280 oppure riduci idratazione a 68-70%',
+      tip: interpolate(loc?.tip ?? "Questo stile prevede W {wMin}–{wMax}: usa una farina in questa forbice oppure riduci un po' l'idratazione", styleVars),
       severity: 'warning',
     });
   }
@@ -349,7 +406,8 @@ export function getContextualWarnings(params: {
       issueId: 'P06',
       message: loc ? interpolate(loc.message, { h: String(params.fermentHours), t: String(params.fermentTemp) })
         : `${params.fermentHours}h a ${params.fermentTemp}°C: rischio sapore acido`,
-      tip: loc?.tip ?? 'Per fermentazioni >24h, usa temperatura 4-8°C',
+      // FW-05 (S13-A-03): come P06, nessuna soglia oraria universale nel consiglio.
+      tip: loc?.tip ?? "Se la cucina è calda, sposta parte della maturazione in frigo e controlla l'impasto più dell'orologio",
       severity: 'warning',
     });
   }
@@ -366,14 +424,15 @@ export function getContextualWarnings(params: {
     });
   }
 
-  /* Forno freddo per stili che richiedono alta temperatura */
-  if (params.usesOven !== false && params.ovenTemp < 250) {
+  /* Forno sotto la temperatura dello stile: crosta pallida (P10), non «base
+   * cruda e bordo bruciato» (FW-05, S13-A-11/B-03). La soglia è quella dello stile. */
+  if (params.usesOven !== false && style && params.ovenTemp < style.ovenMinC) {
     const loc = cmsCtx?.cold_oven;
     warnings.push({
-      issueId: 'P09',
+      issueId: 'P10',
       message: loc ? interpolate(loc.message, { t: String(params.ovenTemp) })
-        : `Forno a ${params.ovenTemp}°C: rischio base cruda con bordo bruciato`,
-      tip: loc?.tip ?? 'Pre-cuoci la base 3min senza topping, poi aggiungi ingredienti',
+        : `Forno a ${params.ovenTemp}°C, sotto la temperatura dello stile: rischio crosta pallida e pizza secca`,
+      tip: loc?.tip ?? 'Preriscalda a lungo pietra o acciaio e, se il forno ha il grill, usalo negli ultimi minuti',
       severity: 'warning',
     });
   }
@@ -381,7 +440,9 @@ export function getContextualWarnings(params: {
   /* Idratazione alta + principiante (skill-aware): solo skill 1 mostra warning a 70+
    * Skill 2 (Intermedio) lo mostra solo se davvero estrema (>85). Skill 3/4 mai. */
   const hydrationWarnThreshold = params.skillLevel === 1 ? 70 : 85;
-  if (params.hydration > hydrationWarnThreshold && params.skillLevel <= 2) {
+  /* FW-05 (S13-V-01): dentro la forbice dello stile non è un errore (la teglia
+   * romana è al 75–85% anche per chi comincia); fuori, il consiglio è relativo. */
+  if (style && params.hydration > hydrationWarnThreshold && params.skillLevel <= 2 && params.hydration > style.hydrationPct[1]) {
     const loc = cmsCtx?.beginner_hydration;
     warnings.push({
       issueId: 'P01',
@@ -389,23 +450,20 @@ export function getContextualWarnings(params: {
         : params.skillLevel === 1
           ? `Idratazione ${params.hydration}% è impegnativa per principianti`
           : `Idratazione ${params.hydration}% è estrema, richiede pratica`,
-      tip: loc?.tip ?? 'Inizia con 60-65% e aumenta gradualmente con esperienza',
+      tip: interpolate(loc?.tip ?? 'Questo stile prevede {hMin}–{hMax}%: se sei alle prime armi resta vicino a {hMin}%', styleVars),
       severity: 'warning',
     });
   }
 
-  /* W molto alto = difficile da stendere P19 */
-  if (params.flourW > 360) {
+  /* W molto oltre lo stile = difficile da stendere P19. Soglia della fattibilità
+   * del motore (W massima dello stile × FLOUR_W_EXCESS_FACTOR), FW-05. */
+  if (style && params.flourW > style.flourWExcess) {
     const loc = cmsCtx?.high_w;
-    // Mix 50:50 → grammi di ciascuna metà per la farina corrente.
-    const halfNote = params.flourG
-      ? ` (≈ ${Math.round(params.flourG / 2)}g + ${Math.round(params.flourG / 2)}g)`
-      : '';
     warnings.push({
       issueId: 'P19',
       message: loc ? interpolate(loc.message, { w: String(params.flourW) })
-        : `W ${params.flourW} molto alto: impasto difficile da stendere`,
-      tip: (loc?.tip ?? 'Mixa 50:50 con farina W 200 oppure prevedi autolisi lunga') + halfNote,
+        : `W ${params.flourW} molto oltre quella dello stile: impasto difficile da stendere`,
+      tip: interpolate(loc?.tip ?? "Questo stile prevede W {wMin}–{wMax}: taglia con una farina più debole oppure prevedi un'autolisi lunga", styleVars),
       severity: 'warning',
     });
   }

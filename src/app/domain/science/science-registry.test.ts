@@ -12,6 +12,8 @@ import { JA_LOCALE } from "../../features/cms/locales/ja";
 import { roundForEvidence } from "./evidence";
 import {
   PROOF_MIN_TEMP_C,
+  foldWindowMinutes,
+  stylePlanFolds,
   STYLES_DB,
   fermentationPhases,
   fermentationSpeedRatio,
@@ -38,6 +40,38 @@ const BUNDLES: Record<string, CmsContent> = {
 };
 
 const assumptionIds = [...new Set(SCIENCE_NOTES.flatMap((note) => note.assumptionIds ?? []))];
+
+/* Revisione ondata 2: niente italiano nei dati che si mostrano così come sono.
+ * La formula del registro è la riserva in simboli; i nomi del motore sono solo
+ * identificatori; i titoli delle fonti sono bibliografici, le glosse sono
+ * `noteKey` tradotte. */
+describe("dati del registro senza testo in una lingua", () => {
+  const symbols = new Set(SCIENCE_NOTES.flatMap((note) => (note.variables ?? []).map((v) => v.symbol)));
+  it("la formula del registro è solo simboli (nessuna parola di 4 o più lettere)", () => {
+    const wordy = SCIENCE_NOTES.flatMap((note) =>
+      (note.formula?.match(/\p{L}{4,}/gu) ?? []).filter((word) => !symbols.has(word)).map((word) => `${note.id}: ${word}`),
+    );
+    expect(wordy).toEqual([]);
+  });
+
+  it("engineRef elenca solo identificatori del motore", () => {
+    const IDENTIFIERS = /^[A-Za-z_][\w.]*(?:, [A-Za-z_][\w.]*)*$/;
+    expect(SCIENCE_NOTES.filter((note) => note.engineRef && !IDENTIFIERS.test(note.engineRef)).map((note) => note.id)).toEqual([]);
+  });
+
+  it("le fonti hanno un titolo o una nota, senza percorsi del repository né glosse in italiano", () => {
+    expect(SCIENCE_SOURCES.filter((source) => !source.title && !source.noteKey).map((source) => source.id)).toEqual([]);
+    const GLOSS = /docs\/|\.md\b|\b(?:schede?|pagine|articol[oi]|letto|manuale|formule|pubblico|secondarie|dimostrativo|inventato)\b/i;
+    expect(SCIENCE_SOURCES.filter((source) => source.title && GLOSS.test(source.title)).map((source) => source.id)).toEqual([]);
+  });
+
+  it("in inglese e in giapponese le formule usano il punto decimale", () => {
+    for (const bundle of [EN_LOCALE, JA_LOCALE]) {
+      const comma = Object.entries(bundle.science.formulas).filter(([, text]) => /\d,\d/.test(text)).map(([id]) => id);
+      expect(comma).toEqual([]);
+    }
+  });
+});
 
 describe("fonti", () => {
   it("hanno id kebab-case unici", () => {
@@ -117,6 +151,20 @@ describe.each(Object.entries(BUNDLES))("testi del registro in %s", (_locale, bun
 
   it("ogni ipotesi ha il suo testo", () => {
     expect(assumptionIds.filter((id) => !bundle.science?.assumptions?.[id]?.trim())).toEqual([]);
+  });
+
+  /* Revisione ondata 2: il «Come lo calcoliamo» e «Metodo e fonti» mostravano
+     la formula del registro, in italiano, in tutte le lingue. */
+  it("ogni nota con formula ha la formula nella lingua, senza orfani", () => {
+    const withFormula = SCIENCE_NOTES.filter((note) => note.formula).map((note) => note.id);
+    expect(withFormula.filter((id) => !bundle.science?.formulas?.[id]?.trim())).toEqual([]);
+    expect(Object.keys(bundle.science?.formulas ?? {}).filter((id) => !withFormula.includes(id))).toEqual([]);
+  });
+
+  it("ogni nota descrittiva delle fonti ha il suo testo, senza orfani", () => {
+    const keys = [...new Set(SCIENCE_SOURCES.flatMap((source) => (source.noteKey ? [source.noteKey] : [])))];
+    expect(keys.filter((key) => !bundle.science?.sourceNotes?.[key]?.trim())).toEqual([]);
+    expect(Object.keys(bundle.science?.sourceNotes ?? {}).filter((key) => !keys.includes(key))).toEqual([]);
   });
 
   it("nessun testo orfano senza nota o ipotesi", () => {
@@ -210,7 +258,9 @@ describe("formule del registro = motore (FW-01)", () => {
     const T = recipe.fermentation_temp_c;
     expect(recipe.yeast_type).toBe(yeast);
     const proof = fermentationPhases(h, recipe.has_pre_ferment, recipe.pre_ferment_type as PreFermentType | undefined, style.method_profile).proof;
-    const ha = T < PROOF_MIN_TEMP_C ? proof : 0;
+    // FW-19: con le pieghe come passo, anche quelle ore sono a 18 °C.
+    const folds = foldWindowMinutes(fermentationPhases(h, recipe.has_pre_ferment, recipe.pre_ferment_type as PreFermentType | undefined, style.method_profile).bulk * 60, stylePlanFolds(style.id)) / 60;
+    const ha = T < PROOF_MIN_TEMP_C ? proof + folds : 0;
     // equivalent-hours: sopra 18 °C h × v(T); sotto (h − hₐ) × v(T) + hₐ.
     const h18 = (h - ha) * v(yeast, T) + ha;
     expect(recipe.science.effective_hours_18c).toBeCloseTo(h18, 1);

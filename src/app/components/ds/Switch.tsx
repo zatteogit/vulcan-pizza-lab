@@ -4,28 +4,48 @@
  * Sostituisce il vecchio wrapper shadcn per i nuovi call-site: consuma solo
  * `--switch-*` e mantiene l'API Radix `checked` / `onCheckedChange`.
  * Vedi docs/design-system-tiers.md (T4, F2-4).
+ *
+ * Budget D-059 (integrazione ondata 2): è un `<button role="switch">` nativo
+ * invece di @radix-ui/react-switch (−2 kB gzip). Stesso contratto per il CSS
+ * (`data-state` sulla traccia e sul pomello) e per l'accessibilità
+ * (`aria-checked`, Spazio e Invio attivano il pulsante nativo).
  */
-import * as SwitchPrimitive from "@radix-ui/react-switch";
-import type { ComponentPropsWithoutRef } from "react";
+import type { ButtonHTMLAttributes, MouseEvent } from "react";
 
-export type SwitchProps = ComponentPropsWithoutRef<
-  typeof SwitchPrimitive.Root
->;
+export type SwitchProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "type" | "role" | "aria-checked" | "onChange"
+> & {
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+};
 
 export function Switch({
   className,
-  style,
-  checked,
+  checked = false,
+  onCheckedChange,
+  onClick,
+  disabled,
   ...props
 }: SwitchProps) {
+  const state = checked ? "checked" : "unchecked";
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event);
+    if (!event.defaultPrevented) onCheckedChange?.(!checked);
+  };
   return (
-    <SwitchPrimitive.Root
-      checked={checked}
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      data-state={state}
+      data-disabled={disabled ? "" : undefined}
+      disabled={disabled}
       className={["ds-switch", className].filter(Boolean).join(" ")}
-      style={style}
+      onClick={handleClick}
       {...props}
     >
-      <SwitchPrimitive.Thumb className="ds-switch__thumb" />
-    </SwitchPrimitive.Root>
+      <span className="ds-switch__thumb" data-state={state} />
+    </button>
   );
 }

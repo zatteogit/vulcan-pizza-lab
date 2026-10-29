@@ -36,7 +36,6 @@ const SearchResultsView = lazy(() =>
   import("../../features/search/search-results-view").then((m) => ({ default: m.SearchResultsView })),
 );
 import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
-import { ThemeSwitcher } from "../../features/dev-tools/theme-switcher";
 import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { IconButton } from "../ds/index";
 import { useEscapeLayer } from "../ds/escape-stack";
@@ -46,6 +45,12 @@ import { EDITION } from "../../config/edition";
 import { motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../../config/tools";
+
+/* Esploratore dei temi: strumento interno, caricato solo dove gli strumenti
+   sono attivi (sviluppo e test). In produzione il chunk non viene emesso. */
+const ThemeSwitcher = TOOLS_ENABLED
+  ? lazy(() => import("../../features/dev-tools/theme-switcher").then((m) => ({ default: m.ThemeSwitcher })))
+  : null;
 
 const MotionLink = motion(Link);
 
@@ -349,6 +354,7 @@ function SidebarRail({
   onAboutOpen: () => void;
 }) {
   const { cms } = useCms();
+  const railPartner = EDITION.partner ? uiMessage("edition.partner", [EDITION.partner.name]) : null;
   return (
     <div className="app-shell-rail">
       {/* Navigation Capsule (Logo + Tabs) */}
@@ -371,12 +377,14 @@ function SidebarRail({
           type="button"
           onClick={onAboutOpen}
           className="app-shell-rail__logo"
-          aria-label={cms.ui.aboutLabel}
+          aria-label={railPartner ? `${cms.ui.aboutLabel} · ${railPartner}` : cms.ui.aboutLabel}
           aria-haspopup="dialog"
         >
           {/* FW-12 (S01-B-05): un solo ciclo, poi fermo (WCAG 2.2.2). */}
           <VulcanHero size={48} energy={35} markRatio={0.46} loops={0} />
         </IconButton>
+        {/* FW-15 (S01-A-02, S18-A-04/B-02): il co-branding resta visibile anche da 768 px. */}
+        {railPartner && <small className="app-shell-rail__partner type-data-sm" aria-hidden="true">{railPartner}</small>}
 
         {/* Tabs */}
         <div className="app-shell-rail__tabs">
@@ -427,8 +435,11 @@ function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
       aria-label={partner ? `${cms.ui.aboutLabel} · ${partner}` : cms.ui.aboutLabel} aria-haspopup="dialog">
       {/* FW-12 (S01-B-05): un solo ciclo, poi fermo (WCAG 2.2.2). */}
       <VulcanHero size={42} energy={45} markRatio={0.5} loops={0} />
-      <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
-      {partner && <span className="app-shell-brand__partner type-data-sm" aria-hidden="true">{partner}</span>}
+      {/* FW-15 (S05-B-21, S18-A-10/B-08): nome e partner in colonna, allineati all'inizio del nome. */}
+      <span className="app-shell-brand__lockup" data-region="brand-lockup">
+        <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
+        {partner && <span className="app-shell-brand__partner type-data-sm" aria-hidden="true">{partner}</span>}
+      </span>
     </IconButton>
   );
 }
@@ -615,13 +626,15 @@ export function AppShell() {
   }, []);
 
   /* Scelta di un risultato: il link (o Invio) porta alla pagina, che parte
-     dall'alto. */
+     dall'alto. FW-04 (S04-A-04, S12-B-01): con un'ancora (#termine) lo
+     scorrimento lo fa la pagina (useHashTarget); qui non si torna in cima. */
   const selectSearchResult = useCallback(
     (link?: string) => {
       searchReturnRef.current = null;
       setSearchOpen(false);
       setSearchQuery("");
       if (link) navigate(link);
+      if (link?.includes("#")) return;
       requestAnimationFrame(() => window.scrollTo(0, 0));
     },
     [navigate],
@@ -818,8 +831,13 @@ export function AppShell() {
             <DebugOverlay />
           )}
 
-          {/* Theme explorer — confronto temi rivista di cucina (fase esplorativa) */}
-          <ThemeSwitcher />
+          {/* Theme explorer — confronto temi rivista di cucina (fase esplorativa).
+              Strumento interno: fuori da dist/ in produzione (budget P-5). */}
+          {ThemeSwitcher && (
+            <Suspense fallback={null}>
+              <ThemeSwitcher />
+            </Suspense>
+          )}
         </div>
         </CookSessionProvider>
       </StylesOverrideProvider>

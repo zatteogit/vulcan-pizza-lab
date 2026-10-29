@@ -4,6 +4,7 @@ import { recipeAllergenScope } from "../../domain/allergen-scope";
 import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName, stgDepartures } from "../../domain/recipe-reference";
 import { CompatibilityPill } from "./style-card-parts";
+import { ScoreExplainer } from "./score-explainer";
 import { RecipeChanges } from "./recipe-changes";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { RecipeDietaryAlternatives } from "./recipe-dietary-notice";
@@ -30,17 +31,24 @@ import {
 } from "../../domain/pizza-engine";
 import { getStyleDeviation, DEVIATION_CATEGORY_LABELS } from "../../domain/deviation-tags";
 import { getInterpretationsForStyle } from "../../data/interpretation-library";
-import { getStyleParametrics } from "../../data/parametric-databases";
+import {
+  getBakingTimeByStyle,
+  getDoughBaseByStyle,
+  getFoldingByStyle,
+  getOvenTempByStyle,
+  getSaltByStyle,
+} from "../../data/parametric-databases";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, placeNameLocalizer, t } from "../cms/i18n";
-import { CtaButton, IconButton } from "../../components/ds/index";
+import { CtaButton, Disclosure, IconButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
 import { useDetailLevel } from "../../hooks/use-detail-level";
-import { formatNumber, formatRange, formatSeconds, pluralPick } from "../../i18n/format";
+import { formatNumber, formatRange, formatSeconds, formatUnit, pluralPick } from "../../i18n/format";
+import { TermLink } from "../glossary/term-link";
 
 interface StyleDetailSheetProps {
   style: PizzaStyle;
@@ -166,7 +174,15 @@ export function StyleDetailSheet({
   /* Audit motore 2026-05: ex getCompatibleVariants (AUTHOR_VARIANTS legacy) →
      ora deriva dalla Interpretation library (unica fonte di verità). */
   const compatVariants = getInterpretationsForStyle(style.id);
-  const params = getStyleParametrics(style.id);
+  /* Budget D-059: solo le tabelle che la scheda mostra. getStyleParametrics
+     portava nel bundle anche acqua e maturazione, che nessuna pagina legge. */
+  const params = {
+    ovenTemp: getOvenTempByStyle(style.id),
+    bakingTime: getBakingTimeByStyle(style.id),
+    doughBase: getDoughBaseByStyle(style.id),
+    salt: getSaltByStyle(style.id),
+    folding: getFoldingByStyle(style.id),
+  };
   // FW-07 (S03-A-02): per le fritte la temperatura è dell'olio, non del forno.
   const frying = params.ovenTemp?.ovenType === "frittura";
   // FW-07: il nome del forno della cucina effettiva (il modello, se è lo stesso tipo).
@@ -181,14 +197,23 @@ export function StyleDetailSheet({
     ? cms.styleChars[style.id].split("|").map((s: string) => s.trim()).filter(Boolean)
     : style.key_characteristics;
 
-  const DATA_PILLS: { icon: typeof Droplets; label: string; value: string }[] = [
-    { icon: Droplets, label: pt.pillHydration, value: hRange },
-    { icon: Wheat, label: pt.pillFlour, value: wRange }, /* FW-13: Flame è il forno */
-    { icon: Ratio, label: pt.pillPL, value: plRange },
-    { icon: Clock, label: pt.pillFermentation, value: fRange },
-    { icon: Layers, label: pt.pillThickness, value: thickness },
+  /* FW-04 (S03-B-08): g/cm² è un carico d'impasto (peso ÷ area), non uno
+     spessore; lo spessore in mm viene dai dati del panetto, se ci sono. */
+  const thicknessMm = params.doughBase?.thickness_mm;
+  const DATA_PILLS: { icon: typeof Droplets; label: string; value: string; termId?: string }[] = [
+    { icon: Droplets, label: pt.pillHydration, value: hRange, termId: "hydration" },
+    { icon: Wheat, label: pt.pillFlour, value: wRange, termId: "w_alveograph" }, /* FW-13: Flame è il forno */
+    { icon: Ratio, label: pt.pillPL, value: plRange, termId: "pl_ratio" },
+    /* FW-05 (S03-B-21): «Lievitazione» come in Cosa cambia; un riposo per gli impasti senza lievito. */
+    { icon: Clock, label: style.dough.unleavened ? pt.pillRest : pt.pillFermentation, value: fRange },
+    { icon: Layers, label: pt.pillDoughLoad, value: thickness, termId: "thickness_factor" },
+    ...(thicknessMm ? [{ icon: Layers, label: pt.pillThickness, value: `≈ ${formatUnit(thicknessMm, "millimeter", bcp47)}` }] : []),
     { icon: ChefHat, label: pt.pillLevel, value: styleDifficultyLabel(style, cms) },
-    { icon: FlaskConical, label: pt.pillExperimentation, value: `${devEmoji} ${devCmsLabel}` },
+    /* FW-06 (S03-A-13, S03-B-20): un profilo «da verificare» non è un dato da
+       mostrare, e «Canonico» non sta accanto a «fuori disciplinare». La
+       sperimentazione resta fra le informazioni a parte del punteggio. */
+    ...(dev.category === "unclassified" || (outsideStg && dev.category === "canonical") ? []
+      : [{ icon: FlaskConical, label: pt.pillExperimentation, value: `${devEmoji} ${devCmsLabel}` }]),
   ];
 
   const generateAction = (placement: "toolbar" | "footer") => (
@@ -303,7 +328,7 @@ export function StyleDetailSheet({
                     ·
                   </span>
                   <CompatibilityPill context="detail" now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
-                    blocked={rec.recipe.verdict.outcome === "not_feasible"} className="style-detail-title__match" />
+                    blocked={rec.recipe.verdict.outcome === "not_feasible"} recipe={rec.recipe} className="style-detail-title__match" />
                 </>
               )}
 
@@ -393,7 +418,8 @@ export function StyleDetailSheet({
                         <PillIcon size={13} className="style-detail-pills__icon" />
                         <div className="style-detail-pills__text">
                           <div className="style-detail-pills__label">
-                            {pill.label}
+                            {/* FW-04 (S05-B-06): W, P/L e gli altri termini si aprono nel glossario. */}
+                            {pill.termId ? <TermLink termId={pill.termId}>{pill.label}</TermLink> : pill.label}
                           </div>
                           <div className="style-detail-pills__value">
                             {pill.value}
@@ -511,6 +537,12 @@ export function StyleDetailSheet({
                   );
                 })}
               </div>
+              {/* FW-06 (S02-B-09, S07-B-03): il numero spiegato, a richiesta. */}
+              <Disclosure variant="inline" className="style-detail-match__score"
+                summary={cms.ui.recipeScore}
+                meta={<strong className="type-numeric">{fmt.number(rec.recipe.scores.composite)}/100</strong>}>
+                <ScoreExplainer scores={rec.recipe.scores} recipe={rec.recipe} />
+              </Disclosure>
             </div>
           )}
 

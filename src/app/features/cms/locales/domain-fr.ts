@@ -13,15 +13,18 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
   paramHydration: "Hydratation",
   paramDuration: "Dur\u00E9e",
   paramTemperature: "Temp\u00E9rature",
-  paramYeast: "Levure",
+  paramYeast: "Levure fraîche",
   detailFermentation: "Fermentation",
   detailFlavor: "Saveur",
   detailCrust: "Cro\u00FBte",
   detailExtensibility: "Extensibilit\u00E9",
   detailIdealStyles: "Styles id\u00E9aux",
+  /* FW-05 */
+  techniqueLabel: "Technique",
+  recipeContextLine: "Dans cette recette : {yeast} de levure pour {flour} de farine du pré-ferment ({pct}). Toute la levure de la pâte va dans le pré-ferment ; elle est dosée sur la durée totale de la recette, pas seulement sur celle du pré-ferment.",
   compLabels: [
     "Hydratation",
-    "Levure",
+    "Levure fraîche (sur la farine du pré-ferment)",
     "Durée",
     "Température",
     "Saveur",
@@ -34,38 +37,32 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
         "Préferment liquide : farine et eau à parts égales avec peu de levure, 12–16 h à 20–22 °C.",
       hydration: "100 % (farine et eau à parts égales)",
       consistency: "Liquide, mousseux",
-      fermentationType:
-        "Rapide : avec autant d'eau, il mûrit en quelques heures",
+      fermentationType: "Plus rapide que la biga à levure égale : à la dose indiquée, il mûrit en 12–16 h",
       flavor: "Légèrement acidulé, notes de noisette",
       crustResult:
         "Fine et dorée ; couleur et taches dépendent du four et de la température",
       extensibility:
         "Élevée (estimation) : facile à étaler",
-      idealStyles:
-        "Teglia Romana, NY Style, Napolitaine contemporaine, Focaccia",
       tips: [
         "Prêt quand la surface est couverte de bulles et que le centre commence à s'affaisser",
         "Plus de levure, moins d'heures : à 20–22 °C, 0,1 % pour 15–16 h, 0,3 % pour 10–12 h",
-        "Farine dans le poolish : 30–50 % de la farine totale",
+        "Farine dans le poolish : 30–50 % de la farine totale ; {brand} part de {poolishFlourPct}",
       ],
     },
     biga: {
       origin: "Italie",
-      description:
-        "Préferment ferme : farine, 44 % d'eau et 1 % de levure, environ 16 h à 18–20 °C.",
-      hydration: "44 % (jusqu'à 50 % avec des farines complètes)",
+      description: "Pré-ferment ferme : farine, {bigaHydration} d'eau et environ 1 % de levure fraîche sur la farine de la biga, environ 16 h à 18–20 °C.",
+      hydration: "{bigaHydration} (jusqu'à 50 % avec des farines complètes)",
       consistency: "S\u00E8che, compacte",
-      fermentationType: "Lente : avec peu d'eau, elle mûrit en 16–48 h",
+      fermentationType: "Lente : avec peu d'eau, elle mûrit en 16 h environ (jusqu'à 48 h avec le réfrigérateur)",
       flavor: "Aromatique, florale",
       crustResult: "Croustillante ; la structure dépend de l'hydratation et du façonnage",
       extensibility:
         "Dépend de la farine et de l'hydratation (à vérifier)",
-      idealStyles:
-        "Pinsa, Pizza al taglio, Pala romana, Pain",
       tips: [
         "Prête quand elle a gonflé par endroits, sent le yaourt et pétille un peu ; si elle a un goût acide, elle est allée trop loin",
         "Biga longue : 24 h à 4–5 °C, puis 24 h à 18–20 °C",
-        "Farine dans la biga : 20–50 % de la farine totale, souvent un tiers",
+        "Farine dans la biga : en général 30–40 % de la farine totale ; {brand} part de {bigaFlourPct} et vous pouvez la modifier entre {flourPctMin} et {flourPctMax}",
         "Pas utilisée pour la Napolitaine STG : le cahier des charges n'admet que la méthode directe",
       ],
     },
@@ -91,22 +88,22 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
   },
   compValues: {
     hydration: {
-      biga: "44 %",
-      poolish: "100%",
+      biga: "{bigaHydration}",
+      poolish: "{poolishHydration}",
       autolisi: "= recette",
     },
     yeast: {
       biga: "1 %",
-      poolish: "0,1–0,3 %",
+      poolish: "0,1–0,2 %",
       autolisi: "0%",
     },
     duration: {
-      biga: "16–48 h",
+      biga: "16 h (jusqu'à 48 h avec 24 h au réfrigérateur)",
       poolish: "12–16 h",
       autolisi: "20–60 min",
     },
     temperature: {
-      biga: "18–20 °C",
+      biga: "18–20 °C (biga longue : d'abord 24 h à 4–5 °C)",
       poolish: "20–22 °C",
       autolisi: "Ambiante",
     },
@@ -161,46 +158,32 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
 
       P01: {
         symptom: "P\u00E2te collante persistante",
-        cause:
-          "Hydratation sup\u00E9rieure \u00E0 la capacit\u00E9 d'absorption de la farine",
-        testRapido:
-          "Comparer H% recette vs absorption farine (+5% max)",
-        fixImmediate:
-          "Ajouter 2-3% de farine, incorporer avec des plis d\u00E9licats",
-        prevention: "Utiliser H% \u2264 absorption farine + 5%",
+        cause: "Plus d'eau que la farine ne peut en absorber",
+        testRapido: "L'hydratation de la recette dépasse-t-elle l'absorption indiquée sur la fiche de la farine ?",
+        fixImmediate: "Ajoutez un peu de farine à la fois (2–3 %) et incorporez-la par rabats délicats",
+        prevention: "Restez proche de l'absorption indiquée par le moulin ; si vous ne la connaissez pas, partez du bas de l'hydratation du style",
       },
       P02: {
         symptom:
           "La p\u00E2te se d\u00E9chire pendant l'\u00E9tirage",
-        cause:
-          "P/L trop \u00E9lev\u00E9 (>0.8) ou fermentation insuffisante (<6h)",
-        testRapido:
-          "\u00C9tirer le p\u00E2ton de 10cm : se d\u00E9chire-t-il ?",
-        fixImmediate:
-          "Repos 60min couvert \u00E0 temp\u00E9rature ambiante",
-        prevention:
-          "Choisir farines avec P/L 0.5-0.6, fermentation minimum 8h",
+        cause: "Gluten peu développé ou pas encore détendu, pâte encore froide du réfrigérateur ; parfois une farine peu extensible (P/L élevé) ou une pâte trop fermentée",
+        testRapido: "Étirez doucement un bord : se déchire-t-il tout de suite au lieu de s'allonger ?",
+        fixImmediate: "Couvrez le pâton et laissez-le reposer à température ambiante 30–60 min, puis réessayez",
+        prevention: "Respectez les temps de la recette, sortez les pâtons du réfrigérateur à temps et utilisez une farine au P/L indiqué par le style",
       },
       P03: {
         symptom: "La p\u00E2te s'affaisse quand on la touche",
-        cause:
-          "Sur-ferment\u00E9e (volume >150%, empreinte du doigt ne revient pas)",
-        testRapido:
-          "Appuyer 1cm avec le doigt : revient en 3-5s ?",
-        fixImmediate:
-          "Irr\u00E9versible. \u00C9taler d\u00E9licatement et cuire imm\u00E9diatement",
-        prevention:
-          "Contr\u00F4ler le volume toutes les 6h, max +150% d'augmentation",
+        cause: "Fermentation trop poussée : trop de temps, trop de chaleur ou trop de levure",
+        testRapido: "Appuyez avec un doigt : si l'empreinte remonte tout de suite, elle n'est pas prête ; si elle remonte lentement, elle est prête ; si elle reste et que la pâte s'affaisse, elle est allée trop loin",
+        fixImmediate: "Reboulez-la et laissez-la reprendre 1–2 h (elle aura moins d'alvéoles), ou étalez-la délicatement et enfournez aussitôt",
+        prevention: "Contrôlez la pâte dès le dernier tiers du temps prévu, pas seulement la montre",
       },
       P04: {
-        symptom: "Aucune lev\u00E9e apr\u00E8s 6+ heures",
-        cause:
-          "Levure morte, temp\u00E9rature trop basse, ou sel en contact direct",
-        testRapido:
-          "Test de vitalit\u00E9 : 5g levure + 5g sucre dans 100ml eau 35\u00B0C \u2014 mousse apr\u00E8s 15min ?",
-        fixImmediate:
-          "Ajouter 0.3% levure fra\u00EEche dissoute dans eau ti\u00E8de, incorporer avec plis",
-        prevention: "Tester la levure avant chaque utilisation",
+        symptom: "La pâte ne lève pas dans le temps prévu",
+        cause: "Levure peu active ou périmée, ou pâte plus froide que prévu. Au réfrigérateur, lever peu est normal",
+        testRapido: "Était-elle au réfrigérateur ? C'est normal. Sinon, délayez une pincée de la levure dans de l'eau tiède avec un peu de sucre : mousse-t-elle après 10–15 min ?",
+        fixImmediate: "Placez-la d'abord au chaud (24–28 °C) pendant 1–2 h. Si elle ne repart pas, la levure est inactive : refaites la pâte avec une levure neuve",
+        prevention: "Vérifiez la date de péremption de la levure et la température de la pièce",
       },
       P05: {
         symptom: "Lev\u00E9e trop rapide (doubl\u00E9 en <3h)",
@@ -215,12 +198,9 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       },
       P06: {
         symptom: "Saveur trop acide/ac\u00E9tique",
-        cause:
-          "LAB h\u00E9t\u00E9rofermentatifs actifs >48h \u00E0 >18\u00B0C (surtout avec levain)",
-        testRapido:
-          "pH p\u00E2te \u2014 devrait \u00EAtre 4.5-5.5, probl\u00E9matique si <4.2",
-        fixImmediate:
-          "Le sucre masque le goût sans corriger la surfermentation. Réévaluer la pâte avant usage.",
+        cause: "Maturation trop longue ou trop chaude : les bactéries lactiques produisent des acides (plus souvent avec le levain)",
+        testRapido: "Sentez et goûtez un petit morceau cru : l'acidité est-elle piquante, comme du vinaigre ?",
+        fixImmediate: "Elle se mange ; la prochaine fois, raccourcissez la maturation à température ambiante",
         prevention:
           "Choisir durée, température et levure selon la méthode ; aucun seuil horaire universel.",
       },
@@ -238,14 +218,11 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       P08: {
         symptom:
           "Trous g\u00E9ants irr\u00E9guliers dans la pizza",
-        cause:
-          "D\u00E9gazage insuffisant + \u00E9tirage trop d\u00E9licat",
-        testRapido:
-          "Alv\u00E9oles >3cm et distribution in\u00E9gale ?",
+        cause: "Grosses bulles restées dans le pâton et étalage très délicat",
+        testRapido: "Les grosses bulles sont-elles réparties aussi au centre, pas seulement dans le bord ?",
         fixImmediate:
           "Presser l\u00E9g\u00E8rement le p\u00E2ton pour redistribuer le gaz",
-        prevention:
-          "R\u00E9duire le temps de fermentation de 20%",
+        prevention: "Avant d'étaler, dégonflez délicatement les plus grosses bulles ; dans la napolitaine et la canotto, quelques grandes alvéoles dans le bord sont voulues",
       },
       P09: {
         symptom: "Base crue mais corniche br\u00FBl\u00E9e",
@@ -253,32 +230,22 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
           "D\u00E9s\u00E9quilibre thermique : trop de chaleur du haut, pas assez du bas",
         testRapido:
           "Contraste de couleur extr\u00EAme entre le dessus et le dessous ?",
-        fixImmediate:
-          "Pr\u00E9-cuisson de la base 3min sans garniture",
-        prevention:
-          "Utiliser plaque/pierre plus \u00E9paisse, \u00E9quilibrer chaleur haut/bas",
+        fixImmediate: "Cuisez plus près de la sole chaude et plus loin de la voûte ; si le four ne dépasse pas 300 °C, vous pouvez précuire la base 2–3 min sans garniture",
+        prevention: "Équilibrez la chaleur : pierre ou acier bien préchauffés dessous, moins de chaleur par le haut",
       },
       P10: {
         symptom: "Cro\u00FBte p\u00E2le, pas de dorure",
-        cause:
-          "Temp\u00E9rature <250\u00B0C, sucres \u00E9puis\u00E9s, ou humidit\u00E9 excessive en surface",
-        testRapido:
-          "Le four atteint-il au moins 250\u00B0C ? Fermentation >48h ?",
-        fixImmediate:
-          "Badigeonner huile+miel avant cuisson ou grill final 2min",
-        prevention:
-          "Ajouter 0,5–1 % de sucre ou de malt et pousser le four au maximum, avec une pierre ou un acier bien préchauffés",
+        cause: "Four ou sole pas assez chauds pour le style, ou peu de sucres restants après une maturation très longue",
+        testRapido: "Le four atteint-il la température du style ? La maturation a-t-elle été très longue ?",
+        fixImmediate: "Utilisez le gril pendant les 1–2 dernières minutes, si le four en a un",
+        prevention: "Poussez le four au maximum avec pierre ou acier bien préchauffés ; hors des recettes STG, qui n'admettent ni sucre ni malt, vous pouvez ajouter 0,5–1 % de sucre ou de malt",
       },
       P11: {
         symptom: "Pizza caoutchouteuse, pas croustillante",
-        cause:
-          "Temp\u00E9rature \u00E0 c\u0153ur <85\u00B0C, hydratation >70%, ou cuisson trop lente",
-        testRapido:
-          "Thermom\u00E8tre \u00E0 c\u0153ur : atteint 90\u00B0C+ ?",
-        fixImmediate:
-          "Prolonger cuisson +2min ou augmenter temp\u00E9rature +20\u00B0C",
-        prevention:
-          "H \u2264 65%, temp\u00E9rature \u00E0 c\u0153ur cible 95\u00B0C",
+        cause: "Cuisson trop courte ou trop basse pour l'épaisseur, ou plus d'eau que le style ne le prévoit",
+        testRapido: "À la coupe, le cœur est-il encore humide et collant ?",
+        fixImmediate: "Prolongez la cuisson de quelques minutes ; si le four a encore de la marge, montez la température",
+        prevention: "Restez dans l'hydratation du style et cuisez le temps indiqué par la recette",
       },
       P14: {
         symptom: "Taches l\u00E9opard sur la corniche",
@@ -292,63 +259,49 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       },
       P15: {
         symptom: "Fond de pizza sombre/noir",
-        cause: "Pierre ou plaque trop chaude (>450\u00B0C)",
+        cause: "Sole plus chaude que ce qu'il faut au style, ou farine ou semoule brûlée sur la pierre",
         testRapido: "Go\u00FBter : saveur am\u00E8re ?",
         fixImmediate:
           "Si amer = probl\u00E8me (baisser temp). Si savoureux = NORMAL",
-        prevention:
-          "Pr\u00E9chauffage de la pierre contr\u00F4l\u00E9, pas au-del\u00E0 de 400\u00B0C",
+        prevention: "Gardez la sole à la température du style et brossez la pierre entre deux pizzas",
       },
       P16: {
         symptom: "Corniche basse et plate",
-        cause:
-          "D\u00E9gazage excessif, W farine trop bas, ou rouleau utilis\u00E9",
+        cause: "Dégazage excessif, farine trop faible pour le style ou usage du rouleau",
         testRapido: "Hauteur corniche <1cm ?",
         fixImmediate:
           "\u00C9tirage plus d\u00E9licat, ne pas \u00E9craser les bords",
-        prevention:
-          "W \u2265 240 pour napolitaine, jamais de rouleau sur styles avec corniche",
+        prevention: "Utilisez une farine de la force indiquée par le style et pas de rouleau pour les styles à bord",
       },
       P17: {
         symptom: "Pizza trop s\u00E8che",
-        cause:
-          "Hydratation <55% ou cuisson trop longue (>10min)",
-        testRapido:
-          "H% de la recette ? Temps de cuisson effectif ?",
-        fixImmediate:
-          "Ajouter de l'huile abondante sur la garniture",
-        prevention:
-          "H \u2265 58%, ne pas d\u00E9passer le temps de cuisson recommand\u00E9",
+        cause: "Moins d'eau que ne le prévoit le style, ou cuisson plus longue que le temps de la recette",
+        testRapido: "L'hydratation et le temps de cuisson sont-ils ceux de la recette ?",
+        fixImmediate: "Servez-la dès la sortie du four ; la prochaine fois, raccourcissez la cuisson",
+        prevention: "Restez dans l'hydratation du style et ne dépassez pas le temps de cuisson indiqué",
       },
       P18: {
         symptom: "Centre de la pizza aqueux",
         cause: "Garniture trop liquide ou cuisson trop courte",
         testRapido:
           "Quantit\u00E9 de sauce par pizza ? Mozzarella tr\u00E8s humide ?",
-        fixImmediate:
-          "Pr\u00E9-cuisson base 2min, puis ajouter garniture",
+        fixImmediate: "Précuisez la base 2–3 min, puis ajoutez la garniture",
         prevention:
           "Max 80ml sauce par pizza 30cm, bien \u00E9goutter la mozzarella",
       },
       P19: {
         symptom: "Impossible d'\u00E9taler le p\u00E2ton",
-        cause:
-          "Farine Manitoba pure (W >380), p\u00E2te trop tenace",
-        testRapido:
-          "Quelle farine avez-vous utilis\u00E9e ? W >350 ?",
-        fixImmediate:
-          "M\u00E9lange 50:50 avec farine W 200 pour la prochaine fois",
-        prevention:
-          "Max W 320 pour pizza, farines avec P/L 0.5-0.6",
+        cause: "Farine bien plus forte que ne le prévoit le style : pâte trop tenace",
+        testRapido: "Le W de votre farine dépasse-t-il nettement celui du style ?",
+        fixImmediate: "Laissez reposer le pâton couvert 20–30 min et réessayez ; dans la prochaine pâte, coupez la farine avec une plus faible",
+        prevention: "Utilisez une farine de la force et du P/L indiqués par le style",
       },
       P20: {
-        symptom: "Odeur 'chimique' dans la p\u00E2te",
-        cause: "Eau du robinet \u00E0 fort taux de chlore",
-        testRapido: "Forte odeur en ouvrant le robinet ?",
-        fixImmediate:
-          "Utiliser eau en bouteille pour le prochain p\u00E9trissage",
-        prevention:
-          "Filtrer l'eau ou la laisser reposer 12h ouverte (le chlore s'\u00E9vapore)",
+        symptom: "Odeur « chimique » (alcool, solvant) dans la pâte",
+        cause: "Fermentation trop poussée (alcool et esters) ou trop de levure ; plus rarement le chlore de l'eau",
+        testRapido: "Odeur d'alcool ou d'acétone, et pâte molle qui ne remonte pas ?",
+        fixImmediate: "Si elle est molle et ne remonte pas, traitez-la comme une pâte trop fermentée : reboulez-la ou enfournez-la aussitôt",
+        prevention: "La prochaine fois, moins de levure ou un endroit plus frais. Si l'eau du robinet a un goût de chlore, prenez-en une autre : le repos à l'air n'élimine pas les chloramines",
       },
       P21: {
         symptom: "La fermentation varie d'une pâte à l'autre (réfrigérateur domestique)",
@@ -362,7 +315,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       sticky_dough: {
         message:
           "Hydratation {h}% avec W {w} : risque de p\u00E2te collante",
-        tip: "Utiliser farine W \u2265 280 ou r\u00E9duire hydratation \u00E0 68-70%",
+        tip: "Ce style prévoit W {wMin}–{wMax} : utilisez une farine dans cette fourchette ou réduisez un peu l'hydratation",
       },
       high_pl: {
         message:
@@ -372,7 +325,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       sour_risk: {
         message:
           "{h}h \u00E0 {t}\u00B0C : risque de saveur acide",
-        tip: "Pour fermentations >24h, utiliser temp\u00E9rature 4-8\u00B0C",
+        tip: "Si votre cuisine est chaude, passez une partie de la maturation au réfrigérateur et surveillez la pâte plus que la montre",
       },
       pale_crust: {
         message:
@@ -380,19 +333,17 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         tip: "Vérifier volume, élasticité et réaction à la pression : les heures seules ne prouvent pas la digestibilité.",
       },
       cold_oven: {
-        message:
-          "Four \u00E0 {t}\u00B0C : risque de base crue avec bord br\u00FBl\u00E9",
-        tip: "Pr\u00E9-cuire la base 3min sans garniture",
+        message: "Four à {t} °C, sous la température du style : risque de croûte pâle et de pizza sèche",
+        tip: "Préchauffez longuement la pierre ou l'acier et, si le four a un gril, utilisez-le pendant les dernières minutes",
       },
       beginner_hydration: {
         message:
           "Hydratation {h}% est exigeante pour les d\u00E9butants",
-        tip: "Commencer \u00E0 60-65% et augmenter progressivement",
+        tip: "Ce style prévoit {hMin}–{hMax} % : si vous débutez, restez près de {hMin} %",
       },
       high_w: {
-        message:
-          "W {w} tr\u00E8s \u00E9lev\u00E9 : p\u00E2te difficile \u00E0 \u00E9taler",
-        tip: "M\u00E9langer 50:50 avec farine W 200 ou pr\u00E9voir autolyse longue",
+        message: "W {w} bien au-dessus de celui du style : pâte difficile à étaler",
+        tip: "Ce style prévoit W {wMin}–{wMax} : coupez avec une farine plus faible ou prévoyez une longue autolyse",
       },
       flat_long_ferment: {
         message:
@@ -405,18 +356,19 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
 export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
+      plainDefinition: "La force de la farine : plus elle est élevée, plus la pâte tient longtemps pendant la levée. Elle est souvent indiquée sur le paquet (par exemple W 280).",
       name: "W (Alv\u00E9ographe de Chopin)",
       definition: "\u00C9nergie totale n\u00E9cessaire pour gonfler une bulle de p\u00E2te jusqu'\u00E0 la rupture. Mesure la force globale de la farine.",
-      whyImportant: "W décrit la force globale de la farine. Ténacité et extensibilité se jugent avec P, L et P/L : un W élevé ne signifie pas à lui seul une pâte plus tenace.",
+      whyImportant: "W décrit la force globale de la farine. La ténacité et l'extensibilité s'évaluent avec P, L et P/L : un W élevé ne signifie pas à lui seul une pâte plus tenace. Ces tranches sont celles que {brand} utilise dans toute l'application ; chaque style indique sa propre fourchette de W.",
       ranges: [
-        { label: "Faible", value: "90\u2013160", note: "Biscuits, gaufrettes" },
-        { label: "Moyenne", value: "160\u2013200", note: "Pain de mie, focaccia" },
-        { label: "Moyenne-forte", value: "200\u2013280", note: "Pizza napolitaine" },
-        { label: "Forte", value: "280\u2013350", note: "Pains \u00E0 longue fermentation" },
-        { label: "Tr\u00E8s forte", value: "350\u2013450", note: "Panettone, croissant" },
+        { label: "Faible", value: "{wBandWeak}", note: "Farine tout usage ou pâtissière" },
+        { label: "Moyenne", value: "{wBandMedium}", note: "Souvent vendue « pour pizza »" },
+        { label: "Forte", value: "{wBandStrong}", note: "Longues maturations et pâtes très hydratées" },
+        { label: "Très forte", value: "{wBandVeryStrong}", note: "Manitoba et farines pour grandes pâtes levées sucrées" },
       ],
     },
     p_tenacity: {
+      plainDefinition: "La résistance de la pâte quand vous l’étirez.",
       name: "P (T\u00E9nacit\u00E9)",
       definition: "R\u00E9sistance maximale \u00E0 la d\u00E9formation. Pic de la courbe alv\u00E9ographique \u2014 \u00E0 quel point la p\u00E2te r\u00E9siste \u00E0 l'\u00E9tirement.",
       whyImportant: "P \u00E9lev\u00E9 : p\u00E2te \u00AB dure \u00BB, garde sa forme \u00E0 la cuisson. P bas : p\u00E2te \u00AB molle \u00BB, facile \u00E0 \u00E9taler, peut s'affaisser.",
@@ -427,6 +379,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     l_extensibility: {
+      plainDefinition: "Jusqu’où la pâte s’allonge avant de se déchirer.",
       name: "L (Extensibilit\u00E9)",
       definition: "Longueur maximale atteinte par la bulle avant la rupture. Mesure jusqu'o\u00F9 la p\u00E2te peut s'allonger.",
       whyImportant: "L \u00E9lev\u00E9 : p\u00E2te extensible, facile \u00E0 \u00E9taler sans d\u00E9chirures. L bas : p\u00E2te courte, se d\u00E9chire.",
@@ -436,40 +389,30 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     pl_ratio: {
+      plainDefinition: "Indique si la pâte a tendance à se rétracter (valeur élevée) ou à s’étirer facilement (valeur basse).",
       name: "P/L (Rapport T\u00E9nacit\u00E9/Extensibilit\u00E9)",
       definition: "Le rapport entre la résistance de la pâte à la déformation et sa capacité à s’étirer.",
-      whyImportant: "Décrit l’équilibre rhéologique. La valeur adaptée dépend de la farine, de l’hydratation et de la méthode ; sans garantie de hauteur ou texture.",
-      ranges: [
-        { label: "<0.4 Tr\u00E8s extensible", value: "S'affaisse facilement", note: "Pinsa" },
-        { label: "0.4\u20130.5 Extensible", value: "Facile \u00E0 travailler", note: "Napolitaine classique" },
-        { label: "0.5\u20130.7 \u00C9quilibr\u00E9", value: "Bon \u00E9quilibre", note: "Napolitaine moderne, pain" },
-        { label: "0.7\u20131.0 Tenace", value: "R\u00E9sistante", note: "Pains \u00E0 longue fermentation" },
-        { label: ">1.0 Tr\u00E8s tenace", value: "\u00C9lastique, se r\u00E9tracte", note: "Croissant" },
-      ],
+      whyImportant: "Décrit un équilibre rhéologique : la valeur adaptée dépend de la farine, de l'hydratation et de la méthode, et ne garantit ni la hauteur ni la texture de la pizza. Les exemples sont les fourchettes des styles de {brand} ; le P/L de votre farine figure sur la fiche technique du moulin.",
     },
     falling_number: {
+      plainDefinition: "Indique l’activité des enzymes de la farine qui transforment l’amidon en sucres.",
       name: "Falling Number (Hagberg-Perten)",
       definition: "Temps mis par une tige pour descendre \u00E0 travers une suspension de farine chauff\u00E9e. Mesure l'activit\u00E9 amylasique.",
       whyImportant: "FN bas (<250) : fermentation rapide mais p\u00E2te instable. FN \u00E9lev\u00E9 (>300) : stable pour les longues maturations.",
       ranges: [
-        { label: "<200 Amylase tr\u00E8s \u00E9lev\u00E9e", value: "P\u00E2te collante", note: "D\u00E9conseill\u00E9 pour la pizza" },
-        { label: "200\u2013250 \u00C9lev\u00E9e", value: "Mie humide", note: "Pain rapide" },
-        { label: "250\u2013300 Moyenne", value: "Bon \u00E9quilibre", note: "Pizza 8-12h" },
-        { label: "300\u2013400 Faible", value: "S\u00E8che, lente", note: "Pizza 24-48h" },
-        { label: ">400 Tr\u00E8s faible", value: "S\u00E8che", note: "P\u00E2tes s\u00E8ches" },
+        { label: "Amylase tr\u00E8s \u00E9lev\u00E9e · P\u00E2te collante", value: "<200", note: "D\u00E9conseill\u00E9 pour la pizza" },
+        { label: "\u00C9lev\u00E9e · Mie humide", value: "200\u2013250", note: "Pain rapide" },
+        { label: "Moyenne · Bon \u00E9quilibre", value: "250\u2013300", note: "Pizza 8-12h" },
+        { label: "Faible · S\u00E8che, lente", value: "300\u2013400", note: "Pizza 24-48h" },
+        { label: "Tr\u00E8s faible · S\u00E8che", value: ">400", note: "P\u00E2tes s\u00E8ches" },
       ],
     },
     hydration: {
+      plainDefinition: "La quantité d’eau dans la pâte par rapport à la farine : à 65 %, vous mettez 65 g d’eau pour 100 g de farine.",
       name: "Hydratation (H%)",
       definition: "Pourcentage en poids d'eau par rapport \u00E0 la farine dans la p\u00E2te.",
-      whyImportant: "H basse (<55%) : croustillante, facile. H moyenne (60-65%) : \u00E9quilibre. H \u00E9lev\u00E9e (>70%) : demande une farine forte (W>280) et du savoir-faire.",
-      ranges: [
-        { label: "Napolitaine classique", value: "55\u201360%", note: "Moelleuse, maniable" },
-        { label: "Napolitaine contemporaine", value: "60\u201365%", note: "Corniche l\u00E9g\u00E8re" },
-        { label: "Canotto", value: "65\u201370%", note: "Grandes alv\u00E9oles" },
-        { label: "Pinsa romaine", value: "75\u201385%", note: "\u00C9tal\u00E9e en plaque" },
-        { label: "Focaccia/Bonci", value: "85\u2013100%+", note: "P\u00E2te quasi liquide" },
-      ],
+      formula: "H% = (poids de l'eau / poids de la farine) × 100",
+      whyImportant: "Plus d'eau rend la pâte plus souple et plus difficile à travailler, et demande une farine plus forte. Le croustillant dépend surtout de la cuisson et de l'épaisseur : même une pizza en plaque très hydratée peut être croustillante. Les exemples sont les fourchettes des styles de {brand}.",
     },
     absorption: {
       name: "Absorption d'eau",
@@ -496,43 +439,48 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "Levure (Saccharomyces cerevisiae)",
       definition: "Un champignon unicellulaire qui fermente les sucres en produisant du dioxyde de carbone, de l’alcool et des composés aromatiques.",
-      whyImportant: "L’activité dépend de la souche, de la dose, de la température et de la pâte. Le froid ralentit la fermentation sans seuil universel d’arrêt immédiat.",
+      whyImportant: "L'activité dépend de la souche, de la dose, de la température et de la pâte. Le froid ralentit la fermentation ; il n'existe pas de seuil universel d'arrêt immédiat. La bonne dose dépend des heures et de la température : la recette la calcule pour vous.",
       ranges: [
-        { label: "Fra\u00EEche", value: "0.5\u20132.0%", note: "Humidit\u00E9 70%, frigo 4\u00B0C" },
-        { label: "S\u00E8che active", value: "0.3\u20131.0%", note: "R\u00E9hydrater avant" },
-        { label: "S\u00E8che instantan\u00E9e", value: "0.2\u20130.8%", note: "Directement" },
+        { label: "Fraîche, {yeastS1Hours} à {yeastS1Temp}", value: "{yeastS1Pct}", note: "Estimation du modèle" },
+        { label: "Fraîche, {yeastS2Hours} à {yeastS2Temp}", value: "{yeastS2Pct}", note: "Estimation du modèle" },
+        { label: "Fraîche, {yeastS3Hours} à {yeastS3Temp}", value: "{yeastS3Pct}", note: "Estimation du modèle" },
+        { label: "Fraîche, {yeastS4Hours} à {yeastS4Temp}", value: "{yeastS4Pct}", note: "Estimation du modèle" },
+        { label: "Sèche (active ou instantanée)", value: "≈ fraîche × {yeastDryRatio}", note: "Même estimation que la fraîche" },
       ],
     },
     lab: {
+      plainDefinition: "Les bactéries du levain qui donnent à la pâte son goût légèrement acidulé.",
       name: "LAB (Bact\u00E9ries lactiques)",
       definition: "Bact\u00E9ries qui fermentent les sucres en produisant de l'acide lactique (et ac\u00E9tique). Pr\u00E9sentes dans le levain.",
       whyImportant: "Ils peuvent modifier acidité et fructanes selon souches, farine et procédé. Leur présence ne certifie pas une pâte low FODMAP.",
     },
     q10: {
+      plainDefinition: "Combien de fois la levée accélère quand il fait {tenDegrees} de plus.",
       name: "Q\u2081\u2080 (Coefficient de temp\u00E9rature)",
       definition: "Facteur multiplicatif de la vitesse de r\u00E9action biochimique pour chaque hausse de 10\u00B0C.",
-      whyImportant: "Avec Q\u2081\u2080 = 2, la fermentation double tous les +10\u00B0C : 24h \u00E0 18\u00B0C \u2248 12h \u00E0 28\u00B0C. Les valeurs ci-dessous sont des estimations du mod\u00E8le {brand}.",
+      whyImportant: "Avec Q₁₀ = {q10ComAbove}, la vitesse est multipliée par {q10ComAbove} tous les {tenDegrees} : {q10ExampleRefHours} à {q10RefTemp} ≈ {q10ExampleWarmHours} à {q10ExampleWarmTemp}. Les valeurs de cette entrée sont des estimations du modèle de {brand}.",
       ranges: [
-        { label: "Levure commerciale \u226510\u00B0C", value: "2.0", note: "Estimation du mod\u00E8le, coh\u00E9rente avec les donn\u00E9es de croissance entre 18 et 25 \u00B0C" },
-        { label: "Levure commerciale <10\u00B0C", value: "1.6", note: "Estimation du mod\u00E8le, sans source" },
-        { label: "Levain >15\u00B0C", value: "2.2", note: "Estimation du mod\u00E8le" },
-        { label: "Levain \u226415\u00B0C", value: "1.9", note: "Estimation du mod\u00E8le" },
+        { label: "Levure de boulanger ≥ {q10ComBreak}", value: "{q10ComAbove}", note: "Estimation du modèle, cohérente avec les données de croissance à température ambiante" },
+        { label: "Levure de boulanger < {q10ComBreak}", value: "{q10ComBelow}", note: "Estimation du modèle, sans source" },
+        { label: "Levain > {q10SdBreak}", value: "{q10SdAbove}", note: "Estimation du modèle" },
+        { label: "Levain ≤ {q10SdBreak}", value: "{q10SdBelow}", note: "Estimation du modèle" },
       ],
     },
     arrhenius: {
       name: "\u00C9quation d'Arrhenius",
-      definition: "D\u00E9crit la d\u00E9pendance de la vitesse de r\u00E9action \u00E0 la temp\u00E9rature absolue.",
-      whyImportant: "Avec \u03B2=0.075 et T_ref=18\u00B0C \u2192 Q\u2081\u2080 \u2248 2.12. Utilis\u00E9e dans le moteur {brand} pour calculer le dosage de levure et les temps.",
+      definition: "Relie la vitesse d'une réaction à la température absolue (en kelvins) par une énergie d'activation.",
+      formula: "k = A · e^(−Eₐ / (R · T)), avec T en kelvins",
+      whyImportant: "{brand} n'utilise pas cette équation. Le moteur applique un Q₁₀ par paliers rapporté à {q10RefTemp} : {q10ComAbove} au-dessus et {q10ComBelow} en dessous de {q10ComBreak} pour la levure de boulanger, {q10SdAbove} au-dessus et {q10SdBelow} jusqu'à {q10SdBreak} pour le levain. Ce sont des estimations du modèle, pas des valeurs mesurées.",
     },
     biga: {
       name: "Biga",
-      definition: "Préferment ferme de farine, 44 % d'eau (jusqu'à 50 % avec des farines complètes) et 1 % de levure, mûri environ 16 h à 18–20 °C ; la biga longue demande 24 h à 4–5 °C puis 24 h à 18–20 °C.",
-      whyImportant: "Apporte arôme et structure à la pâte finale. Souvent un tiers de la farine totale (20–50 %). Non admise pour la Napolitaine STG, qui est en direct.",
+      definition: "Pré-pâte ferme de farine, {bigaHydration} d'eau (jusqu'à 50 % avec des farines complètes) et environ 1 % de levure fraîche rapportée à la farine de la biga, maturée environ 16 h à 18–20 °C ; la biga longue passe 24 h à 4–5 °C puis 24 h à 18–20 °C.",
+      whyImportant: "Apporte arôme et structure à la pâte finale. En général 30–40 % de la farine totale : {brand} part de {bigaFlourPct}. Non admise dans la napolitaine STG, qui se fait en direct.",
     },
     poolish: {
       name: "Poolish",
       definition: "Préferment liquide : farine et eau à parts égales avec peu de levure, mûri 12–16 h à 20–22 °C (0,1 % de levure pour 15–16 h, 0,3 % pour 10–12 h).",
-      whyImportant: "Mûrit vite et rend la pâte extensible. Souvent 30–50 % de la farine totale. Prêt quand la surface est couverte de bulles et que le centre commence à s'affaisser.",
+      whyImportant: "Mûrit plus vite que la biga et rend la pâte extensible. En général 30–50 % de la farine totale : {brand} part de {poolishFlourPct}. Il est prêt quand la surface est couverte de bulles et que le centre commence à retomber.",
     },
     autolysis: {
       name: "Autolyse",
@@ -572,7 +520,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     thermal_conductivity: {
       name: "Conductivit\u00E9 thermique",
       definition: "Capacit\u00E9 d'un mat\u00E9riau \u00E0 conduire la chaleur.",
-      whyImportant: "Acier (k=50) : id\u00E9al pour les fours domestiques \u00E0 280\u00B0C, cuisson 6-8 min. Pierre (k=2) : id\u00E9ale pour les fours \u00E0 bois \u00E0 450\u00B0C+, cuisson 60-90s.",
+      whyImportant: "Plus k est élevé, plus la surface transmet vite la chaleur à la base : c'est pourquoi l'acier aide les fours domestiques, qui chauffent moins. Sur la sole, la chaleur que le matériau accumule compte aussi : les fours à bois utilisent de la brique réfractaire ou du biscotto.",
       ranges: [
         { label: "Cuivre", value: "400" },
         { label: "Aluminium", value: "205" },
@@ -596,7 +544,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     gluten: {
       name: "Gluten",
       definition: "La gliadine et la gluténine forment, avec l’eau et le travail de la pâte, un réseau élastique et extensible.",
-      whyImportant: "\u00C9lasticit\u00E9 due aux glut\u00E9nines (liaisons S-S), viscosit\u00E9 due aux gliadines (liaisons H). Une prot\u00E9olyse longue coupe les liaisons \u2192 p\u00E2te plus extensible.",
+      whyImportant: "Élasticité due aux gluténines (liaisons S-S), viscosité due aux gliadines (liaisons H). Une protéolyse longue rend la pâte plus extensible, mais le gluten reste : une fermentation longue ou au levain ne rend pas la pizza adaptée aux personnes cœliaques. Vous indiquez allergies et intolérances dans votre Profil.",
     },
     proteolysis: {
       name: "Prot\u00E9olyse",
@@ -604,15 +552,11 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       whyImportant: "Elle peut modifier l’extensibilité et la tenue de la pâte. Elle dépend de la farine, des micro-organismes, de la température et du procédé : aucune durée optimale universelle et aucune mesure de la digestibilité individuelle.",
     },
     thickness_factor: {
-      name: "Thickness Factor (TF)",
+      plainDefinition: "La quantité de pâte nécessaire par centimètre carré de pizza : plus elle est élevée, plus la pizza est épaisse.",
+      name: "Charge de pâte (Thickness Factor, TF)",
       definition: "Quantité de pâte par unité de surface : les grammes de pâte pour chaque cm² de pizza.",
-      whyImportant: "Une mesure répandue dans les calculateurs de pâte nord-américains (en oz/in² ; 1 oz/in² ≈ 4,39 g/cm²). {brand} l'exprime en g/cm² pour dimensionner les pâtons ; avec le four, elle oriente le temps de cuisson et le croustillant.",
-      ranges: [
-        { label: "Napolitaine", value: "0.30\u20130.36", note: "6-7 mm" },
-        { label: "Romaine ronde", value: "0.20\u20130.25", note: "4-5 mm" },
-        { label: "New York", value: "0.40\u20130.50", note: "8-10 mm" },
-        { label: "Chicago deep dish", value: "1.00\u20131.30", note: "20-26 mm" },
-      ],
+      formula: "TF = poids du pâton (g) / surface de la pizza (cm²)",
+      whyImportant: "Mesure courante dans les calculateurs de pâte nord-américains (en oz/in² ; 1 oz/in² ≈ 4,39 g/cm²). {brand} l'exprime en g/cm² pour dimensionner les pâtons ; avec le four, elle oriente le temps de cuisson et le croustillant. Les exemples sont calculés à partir du poids du pâton et de la forme de chaque style.",
     },
     friction_factor: {
       name: "\u00C9chauffement du p\u00E9trin",
@@ -627,34 +571,100 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
-      name: "Temp\u00E9rature de l'eau (trois temp\u00E9ratures)",
+      name: "Température de l'eau (règle du 55)",
       definition: "Calcule \u00E0 quelle temp\u00E9rature mettre l'eau pour que la p\u00E2te atteigne la temp\u00E9rature voulue.",
-      whyImportant: "Somme des trois temp\u00E9ratures = 3 \u00D7 p\u00E2te voulue \u2212 \u00E9chauffement. En pizzeria on parle aussi de \u00AB r\u00E8gle du 55 \u00BB : avec une somme fixe de 55 la p\u00E2te arrive vers 18 \u00B0C (55 \u00F7 3) ; ici on utilise la cible du style, 22\u201324 \u00B0C.",
+      formula: "T_eau = 3 × T_pâte − T_ambiante − T_farine − friction",
+      whyImportant: "Somme des trois températures (cuisine, farine, eau) = 3 × pâte voulue − échauffement ; avec un préferment, sa température entre aussi et la somme des quatre termes devient 4 × pâte voulue − échauffement. En pizzeria on parle aussi de « règle du 55 » : avec une somme fixe de 55 la pâte arrive vers 18 °C (55 ÷ 3) ; ici la pâte voulue est de 22 °C si la pâte mature au réfrigérateur, 24 °C sinon.",
     },
     a_score: {
       name: "A-Score (Authenticit\u00E9)",
       definition: "Score de 0 à 100 sur la proximité avec le style de référence. Il ne certifie pas le respect d’un cahier des charges.",
+      formula: "A = Ingrédients × {authWIngredients} + Procédé × {authWProcess} + Équipement × {authWEquipment}",
       ranges: [
-        { label: "90-100", value: "Rigoureusement authentique" },
-        { label: "75-89", value: "Globalement authentique" },
-        { label: "60-74", value: "Inspir\u00E9e du style" },
-        { label: "<60", value: "\u00C9cart important" },
+        { label: "Rigoureusement authentique", value: "{aBand0}" },
+        { label: "Fidèle avec adaptations", value: "{aBand1}" },
+        { label: "Inspirée mais modifiée", value: "{aBand2}" },
+        { label: "Librement interprétée", value: "{aBand3}" },
       ],
+      whyImportant: "Les poids sont un choix de {brand}, pas une mesure. Règles du produit : si le four n'est pas celui prévu par le style (bois ou charbon) et n'atteint pas sa température minimale, le score ne dépasse pas {authFuelCap} ; sous la température minimale du style, il diminue en proportion.",
     },
     f_score: {
       name: "F-Score (Facilité)",
       definition: "Score de 0 à 100 sur la facilité de préparation avec le four, la farine et l’expérience disponibles. Les conditions qui bloquent une recette sont évaluées à part.",
+      formula: "F = Four × {feasWOven} + Farine × {feasWFlour} + Expérience × {feasWSkill}",
       ranges: [
-        { label: "90-100", value: "Tr\u00E8s faisable" },
-        { label: "75-89", value: "Faisable avec attention" },
-        { label: "60-74", value: "Difficile" },
-        { label: "<60", value: "D\u00E9conseill\u00E9" },
+        { label: "Très faisable", value: "{fBand0}" },
+        { label: "Faisable avec attention", value: "{fBand1}" },
+        { label: "Difficile", value: "{fBand2}" },
+        { label: "Risque élevé", value: "{fBand3}" },
       ],
+      whyImportant: "Les poids sont un choix de {brand}, pas une mesure. Si la recette ne peut pas être réalisée avec votre cuisine, la compatibilité ne dépasse pas {nonFeasibleCeiling}, quels que soient les autres scores.",
     },
     d_score: {
       name: "D-Score (Maturation estimée)",
       definition: "Estimation du modèle selon le temps, la température, la levure et les préferments. Elle ne mesure pas la digestibilité individuelle et ne calcule pas les FODMAP.",
-      ranges: [{"label":"85-100","value":"Indice élevé"},{"label":"70-84","value":"Indice moyen-élevé"},{"label":"50-69","value":"Indice moyen"},{"label":"<50","value":"Indice faible"}],
+      ranges: [{ label: "Indice élevé", value: "{dBand0}" },{ label: "Indice moyen-élevé", value: "{dBand1}" },{ label: "Indice moyen", value: "{dBand2}" },{ label: "Indice faible", value: "{dBand3}" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: "Division (staglio)",
+      definition: "Diviser la masse de pâte en morceaux de même poids, un par pizza, et les fermer en boule.",
+      whyImportant: "Des pâtons de même poids lèvent et cuisent de la même façon. Le poids de chaque pâton est indiqué dans la recette.",
+    },
+    ball_shaping: {
+      name: "Boulage (pirlatura)",
+      definition: "Le geste qui referme le morceau de pâte en une boule lisse et tendue : vous le faites tourner sur lui-même, sur le plan de travail ou entre vos mains, jusqu’à ce que la surface soit tendue.",
+      whyImportant: "Une surface tendue retient le gaz pendant l’apprêt et donne un pâton qui s’étale en rond. Si la pâte se déchire, vous avez trop tiré : laissez-la reposer quelques minutes.",
+    },
+    gluten_development: {
+      name: "Développement du gluten (incordatura)",
+      definition: "Le moment où la pâte devient lisse et élastique et ne colle plus aux mains ni au bol : le réseau de gluten s’est formé.",
+      whyImportant: "Une pâte bien développée retient le gaz de la levée. Test pratique : étirez un petit morceau entre vos doigts ; s’il forme une fine pellicule sans se déchirer tout de suite, elle est prête. Pétrir trop longtemps à la machine, en revanche, chauffe et affaiblit la pâte.",
+    },
+    folds: {
+      name: "Rabats",
+      definition: "Vous étirez un pan de pâte et le rabattez sur le reste, tournez la masse et recommencez de chaque côté. On les fait à intervalles pendant le repos, au lieu de pétrir plus longtemps.",
+      whyImportant: "Ils renforcent le réseau de gluten sans chauffer la pâte, surtout dans les pâtes très hydratées. Le « slap & fold » est une variante : vous soulevez la pâte, la frappez sur le plan de travail et la repliez sur elle-même.",
+    },
+    poke_test: {
+      name: "Test du doigt (poke test)",
+      definition: "Enfoncez un doigt fariné d’environ un centimètre dans le pâton et observez comment la marque remonte.",
+      whyImportant: "Si la marque remonte lentement et qu’il en reste un peu, le pâton est prêt. Si elle remonte tout de suite, il lui faut encore du temps. Si elle reste enfoncée et que le pâton s’affaisse, il a trop levé. C’est une indication pratique, pas une mesure.",
+    },
+    cornicione: {
+      name: "Cornicione (bord)",
+      definition: "Le bord de la pizza, plus haut et plus gonflé que le centre : à la cuisson, le gaz de la pâte se dilate et le soulève.",
+      whyImportant: "Pour l’obtenir, en étalant, poussez l’air du centre vers le bord sans l’écraser. Hauteur et alvéoles dépendent du style, de l’hydratation, de la fermentation et de la chaleur du four.",
+    },
+    oven_floor_dome: {
+      name: "Sole et voûte",
+      definition: "La sole est la surface du four sur laquelle repose la pizza ; la voûte est la partie au-dessus. La sole cuit le dessous par contact, la voûte cuit la garniture et le bord par la chaleur qu’elle rayonne.",
+      whyImportant: "Si le dessous brûle alors que la garniture reste crue, la sole est trop chaude par rapport à la voûte ; dans le cas contraire, elle est trop froide. Dans un four domestique, la pierre ou l’acier jouent le rôle de sole et le gril celui de voûte.",
+    },
+    pre_ferment: {
+      name: "Préferment",
+      definition: "Une partie de la farine et de l’eau mélangée à la levure des heures avant la pâte finale et laissée à maturer. Les plus courants sont la biga (ferme) et le poolish (liquide).",
+      whyImportant: "Il apporte des arômes et change la façon dont la pâte finale se travaille. Dans la recette, c’est une phase à part, et ses quantités font partie du total : elles ne s’y ajoutent pas. L’autolyse n’est pas un préferment, car elle ne contient pas de levure.",
+    },
+    sourdough: {
+      name: "Levain (lievito madre)",
+      definition: "Une pâte de farine et d’eau où vivent des levures sauvages et des bactéries lactiques, entretenue par des rafraîchis de farine et d’eau. Une partie remplace la levure de boulanger.",
+      whyImportant: "Il lève plus lentement que la levure de boulanger et donne un goût légèrement acidulé. Son activité dépend de la façon dont vous le rafraîchissez : c’est pourquoi la dose de levain est une hypothèse du modèle, à adapter au vôtre.",
+    },
+    flour_type: {
+      name: "Type de farine (00, 0, 1, 2, complète)",
+      definition: "En Italie, le type indique à quel point la farine de blé tendre est raffinée : la 00 est la plus blanche, puis 0, 1, 2 et complète, qui contient tout le grain. Il est fixé par le taux de cendres, c’est-à-dire les minéraux qui restent après avoir brûlé la farine.",
+      whyImportant: "Le type ne dit pas si la farine est forte : une 00 peut être faible ou très forte. La force, c’est le W, s’il figure sur le paquet. Si vous ne l’indiquez pas, le modèle suppose une plage typique pour ce type.",
+    },
+    manitoba: {
+      name: "Manitoba",
+      definition: "Farine de blé tendre riche en protéines, à l’origine issue de blés nord-américains (le nom vient de la province canadienne du Manitoba). Aujourd’hui, dans le commerce, elle désigne une farine très forte.",
+      whyImportant: "On l’utilise pour les fermentations longues ou en mélange avec une 00 pour augmenter la force. Seule, elle donne une pâte tenace, plus difficile à étaler.",
+    },
+    semola_rimacinata: {
+      name: "Semoule remoulue (semola rimacinata)",
+      definition: "Semoule de blé dur moulue une seconde fois, plus fine que la semoule ordinaire : jaune et légèrement granuleuse au toucher.",
+      whyImportant: "On l’utilise pour fleurer le plan de travail et la pelle, car elle fait glisser la pizza et brûle moins que la farine, et en petite quantité dans la pâte de certains styles. Le gluten du blé dur est moins extensible que celui du blé tendre.",
     },
   },
 };
@@ -674,7 +684,7 @@ export const SCIENCE_FR: CmsScience = {
     "equivalent-hours": {
       title: "Heures équivalentes",
       l1: "Vos heures traduites en heures nécessaires à la température de référence.",
-      l2: "Nous multiplions les heures par la vitesse à votre température. Si vous fermentez plus au frais que la référence (réfrigérateur, cave), l'apprêt final se fait à la température de référence : ces heures comptent telles quelles et seules les autres sont multipliées. C'est pourquoi « heures × vitesse » seul ne tombe pas juste.",
+      l2: "Nous multiplions les heures par la vitesse à votre température. Si vous fermentez plus au frais que la référence (réfrigérateur, cave), l'apprêt final et les plis avant le frigo se font à la température de référence : ces heures comptent telles quelles et seules les autres sont multipliées. C'est pourquoi « heures × vitesse » seul ne tombe pas juste.",
     },
     "kitchen-temp-default": {
       title: "Température de la cuisine",
@@ -704,7 +714,7 @@ export const SCIENCE_FR: CmsScience = {
     "water-temp-rule": {
       title: "Température de l'eau",
       l1: "Un calcul exact, qui part de quelques hypothèses sur votre cuisine.",
-      l2: "Cuisine, farine, eau et chauffe du pétrin font trois fois la température de pâte voulue. L'arithmétique est exacte ; cuisine et farine sont des estimations si vous ne les mesurez pas, et la chauffe du pétrin est une valeur type.",
+      l2: "Cuisine, farine, eau et chauffe du pétrin font trois fois la température de pâte voulue ; avec un préferment, il entre aussi dans le calcul et la somme devient quatre fois. L'arithmétique est exacte ; cuisine et farine sont des estimations si vous ne les mesurez pas, et la chauffe du pétrin est une valeur type.",
     },
     "water-activity": {
       title: "Activité de l'eau (aw)",
@@ -725,6 +735,12 @@ export const SCIENCE_FR: CmsScience = {
       title: "Le sel dans la Napoletana STG",
       l1: "Le cahier des charges dissout le sel dans l'eau avant d'ajouter la farine.",
       l2: "C'est l'ordre du règlement UE de la STG. D'autres méthodes ajoutent le sel plus tard : pour ce style, nous suivons le cahier des charges.",
+    },
+    /* FW-02 */
+    "stg-reference": {
+      title: "Recette et cahier des charges",
+      l1: "Nous comparons certaines valeurs de la recette avec le cahier des charges de la Napoletana STG.",
+      l2: "Le cahier des charges (règlement UE 97/2010) fixe la farine, la fermentation, le poids du pâton et la cuisson. Si une valeur sort de ses intervalles, la recette est « inspirée de la STG » et l'écart est indiqué ici. Le score ne certifie pas la conformité.",
     },
     "flour-w-by-grade": {
       title: "Type de farine et force",
@@ -784,7 +800,7 @@ export const SCIENCE_FR: CmsScience = {
     "score-weights": {
       title: "Poids du score",
       l1: "Les poids des dimensions sont un choix de {brand}.",
-      l2: "Ils disent combien compte chaque dimension dans le chiffre final. Ils ne viennent pas d'une mesure : c'est une règle de l'app, la même pour tous.",
+      l2: "Dans le nombre « Compatibilité avec votre cuisine », seules l’authenticité et la facilité comptent : maturation, durabilité et expérimentation sont présentées à part et ne le modifient pas. Les poids ne viennent pas d’une mesure : c’est une règle de l’app, la même pour tous. Le score est ensuite la plus basse valeur entre la moyenne pondérée et l’authenticité.",
     },
     "non-feasible-ceiling": {
       title: "Plafond des recettes non faisables",
@@ -793,8 +809,13 @@ export const SCIENCE_FR: CmsScience = {
     },
     "authenticity-fuel-cap": {
       title: "Plafond d'authenticité lié au combustible",
-      l1: "Sans le four prévu par le style, l'authenticité a un plafond : c'est un choix de {brand}.",
-      l2: "Quand un style exige le bois ou le charbon, un autre four peut bien cuire mais ne suit pas la méthode. Le plafond est une limite éditoriale, pas une mesure de qualité.",
+      l1: "Si le four n'est pas celui prévu par le style (bois ou charbon) et n'atteint pas la température minimale du style, l'authenticité a un plafond : c'est un choix de {brand}.",
+      l2: "Le plafond ne s'applique que s'il manque à la fois le combustible et la chaleur : un four électrique ou à gaz qui atteint la température minimale du style n'a pas de plafond. Que le style prévoie le bois ou le charbon (pour la Napoletana STG, le cahier des charges le dit) reste écrit dans le détail de l'authenticité, comme une information et non comme une pénalité. Le plafond est une limite éditoriale, pas une mesure de qualité.",
+    },
+    "ranking-tiebreak": {
+      title: "Départage à score égal",
+      l1: "À nombre égal, le style que votre cuisine couvre avec le plus de marge passe en premier : c'est un choix de {brand}.",
+      l2: "Le nombre ne change pas : seul l'ordre change, et seulement entre styles du même groupe ayant le même score. La marge est la moyenne de deux valeurs entre 0 et 1 : de combien le four dépasse la température minimale du style et de combien les heures disponibles dépassent la maturation minimale, chacune en proportion du minimum (1 signifie le double ou plus). Pour les fritures, seul le temps compte. Cela vaut dans Créer, dans Découvrir et pour les assistants.",
     },
     digestibility: {
       title: "Indice de digestibilité",
@@ -806,6 +827,17 @@ export const SCIENCE_FR: CmsScience = {
       l1: "Les seuils chiffrés des problèmes sont indicatifs.",
       l2: "Ce sont des règles empiriques sans source publiée, qui ne tiennent pas compte du style : une pâte en plaque, par exemple, est bien plus hydratée qu'une napolitaine. Utilisez-les comme piste, pas comme diagnostic.",
     },
+    /* FW-19: piano temporale. */
+    "comfort-tolerances": {
+      title: "Marges de la timeline confortable",
+      l1: "Les marges avec lesquelles la timeline confortable déplace les attentes sont notre choix, pas une mesure.",
+      l2: "Nous allongeons ou raccourcissons les attentes dans des marges fixes, plus larges au frigo qu'à température ambiante, sans déplacer d'heures du frigo vers la température ambiante et sans recalculer la levure. Plus vous vous éloignez du planning de départ, plus il faut vous fier au volume de la pâte.",
+    },
+    "bake-round-recovery": {
+      title: "Remontée du four entre les cuissons",
+      l1: "Le temps entre deux cuissons est une hypothèse du modèle.",
+      l2: "Entre deux pizzas, on défourne, on enfourne et la sole remonte en température : un four domestique avec pierre a besoin de quelques minutes, un four à pizza de moins, un four à bois presque de rien. Nous utilisons une valeur fixe par type de four, non mesurée sur le vôtre.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "La température reste constante pendant toute la phase.",
@@ -815,6 +847,7 @@ export const SCIENCE_FR: CmsScience = {
     "proof-share-default": "Sans indication du style, l'apprêt est une part fixe des heures.",
     "starter-steps-by-hours": "La dose de levain baisse par paliers avec les heures, sans tenir compte de la température.",
     "starter-not-in-hydration": "La farine et l'eau du levain ne sont pas comptées dans l'hydratation.",
+    "preferment-at-maturation-temp": "Avec un préferment, le préferment mûr est au milieu de sa température de maturation (biga 18–20 °C, poolish 20–22 °C) et son pétrissage à la main ne chauffe pas par friction.",
     "flour-at-kitchen-temp": "La farine est à la température de la cuisine.",
     "mixer-friction-values": "La chauffe du pétrin est une valeur type à vérifier ; à la main, elle est nulle.",
     "coefficients-not-measured": "Les coefficients de la formule sont choisis par le modèle, non mesurés.",
@@ -826,5 +859,38 @@ export const SCIENCE_FR: CmsScience = {
     "oven-power-steps": "Une puissance type par tranche de température, la même pour chaque combustible.",
     "no-health-claim": "Aucune allégation de santé : l'indice ne mesure pas la digestion d'une personne.",
     "thresholds-rules-of-thumb": "Les seuils sont des règles empiriques générales, non ajustées au style.",
+    /* FW-19: piano temporale. */
+    "comfort-margins-rule-of-thumb": "Les marges, plus larges au frigo qu'à température ambiante, sont des règles pratiques sans source.",
+    "comfort-yeast-unchanged": "La dose de levure reste celle calculée pour le planning de départ.",
+    "recovery-by-oven-type": "La remontée dépend seulement du type de four, ni du modèle ni de la surface.",
+    /* FW-02 */
+    "stg-partial-check": "Nous ne comparons que certaines valeurs : l'origine des ingrédients, la température de la pâte et l'exécution ne sont pas vérifiées.",
+  },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0,01 % ; min(3 % ; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fraîche), t₀ = 24 h, s = 1 fraîche / 0,33 sèche, k = correction personnelle (0,5–2) · tₑ = h si T ≥ 18 °C ; en dessous : tₑ = (h − hₐ) + hₐ ÷ v(T), avec hₐ = apprêt + rabats à 18 °C · v(T) : voir « Température et vitesse de pousse »",
+    "q10-fermentation": "v(T) = Q10ₐ^((T − 18)/10) si T ≥ T_b ; en dessous : v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · levure de boulanger : T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · levain : T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
+    "equivalent-hours": "T ≥ 18 °C : h₁₈ = h × v(T) · T < 18 °C : h₁₈ = (h − hₐ) × v(T) + hₐ, avec hₐ = apprêt + rabats à 18 °C",
+    "water-temp-rule": "T_eau = 3 × T_pâte − T_ambiante − T_farine − friction · avec un préferment, pâte finale : T_eau = 4 × T_pâte − T_ambiante − T_farine − T_préferment − friction ; eau du préferment : 3 × T_préferment − T_ambiante − T_farine",
+    "water-activity": "Aw ≈ 0,96 + (H − 55) × 0,0005 − sel × 0,006 − sucre × 0,004",
+    "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, limité à la plage du style",
+    "baking-energy": "E = P × t · P = 2, 3 ou 8 kW selon la température du four",
+    "thickness-factor": "TF = poids du pâton (g) / surface de la pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+    "score-weights": "C = min(moyenne pondérée de A et F ; A) · poids par défaut : Authenticité (A) 55 %, Facilité (F) 45 % · non réalisable : C ≤ 39",
+    "ranking-tiebreak": "M = moyenne de min(1 ; max(0 ; (T − T_min) / T_min)) et min(1 ; max(0 ; (H − H_min) / H_min)) · T four, H heures disponibles · fritures : H seul",
+  },
+  sourceNotes: {
+    "internal-db": "base de travail interne du projet, non publique",
+    "demo": "donnée de démonstration, marque inventée",
+    "ovens-secondary": "revendeurs et avis sur les fours (sources secondaires)",
+    "autolyse-calvel": "article sur l'autolyse (cite R. Calvel, 1974)",
+    "recipes": "recettes",
+    "articles": "articles",
+    "abstract-only": "résumé seul lu",
+    "manufacturer-sheet": "fiche du fabricant",
+    "manufacturer-pages": "pages produit du fabricant",
+    "manual": "mode d'emploi",
+    "faq": "questions fréquentes",
   },
 };

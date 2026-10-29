@@ -55,12 +55,13 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
         <caption className="recipe-comparison__title">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</caption>
         <thead><tr><td /><th scope="col">{beforeLabel}</th><td aria-hidden="true" /><th scope="col">{afterLabel}</th></tr></thead>
         <tbody>
-          <tr className="recipe-comparison__score">
+          {/* FW-02 (S03-A-18/B-14): «25 → 25» non è una modifica. */}
+          {fmt.number(from.scores.composite) !== fmt.number(to.scores.composite) && <tr className="recipe-comparison__score">
             <th scope="row"><span data-slot="label"><Gauge size={15} aria-hidden="true" />{cms.ui.recipeScoreLabel}</span></th>
             <td>{fmt.number(from.scores.composite)}<small>/100</small></td>
             <td aria-hidden="true"><ArrowRight size={14} /></td>
             <td>{fmt.number(to.scores.composite)}<small>/100</small></td>
-          </tr>
+          </tr>}
           {rows.map(row => {
             const Icon = row.icon;
             return <tr key={row.key}>

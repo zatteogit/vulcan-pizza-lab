@@ -16,9 +16,13 @@ export interface TroubleshootingMessages {
 export interface GlossaryMessages {
   terms: Record<string, {
     name: string;
+    /** FW-04: livello 1 in parole semplici (S12-B-08). */
+    plainDefinition?: string;
     definition: string;
     whyImportant?: string;
-    ranges?: { label: string; value: string; note?: string }[];
+    /** FW-05: solo per le formule con parole da tradurre. */
+    formula?: string;
+    ranges?: { label: string; value: string; note?: string; key?: string }[];
   }>;
 }
 
@@ -30,4 +34,6 @@ export interface TroubleshootingMessageSource {
 
 export interface GlossaryMessageSource {
   glossaryTerms?: GlossaryMessages;
+  /** FW-05: lingua dei numeri interpolati dai fatti del motore. */
+  locale?: { id: string };
 }

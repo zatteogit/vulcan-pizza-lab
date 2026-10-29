@@ -7,6 +7,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import { X } from "lucide-react";
 import { getTermById } from "../../data/glossary-data";
+import { flourStrength } from "../../domain/flour-strength";
 import { useCms } from "../cms/cms-context";
 import { ModalSheet } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -106,11 +107,11 @@ export function GlossaryWLink({ w, label = String(w) }: { w: number; label?: str
 
   if (!term) return <>W {label}</>;
 
-  const inRange = (value: string) => {
-    const match = value.match(/(\d+)\s*–\s*(\d+)/);
-    if (!match) return false;
-    return w >= Number(match[1]) && w <= Number(match[2]);
-  };
+  /* FW-05 (S08-B-05, S12-B-17): la fascia attiva è quella della scala unica
+     del motore (fasce semiaperte), non un confronto sul testo: W280 era
+     «attuale» in due fasce. */
+  const current = flourStrength(w);
+  const inRange = (range: { key?: string }) => range.key === current;
 
   return (
     <>
@@ -145,7 +146,7 @@ export function GlossaryWLink({ w, label = String(w) }: { w: number; label?: str
         {term.ranges && term.ranges.length > 0 && (
           <div className="bits-glossary-w-modal__ranges">
             {term.ranges.map((range) => {
-              const active = inRange(range.value);
+              const active = inRange(range);
               return (
                 <div
                   key={range.label}
@@ -176,7 +177,7 @@ export function GlossaryWLink({ w, label = String(w) }: { w: number; label?: str
           onClick={() => setOpen(false)}
           className="bits-glossary-w-modal__learn-more"
         >
-          {cms.cooking.learnMore} →
+          {uiMessage("ds.disclosure.openGlossary")} →
         </Link>
       </ModalSheet>
     </>
