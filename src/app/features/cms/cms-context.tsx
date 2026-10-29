@@ -56,7 +56,6 @@ interface CmsLocale {
 
 /** Generic UI strings — buttons, labels, actions, placeholders */
 export interface CmsUiStrings {
-  scoreTipTitle: string;
   scoreTipOriginal: string;
   scoreTipTailored: string;
   scoreTipGlobal: string;
@@ -105,24 +104,19 @@ export interface CmsUiStrings {
   disable: string;
   restore: string;
   generate: string;
-  chooseStyle: string;
   customizeParams: string;
   /** Gerarchia azioni (Proposta A, lug 2026): invito testuale Easy che apre
    *  il dialog Personalizza. Opzionali: fallback sul default. */
   adjustByHand?: string;
-  adjustByHandQuestion?: string;
   /** Redesign lug 2026: label temperatura di fermentazione nell'accordion
    *  parametri dello spec-sheet Impasto. Opzionale. */
-  specFermentTemp?: string;
   /** Redesign lug 2026: azione "Personalizza" sulla match card (apre il
    *  dialog parametri; sostituisce la leva "Regola a mano"). Opzionale. */
   personalize?: string;
   changeStyle: string;
-  newPizza: string;
   // Recipe output
   ingredients: string;
   procedure: string;
-  steps_count: string;       // "{n} passaggi" template
   doughBalls: string;
   timeline: string;
   doughBallsFrom: string;    // "da {w}" template, with {w} already formatted for the selected unit system
@@ -131,8 +125,6 @@ export interface CmsUiStrings {
   endTime: string;
   // Recipe output — clipboard/share text
   clipboardBalls: string;        // "{n} panetti da {w}", with {w} already formatted
-  clipboardTotal: string;        // "Totale: {g}", with {g} already formatted
-  clipboardProcedure: string;    // "{style} — Procedimento"
   // Recipe output — ingredient names
   flour: string;
   flourMix: string;
@@ -142,14 +134,6 @@ export interface CmsUiStrings {
   sugar: string;
   oilEvo: string;
   // Recipe output — compensations
-  compTitle: string;
-  compTitleNerd: string;
-  compHydration: string;
-  compOil: string;
-  compSugar: string;
-  compCookTime: string;
-  compThickness: string;
-  compDefault: string;
   bakeAdjustmentTitle: string;
   relativeToBase: string;
   // Recipe output — aria labels
@@ -161,7 +145,6 @@ export interface CmsUiStrings {
   /** M-6/M-8: stili fritti e non lievitati. */
   statRest: string;
   statOil: string;
-  statCookTime: string;
   statFermentation: string;
   /** Tabella parametri (round 7): "Forza farina" + contesto lievitazione. */
   statFlourStrength: string;
@@ -170,8 +153,6 @@ export interface CmsUiStrings {
   statTempSuffix: string;        // "a {t}°C"
   statIdeal?: string;
   // Nerd row
-  nerdTitle: string;
-  nerdFlourW: string;
   nerdPL: string;
   nerdYeast: string;
   nerdHoursAt18: string;
@@ -273,22 +254,9 @@ export interface CmsUiStrings {
   recipeCurrentVersion: string;
   recipeOptimizedVersion: string;
   recipeScoreLabel: string;
-  recipeScoreTransition: string;
   scoreBasisOriginal: string;
   scoreBasisTailored: string;
-  scoreLimitedAuthenticity: string;
-  scoreLimitedFeasibility: string;
-  scoreWeightedAverage: string;
-  scoreAuthenticityCeiling: string;
-  scoreFeasibilityCeiling: string;
-  scoreNotWeighted: string;
-  scoreReferencePending: string;
-  nerdToggle: string;
-  nerdActive: string;
   scienceTitle: string;
-  ariaCloseScores: string;
-  ariaViewScores: string;
-  tapForDetails: string;
   // Banners
   styleEditorActive: string;
   cmsActive: string;
@@ -297,17 +265,13 @@ export interface CmsUiStrings {
   /** Oven section — edit label when already configured */
   editOven: string;
   // Weather widget
-  weatherCity: string;          // fallback city name
   weatherOutdoor: string;       // "{t}°C fuori" template
-  weatherKitchen: string;       // "Cucina"
   // Badges
   badgeIdeal: string;           // "Consigliato" — slot con fermentazione più vicina a ~24h (finestra ideale, non il più rapido)
   badgeRecent: string;          // "RECENTE"
   autoLabel: string;            // "Auto"
   // Oven compact bar
   cancel: string;
-  changeOven: string;
-  ovenFallback: string;
   // Pantry group labels
   pantryFlours: string;
   pantryYeasts: string;
@@ -322,13 +286,6 @@ export interface CmsUiStrings {
   // Kitchen / Pantry UI
   kitchenTitle: string;      // "La tua cucina"
   pantryOptional: string;    // "opzionale"
-  specialFlours: string;     // "Farine speciali"
-  brandSuggest: string;      // "Conosci la marca?"
-  badgeSelected: string;     // "Selezionata"
-  otherCompatibleFlours: string; // "Altre farine compatibili"
-  flourSelectHint: string;   // "Seleziona una farina per aggiornare W e P/L"
-  flourSelected: string;     // "Applicata"
-  autolysisSuggested: string; // "Autolisi consigliata"
   // Dietary labels
   dietGlutenFree: string;
   dietLactoseFree: string;
@@ -349,7 +306,6 @@ interface CmsInlineTips {
 
 interface CmsHero {
   title_line1: string;
-  title_line2: string;
   subtitle: string;
   /** D-038 (ripristinata da FW-20): avviso di Crea che chiede solo il forno,
    *  finché non è scelto. `onboardingBody` riceve {oven} e {temp}. */
@@ -547,7 +503,6 @@ interface CmsProfile {
   skillStep: string;
   pantryTitle: string;
   pantrySubtitle: string;
-  pantryStep: string;
   dietTitle: string;
   dietSubtitle: string;
   dietStep: string;
@@ -575,7 +530,6 @@ interface CmsProfile {
   locationStep: string;
   locationPlaceholder: string;
   locationAuto: string;
-  locationAutoDetected: string;
   locationSaved: string;
   locationNone: string;
   locationSearching: string;
@@ -727,12 +681,7 @@ interface CmsPages {
   navProfile: string;
   navSearch: string;
   // Explore page
-  exploreStepNum: string;
-  exploreTitle: string;
-  exploreSubtitle: string;
   // Learn page
-  learnTitle: string;
-  learnSubtitle: string;
   learnGlossary: string;
   learnGlossaryDesc: string;
   learnTroubleshooting: string;
@@ -775,17 +724,13 @@ interface CmsPages {
   // Accessibility
   skipToContent: string;
   navMainLabel: string;
-  searchCloseLabel: string;
   searchFieldLabel: string;
   searchClearLabel: string;
-  homeAria: string;
   devToolsAria: string;
   mottoAria: string;
   troubleshootSearchPlaceholder: string;
   // Home result section
   dietaryWarningsTitle: string;
-  troubleshootingTitle: string;
-  troubleshootingDesc: string;
   // Explore page extensions
   exploreRecipe: string;
   exploreHeroDesc: string;
@@ -823,8 +768,6 @@ interface CmsPages {
   noChanges: string;
   deactivateCustomStyles: string;
   deactivate: string;
-  passToEasy: string;
-  activateNerd: string;
   /** FW-04 */
   learnOpenTerm: string;
 }
@@ -834,7 +777,6 @@ interface CmsConfigurator {
   hydrationLabel: string;
   hydrationTip: string;
   flourWLabel: string;
-  flourWLabelBlend: string;
   flourWTip: string;
   plLabel: string;
   plTip: string;
@@ -849,7 +791,6 @@ interface CmsConfigurator {
   preFermentLabel: string;
   preFermentTip: string;
   ovenLabel: string;
-  ovenTip: string;
   panLabel: string;
   panTipRect: string;
   panTipRound: string;
@@ -865,7 +806,6 @@ interface CmsConfigurator {
   thicknessThick: string;
   thicknessStandard: string;
   backLabel: string;
-  sliderOptimal: string;
   /** Adaptive cross-parameter hints */
   hintHighHydrationNeedsW: string;
   hintLowWLimitsHydration: string;
@@ -934,7 +874,6 @@ export interface CmsContent {
     fallbackPhoto: string;
   };
   result: {
-    breadcrumb: string;
     heading: string;
     backLabel: string;
   };
@@ -945,14 +884,12 @@ export interface CmsContent {
     toppingPrevAria: string;
     toppingNextAria: string;
     notPersonalizedAria: string;
-    ballEstimateTooltip: string;
     tabRecipe: string;
     tabRecipeTailored: string;
     /** Etichetta stato ricetta non personalizzata (pill contesto + occhiello). */
     recipeCanonical: string;
     /** Occhiello hero: variante canonica senza ripetere "Ricetta" (già nel tab).
      *  Opzionale: i locali che non la definiscono ricadono su recipeCanonical. */
-    recipeCanonicalEyebrow?: string;
     /** Dialog pre-cottura: la ricetta canonica non è ancora adattata. */
     preCookTitle: string;
     preCookBody: string;
@@ -981,7 +918,6 @@ export interface CmsContent {
     needFlour: string;
     /** Match card — azioni. */
     makePossible: string;
-    adaptToKitchen: string;
     optimizeForMe: string;
     resetToOriginal: string;
     saveVersion: string;
@@ -996,22 +932,16 @@ export interface CmsContent {
     fillingTitle?: string;
     chooseTopping: string;
     learnMore: string;
-    tailoredEyebrow: string;
-    recipeEyebrow: string;
     start: string;
     resume: string;
     startShort: string;
     inProgressShort: string;
-    followYou: string;
     reopen: string;
     completed: string;
     waitOver: string;
     /** "È ora: {title}" */
     dueNow: string;
-    /** "{style} · passo {n}/{total}" */
-    stepProgress: string;
     interrupt: string;
-    abortConfirm: string;
     abortConfirmTitle: string;
     /** "Perderai timer e avanzamento di questa {style}…" */
     abortBody: string;
@@ -1061,24 +991,18 @@ export interface CmsContent {
     ovenOptimal: string;
     ovenLimited: string;
     ovenNeedsAdaptation: string;
-    procedureHeroDescription: string;
     toppingNotesTitle: string;
     toppingAmountsNote: string;
-    toppingPerUnit: string;
     durationLabel: string;
-    totalDuration: string;
     finalDoughStageTitle: string;
-    rule55Title: string;
     /** FW-02: variante senza impastatrice (attrito zero). */
     rule55DescriptionHand: string;
     rule55Description: string;
     /** FW-17 (S08-A-07): Regola 55 a quattro termini, con un prefermento. */
     rule55DescriptionPreferment: string;
     stepDetailsShow: string;
-    stepDetailsHide: string;
     /** Toggle dettagli della match card (barre punteggio, stato forno).
      *  Opzionale: i locale non ancora tradotti cadono sul default. */
-    matchDetailsShow?: string;
     /** Redesign lug 2026: toggle compatto sotto il numero del Match
      *  ("Dettagli ⌄" / "Nascondi ⌃"). Opzionali. */
     matchDetails?: string;
@@ -1090,8 +1014,6 @@ export interface CmsContent {
     unsavedDiscard?: string;
     /** Learn-inline assi (audit lug 2026) — etichetta della formula pesata in
      *  nerd mode e peso dell'asse nel pannello di spiegazione. Opzionali. */
-    matchBreakdownLabel?: string;
-    matchAxisWeight?: string;
     /** "È andata lunga?" (audit lug 2026) — domanda per-fase che porta
      *  all'issue di troubleshooting più probabile (STEP_TROUBLE). Chiavi:
      *  preferment/mix/bulk/proof/shape/bake. Opzionale. */
@@ -1099,11 +1021,6 @@ export interface CmsContent {
     /** Ondata 1 (audit lug 2026) — ricetta parcheggiata: card Riprendi negli
      *  step precedenti + conferma prima di sostituirla con un nuovo stile.
      *  Opzionali: i locale non ancora tradotti cadono sul default. */
-    draftResumeEyebrow?: string;
-    draftResumeCta?: string;
-    draftReplaceTitle?: string;
-    draftReplaceBody?: string;
-    draftReplaceConfirm?: string;
     /** Nota sotto lo scorporo biga/poolish (prima hardcoded in italiano). */
     prefermentSaltNote?: string;
     /** Pannello F2 "Vulcan ha imparato dai tuoi tentativi" (prima hardcoded). */
@@ -1116,28 +1033,17 @@ export interface CmsContent {
   /** Stringhe UI varie prima hard-coded nei componenti (VPL-082) */
   misc: {
     showAllStyles: string;
-    noFloursInCategory: string;
     noTroubleshootingResults: string;
     moreInfo: string;
     changeTiming: string;
     kitchenTempSubtitle: string;
     techAdjustmentsApplied: string;
-    techDataAria: string;
-    techDataTitle: string;
     feedbackYes: string;
     feedbackNo: string;
     feedbackPlaceholder: string;
     preFermentCompare: string;
     scoreExplainer: string;
-    companionContext: string;
-    companionSetup: string;
-    companionStyles: string;
-    smartLinkOn: string;
-    smartLinkOff: string;
-    smartLinkApplied: string;
     settingsHelp: string;
-    versionsLabel: string;
-    versionsHint: string;
     learnHeroTitle1: string;
     learnHeroTitle2: string;
     learnHeroSubtitle: string;
@@ -1147,15 +1053,9 @@ export interface CmsContent {
     kitchenTempUp: string;
     current: string;
     noStyleInFamily: string;
-    notFeasibleExplainer: string;
     exploreHeroTitle1: string;
     exploreHeroTitle2: string;
-    badgeBeginnerFriendly: string;
-    interpretationsLabel: string;
-    goToSite: string;
     signatureLabel: string;
-    noSignature: string;
-    fineParams: string;
     cmsRestoreContent: string;
     /** Riga "Ispirazione" sulla scheda ricetta (redesign lug 2026): chip solo
      *  per le firme che cambiano i parametri; le storie vivono nella modale. */
@@ -1210,9 +1110,6 @@ export interface CmsContent {
   filters: {
     advancedLabel: string;
     removeFilters: string;
-    brandedFlours: string;
-    settingsOpen: string;
-    settingsClosed: string;
     hydrationLabel: string;
     hydrationLow: string;
     hydrationMedium: string;
@@ -1228,7 +1125,6 @@ export interface CmsContent {
     skillIntermediate: string;
     skillAdvanced: string;
     skillExpert: string;
-    timeFast: string;
     ovenLabel: string;
     ovenHome: string;
     ovenWood: string;
@@ -1250,7 +1146,6 @@ export interface CmsContent {
     rangesLabel: string;
     whyImportantLabel: string;
     relatedLabel: string;
-    backToHome: string;
     termCount: string;
     /** FW-09 */
     termCountOne: string;
@@ -1291,28 +1186,17 @@ export interface CmsContent {
     yeastBaker: string;
     effectiveHours: string;
     q10Factor: string;
-    q10Cold: string;
-    q10Sourdough: string;
-    q10Standard: string;
     waterActivity: string;
     glutenNetwork: string;
     proteolysis: string;
-    starchDegradation: string;
-    fodmapReduction: string;
-    plEstimated: string;
     bakingEnergy: string;
-    waterTemp: string;
     desiredDoughTemp: string;
     frictionFactor: string;
-    deviationCategory: string;
-    deviationScore: string;
   };
   /** Timeline step labels, keyed by step id */
   timelineLabels: Record<string, CmsTimelineStep>;
   /** Misc timeline UI strings */
   timelineUi: {
-    startLabel: string;
-    beforeSuffix: string;
   };
   /** Parametric tips — StyleDetailSheet labels + timeline contextual tips */
   parametricTips: {
@@ -1325,8 +1209,6 @@ export interface CmsContent {
     pillThickness: string;
     pillLevel: string;
     pillExperimentation: string;
-    pillLevelBeginner: string;
-    pillLevelExpert: string;
     // StyleDetailSheet section labels
     sheetSectionTitle: string;
     sheetOvenLabel: string;
@@ -1338,7 +1220,6 @@ export interface CmsContent {
     sheetFoldLabel: string;
     sheetFoldInterval: string;
     sheetGenerateBtn: string;
-    sheetMatchTitle: string;
     sheetTechniquesLabel: string;
     // Timeline parametric tips — beginner
     mixBeginner: string;
@@ -1446,7 +1327,6 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   messages: UI_MESSAGES_IT,
   ui: {
-    scoreTipTitle: "Come leggere il punteggio",
     scoreTipOriginal: "Riferimento dello stile, sulla tua cucina.",
     scoreTipTailored: "Versione con gli adattamenti proposti.",
     scoreTipGlobal: "Il voto conta solo facilità e autenticità, e non supera l’autenticità. Maturazione, sostenibilità e sperimentazione sono informazioni a parte. Non attesta la conformità a un disciplinare.",
@@ -1510,17 +1390,9 @@ export const CMS_DEFAULTS: CmsContent = {
     recipeCurrentVersion: "Attuale",
     recipeOptimizedVersion: "Proposta",
     recipeScoreLabel: "Punteggio",
-    recipeScoreTransition: "Punteggio: {from}/100 → {to}/100",
     scoreBasisOriginal: "Riferimento",
     scoreBasisTailored: "Su misura",
 
-    scoreLimitedAuthenticity: "L’autenticità ({score}/100) limita il punteggio.",
-    scoreLimitedFeasibility: "Un requisito essenziale non è rispettato: controlla il motivo qui sotto.",
-    scoreWeightedAverage: "Media ponderata dei cinque criteri",
-    scoreAuthenticityCeiling: "Tetto dato dall’autenticità",
-    scoreFeasibilityCeiling: "Tetto dato dalla non fattibilità",
-    scoreNotWeighted: "Asse informativo: con questo peso non modifica il punteggio globale.",
-    scoreReferencePending: "Profilo di deviazione non ancora verificato per questo stile.",
 
     copy: "Copia",
     share: "Condividi",
@@ -1533,18 +1405,13 @@ export const CMS_DEFAULTS: CmsContent = {
     disable: "Disattiva",
     restore: "Ripristina",
     generate: "Genera ricetta",
-    chooseStyle: "Scegli lo stile",
     customizeParams: "Personalizza parametri",
     adjustByHand: "Regola a mano",
-    specFermentTemp: "Fermento",
     personalize: "Personalizza",
-    adjustByHandQuestion: "Preferisci decidere tu?",
     changeStyle: "Altro stile",
-    newPizza: "Ricomincia",
     // Recipe output
     ingredients: "Ingredienti",
     procedure: "Procedimento",
-    steps_count: "{n} passaggi",
     doughBalls: "Panetti",
     timeline: "Tabella di marcia",
     doughBallsFrom: "da {w}",
@@ -1553,8 +1420,6 @@ export const CMS_DEFAULTS: CmsContent = {
     endTime: "Fine",
     // Recipe output — clipboard/share text
     clipboardBalls: "{n} panetti da {w}",
-    clipboardTotal: "Totale: {g}",
-    clipboardProcedure: "{style} — Procedimento",
     // Recipe output — ingredient names
     flour: "Farina",
     flourMix: "mix di farine",
@@ -1564,14 +1429,6 @@ export const CMS_DEFAULTS: CmsContent = {
     sugar: "Zucchero",
     oilEvo: "Olio d'oliva",
     // Recipe output — compensations
-    compTitle: "Adattamenti per il tuo forno",
-    compTitleNerd: "Compensazioni tecniche",
-    compHydration: "Idratazione",
-    compOil: "Olio",
-    compSugar: "Zucchero",
-    compCookTime: "Cottura",
-    compThickness: "Spessore",
-    compDefault: "Default",
     bakeAdjustmentTitle: "Cottura",
     relativeToBase: "rispetto alla base",
     // Recipe output — aria labels
@@ -1582,7 +1439,6 @@ export const CMS_DEFAULTS: CmsContent = {
     statOven: "Forno",
     statRest: "Riposo",
     statOil: "Olio",
-    statCookTime: "Cottura",
     statFermentation: "Lievitazione",
     statFlourStrength: "Forza farina",
     fermentEnvAmbient: "ambiente",
@@ -1590,8 +1446,6 @@ export const CMS_DEFAULTS: CmsContent = {
     statTempSuffix: "a {t}°C",
     statIdeal: "ideale",
     // Nerd row
-    nerdTitle: "Parametri impasto",
-    nerdFlourW: "Farina W",
     nerdPL: "P/L",
     nerdYeast: "Lievito",
     nerdHoursAt18: "Ore @{refTemp}",
@@ -1659,12 +1513,7 @@ export const CMS_DEFAULTS: CmsContent = {
     verdictRecipeBelow: "Puoi consultare la ricetta e vedere quali requisiti cambiare.",
     // Score dashboard
     recipeScore: "Compatibilit\u00E0 con la tua cucina",
-    nerdToggle: "PizzaNerd",
-    nerdActive: "Attiva PizzaNerd",
     scienceTitle: "{brand} Science",
-    ariaCloseScores: "Chiudi i dettagli del punteggio",
-    ariaViewScores: "Vedi i dettagli del punteggio",
-    tapForDetails: "Quanto la tua versione si avvicina al massimo · Tocca per dettagli ›",
     // Banners
     styleEditorActive: "Style Editor attivo",
     cmsActive: "CMS attivo",
@@ -1673,17 +1522,13 @@ export const CMS_DEFAULTS: CmsContent = {
     /** Oven section — edit label when already configured */
     editOven: "Modifica forno",
     // Weather widget
-    weatherCity: "Roma",
     weatherOutdoor: "{t}°C fuori",
-    weatherKitchen: "Temperatura cucina",
     // Badges
     badgeIdeal: "Consigliato",
     badgeRecent: "RECENTE",
     autoLabel: "Auto",
     // Oven compact bar
     cancel: "Annulla",
-    changeOven: "Cambia",
-    ovenFallback: "Forno",
     // Pantry group labels
     pantryFlours: "Farine",
     pantryYeasts: "Lieviti",
@@ -1698,13 +1543,6 @@ export const CMS_DEFAULTS: CmsContent = {
     // Kitchen / Pantry UI
     kitchenTitle: "La tua cucina",
     pantryOptional: "opzionale",
-    specialFlours: "Farine speciali",
-    brandSuggest: "Conosci la marca?",
-    badgeSelected: "Selezionata",
-    otherCompatibleFlours: "Altre farine compatibili",
-    flourSelectHint: "Seleziona una farina per aggiornare automaticamente W e P/L della ricetta.",
-    flourSelected: "Applicata",
-    autolysisSuggested: "Autolisi consigliata",
     // Dietary labels
     dietGlutenFree: "Senza glutine",
     dietLactoseFree: "Senza lattosio",
@@ -1723,7 +1561,6 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   hero: {
     title_line1: "La tua",
-    title_line2: "prossima pizza.",
     subtitle: "Scegli quando vuoi portarla in tavola.",
     /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
     onboardingEyebrow: "Prima volta qui?",
@@ -1829,7 +1666,6 @@ export const CMS_DEFAULTS: CmsContent = {
     fallbackPhoto: "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
   },
   result: {
-    breadcrumb: "Ricetta",
     heading: "Ecco la tua ricetta",
     backLabel: "Torna alla selezione",
   },
@@ -1838,11 +1674,9 @@ export const CMS_DEFAULTS: CmsContent = {
     toppingPrevAria: "Condimento precedente",
     toppingNextAria: "Condimento successivo",
     notPersonalizedAria: "Ricetta non ancora personalizzata",
-    ballEstimateTooltip: "Stima indicativa basata sulla pezzatura tradizionale dello stile",
     tabRecipe: "Ricetta",
     tabRecipeTailored: "Ricetta su misura",
     recipeCanonical: "Riferimento",
-    recipeCanonicalEyebrow: "Riferimento",
     preCookTitle: "Prima di iniziare",
     preCookBody:
       "Stai consultando il riferimento. Prima di prepararlo, controlla le condizioni oppure adattalo alla tua cucina.",
@@ -1889,7 +1723,6 @@ export const CMS_DEFAULTS: CmsContent = {
       "La proposta arriva a {ceiling}/100 e richiede adattamenti rispetto al riferimento.",
     needFlour: "una farina W {w}",
     makePossible: "Rendila possibile",
-    adaptToKitchen: "Adatta alla mia cucina",
     optimizeForMe: "Adatta alla mia cucina",
     resetToOriginal: "Torna al riferimento",
     saveVersion: "Salva nel ricettario",
@@ -1901,20 +1734,15 @@ export const CMS_DEFAULTS: CmsContent = {
     fillingTitle: "Farcitura",
     chooseTopping: "Scegli condimento",
     learnMore: "Approfondisci",
-    tailoredEyebrow: "La tua ricetta su misura",
-    recipeEyebrow: "Ricetta",
     start: "Inizia la pizzata",
     resume: "Riprendi la pizzata",
     startShort: "Inizia",
     inProgressShort: "In corso",
-    followYou: "Tieni {brand} aperto per seguire i tempi e ricevere i promemoria.",
     reopen: "Riapri la pizzata in corso",
     completed: "Pizzata completata",
     waitOver: "Attesa finita: continua!",
     dueNow: "È ora: {title}",
-    stepProgress: "{style} · passo {n}/{total}",
     interrupt: "Interrompi la pizzata",
-    abortConfirm: "Sei sicuro di voler interrompere la pizzata attiva? Tutti i timer e l'avanzamento verranno persi.",
     abortConfirmTitle: "Interrompere la pizzata?",
     abortBody: "Perderai timer e avanzamento di questa {style}. La ricetta resta, ma la sessione riparte da zero.",
     abortYes: "Sì, interrompi",
@@ -1961,27 +1789,19 @@ export const CMS_DEFAULTS: CmsContent = {
     ovenOptimal: "Temperatura forno ottimale",
     ovenLimited: "Fattibile (temperatura limite)",
     ovenNeedsAdaptation: "Richiede adattamento temperatura",
-    procedureHeroDescription: "Procedimento guidato per {style}: {steps}, {duration} totali e {oven}.",
     toppingNotesTitle: "Accorgimenti condimento",
     toppingAmountsNote: "Le dosi sono per una pizza o unità. Gli ingredienti seguono l’ordine in cui aggiungerli.",
-    toppingPerUnit: "{amount} per {unit}",
     durationLabel: "Durata: {duration}",
-    totalDuration: "{duration} totali",
     finalDoughStageTitle: "Impasto finale",
-    rule55Title: "Temperatura dell'acqua",
     rule55DescriptionHand: "Ambiente, farina e acqua devono sommare circa {sum}: tre volte la temperatura d'impasto che vuoi ({ddt}). Impastando a mano non c'è calore dell'impastatrice da togliere. Per questo l'acqua cambia con la temperatura della tua cucina.",
     rule55Description: "Ambiente, farina e acqua devono sommare circa {sum}: tre volte la temperatura d'impasto che vuoi ({ddt}) meno il calore dell'impastatrice ({friction}). Per questo l'acqua cambia con la temperatura della tua cucina.",
     rule55DescriptionPreferment: "Ambiente, farina, acqua e {preferment} devono sommare circa {sum}: quattro volte la temperatura d'impasto che vuoi ({ddt}) meno il calore dell'impastatrice ({friction}). Il prefermento entra a circa {prefTemp}, la sua temperatura di maturazione (stima del modello). Per questo l'acqua dell'impasto finale cambia con la temperatura della tua cucina.",
     stepDetailsShow: "Come si fa",
-    stepDetailsHide: "Nascondi dettagli",
-    matchDetailsShow: "Dettagli punteggio",
     matchDetails: "Dettagli",
     matchDetailsHide: "Nascondi",
     unsavedTitle: "Modifiche non salvate",
     unsavedBody: "Se esci ora, la tua versione di {style} andrà persa. Vuoi salvarla nel ricettario?",
     unsavedDiscard: "Esci senza salvare",
-    matchBreakdownLabel: "Media pesata",
-    matchAxisWeight: "peso {pct}% nel punteggio",
     troubleStepLinks: {
       preferment: "Odora troppo di acido?",
       mix: "Impasto troppo appiccicoso?",
@@ -1990,12 +1810,6 @@ export const CMS_DEFAULTS: CmsContent = {
       shape: "Si strappa quando stendi?",
       bake: "Cottura non riuscita?",
     },
-    draftResumeEyebrow: "Ricetta in corso",
-    draftResumeCta: "Riprendi",
-    draftReplaceTitle: "Sostituire la ricetta in corso?",
-    draftReplaceBody:
-      "Hai già {current} pronta e regolata sui tuoi tempi. Scegliendo {next} la sostituisci e i suoi parametri vanno persi.",
-    draftReplaceConfirm: "Passa a {next}",
     prefermentSaltNote:
       "Il sale va nell’impasto finale, non nel prefermento: lì frenerebbe il lievito.",
     learnedFromAttempts: "Ho imparato dai tuoi {n} tentativi",
@@ -2012,28 +1826,17 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   misc: {
     showAllStyles: "Mostra tutte",
-    noFloursInCategory: "Nessuna farina in questa categoria",
     noTroubleshootingResults: "Nessun problema trovato per questa ricerca",
     moreInfo: "Più informazioni",
     changeTiming: "Cambia i tempi",
     kitchenTempSubtitle: "La temperatura influisce sulla velocità di lievitazione",
     techAdjustmentsApplied: "Adattamenti tecnici applicati",
-    techDataAria: "Mostra dati tecnici (W, P/L, Q10, Aw)",
-    techDataTitle: "Dati tecnici e calcoli dell’impasto",
     feedbackYes: "Sì, volentieri",
     feedbackNo: "No, a posto così",
     feedbackPlaceholder: "Cosa hai cambiato? Come è venuta? Dettagli utili...",
     preFermentCompare: "Confronto rapido",
     scoreExplainer: "Il punteggio combina i criteri della ricetta. Requisiti non rispettati e distanza dal riferimento possono limitarlo.",
-    companionContext: "La temperatura della cucina e il tempo a disposizione guidano tutto il processo.",
-    companionSetup: "Adattiamo la ricetta alla tua esperienza, al forno e alla dispensa reale.",
-    companionStyles: "Ogni stile ha parametri unici: scegli quello che meglio si adatta alle tue condizioni.",
-    smartLinkOn: "Parametri collegati — muovi uno slider, gli altri si adattano",
-    smartLinkOff: "Collega tutti i parametri per regolazione automatica",
-    smartLinkApplied: "{param}: ho riallineato gli altri parametri e la timeline.",
     settingsHelp: "Questi dati aiutano {brand} ad adattare tempi e ricetta.",
-    versionsLabel: "Versioni",
-    versionsHint: "Ogni versione ha valori di riferimento propri. Le tacche dei controlli mostrano quelli della versione selezionata.",
     learnHeroTitle1: "Capisci l’impasto,",
     learnHeroTitle2: "migliora la tua pizza.",
     learnHeroSubtitle: "Termini, problemi, prefermenti e come calcoliamo: impara cosa osservare e come intervenire.",
@@ -2043,15 +1846,9 @@ export const CMS_DEFAULTS: CmsContent = {
     kitchenTempUp: "Aumenta temperatura cucina",
     current: "Selezionato",
     noStyleInFamily: "Nessuno stile in questa famiglia per i tuoi parametri.",
-    notFeasibleExplainer: "Queste ricette hanno un requisito non rispettato. Apri il dettaglio per capire cosa cambiare.",
     exploreHeroTitle1: "Esplora stili",
     exploreHeroTitle2: "e ricette.",
-    badgeBeginnerFriendly: "Principianti",
-    interpretationsLabel: "Interpretazioni",
-    goToSite: "Vai al sito",
     signatureLabel: "Versione",
-    noSignature: "nessuna ispirazione",
-    fineParams: "Parametri avanzati",
     cmsRestoreContent: "Ripristina contenuti CMS",
     inspirationLabel: "Versione",
     inspirationBase: "Riferimento",
@@ -2117,9 +1914,6 @@ export const CMS_DEFAULTS: CmsContent = {
   filters: {
     advancedLabel: "Altro",
     removeFilters: "Rimuovi filtri",
-    brandedFlours: "Farine di marca",
-    settingsOpen: "Impostazioni",
-    settingsClosed: "Le tue impostazioni",
     hydrationLabel: "Idratazione",
     hydrationLow: "Bassa <60%",
     hydrationMedium: "Media 60-70%",
@@ -2135,7 +1929,6 @@ export const CMS_DEFAULTS: CmsContent = {
     skillIntermediate: "Intermedio",
     skillAdvanced: "Avanzato",
     skillExpert: "Esperto",
-    timeFast: "veloce",
     ovenLabel: "Cottura",
     ovenHome: "Forno casa",
     ovenWood: "Legna",
@@ -2154,7 +1947,6 @@ export const CMS_DEFAULTS: CmsContent = {
     rangesLabel: "Valori tipici",
     whyImportantLabel: "Perché conta",
     relatedLabel: "Correlati",
-    backToHome: "Torna alla home",
     termCount: "{count} termini",
     // FW-09
     termCountOne: "{count} termine",
@@ -2220,9 +2012,6 @@ export const CMS_DEFAULTS: CmsContent = {
     "rec.timeCompatible": "Lievitazione {fMin}–{fMax}: compatibile con il tuo tempo",
     "rec.timeAdaptable": "Fermentazione adattabile a ~{hours}",
     "rec.timeInsufficient": "Richiede minimo {fMin}, hai {available}",
-    "rec.needsWoodOven": "Il riferimento prevede il forno a legna; con il tuo forno la cottura cambia.",
-    "rec.ovenAdapted": "Il tuo forno arriva a {temp}: temperatura ideale {ideal}, cottura adattata",
-    "rec.needsDeck": "Per questa cottura serve pietra o acciaio preriscaldato: non risultano nella tua cucina",
     "timeline.homeTray.preheat": "Preriscalda il forno al massimo ({temp}) con una teglia capovolta già dentro, finché anche la teglia è ben calda. Intanto termina il riposo dell’impasto.",
     "gen.fermentationTooLong": "Lievitazione di {hours}: supera il massimo previsto da questa ricetta ({maxHours}). Scegli un metodo verificato per una durata maggiore.",
     "gen.fermentationTemperature": "Questo metodo prevede maturazione a {requiredTemp}; è stata impostata a {temp}. Ripristina il regime previsto o scegli un altro metodo verificato.",
@@ -2240,7 +2029,6 @@ export const CMS_DEFAULTS: CmsContent = {
     "need.withoutWood": "Anche senza legna",
     "need.adaptedBake": "Cottura adattata",
     "need.deck": "Serve pietra o acciaio",
-    "card.pantryCheck": "Verifica la dispensa",
     "card.directDough": "Impasto diretto",
     "card.resourceExcluded": "Requisito escluso",
     "card.panMissing": "Serve una teglia",
@@ -2266,32 +2054,9 @@ export const CMS_DEFAULTS: CmsContent = {
     "change.prefermentOff": "Si passa all’impasto diretto",
     "change.prefermentDetails": "Prefermento: {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
-    "rec.ovenAdequate": "Forno adeguato (compensazione automatica tempo/temperatura)",
     "rec.ovenTooCold": "Forno troppo freddo: {temp} < min {min}",
     "rec.skillMatch": "Adatto al tuo livello",
-    "rec.skillExpert": "Il tuo livello permette qualsiasi stile",
-    "rec.hydrationNeedsPractice": "Idratazione alta richiede pratica",
-    "rec.advancedForBeginner": "Stile avanzato per principianti",
-    "rec.noKneadNoMixer": "Non serve impastatrice (no-knead)",
-    "rec.handsHighHydration": "Idratazione alta: impasto a mano molto difficile",
-    "rec.handsMedHydration": "Idratazione media-alta: impasto a mano richiede pratica",
-    "rec.forkIdealHighH": "Forcella ideale per alta idratazione",
-    "rec.forkLowFriction": "Impastatrice a forcella: basso attrito termico",
-    "rec.spiralOptimal": "Spirale professionale: impasto ottimale",
-    "rec.domesticStrugglesHighH": "Planetaria domestica: può faticare con idratazione >80%",
-    "rec.mixerHelps": "La tua impastatrice facilita il processo",
-    "rec.mixerRecommended": "Idratazione alta: impastatrice consigliata",
-    "rec.castIronPerfect": "Ghisa perfetta per questo stile",
-    "rec.panFits": "Teglia adatta a questo stile",
-    "rec.needsPan": "Serve una teglia per questo stile",
-    "rec.refractoryIdeal": "Biscotto refrattario: ideale per la napoletana",
-    "rec.steelPlateCrispy": "Piastra in acciaio: base croccante in secondi",
-    "rec.panPerfect": "La tua teglia è perfetta per questo stile",
     "rec.flourMatch": "Farina in dispensa compatibile",
-    "rec.flourPartial": "Farina parzialmente adatta (W non ideale)",
-    "rec.flourNoMatch": "Nessuna farina in dispensa nel range W richiesto",
-    "rec.sourdoughLongFerment": "Lievito madre ideale per maturazione lunga",
-    "rec.sourdoughOnlyShort": "Solo lievito madre: fermentazione breve difficile",
     "tip.waterTemp": "",
     "tip.waterTempCold": "Usa acqua fredda di frigo ({temp}): l'impastatrice scalda la massa.",
     "tip.waterTempNormal": "Acqua a {temp} per avere l'impasto a {ddt}.",
@@ -2326,22 +2091,14 @@ export const CMS_DEFAULTS: CmsContent = {
     "hint.yeastDryOneHalfTsp": "≈ 1 cucchiaino e ½",
     "hint.yeastFreshPinch": "≈ un pizzico",
     "hint.yeastFreshWeighable": "≈ {g} g sulla bilancia da cucina",
-    "serving.peopleOne": "≈ {n} persona",
-    "serving.peopleMany": "≈ {n} persone",
-    "serving.peopleRange": "≈ {min}-{max} persone",
     "topping.auth.canonical": "Da disciplinare",
     "topping.auth.natural": "Tradizionale",
     "topping.auth.common": "Alternativa",
     "topping.auth.experimental": "Da provare",
     "topping.auth.taboo": "Sconsigliato",
-    "recipeSetup.dough": "Impasto",
     // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
     "recipeSetup.profileHint": "Scegli una versione di partenza o un'ispirazione d'autore: i valori restano modificabili.",
     "recipeSetup.styleBase": "stile base",
-    "recipeSetup.temp.fridge": "frigo",
-    "recipeSetup.temp.cool": "fresco",
-    "recipeSetup.temp.room": "ambiente",
-    "recipeSetup.versionApplied": "{label}: parametri impasto applicati",
     "version.label.Leggerissima": "Leggerissima",
     "version.label.Casalingo": "Casalingo",
     "version.label.Casalinga": "Casalinga",
@@ -2377,18 +2134,10 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.fillSheets.title": "Farcitura tra sfoglie",
     "timeline.bakeWhite.title": "Cottura in bianco",
     "timeline.splitFill.title": "Sdoppiamento e farcitura",
-    "timeline.bake2.title": "Seconda cottura (breve)",
     "timeline.bake.title": "Cottura",
     "timeline.bake.desc": "Cuocere a {temp}.",
     "timeline.bake.rounds": "{n} cotture da {sec}, una alla volta.",
     "timeline.topPost.title": "Farcitura post-cottura",
-    "recipeSetup.noSignature": "Nessuna ispirazione",
-    "recipeSetup.currentParams": "parametri correnti",
-    "recipeSetup.noSignatureAlreadyActive": "Nessuna ispirazione già attiva",
-    "recipeSetup.signatureApplied": "{label}: ispirazione applicata",
-    "recipeSetup.signatureRemoved": "Ispirazione rimossa: parametri ripristinati",
-    "dig.fodmapReduced": "Riduzione FODMAP non determinabile dalle sole ore",
-    "dig.fodmapHighReduction": "Riduzione FODMAP non determinabile dalle sole ore",
     "hint.yeastPrecisionScale": "Usa una bilancia da 0,01 g",
     "timeline.batchModel": "Tempi stimati per una persona: stesura e condimento di tutte le unità, poi cotture una alla volta, con il recupero del forno fra l'una e l'altra (stima). Servizio scaglionato; nessuna sovrapposizione prevista.",
     /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
@@ -2407,21 +2156,12 @@ export const CMS_DEFAULTS: CmsContent = {
     yeastBaker: "Lievito da forno",
     effectiveHours: "Ore effettive",
     q10Factor: "Fattore Q₁₀",
-    q10Cold: "Q₁₀ freddo",
-    q10Sourdough: "Q₁₀ lievito madre",
-    q10Standard: "Q₁₀ standard",
     waterActivity: "Attività acquosa",
     glutenNetwork: "Rete glutine",
     proteolysis: "Proteolisi",
-    starchDegradation: "Degradazione amido",
-    fodmapReduction: "Riduzione FODMAP",
-    plEstimated: "P/L stimato",
     bakingEnergy: "Energia di cottura",
-    waterTemp: "Temperatura acqua",
     desiredDoughTemp: "Temperatura impasto",
     frictionFactor: "Fattore attrito",
-    deviationCategory: "Deviazione",
-    deviationScore: "Dev. effettiva",
   },
   timelineLabels: {
     preferment: {
@@ -2518,8 +2258,6 @@ export const CMS_DEFAULTS: CmsContent = {
     },
   },
   timelineUi: {
-    startLabel: "Inizio",
-    beforeSuffix: "prima",
   },
   parametricTips: {
     // Data pill labels
@@ -2532,8 +2270,6 @@ export const CMS_DEFAULTS: CmsContent = {
     pillThickness: "Spessore",
     pillLevel: "Livello",
     pillExperimentation: "Sperimentazione",
-    pillLevelBeginner: "Principiante",
-    pillLevelExpert: "Esperto",
     // StyleDetailSheet labels
     sheetSectionTitle: "Riferimento dello stile",
     sheetOvenLabel: "Forno ideale",
@@ -2545,7 +2281,6 @@ export const CMS_DEFAULTS: CmsContent = {
     sheetFoldLabel: "Pieghe",
     sheetFoldInterval: "Ogni {min} min",
     sheetGenerateBtn: "Genera ricetta",
-    sheetMatchTitle: "Perché è adatta alla tua cucina",
     sheetTechniquesLabel: "Tecniche d'autore compatibili",
     // Timeline — beginner
     mixBeginner: "{mixer} (~{time} min di impasto).",
@@ -2652,7 +2387,6 @@ export const CMS_DEFAULTS: CmsContent = {
     skillStep: "02 — Livello",
     pantryTitle: "La tua dispensa",
     pantrySubtitle: "Farine e lieviti che hai a disposizione",
-    pantryStep: "03 — Dispensa",
     dietTitle: "Preferenze dietetiche",
     dietSubtitle: "Ti avvisiamo quando una ricetta contiene ciò che eviti.",
     dietStep: "04 — Dieta",
@@ -2664,7 +2398,6 @@ export const CMS_DEFAULTS: CmsContent = {
     locationStep: "05 — Posizione",
     locationPlaceholder: "Cerca città...",
     locationAuto: "Rileva posizione",
-    locationAutoDetected: "Rilevata automaticamente",
     locationSaved: "Posizione salvata",
     locationNone: "Puoi indicarla più avanti o impostare direttamente la temperatura della cucina.",
     locationSearching: "Ricerca...",
@@ -2833,11 +2566,6 @@ export const CMS_DEFAULTS: CmsContent = {
     navLearn: "Impara",
     navProfile: "Profilo",
     navSearch: "Cerca",
-    exploreStepNum: "15 stili — 4 famiglie",
-    exploreTitle: "Esplora gli stili",
-    exploreSubtitle: "Dalla Napoletana STG alla Focaccia di Recco.",
-    learnTitle: "Impara",
-    learnSubtitle: "Capisci l’impasto, scegli le tecniche e impara a riconoscere cosa succede.",
     learnGlossary: "Glossario",
     learnGlossaryDesc: "I termini dell’impasto, con formule e valori tipici.",
     learnTroubleshooting: "Problemi e soluzioni",
@@ -2873,16 +2601,12 @@ export const CMS_DEFAULTS: CmsContent = {
     searchFlourSpecial: "Speciale",
     skipToContent: "Salta al contenuto",
     navMainLabel: "Navigazione principale",
-    searchCloseLabel: "Chiudi ricerca",
     searchFieldLabel: "Campo di ricerca globale",
     searchClearLabel: "Cancella ricerca",
-    homeAria: "{brandFull} — Home",
     devToolsAria: "Developer Tools",
     mottoAria: "{brand} motto",
     troubleshootSearchPlaceholder: "Cerca sintomo o causa...",
     dietaryWarningsTitle: "Da sapere prima di prepararla",
-    troubleshootingTitle: "Problemi con la ricetta?",
-    troubleshootingDesc: "Trova cause e rimedi per impasto, forno e frittura",
     exploreRecipe: "Esplora la ricetta",
     exploreHeroDesc: "Stili della tradizione e interpretazioni d’autore. Scegli da dove cominciare.",
     exploreFilterFeatured: "In primo piano",
@@ -2916,8 +2640,6 @@ export const CMS_DEFAULTS: CmsContent = {
     noChanges: "nessuna modifica",
     deactivateCustomStyles: "Disattiva stili custom",
     deactivate: "Disattiva",
-    passToEasy: "Passa a Easy",
-    activateNerd: "Attiva modalità Nerd",
     // FW-04
     learnOpenTerm: "Apri la voce nel glossario",
   },
@@ -2925,7 +2647,6 @@ export const CMS_DEFAULTS: CmsContent = {
     hydrationLabel: "Idratazione",
     hydrationTip: "Quanta acqua usi rispetto alla farina. Aumentarla cambia la consistenza e può rendere l’impasto più difficile da lavorare.",
     flourWLabel: "Forza Farina (W)",
-    flourWLabelBlend: "Forza della farina di frumento",
     flourWTip: "La W indica la forza della farina. Aiuta a scegliere un prodotto adatto al metodo e ai tempi della ricetta.",
     plLabel: "Rapporto P/L",
     plTip: "Descrive l’equilibrio tra resistenza e capacità di allungarsi. Se non lo imposti, usiamo una stima: il dato della confezione è preferibile.",
@@ -2939,7 +2660,6 @@ export const CMS_DEFAULTS: CmsContent = {
     preFermentLabel: "Prefermento",
     preFermentTip: "Biga e poolish sono impasti preparati in anticipo e poi uniti all’impasto finale. Possono cambiare aromi e struttura: segui tempi e dosi del procedimento.",
     ovenLabel: "Forno",
-    ovenTip: "Imposta il forno e la temperatura di cottura. Il risultato dipende anche dallo stile e dalla superficie su cui cuoci.",
     panLabel: "Teglia",
     panTipRect: "Forma e dimensioni della teglia influenzano la quantità di impasto e il risultato finale. Lo standard per questo stile è rettangolare.",
     panTipRound: "Forma e dimensioni della teglia influenzano la quantità di impasto e il risultato finale. Lo standard per questo stile è tonda.",
@@ -2955,7 +2675,6 @@ export const CMS_DEFAULTS: CmsContent = {
     thicknessThick: "Alta e soffice",
     thicknessStandard: "Standard per questo stile",
     backLabel: "Indietro",
-    sliderOptimal: "ottimale",
     hintHighHydrationNeedsW: "Con idratazione al {h}%, servono farine forti: W consigliato ≥ {w}",
     hintLowWLimitsHydration: "Con W {w}, idratazione massima consigliata ~{h}%",
     hintLongFermentUseFridge: "Con {hours}h di fermentazione, meglio in frigo ({fridgeTemp}) per controllare l'impasto",
@@ -3491,14 +3210,11 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ui.disable", label: "Disattiva", type: "text" },
       { path: "ui.restore", label: "Ripristina", type: "text" },
       { path: "ui.generate", label: "Genera ricetta", type: "text" },
-      { path: "ui.chooseStyle", label: "Scegli stile", type: "text" },
       { path: "ui.customizeParams", label: "Personalizza parametri", type: "text" },
       { path: "ui.changeStyle", label: "Cambia stile", type: "text" },
-      { path: "ui.newPizza", label: "Nuova pizza", type: "text" },
       // Recipe output
       { path: "ui.ingredients", label: "Ingredienti (heading)", type: "text" },
       { path: "ui.procedure", label: "Procedimento (heading)", type: "text" },
-      { path: "ui.steps_count", label: "Conteggio passaggi", type: "text", description: "Template: {n} passaggi" },
       { path: "ui.doughBalls", label: "Panetti (label)", type: "text" },
       { path: "ui.doughBallsFrom", label: "Panetti (da {w})", type: "text" },
       { path: "ui.totalDough", label: "Totale impasto", type: "text" },
@@ -3506,8 +3222,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ui.endTime", label: "Fine (orario)", type: "text" },
       // Recipe output — clipboard/share text
       { path: "ui.clipboardBalls", label: "Panetti clipboard", type: "text", description: "Template: {n} panetti da {w}" },
-      { path: "ui.clipboardTotal", label: "Totale clipboard", type: "text", description: "Template: Totale: {g}" },
-      { path: "ui.clipboardProcedure", label: "Procedimento clipboard", type: "text", description: "Template: {style} — Procedimento" },
       // Recipe output — ingredient names
       { path: "ui.flour", label: "Farina", type: "text" },
       { path: "ui.water", label: "Acqua", type: "text" },
@@ -3515,26 +3229,15 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ui.sugar", label: "Zucchero", type: "text" },
       { path: "ui.oilEvo", label: "Olio d'oliva", type: "text" },
       // Recipe output — compensations
-      { path: "ui.compTitle", label: "Compensazioni", type: "text" },
-      { path: "ui.compTitleNerd", label: "Compensazioni tecniche", type: "text" },
-      { path: "ui.compHydration", label: "Compensazione idratazione", type: "text" },
-      { path: "ui.compOil", label: "Compensazione olio", type: "text" },
-      { path: "ui.compSugar", label: "Compensazione zucchero", type: "text" },
-      { path: "ui.compCookTime", label: "Compensazione cottura", type: "text" },
-      { path: "ui.compThickness", label: "Compensazione spessore", type: "text" },
-      { path: "ui.compDefault", label: "Compensazione default", type: "text" },
       // Recipe output — aria labels
       { path: "ui.ariaReduceBalls", label: "Aria: Riduci panetti", type: "text" },
       { path: "ui.ariaAddBalls", label: "Aria: Aumenta panetti", type: "text" },
       // Stat strip
       { path: "ui.statHydration", label: "Stat: Idratazione", type: "text" },
       { path: "ui.statOven", label: "Stat: Forno", type: "text" },
-      { path: "ui.statCookTime", label: "Stat: Cottura", type: "text" },
       { path: "ui.statFermentation", label: "Stat: Lievitazione", type: "text" },
       { path: "ui.statTempSuffix", label: "Stat: Suffisso temperatura", type: "text", description: "Template: a {t}°C" },
       // Nerd row
-      { path: "ui.nerdTitle", label: "Nerd: titolo riga", type: "text" },
-      { path: "ui.nerdFlourW", label: "Nerd: Farina W", type: "text" },
       { path: "ui.nerdPL", label: "Nerd: P/L", type: "text" },
       { path: "ui.nerdYeast", label: "Nerd: Lievito", type: "text" },
       { path: "ui.nerdHoursAt18", label: "Nerd: Ore @{refTemp}", type: "text" },
@@ -3548,12 +3251,7 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ui.hour", label: "ora", type: "text" },
       // Score
       { path: "ui.recipeScore", label: "Punteggio ricetta", type: "text" },
-      { path: "ui.nerdToggle", label: "Toggle PizzaNerd", type: "text" },
-      { path: "ui.nerdActive", label: "Attiva PizzaNerd", type: "text" },
       { path: "ui.scienceTitle", label: "Titolo scienza", type: "text" },
-      { path: "ui.ariaCloseScores", label: "Aria: Chiudi punteggi", type: "text" },
-      { path: "ui.ariaViewScores", label: "Aria: Visualizza punteggi", type: "text" },
-      { path: "ui.tapForDetails", label: "Aria: Tocca per dettagli", type: "text" },
       // Banners
       { path: "ui.styleEditorActive", label: "Banner: Style Editor", type: "text" },
       { path: "ui.cmsActive", label: "Banner: CMS", type: "text" },
@@ -3562,17 +3260,13 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       /** Oven section — edit label when already configured */
       { path: "ui.editOven", label: "Banner: Modifica forno", type: "text" },
       // Weather widget
-      { path: "ui.weatherCity", label: "Città meteo", type: "text" },
       { path: "ui.weatherOutdoor", label: "Meteo esterno", type: "text", description: "Template: {t}°C fuori" },
-      { path: "ui.weatherKitchen", label: "Meteo cucina", type: "text" },
       // Badges
       { path: "ui.badgeIdeal", label: "Badge: Ideale", type: "text" },
       { path: "ui.badgeRecent", label: "Badge: Recente", type: "text" },
       { path: "ui.autoLabel", label: "Label: Auto", type: "text" },
       // Oven compact bar
       { path: "ui.cancel", label: "Annulla", type: "text" },
-      { path: "ui.changeOven", label: "Cambia", type: "text" },
-      { path: "ui.ovenFallback", label: "Forno", type: "text" },
       // Pantry group labels
       { path: "ui.pantryFlours", label: "Gruppo farine", type: "text" },
       { path: "ui.pantryYeasts", label: "Gruppo lieviti", type: "text" },
@@ -3585,13 +3279,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ui.equipSurface", label: "Superficie cottura (label)", type: "text" },
       { path: "ui.kitchenTitle", label: "La tua cucina (titolo)", type: "text" },
       { path: "ui.pantryOptional", label: "opzionale (label)", type: "text" },
-      { path: "ui.specialFlours", label: "Farine speciali (label)", type: "text" },
-      { path: "ui.brandSuggest", label: "Conosci la marca? (label)", type: "text" },
-      { path: "ui.badgeSelected", label: "Badge farina selezionata", type: "text" },
-      { path: "ui.otherCompatibleFlours", label: "Altre farine compatibili (label)", type: "text" },
-      { path: "ui.flourSelectHint", label: "Hint selezione farina", type: "text" },
-      { path: "ui.flourSelected", label: "Farina applicata (label)", type: "text" },
-      { path: "ui.autolysisSuggested", label: "Autolisi consigliata (label)", type: "text" },
       // Dietary labels
       { path: "ui.dietGlutenFree", label: "Senza glutine", type: "text" },
       { path: "ui.dietLactoseFree", label: "Senza lattosio", type: "text" },
@@ -3624,7 +3311,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     fields: [
       { path: "filters.advancedLabel", label: "Titolo sezione", type: "text" },
       { path: "filters.removeFilters", label: "Rimuovi filtri", type: "text" },
-      { path: "filters.brandedFlours", label: "Farine di marca", type: "text" },
       { path: "filters.hydrationLabel", label: "Idratazione — label", type: "text" },
       { path: "filters.hydrationLow", label: "Idratazione bassa", type: "text" },
       { path: "filters.hydrationMedium", label: "Idratazione media", type: "text" },
@@ -3662,7 +3348,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "glossary.rangesLabel", label: "Valori tipici", type: "text" },
       { path: "glossary.whyImportantLabel", label: "Perch\u00E9 conta", type: "text" },
       { path: "glossary.relatedLabel", label: "Correlati", type: "text" },
-      { path: "glossary.backToHome", label: "Torna alla home", type: "text" },
       { path: "glossary.termCount", label: "Conteggio termini ({count})", type: "text" },
       { path: "glossary.termCountOne", label: "Conteggio, un termine ({count})", type: "text" },
       { path: "glossary.emptyReason", label: "Nessun risultato: motivo", type: "textarea" },
@@ -3701,7 +3386,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     description: "Titolo principale, sottotitolo e testi hero della homepage",
     fields: [
       { path: "hero.title_line1", label: "Titolo riga 1", type: "text", description: "Prima riga del titolo hero" },
-      { path: "hero.title_line2", label: "Titolo riga 2", type: "text", description: "Seconda riga (accent color)" },
       { path: "hero.subtitle", label: "Sottotitolo", type: "textarea", description: "Paragrafo sotto il titolo hero" },
       /* FW-20 · D-038: avviso del forno in Crea. */
       { path: "hero.onboardingEyebrow", label: "Avviso forno — Titolo", type: "text" },
@@ -3709,7 +3393,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "hero.onboardingCta", label: "Avviso forno — Scegli il forno", type: "text" },
       { path: "hero.onboardingDismiss", label: "Avviso forno — Va bene così", type: "text" },
       { path: "hero.onboardingProfileCta", label: "Avviso forno — Tutta la cucina", type: "text" },
-      { path: "result.breadcrumb", label: "Breadcrumb risultato", type: "text" },
       { path: "result.heading", label: "Titolo risultato", type: "text" },
       { path: "result.backLabel", label: "Pulsante indietro", type: "text" },
     ],
@@ -3851,8 +3534,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     icon: "list-ordered",
     description: "Testi degli step della timeline procedurale (titolo, descrizione, tip beginner/nerd)",
     fields: [
-      { path: "timelineUi.startLabel", label: "Label: Inizio", type: "text" },
-      { path: "timelineUi.beforeSuffix", label: "Suffisso: prima", type: "text" },
       { path: "timelineLabels.preferment.title", label: "Prefermento — Titolo", type: "text" },
       { path: "timelineLabels.preferment.desc", label: "Prefermento — Desc", type: "textarea", description: "Template: {type} = biga/poolish" },
       { path: "timelineLabels.preferment.tipBeginner", label: "Prefermento — Tip beginner", type: "textarea" },
@@ -3913,8 +3594,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "parametricTips.pillThickness", label: "Pill: Spessore", type: "text" },
       { path: "parametricTips.pillLevel", label: "Pill: Livello", type: "text" },
       { path: "parametricTips.pillExperimentation", label: "Pill: Sperimentazione", type: "text" },
-      { path: "parametricTips.pillLevelBeginner", label: "Pill: Principiante", type: "text" },
-      { path: "parametricTips.pillLevelExpert", label: "Pill: Esperto", type: "text" },
       // Sheet labels
       { path: "parametricTips.sheetSectionTitle", label: "Sheet: Titolo sezione", type: "text" },
       { path: "parametricTips.sheetOvenLabel", label: "Sheet: Forno", type: "text" },

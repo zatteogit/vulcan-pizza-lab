@@ -58,6 +58,16 @@ Unendo FW-05, FW-15, FW-17, FW-19 e FW-02 il codice senza lingue arrivava a
 - il catalogo UI italiano (`ui-messages.it.ts`) è un chunk a sé, caricato
   subito come prima, così il chunk principale resta sotto i 100 kB.
 
+Con FW-06 il ramo d'integrazione misurava 501,8 kB senza lingue e 600,2 kB
+per utente (ja 99,8 kB). FW-04 (glossario: 12 voci nuove in 7 lingue,
+TermLink, deep link) aggiunge circa 5 kB di codice e 2,4 kB a ogni lingua.
+Recupero: 161 chiavi del CMS che nessun codice legge più (118 per sezione,
+43 messaggi del motore come i vecchi `rec.*`), tolte dal tipo, dal default
+italiano, dalle sei lingue e dai campi dell'editor. Il catalogo ja torna a
+97,9 kB; il codice senza lingue resta sopra il limite (vedi la PR di FW-04
+per le misure): servono interventi strutturali (per esempio `LazyMotion`),
+non un altro taglio di testi.
+
 ## Perché l'LCP è lento
 
 1. **La home scarica il motore prima che serva.** `use-recipe-state` (187 kB),
