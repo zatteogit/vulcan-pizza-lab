@@ -11179,6 +11179,27 @@
     color: var(--text-muted);
   }
 
+  /* ═══ FW-19 · Timeline comoda onesta (D-Q, S09-A-05, S09-B-04) ═══
+   * Sotto l'interruttore acceso: «i tempi cambiano, il lievito no» e il
+   * «Perché si può?» con i margini dichiarati come regole pratiche. */
+  .procedure-hero__comfort-note {
+    margin-top: var(--space-2);
+    padding-inline: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .procedure-hero__comfort-dose {
+    color: var(--text-default);
+    line-height: var(--leading-normal);
+  }
+
+  .procedure-hero__comfort-why-body {
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
   /* ═══ ONDATA 3 — COMPONENT: procedure-timeline (PREFIX: procedure-timeline) ═══ */
   /* ═══ PROCEDURE TIMELINE — spina, nodi, durate (ondata 3) ═══
    * Consumato da src/app/features/recipe/procedure-timeline.tsx.
@@ -11403,6 +11424,12 @@
     background: transparent;
     /* originale: custom property comfort-chip-bg mai definita → reso trasparente (bug latente preservato) */
     color: var(--recipe-success);
+  }
+
+  /* ═══ FW-19 · Appretto con gli ultimi minuti durante il preriscaldo (S09-A-11) ═══ */
+  .procedure-timeline-step__parallel {
+    margin-left: var(--space-1-5);
+    color: var(--text-muted);
   }
 
   /* ═══ ONDATA 3 — COMPONENT: recipe-output (PREFIX: recipe-output) ═══ */
@@ -17545,6 +17572,95 @@
 
   .cooking-mode-phase--done .cooking-mode-phase__value {
     color: var(--status-positive-fg);
+  }
+
+  /* ═══ FW-19 · Modalità cottura sul piano unico (S10-A-01/02, S10-B-05/12, S10-A-16) ═══
+   * Un passo attivo oltre il tempo previsto non è «completato»: tono di
+   * attenzione, mai il verde del successo. */
+  .cooking-mode-phase--late {
+    background: var(--status-caution-bg);
+    border-color: var(--status-caution-border);
+  }
+
+  .cooking-mode-phase--late .cooking-mode-phase__icon {
+    color: var(--status-caution-icon);
+  }
+
+  .cooking-mode-phase--late .cooking-mode-phase__value {
+    color: var(--status-caution-fg);
+  }
+
+  .cooking-mode-header__ready {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .cooking-mode-note {
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-xl);
+    padding-inline: var(--space-3);
+    padding-block: var(--space-2);
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+    background: var(--status-neutral-bg);
+    border: var(--border-width-thin) solid var(--status-neutral-border);
+    color: var(--text-default);
+  }
+
+  .cooking-mode-note[data-tone="caution"] {
+    background: var(--status-caution-bg);
+    border-color: var(--status-caution-border);
+  }
+
+  .cooking-mode-confirm__night {
+    display: block;
+    margin-top: var(--space-2);
+    color: var(--status-caution-fg);
+  }
+
+  .cook-rounds {
+    margin-top: var(--space-3);
+    border-radius: var(--radius-2xl);
+    padding-inline: var(--space-5);
+    padding-block: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    background: var(--surface-container-low);
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .cook-rounds[data-phase="out"] {
+    background: var(--status-positive-bg);
+    border-color: var(--status-positive-border);
+  }
+
+  .cook-rounds__count {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .cook-rounds__status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-default);
+  }
+
+  .cook-rounds__icon {
+    flex-shrink: 0;
+    color: var(--text-accent);
+  }
+
+  .cook-rounds__hint {
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+  }
+
+  .cook-rounds__cta {
+    align-self: flex-start;
   }
 
   .cooking-mode-phase__meta {

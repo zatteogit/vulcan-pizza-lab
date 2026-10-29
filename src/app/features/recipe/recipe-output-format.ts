@@ -11,7 +11,6 @@ import { getScienceNote } from "../../data/science-notes";
 import { roundForEvidence } from "../../domain/science/evidence";
 import { getActiveUiLocale, uiMessage } from "../../i18n/ui-messages";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
-import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
 import { preFermentMaturationTempC, rule55Sum } from "../../domain/pre-ferment-split";
 import { buildRecipePhases, KITCHEN_SCALE_ERROR_G, type PhaseIngredient, type PhaseIngredientId, type YeastDilution } from "../../domain/recipe-phases";
 import {
@@ -61,6 +60,8 @@ export interface ParametricTipContext {
   ovenType?: OvenType;
   /** FW-07: passo di frittura, senza forno né rotazioni. */
   frying?: boolean;
+  /** FW-19: il piano ha il passo «Pieghe»: la puntata non le ripete. */
+  foldsInPlan?: boolean;
 }
 
 /** FW-07: forni con la fiamma o il calore da un lato, dove la pizza si
@@ -99,6 +100,8 @@ export function getParametricTip(
         : t(pt.mixBeginner, { mixer, time: eq.mixingTime_min, equipment: "" }).trim();
     }
     case "bulk": {
+      // FW-19 (S09-A-07): numero e intervallo stanno nel passo «Pieghe».
+      if (ctx?.foldsInPlan) return null;
       const fold = getFoldingByStyle(styleId);
       if (!fold || fold.foldCount === 0) return null;
       const foldName = text?.fold?.[fold.foldType] ?? fold.foldType.replace(/_/g, " ");
@@ -166,27 +169,8 @@ export function getParametricTip(
 
 /* ═══ CLOCK HELPERS ═══ */
 
-/** Audit totale n. 2: senza un pasto scelto il piano partiva «adesso» e la
- *  pizza usciva alle 3 di notte. Ora si ancora al primo pranzo (12:30) o
- *  cena (20:00) raggiungibile, come gli slot di Crea, e si parte
- *  all'indietro. */
-export function defaultMealStart(totalMinutes: number, now: Date = new Date()): Date {
-  let firstReachable: Date | null = null;
-  for (let day = 0; day < 8; day++) {
-    for (const [h, m] of [[12, 30], [20, 0]] as const) {
-      const meal = new Date(now);
-      meal.setDate(meal.getDate() + day);
-      meal.setHours(h, m, 0, 0);
-      const start = new Date(meal.getTime() - totalMinutes * 60_000);
-      if (start.getTime() < now.getTime()) continue;
-      firstReachable ??= start;
-      // Anche l'impasto va fatto di giorno: si scarta un inizio fra le 22 e le 7.
-      const sh = start.getHours();
-      if (sh >= 7 && sh < 22) return start;
-    }
-  }
-  return firstReachable ?? roundToQuarter(now);
-}
+/* FW-19: l'orario proposto senza pasto scelto (defaultMealStart), la notte
+ * e la Timeline comoda vivono in use-cases/cook-plan.ts, puri e testati. */
 
 export function roundToQuarter(date: Date): Date {
   const d = new Date(date);
@@ -251,20 +235,19 @@ function clockWithDay(
   return hhmm + daySuffix(reference, date, copy);
 }
 
-/** Tutte le viste usano gli stessi istanti. «ca.» indica la variabilità
- * biologica delle fasi flessibili, senza spostarle rispetto alla fase prima. */
+/** Tutte le viste usano gli stessi istanti. FW-19 (S09-A-10): «ca.» va
+ * sull'orario incerto, cioè sull'inizio del passo che segue un'attesa
+ * biologica (approxStartAt in use-cases/cook-plan.ts), non sull'inizio
+ * dell'attesa, che è preciso. */
 export function displayStepTime(
-  stepId: string,
+  approximate: boolean,
   date: Date,
   reference: Date,
   bcp47: string,
   copy?: CmsContent["cooking"],
 ): string {
-  const approx = copy?.approxPrefix ?? "ca. ";
-  if (!FLEXIBLE_STEP_IDS.has(stepId)) {
-    return clockWithDay(date, reference, bcp47, copy);
-  }
-  return `${approx}${clockWithDay(date, reference, bcp47, copy)}`;
+  const clock = clockWithDay(date, reference, bcp47, copy);
+  return approximate ? `${copy?.approxPrefix ?? "ca. "}${clock}` : clock;
 }
 
 function normalizeTemperatureUnitSuffixes(text: string): string {
@@ -276,113 +259,8 @@ export function normalizeMeasureUnitSuffixes(text: string): string {
     .replace(/(\d+(?:[.,]\d+)?\s*g)\s*g\b/g, "$1");
 }
 
-/* ═══ OTTIMIZZATORE COMODITÀ (feedback giugno 2026) ═══
- * "A volte non fa niente se l'impasto resta in frigo un'ora in più, ma magari
- * non ti devi alzare alle 5." Le fasi flessibili si stirano/accorciano entro
- * tolleranze tecniche per portare le fasi ATTIVE in orari umani, tenendo
- * fisso l'orario del pasto (la fine non si tocca). */
-
-const ACTIVE_STEP_IDS = new Set([
-  "mix", "divide", "shape", "top", "bake", "preheat",
-  "stack", "fill_internal", "split_fill", "top_post", "bake2",
-]);
-
-function isNightHour(h: number): boolean {
-  return h >= 23 || h < 7;
-}
-
-export function countNightActives(
-  timeline: TimelineStep[],
-  startMs: number,
-  stretch: Record<number, number>,
-): number {
-  let cursor = startMs;
-  let count = 0;
-  timeline.forEach((step, i) => {
-    if (ACTIVE_STEP_IDS.has(step.id) && isNightHour(new Date(cursor).getHours())) count++;
-    cursor += (step.duration_minutes + (stretch[i] ?? 0)) * 60_000;
-  });
-  return count;
-}
-
-interface ComfortPlan {
-  stretch: Record<number, number>;
-  newStart: Date;
-  nightCount: number;
-  totalExtra: number;
-}
-
-export function optimizeComfort(
-  timeline: TimelineStep[],
-  startTime: Date,
-  fermentTempC: number,
-  now: Date = new Date(),
-): ComfortPlan | null {
-  const baseNight = countNightActives(timeline, startTime.getTime(), {});
-  if (baseNight === 0) return null;
-
-  const flexIdx = timeline
-    .map((s, i) => ({ s, i }))
-    .filter(({ s }) => FLEXIBLE_STEP_IDS.has(s.id) && s.duration_minutes >= 45)
-    .map(({ i }) => i);
-  if (flexIdx.length === 0) return null;
-
-  const cold = fermentTempC <= 6;
-  const optionsFor = (i: number): number[] => {
-    const dur = timeline[i].duration_minutes;
-    /* In frigo la maturazione tollera molto: fino a +50% (max 6h) e -25%
-     * (max 4h) — su 14h di frigo, ±2-3h non cambiano la pizza. A temperatura
-     * ambiente i margini sono stretti: +30% (max 2h), -20% (max 90').
-     * Passi da 30'. */
-    const maxExtra = Math.min(cold ? dur * 0.5 : dur * 0.3, cold ? 360 : 120);
-    const maxShrink = cold
-      ? Math.min(dur * 0.25, 240)
-      : Math.min(dur * 0.2, 90);
-    const opts: number[] = [];
-    for (let e = -Math.floor(maxShrink / 30) * 30; e <= maxExtra; e += 30) opts.push(e);
-    return opts;
-  };
-
-  /* Cartesiano sui (pochi) step flessibili */
-  let combos: Record<number, number>[] = [{}];
-  for (const i of flexIdx) {
-    const next: Record<number, number>[] = [];
-    for (const c of combos) {
-      for (const e of optionsFor(i)) next.push({ ...c, [i]: e });
-    }
-    combos = next;
-    if (combos.length > 25_000) break;
-  }
-
-  const totalBase = timeline.reduce((s, st) => s + st.duration_minutes, 0);
-  const endMs = startTime.getTime() + totalBase * 60_000; // il pasto NON si sposta
-  let best: ComfortPlan | null = null;
-  let bestScore = Infinity;
-
-  for (const c of combos) {
-    const totalExtra = Object.values(c).reduce((a, b) => a + b, 0);
-    // Inizio su quarti d'ora: gli orari proposti devono essere umani
-    const newStartMs =
-      Math.round((endMs - (totalBase + totalExtra) * 60_000) / 900_000) * 900_000;
-    if (newStartMs < now.getTime() - 5 * 60_000) continue; // non si parte nel passato
-    const night = countNightActives(timeline, newStartMs, c);
-    const score = night * 100_000 + Math.abs(totalExtra);
-    if (score < bestScore) {
-      bestScore = score;
-      best = { stretch: c, newStart: new Date(newStartMs), nightCount: night, totalExtra };
-    }
-  }
-
-  /* Onestà prima di tutto: proponiamo il piano solo se AZZERA le fasi attive
-   * notturne. Un miglioramento parziale ("ti svegli alle 2:30 invece che
-   * alle 3") non mantiene la promessa "sistemalo per me". */
-  if (!best || best.nightCount > 0) return null;
-  best.stretch = Object.fromEntries(
-    Object.entries(best.stretch).filter(([, v]) => v !== 0),
-  ) as Record<number, number>;
-  if (Object.keys(best.stretch).length === 0) return null;
-  return best;
-}
+/* FW-19: l'ottimizzatore della Timeline comoda è in use-cases/cook-plan.ts
+ * (optimizeComfort, con le tolleranze dichiarate e la regola D-Q). */
 
 /** Vista Semplice: la forza farina in parole, non in sigle (audit roleplay). */
 export function engineMessage(cms: CmsContent | undefined, key: string, fallback: string): string {

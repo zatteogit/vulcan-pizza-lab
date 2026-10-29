@@ -12,6 +12,8 @@ import { JA_LOCALE } from "../../features/cms/locales/ja";
 import { roundForEvidence } from "./evidence";
 import {
   PROOF_MIN_TEMP_C,
+  foldWindowMinutes,
+  stylePlanFolds,
   STYLES_DB,
   fermentationPhases,
   fermentationSpeedRatio,
@@ -210,7 +212,9 @@ describe("formule del registro = motore (FW-01)", () => {
     const T = recipe.fermentation_temp_c;
     expect(recipe.yeast_type).toBe(yeast);
     const proof = fermentationPhases(h, recipe.has_pre_ferment, recipe.pre_ferment_type as PreFermentType | undefined, style.method_profile).proof;
-    const ha = T < PROOF_MIN_TEMP_C ? proof : 0;
+    // FW-19: con le pieghe come passo, anche quelle ore sono a 18 °C.
+    const folds = foldWindowMinutes(fermentationPhases(h, recipe.has_pre_ferment, recipe.pre_ferment_type as PreFermentType | undefined, style.method_profile).bulk * 60, stylePlanFolds(style.id)) / 60;
+    const ha = T < PROOF_MIN_TEMP_C ? proof + folds : 0;
     // equivalent-hours: sopra 18 °C h × v(T); sotto (h − hₐ) × v(T) + hₐ.
     const h18 = (h - ha) * v(yeast, T) + ha;
     expect(recipe.science.effective_hours_18c).toBeCloseTo(h18, 1);

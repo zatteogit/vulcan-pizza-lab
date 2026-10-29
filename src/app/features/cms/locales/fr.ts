@@ -770,8 +770,8 @@ export const FR_LOCALE: CmsContent = {
     "learn.compatiblePath": "Un parcours pratique compatible avec votre cuisine : vérifier les conditions de la recette.",
     "learn.theoryOnly": "Aucune recette vérifiée ne correspond à ces contraintes ; explorer la théorie.",
     "learn.openTheory": "Explorer la théorie",
-    "timeline.preheat.includesProof": "Ce bloc comprend {minutes} minutes de fermentation finale, déjà comptées dans le temps total : ne pas les ajouter à nouveau.",
-    "timeline.preheat.includesRest": "Ce bloc comprend {minutes} minutes de repos, déjà comptées dans le temps total : ne pas les ajouter à nouveau.",
+    "timeline.preheat.includesProof": "Quand le four est prêt, vérifiez la pâte : pressée du doigt, la marque remonte lentement.",
+    "timeline.preheat.includesProofOil": "Quand l'huile est à température, vérifiez la pâte : pressée du doigt, la marque remonte lentement.",
     "auth.hydrationOff":
       "Hydratation hors centre (-{penalty}%)",
     "auth.wOutOfRange": "W farine hors plage (-{penalty}%)",
@@ -1100,7 +1100,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.bake.title": "Cuisson",
     "timeline.bake.desc": "Faites cuire à {temp}.",
     "timeline.bake.rounds": "{n} cuissons de {sec}, une à la fois.",
-    "timeline.bake.tipBeginner": "Le four doit être très chaud. Préchauffez-le au moins 30 minutes avant.",
+    "timeline.bake.tipBeginner": "Elle est cuite quand le bord est doré et que, soulevée avec la pelle, le dessous est sec avec quelques points sombres.",
     "timeline.bake.tipNerd": "La réaction de Maillard commence à ~140°C et s'accélère de façon exponentielle. À {temp}, la caramélisation crée ~600 composés aromatiques.",
     "timeline.topPost.title": "Garniture après cuisson",
     "timeline.topPost.desc": "Ajoutez les garnitures froides directement sur la surface cuite.",
@@ -1115,7 +1115,20 @@ export const FR_LOCALE: CmsContent = {
     "dig.fodmapReduced": "La réduction des FODMAP ne se détermine pas avec les seules heures",
     "dig.fodmapHighReduction": "La réduction des FODMAP ne se détermine pas avec les seules heures",
     "hint.yeastPrecisionScale": "Utiliser une balance à 0,01 g",
-    "timeline.batchModel": "Durées estimées pour une personne : étaler et garnir toutes les unités, puis cuire une à une. Service échelonné ; aucune tâche simultanée prévue.",
+    "timeline.batchModel": "Durées estimées pour une personne : étaler et garnir toutes les unités, puis cuire une à une, avec la remontée en température du four entre deux cuissons (estimation). Service échelonné ; aucune tâche simultanée prévue.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Plis",
+    "timeline.folds.desc": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte.",
+    "timeline.folds.descCold": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte à température ambiante. Après la dernière série, mettez le récipient au frigo.",
+    "timeline.folds.descCool": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte à température ambiante. Après la dernière série, remettez le récipient à {temp}, pas au frigo.",
+    "timeline.folds.tipBeginner": "Mouillez-vous les mains, saisissez un pan, étirez-le vers le haut et rabattez-le au centre ; tournez le récipient et répétez sur les quatre côtés. Couvrez entre deux séries.",
+    "timeline.folds.tipNerd": "Les plis alignent et tendent les fibres de gluten et redistribuent les gaz : ils donnent de la force sans travail mécanique.",
+    "timeline.bake.recovery": "Entre deux cuissons, comptez environ {sec} pour défourner, enfourner et laisser le four remonter en température.",
+    "timelineComfort.nightNoPlan": "Étapes à faire la nuit : {n}, la première à {time}. Choisissez un repas ci-dessus.",
+    "timelineComfort.nightNoPlanNoMeal": "Étapes à faire la nuit : {n}, la première à {time}. Décalez le début avec les boutons ci-dessus.",
+    "timelineComfort.doseNote": "Les horaires changent, pas la levure : fiez-vous au volume de la pâte, pas à l'horloge.",
+    "timelineComfort.whyTitle": "Pourquoi est-ce possible ?",
+    "timelineComfort.whyBody": "Nous allongeons ou raccourcissons seulement les attentes, chacune dans une marge : au frigo jusqu'à +{coldPlusPct} (au plus {coldPlus}) ou −{coldMinusPct} (au plus {coldMinus}) ; à température ambiante, apprêt compris, jusqu'à +{roomPlusPct} (au plus {roomPlus}) ou −{roomMinusPct} (au plus {roomMinus}). Nous ne déplaçons pas d'heures du frigo vers la température ambiante et nous ne recalculons pas la levure. Ces marges sont des règles pratiques que nous avons choisies, pas des mesures : c'est pourquoi le volume compte.",
   },
   scienceLabels: {
     yeastBaker: "Levure de boulanger",
@@ -1161,7 +1174,7 @@ export const FR_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "M\u00E9lange",
-      desc: "M\u00E9langer sans p\u00E9trir jusqu'\u00E0 dissoudre les grumeaux. Puis 3 s\u00E9ries de plis (stretch & fold) toutes les ~30 min.",
+      desc: "Mélangez sans pétrir jusqu'à dissoudre les grumeaux. Les plis et le temps font le reste.",
       tipBeginner:
         "Pas besoin de p\u00E9trir ! M\u00E9langer avec une spatule jusqu'\u00E0 disparition des grumeaux secs.",
       tipNerd:
@@ -1175,7 +1188,7 @@ export const FR_LOCALE: CmsContent = {
         "La p\u00E2te doit doubler de volume. S'il fait chaud, v\u00E9rifier plus souvent !",
       tipNerd:
         "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}. Cela ne mesure ni la réduction des FODMAP ni la digestibilité.",
-      longDesc: "La p\u00E2te repose en une seule masse, dans un r\u00E9cipient huil\u00E9 et couvert d'un film au contact. C'est pendant cette phase que la levure travaille et d\u00E9veloppe ar\u00F4me, structure et digestibilit\u00E9. Si l'hydratation est \u00E9lev\u00E9e, faites 2-3 \u00AB plis de renforcement \u00BB (stretch & fold) pendant les 2 premi\u00E8res heures : soulevez un pan de p\u00E2te, \u00E9tirez-le vers le haut et rabattez-le vers le centre, tournez et r\u00E9p\u00E9tez sur les 4 c\u00F4t\u00E9s. La fermentation est termin\u00E9e quand le volume a doubl\u00E9 et que la surface est bomb\u00E9e et lisse.",
+      longDesc: "La pâte repose en une seule masse, dans un récipient huilé et couvert d'un film au contact. C'est pendant cette phase que la levure travaille et développe arôme, structure et digestibilité. Si le style prévoit des plis, leur nombre et leur intervalle figurent dans une étape ou un conseil à part. La fermentation est terminée quand le volume a doublé et que la surface est bombée et lisse.",
     },
     bulk_cold: {
       title: "Pointage",
@@ -1184,7 +1197,7 @@ export const FR_LOCALE: CmsContent = {
         "Au frigo la p\u00E2te monte lentement mais gagne en saveur. Bien couvrir avec un film au contact.",
       tipNerd:
         "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}. Cela ne mesure ni la réduction des FODMAP ni la digestibilité.",
-      longDesc: "Placez le r\u00E9cipient avec la p\u00E2te au r\u00E9frig\u00E9rateur ({fridgeTemp}). Au frigo, la levure travaille beaucoup plus lentement : il faut bien plus de temps, mais en \u00E9change vous gagnez en complexit\u00E9 aromatique, en digestibilit\u00E9 et en r\u00E9seau de gluten plus d\u00E9velopp\u00E9. Couvrez toujours d'un film au contact pour \u00E9viter que la surface ne s\u00E8che. Une fois sortie, laissez la p\u00E2te s'acclimater 1-2 heures \u00E0 temp\u00E9rature ambiante avant la division.",
+      longDesc: "Placez le récipient avec la pâte au réfrigérateur ({fridgeTemp}). Au frigo, la levure travaille beaucoup plus lentement : il faut bien plus de temps, mais en échange vous gagnez en complexité aromatique, en digestibilité et en réseau de gluten plus développé. Couvrez toujours d'un film au contact pour éviter que la surface ne sèche. Vous pouvez la diviser dès sa sortie du frigo : elle s'acclimate pendant l'apprêt.",
     },
     rest: {
       title: "Repos",
@@ -1943,7 +1956,6 @@ export const FR_LOCALE: CmsContent = {
     toppingAmountsNote: "Les quantités sont pour une pizza ou une unité. Les ingrédients suivent l’ordre d’ajout.",
     toppingPerUnit: "{amount} par {unit}",
     durationLabel: "Dur\u00E9e : {duration}",
-    comfortLabel: "{duration} confort",
     totalDuration: "{duration} au total",
     finalDoughStageTitle: "P\u00E2te finale",
     rule55Title: "Temp\u00E9rature de l'eau",

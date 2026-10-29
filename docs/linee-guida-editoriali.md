@@ -83,6 +83,9 @@ lo aggiunge qui e, se è tecnico, al glossario.
 | **Genera ricetta** | La CTA del pannello stile, su ogni breakpoint | pannello stile | «Crea» (è il nome della tab) |
 | **Metodo e fonti** | La pagina di Impara generata dal registro della scienza (`/learn/metodo`, FW-15, D-D): come lavora il motore, note con statuto, ipotesi, fonti con stato, limiti, versione | Impara, Informazioni, Profilo, «Perché?» (L3) | «Bibliografia», «Scienza», «Riferimenti» (il glossario non ha fonti) |
 | **Edizione per {partner}** | Il blocco che dichiara per chi è un'edizione e la regola di neutralità del motore (FW-15, D-K); i testi vengono dallo schema dell'edizione | Informazioni, onboarding | «Sponsorizzato da», «in collaborazione con» |
+| **Pieghe** | Il passo con i giri di pieghe (stretch & fold) prima della puntata: numero e intervallo da `FOLDING_DB`, mai scritti a mano in un altro testo (FW-19) | Procedimento, modalità cottura | «~30 min» o «ogni 45 minuti» in testi diversi dal passo |
+| **Recupero del forno** | Il tempo fra due cotture in serie per sfornare, infornare e far tornare in temperatura la platea; ipotesi del modello (nota `bake-round-recovery`, FW-19) | passo Cottura, banner del modello, modalità cottura | «tempi morti» |
+| **«ca.»** | L'orario incerto: l'inizio del passo che segue un'attesa biologica e la fine della pizzata. Una sola notazione, anche nella tabella di marcia (FW-19) | Procedimento, modalità cottura | «≈», «~» davanti agli orari |
 - FW-11. In inglese si scrive **autolyse** (non «autolysis») e **preferment**
   senza trattino, come nella fonte King Arthur. I nomi propri dei luoghi
   d'origine usano l'esonimo della lingua (Napoli → Naples, Neapel, Nápoles):

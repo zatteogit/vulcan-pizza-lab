@@ -605,7 +605,7 @@ export const SCIENCE_ES: CmsScience = {
     "equivalent-hours": {
       title: "Horas equivalentes",
       l1: "Tus horas traducidas a las horas necesarias a la temperatura de referencia.",
-      l2: "Multiplicamos las horas por la velocidad a tu temperatura. Si fermentas más fresco que la referencia (nevera, bodega), el apresto final se hace a la temperatura de referencia: esas horas cuentan tal cual y solo las demás se multiplican. Por eso la cuenta «horas × velocidad» sola no cuadra.",
+      l2: "Multiplicamos las horas por la velocidad a tu temperatura. Si fermentas más fresco que la referencia (nevera, bodega), el apresto final y los pliegues antes de la nevera se hacen a la temperatura de referencia: esas horas cuentan tal cual y solo las demás se multiplican. Por eso la cuenta «horas × velocidad» sola no cuadra.",
     },
     "kitchen-temp-default": {
       title: "Temperatura de la cocina",
@@ -737,6 +737,17 @@ export const SCIENCE_ES: CmsScience = {
       l1: "Los umbrales numéricos de los problemas son orientativos.",
       l2: "Son reglas prácticas sin fuente publicada y no tienen en cuenta el estilo: una masa en bandeja, por ejemplo, está mucho más hidratada que una napolitana. Úsalos como pista, no como diagnóstico.",
     },
+    /* FW-19: piano temporale. */
+    "comfort-tolerances": {
+      title: "Márgenes de la línea de tiempo cómoda",
+      l1: "Los márgenes con los que la línea de tiempo cómoda mueve las esperas son una elección nuestra, no una medición.",
+      l2: "Alargamos o acortamos las esperas dentro de márgenes fijos, más amplios en la nevera que a temperatura ambiente, sin pasar horas de la nevera al ambiente y sin recalcular la levadura. Cuanto más te alejas del plan de partida, más cuenta fijarse en el volumen de la masa.",
+    },
+    "bake-round-recovery": {
+      title: "Recuperación del horno entre horneados",
+      l1: "El tiempo entre un horneado y otro es una hipótesis del modelo.",
+      l2: "Entre una pizza y otra se saca, se mete y la base recupera la temperatura: el horno de casa con piedra necesita minutos, los hornos de pizza menos y los de leña casi nada. Usamos un valor fijo por tipo de horno, no medido en el tuyo.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "La temperatura se mantiene constante durante toda la fase.",
@@ -758,5 +769,9 @@ export const SCIENCE_ES: CmsScience = {
     "oven-power-steps": "Una potencia típica por franja de temperatura, igual para todos los combustibles.",
     "no-health-claim": "Ninguna afirmación de salud: el índice no mide la digestión de una persona.",
     "thresholds-rules-of-thumb": "Los umbrales son reglas prácticas generales, no ajustadas al estilo.",
+    /* FW-19: piano temporale. */
+    "comfort-margins-rule-of-thumb": "Los márgenes, más amplios en la nevera que a temperatura ambiente, son reglas prácticas sin fuente.",
+    "comfort-yeast-unchanged": "La dosis de levadura sigue siendo la calculada para el plan de partida.",
+    "recovery-by-oven-type": "La recuperación depende solo del tipo de horno, no del modelo ni de la superficie.",
   },
 };

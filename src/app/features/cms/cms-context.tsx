@@ -1058,7 +1058,6 @@ export interface CmsContent {
     toppingAmountsNote: string;
     toppingPerUnit: string;
     durationLabel: string;
-    comfortLabel: string;
     totalDuration: string;
     finalDoughStageTitle: string;
     rule55Title: string;
@@ -1911,7 +1910,6 @@ export const CMS_DEFAULTS: CmsContent = {
     toppingAmountsNote: "Le dosi sono per una pizza o unità. Gli ingredienti seguono l’ordine in cui aggiungerli.",
     toppingPerUnit: "{amount} per {unit}",
     durationLabel: "Durata: {duration}",
-    comfortLabel: "{duration} comfort",
     totalDuration: "{duration} totali",
     finalDoughStageTitle: "Impasto finale",
     rule55Title: "Temperatura dell'acqua",
@@ -2137,8 +2135,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "learn.compatiblePath": "Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta.",
     "learn.theoryOnly": "Con questi vincoli manca una ricetta verificata: puoi approfondire la teoria.",
     "learn.openTheory": "Esplora la teoria",
-    "timeline.preheat.includesProof": "Questo blocco comprende {minutes} minuti di appretto, già inclusi nel tempo totale: non aggiungerli di nuovo.",
-    "timeline.preheat.includesRest": "Questo blocco comprende {minutes} minuti di riposo, già inclusi nel tempo totale: non aggiungerli di nuovo.",
+    "timeline.preheat.includesProof": "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
+    "timeline.preheat.includesProofOil": "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
     // Authenticity penalties
     "auth.hydrationOff": "Idratazione fuori centro (-{penalty}%)",
     "auth.wOutOfRange": "W farina fuori range (-{penalty}%)",
@@ -2327,7 +2325,18 @@ export const CMS_DEFAULTS: CmsContent = {
     "dig.fodmapReduced": "Riduzione FODMAP non determinabile dalle sole ore",
     "dig.fodmapHighReduction": "Riduzione FODMAP non determinabile dalle sole ore",
     "hint.yeastPrecisionScale": "Usa una bilancia da 0,01 g",
-    "timeline.batchModel": "Tempi stimati per una persona: stesura e condimento di tutte le unità, poi cotture una alla volta. Servizio scaglionato; nessuna sovrapposizione prevista.",
+    "timeline.batchModel": "Tempi stimati per una persona: stesura e condimento di tutte le unità, poi cotture una alla volta, con il recupero del forno fra l'una e l'altra (stima). Servizio scaglionato; nessuna sovrapposizione prevista.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Pieghe",
+    "timeline.folds.desc": "Fai {count} giri di pieghe, uno ogni {interval}, con l'impasto coperto.",
+    "timeline.folds.descCold": "Fai {count} giri di pieghe, uno ogni {interval}, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro metti il contenitore in frigo.",
+    "timeline.folds.descCool": "Fai {count} giri di pieghe, uno ogni {interval}, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro rimetti il contenitore a {temp}, non in frigo.",
+    "timeline.bake.recovery": "Fra una cottura e l'altra conta circa {sec} per sfornare, infornare e lasciare che il forno torni in temperatura.",
+    "timelineComfort.nightNoPlan": "Fasi da fare di notte: {n}, la prima alle {time}. Scegli un pasto qui sopra.",
+    "timelineComfort.nightNoPlanNoMeal": "Fasi da fare di notte: {n}, la prima alle {time}. Sposta l'inizio con i pulsanti qui sopra.",
+    "timelineComfort.doseNote": "I tempi cambiano, il lievito no: guarda il volume dell'impasto, non l'orologio.",
+    "timelineComfort.whyTitle": "Perché si può?",
+    "timelineComfort.whyBody": "Allunghiamo o accorciamo solo le attese, ognuna dentro un margine: in frigo fino a +{coldPlusPct} (al massimo {coldPlus}) o −{coldMinusPct} (al massimo {coldMinus}); a temperatura ambiente, appretto compreso, fino a +{roomPlusPct} (al massimo {roomPlus}) o −{roomMinusPct} (al massimo {roomMinus}). Non spostiamo ore dal frigo all'ambiente e non ricalcoliamo il lievito. Questi margini sono regole pratiche scelte da noi, non misure: per questo conta il volume.",
   },
   scienceLabels: {
     yeastBaker: "Lievito da forno",
@@ -2368,7 +2377,7 @@ export const CMS_DEFAULTS: CmsContent = {
     },
     mix_noknead: {
       title: "Impasto",
-      desc: "Mescolare senza impastare fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min.",
+      desc: "Mescola senza impastare finché non restano grumi di farina asciutta. La forza la danno poi le pieghe e il tempo.",
       longDesc: "Niente impastatrice: usa solo una spatola o una mano. Versa l'acqua nel contenitore, aggiungi il lievito sciolto, poi la farina e infine il sale. Mescola in modo grossolano fino a quando non ci sono pi\u00F9 grumi di farina asciutta (sono sufficienti 2-3 minuti). L'impasto sar\u00E0 appiccicoso e irregolare \u2014 \u00E8 normale. Copri e lascia riposare: lo sviluppo del glutine avverr\u00E0 da solo con il tempo + le pieghe successive.",
       tipBeginner: "Non serve impastare! Mescola con una spatola finch\u00E9 non ci sono pi\u00F9 grumi di farina asciutta.",
       tipNerd: "L'autolisi sfrutta le proteinasi endogene della farina per sviluppare il glutine senza lavoro meccanico.",
@@ -2376,14 +2385,14 @@ export const CMS_DEFAULTS: CmsContent = {
     bulk: {
       title: "Puntata",
       desc: "Lievitazione in massa a {temp}",
-      longDesc: "L'impasto riposa in un'unica massa, dentro un contenitore unto d'olio e coperto a contatto con pellicola. \u00C8 in questa fase che il lievito lavora e sviluppa aroma, struttura e digeribilit\u00E0. Se idratazione alta, esegui 2-3 \"pieghe di rinforzo\" (stretch & fold) nelle prime 2 ore: solleva un lembo, tiralo in alto e ripiegalo verso il centro, ruota e ripeti per i 4 lati. La fermentazione \u00E8 completa quando il volume \u00E8 raddoppiato e la superficie \u00E8 bombata e liscia.",
+      longDesc: "L'impasto riposa in un'unica massa, dentro un contenitore unto d'olio e coperto a contatto con pellicola. È in questa fase che il lievito lavora e sviluppa aroma, struttura e digeribilità. Se lo stile prevede le pieghe, numero e intervallo sono in un passo o in un consiglio a parte. La fermentazione è completa quando il volume è raddoppiato e la superficie è bombata e liscia.",
       tipBeginner: "L'impasto deve raddoppiare di volume. Se fa caldo, controlla più spesso!",
       tipNerd: "A {temp} il modello stima una velocità di fermentazione di {factor}× rispetto a {refTemp}. Non è una misura della riduzione FODMAP o della digeribilità.",
     },
     bulk_cold: {
       title: "Puntata",
       desc: "Lievitazione in massa a {temp}",
-      longDesc: "Trasferisci il contenitore con l'impasto in frigorifero ({fridgeTemp}). In frigo il lievito lavora molto pi\u00F9 lentamente: serve molto pi\u00F9 tempo, ma in cambio guadagni complessit\u00E0 di aroma, digeribilit\u00E0 e maglia glutinica pi\u00F9 sviluppata. Copri sempre con pellicola a contatto per evitare che la crosta si secchi. Quando lo tiri fuori, lascialo acclimatare 1-2 ore a temperatura ambiente prima dello staglio.",
+      longDesc: "Trasferisci il contenitore con l'impasto in frigorifero ({fridgeTemp}). In frigo il lievito lavora molto più lentamente: serve molto più tempo, ma in cambio guadagni complessità di aroma, digeribilità e maglia glutinica più sviluppata. Copri sempre con pellicola a contatto per evitare che la crosta si secchi. Puoi dividerlo appena lo tiri fuori dal frigo: si acclimata durante l'appretto.",
       tipBeginner: "In frigo l'impasto cresce lento ma guadagna sapore. Copri bene con pellicola a contatto.",
       tipNerd: "A {temp} il modello stima una velocità di fermentazione di {factor}× rispetto a {refTemp}. Non è una misura della riduzione FODMAP o della digeribilità.",
     },

@@ -771,8 +771,8 @@ export const ES_LOCALE: CmsContent = {
     "learn.compatiblePath": "Un recorrido práctico compatible con tu cocina: comprueba las condiciones de la receta.",
     "learn.theoryOnly": "No hay una receta verificada para estas condiciones; explora la teoría.",
     "learn.openTheory": "Explora la teoría",
-    "timeline.preheat.includesProof": "Este bloque incluye {minutes} minutos de fermentación final, ya incluidos en el tiempo total: no los sumes otra vez.",
-    "timeline.preheat.includesRest": "Este bloque incluye {minutes} minutos de reposo, ya incluidos en el tiempo total: no los sumes otra vez.",
+    "timeline.preheat.includesProof": "Cuando el horno esté listo, comprueba la masa: al presionarla con un dedo, la marca vuelve despacio.",
+    "timeline.preheat.includesProofOil": "Cuando el aceite esté a temperatura, comprueba la masa: al presionarla con un dedo, la marca vuelve despacio.",
     "auth.hydrationOff":
       "Hidratación fuera de centro (-{penalty}%)",
     "auth.wOutOfRange":
@@ -1100,7 +1100,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.bake.title": "Cocción",
     "timeline.bake.desc": "Hornea a {temp}.",
     "timeline.bake.rounds": "{n} horneados de {sec}, de uno en uno.",
-    "timeline.bake.tipBeginner": "El horno debe estar muy caliente. Precalienta al menos 30 minutos antes.",
+    "timeline.bake.tipBeginner": "Está hecha cuando el borde está dorado y, al levantarla con la pala, la base está seca y tiene algunos puntos oscuros.",
     "timeline.bake.tipNerd": "La reacción de Maillard empieza a ~140°C y se acelera exponencialmente. A {temp} la caramelización crea ~600 compuestos aromáticos.",
     "timeline.topPost.title": "Cobertura tras el horneado",
     "timeline.topPost.desc": "Añade los ingredientes en frío directamente sobre la superficie horneada.",
@@ -1115,7 +1115,20 @@ export const ES_LOCALE: CmsContent = {
     "dig.fodmapReduced": "La reducción de FODMAP no puede determinarse solo por las horas",
     "dig.fodmapHighReduction": "La reducción de FODMAP no puede determinarse solo por las horas",
     "hint.yeastPrecisionScale": "Usa una báscula de 0,01 g",
-    "timeline.batchModel": "Tiempos estimados para una persona: estirar y cubrir todas las unidades y después hornear de una en una. Servicio escalonado; sin tareas solapadas.",
+    "timeline.batchModel": "Tiempos estimados para una persona: estirar y cubrir todas las unidades y después hornear de una en una, con la recuperación del horno entre horneados (estimación). Servicio escalonado; sin tareas solapadas.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Pliegues",
+    "timeline.folds.desc": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada.",
+    "timeline.folds.descCold": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada a temperatura ambiente. Tras la última tanda, mete el recipiente en la nevera.",
+    "timeline.folds.descCool": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada a temperatura ambiente. Tras la última tanda, vuelve a dejar el recipiente a {temp}, no en la nevera.",
+    "timeline.folds.tipBeginner": "Mójate las manos, toma un extremo, estíralo hacia arriba y dóblalo al centro; gira el recipiente y repite en los cuatro lados. Tapa entre tanda y tanda.",
+    "timeline.folds.tipNerd": "Los pliegues alinean y tensan las fibras de gluten y redistribuyen los gases: dan fuerza sin trabajo mecánico.",
+    "timeline.bake.recovery": "Entre un horneado y otro, cuenta unos {sec} para sacar, meter y dejar que el horno recupere la temperatura.",
+    "timelineComfort.nightNoPlan": "Pasos que caen de noche: {n}, el primero a las {time}. Elige una comida arriba.",
+    "timelineComfort.nightNoPlanNoMeal": "Pasos que caen de noche: {n}, el primero a las {time}. Mueve el inicio con los botones de arriba.",
+    "timelineComfort.doseNote": "Cambian los tiempos, no la levadura: guíate por el volumen de la masa, no por el reloj.",
+    "timelineComfort.whyTitle": "¿Por qué se puede?",
+    "timelineComfort.whyBody": "Solo alargamos o acortamos las esperas, cada una dentro de un margen: en la nevera hasta +{coldPlusPct} (como mucho {coldPlus}) o −{coldMinusPct} (como mucho {coldMinus}); a temperatura ambiente, fermentación final incluida, hasta +{roomPlusPct} (como mucho {roomPlus}) o −{roomMinusPct} (como mucho {roomMinus}). No pasamos horas de la nevera al ambiente ni recalculamos la levadura. Estos márgenes son reglas prácticas elegidas por nosotros, no mediciones: por eso cuenta el volumen.",
   },
   scienceLabels: {
     yeastBaker: "Levadura de panadero",
@@ -1161,7 +1174,7 @@ export const ES_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "Amasado",
-      desc: "Mezclar sin amasar hasta deshacer los grumos. Luego 3 tandas de pliegues (stretch & fold) cada ~30 min.",
+      desc: "Mezcla sin amasar hasta deshacer los grumos. Los pliegues y el tiempo hacen el resto.",
       tipBeginner:
         "\u00A1No hace falta amasar! Mezcla con una esp\u00E1tula hasta que no queden grumos de harina seca.",
       tipNerd:
@@ -1175,7 +1188,7 @@ export const ES_LOCALE: CmsContent = {
         "La masa debe duplicar su volumen. \u00A1Si hace calor, revisa m\u00E1s seguido!",
       tipNerd:
         "A {temp}, el modelo estima una velocidad de fermentación de {factor}× respecto a {refTemp}. No mide la reducción de FODMAP ni la digestibilidad.",
-      longDesc: "La masa reposa en una sola pieza, dentro de un recipiente untado con aceite y cubierta con film en contacto. Es en esta fase cuando la levadura trabaja y desarrolla aroma, estructura y digestibilidad. Si la hidrataci\u00F3n es alta, haz 2-3 \u00ABpliegues de refuerzo\u00BB (stretch & fold) en las primeras 2 horas: levanta un extremo, est\u00EDralo hacia arriba y d\u00F3blalo hacia el centro; gira el recipiente y repite en los 4 lados. La fermentaci\u00F3n est\u00E1 completa cuando el volumen se ha duplicado y la superficie est\u00E1 abombada y lisa.",
+      longDesc: "La masa reposa en una sola pieza, dentro de un recipiente untado con aceite y cubierta con film en contacto. Es en esta fase cuando la levadura trabaja y desarrolla aroma, estructura y digestibilidad. Si el estilo prevé pliegues, su número y su intervalo están en un paso o un consejo aparte. La fermentación está completa cuando el volumen se ha duplicado y la superficie está abombada y lisa.",
     },
     bulk_cold: {
       title: "Fermentaci\u00F3n en bloque",
@@ -1184,7 +1197,7 @@ export const ES_LOCALE: CmsContent = {
         "En la nevera la masa crece lento pero gana sabor. Cubre bien con film en contacto.",
       tipNerd:
         "A {temp}, el modelo estima una velocidad de fermentación de {factor}× respecto a {refTemp}. No mide la reducción de FODMAP ni la digestibilidad.",
-      longDesc: "Pasa el recipiente con la masa a la nevera ({fridgeTemp}). En fr\u00EDo la levadura trabaja mucho m\u00E1s despacio: hace falta bastante m\u00E1s tiempo, pero a cambio ganas complejidad arom\u00E1tica, digestibilidad y una malla glut\u00EDnica m\u00E1s desarrollada. Cubre siempre con film en contacto para que no se forme costra. Cuando la saques, d\u00E9jala aclimatarse 1-2 horas a temperatura ambiente antes del boleado.",
+      longDesc: "Pasa el recipiente con la masa a la nevera ({fridgeTemp}). En frío la levadura trabaja mucho más despacio: hace falta bastante más tiempo, pero a cambio ganas complejidad aromática, digestibilidad y una malla glutínica más desarrollada. Cubre siempre con film en contacto para que no se forme costra. Puedes dividirla en cuanto la sacas de la nevera: se aclimata durante la fermentación final.",
     },
     rest: {
       title: "Reposo",
@@ -1937,7 +1950,6 @@ export const ES_LOCALE: CmsContent = {
     toppingAmountsNote: "Las cantidades son para una pizza o unidad. Los ingredientes siguen el orden en que se añaden.",
     toppingPerUnit: "{amount} por {unit}",
     durationLabel: "Duraci\u00F3n: {duration}",
-    comfortLabel: "{duration} con margen",
     totalDuration: "{duration} en total",
     finalDoughStageTitle: "Masa final",
     rule55Title: "Temperatura del agua",

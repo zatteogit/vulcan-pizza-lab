@@ -611,7 +611,7 @@ export const SCIENCE_DE: CmsScience = {
     "equivalent-hours": {
       title: "Äquivalente Stunden",
       l1: "Deine Stunden, umgerechnet in die Stunden bei Referenztemperatur.",
-      l2: "Wir multiplizieren die Stunden mit der Geschwindigkeit bei deiner Temperatur. Wenn du kühler als die Referenz gärst (Kühlschrank, Keller), findet die Stückgare bei der Referenztemperatur statt: Diese Stunden zählen so, wie sie sind, und nur die übrigen werden multipliziert. Deshalb geht «Stunden × Geschwindigkeit» allein nicht auf.",
+      l2: "Wir multiplizieren die Stunden mit der Geschwindigkeit bei deiner Temperatur. Wenn du kühler als die Referenz gärst (Kühlschrank, Keller), finden die Stückgare und die Falt-Runden vor dem Kühlschrank bei der Referenztemperatur statt: Diese Stunden zählen so, wie sie sind, und nur die übrigen werden multipliziert. Deshalb geht «Stunden × Geschwindigkeit» allein nicht auf.",
     },
     "kitchen-temp-default": {
       title: "Küchentemperatur",
@@ -743,6 +743,17 @@ export const SCIENCE_DE: CmsScience = {
       l1: "Die Zahlenschwellen bei den Problemen sind Richtwerte.",
       l2: "Es sind Faustregeln ohne veröffentlichte Quelle, und sie berücksichtigen den Stil nicht: Ein Blechteig ist zum Beispiel viel feuchter als ein neapolitanischer. Nutze sie als Hinweis, nicht als Diagnose.",
     },
+    /* FW-19: piano temporale. */
+    "comfort-tolerances": {
+      title: "Spielräume der Komfort-Timeline",
+      l1: "Die Spielräume, mit denen die Komfort-Timeline die Wartezeiten verschiebt, sind unsere Wahl, keine Messung.",
+      l2: "Wir verlängern oder verkürzen die Wartezeiten innerhalb fester Spielräume, im Kühlschrank größer als bei Raumtemperatur, ohne Stunden vom Kühlschrank zur Raumtemperatur zu verschieben und ohne die Hefe neu zu berechnen. Je weiter du dich vom Ausgangsplan entfernst, desto mehr zählt das Teigvolumen.",
+    },
+    "bake-round-recovery": {
+      title: "Erholzeit des Ofens zwischen den Backvorgängen",
+      l1: "Die Zeit zwischen zwei Backvorgängen ist eine Annahme des Modells.",
+      l2: "Zwischen zwei Pizzen wird herausgeholt, eingeschossen und die Backfläche kommt wieder auf Temperatur: Der Haushaltsofen mit Stein braucht Minuten, Pizzaöfen weniger, Holzöfen fast nichts. Wir verwenden einen festen Wert pro Ofentyp, nicht an deinem Ofen gemessen.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "Die Temperatur bleibt während der ganzen Phase gleich.",
@@ -764,5 +775,9 @@ export const SCIENCE_DE: CmsScience = {
     "oven-power-steps": "Eine typische Leistung je Temperaturbereich, gleich für jeden Brennstoff.",
     "no-health-claim": "Keine Gesundheitsaussage: Der Index misst nicht, wie ein Mensch verdaut.",
     "thresholds-rules-of-thumb": "Die Schwellen sind allgemeine Faustregeln, nicht auf den Stil abgestimmt.",
+    /* FW-19: piano temporale. */
+    "comfort-margins-rule-of-thumb": "Die Spielräume, im Kühlschrank größer als bei Raumtemperatur, sind Faustregeln ohne Quelle.",
+    "comfort-yeast-unchanged": "Die Hefemenge bleibt die für den Ausgangsplan berechnete.",
+    "recovery-by-oven-type": "Die Erholzeit hängt nur vom Ofentyp ab, nicht vom Modell oder der Backfläche.",
   },
 };
