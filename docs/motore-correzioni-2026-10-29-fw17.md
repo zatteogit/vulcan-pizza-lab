@@ -65,8 +65,25 @@ percentuali, non i grammi arrotondati, e D-P agisce solo con il solo lievito mad
 
 ## Nessuna dose promessa come esatta
 
-- La diluizione è esatta nell'aritmetica; l'incertezza resta la pesata dei 5 g con la bilancia
-  da cucina (±0,5 g, circa un decimo) e lo si dice.
+- La diluizione è esatta nell'aritmetica, le pesate no. Con la bilancia da cucina (passo 1 g,
+  errore fino a ±0,5 g) si pesa due volte: i 5 g di lievito della soluzione madre (±10 %) e la
+  soluzione da prelevare (±0,5 g su 5–45 g, dal ±10 % all'1 %). Gli errori si sommano: ±20 % a
+  0,1 g (5 g di soluzione), ±15 % da 0,2 g fino al grammo (arrotondato per eccesso al 5 %;
+  `dilutionUncertaintyPct` in `recipe-phases.ts`). Il testo nomina entrambe le pesate e dà il
+  valore calcolato per quella dose. L'acqua della soluzione madre (245 g, ±0,2 %) si trascura.
 - I cucchiaini sono marcati «stima» (un cucchiaino raso di secco ≈ 3 g, la stessa ipotesi dei
   suggerimenti già presenti sopra il grammo).
 - La temperatura dell'acqua del prefermento è marcata «stima».
+
+## Revisione (stesso ramo)
+
+- Baker's %: la Ricetta (livello nerd) e la stampa leggono la stessa riga dei totali
+  (`buildRecipePhases(...).totals`, cioè i `baker_pcts` del motore) con lo stesso formato
+  (`phaseBakerPctText`). Prima la Ricetta ricalcolava dai grammi arrotondati: pinsa da un
+  panetto, sale 1,9 % a schermo e 1,8 % in stampa, olio 1,1 % e 1,3 %; STG sale 3 % e 2,8 %.
+- Regola 55 col prefermento: la spiegazione usa la stessa somma del motore (`rule55Sum` in
+  `pre-ferment-split.ts`): cucina + farina + acqua + prefermento = 4 × DDT − attrito, col
+  prefermento alla temperatura di maturazione (ipotesi: punto medio, biga 19 °C, poolish 21 °C).
+  Esempio: canotto con biga, cucina a 20 °C, DDT 24 °C: 20 + 20 + 37 + 19 = 96 = 4 × 24. Il (?)
+  sta accanto alla temperatura dell'acqua dell'impasto finale, nello scorporo, non più sulla riga
+  Acqua (che con un prefermento non mostra temperature).

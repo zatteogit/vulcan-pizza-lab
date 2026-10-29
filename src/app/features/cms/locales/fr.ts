@@ -1955,6 +1955,7 @@ export const FR_LOCALE: CmsContent = {
     rule55AriaOpen: "Comment se calcule la temp\u00E9rature de l'eau",
     rule55AriaClose: "Masquer l'explication",
     rule55Description: "Ambiante, farine et eau doivent faire environ {sum} au total : trois fois la temp\u00E9rature de p\u00E2te voulue ({ddt}) moins la chaleur du p\u00E9trin ({friction}). C'est pour cela que l'eau change avec la temp\u00E9rature de votre cuisine.",
+    rule55DescriptionPreferment: "Ambiante, farine, eau et {preferment} doivent faire environ {sum} au total : quatre fois la température de pâte voulue ({ddt}) moins la chaleur du pétrin ({friction}). Le préferment entre à environ {prefTemp}, sa température de maturation (estimation du modèle). C'est pour cela que l'eau de la pâte finale change avec la température de votre cuisine.",
     stepDetailsShow: "Comment faire",
     stepDetailsHide: "Masquer les d\u00E9tails",
     matchDetailsShow: "D\u00E9tails du score",

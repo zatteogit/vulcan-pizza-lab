@@ -24,7 +24,7 @@ type ToppingRecipe
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, pantryIngredientReferences, type PantryFlourDetails } from "./pantry-ingredients";
 import { BRAND } from "../config/brand";
-import { maxPreFermentFlourPct, PRE_FERMENT_TEMP_C } from "./pre-ferment-split";
+import { maxPreFermentFlourPct, preFermentMaturationTempC, rule55Sum } from "./pre-ferment-split";
 import { roundForDisplay } from "./dose-rounding";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
 import { assessAllergens, allergenWarnings, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
@@ -2565,12 +2565,8 @@ export function generateRecipe(
      PRE_FERMENT_TEMP_C): T_acqua = 4 × DDT − T_cucina − T_farina − T_pref − attrito.
      L'acqua del prefermento, mescolato a mano (attrito 0), mira alla sua
      temperatura di maturazione: T = 3 × T_pref − T_cucina − T_farina. */
-  const preFermentTempC = hasPreFerment
-    ? (PRE_FERMENT_TEMP_C[preFermentType][0] + PRE_FERMENT_TEMP_C[preFermentType][1]) / 2
-    : null;
-  const waterTempRaw = preFermentTempC != null
-    ? ddt * 4 - kitchenTemp - flourTemp - preFermentTempC - frictionFactor
-    : ddt * 3 - kitchenTemp - flourTemp - frictionFactor;
+  const preFermentTempC = hasPreFerment ? preFermentMaturationTempC(preFermentType) : null;
+  const waterTempRaw = rule55Sum(ddt, frictionFactor, preFermentTempC != null) - kitchenTemp - flourTemp - (preFermentTempC ?? 0);
   const preFermentWaterTempC = preFermentTempC != null
     ? Math.round(Math.min(WATER_TEMP_MAX_C, Math.max(WATER_TEMP_MIN_C, preFermentTempC * 3 - kitchenTemp - flourTemp)) * 10) / 10
     : null;

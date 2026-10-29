@@ -563,7 +563,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "recipe.phases.dilutionBody": "Dissolve {0} of yeast in {1} of water and stir well. Weigh out {2} of this solution: it holds {3} of yeast.",
   "recipe.phases.dilutionLessWater": "Then use {0} less water in the recipe.",
   "recipe.phases.dilutionLessWaterPreferment": "Then use {0} less water in the pre-ferment.",
-  "recipe.phases.dilutionWhy": "The arithmetic is exact; the only error left is your kitchen scale on the {0} of yeast, about one tenth. You won't need the rest of the solution.",
+  "recipe.phases.dilutionWhy": "The arithmetic is exact, the weighing is not: a kitchen scale can be off by up to {2}, both on the {0} of yeast and on the {1} of solution. Together that is up to about ±{3} on the dose. You won't need the rest of the solution.",
   "recipe.phases.spoonEighth": "Alternatively, estimate: ⅛ of a level teaspoon.",
   "recipe.phases.spoonQuarter": "Alternatively, estimate: ¼ of a level teaspoon.",
   "recipe.phases.peopleBalls": "= {0} {1} of {2}",

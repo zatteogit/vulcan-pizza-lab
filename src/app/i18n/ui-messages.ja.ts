@@ -563,7 +563,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "recipe.phases.dilutionBody": "酵母{0}を水{1}に溶かし、よく混ぜます。この溶液を{2}量ると、酵母{3}が入っています。",
   "recipe.phases.dilutionLessWater": "そのぶんレシピの水を{0}減らします。",
   "recipe.phases.dilutionLessWaterPreferment": "そのぶん中種の水を{0}減らします。",
-  "recipe.phases.dilutionWhy": "計算は正確です。残る誤差は酵母{0}を量るキッチンスケールの誤差だけで、約1割です。残りの溶液は使いません。",
+  "recipe.phases.dilutionWhy": "計算は正確ですが、計量には誤差があります。キッチンスケールは酵母{0}でも溶液{1}でも最大{2}ずれることがあり、合わせると用量の誤差は最大約±{3}です。残りの溶液は使いません。",
   "recipe.phases.spoonEighth": "代わりに（推定）：すりきり小さじ⅛。",
   "recipe.phases.spoonQuarter": "代わりに（推定）：すりきり小さじ¼。",
   "recipe.phases.peopleBalls": "= {2}の{1}×{0}",

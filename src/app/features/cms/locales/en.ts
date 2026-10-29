@@ -704,6 +704,7 @@ export const EN_LOCALE: CmsContent = {
     rule55AriaOpen: "How the water temperature is worked out",
     rule55AriaClose: "Hide the explanation",
     rule55Description: "Room, flour and water should add up to about {sum}: three times the dough temperature you want ({ddt}) minus the heat from the mixer ({friction}). That is why the water changes with the temperature of your kitchen.",
+    rule55DescriptionPreferment: "Room, flour, water and {preferment} should add up to about {sum}: four times the dough temperature you want ({ddt}) minus the heat from the mixer ({friction}). The preferment goes in at about {prefTemp}, its maturation temperature (a model estimate). That is why the final-dough water changes with the temperature of your kitchen.",
     stepDetailsShow: "How to do it",
     stepDetailsHide: "Hide details",
     matchDetailsShow: "Score details",

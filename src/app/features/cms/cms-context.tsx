@@ -1061,6 +1061,8 @@ export interface CmsContent {
     rule55AriaOpen: string;
     rule55AriaClose: string;
     rule55Description: string;
+    /** FW-17 (S08-A-07): Regola 55 a quattro termini, con un prefermento. */
+    rule55DescriptionPreferment: string;
     stepDetailsShow: string;
     stepDetailsHide: string;
     /** Toggle dettagli della match card (barre punteggio, stato forno).
@@ -1911,6 +1913,7 @@ export const CMS_DEFAULTS: CmsContent = {
     rule55AriaOpen: "Come si calcola la temperatura dell'acqua",
     rule55AriaClose: "Nascondi la spiegazione",
     rule55Description: "Ambiente, farina e acqua devono sommare circa {sum}: tre volte la temperatura d'impasto che vuoi ({ddt}) meno il calore dell'impastatrice ({friction}). Per questo l'acqua cambia con la temperatura della tua cucina.",
+    rule55DescriptionPreferment: "Ambiente, farina, acqua e {preferment} devono sommare circa {sum}: quattro volte la temperatura d'impasto che vuoi ({ddt}) meno il calore dell'impastatrice ({friction}). Il prefermento entra a circa {prefTemp}, la sua temperatura di maturazione (stima del modello). Per questo l'acqua dell'impasto finale cambia con la temperatura della tua cucina.",
     stepDetailsShow: "Come si fa",
     stepDetailsHide: "Nascondi dettagli",
     matchDetailsShow: "Dettagli punteggio",

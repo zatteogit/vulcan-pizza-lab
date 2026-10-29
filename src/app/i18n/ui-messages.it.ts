@@ -565,7 +565,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "recipe.phases.dilutionBody": "Sciogli {0} di lievito in {1} d'acqua e mescola bene. Pesa {2} di questa soluzione: contengono {3} di lievito.",
   "recipe.phases.dilutionLessWater": "Poi usa {0} d'acqua in meno nella ricetta.",
   "recipe.phases.dilutionLessWaterPreferment": "Poi usa {0} d'acqua in meno nel prefermento.",
-  "recipe.phases.dilutionWhy": "Il conto è esatto; resta solo l'errore della bilancia da cucina sui {0} di lievito, circa un decimo. Il resto della soluzione non serve.",
+  "recipe.phases.dilutionWhy": "Il conto è esatto, le pesate no: la bilancia da cucina sbaglia fino a {2} sia sui {0} di lievito sia sui {1} di soluzione. Insieme fanno fino a circa ±{3} sulla dose. Il resto della soluzione non serve.",
   "recipe.phases.spoonEighth": "In alternativa, stima: ⅛ di cucchiaino raso.",
   "recipe.phases.spoonQuarter": "In alternativa, stima: ¼ di cucchiaino raso.",
   "recipe.phases.peopleBalls": "= {0} {1} da {2}",

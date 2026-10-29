@@ -12,7 +12,8 @@ import { roundForEvidence } from "../../domain/science/evidence";
 import { getActiveUiLocale, uiMessage } from "../../i18n/ui-messages";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
-import { buildRecipePhases, type PhaseIngredientId, type YeastDilution } from "../../domain/recipe-phases";
+import { preFermentMaturationTempC, rule55Sum } from "../../domain/pre-ferment-split";
+import { buildRecipePhases, KITCHEN_SCALE_ERROR_G, type PhaseIngredient, type PhaseIngredientId, type YeastDilution } from "../../domain/recipe-phases";
 import {
   getBakingTimeByStyle,
   getEquipmentByStyle,
@@ -432,6 +433,14 @@ export function compGramsSuffix(
   const g = Math.round((flourG * (c.compensated - c.original)) / 100);
   /* FW-11: grammi con lo spazio e i decimali della lingua. */
   return g > 0 ? ` · ≈ +${formatMass(g, getActiveUiLocale())}` : "";
+}
+
+/** FW-17 (S08-A-09/B-07): baker's % di una riga dei totali, uguale a schermo
+ *  (Ricetta, livello nerd) e in stampa. Il valore è quello dichiarato dal
+ *  motore (buildRecipePhases.totals → baker_pcts), non ricalcolato dai grammi
+ *  arrotondati; il lievito con due decimali, gli altri con uno. */
+export function phaseBakerPctText(row: Pick<PhaseIngredient, "id" | "bakerPct">, locale: string): string {
+  return `${new Intl.NumberFormat(locale, { maximumFractionDigits: row.id === "yeast" ? 2 : 1 }).format(row.bakerPct)}%`;
 }
 
 const YEAST_NOTE = getScienceNote("yeast-dose");
@@ -946,12 +955,41 @@ export function phaseIngredientLabel(
   }
 }
 
+/** Spiegazione della Regola 55 (tip della temperatura dell'acqua) con i numeri
+ *  del motore. FW-17 (S08-A-07): con un prefermento l'acqua dell'impasto finale
+ *  viene dalla regola a quattro termini, e così la spiegazione: cucina +
+ *  farina + acqua + prefermento = 4 × DDT − attrito, col prefermento alla sua
+ *  temperatura di maturazione (ipotesi del modello). */
+export function rule55DescriptionText(
+  recipe: Pick<GeneratedRecipe, "has_pre_ferment" | "pre_ferment_type"> & {
+    science: Pick<GeneratedRecipe["science"], "desired_dough_temp_c" | "friction_factor">;
+  },
+  cms: Pick<CmsContent, "cooking">,
+  fmt: ReturnType<typeof createFormatter>,
+): string {
+  const ddt = recipe.science.desired_dough_temp_c;
+  const friction = recipe.science.friction_factor;
+  const values = { ddt: fmt.celsius(ddt), friction: fmt.celsiusDelta(friction) };
+  if (!recipe.has_pre_ferment) {
+    return t(cms.cooking.rule55Description, { ...values, sum: fmt.celsius(rule55Sum(ddt, friction, false)) });
+  }
+  const isPoolish = (recipe.pre_ferment_type ?? "").toLowerCase().includes("poolish");
+  return t(cms.cooking.rule55DescriptionPreferment, {
+    ...values,
+    sum: fmt.celsius(rule55Sum(ddt, friction, true)),
+    preferment: isPoolish ? "Poolish" : "Biga",
+    prefTemp: fmt.celsius(preFermentMaturationTempC(isPoolish ? "poolish" : "biga")),
+  });
+}
+
 /** FW-17 (D-O): testo della diluizione per le microdosi di lievito. */
 export function yeastDilutionText(d: YeastDilution, fmt: ReturnType<typeof createFormatter>): { title: string; body: string[] } {
   const body = [
     uiMessage("recipe.phases.dilutionBody", [fmt.grams(d.stockYeastG), fmt.grams(d.stockWaterG), fmt.grams(d.solutionG), fmt.grams(d.yeastG)]),
     uiMessage(d.phase === "preferment" ? "recipe.phases.dilutionLessWaterPreferment" : "recipe.phases.dilutionLessWater", [fmt.grams(d.waterToRemoveG)]),
-    uiMessage("recipe.phases.dilutionWhy", [fmt.grams(d.stockYeastG)]),
+    /* La dose ha l'incertezza di due pesate con la bilancia da cucina (D-O):
+       la si dice, calcolata dal motore (recipe-phases, dilutionUncertaintyPct). */
+    uiMessage("recipe.phases.dilutionWhy", [fmt.grams(d.stockYeastG), fmt.grams(d.solutionG), fmt.grams(KITCHEN_SCALE_ERROR_G), fmt.percent(d.uncertaintyPct)]),
   ];
   if (d.spoonEstimate) body.push(uiMessage(d.spoonEstimate === "eighth" ? "recipe.phases.spoonEighth" : "recipe.phases.spoonQuarter"));
   return { title: uiMessage("recipe.phases.dilutionTitle"), body };

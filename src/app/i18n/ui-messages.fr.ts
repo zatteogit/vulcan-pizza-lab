@@ -563,7 +563,7 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "recipe.phases.dilutionBody": "Dissolvez {0} de levure dans {1} d’eau et mélangez bien. Pesez {2} de cette solution : elle contient {3} de levure.",
   "recipe.phases.dilutionLessWater": "Utilisez ensuite {0} d’eau en moins dans la recette.",
   "recipe.phases.dilutionLessWaterPreferment": "Utilisez ensuite {0} d’eau en moins dans le préferment.",
-  "recipe.phases.dilutionWhy": "Le calcul est exact ; il ne reste que l’erreur de la balance de cuisine sur les {0} de levure, environ un dixième. Le reste de la solution ne sert pas.",
+  "recipe.phases.dilutionWhy": "Le calcul est exact, les pesées non : la balance de cuisine peut se tromper jusqu’à {2}, sur les {0} de levure comme sur les {1} de solution. Ensemble, cela fait jusqu’à environ ±{3} sur la dose. Le reste de la solution ne sert pas.",
   "recipe.phases.spoonEighth": "Sinon, estimation : ⅛ de cuillère à café rase.",
   "recipe.phases.spoonQuarter": "Sinon, estimation : ¼ de cuillère à café rase.",
   "recipe.phases.peopleBalls": "= {0} {1} de {2}",

@@ -563,7 +563,7 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "recipe.phases.dilutionBody": "Dissolva {0} de fermento em {1} de água e mexa bem. Pese {2} desta solução: contêm {3} de fermento.",
   "recipe.phases.dilutionLessWater": "Depois use {0} de água a menos na receita.",
   "recipe.phases.dilutionLessWaterPreferment": "Depois use {0} de água a menos no pré-fermento.",
-  "recipe.phases.dilutionWhy": "A conta é exata; fica só o erro da balança de cozinha nos {0} de fermento, cerca de um décimo. O resto da solução não é preciso.",
+  "recipe.phases.dilutionWhy": "A conta é exata, as pesagens não: a balança de cozinha pode errar até {2}, tanto nos {0} de fermento como nos {1} de solução. No total, até cerca de ±{3} na dose. O resto da solução não é preciso.",
   "recipe.phases.spoonEighth": "Em alternativa, estimativa: ⅛ de colher de chá rasa.",
   "recipe.phases.spoonQuarter": "Em alternativa, estimativa: ¼ de colher de chá rasa.",
   "recipe.phases.peopleBalls": "= {0} {1} de {2}",

@@ -1883,6 +1883,7 @@ export const DE_LOCALE: CmsContent = {
     rule55AriaClose: "Erkl\u00E4rung ausblenden",
     rule55Description:
       "Raum, Mehl und Wasser sollten zusammen etwa {sum} ergeben: dreimal die gew\u00FCnschte Teigtemperatur ({ddt}) minus die W\u00E4rme der Knetmaschine ({friction}). Deshalb \u00E4ndert sich das Wasser mit der Temperatur deiner K\u00FCche.",
+    rule55DescriptionPreferment: "Raum, Mehl, Wasser und {preferment} sollten zusammen etwa {sum} ergeben: viermal die gewünschte Teigtemperatur ({ddt}) minus die Wärme der Knetmaschine ({friction}). Der Vorteig kommt mit etwa {prefTemp} hinein, seiner Reifetemperatur (Schätzung des Modells). Deshalb ändert sich das Wasser des Hauptteigs mit der Temperatur deiner Küche.",
     stepDetailsShow: "So geht es",
     stepDetailsHide: "Details ausblenden",
     matchDetailsShow: "Match-Details",

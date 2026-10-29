@@ -8,7 +8,7 @@ import { pantryIngredientId } from "../../domain/pantry-ingredients";
 import { createPortal } from "react-dom";
 import { BRAND } from "../../config/brand";
 import { VulcanMark } from "../../components/shared/vulcan-logo";
-import { buildRecipePhases, type DoughIngredientId } from "../../domain/recipe-phases";
+import { buildRecipePhases } from "../../domain/recipe-phases";
 import type { GeneratedRecipe } from "../../domain/pizza-engine";
 import { scaleToppingAmounts, type ToppingRecipe } from "../../data/topping-library";
 import { toppingConcept } from "../../data/topping-i18n/localize";
@@ -16,7 +16,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import type { CmsContent } from "../cms/cms-context";
 import type { createFormatter } from "../cms/i18n";
 import type { CookSessionStep } from "../cooking/cook-session";
-import { phaseIngredientLabel, formatToppingAmountForLocale, yeastDilutionText } from "./recipe-output-format";
+import { phaseBakerPctText, phaseIngredientLabel, formatToppingAmountForLocale, yeastDilutionText } from "./recipe-output-format";
 
 /* ═══ D-043 — Scheda di produzione stampabile ═══
  * Stampare l'interfaccia dava una pagina con pulsanti, cursori e foto vuote
@@ -68,8 +68,8 @@ export function PrintSheet({
   /* FW-17 (S08-A-09/B-07, S08-B-19): totali e percentuali dal modello per
      fasi (quelli del motore), come a schermo; il lievito con due decimali. */
   const model = buildRecipePhases(recipe);
-  const pct = (value: number, id?: DoughIngredientId) =>
-    `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: id === "yeast" ? 2 : 1 }).format(value)}%`;
+  const pct = (value: number) =>
+    `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: 1 }).format(value)}%`;
   const time = (ms: number) => new Intl.DateTimeFormat(bcp47, STEP_TIME_FORMAT).format(new Date(ms));
   const preName = model.preFerment?.name ?? "";
   const label = (id: Parameters<typeof phaseIngredientLabel>[0]) => phaseIngredientLabel(id, recipe, cms, preName);
@@ -134,7 +134,7 @@ export function PrintSheet({
                 <tr key={row.id}>
                   <td>{label(row.id)}</td>
                   <td className="print-sheet__num">{fmt.grams(row.grams)}</td>
-                  <td className="print-sheet__num">{pct(row.bakerPct, row.id as DoughIngredientId)}</td>
+                  <td className="print-sheet__num">{phaseBakerPctText(row, bcp47)}</td>
                 </tr>
               )).flatMap((tr, i) =>
                 /* FW-17 (S08-B-06): il mix di farine sotto la riga Farina, come a

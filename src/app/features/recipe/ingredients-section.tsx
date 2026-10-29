@@ -15,7 +15,7 @@ import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { CtaButton, Stepper } from "../../components/ds/index";
 import { Disclosure } from "../../components/ds/Disclosure";
-import { buildRecipePhases } from "../../domain/recipe-phases";
+import { buildRecipePhases, type DoughIngredientId } from "../../domain/recipe-phases";
 import {
   type GeneratedRecipe,
   type UserConstraints,
@@ -30,6 +30,7 @@ import {
   flourStrength,
   getServingUnitLabel,
   normalizeMeasureUnitSuffixes,
+  phaseBakerPctText,
   phaseIngredientLabel,
   yeastDilutionText,
   yeastPracticalHint,
@@ -81,11 +82,6 @@ export function IngredientsSection({
     () => constraints.dough_balls * Math.max(1, getServingsRange(recipe.style)[0]),
   );
   const waterTempLimit = recipe.science.water_temp_limit ?? null;
-  /* Baker's % sul totale farina — layer nerd accanto ai grammi. */
-  const bakerPct = (grams: number, maxDecimals = 1) =>
-    `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: maxDecimals }).format(
-      (grams / recipe.flour_g) * 100,
-    )}%`;
   /* Nome del grasso nella lingua attiva (il motore dà un'etichetta italiana). */
   const fatType = recipe.style.dough.fat_type;
   const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
@@ -98,11 +94,64 @@ export function IngredientsSection({
   /* FW-17: le dosi per fase vengono da un solo modello (domain/recipe-phases),
      lo stesso di Procedimento, modalità cottura e stampa. */
   const phases = buildRecipePhases(recipe);
+  /* Baker's % (layer nerd accanto ai grammi): le stesse righe dei totali e lo
+     stesso formato della stampa, così i due numeri non divergono (S08-A-09). */
+  const bakerPct = (id: DoughIngredientId) => {
+    const row = phases.totals.find((r) => r.id === id);
+    return row ? phaseBakerPctText(row, bcp47) : undefined;
+  };
   const dilution = phases.yeastDilution ? yeastDilutionText(phases.yeastDilution, fmt) : null;
   /* FW-17 (S08-A-15/B-10, D-042): per le tonde una persona = un panetto, quindi
      un solo stepper («Persone») e una riga che dice quanti panetti servono. */
   const perUnit = Math.max(1, getServingsRange(recipe.style)[0]);
   const singleStepper = perUnit === 1;
+  /* Regola 55: bottone (?) e spiegazione. Senza prefermento stanno sulla riga
+     Acqua; con un prefermento accanto alla temperatura dell'acqua dell'impasto
+     finale, nello scorporo (FW-17, S08-A-07): la spiegazione è quella a quattro
+     termini (rule55DescriptionText). */
+  const rule55Toggle = recipe.water_temp_c != null ? (
+    <button
+      type="button"
+      onClick={() => setShowRule55Tip((v) => !v)}
+      className={`ingredients-rule55-toggle${showRule55Tip ? " ingredients-rule55-toggle--active" : ""}`}
+      aria-label={showRule55Tip ? cms.cooking.rule55AriaClose : cms.cooking.rule55AriaOpen}
+      aria-expanded={showRule55Tip}
+    >
+      <HelpCircle size={13} />
+    </button>
+  ) : null;
+  const rule55Tip = recipe.water_temp_c != null && showRule55Tip ? (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={motionSpring.balanced}
+      className="ingredients-rule55-tip"
+    >
+      {!waterTempLimit && (
+      <div className="type-body ingredients-rule55-tip__text">
+        {recipe.water_temp_c < 5
+          ? t(cms.engineMessages["tip.waterTempCold"], {
+              temp: fmt.celsius(recipe.water_temp_c),
+            })
+          : t(cms.engineMessages["tip.waterTempNormal"], {
+              temp: fmt.celsius(recipe.water_temp_c),
+              ddt: fmt.celsius(recipe.science.desired_dough_temp_c),
+            })}
+      </div>
+      )}
+      <div className="type-body ingredients-rule55-tip__desc">
+        {rule55Description}
+      </div>
+      {recipe.science.friction_factor > 0 && (
+        <div className="type-data ingredients-rule55-tip__friction">
+          {t(cms.engineMessages["tip.frictionNote"], {
+            friction: fmt.celsiusDelta(recipe.science.friction_factor),
+          })}
+        </div>
+      )}
+    </motion.div>
+  ) : null;
   const announceBalls = (actual: number) =>
     /* U-10 (F11): le quantità cambiano tutte insieme; lo si dice. */
     setBallsStatus(
@@ -273,22 +322,10 @@ export function IngredientsSection({
                 {recipe.water_temp_c != null && !phases.preFerment
                   ? ` · ${fmt.celsius(recipe.water_temp_c)}`
                   : ""}
-                {recipe.water_temp_c != null && (
-                  /* Round 7 (nota Matteo): la Regola 55 vive SOLO come tip
-                     della riga Acqua — la temperatura è già nel dettaglio. */
-                  <button
-                    onClick={() => setShowRule55Tip((v) => !v)}
-                    className={`ingredients-rule55-toggle${showRule55Tip ? " ingredients-rule55-toggle--active" : ""}`}
-                    aria-label={
-                      showRule55Tip
-                        ? cms.cooking.rule55AriaClose
-                        : cms.cooking.rule55AriaOpen
-                    }
-                    aria-expanded={showRule55Tip}
-                  >
-                    <HelpCircle size={13} />
-                  </button>
-                )}
+                {/* Round 7 (nota Matteo): la Regola 55 vive come tip accanto alla
+                    temperatura che spiega; con un prefermento quella temperatura
+                    è nello scorporo, e il tip la segue (FW-17, S08-A-07). */}
+                {!phases.preFerment && rule55Toggle}
               </>
             }
             amount={fmt.grams(recipe.water_g)}
@@ -308,43 +345,12 @@ export function IngredientsSection({
               )}
             </p>
           )}
-          {recipe.water_temp_c != null && showRule55Tip && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={motionSpring.balanced}
-              className="ingredients-rule55-tip"
-            >
-              {!waterTempLimit && (
-              <div className="type-body ingredients-rule55-tip__text">
-                {recipe.water_temp_c < 5
-                  ? t(cms.engineMessages["tip.waterTempCold"], {
-                      temp: fmt.celsius(recipe.water_temp_c),
-                    })
-                  : t(cms.engineMessages["tip.waterTempNormal"], {
-                      temp: fmt.celsius(recipe.water_temp_c),
-                      ddt: fmt.celsius(recipe.science.desired_dough_temp_c),
-                    })}
-              </div>
-              )}
-              <div className="type-body ingredients-rule55-tip__desc">
-                {rule55Description}
-              </div>
-              {recipe.science.friction_factor > 0 && (
-                <div className="type-data ingredients-rule55-tip__friction">
-                  {t(cms.engineMessages["tip.frictionNote"], {
-                    friction: fmt.celsiusDelta(recipe.science.friction_factor),
-                  })}
-                </div>
-              )}
-            </motion.div>
-          )}
+          {!phases.preFerment && rule55Tip}
           {/* Audit lug 2026 (nerd): baker's % accanto ai grammi — il linguaggio
               con cui si confrontano le ricette. Easy resta pulito. */}
           <IngRow
             name={ui.salt}
-            detail={isNerd ? bakerPct(recipe.salt_g) : undefined}
+            detail={isNerd ? bakerPct("salt") : undefined}
             amount={fmt.grams(recipe.salt_g)}
           />
           {recipe.yeast_g > 0 && (
@@ -352,7 +358,7 @@ export function IngredientsSection({
               name={cms.yeastLabels[recipe.yeast_type] || YEAST_LABELS[recipe.yeast_type] || recipe.yeast_type}
               detail={[
                 yeastPracticalHint(recipe.yeast_g, recipe.yeast_type, cms),
-                isNerd ? bakerPct(recipe.yeast_g, 2) : null,
+                isNerd ? bakerPct("yeast") : null,
               ]
                 .filter(Boolean)
                 .join(" · ")}
@@ -374,14 +380,14 @@ export function IngredientsSection({
           {recipe.fat_g > 0 && (
             <IngRow
               name={fatLabel}
-              detail={isNerd ? bakerPct(recipe.fat_g) : undefined}
+              detail={isNerd ? bakerPct("fat") : undefined}
               amount={fmt.grams(recipe.fat_g)}
             />
           )}
           {recipe.sugar_g > 0 && (
             <IngRow
               name={ui.sugar}
-              detail={isNerd ? bakerPct(recipe.sugar_g) : undefined}
+              detail={isNerd ? bakerPct("sugar") : undefined}
               amount={fmt.grams(recipe.sugar_g)}
             />
           )}
@@ -442,12 +448,14 @@ export function IngredientsSection({
                             ? uiMessage("recipe.phases.estimateValue", [fmt.celsius(phase.waterTempC)])
                             : fmt.celsius(phase.waterTempC)}
                         </b>
+                        {phase.id === "final" && rule55Toggle}
                       </li>
                     )}
                   </ul>
                 </div>
               ))}
             </div>
+            {rule55Tip}
             <p className="type-body ingredients-preferment__note">
               {/* FW-14 (S08-A-18): una sola nota sul sale, quella del CMS
                   (il testo di riserva diceva il perché ma non si vedeva mai). */}

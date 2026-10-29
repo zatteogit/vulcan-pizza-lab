@@ -1947,6 +1947,7 @@ export const PT_LOCALE: CmsContent = {
     rule55AriaOpen: "Como se calcula a temperatura da \u00E1gua",
     rule55AriaClose: "Ocultar a explica\u00E7\u00E3o",
     rule55Description: "Ambiente, farinha e \u00E1gua devem somar cerca de {sum}: tr\u00EAs vezes a temperatura de massa que voc\u00EA quer ({ddt}) menos o calor da amassadeira ({friction}). Por isso a \u00E1gua muda com a temperatura da sua cozinha.",
+    rule55DescriptionPreferment: "Ambiente, farinha, água e {preferment} devem somar cerca de {sum}: quatro vezes a temperatura de massa que você quer ({ddt}) menos o calor da amassadeira ({friction}). O pré-fermento entra a cerca de {prefTemp}, a sua temperatura de maturação (estimativa do modelo). Por isso a água da massa final muda com a temperatura da sua cozinha.",
     stepDetailsShow: "Como fazer",
     stepDetailsHide: "Ocultar detalhes",
     matchDetailsShow: "Detalhes da pontua\u00E7\u00E3o",

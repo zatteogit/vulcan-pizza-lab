@@ -563,7 +563,7 @@ export const UI_MESSAGES_ES: Record<string, string> = {
   "recipe.phases.dilutionBody": "Disuelve {0} de levadura en {1} de agua y mezcla bien. Pesa {2} de esta solución: contienen {3} de levadura.",
   "recipe.phases.dilutionLessWater": "Luego usa {0} de agua menos en la receta.",
   "recipe.phases.dilutionLessWaterPreferment": "Luego usa {0} de agua menos en el prefermento.",
-  "recipe.phases.dilutionWhy": "La cuenta es exacta; solo queda el error de la báscula de cocina en los {0} de levadura, más o menos una décima parte. El resto de la solución no hace falta.",
+  "recipe.phases.dilutionWhy": "La cuenta es exacta, las pesadas no: la báscula de cocina puede fallar hasta {2}, tanto en los {0} de levadura como en los {1} de solución. En total, hasta cerca de ±{3} en la dosis. El resto de la solución no hace falta.",
   "recipe.phases.spoonEighth": "Como alternativa, estimación: ⅛ de cucharadita rasa.",
   "recipe.phases.spoonQuarter": "Como alternativa, estimación: ¼ de cucharadita rasa.",
   "recipe.phases.peopleBalls": "= {0} {1} de {2}",

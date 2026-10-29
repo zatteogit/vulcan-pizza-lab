@@ -5,7 +5,7 @@ import {
   type PizzaStyle,
   type UserConstraints,
 } from "./pizza-engine";
-import { buildRecipePhases, onlySourdoughYeast, phaseSum, yeastDilution, type DoughIngredientId } from "./recipe-phases";
+import { buildRecipePhases, dilutionUncertaintyPct, onlySourdoughYeast, phaseSum, yeastDilution, type DoughIngredientId } from "./recipe-phases";
 import { roundForDisplay } from "./dose-rounding";
 
 /* ═══ FW-17 — invarianti delle dosi per fase, su tutti gli stili ═══
@@ -179,6 +179,21 @@ describe("yeastDilution (D-O)", () => {
     expect(yeastDilution(0.5, "sourdough", 500)).toBeNull();
     expect(yeastDilution(0.9, "fresh", 40)).toBeNull();
     expect(yeastDilution(0, "fresh", 500)).toBeNull();
+  });
+
+  it("l'incertezza conta le due pesate: ±20 % a 0,1 g, ±15 % dalle dosi maggiori fino al grammo", () => {
+    // 0,1 g → 5 g di soluzione: ±0,5/5 sul lievito madre + ±0,5/5 sulla soluzione.
+    expect(yeastDilution(0.1, "fresh", 500)!.uncertaintyPct).toBe(20);
+    expect(yeastDilution(0.2, "fresh", 500)!.uncertaintyPct).toBe(15);
+    expect(yeastDilution(0.5, "fresh", 500)!.uncertaintyPct).toBe(15);
+    expect(yeastDilution(0.9, "fresh", 500)!.uncertaintyPct).toBe(15);
+    // 0,9 g → 45 g di soluzione: 10 % + 1,1 % = 11,1 %, per eccesso 15 %.
+    expect(dilutionUncertaintyPct(5, 45)).toBe(15);
+    expect(dilutionUncertaintyPct(5, 5)).toBe(20);
+    // mai meno dell'errore sui soli 5 g del lievito madre
+    for (let tenth = 1; tenth < 10; tenth++) {
+      expect(yeastDilution(tenth / 10, "dry", 500)!.uncertaintyPct).toBeGreaterThan(10);
+    }
   });
 
   it("stima in cucchiaini solo per il secco e solo vicino alla dose", () => {

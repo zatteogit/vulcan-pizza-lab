@@ -563,7 +563,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "recipe.phases.dilutionBody": "Lösen Sie {0} Hefe in {1} Wasser auf und rühren Sie gut um. Wiegen Sie {2} dieser Lösung ab: Darin sind {3} Hefe.",
   "recipe.phases.dilutionLessWater": "Nehmen Sie dann {0} weniger Wasser für das Rezept.",
   "recipe.phases.dilutionLessWaterPreferment": "Nehmen Sie dann {0} weniger Wasser für den Vorteig.",
-  "recipe.phases.dilutionWhy": "Die Rechnung ist exakt; es bleibt nur der Fehler der Küchenwaage bei den {0} Hefe, etwa ein Zehntel. Den Rest der Lösung brauchen Sie nicht.",
+  "recipe.phases.dilutionWhy": "Die Rechnung ist exakt, das Wiegen nicht: Die Küchenwaage kann um bis zu {2} danebenliegen, bei den {0} Hefe wie bei den {1} Lösung. Zusammen sind das bis zu etwa ±{3} bei der Dosis. Den Rest der Lösung brauchen Sie nicht.",
   "recipe.phases.spoonEighth": "Alternativ, geschätzt: ⅛ gestrichener Teelöffel.",
   "recipe.phases.spoonQuarter": "Alternativ, geschätzt: ¼ gestrichener Teelöffel.",
   "recipe.phases.peopleBalls": "= {0} {1} zu je {2}",

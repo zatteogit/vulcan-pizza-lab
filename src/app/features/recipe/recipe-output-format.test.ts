@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip, bakeSecondsPerRound, yeastBakerPctText, stepQuantities } from "./recipe-output-format";
+import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip, bakeSecondsPerRound, yeastBakerPctText, stepQuantities, phaseBakerPctText, rule55DescriptionText, yeastDilutionText } from "./recipe-output-format";
+import { preFermentMaturationTempC } from "../../domain/pre-ferment-split";
+import { buildRecipePhases, yeastDilution } from "../../domain/recipe-phases";
 import { generateRecipe, STYLES_DB, type UserConstraints } from "../../domain/pizza-engine";
 import { CMS_DEFAULTS } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
@@ -185,5 +187,132 @@ describe("stepQuantities (FW-17)", () => {
     const rows = stepQuantities("spread_salamoia_genovese", recipe, CMS_DEFAULTS, fmt, topping);
     expect(labels(rows)).toEqual(expect.arrayContaining(["Acqua", "Sale fino"]));
     expect(rows.find((r) => r.label === "Acqua")?.value).toMatch(/in tutto/);
+  });
+});
+
+/* ═══ FW-17 (S08-A-09/B-07) — baker's % uguale in Ricetta e in stampa ═══
+ * Le due viste leggono la stessa riga dei totali (buildRecipePhases, cioè i
+ * baker_pcts del motore) con lo stesso formato. Prima la Ricetta ricalcolava la
+ * percentuale dai grammi arrotondati: pinsa da un panetto, sale 1,9 % a schermo
+ * e 1,8 % in stampa. */
+describe("baker's % della Ricetta = baker's % della stampa (FW-17)", () => {
+  const VIEWS = import.meta.glob(["./ingredients-section.tsx", "./print-sheet.tsx"], { query: "?raw", import: "default", eager: true }) as Record<string, string>;
+  const k: UserConstraints = {
+    oven_type: "home", oven_max_temp_c: 250, skill_level: 3, available_hours: 72, dough_balls: 1,
+    has_mixer: false, has_pizza_stone: false, has_pizza_steel: false, has_baking_pan: true,
+    dietary_filters: [], kitchen_temp_c: 21, pantry_flours: [], pantry_yeasts: [], mixer_type: "hands", surfaces: [],
+  };
+  const fmtPct = (n: number, locale: string) => `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(n)}%`;
+
+  it("entrambe le viste usano phaseBakerPctText sulle righe dei totali, nessuna ricalcola dai grammi", () => {
+    const screen = VIEWS["./ingredients-section.tsx"];
+    const print = VIEWS["./print-sheet.tsx"];
+    expect(screen).toMatch(/phases\.totals\.find\(/);
+    expect(screen).toMatch(/phaseBakerPctText\(row, bcp47\)/);
+    for (const id of ["salt", "yeast", "fat", "sugar"]) expect(screen).toContain(`bakerPct("${id}")`);
+    expect(screen).not.toMatch(/\/ recipe\.flour_g\) \* 100/);
+    expect(print).toMatch(/model\.totals\.map/);
+    expect(print).toMatch(/phaseBakerPctText\(row, bcp47\)/);
+  });
+
+  for (const id of ["pinsa_romana", "napoletana_stg"]) {
+    it(`${id}, un panetto: sale, grasso e zucchero come i baker_pcts del motore`, () => {
+      const recipe = generateRecipe(STYLES_DB[id], k);
+      const totals = buildRecipePhases(recipe).totals;
+      for (const locale of ["it-IT", "en-US", "fr-FR", "de-DE", "es-ES", "pt-PT", "ja-JP"]) {
+        for (const key of ["salt", "fat", "sugar"] as const) {
+          const row = totals.find((r) => r.id === key);
+          if (!row) continue;
+          expect(phaseBakerPctText(row, locale)).toBe(fmtPct(recipe.baker_pcts![key], locale));
+        }
+      }
+    });
+  }
+
+  it("le evidenze dell'audit: pinsa sale 1,8 % e olio 1,3 %, STG sale 2,8 %", () => {
+    const pinsa = buildRecipePhases(generateRecipe(STYLES_DB.pinsa_romana, k)).totals;
+    const stg = buildRecipePhases(generateRecipe(STYLES_DB.napoletana_stg, k)).totals;
+    const text = (rows: typeof pinsa, id: string) => phaseBakerPctText(rows.find((r) => r.id === id)!, "it-IT");
+    expect(text(pinsa, "salt")).toBe("1,8%");
+    expect(text(pinsa, "fat")).toBe("1,3%");
+    expect(text(stg, "salt")).toBe("2,8%");
+  });
+});
+
+/* ═══ FW-17 (S08-A-07) — la spiegazione della Regola 55 torna coi numeri ═══
+ * Con un prefermento l'acqua dell'impasto finale viene dalla regola a quattro
+ * termini: anche la spiegazione. Prima diceva «cucina + farina + acqua ≈ 72 °C»
+ * accanto a un'acqua a 37 °C con la cucina a 20 °C (20 + 20 + 37 = 77). */
+describe("Regola 55: numero e spiegazione coincidono (FW-17)", () => {
+  const base: UserConstraints = {
+    oven_type: "home", oven_max_temp_c: 250, skill_level: 3, available_hours: 72, dough_balls: 4,
+    has_mixer: false, has_pizza_stone: false, has_pizza_steel: false, has_baking_pan: true,
+    dietary_filters: [], kitchen_temp_c: 20, pantry_flours: [], pantry_yeasts: [], mixer_type: "hands", surfaces: [],
+  };
+  const fmt = createFormatter(CMS_DEFAULTS.ui, "it-IT");
+  const SECTION = (import.meta.glob("./ingredients-section.tsx", { query: "?raw", import: "default", eager: true }) as Record<string, string>)["./ingredients-section.tsx"];
+
+  it("canotto con biga, cucina a 20 °C: cucina + farina + acqua + biga = 4 × DDT, e il testo lo dice", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_canotto, base, { usePreFerment: true, preFerment: { type: "biga", flourPct: 50 } });
+    expect(recipe.has_pre_ferment).toBe(true);
+    const ddt = recipe.science.desired_dough_temp_c;
+    expect(recipe.science.friction_factor).toBe(0);
+    expect(20 + 20 + recipe.water_temp_c! + 19).toBeCloseTo(4 * ddt, 1);
+    const text = rule55DescriptionText(recipe, CMS_DEFAULTS, fmt);
+    expect(text).toContain(fmt.celsius(4 * ddt));
+    expect(text).toContain("Biga");
+    expect(text).toContain(fmt.celsius(19));
+    // La vecchia spiegazione a tre termini (3 × DDT) non torna più con questo numero.
+    expect(text).not.toContain(fmt.celsius(3 * ddt));
+  });
+
+  it("su tutto il catalogo, con e senza prefermento, i termini sommano al numero della spiegazione", () => {
+    let checked = 0;
+    for (const style of Object.values(STYLES_DB)) {
+      for (const options of [{ usePreFerment: false }, { usePreFerment: true, preFerment: { type: "biga" as const, flourPct: 40 } }, { usePreFerment: true, preFerment: { type: "poolish" as const, flourPct: 30 } }]) {
+        const recipe = generateRecipe(style, base, options);
+        if (recipe.water_temp_c == null || recipe.science.water_temp_limit) continue;
+        const ddt = recipe.science.desired_dough_temp_c;
+        const friction = recipe.science.friction_factor;
+        const pref = recipe.has_pre_ferment
+          ? preFermentMaturationTempC(recipe.pre_ferment_type!.includes("poolish") ? "poolish" : "biga")
+          : 0;
+        const sum = (recipe.has_pre_ferment ? 4 : 3) * ddt - friction;
+        expect(20 + 20 + recipe.water_temp_c + pref).toBeCloseTo(sum, 1);
+        expect(rule55DescriptionText(recipe, CMS_DEFAULTS, fmt)).toContain(fmt.celsius(sum));
+        checked++;
+      }
+    }
+    expect(checked).toBeGreaterThan(20);
+  });
+
+  it("con un prefermento il (?) sta accanto all'acqua dell'impasto finale, non sulla riga Acqua", () => {
+    expect(SECTION).toMatch(/\{!phases\.preFerment && rule55Toggle\}/);
+    expect(SECTION).toMatch(/\{phase\.id === "final" && rule55Toggle\}/);
+  });
+
+  it("la stringa a quattro termini esiste in tutte le lingue con gli stessi segnaposto", async () => {
+    const locales = await Promise.all(["en", "fr", "de", "es", "pt", "ja"].map((l) => import(`../cms/locales/${l}.ts`)));
+    const texts = [CMS_DEFAULTS.cooking.rule55DescriptionPreferment, ...locales.map((m) => (Object.values(m).find((v) => (v as { cooking?: unknown })?.cooking) as { cooking: { rule55DescriptionPreferment: string } }).cooking.rule55DescriptionPreferment)];
+    for (const text of texts) {
+      for (const ph of ["{sum}", "{ddt}", "{friction}", "{preferment}", "{prefTemp}"]) expect(text).toContain(ph);
+    }
+  });
+});
+
+/* ═══ FW-17 (D-O, revisione) — la diluizione dice entrambe le pesate ═══ */
+describe("diluzione del lievito: incertezza onesta (FW-17)", () => {
+  const fmt = createFormatter(CMS_DEFAULTS.ui, "it-IT");
+  it("0,1 g: nomina lievito e soluzione e dà ±20 %, non «solo un decimo»", () => {
+    const why = yeastDilutionText(yeastDilution(0.1, "fresh", 300)!, fmt).body[2];
+    expect(why).toContain("5 g di lievito");
+    expect(why).toContain("5 g di soluzione");
+    expect(why).toContain(fmt.percent(20));
+    expect(why).not.toMatch(/resta solo|un decimo/);
+  });
+  it("0,6 g: 30 g di soluzione, ±15 %", () => {
+    const why = yeastDilutionText(yeastDilution(0.6, "fresh", 300)!, fmt).body[2];
+    expect(why).toContain("30 g di soluzione");
+    expect(why).toContain(fmt.percent(15));
   });
 });

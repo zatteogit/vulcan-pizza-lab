@@ -1949,6 +1949,7 @@ export const ES_LOCALE: CmsContent = {
     rule55AriaOpen: "C\u00F3mo se calcula la temperatura del agua",
     rule55AriaClose: "Ocultar la explicaci\u00F3n",
     rule55Description: "Ambiente, harina y agua deben sumar unos {sum}: tres veces la temperatura de masa que quieres ({ddt}) menos el calor de la amasadora ({friction}). Por eso el agua cambia con la temperatura de tu cocina.",
+    rule55DescriptionPreferment: "Ambiente, harina, agua y {preferment} deben sumar unos {sum}: cuatro veces la temperatura de masa que quieres ({ddt}) menos el calor de la amasadora ({friction}). El prefermento entra a unos {prefTemp}, su temperatura de maduración (estimación del modelo). Por eso el agua de la masa final cambia con la temperatura de tu cocina.",
     stepDetailsShow: "C\u00F3mo se hace",
     stepDetailsHide: "Ocultar detalles",
     matchDetailsShow: "Detalles de la puntuaci\u00F3n",

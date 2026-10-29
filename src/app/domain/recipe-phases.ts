@@ -60,6 +60,10 @@ export interface YeastDilution {
   /** Dose di lievito contenuta nella soluzione prelevata. */
   yeastG: number;
   phase: RecipePhase["id"];
+  /** Errore massimo sulla dose, in % (stima): somma degli errori relativi
+   *  delle due pesate con la bilancia da cucina, il lievito della soluzione
+   *  madre e la soluzione prelevata. Arrotondato per eccesso al 5 %. */
+  uncertaintyPct: number;
   /** Solo lievito secco: frazione di cucchiaino raso equivalente (stima). */
   spoonEstimate?: "eighth" | "quarter";
 }
@@ -87,10 +91,22 @@ export type PhaseRecipe = Pick<
 /* ── Diluizione (D-O) ──
  * 5 g di lievito in 245 g d'acqua = soluzione al 2 %: ogni 50 g contengono
  * 1 g di lievito. Con dosi al decimo di grammo la soluzione da prelevare è un
- * multiplo di 5 g, pesabile con la bilancia da cucina. L'aritmetica è esatta;
- * l'incertezza resta quella della pesata dei 5 g (±0,5 g, cioè ±10 %). */
+ * multiplo di 5 g, pesabile con la bilancia da cucina. L'aritmetica è esatta,
+ * le pesate no: la bilancia da cucina (passo 1 g) sbaglia fino a ±0,5 g sia sui
+ * 5 g di lievito (±10 %) sia sulla soluzione prelevata (±0,5 g su 5–45 g, cioè
+ * dal ±10 % all'1 %). Le due incertezze si sommano: ±20 % a 0,1 g, ±15 % da
+ * 0,2 g fino al grammo (per eccesso al 5 %). L'acqua della soluzione madre
+ * (245 g) pesa per lo 0,2 % e si trascura. */
 export const DILUTION_STOCK_YEAST_G = 5;
 export const DILUTION_FACTOR = 50;
+/** Metà del passo di una bilancia da cucina al grammo. */
+export const KITCHEN_SCALE_ERROR_G = 0.5;
+
+/** Errore massimo sulla dose diluita, in %, arrotondato per eccesso al 5 %. */
+export function dilutionUncertaintyPct(stockYeastG: number, solutionG: number, scaleErrorG = KITCHEN_SCALE_ERROR_G): number {
+  const relative = scaleErrorG / stockYeastG + scaleErrorG / solutionG;
+  return Math.ceil(Math.round(relative * 1000) / 10 / 5) * 5;
+}
 
 export function yeastDilution(
   yeastG: number,
@@ -115,6 +131,7 @@ export function yeastDilution(
     waterToRemoveG,
     yeastG,
     phase,
+    uncertaintyPct: dilutionUncertaintyPct(DILUTION_STOCK_YEAST_G, solutionG),
     ...(spoon ? { spoonEstimate: spoon } : {}),
   };
 }
