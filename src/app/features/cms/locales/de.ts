@@ -371,26 +371,26 @@ export const DE_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
-    coal: { name: "Kohleofen", maxTemp: 400, icon: "flame" },
-    home: { name: "Heimofen", maxTemp: 250, icon: "home" },
+    coal: { name: "Kohleofen", hint: "Professioneller Kohleofen", maxTemp: 400, icon: "flame" },
+    home: { name: "Heimofen", hint: "Der Backofen in der Küche", maxTemp: 250, icon: "home" },
     electric_standard: {
-      name: "Standard-Elektroofen",
+      name: "Standard-Elektroofen", hint: "Elektrischer Tisch-Pizzaofen mit Stein",
       maxTemp: 300,
       icon: "zap",
     },
-    gas: { name: "Gas-Etagenofen", maxTemp: 350, icon: "flame" },
+    gas: { name: "Gas-Etagenofen", hint: "Professioneller Gasofen mit Steinboden", maxTemp: 350, icon: "flame" },
     electric_high: {
-      name: "Hochtemperatur-Elektro",
+      name: "Hochtemperatur-Elektro", hint: "Elektrischer Hochtemperatur-Pizzaofen",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "Holzofen",
+      name: "Holzofen", hint: "Holz- oder Pelletofen",
       maxTemp: 500,
       icon: "flame-kindling",
     },
     gas_pizza: {
-      name: "Gas-Pizzaofen",
+      name: "Gas-Pizzaofen", hint: "Tragbarer Gas-Pizzaofen",
       maxTemp: 500,
       icon: "flame",
     },

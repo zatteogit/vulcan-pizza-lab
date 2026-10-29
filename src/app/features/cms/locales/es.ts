@@ -374,34 +374,34 @@ export const ES_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
-    coal: { name: "Horno de carbón", maxTemp: 400, icon: "flame" },
+    coal: { name: "Horno de carbón", hint: "Horno profesional de carbón", maxTemp: 400, icon: "flame" },
     home: {
-      name: "Horno dom\u00E9stico",
+      name: "Horno dom\u00E9stico", hint: "El horno de la cocina",
       maxTemp: 250,
       icon: "home",
     },
     electric_standard: {
-      name: "El\u00E9ctrico est\u00E1ndar",
+      name: "El\u00E9ctrico est\u00E1ndar", hint: "Horno eléctrico de sobremesa con piedra",
       maxTemp: 300,
       icon: "zap",
     },
     gas: {
-      name: "Horno de gas de solera",
+      name: "Horno de gas de solera", hint: "Horno profesional de gas con solera",
       maxTemp: 350,
       icon: "flame",
     },
     electric_high: {
-      name: "El\u00E9ctrico alta temperatura",
+      name: "El\u00E9ctrico alta temperatura", hint: "Horno eléctrico de pizza de alta temperatura",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "Horno de le\u00F1a",
+      name: "Horno de le\u00F1a", hint: "Horno de leña o de pellet",
       maxTemp: 500,
       icon: "flame-kindling",
     },
     gas_pizza: {
-      name: "Horno de gas para pizza",
+      name: "Horno de gas para pizza", hint: "Horno de pizza portátil de gas",
       maxTemp: 500,
       icon: "flame",
     },

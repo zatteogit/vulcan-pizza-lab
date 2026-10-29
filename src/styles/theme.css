@@ -5497,6 +5497,25 @@
     color: var(--text-muted);
   }
 
+  /* G5-WP-03: descrizione generica del tipo di forno, sotto il nome. */
+  .profile-ftu__option-hint {
+    display: block;
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+    color: var(--text-muted);
+  }
+
+  .profile-ftu__model-search {
+    align-self: flex-start;
+    margin-top: var(--space-3);
+  }
+
+  /* Molti risultati: il foglio scorre invece di uscire dallo schermo. */
+  .profile-ftu__model-sheet {
+    max-block-size: var(--dimension-viewport-height-85);
+    overflow-y: auto;
+  }
+
   .profile-ftu__option-check {
     color: var(--primary);
   }
@@ -7643,6 +7662,17 @@
     border: var(--border-width-thin) solid var(--primary);
     color: var(--text-default);
     font-weight: var(--weight-semibold);
+  }
+
+  .oven-model-search__selected [data-region="selected-name"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .oven-model-search__mapped {
+    color: var(--text-muted);
+    font-weight: var(--weight-regular);
   }
 
   .oven-model-search__label {

@@ -371,34 +371,34 @@ export const PT_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
-    coal: { name: "Forno a carvão", maxTemp: 400, icon: "flame" },
+    coal: { name: "Forno a carvão", hint: "Forno profissional a carvão", maxTemp: 400, icon: "flame" },
     home: {
-      name: "Forno dom\u00E9stico",
+      name: "Forno dom\u00E9stico", hint: "O forno da cozinha",
       maxTemp: 250,
       icon: "home",
     },
     electric_standard: {
-      name: "El\u00E9trico padr\u00E3o",
+      name: "El\u00E9trico padr\u00E3o", hint: "Forno elétrico de bancada com pedra",
       maxTemp: 300,
       icon: "zap",
     },
     gas: {
-      name: "Forno a g\u00E1s de lastro",
+      name: "Forno a g\u00E1s de lastro", hint: "Forno profissional a gás com lastro",
       maxTemp: 350,
       icon: "flame",
     },
     electric_high: {
-      name: "El\u00E9trico alta temp.",
+      name: "El\u00E9trico alta temp.", hint: "Forno elétrico de pizza de alta temperatura",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "Forno a lenha",
+      name: "Forno a lenha", hint: "Forno a lenha ou a pellet",
       maxTemp: 500,
       icon: "flame-kindling",
     },
     gas_pizza: {
-      name: "Forno de pizza a g\u00E1s",
+      name: "Forno de pizza a g\u00E1s", hint: "Forno de pizza portátil a gás",
       maxTemp: 500,
       icon: "flame",
     },

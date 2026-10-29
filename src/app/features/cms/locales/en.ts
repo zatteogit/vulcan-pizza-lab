@@ -390,30 +390,30 @@ export const EN_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
-    coal: { name: "Coal-fired oven", maxTemp: 400, icon: "flame" },
-    home: { name: "Home oven", maxTemp: 250, icon: "home" },
+    coal: { name: "Coal-fired oven", hint: "Professional coal-fired oven", maxTemp: 400, icon: "flame" },
+    home: { name: "Home oven", hint: "Your kitchen oven", maxTemp: 250, icon: "home" },
     electric_standard: {
-      name: "Standard electric",
+      name: "Standard electric", hint: "Countertop electric pizza oven with a stone",
       maxTemp: 300,
       icon: "zap",
     },
     gas: {
-      name: "Gas deck oven",
+      name: "Gas deck oven", hint: "Professional gas oven with a stone deck",
       maxTemp: 350,
       icon: "flame",
     },
     electric_high: {
-      name: "High-temperature electric",
+      name: "High-temperature electric", hint: "High-temperature electric pizza oven",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "Wood-fired oven",
+      name: "Wood-fired oven", hint: "Wood- or pellet-fired oven",
       maxTemp: 500,
       icon: "flame-kindling",
     },
     gas_pizza: {
-      name: "Gas pizza oven",
+      name: "Gas pizza oven", hint: "Portable gas pizza oven",
       maxTemp: 500,
       icon: "flame",
     },

@@ -14,6 +14,7 @@ import {
   type OvenFuel,
   type OvenModel,
 } from "../../data/oven-models";
+import type { OvenType } from "../../domain/pizza-engine";
 
 /* FW-15 (S18-A-03/B-04, S16-A-11): segnaposto e stato vuoto dal catalogo
    attivo. Con pochi modelli (edizione filtrata) la lista si apre al focus,
@@ -50,6 +51,7 @@ export function OvenModelSearch({
   formatTemp,
   currentTempC,
   onRestore,
+  formatOvenType,
 }: {
   selectedId: string | null;
   onPick: (model: OvenModel) => void;
@@ -59,6 +61,8 @@ export function OvenModelSearch({
   currentTempC?: number;
   /** FW-07: torna alla temperatura dichiarata dal produttore. */
   onRestore?: (model: OvenModel) => void;
+  /** G5-WP-03: nome del tipo di forno per la riga «Usato come». */
+  formatOvenType?: (type: OvenType) => string;
 }) {
   const inputId = useId();
   const listId = useId();
@@ -112,34 +116,6 @@ export function OvenModelSearch({
 
   return (
     <section className="oven-model-search" aria-labelledby={`${inputId}-label`}>
-      {selected && (
-        <p className="oven-model-search__selected">
-          <span data-region="selected-name">
-            {uiMessage("features.profile.oven-model-search.selected", [`${selected.brand} ${selected.model}`])}
-          </span>
-          <IconButton
-            size="sm"
-            variant="ghost"
-            onClick={onClear}
-            aria-label={uiMessage("features.profile.oven-model-search.clear")}
-          >
-            <X size={14} />
-          </IconButton>
-        </p>
-      )}
-      {/* FW-07 (S16-A-02): modello e cursore non si contraddicono in silenzio. */}
-      {selected && currentTempC !== undefined && currentTempC !== selected.maxTempC && (
-        <p className="type-data-sm oven-model-search__adjusted" role="status">
-          <span data-region="adjusted-temp">
-            {uiMessage("features.profile.oven-model-search.adjusted", [`${selected.brand} ${selected.model}`, formatTemp(currentTempC), formatTemp(selected.maxTempC)])}
-          </span>
-          {onRestore && (
-            <button type="button" className="needs-oven-model__link" onClick={() => onRestore(selected)}>
-              {uiMessage("features.profile.oven-model-search.restore")}
-            </button>
-          )}
-        </p>
-      )}
       <label id={`${inputId}-label`} htmlFor={inputId} className="type-label oven-model-search__label">
         {uiMessage("features.profile.oven-model-search.label")}
       </label>
@@ -168,6 +144,41 @@ export function OvenModelSearch({
           className="oven-model-search__input"
         />
       </p>
+      {/* G5-WP-03 (S15-A-02): la conferma del modello sta sotto il campo che
+          l'ha prodotta e dice come lo usa il motore (tipo · temperatura). */}
+      {selected && (
+        <p className="oven-model-search__selected">
+          <span data-region="selected-name">
+            {uiMessage("features.profile.oven-model-search.selected", [`${selected.brand} ${selected.model}`])}
+            {formatOvenType && (
+              <small className="type-data-sm oven-model-search__mapped">
+                {uiMessage("features.profile.oven-model-search.mapped", [formatOvenType(selected.ovenType), formatTemp(selected.maxTempC)])}
+              </small>
+            )}
+          </span>
+          <IconButton
+            size="sm"
+            variant="ghost"
+            onClick={onClear}
+            aria-label={uiMessage("features.profile.oven-model-search.clear")}
+          >
+            <X size={14} />
+          </IconButton>
+        </p>
+      )}
+      {/* FW-07 (S16-A-02): modello e cursore non si contraddicono in silenzio. */}
+      {selected && currentTempC !== undefined && currentTempC !== selected.maxTempC && (
+        <p className="type-data-sm oven-model-search__adjusted" role="status">
+          <span data-region="adjusted-temp">
+            {uiMessage("features.profile.oven-model-search.adjusted", [`${selected.brand} ${selected.model}`, formatTemp(currentTempC), formatTemp(selected.maxTempC)])}
+          </span>
+          {onRestore && (
+            <button type="button" className="needs-oven-model__link" onClick={() => onRestore(selected)}>
+              {uiMessage("features.profile.oven-model-search.restore")}
+            </button>
+          )}
+        </p>
+      )}
       <p className="sr-only" role="status">{status}</p>
       {expanded && results.length === 0 && (
         <p className="oven-model-search__empty" aria-hidden="true">

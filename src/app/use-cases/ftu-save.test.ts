@@ -29,4 +29,13 @@ describe("onboarding: che cosa salva «Salta» (G5-WP-01)", () => {
     const savedOven = { ovenType: "electric_high" as const, maxTemp: 450, modelId: "effeuno-p134h" };
     expect(planFtuWrites({ ...base, mode: "finish", savedOven }).oven).toEqual({ ovenType: "wood", maxTemp: 480 });
   });
+  it("il modello cercato nell'onboarding si salva con tipo e temperatura (G5-WP-03)", () => {
+    expect(planFtuWrites({ ...base, confirmedUpTo: 0, ovenType: "gas_pizza", ovenTemp: 500, modelId: "ooni-koda-16" }).oven)
+      .toEqual({ ovenType: "gas_pizza", maxTemp: 500, modelId: "ooni-koda-16" });
+  });
+  it("togliere il modello nell'onboarding non lo fa tornare dal forno salvato", () => {
+    const savedOven = { ovenType: "electric_high" as const, maxTemp: 450, modelId: "effeuno-p134h", origin: "edition" as const };
+    expect(planFtuWrites({ ...base, mode: "finish", savedOven, ovenType: "electric_high", ovenTemp: 450, modelId: null }).oven)
+      .toEqual({ ovenType: "electric_high", maxTemp: 450 });
+  });
 });

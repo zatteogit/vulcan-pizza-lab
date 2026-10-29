@@ -373,34 +373,34 @@ export const FR_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
-    coal: { name: "Four à charbon", maxTemp: 400, icon: "flame" },
+    coal: { name: "Four à charbon", hint: "Four professionnel à charbon", maxTemp: 400, icon: "flame" },
     home: {
-      name: "Four domestique",
+      name: "Four domestique", hint: "Le four de la cuisine",
       maxTemp: 250,
       icon: "home",
     },
     electric_standard: {
-      name: "\u00C9lectrique standard",
+      name: "\u00C9lectrique standard", hint: "Petit four électrique de table avec pierre",
       maxTemp: 300,
       icon: "zap",
     },
     gas: {
-      name: "Four \u00E0 gaz \u00E0 sole",
+      name: "Four \u00E0 gaz \u00E0 sole", hint: "Four professionnel à gaz avec sole",
       maxTemp: 350,
       icon: "flame",
     },
     electric_high: {
-      name: "\u00C9lectrique haute temp.",
+      name: "\u00C9lectrique haute temp.", hint: "Four à pizza électrique haute température",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "Four \u00E0 bois",
+      name: "Four \u00E0 bois", hint: "Four à bois ou à granulés",
       maxTemp: 500,
       icon: "flame-kindling",
     },
     gas_pizza: {
-      name: "Four \u00E0 pizza au gaz",
+      name: "Four \u00E0 pizza au gaz", hint: "Four à pizza portable au gaz",
       maxTemp: 500,
       icon: "flame",
     },

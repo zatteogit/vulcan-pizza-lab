@@ -424,34 +424,34 @@ export const JA_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
-    coal: { name: "石炭窯", maxTemp: 400, icon: "flame" },
+    coal: { name: "石炭窯", hint: "業務用の石炭窯", maxTemp: 400, icon: "flame" },
     home: {
-      name: "\u5BB6\u5EAD\u7528\u30AA\u30FC\u30D6\u30F3",
+      name: "\u5BB6\u5EAD\u7528\u30AA\u30FC\u30D6\u30F3", hint: "キッチンのオーブン",
       maxTemp: 250,
       icon: "home",
     },
     electric_standard: {
-      name: "\u96FB\u6C17\u30AA\u30FC\u30D6\u30F3\uFF08\u6A19\u6E96\uFF09",
+      name: "\u96FB\u6C17\u30AA\u30FC\u30D6\u30F3\uFF08\u6A19\u6E96\uFF09", hint: "石板付きの卓上電気ピザ窯",
       maxTemp: 300,
       icon: "zap",
     },
     gas: {
-      name: "\u30AC\u30B9\u30C7\u30C3\u30AD\u30AA\u30FC\u30D6\u30F3",
+      name: "\u30AC\u30B9\u30C7\u30C3\u30AD\u30AA\u30FC\u30D6\u30F3", hint: "炉床付きの業務用ガス窯",
       maxTemp: 350,
       icon: "flame",
     },
     electric_high: {
-      name: "\u9AD8\u6E29\u96FB\u6C17\u30AA\u30FC\u30D6\u30F3",
+      name: "\u9AD8\u6E29\u96FB\u6C17\u30AA\u30FC\u30D6\u30F3", hint: "高温の電気ピザ窯",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "\u85AA\u7AAF",
+      name: "\u85AA\u7AAF", hint: "薪またはペレットの窯",
       maxTemp: 500,
       icon: "flame-kindling",
     },
     gas_pizza: {
-      name: "\u30AC\u30B9\u5F0F\u30D4\u30B6\u7AAF",
+      name: "\u30AC\u30B9\u5F0F\u30D4\u30B6\u7AAF", hint: "ポータブルのガスピザ窯",
       maxTemp: 500,
       icon: "flame",
     },

@@ -334,6 +334,8 @@ interface CmsTimeSlot {
 
 interface CmsOvenPreset {
   name: string;
+  /** G5-WP-03: riga descrittiva generica (senza marchi) sotto il nome nell'onboarding. */
+  hint?: string;
   maxTemp: number;
   icon: string;
 }
@@ -1566,13 +1568,13 @@ export const CMS_DEFAULTS: CmsContent = {
     weekend:         { label: "Nel weekend",    sublabel: "72+ ore",   emoji: "\u{1F389}", hours: 72 },
   },
   ovenPresets: {
-    coal: { name: "Forno a carbone", maxTemp: 400, icon: "flame" },
-    home:              { name: "Forno di casa",      maxTemp: 250, icon: "home" },
-    electric_standard: { name: "Elettrico standard", maxTemp: 300, icon: "zap" },
-    gas:               { name: "Forno a gas a platea", maxTemp: 350, icon: "flame" },
-    electric_high:     { name: "Elettrico alta temperatura", maxTemp: 450, icon: "thermometer" },
-    gas_pizza:         { name: "Forno a gas da pizza", maxTemp: 500, icon: "flame" },
-    wood:              { name: "Forno a legna",      maxTemp: 500, icon: "flame-kindling" },
+    coal: { name: "Forno a carbone", hint: "Forno professionale a carbone", maxTemp: 400, icon: "flame" },
+    home:              { name: "Forno di casa", hint: "Il forno della cucina",      maxTemp: 250, icon: "home" },
+    electric_standard: { name: "Elettrico standard", hint: "Fornetto elettrico da banco con pietra", maxTemp: 300, icon: "zap" },
+    gas:               { name: "Forno a gas a platea", hint: "Forno professionale a gas con platea", maxTemp: 350, icon: "flame" },
+    electric_high:     { name: "Elettrico alta temperatura", hint: "Forno elettrico da pizza ad alta temperatura", maxTemp: 450, icon: "thermometer" },
+    gas_pizza:         { name: "Forno a gas da pizza", hint: "Forno da pizza portatile a gas", maxTemp: 500, icon: "flame" },
+    wood:              { name: "Forno a legna", hint: "Forno a legna o a pellet",      maxTemp: 500, icon: "flame-kindling" },
   },
   skillLevels: {
     "1": { name: "Principiante", description: "Non ho mai impastato" },
@@ -3422,6 +3424,13 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ovenPresets.electric_high.maxTemp", label: "Elettrico alta temperatura — Max T", type: "number", min: 350, max: 550 },
       { path: "ovenPresets.wood.name", label: "Legna — Nome", type: "text" },
       { path: "ovenPresets.wood.maxTemp", label: "Legna — Max T", type: "number", min: 400, max: 600 },
+      { path: "ovenPresets.home.hint", label: "Forno domestico — Descrizione", type: "text" },
+      { path: "ovenPresets.electric_standard.hint", label: "Elettrico std — Descrizione", type: "text" },
+      { path: "ovenPresets.gas.hint", label: "Gas — Descrizione", type: "text" },
+      { path: "ovenPresets.electric_high.hint", label: "Elettrico alta temperatura — Descrizione", type: "text" },
+      { path: "ovenPresets.gas_pizza.hint", label: "Gas da pizza — Descrizione", type: "text" },
+      { path: "ovenPresets.wood.hint", label: "Legna — Descrizione", type: "text" },
+      { path: "ovenPresets.coal.hint", label: "Carbone — Descrizione", type: "text" },
       // Skill levels
       { path: "skillLevels.1.name", label: "Skill 1 — Nome", type: "text" },
       { path: "skillLevels.1.description", label: "Skill 1 — Desc", type: "text" },

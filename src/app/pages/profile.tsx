@@ -13,7 +13,7 @@ import { Suspense, lazy, useCallback,useEffect,useId,useMemo,useRef,useState } f
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
-import { Chip, ConfirmDialog, CtaButton, Disclosure, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
+import { BottomSheet, Chip, ConfirmDialog, CtaButton, Disclosure, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
 import {
 createFormatter,
 getPreferredUnitSystem,
@@ -763,6 +763,12 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const savedModel = getOvenModel(savedOven?.modelId);
   const editionOven = savedOven?.origin === "edition" ? savedModel : undefined;
   const [ovenTemp, setOvenTemp] = useState(savedOven?.maxTemp ?? 250);
+  /* G5-WP-03 (S15-A-02): il modello si cerca anche qui, non solo nel Profilo.
+     Parte da quello salvato; cambiare tipo di forno lo toglie. */
+  const [ftuModelId, setFtuModelId] = useState<string | null>(savedModel?.id ?? null);
+  const ftuModel = getOvenModel(ftuModelId);
+  const [modelSheetOpen, setModelSheetOpen] = useState(false);
+  const ovenListRef = useRef<HTMLDivElement>(null);
   /* FW-07 (S15-V-01, S15-A-06): il livello parte da quello salvato e, se non
      c'è, da nessuno: «Avanti» non sceglie «Principiante» al posto tuo. */
   const [skillLevel, setSkillLevel] = useState<SkillLevel | null>(() => loadJson<SkillLevel>(SKILL_STORAGE_KEY));
@@ -792,7 +798,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const pantryLabels = [...FTU_FLOURS, ...FTU_FLOURS_SPECIAL, ...FTU_YEASTS]
     .filter((item) => ftuFlours.includes(item.id) || ftuYeasts.includes(item.id))
     .map((item) => (p as unknown as Record<string, string>)[item.labelKey] || item.id);
-  const ovenModel = savedModel && savedOven?.ovenType === ovenType ? `${savedModel.brand} ${savedModel.model}` : cms.ovenPresets[ovenType]?.name ?? ovenType;
+  const ovenModel = ftuModel && ftuModel.ovenType === ovenType ? `${ftuModel.brand} ${ftuModel.model}` : cms.ovenPresets[ovenType]?.name ?? ovenType;
   const summaryRows = [
     { step: 0, label: p.ftuSummaryOven, value: `${ovenModel} · ${fmt.celsius(ovenTemp)}` },
     { step: 1, label: p.ftuSummarySkill, value: skillLevel !== null ? cms.skillLevels[String(skillLevel)]?.name ?? String(skillLevel) : p.ftuSummaryNotSet },
@@ -807,7 +813,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
      restano «non scelti» (audit n. 33 / D-038). Il modello del forno resta
      solo se il forno non è cambiato (FW-07, S18-A-01). */
   const complete = useCallback((mode: "finish" | "skip") => {
-    const writes = planFtuWrites({ confirmedUpTo, mode, savedOven, ovenType, ovenTemp, skillLevel, flours: ftuFlours, yeasts: ftuYeasts });
+    const writes = planFtuWrites({ confirmedUpTo, mode, savedOven, ovenType, ovenTemp, modelId: ftuModelId, skillLevel, flours: ftuFlours, yeasts: ftuYeasts });
     if (writes.oven) saveJson(OVEN_STORAGE_KEY, writes.oven);
     if (writes.skill !== undefined) saveJson(SKILL_STORAGE_KEY, writes.skill);
     if (writes.pantry) saveJson(PANTRY_STORAGE_KEY, { ...(loadJson<Record<string, unknown>>(PANTRY_STORAGE_KEY) ?? {}), ...writes.pantry });
@@ -817,7 +823,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [confirmedUpTo, savedOven, ovenType, ovenTemp, skillLevel, ftuFlours, ftuYeasts, offerTechnical, ftuTechnical, setDetailLevel, onComplete]);
+  }, [confirmedUpTo, savedOven, ovenType, ovenTemp, ftuModelId, skillLevel, ftuFlours, ftuYeasts, offerTechnical, ftuTechnical, setDetailLevel, onComplete]);
   const handleFinish = useCallback(() => complete("finish"), [complete]);
   const handleSkip = useCallback(() => complete("skip"), [complete]);
 
@@ -894,14 +900,15 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step === 0 && <SettingEffectNote settingId="oven" />}
             {step === 1 && <SettingEffectNote settingId="skill" />}
             {step === 2 && <SettingEffectNote settingId="pantry" />}
-            {step === 0 && editionOven && ovenType === editionOven.ovenType && (
+            {step === 0 && editionOven && ftuModelId === editionOven.id && (
               <p className="type-data-sm profile-ftu__edition-oven" role="note">
                 {uiMessage("pages.profile.ftu.editionOven", [`${editionOven.brand} ${editionOven.model}`])}
                 {neutralityText() && <small data-region="neutrality">{neutralityText()}</small>}
               </p>
             )}
             {step === 0 && (
-              <div className="profile-ftu__option-list">
+              <>
+              <div ref={ovenListRef} className="profile-ftu__option-list">
                 {OVEN_PRESETS.map((preset) => {
                   const Icon = ovenIcon(preset.id);
                   const active = ovenType === preset.id;
@@ -915,6 +922,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                         if (active) return;
                         setOvenType(preset.id);
                         setOvenTemp(preset.maxTemp);
+                        setFtuModelId(null);
                       }}
                       className="profile-ftu__option"
                       animate={{
@@ -941,11 +949,14 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                         <div className="profile-ftu__option-name">
                           {cms.ovenPresets[preset.id]?.name ?? preset.name}
                         </div>
+                        {cms.ovenPresets[preset.id]?.hint && (
+                          <small className="profile-ftu__option-hint">{cms.ovenPresets[preset.id]?.hint}</small>
+                        )}
                         <div className="type-data-sm profile-ftu__option-meta">
                           {uiMessage("pages.profile.maxTemp", [fmt.celsius(active ? ovenTemp : preset.maxTemp)])}
                         </div>
-                        {active && savedModel && savedOven?.ovenType === preset.id && (
-                          <div className="type-data-sm profile-ftu__option-model">{`${savedModel.brand} ${savedModel.model}`}</div>
+                        {active && ftuModel && ftuModel.ovenType === preset.id && (
+                          <div className="type-data-sm profile-ftu__option-model">{`${ftuModel.brand} ${ftuModel.model}`}</div>
                         )}
                       </div>
                       {active && (
@@ -961,6 +972,42 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                   );
                 })}
               </div>
+              <CtaButton
+                type="button"
+                variant="secondary"
+                radius="lg"
+                className="profile-ftu__model-search"
+                aria-haspopup="dialog"
+                onClick={() => setModelSheetOpen(true)}
+              >
+                <Search size={16} aria-hidden="true" />
+                {uiMessage("pages.profile.ftu-search-model")}
+              </CtaButton>
+              <BottomSheet
+                open={modelSheetOpen}
+                onClose={() => setModelSheetOpen(false)}
+                className="profile-ftu__model-sheet"
+                title={uiMessage("pages.profile.ftu-search-model")}
+              >
+                <OvenModelSearch
+                  selectedId={ftuModelId}
+                  formatTemp={(c) => fmt.celsius(c)}
+                  formatOvenType={(type) => cms.ovenPresets[type]?.name ?? type}
+                  onPick={(model) => {
+                    setFtuModelId(model.id);
+                    setOvenType(model.ovenType);
+                    setOvenTemp(model.maxTempC);
+                    setModelSheetOpen(false);
+                    /* Il dialog rimette il focus sul bottone che l'ha aperto:
+                       subito dopo lo portiamo sulla tessera del forno scelto. */
+                    requestAnimationFrame(() => {
+                      ovenListRef.current?.querySelector<HTMLElement>("[aria-pressed='true']")?.focus();
+                    });
+                  }}
+                  onClear={() => setFtuModelId(null)}
+                />
+              </BottomSheet>
+              </>
             )}
 
             {step === 1 && (
@@ -1551,10 +1598,13 @@ export function ProfilePage() {
         onComplete={() => {
           setShowFtu(false);
           /* Reload state from localStorage after FTU writes */
-          const oven = loadJson<{ ovenType: OvenType; maxTemp: number }>(OVEN_STORAGE_KEY);
+          const oven = loadJson<{ ovenType: OvenType; maxTemp: number; modelId?: string }>(OVEN_STORAGE_KEY);
           if (oven) {
             setOvens([oven.ovenType]);
             setOvenTemp(oven.maxTemp);
+            /* G5-WP-03: anche il modello, o il salvataggio automatico del
+               Profilo lo cancellerebbe subito dopo l'onboarding. */
+            setOvenModelId(oven.modelId ?? null);
           }
           const skill = loadJson<SkillLevel>(SKILL_STORAGE_KEY);
           if (skill) setSkillLevel(skill);
@@ -1653,6 +1703,7 @@ export function ProfilePage() {
           <OvenModelSearch
             selectedId={ovenModelId}
             formatTemp={(c) => fmt.celsius(c)}
+            formatOvenType={(type) => cms.ovenPresets[type]?.name ?? type}
             onPick={(model) => {
               setOvenModelId(model.id);
               setOvens([model.ovenType]);

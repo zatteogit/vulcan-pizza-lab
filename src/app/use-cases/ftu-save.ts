@@ -17,6 +17,9 @@ export interface FtuState {
   savedOven: SavedOvenPref | null | undefined;
   ovenType: OvenType;
   ovenTemp: number;
+  /** G5-WP-03: modello scelto con «Cerca il tuo modello» (null = nessuno;
+   *  assente = non gestito, vale la regola del forno salvato). */
+  modelId?: string | null;
   skillLevel: SkillLevel | null;
   flours: string[];
   yeasts: string[];
@@ -36,7 +39,9 @@ export function planFtuWrites(state: FtuState): FtuWrites {
   const writes: FtuWrites = {};
   if (finish || state.confirmedUpTo >= FTU_STEP.oven) {
     // Il modello resta solo se il forno non è cambiato (FW-07, S18-A-01).
-    writes.oven = state.savedOven?.ovenType === state.ovenType
+    writes.oven = state.modelId !== undefined
+      ? { ovenType: state.ovenType, maxTemp: state.ovenTemp, ...(state.modelId ? { modelId: state.modelId } : {}) }
+      : state.savedOven?.ovenType === state.ovenType
       ? nextSavedOven(state.savedOven, state.ovenType)
       : { ovenType: state.ovenType, maxTemp: state.ovenTemp };
   }
