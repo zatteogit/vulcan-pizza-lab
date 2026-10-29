@@ -74,6 +74,11 @@ describe("FW-10: l'idratazione per chi comincia è un segnale di livello 1", () 
     expect(signals[0]).toMatchObject({ icon: "water", tone: "warning", message: { key: "card.hydrationBeginner" } });
     expect(recipeCardSignals(recipe, "explore")[0].message.key).toBe("card.hydrationBeginner");
   });
+  it("in Scopri resta un solo segnale, il più importante (nota di Matteo, 29/10/2026)", () => {
+    const recipe = generateRecipe(STYLES_DB.teglia_romana, { ...constraints, skill_level: 1 });
+    expect(recipeCardSignals(recipe).length).toBeGreaterThan(1);
+    expect(recipeCardSignals(recipe, "explore").map(s => s.message.key)).toEqual(["card.hydrationBeginner"]);
+  });
   it("chi è esperto non vede il segnale", () => {
     const recipe = generateRecipe(STYLES_DB.teglia_romana, constraints);
     expect(recipeCardSignals(recipe).some(s => s.message.key === "card.hydrationBeginner")).toBe(false);

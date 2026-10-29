@@ -127,7 +127,7 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
   );
 }
 
-/** A maximum of two useful signals, inside the photo. The duration describes
+/** A maximum of two useful signals (one in Explore), inside the photo. The duration describes
  * the complete generated timeline, not fermentation alone. */
 export function StyleMetaChip({ style, cms, recipe, context = "create", id }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe; context?: "create" | "explore"; /** Per aria-describedby del link che contiene i segnali. */ id?: string }) {
   const { bcp47 } = useCms();
@@ -151,7 +151,7 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", id }: { 
           <Icon size={13} aria-hidden="true" /><span data-slot="label">{text}</span>
         </Badge>;
       })}
-      {signals.length < 2 && recipe?.verdict.outcome !== "not_feasible" && (
+      {signals.length < (context === "explore" ? 1 : 2) && recipe?.verdict.outcome !== "not_feasible" && (
         /* FW-05 (S03-B-21, S03-A-21): il badge dice che cosa misura (il tempo
            totale) e, a voce, su quale ricetta: riferimento in Scopri, su misura in Crea. */
         <Badge

@@ -10,7 +10,7 @@ export interface CardSignal {
 }
 const msg = (key: string, fallback: string, params?: EngineMsg["params"]): EngineMsg => ({ key, fallback, params });
 
-/** Card policy: at most two decision signals.
+/** Card policy: at most two decision signals in Create, one in Explore.
  * D-060 (29/10/2026, nota di Matteo): «Se hai farina W…» e «Se hai lievito»
  * non sono segnali. Finché la dispensa non è detta valgono per ogni ricetta e
  * la farina giusta è già negli ingredienti; Crea lo dice una volta (banner).
@@ -51,7 +51,8 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   if (!method && recipe.scores.authenticity < 60) add("check", msg("card.authenticity", "Meno autentica"));
   // Discovery cards introduce the style. Pantry/equipment prerequisites
   // remain inspectable in the detail and actionable in Create.
-  if (context === "explore") return result.slice(0, 2);
+  // Nota di Matteo (29/10/2026): in Scopri un solo segnale, il più importante.
+  if (context === "explore") return result.slice(0, 1);
   for (const c of [...conditions].sort((a, b) => Number(b.status === "missing") - Number(a.status === "missing"))) {
     // D-060: le verifiche di dispensa non sono segnali (vedi sopra).
     // Per chiave, non per tipo: la verifica delle esclusioni (rifiuto esplicito

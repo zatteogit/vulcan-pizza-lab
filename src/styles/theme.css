@@ -3524,24 +3524,6 @@
     transform: scale(1.05);
   }
 
-  .explore-card__badge {
-    position: absolute;
-    z-index: 1;
-    padding-inline: var(--space-2);
-    padding-block: var(--space-1);
-    border-radius: var(--radius-lg);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-semibold);
-    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
-  }
-
-  .explore-card__badge--auth {
-    top: var(--space-3);
-    right: var(--space-3);
-    color: var(--primary-foreground);
-    background: color-mix(in srgb, var(--primary) 90%, transparent);
-  }
-
 
   .explore-card__match {
     position: absolute;
@@ -3852,6 +3834,7 @@
   }
 
   .explore-card__eyebrow {
+    margin-block-start: var(--space-0);
     font-size: var(--font-size-sm);
     font-weight: var(--weight-semibold);
     letter-spacing: var(--tracking-label);
@@ -11874,17 +11857,6 @@
     align-self: flex-start;
     gap: var(--space-1);
     margin-top: var(--space-1);
-  }
-
-  /* Il badge d'autenticità sta nella didascalia: l'angolo è della compatibilità. */
-  .explore-card__caption .explore-card__badge--auth {
-    position: static;
-    display: inline-block;
-    max-width: 100%;
-    margin-bottom: var(--space-2);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   }
 
   .profile-diet-note {
