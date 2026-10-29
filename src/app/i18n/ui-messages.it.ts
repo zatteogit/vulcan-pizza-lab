@@ -356,7 +356,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "features.recipe.recipe-setup-panel.regola-a-mano-93b9fcba": "Regola a mano",
   "features.recipe.recipe-stat-strip.prima-value-ottimizzato-value-e6e2e71f": "Prima {0} → ottimizzato {1}",
   "features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8": "Valore ottimizzato. Prima: {0}. Ora: {1}",
-  "features.recipe.recipe-stat-strip.w-value-f64b6332": "W{0}",
+  "features.recipe.recipe-stat-strip.w-value-f64b6332": "W {0}",
   "features.recipe.recipe-stat-strip.idealOven": "ideale {0}",
   "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Salva nel ricettario",
   "features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success": "Ricetta salvata nel ricettario!",

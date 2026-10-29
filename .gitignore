@@ -1,4 +1,7 @@
 node_modules/
+# Anche come collegamento simbolico (i worktree degli agenti lo creano): un
+# node_modules versionato in main ricreava a ogni checkout un link a sé stesso.
+node_modules
 dist/
 .DS_Store
 *.local

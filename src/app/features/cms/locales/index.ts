@@ -64,9 +64,10 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  28 → FW-02: nota della scienza «stg-reference» e ipotesi «stg-partial-check».
  *  29 → revisione ondata 2: formule della scienza e note delle fonti nella
  *       lingua (science.formulas, science.sourceNotes), tedesco sempre «du».
+ *  30 → D-060 (main): la forza della farina come intervallo («W 260–310»).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 29;
+export const LOCALE_BUNDLE_REV = 30;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

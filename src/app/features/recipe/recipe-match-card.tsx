@@ -536,8 +536,8 @@ export function RecipeMatchCard({
             {/* Copy emotivo del tono: apre il pannello. */}
             <div className="match-details__intro">
               <p className="match-details__body">
-                {verdictRecipe ? cms.tiers[verdictRecipe.verdict.outcome === "not_feasible" ? "not_feasible"
-                  : verdictRecipe.verdict.outcome === "ok" ? "perfect" : "good"].subtitle : tone.body}
+                {presentationState ? cms.tiers[presentationState === "blocked" ? "not_feasible"
+                  : presentationState === "ready" ? "perfect" : "good"].subtitle : tone.body}
               </p>
             </div>
 

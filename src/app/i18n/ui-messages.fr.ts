@@ -354,7 +354,7 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "features.recipe.recipe-setup-panel.regola-a-mano-93b9fcba": "Régler à la main",
   "features.recipe.recipe-stat-strip.prima-value-ottimizzato-value-e6e2e71f": "Avant {0} → optimisé {1}",
   "features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8": "Valeur optimisée. Avant : {0}. Maintenant : {1}",
-  "features.recipe.recipe-stat-strip.w-value-f64b6332": "W{0}",
+  "features.recipe.recipe-stat-strip.w-value-f64b6332": "W {0}",
   "features.recipe.recipe-stat-strip.idealOven": "idéal {0}",
   "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Enregistrer dans le carnet",
   "features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success": "Recette enregistrée dans le carnet !",

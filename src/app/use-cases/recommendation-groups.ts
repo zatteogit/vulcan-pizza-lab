@@ -18,6 +18,13 @@ export const PANTRY_CHECK_KEYS: ReadonlySet<string> = new Set([
   "need.checkBlend",
 ]);
 
+/** D-060: il verdetto ha solo verifiche di dispensa (oltre a nessun avviso
+ *  alimentare). Sono condizioni che valgono per ogni ricetta finché la dispensa
+ *  non è detta: non cambiano l'esito che l'utente vede. */
+export function onlyPantryChecks(verdict: { adaptations: readonly { key: string }[] }, dietaryWarnings = 0): boolean {
+  return dietaryWarnings === 0 && verdict.adaptations.every((msg) => PANTRY_CHECK_KEYS.has(msg.key));
+}
+
 /** La dispensa non è stata compilata: nessuna farina e inventario non confermato. */
 export function pantryUnknown(constraints: UserConstraints): boolean {
   return constraints.pantry_flours.length === 0 && constraints.pantry_inventory_complete !== true;
@@ -28,7 +35,5 @@ export type PresentationTier = StyleRecommendation["tier"];
 /** Il gruppo in cui mostrare lo stile in Crea. */
 export function presentationTier(rec: StyleRecommendation, constraints: UserConstraints): PresentationTier {
   if (rec.tier !== "good" || !pantryUnknown(constraints)) return rec.tier;
-  const onlyPantryChecks = rec.verdict.adaptations.every((msg) => PANTRY_CHECK_KEYS.has(msg.key));
-  const dietary = rec.recipe?.dietary_warnings?.length ?? 0;
-  return onlyPantryChecks && dietary === 0 ? "perfect" : "good";
+  return onlyPantryChecks(rec.verdict, rec.recipe?.dietary_warnings?.length ?? 0) ? "perfect" : "good";
 }

@@ -354,7 +354,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.recipe-setup-panel.regola-a-mano-93b9fcba": "手動で調整",
   "features.recipe.recipe-stat-strip.prima-value-ottimizzato-value-e6e2e71f": "変更前 {0} → 最適化後 {1}",
   "features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8": "最適化された値。変更前：{0}。現在：{1}",
-  "features.recipe.recipe-stat-strip.w-value-f64b6332": "W{0}",
+  "features.recipe.recipe-stat-strip.w-value-f64b6332": "W {0}",
   "features.recipe.recipe-stat-strip.idealOven": "理想 {0}",
   "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "レシピ帳に保存",
   "features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success": "レシピ帳に保存しました！",

@@ -35,6 +35,7 @@ import {
   yeastBakerPctText,
 } from "./recipe-output-format";
 import { uiMessage } from "../../i18n/ui-messages";
+import { flourWText } from "../../domain/flour-w-display";
 import { getScienceNote } from "../../data/science-notes";
 import { roundForEvidence } from "../../domain/science/evidence";
 
@@ -248,13 +249,13 @@ export function IngredientsSection({
                   ? (
                       /* FW-17 (S08-A-14): l'uso e la forza dicevano la stessa cosa due volte. */
                       <>
-                        {/* FW-05 (S08-B-05): un'etichetta sola sulla scala unica. */}
-                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} />
+                        {/* FW-05 (S08-B-05): un'etichetta sola sulla scala unica; D-060: W come fascia. */}
+                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} label={flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)} />
                       </>
                     )
                   : (
                       <>
-                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} /> {uiMessage("features.recipe.ingredients-section.p-l-c4730ae9")}{recipe.flour_pl}
+                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} label={flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)} /> {uiMessage("features.recipe.ingredients-section.p-l-c4730ae9")}{recipe.flour_pl}
                       </>
                     )
             }

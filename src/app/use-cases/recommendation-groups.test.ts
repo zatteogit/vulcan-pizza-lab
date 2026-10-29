@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { recommendStyles, type UserConstraints } from "../domain/pizza-engine";
 import { tailoredRecipeEntry } from "./recipe-entry";
-import { recipeCardSignals } from "../features/recipe/recipe-card-signals";
-import { pantryUnknown, presentationTier } from "./recommendation-groups";
+import { recipeCardSignals, recipePresentationState } from "../features/recipe/recipe-card-signals";
+import { onlyPantryChecks, pantryUnknown, presentationTier } from "./recommendation-groups";
 
 const p1: UserConstraints = { oven_type: "home", oven_max_temp_c: 250, oven_capacity_temp_c: 250, skill_level: 1,
   available_hours: 0, meal_deadline: false, dough_balls: 4, has_mixer: false, has_pizza_stone: false, has_pizza_steel: false,
@@ -45,14 +45,18 @@ describe("gruppi di Crea con la dispensa sconosciuta", () => {
     const onlyChecks = withCheck.filter((rec) => rec.verdict.adaptations.every((msg) => msg.key.startsWith("need.check")));
     expect(onlyChecks.length).toBeGreaterThan(0);
     for (const rec of onlyChecks) {
-      expect(recipeCardSignals(rec.recipe, "create", { hidePantryChecks: true }).map((s) => s.message.key), rec.style.id).toContain("need.checkExclusions");
+      expect(recipeCardSignals(rec.recipe, "create").map((s) => s.message.key), rec.style.id).toContain("need.checkExclusions");
     }
   });
 
-  it("con la dispensa sconosciuta la card nasconde solo le verifiche di dispensa", () => {
-    const keys = (c: UserConstraints) => recommend(c).flatMap((rec) => recipeCardSignals(rec.recipe, "create", { hidePantryChecks: true }).map((s) => s.message.key));
+  it("D-060: le verifiche di dispensa non sono mai segnali, e da sole non fanno «con condizioni»", () => {
+    const keys = (c: UserConstraints) => recommend(c).flatMap((rec) => recipeCardSignals(rec.recipe, "create").map((s) => s.message.key));
     for (const key of keys(p1)) expect(["need.checkFlour", "need.checkYeast", "card.blendCheck"]).not.toContain(key);
+    const onlyPantry = recommend(p1).filter((rec) => rec.recipe && rec.verdict.outcome === "warnings" && onlyPantryChecks(rec.verdict, rec.recipe.dietary_warnings?.length ?? 0));
+    expect(onlyPantry.length).toBeGreaterThan(0);
+    for (const rec of onlyPantry) expect(recipePresentationState(rec.recipe!), rec.style.id).toBe("ready");
   });
+
 
   it("con la dispensa dichiarata il gruppo è quello del motore", () => {
     const declared = { ...p3, pantry_inventory_complete: true };

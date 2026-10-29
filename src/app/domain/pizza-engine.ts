@@ -30,6 +30,7 @@ import { maxPreFermentFlourPct, preFermentMaturationTempC, rule55Sum } from "./p
 import { roundForDisplay } from "./dose-rounding";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
 import { assessAllergens, allergenWarnings, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
+import { flourWText } from "./flour-w-display";
 
 // ═══ TYPES ═══
 
@@ -854,8 +855,8 @@ function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints, f
   const mix = !coversW ? pantryFlourMix(constraints.pantry_flours, [flourW, flourW], true, constraints.pantry_flour_details) : null;
   if (unknownFlour || (!coversW && !mix)) {
     add("flour", unknownFlour ? "unverified" : "missing", unknownFlour
-      ? em("need.checkFlour", "Se hai farina W{w}", { w: flourW })
-      : em("need.flour", "Serve farina W{w}", { w: flourW }));
+      ? em("need.checkFlour", "Se hai farina W {range}", { w: flourW, range: flourWText(flourW, style.dough.flour_w_range) })
+      : em("need.flour", "Serve farina W {range}", { w: flourW, range: flourWText(flourW, style.dough.flour_w_range) }));
   }
   if ((style.dough.flour_blend?.length ?? 0) > 1) {
     // La dispensa censisce prodotti/farine, non tutti i componenti di ogni blend.

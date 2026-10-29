@@ -97,13 +97,15 @@ export function IngRow({
    round 7 (nota Matteo) NON porta più fuori dalla ricetta: apre un pannello
    in-page con la voce di glossario, evidenziando la fascia della W corrente.
    Portal su body: il trigger vive dentro gli span di IngRow. */
-export function GlossaryWLink({ w }: { w: number }) {
+/** `label` (D-060): la W come la vede l'utente, di solito l'intervallo dello
+ *  stile («260–310»); `w` resta il valore del calcolo, per evidenziare la fascia. */
+export function GlossaryWLink({ w, label = String(w) }: { w: number; label?: string }) {
   const [open, setOpen] = useState(false);
   const { cms } = useCms();
   /* FW-11 (S08-B-08): la voce nella lingua attiva, come nel Glossario. */
   const term = getTermById("w_alveograph", cms);
 
-  if (!term) return <>W{w}</>;
+  if (!term) return <>W {label}</>;
 
   /* FW-05 (S08-B-05, S12-B-17): la fascia attiva è quella della scala unica
      del motore (fasce semiaperte), non un confronto sul testo: W280 era
@@ -120,7 +122,7 @@ export function GlossaryWLink({ w }: { w: number }) {
         title={term.name}
         className="bits-glossary-w__trigger"
       >
-        W{w}
+        W {label}
       </button>
       <ModalSheet
         open={open}
