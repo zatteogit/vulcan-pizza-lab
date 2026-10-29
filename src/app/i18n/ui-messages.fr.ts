@@ -589,5 +589,14 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "cooking.rounds.turn": "À mi-cuisson : tournez-la d'un demi-tour",
   "cooking.rounds.out": "Défournez !",
   "cooking.rounds.allDone": "Toutes les cuissons sont faites ({0})",
-  "cooking.rounds.recovery": "Avant la suivante, laissez au four environ {0} pour remonter en température."
+  "cooking.rounds.recovery": "Avant la suivante, laissez au four environ {0} pour remonter en température.",
+  "cooking.rounds.rotate": "Tournez la pizza ({0} sur {1})",
+  "cooking.rounds.fry.label": "Une friture à la fois",
+  "cooking.rounds.fry.progress": "Friture {0} sur {1}",
+  "cooking.rounds.fry.ready": "Chaque friture dure environ {0}. Plongez la pizza dans l'huile quand vous êtes prêt.",
+  "cooking.rounds.fry.start": "Plonger ({0} sur {1})",
+  "cooking.rounds.fry.remaining": "Sortez-la de l'huile dans {0}",
+  "cooking.rounds.fry.turn": "À mi-cuisson : retournez-la avec l'écumoire",
+  "cooking.rounds.fry.out": "Égouttez-la sur du papier absorbant !",
+  "cooking.rounds.fry.allDone": "Toutes les fritures sont faites ({0})"
 };

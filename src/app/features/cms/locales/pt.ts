@@ -1122,6 +1122,7 @@ export const PT_LOCALE: CmsContent = {
     "timeline.folds.title": "Dobras",
     "timeline.folds.desc": "Faça {count} voltas de dobras, uma a cada {interval}, com a massa coberta.",
     "timeline.folds.descCold": "Faça {count} voltas de dobras, uma a cada {interval}, com a massa coberta em temperatura ambiente. Depois da última volta, leve o recipiente à geladeira.",
+    "timeline.folds.descCool": "Faça {count} voltas de dobras, uma a cada {interval}, com a massa coberta em temperatura ambiente. Depois da última volta, volte a deixar o recipiente a {temp}, não na geladeira.",
     "timeline.folds.tipBeginner": "Molhe as mãos, pegue uma ponta, puxe para cima e dobre até o centro; gire o recipiente e repita nos quatro lados. Cubra entre uma volta e outra.",
     "timeline.folds.tipNerd": "As dobras alinham e esticam as fibras de glúten e redistribuem os gases: dão força sem trabalho mecânico.",
     "timeline.bake.recovery": "Entre um assamento e outro, conte cerca de {sec} para tirar, colocar e deixar o forno voltar à temperatura.",

@@ -1176,6 +1176,7 @@ export const JA_LOCALE: CmsContent = {
     "timeline.folds.title": "折りたたみ",
     "timeline.folds.desc": "{interval}おきに折りたたみを{count}回。合間は生地に覆いをしておきます。",
     "timeline.folds.descCold": "室温で{interval}おきに折りたたみを{count}回。合間は覆いをし、最後の回が終わったら容器を冷蔵庫に入れます。",
+    "timeline.folds.descCool": "室温で{interval}おきに折りたたみを{count}回。合間は覆いをし、最後の回が終わったら容器を{temp}の場所に戻します（冷蔵庫には入れません）。",
     "timeline.folds.tipBeginner": "手を濡らし、生地の端をつかんで持ち上げ、中心へ折りたたみます。容器を回して4辺で繰り返し、回の合間は覆いをします。",
     "timeline.folds.tipNerd": "折りたたみはグルテンの繊維をそろえて張らせ、ガスを分散させます。機械でこねずに生地に力をつけます。",
     "timeline.bake.recovery": "焼成と焼成の間に、取り出し・投入とオーブンの温度回復のため約{sec}を見込みます。",

@@ -223,8 +223,33 @@ describe("(d) pieghe e acclimatazione dei testi sono nel piano (S10-B-10, S09-A-
       expect(ids.indexOf("bulk")).toBe(ids.indexOf("folds") + 1);
       const desc = folds.msg?.description?.[0];
       expect(desc?.params).toEqual({ count: data.foldCount, interval: data.foldInterval_min });
-      expect(desc?.key).toBe(r.fermentation_temp_c < 18 ? "timeline.folds.descCold" : "timeline.folds.desc");
+      expect(desc?.key).toBe(r.fermentation_temp_c <= 6 ? "timeline.folds.descCold" : "timeline.folds.desc");
     }
+  });
+
+  it("in cantina (12 °C) le pieghe non mandano il contenitore in frigo: torna a 12 °C, come la puntata", () => {
+    for (const id of ["teglia_romana", "napoletana_canotto"]) {
+      const r = generateRecipe(STYLES_DB[id], P1, { customFermentationTempC: 12, customFermentationHours: 24 });
+      expect(r.fermentation_temp_c, id).toBe(12);
+      const folds = r.timeline.find((s) => s.id === "folds")!;
+      const desc = folds.msg?.description?.[0];
+      expect(desc?.key, id).toBe("timeline.folds.descCool");
+      expect(desc?.params?.temp, id).toBe(12);
+      expect(folds.description, id).not.toMatch(/metti il contenitore in frigo/);
+      expect(folds.description, id).toMatch(/rimetti il contenitore a 12°C, non in frigo/);
+      expect(r.timeline.find((s) => s.id === "bulk")!.description).toMatch(/12°C/);
+    }
+  });
+
+  it("il frigo resta per la puntata fino a 6 °C; da 18 °C nessuna indicazione sul contenitore", () => {
+    const keyAt = (t: number) =>
+      generateRecipe(STYLES_DB.teglia_romana, P1, { customFermentationTempC: t, customFermentationHours: 24 })
+        .timeline.find((s) => s.id === "folds")!.msg?.description?.[0]?.key;
+    expect(keyAt(4)).toBe("timeline.folds.descCold");
+    expect(keyAt(6)).toBe("timeline.folds.descCold");
+    expect(keyAt(7)).toBe("timeline.folds.descCool");
+    expect(keyAt(17)).toBe("timeline.folds.descCool");
+    expect(keyAt(18)).toBe("timeline.folds.desc");
   });
 
   it("l'impasto senza impastatrice non scrive più un intervallo diverso da quello del passo", () => {

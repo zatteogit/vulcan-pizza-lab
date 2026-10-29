@@ -1,4 +1,4 @@
-import { PROOF_MIN_TEMP_C } from "../domain/fermentation-constants";
+import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C } from "../domain/fermentation-constants";
 import {
   ACTIVE_STEP_IDS,
   FLEXIBLE_STEP_IDS,
@@ -168,7 +168,7 @@ export const COMFORT_TOLERANCES = {
   /** A temperatura ambiente (e l'appretto, sempre ad almeno 18 °C) i margini sono stretti. */
   room: { plusFraction: 0.3, plusMaxMin: 120, minusFraction: 0.2, minusMaxMin: 90 },
   /** Temperatura massima del frigo per le tolleranze «cold». */
-  coldMaxC: 6,
+  coldMaxC: FRIDGE_MAX_TEMP_C,
   /** Passo delle estensioni, in minuti. */
   stepMin: 30,
   /** Durata minima di una fase per essere stirata. */

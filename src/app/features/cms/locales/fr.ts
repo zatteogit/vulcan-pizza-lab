@@ -1122,6 +1122,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.folds.title": "Plis",
     "timeline.folds.desc": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte.",
     "timeline.folds.descCold": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte à température ambiante. Après la dernière série, mettez le récipient au frigo.",
+    "timeline.folds.descCool": "Faites {count} séries de plis, une toutes les {interval}, pâte couverte à température ambiante. Après la dernière série, remettez le récipient à {temp}, pas au frigo.",
     "timeline.folds.tipBeginner": "Mouillez-vous les mains, saisissez un pan, étirez-le vers le haut et rabattez-le au centre ; tournez le récipient et répétez sur les quatre côtés. Couvrez entre deux séries.",
     "timeline.folds.tipNerd": "Les plis alignent et tendent les fibres de gluten et redistribuent les gaz : ils donnent de la force sans travail mécanique.",
     "timeline.bake.recovery": "Entre deux cuissons, comptez environ {sec} pour défourner, enfourner et laisser le four remonter en température.",

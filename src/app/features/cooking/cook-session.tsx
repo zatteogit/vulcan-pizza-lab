@@ -24,6 +24,7 @@ import { t } from "../cms/i18n";
 import type { StepVisual } from "./step-visual";
 import { showReminder, truncateAtWord } from "../../adapters/browser/cook-reminders";
 import type { PredictedScores, RecipeSnapshot } from "../../domain/recipe-feedback";
+import type { TimelineStep } from "../../domain/pizza-engine";
 import {
   FLEXIBLE_STEP_IDS,
   TIMED_WAIT_STEP_IDS,
@@ -59,6 +60,10 @@ export interface CookSessionStep {
   rounds?: number;
   roundSec?: number;
   recoverySec?: number;
+  /** Rotazioni per cottura (0 = non girare) e variante («fry» = in olio):
+   *  decidono i testi del timer per giro. */
+  turns?: number;
+  variant?: TimelineStep["variant"];
 }
 
 /** FW-16 (D-M, S10-B-07): parametri della ricetta cucinata, per chiedere

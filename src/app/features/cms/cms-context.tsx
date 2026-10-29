@@ -2326,6 +2326,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.folds.title": "Pieghe",
     "timeline.folds.desc": "Fai {count} giri di pieghe, uno ogni {interval}, con l'impasto coperto.",
     "timeline.folds.descCold": "Fai {count} giri di pieghe, uno ogni {interval}, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro metti il contenitore in frigo.",
+    "timeline.folds.descCool": "Fai {count} giri di pieghe, uno ogni {interval}, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro rimetti il contenitore a {temp}, non in frigo.",
     "timeline.bake.recovery": "Fra una cottura e l'altra conta circa {sec} per sfornare, infornare e lasciare che il forno torni in temperatura.",
     "timelineComfort.nightNoPlan": "Fasi da fare di notte: {n}, la prima alle {time}. Scegli un pasto qui sopra.",
     "timelineComfort.nightNoPlanNoMeal": "Fasi da fare di notte: {n}, la prima alle {time}. Sposta l'inizio con i pulsanti qui sopra.",

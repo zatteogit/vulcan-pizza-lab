@@ -645,6 +645,8 @@ export function CookingMode() {
                     rounds={step.rounds!}
                     roundSec={step.roundSec}
                     recoverySec={step.recoverySec}
+                    turns={step.turns}
+                    variant={step.variant}
                   />
                 ) : null}
 

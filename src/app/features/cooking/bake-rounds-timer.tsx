@@ -4,7 +4,8 @@
  * ogni infornata si avvia con un tocco, a metà arriva «gira» e alla fine
  * «sforna»; fra un giro e l'altro si ricorda il recupero del forno (ipotesi
  * del modello, nota bake-round-recovery). Lo stato vive nella vista: il
- * piano della pizzata non cambia. */
+ * piano della pizzata non cambia. Variante (forno o olio) e rotazioni dello
+ * stile decidono i testi: vedi bake-rounds-status.ts. */
 
 import { Flame, RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import { CtaButton } from "../../components/ds/index";
 import { formatSeconds } from "../../i18n/format";
 import { uiMessage } from "../../i18n/ui-messages";
 import { useCms } from "../cms/cms-context";
+import { roundStatus, type RoundPhase } from "./bake-rounds-status";
 
 interface BakeRoundsTimerProps {
   rounds: number;
@@ -19,11 +21,13 @@ interface BakeRoundsTimerProps {
   roundSec: number;
   /** Secondi di recupero del forno fra due giri (ipotesi), se previsti. */
   recoverySec?: number;
+  /** Rotazioni per cottura dello stile (0 = non girare). */
+  turns?: number;
+  /** Variante del passo: «fry» = frittura in olio. */
+  variant?: string;
 }
 
-type RoundPhase = "idle" | "baking" | "out";
-
-export function BakeRoundsTimer({ rounds, roundSec, recoverySec }: BakeRoundsTimerProps) {
+export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, variant }: BakeRoundsTimerProps) {
   const { bcp47 } = useCms();
   /** Giro in corso o appena finito (1-based); 0 = nessuno ancora. */
   const [round, setRound] = useState(0);
@@ -46,27 +50,32 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec }: BakeRoundsTim
 
   const allDone = round >= rounds && phase !== "baking";
   const remainingSec = Math.max(0, Math.ceil(roundSec - elapsedSec));
-  const halfway = phase === "baking" && elapsedSec >= roundSec / 2;
   const nextRound = round + 1;
+  const st = roundStatus({ phase, elapsedSec, roundSec, round, rounds, turns, variant });
+  const turning = st.key === "turn" || st.key === "rotate";
+  /* La frittura (pizza fritta, montanara) ha testi propri: niente forno. */
+  const fry = variant === "fry";
 
   const status =
-    phase === "baking"
-      ? halfway
-        ? uiMessage("cooking.rounds.turn")
-        : uiMessage("cooking.rounds.remaining", [formatSeconds(remainingSec, bcp47)])
-      : allDone
-        ? uiMessage("cooking.rounds.allDone", [rounds])
-        : phase === "out"
-          ? uiMessage("cooking.rounds.out")
-          : uiMessage("cooking.rounds.ready", [formatSeconds(roundSec, bcp47)]);
+    st.key === "remaining"
+      ? uiMessage(fry ? "cooking.rounds.fry.remaining" : "cooking.rounds.remaining", [formatSeconds(remainingSec, bcp47)])
+      : st.key === "turn"
+        ? uiMessage(fry ? "cooking.rounds.fry.turn" : "cooking.rounds.turn")
+        : st.key === "rotate"
+          ? uiMessage("cooking.rounds.rotate", [st.turnIndex ?? 1, st.turnCount ?? turns])
+          : st.key === "allDone"
+            ? uiMessage(fry ? "cooking.rounds.fry.allDone" : "cooking.rounds.allDone", [rounds])
+            : st.key === "out"
+              ? uiMessage(fry ? "cooking.rounds.fry.out" : "cooking.rounds.out")
+              : uiMessage(fry ? "cooking.rounds.fry.ready" : "cooking.rounds.ready", [formatSeconds(roundSec, bcp47)]);
 
   return (
-    <section className="cook-rounds" data-phase={phase} aria-label={uiMessage("cooking.rounds.label")}>
+    <section className="cook-rounds" data-phase={phase} aria-label={uiMessage(fry ? "cooking.rounds.fry.label" : "cooking.rounds.label")}>
       <p className="cook-rounds__count type-numeric">
-        {uiMessage("cooking.rounds.progress", [Math.min(Math.max(round, 1), rounds), rounds])}
+        {uiMessage(fry ? "cooking.rounds.fry.progress" : "cooking.rounds.progress", [Math.min(Math.max(round, 1), rounds), rounds])}
       </p>
       <p className="cook-rounds__status type-numeric" role="status" aria-live="polite">
-        {halfway && <RotateCw size={18} aria-hidden="true" className="cook-rounds__icon" />}
+        {turning && <RotateCw size={18} aria-hidden="true" className="cook-rounds__icon" />}
         {status}
       </p>
       {phase === "out" && !allDone && recoverySec ? (
@@ -84,7 +93,7 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec }: BakeRoundsTim
           className="cook-rounds__cta"
         >
           <Flame size={18} aria-hidden="true" />
-          {uiMessage("cooking.rounds.start", [nextRound, rounds])}
+          {uiMessage(fry ? "cooking.rounds.fry.start" : "cooking.rounds.start", [nextRound, rounds])}
         </CtaButton>
       )}
     </section>

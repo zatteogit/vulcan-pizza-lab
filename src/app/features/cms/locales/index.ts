@@ -53,7 +53,8 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  23 → FW-14 (revisione): «Riferimento» al posto di «Originale» nei testi
  *       della ricetta di riferimento.
  *  24 → FW-19: piano temporale unico (pieghe come passo, recupero del forno
- *       fra le cotture, Timeline comoda onesta, niente «contabilità del tempo»).
+ *       fra le cotture, Timeline comoda onesta, niente «contabilità del tempo»;
+ *       pieghe in cantina senza frigo, timer di cottura per variante).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
 export const LOCALE_BUNDLE_REV = 24;

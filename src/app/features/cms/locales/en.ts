@@ -1292,6 +1292,7 @@ export const EN_LOCALE: CmsContent = {
     "timeline.folds.title": "Folds",
     "timeline.folds.desc": "Do {count} rounds of folds, one every {interval}, keeping the dough covered.",
     "timeline.folds.descCold": "Do {count} rounds of folds, one every {interval}, keeping the dough covered at room temperature. After the last round, put the container in the fridge.",
+    "timeline.folds.descCool": "Do {count} rounds of folds, one every {interval}, keeping the dough covered at room temperature. After the last round, put the container back at {temp}, not in the fridge.",
     "timeline.folds.tipBeginner": "Wet your hands, grab a flap, pull it up and fold it to the centre; turn the container and repeat on all four sides. Cover between rounds.",
     "timeline.folds.tipNerd": "Folds align and stretch the gluten strands and redistribute the gas: they build strength without mechanical work.",
     "timeline.bake.recovery": "Between bakes, allow about {sec} to unload, load and let the oven come back to temperature.",

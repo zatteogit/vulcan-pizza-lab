@@ -589,5 +589,14 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "cooking.rounds.turn": "Halbzeit: um eine halbe Drehung wenden",
   "cooking.rounds.out": "Herausholen!",
   "cooking.rounds.allDone": "Alle Backvorgänge erledigt ({0})",
-  "cooking.rounds.recovery": "Gib dem Ofen vor dem nächsten etwa {0}, um wieder auf Temperatur zu kommen."
+  "cooking.rounds.recovery": "Gib dem Ofen vor dem nächsten etwa {0}, um wieder auf Temperatur zu kommen.",
+  "cooking.rounds.rotate": "Pizza drehen ({0} von {1})",
+  "cooking.rounds.fry.label": "Eine nach der anderen frittieren",
+  "cooking.rounds.fry.progress": "Frittieren {0} von {1}",
+  "cooking.rounds.fry.ready": "Jedes Frittieren dauert etwa {0}. Gib die Pizza ins Öl, wenn du bereit bist.",
+  "cooking.rounds.fry.start": "Ins Öl geben ({0} von {1})",
+  "cooking.rounds.fry.remaining": "Aus dem Öl nehmen in {0}",
+  "cooking.rounds.fry.turn": "Halbzeit: mit dem Schaumlöffel wenden",
+  "cooking.rounds.fry.out": "Auf Küchenpapier abtropfen lassen!",
+  "cooking.rounds.fry.allDone": "Alles frittiert ({0})"
 };

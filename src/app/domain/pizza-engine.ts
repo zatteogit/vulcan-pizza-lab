@@ -13,8 +13,8 @@ getImpasto,
 mergeImpastoIntoDough,
 type ImpastoRecipe,
 } from "../data/impasto-library";
-import { getFoldingByStyle, getToppingByStyle } from "../data/parametric-databases";
-import { PROOF_MIN_TEMP_C } from "./fermentation-constants";
+import { getBakingTimeByStyle, getFoldingByStyle, getToppingByStyle } from "../data/parametric-databases";
+import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C } from "./fermentation-constants";
 export { PROOF_MIN_TEMP_C };
 import { isHeatProfileCompatible } from "../data/equipment-data";
 import {
@@ -668,6 +668,9 @@ export interface TimelineStep {
    *  (già compresi in duration_minutes). Servono al timer per giro. */
   round_seconds?: number;
   recovery_seconds?: number;
+  /** FW-19: quante volte si gira la pizza in una cottura (BAKING_TIMES_DB:
+   *  0 = non girare, es. Chicago; 3 = napoletana). Serve al timer per giro. */
+  turns?: number;
   /** Passive activity already contained in this timeline block. Never subtract it again. */
   parallel_activity?: { kind: "proof" | "rest"; duration_minutes: number; included_in_fermentation: true };
   /** Lavoro per unità: duration_minutes include già tutte le unità. */
@@ -3601,19 +3604,34 @@ function generateTimeline(
   };
 
   // FW-19 (S10-B-10, S09-A-07): le pieghe che il testo chiede sono un passo,
-  // a temperatura ambiente; con la puntata in frigo, dopo l'ultimo giro.
+  // a temperatura ambiente. Dopo l'ultimo giro: in frigo solo se la puntata è
+  // davvero in frigo (≤ FRIDGE_MAX_TEMP_C, come bulk_cold e le tolleranze
+  // della Timeline comoda); fra 7 e 17 °C (cantina, «fresco») il contenitore
+  // torna a quella temperatura, perché la dose di lievito è calcolata lì.
   if (foldPlan && foldMinutes > 0) {
-    const coldBulk = fermentTemp < PROOF_MIN_TEMP_C;
+    const foldsKey =
+      fermentTemp <= FRIDGE_MAX_TEMP_C
+        ? "timeline.folds.descCold"
+        : fermentTemp < PROOF_MIN_TEMP_C
+          ? "timeline.folds.descCool"
+          : "timeline.folds.desc";
+    const foldsFallback: Record<typeof foldsKey, string> = {
+      "timeline.folds.descCold":
+        "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro metti il contenitore in frigo.",
+      "timeline.folds.descCool":
+        "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro rimetti il contenitore a {temp}, non in frigo.",
+      "timeline.folds.desc": "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto.",
+    };
     steps.push(
       keyedStep(
         { id: "folds", duration_minutes: foldMinutes, icon: "hand", timing_label: `${foldPlan.count} × ${foldPlan.intervalMin} min` },
         em("timeline.folds.title", "Pieghe"),
         [em(
-          coldBulk ? "timeline.folds.descCold" : "timeline.folds.desc",
-          coldBulk
-            ? "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro metti il contenitore in frigo."
-            : "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto.",
-          { count: foldPlan.count, interval: foldPlan.intervalMin },
+          foldsKey,
+          foldsFallback[foldsKey],
+          foldsKey === "timeline.folds.descCool"
+            ? { count: foldPlan.count, interval: foldPlan.intervalMin, temp: fermentTemp }
+            : { count: foldPlan.count, interval: foldPlan.intervalMin },
         )],
         {
           beginner: em("timeline.folds.tipBeginner", METHOD_MESSAGES_IT["timeline.folds.tipBeginner"]),
@@ -4034,6 +4052,7 @@ function generateTimeline(
     // e la platea torna in temperatura. Ipotesi del modello per tipo di forno
     // (nota bake-round-recovery), sommata ai secondi reali delle cotture.
     const recoverySec = bakeRoundRecoverySec(equipment?.ovenType);
+    const turns = Math.max(0, Math.round(getBakingTimeByStyle(style.id)?.turns ?? 1));
     for (const step of steps) {
       if (step.id !== "bake" && step.id !== "bake2") continue;
       const perRoundSec = step.id === "bake" && !hasSecondBake ? effectiveCookSec : step.duration_minutes * 60;
@@ -4043,6 +4062,7 @@ function generateTimeline(
       step.duration_minutes = Math.max(1, Math.ceil((perRoundSec * bakeRounds + stepRecoverySec * (bakeRounds - 1)) / 60));
       step.rounds = bakeRounds;
       step.round_seconds = perRoundSec;
+      step.turns = turns;
       if (stepRecoverySec > 0) step.recovery_seconds = stepRecoverySec;
       step.timing_label = `${bakeRounds} × ${formatCookTime(perRoundSec)}`;
       if (step.msg?.description) {

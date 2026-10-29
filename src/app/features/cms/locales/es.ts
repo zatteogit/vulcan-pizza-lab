@@ -1122,6 +1122,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.folds.title": "Pliegues",
     "timeline.folds.desc": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada.",
     "timeline.folds.descCold": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada a temperatura ambiente. Tras la última tanda, mete el recipiente en la nevera.",
+    "timeline.folds.descCool": "Haz {count} tandas de pliegues, una cada {interval}, con la masa tapada a temperatura ambiente. Tras la última tanda, vuelve a dejar el recipiente a {temp}, no en la nevera.",
     "timeline.folds.tipBeginner": "Mójate las manos, toma un extremo, estíralo hacia arriba y dóblalo al centro; gira el recipiente y repite en los cuatro lados. Tapa entre tanda y tanda.",
     "timeline.folds.tipNerd": "Los pliegues alinean y tensan las fibras de gluten y redistribuyen los gases: dan fuerza sin trabajo mecánico.",
     "timeline.bake.recovery": "Entre un horneado y otro, cuenta unos {sec} para sacar, meter y dejar que el horno recupere la temperatura.",

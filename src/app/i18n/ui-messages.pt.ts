@@ -589,5 +589,14 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "cooking.rounds.turn": "Na metade: gire meia volta",
   "cooking.rounds.out": "Tire do forno!",
   "cooking.rounds.allDone": "Todos os assamentos feitos ({0})",
-  "cooking.rounds.recovery": "Antes da próxima, dê ao forno cerca de {0} para voltar à temperatura."
+  "cooking.rounds.recovery": "Antes da próxima, dê ao forno cerca de {0} para voltar à temperatura.",
+  "cooking.rounds.rotate": "Gire a pizza ({0} de {1})",
+  "cooking.rounds.fry.label": "Uma fritura de cada vez",
+  "cooking.rounds.fry.progress": "Fritura {0} de {1}",
+  "cooking.rounds.fry.ready": "Cada fritura leva cerca de {0}. Mergulhe a pizza no óleo quando estiver pronto.",
+  "cooking.rounds.fry.start": "Mergulhar ({0} de {1})",
+  "cooking.rounds.fry.remaining": "Tire do óleo em {0}",
+  "cooking.rounds.fry.turn": "Na metade: vire-a com a escumadeira",
+  "cooking.rounds.fry.out": "Escorra em papel absorvente!",
+  "cooking.rounds.fry.allDone": "Todas as frituras feitas ({0})"
 };

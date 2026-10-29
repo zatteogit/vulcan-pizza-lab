@@ -1108,6 +1108,7 @@ export const DE_LOCALE: CmsContent = {
     "timeline.folds.title": "Falten",
     "timeline.folds.desc": "Mache {count} Falt-Runden im Abstand von {interval}; den Teig dazwischen abdecken.",
     "timeline.folds.descCold": "Mache {count} Falt-Runden im Abstand von {interval}, den Teig abgedeckt bei Raumtemperatur. Nach der letzten Runde den Behälter in den Kühlschrank stellen.",
+    "timeline.folds.descCool": "Mache {count} Falt-Runden im Abstand von {interval}, den Teig abgedeckt bei Raumtemperatur. Nach der letzten Runde den Behälter wieder bei {temp} stellen, nicht in den Kühlschrank.",
     "timeline.folds.tipBeginner": "Hände anfeuchten, einen Teiglappen greifen, nach oben ziehen und zur Mitte falten; den Behälter drehen und auf allen vier Seiten wiederholen. Zwischen den Runden abdecken.",
     "timeline.folds.tipNerd": "Falten richten die Glutenstränge aus, dehnen sie und verteilen die Gase neu: Sie geben Kraft ohne mechanische Arbeit.",
     "timeline.bake.recovery": "Rechne zwischen zwei Backvorgängen mit etwa {sec} zum Herausholen und Einschießen, damit der Ofen wieder auf Temperatur kommt.",

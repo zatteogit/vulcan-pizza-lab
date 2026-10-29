@@ -589,5 +589,14 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "cooking.rounds.turn": "半分経過：半回転させましょう",
   "cooking.rounds.out": "取り出しましょう！",
   "cooking.rounds.allDone": "すべての焼成が完了（{0}回）",
-  "cooking.rounds.recovery": "次を入れる前に、オーブンが温度を取り戻すまで約{0}待ちましょう。"
+  "cooking.rounds.recovery": "次を入れる前に、オーブンが温度を取り戻すまで約{0}待ちましょう。",
+  "cooking.rounds.rotate": "ピザを回転（{0}/{1}）",
+  "cooking.rounds.fry.label": "1枚ずつ揚げる",
+  "cooking.rounds.fry.progress": "揚げ {0}/{1}",
+  "cooking.rounds.fry.ready": "1回の揚げ時間は約{0}です。準備ができたらピザを油に入れてください。",
+  "cooking.rounds.fry.start": "油に入れる（{0}/{1}）",
+  "cooking.rounds.fry.remaining": "あと{0}で油から引き上げ",
+  "cooking.rounds.fry.turn": "半分経過：網じゃくしで裏返しましょう",
+  "cooking.rounds.fry.out": "キッチンペーパーで油を切りましょう！",
+  "cooking.rounds.fry.allDone": "すべて揚げ終わり（{0}回）"
 };
