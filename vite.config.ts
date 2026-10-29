@@ -208,6 +208,11 @@ export default defineConfig({
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
+        /* Budget D-059 (ondata 2 dell'audit): i chunk condivisi sotto ~4 kB
+           senza effetti collaterali (icone, piccoli componenti DS) si fondono
+           in un chunk caricato nelle stesse condizioni. Meno file, meno
+           involucri e gzip più efficace: −4 kB sul codice senza lingue. */
+        experimentalMinChunkSize: 4000,
         manualChunks: {
           "vendor-react": [
             "react",
@@ -217,6 +222,9 @@ export default defineConfig({
           /* "motion" è un wrapper: senza framer-motion qui, i ~120 kB veri
              finivano nel chunk principale (audit bundle lug 2026). */
           "vendor-motion": ["motion", "framer-motion"],
+          /* Catalogo UI italiano (lingua di riserva, sempre caricato): file a
+             sé accanto al chunk principale, che altrimenti supera i 100 kB. */
+          "ui-messages-it": [path.resolve(__dirname, "src/app/i18n/ui-messages.it.ts")],
         },
       },
     },

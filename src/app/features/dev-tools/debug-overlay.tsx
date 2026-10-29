@@ -4,10 +4,12 @@ import { useDebugGate } from "./debug/use-debug-gate";
 
 /* The interactive workspace (pins, canvas, form, panel, sync) is a separate
    chunk pulled in only when the debugger is switched on, so users who never
-   open it don't download or run any of it. */
-const DebugWorkspace = lazy(() =>
-  import("./debug/debug-workspace").then((m) => ({ default: m.DebugWorkspace })),
-);
+   open it don't download or run any of it. In production builds the
+   constant condition drops the dynamic import, so the chunk is not even
+   emitted into dist/ (budget P-5). */
+const DebugWorkspace = import.meta.env.DEV
+  ? lazy(() => import("./debug/debug-workspace").then((m) => ({ default: m.DebugWorkspace })))
+  : null;
 
 function DebugToast({ message }: { message: string | null }) {
   return (
@@ -53,7 +55,7 @@ function DebugOverlayGate() {
   return (
     <>
       <DebugToast message={toast} />
-      {isEnabled && (
+      {isEnabled && DebugWorkspace && (
         <Suspense fallback={null}>
           <DebugWorkspace showToast={showToast} />
         </Suspense>

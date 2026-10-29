@@ -45,6 +45,19 @@ due: il codice senza lingue e il codice più il catalogo più pesante. Il totale
 resta stampato come informazione. I cataloghi si riconoscono dai file in
 `src/app/features/cms/locales/<lingua>.ts`.
 
+### Ondata 2 dell'audit (29/10/2026)
+
+Unendo FW-05, FW-15, FW-17, FW-19 e FW-02 il codice senza lingue arrivava a
+512,3 kB (chunk principale 104,2 kB), oltre i limiti, senza alzarli:
+
+- il pannello di debug AI (`debug-workspace`, ~10 kB) e l'esploratore dei temi
+  non entrano più in `dist/` in produzione (import dinamico sotto
+  `import.meta.env.DEV` / `TOOLS_ENABLED`);
+- `experimentalMinChunkSize: 4000` in `vite.config.ts` fonde i chunk condivisi
+  piccoli e senza effetti collaterali (−4 kB);
+- il catalogo UI italiano (`ui-messages.it.ts`) è un chunk a sé, caricato
+  subito come prima, così il chunk principale resta sotto i 100 kB.
+
 ## Perché l'LCP è lento
 
 1. **La home scarica il motore prima che serva.** `use-recipe-state` (187 kB),
