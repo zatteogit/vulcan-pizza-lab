@@ -17,6 +17,7 @@ import {
   completeStepAt,
   countNightActives,
   defaultMealStart,
+  displayedClockMs,
   isColdPhase,
   isNightHour,
   movesHoursBetweenColdAndRoom,
@@ -26,6 +27,7 @@ import {
   recipeFingerprint,
   sessionNightActions,
   sessionReadyAt,
+  startNowNeedsConfirm,
   startStepAt,
   stepHasStarted,
   stretchOptions,
@@ -294,6 +296,41 @@ describe("(e) il ri-ancoraggio conserva il piano comodo (S10-A-03)", () => {
     expect(preview.readyAtMs).toBe(plan.readyAtMs - (plan.startMs - now));
     expect(preview.nightActions).toEqual(sessionNightActions(startStepAt(session, 0, now), now));
     expect(stepHasStarted(startStepAt(session, 0, now)[0], now)).toBe(true);
+  });
+});
+
+describe("«Iniziare adesso?» solo se cambia ciò che si legge (revisione ondata 2)", () => {
+  // Impasto alle 12:17 di venerdì, poi 96 min di lievitazione (flessibile) e 7 min di cottura: pronto alle 14:20, «ca. 14:15».
+  const mixAt = at(30, 12, 17).getTime();
+  const session: SessionTiming[] = [
+    { id: "mix", duration_minutes: 20, startMs: mixAt, endMs: mixAt + 20 * 60_000, done: false },
+    { id: "proof", duration_minutes: 96, startMs: mixAt + 20 * 60_000, endMs: mixAt + 116 * 60_000, done: false },
+    { id: "bake", duration_minutes: 7, startMs: mixAt + 116 * 60_000, endMs: mixAt + 123 * 60_000, done: false },
+  ];
+  it("10 minuti prima, «ca. 14:15» resta «ca. 14:15»: niente dialogo", () => {
+    const now = at(30, 12, 7).getTime();
+    expect(previewStartNow(session, 0, now).readyAtMs).toBe(sessionReadyAt(session) - 10 * 60_000);
+    expect(startNowNeedsConfirm(session, 0, now, true)).toBe(false);
+  });
+  it("senza «ca.» l'orario al minuto cambia: dialogo", () => {
+    expect(startNowNeedsConfirm(session, 0, at(30, 12, 7).getTime(), false)).toBe(true);
+  });
+  it("un anticipo oltre il quarto d'ora cambia l'orario mostrato: dialogo", () => {
+    expect(startNowNeedsConfirm(session, 0, at(30, 11, 30).getTime(), true)).toBe(true);
+  });
+  it("una nuova azione di notte chiede conferma anche se l'orario mostrato non cambia", () => {
+    // «Impasto» alle 7:01 (fuori dalla notte), pronto alle 7:03: «ca. 7:00».
+    const mix = at(31, 7, 1).getTime();
+    const morning: SessionTiming[] = [
+      { id: "proof", duration_minutes: 10, startMs: mix - 10 * 60_000, endMs: mix, done: false },
+      { id: "mix", duration_minutes: 2, startMs: mix, endMs: mix + 2 * 60_000, done: false },
+    ];
+    // Cominciando alle 6:47 l'impasto cade alle 6:57, di notte; il pasto resta «ca. 7:00».
+    const now = at(31, 6, 47).getTime();
+    expect(displayedClockMs(previewStartNow(morning, 0, now).readyAtMs, true)).toBe(displayedClockMs(sessionReadyAt(morning), true));
+    expect(startNowNeedsConfirm(morning, 0, now, true)).toBe(true);
+    // Alle 6:52 l'impasto cade alle 7:02: niente di nuovo di notte, niente dialogo.
+    expect(startNowNeedsConfirm(morning, 0, at(31, 6, 52).getTime(), true)).toBe(false);
   });
 });
 

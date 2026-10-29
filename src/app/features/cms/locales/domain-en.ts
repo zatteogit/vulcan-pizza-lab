@@ -838,4 +838,29 @@ export const SCIENCE_EN: CmsScience = {
     /* FW-02 */
     "stg-partial-check": "We compare only some values: ingredient origin, dough temperature and technique are not checked.",
   },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0.01%; min(3%; Y₀ × (t₀ / tₑ)^0.7 ÷ v(T) × s) ÷ k) · Y₀ = 0.1% (fresh), t₀ = 24 h, s = 1 fresh / 0.33 dry, k = personal correction (0.5–2) · tₑ = h if T ≥ 18 °C; below that: tₑ = (h − hₐ) + hₐ ÷ v(T), with hₐ = final proof + folds at 18 °C · v(T): see “Temperature and rising speed”",
+    "q10-fermentation": "v(T) = Q10ₐ^((T − 18)/10) if T ≥ T_b; below that: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · baker's yeast: T_b = 10 °C, Q10ₐ = 2.0, Q10_b = 1.6 · sourdough starter: T_b = 15 °C, Q10ₐ = 2.2, Q10_b = 1.9",
+    "equivalent-hours": "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, with hₐ = final proof + folds at 18 °C",
+    "water-temp-rule": "T_water = 3 × T_dough − T_room − T_flour − friction · with a pre-ferment, final dough: T_water = 4 × T_dough − T_room − T_flour − T_pre-ferment − friction; pre-ferment water: 3 × T_pre-ferment − T_room − T_flour",
+    "water-activity": "Aw ≈ 0.96 + (H − 55) × 0.0005 − salt × 0.006 − sugar × 0.004",
+    "flour-pl-estimate": "P/L ≈ 0.30 + (W − 150) × 0.0015, limited to the style's range",
+    "baking-energy": "E = P × t · P = 2, 3 or 8 kW depending on oven temperature",
+    "thickness-factor": "TF = dough ball weight (g) / pizza area (cm²) · 1 oz/in² ≈ 4.39 g/cm²",
+  },
+  sourceNotes: {
+    "internal-db": "the project's internal working database, not public",
+    "demo": "sample data, invented brand",
+    "ovens-secondary": "oven retailers and reviews (secondary sources)",
+    "autolyse-calvel": "article on autolyse (cites R. Calvel, 1974)",
+    "recipes": "recipes",
+    "articles": "articles",
+    "abstract-only": "abstract only",
+    "manufacturer-sheet": "manufacturer's data sheet",
+    "manufacturer-pages": "manufacturer's product pages",
+    "manual": "user manual",
+    "faq": "frequently asked questions",
+  },
 };

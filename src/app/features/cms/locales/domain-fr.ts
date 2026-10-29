@@ -791,4 +791,29 @@ export const SCIENCE_FR: CmsScience = {
     /* FW-02 */
     "stg-partial-check": "Nous ne comparons que certaines valeurs : l'origine des ingrédients, la température de la pâte et l'exécution ne sont pas vérifiées.",
   },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0,01 % ; min(3 % ; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fraîche), t₀ = 24 h, s = 1 fraîche / 0,33 sèche, k = correction personnelle (0,5–2) · tₑ = h si T ≥ 18 °C ; en dessous : tₑ = (h − hₐ) + hₐ ÷ v(T), avec hₐ = apprêt + rabats à 18 °C · v(T) : voir « Température et vitesse de pousse »",
+    "q10-fermentation": "v(T) = Q10ₐ^((T − 18)/10) si T ≥ T_b ; en dessous : v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · levure de boulanger : T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · levain : T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
+    "equivalent-hours": "T ≥ 18 °C : h₁₈ = h × v(T) · T < 18 °C : h₁₈ = (h − hₐ) × v(T) + hₐ, avec hₐ = apprêt + rabats à 18 °C",
+    "water-temp-rule": "T_eau = 3 × T_pâte − T_ambiante − T_farine − friction · avec un préferment, pâte finale : T_eau = 4 × T_pâte − T_ambiante − T_farine − T_préferment − friction ; eau du préferment : 3 × T_préferment − T_ambiante − T_farine",
+    "water-activity": "Aw ≈ 0,96 + (H − 55) × 0,0005 − sel × 0,006 − sucre × 0,004",
+    "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, limité à la plage du style",
+    "baking-energy": "E = P × t · P = 2, 3 ou 8 kW selon la température du four",
+    "thickness-factor": "TF = poids du pâton (g) / surface de la pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+  },
+  sourceNotes: {
+    "internal-db": "base de travail interne du projet, non publique",
+    "demo": "donnée de démonstration, marque inventée",
+    "ovens-secondary": "revendeurs et avis sur les fours (sources secondaires)",
+    "autolyse-calvel": "article sur l'autolyse (cite R. Calvel, 1974)",
+    "recipes": "recettes",
+    "articles": "articles",
+    "abstract-only": "résumé seul lu",
+    "manufacturer-sheet": "fiche du fabricant",
+    "manufacturer-pages": "pages produit du fabricant",
+    "manual": "mode d'emploi",
+    "faq": "questions fréquentes",
+  },
 };

@@ -212,6 +212,39 @@ describe("roundForDisplay (S08-B-19)", () => {
     expect(roundForDisplay("yeast", 0.64)).toBe(0.6);
     expect(roundForDisplay("starter", 91.6)).toBe(92);
   });
+
+  it("lievito sotto 0,1 g: al centesimo e mai 0", () => {
+    expect(roundForDisplay("yeast", 0.0393)).toBe(0.04);
+    expect(roundForDisplay("yeast", 0.004)).toBe(0.01);
+    expect(roundForDisplay("yeast", 0.096)).toBe(0.1);
+    expect(roundForDisplay("yeast", 0)).toBe(0);
+  });
+});
+
+describe("microdosi di lievito: un impasto lievitato ha sempre il suo lievito", () => {
+  it("0,04 g: 4 g di soluzione all'1 %, e la soluzione contiene la dose", () => {
+    const d = yeastDilution(0.04, "dry", 300)!;
+    expect(d).toMatchObject({ stockYeastG: 5, stockWaterG: 495, solutionG: 4, waterToRemoveG: 4 });
+    expect((d.solutionG * d.stockYeastG) / (d.stockYeastG + d.stockWaterG)).toBeCloseTo(0.04, 9);
+  });
+
+  it("su tutto il catalogo, 1 panetto e solo secco, anche con 48–72 h in frigo", () => {
+    const plans = [{}, { customFermentationHours: 48, customFermentationTempC: 4 }, { customFermentationHours: 72, customFermentationTempC: 4 }];
+    for (const style of STYLES) {
+      for (const plan of plans) {
+        for (const pre of [{ usePreFerment: false }, { usePreFerment: true, preFerment: { type: "biga" as const, flourPct: 30 } }]) {
+          const recipe = generateRecipe(style, constraints({ dough_balls: 1, pantry_yeasts: ["dry"], available_hours: 96 }), { ...plan, ...pre });
+          if (recipe.yeast_type === "sourdough" || style.dough.unleavened) continue;
+          const model = buildRecipePhases(recipe);
+          const label = `${style.id} ${JSON.stringify(plan)} ${JSON.stringify(pre)}`;
+          expect(recipe.yeast_g, label).toBeGreaterThan(0);
+          const yeastRows = model.phases.flatMap((phase) => phase.ingredients.filter((i) => i.id === "yeast"));
+          expect(yeastRows.some((row) => row.grams > 0) || model.yeastDilution !== null, label).toBe(true);
+          expect(model.totals.find((t) => t.id === "yeast")?.grams ?? 0, label).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
 });
 
 describe("onlySourdoughYeast (D-P) — stessa scelta del motore", () => {

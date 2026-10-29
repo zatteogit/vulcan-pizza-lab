@@ -62,9 +62,11 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       fra le cotture, Timeline comoda onesta, niente «contabilità del tempo»;
  *       pieghe in cantina senza frigo, timer di cottura per variante).
  *  28 → FW-02: nota della scienza «stg-reference» e ipotesi «stg-partial-check».
+ *  29 → revisione ondata 2: formule della scienza e note delle fonti nella
+ *       lingua (science.formulas, science.sourceNotes), tedesco sempre «du».
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 28;
+export const LOCALE_BUNDLE_REV = 29;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

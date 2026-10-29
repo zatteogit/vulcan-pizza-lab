@@ -788,4 +788,29 @@ export const SCIENCE_PT: CmsScience = {
     /* FW-02 */
     "stg-partial-check": "Comparamos só alguns valores: a origem dos ingredientes, a temperatura da massa e a execução não são verificadas.",
   },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fresco), t₀ = 24 h, s = 1 fresco / 0,33 seco, k = correção pessoal (0,5–2) · tₑ = h se T ≥ 18 °C; abaixo: tₑ = (h − hₐ) + hₐ ÷ v(T), com hₐ = fermentação final + dobras a 18 °C · v(T): ver «Temperatura e velocidade de fermentação»",
+    "q10-fermentation": "v(T) = Q10ₐ^((T − 18)/10) se T ≥ T_b; abaixo: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · fermento biológico: T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · levain natural: T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
+    "equivalent-hours": "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, com hₐ = fermentação final + dobras a 18 °C",
+    "water-temp-rule": "T_água = 3 × T_massa − T_ambiente − T_farinha − atrito · com um pré-fermento, massa final: T_água = 4 × T_massa − T_ambiente − T_farinha − T_pré-fermento − atrito; água do pré-fermento: 3 × T_pré-fermento − T_ambiente − T_farinha",
+    "water-activity": "Aw ≈ 0,96 + (H − 55) × 0,0005 − sal × 0,006 − açúcar × 0,004",
+    "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, limitado ao intervalo do estilo",
+    "baking-energy": "E = P × t · P = 2, 3 ou 8 kW conforme a temperatura do forno",
+    "thickness-factor": "TF = peso da bola de massa (g) / área da pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+  },
+  sourceNotes: {
+    "internal-db": "base de dados de trabalho interna do projeto, não pública",
+    "demo": "dado de demonstração, marca inventada",
+    "ovens-secondary": "revendedores e avaliações de fornos (fontes secundárias)",
+    "autolyse-calvel": "artigo sobre a autólise (cita R. Calvel, 1974)",
+    "recipes": "receitas",
+    "articles": "artigos",
+    "abstract-only": "lido apenas o resumo",
+    "manufacturer-sheet": "ficha do fabricante",
+    "manufacturer-pages": "páginas de produto do fabricante",
+    "manual": "manual de uso",
+    "faq": "perguntas frequentes",
+  },
 };

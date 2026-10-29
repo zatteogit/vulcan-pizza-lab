@@ -96,9 +96,14 @@ export type PhaseRecipe = Pick<
  * 5 g di lievito (±10 %) sia sulla soluzione prelevata (±0,5 g su 5–45 g, cioè
  * dal ±10 % all'1 %). Le due incertezze si sommano: ±20 % a 0,1 g, ±15 % da
  * 0,2 g fino al grammo (per eccesso al 5 %). L'acqua della soluzione madre
- * (245 g) pesa per lo 0,2 % e si trascura. */
+ * (245 g) pesa per lo 0,2 % e si trascura.
+ * Sotto 0,1 g (dosi al centesimo) la soluzione al 2 % darebbe meno di 5 g da
+ * pesare: si usa l'1 % (5 g in 495 g), e 0,04 g diventano 4 g di soluzione.
+ * L'incertezza si calcola allo stesso modo e cresce: si mostra com'è. */
 export const DILUTION_STOCK_YEAST_G = 5;
 export const DILUTION_FACTOR = 50;
+/** Diluizione per le dosi sotto 0,1 g: soluzione all'1 %. */
+export const DILUTION_FACTOR_MICRO = 100;
 /** Metà del passo di una bilancia da cucina al grammo. */
 export const KITCHEN_SCALE_ERROR_G = 0.5;
 
@@ -115,7 +120,8 @@ export function yeastDilution(
   phase: RecipePhase["id"] = "final",
 ): YeastDilution | null {
   if (yeastType === "sourdough" || !(yeastG > 0) || yeastG >= 1) return null;
-  const solutionG = Math.round(yeastG * DILUTION_FACTOR * 10) / 10;
+  const factor = yeastG < 0.1 ? DILUTION_FACTOR_MICRO : DILUTION_FACTOR;
+  const solutionG = Math.round(yeastG * factor * 10) / 10;
   const waterToRemoveG = Math.round(solutionG - yeastG);
   if (waterToRemoveG > phaseWaterG) return null;
   /* Stima, solo per il secco: un cucchiaino raso ≈ 3 g (la stessa ipotesi dei
@@ -126,7 +132,7 @@ export function yeastDilution(
     : undefined;
   return {
     stockYeastG: DILUTION_STOCK_YEAST_G,
-    stockWaterG: DILUTION_STOCK_YEAST_G * (DILUTION_FACTOR - 1),
+    stockWaterG: DILUTION_STOCK_YEAST_G * (factor - 1),
     solutionG,
     waterToRemoveG,
     yeastG,

@@ -782,4 +782,29 @@ export const SCIENCE_ES: CmsScience = {
     /* FW-02 */
     "stg-partial-check": "Solo comparamos algunos valores: el origen de los ingredientes, la temperatura de la masa y la ejecución no se verifican.",
   },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fresca), t₀ = 24 h, s = 1 fresca / 0,33 seca, k = corrección personal (0,5–2) · tₑ = h si T ≥ 18 °C; por debajo: tₑ = (h − hₐ) + hₐ ÷ v(T), con hₐ = apresto + pliegues a 18 °C · v(T): ver «Temperatura y velocidad de fermentación»",
+    "q10-fermentation": "v(T) = Q10ₐ^((T − 18)/10) si T ≥ T_b; por debajo: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · levadura de panadería: T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · masa madre: T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
+    "equivalent-hours": "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, con hₐ = apresto + pliegues a 18 °C",
+    "water-temp-rule": "T_agua = 3 × T_masa − T_ambiente − T_harina − fricción · con un prefermento, masa final: T_agua = 4 × T_masa − T_ambiente − T_harina − T_prefermento − fricción; agua del prefermento: 3 × T_prefermento − T_ambiente − T_harina",
+    "water-activity": "Aw ≈ 0,96 + (H − 55) × 0,0005 − sal × 0,006 − azúcar × 0,004",
+    "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, limitado al intervalo del estilo",
+    "baking-energy": "E = P × t · P = 2, 3 u 8 kW según la temperatura del horno",
+    "thickness-factor": "TF = peso del bollo (g) / área de la pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+  },
+  sourceNotes: {
+    "internal-db": "base de datos de trabajo interna del proyecto, no pública",
+    "demo": "dato de demostración, marca inventada",
+    "ovens-secondary": "distribuidores y reseñas de hornos (fuentes secundarias)",
+    "autolyse-calvel": "artículo sobre la autólisis (cita a R. Calvel, 1974)",
+    "recipes": "recetas",
+    "articles": "artículos",
+    "abstract-only": "solo se leyó el resumen",
+    "manufacturer-sheet": "ficha del fabricante",
+    "manufacturer-pages": "páginas de producto del fabricante",
+    "manual": "manual de uso",
+    "faq": "preguntas frecuentes",
+  },
 };

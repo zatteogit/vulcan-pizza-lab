@@ -125,6 +125,29 @@ export function previewStartNow(steps: readonly SessionTiming[], index: number, 
   return { readyAtMs: sessionReadyAt(next), nightActions: sessionNightActions(next, nowMs) };
 }
 
+/** L'orario come lo legge l'utente, al minuto: con «ca.» arrotondato al
+ *  quarto d'ora come formatClock (format.ts). */
+export function displayedClockMs(ms: number, approximate: boolean): number {
+  return approximate ? Math.round(ms / 900_000) * 900_000 : Math.floor(ms / 60_000) * 60_000;
+}
+
+/** Revisione ondata 2: «Iniziare adesso?» chiede conferma solo se cambia
+ *  qualcosa che l'utente legge. Anticipare di 10 minuti un pasto «ca. 12:30»
+ *  lo lascia «ca. 12:30»: il dialogo diceva «sarà pronta ca. 12:30 invece che
+ *  ca. 12:30». Serve conferma se cambia l'orario mostrato del pasto o se
+ *  compare un'azione di notte che prima non c'era. */
+export function startNowNeedsConfirm(
+  steps: readonly SessionTiming[],
+  index: number,
+  nowMs: number,
+  approximate: boolean,
+): boolean {
+  const preview = previewStartNow(steps, index, nowMs);
+  if (displayedClockMs(preview.readyAtMs, approximate) !== displayedClockMs(sessionReadyAt(steps), approximate)) return true;
+  const before = new Set(sessionNightActions(steps, nowMs).map((a) => a.index));
+  return preview.nightActions.some((a) => !before.has(a.index));
+}
+
 /** Azioni attive ancora da fare che cadono di notte (S10-A-03). */
 export function sessionNightActions(steps: readonly SessionTiming[], nowMs: number): NightAction[] {
   return steps

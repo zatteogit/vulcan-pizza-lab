@@ -17593,6 +17593,12 @@
     color: var(--text-default);
   }
 
+  .cook-rounds__clock {
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+  }
+
   .cook-rounds__icon {
     flex-shrink: 0;
     color: var(--text-accent);

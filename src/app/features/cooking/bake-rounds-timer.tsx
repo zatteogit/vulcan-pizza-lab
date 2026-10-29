@@ -69,15 +69,32 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
               ? uiMessage(fry ? "cooking.rounds.fry.out" : "cooking.rounds.out")
               : uiMessage(fry ? "cooking.rounds.fry.ready" : "cooking.rounds.ready", [formatSeconds(roundSec, bcp47)]);
 
+  /* Revisione ondata 2 (come PhaseCountdown, FW-13): il conto alla rovescia
+     cambia ogni secondo e non sta in una regione live, altrimenti il lettore di
+     schermo annuncia un numero al secondo e copre «gira» e «sforna». La regione
+     live cambia testo solo quando cambia lo stato: l'inizio della cottura si
+     annuncia una volta, con la durata. */
+  const announcement =
+    st.key === "remaining"
+      ? uiMessage(fry ? "cooking.rounds.fry.started" : "cooking.rounds.started", [round, rounds, formatSeconds(roundSec, bcp47)])
+      : status;
+  /* Dopo «gira» il tempo rimasto resta visibile: si sa quanto manca a «sforna». */
+  const clock =
+    phase === "baking" && turning
+      ? uiMessage(fry ? "cooking.rounds.fry.remaining" : "cooking.rounds.remaining", [formatSeconds(remainingSec, bcp47)])
+      : null;
+
   return (
     <section className="cook-rounds" data-phase={phase} aria-label={uiMessage(fry ? "cooking.rounds.fry.label" : "cooking.rounds.label")}>
       <p className="cook-rounds__count type-numeric">
         {uiMessage(fry ? "cooking.rounds.fry.progress" : "cooking.rounds.progress", [Math.min(Math.max(round, 1), rounds), rounds])}
       </p>
-      <p className="cook-rounds__status type-numeric" role="status" aria-live="polite">
+      <p className="cook-rounds__status type-numeric">
         {turning && <RotateCw size={18} aria-hidden="true" className="cook-rounds__icon" />}
         {status}
       </p>
+      {clock && <p className="cook-rounds__clock type-numeric">{clock}</p>}
+      <p className="sr-only" role="status">{announcement}</p>
       {phase === "out" && !allDone && recoverySec ? (
         <p className="cook-rounds__hint">
           {uiMessage("cooking.rounds.recovery", [formatSeconds(recoverySec, bcp47)])}

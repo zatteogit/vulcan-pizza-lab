@@ -357,4 +357,29 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     /* FW-02 */
     "stg-partial-check": "Confrontiamo solo alcuni valori: provenienza degli ingredienti, temperatura dell'impasto ed esecuzione non sono verificate.",
   },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fresco), t₀ = 24 h, s = 1 fresco / 0,33 secco, k = correzione personale (0,5–2) · tₑ = h se T ≥ 18 °C; sotto: tₑ = (h − hₐ) + hₐ ÷ v(T), con hₐ = appretto + pieghe a 18 °C · v(T): vedi «Temperatura e velocità di lievitazione»",
+    "q10-fermentation": "v(T) = Q10ₐ^((T − 18)/10) se T ≥ T_b; sotto: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · lievito di birra: T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · lievito madre: T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
+    "equivalent-hours": "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, con hₐ = appretto + pieghe a 18 °C",
+    "water-temp-rule": "T_acqua = 3 × T_impasto − T_cucina − T_farina − attrito · con un prefermento, impasto finale: T_acqua = 4 × T_impasto − T_cucina − T_farina − T_prefermento − attrito; acqua del prefermento: 3 × T_prefermento − T_cucina − T_farina",
+    "water-activity": "Aw ≈ 0,96 + (H − 55) × 0,0005 − sale × 0,006 − zucchero × 0,004",
+    "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, limitato all'intervallo dello stile",
+    "baking-energy": "E = P × t · P = 2, 3 o 8 kW secondo la temperatura del forno",
+    "thickness-factor": "TF = peso del panetto (g) / area della pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+  },
+  sourceNotes: {
+    "internal-db": "database di lavoro del progetto, non pubblico",
+    "demo": "dato dimostrativo, marchio inventato",
+    "ovens-secondary": "rivenditori e recensioni dei forni (fonti secondarie)",
+    "autolyse-calvel": "articolo sull'autolisi (cita R. Calvel, 1974)",
+    "recipes": "ricette",
+    "articles": "articoli",
+    "abstract-only": "letto solo l'abstract",
+    "manufacturer-sheet": "scheda del produttore",
+    "manufacturer-pages": "pagine prodotto del produttore",
+    "manual": "manuale d'uso",
+    "faq": "domande frequenti",
+  },
 };

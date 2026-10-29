@@ -192,7 +192,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Den Teig kühlen, um die Fermentation zu verlangsamen; Kälte stoppt sie nicht sofort.",
         prevention:
-          "Die für Ihre Stunden und Temperatur berechnete Hefemenge verwenden (bei 18 °C für 24 h etwa 0,1 % Frischhefe)",
+          "Die für deine Stunden und Temperatur berechnete Hefemenge verwenden (bei 18 °C für 24 h etwa 0,1 % Frischhefe)",
       },
       P06: {
         symptom: "Zu saurer/essigartiger Geschmack",
@@ -787,5 +787,30 @@ export const SCIENCE_DE: CmsScience = {
     "recovery-by-oven-type": "Die Erholzeit hängt nur vom Ofentyp ab, nicht vom Modell oder der Backfläche.",
     /* FW-02 */
     "stg-partial-check": "Wir vergleichen nur einige Werte: Herkunft der Zutaten, Teigtemperatur und Ausführung werden nicht geprüft.",
+  },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (Frischhefe), t₀ = 24 h, s = 1 frisch / 0,33 trocken, k = persönliche Korrektur (0,5–2) · tₑ = h bei T ≥ 18 °C; darunter: tₑ = (h − hₐ) + hₐ ÷ v(T), mit hₐ = Stückgare + Falten bei 18 °C · v(T): siehe „Temperatur und Gärgeschwindigkeit“",
+    "q10-fermentation": "v(T) = Q10ₐ^((T − 18)/10) bei T ≥ T_b; darunter: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · Backhefe: T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · Sauerteig: T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
+    "equivalent-hours": "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, mit hₐ = Stückgare + Falten bei 18 °C",
+    "water-temp-rule": "T_Wasser = 3 × T_Teig − T_Raum − T_Mehl − Reibung · mit Vorteig, Hauptteig: T_Wasser = 4 × T_Teig − T_Raum − T_Mehl − T_Vorteig − Reibung; Wasser des Vorteigs: 3 × T_Vorteig − T_Raum − T_Mehl",
+    "water-activity": "Aw ≈ 0,96 + (H − 55) × 0,0005 − Salz × 0,006 − Zucker × 0,004",
+    "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, begrenzt auf den Bereich des Stils",
+    "baking-energy": "E = P × t · P = 2, 3 oder 8 kW je nach Ofentemperatur",
+    "thickness-factor": "TF = Teiglinggewicht (g) / Pizzafläche (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+  },
+  sourceNotes: {
+    "internal-db": "interne Arbeitsdatenbank des Projekts, nicht öffentlich",
+    "demo": "Beispieldaten, erfundene Marke",
+    "ovens-secondary": "Händler und Testberichte zu Öfen (Sekundärquellen)",
+    "autolyse-calvel": "Artikel über die Autolyse (zitiert R. Calvel, 1974)",
+    "recipes": "Rezepte",
+    "articles": "Artikel",
+    "abstract-only": "nur das Abstract gelesen",
+    "manufacturer-sheet": "Datenblatt des Herstellers",
+    "manufacturer-pages": "Produktseiten des Herstellers",
+    "manual": "Bedienungsanleitung",
+    "faq": "häufige Fragen",
   },
 };

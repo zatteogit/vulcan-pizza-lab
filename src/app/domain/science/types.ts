@@ -34,8 +34,12 @@ export type SourceStatus =
 export interface SourceRef {
   /** Id stabile kebab-case (`masaf-stg-2010`, `avpn-2024`…). */
   id: string;
-  /** Titolo come in docs/fonti-dati.md (non tradotto: è un riferimento bibliografico). */
-  title: string;
+  /** Titolo bibliografico nella lingua originale (non si traduce). Assente
+   *  solo se la fonte è descritta, non intitolata: allora c'è `noteKey`. */
+  title?: string;
+  /** Nota descrittiva tradotta nel CMS (`science.sourceNotes.<noteKey>`):
+   *  «pagine prodotto», «letto solo l'abstract», «non pubblico». */
+  noteKey?: string;
   author?: string;
   year?: number;
   url?: string;
@@ -81,7 +85,9 @@ export interface ScienceNote {
   /** Id stabile kebab-case: è anche l'ancora della pagina «Metodo e fonti». */
   id: string;
   kind: EvidenceKind;
-  /** Formula in simboli unicode, senza LaTeX. Non tradotta. */
+  /** Formula in soli simboli unicode, senza LaTeX e senza parole: è la
+   *  riserva. Il testo per l'utente, con le parole e i decimali della lingua,
+   *  sta nel CMS (`science.formulas.<id>`, 7 lingue). */
   formula?: string;
   variables?: ScienceVariable[];
   /** Ipotesi del modello: testi in CMS `science.assumptions.<id>`. */
@@ -89,7 +95,8 @@ export interface ScienceNote {
   /** Fonti a sostegno (id di science-sources). */
   sourceIds: string[];
   uncertainty?: ScienceUncertainty;
-  /** Nome della costante o funzione del motore che la nota descrive. */
+  /** Costanti o funzioni del motore che la nota descrive: solo
+   *  identificatori separati da virgole, niente glosse in italiano. */
   engineRef?: string;
   /** Voce di glossario collegata, se esiste. */
   glossaryTermId?: string;

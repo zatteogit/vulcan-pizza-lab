@@ -14,7 +14,9 @@ import { getScienceSource } from "./science-sources";
  * - nessuna nota cita una fonte 'wrong';
  * - ogni 'estimate' dichiara l'incertezza e i decimali mostrabili;
  * - i testi (titolo, livello 1, livello 2, ipotesi) stanno nel CMS in 7 lingue:
- *   `science.notes.<id>.{title,l1,l2}`, `science.assumptions.<id>`.
+ *   `science.notes.<id>.{title,l1,l2}`, `science.assumptions.<id>`;
+ * - la formula da leggere sta nel CMS (`science.formulas.<id>`, 7 lingue): qui
+ *   resta solo in simboli, di riserva; engineRef sono solo identificatori.
  * I numeri del motore non si scrivono nei testi: arrivano come `context`. */
 
 export const SCIENCE_NOTES: readonly ScienceNote[] = [
@@ -24,8 +26,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     kind: "estimate",
     // FW-01: è il conto di calculateYeastPercentage + generateRecipe, passo per
     // passo (test in science-registry.test.ts che ricalcola yeast_baker_pct).
-    formula:
-      "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fresco), t₀ = 24 h, s = 1 fresco / 0,33 secco, k = correzione personale (0,5–2) · tₑ = h se T ≥ 18 °C; sotto: tₑ = (h − hₐ) + hₐ ÷ v(T), con hₐ = appretto + pieghe a 18 °C · v(T) dalla nota q10-fermentation",
+    formula: "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · tₑ = (h − hₐ) + hₐ ÷ v(T)",
     variables: [
       { symbol: "Y", unitKey: "percent" },
       { symbol: "tₑ", unitKey: "hours" },
@@ -45,8 +46,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     id: "q10-fermentation",
     kind: "estimate",
     // FW-01: getQ10 + fermentationSpeedRatio, a tratti continui per tipo di lievito.
-    formula:
-      "v(T) = Q10ₐ^((T − 18)/10) se T ≥ T_b; sotto: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · lievito di birra: T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · lievito madre: T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
+    formula: "v(T) = Q10ₐ^((T − 18)/10) · T < T_b: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10)",
     variables: [
       { symbol: "v", unitKey: "ratio" },
       { symbol: "T", unitKey: "celsius" },
@@ -62,7 +62,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     kind: "estimate",
     // FW-01: equivalentFermentationHours × fermentationSpeedRatio. Sotto i
     // 18 °C l'appretto si fa a 18 °C (PROOF_MIN_TEMP_C) e conta per le sue ore.
-    formula: "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, con hₐ = appretto + pieghe a 18 °C (fermentationPhases, foldWindowMinutes)",
+    formula: "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ",
     variables: [
       { symbol: "h₁₈", unitKey: "hours" },
       { symbol: "h", unitKey: "hours" },
@@ -72,7 +72,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     assumptionIds: ["constant-ferment-temp", "q10-cold-no-source"],
     sourceIds: ["salvado-2011"],
     uncertainty: { displayDecimals: 0 },
-    engineRef: "equivalentFermentationHours, fermentationSpeedRatio, fermentationPhases",
+    engineRef: "equivalentFermentationHours, fermentationSpeedRatio, fermentationPhases, foldWindowMinutes",
   },
   {
     id: "kitchen-temp-default",
@@ -94,7 +94,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     kind: "assumption",
     assumptionIds: ["starter-steps-by-hours", "starter-not-in-hydration"],
     sourceIds: ["vulcan-notion-db"],
-    engineRef: "generateRecipe (yeastType sourdough)",
+    engineRef: "generateRecipe",
   },
   {
     id: "pre-ferment",
@@ -127,19 +127,19 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     id: "water-temp-rule",
     kind: "exact",
     // FW-17 (S08-A-07): con un prefermento la regola ha quattro termini.
-    formula: "T acqua = 3 × T impasto − T cucina − T farina − attrito · con un prefermento: impasto finale 4 × T impasto − T cucina − T farina − T prefermento − attrito; acqua del prefermento 3 × T prefermento − T cucina − T farina",
+    formula: "T_w = 3 × T_d − T_k − T_f − F · T_w = 4 × T_d − T_k − T_f − T_p − F · T_wp = 3 × T_p − T_k − T_f",
     variables: [
       { symbol: "T", unitKey: "celsius" },
     ],
     assumptionIds: ["kitchen-temp-standard", "flour-at-kitchen-temp", "mixer-friction-values", "preferment-at-maturation-temp"],
     sourceIds: ["vulcan-notion-db"],
-    engineRef: "Regola 55: desired_dough_temp_c, MIXER_FRICTION_K",
+    engineRef: "desired_dough_temp_c, MIXER_FRICTION_K",
     glossaryTermId: "rule_of_55",
   },
   {
     id: "water-activity",
     kind: "estimate",
-    formula: "Aw ≈ 0,96 + (H − 55) × 0,0005 − sale × 0,006 − zucchero × 0,004",
+    formula: "Aw ≈ 0,96 + (H − 55) × 0,0005 − S × 0,006 − Z × 0,004",
     variables: [
       { symbol: "Aw", unitKey: "dimensionless" },
       { symbol: "H", unitKey: "percent" },
@@ -161,7 +161,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     id: "salt-range",
     kind: "editorial",
     sourceIds: ["masaf-stg-2010"],
-    engineRef: "recipe-configurator: salt_pct ± 0,3",
+    engineRef: "salt_pct",
   },
   {
     id: "stg-salt-timing",
@@ -191,7 +191,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
   {
     id: "flour-pl-estimate",
     kind: "estimate",
-    formula: "P/L ≈ 0,30 + (W − 150) × 0,0015, limitato all'intervallo dello stile",
+    formula: "P/L ≈ 0,30 + (W − 150) × 0,0015",
     variables: [
       { symbol: "P/L", unitKey: "ratio" },
       { symbol: "W", unitKey: "w-alveograph" },
@@ -249,14 +249,14 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     kind: "assumption",
     assumptionIds: ["style-min-temp-no-source"],
     sourceIds: [],
-    engineRef: "STYLES_DB.<stile>.baking.temp_c_range, thermalViability",
+    engineRef: "baking.temp_c_range, thermalViability",
   },
   {
     id: "bake-time-home-preheat",
     kind: "assumption",
     assumptionIds: ["preheat-home-minutes"],
     sourceIds: [],
-    engineRef: "generateTimeline: idealPreheat",
+    engineRef: "generateTimeline, idealPreheat",
   },
   {
     id: "surface-conductivity",
@@ -271,7 +271,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
   {
     id: "baking-energy",
     kind: "assumption",
-    formula: "E = P × t · P = 2, 3 o 8 kW secondo la temperatura del forno",
+    formula: "E = P × t · P ∈ {2; 3; 8} kW",
     variables: [
       { symbol: "E", unitKey: "kilojoule" },
       { symbol: "t", unitKey: "seconds" },
@@ -283,10 +283,10 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
   {
     id: "thickness-factor",
     kind: "exact",
-    formula: "TF = peso del panetto (g) / area della pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+    formula: "TF = m / A · 1 oz/in² ≈ 4,39 g/cm²",
     variables: [{ symbol: "TF", unitKey: "g-per-cm2" }],
     sourceIds: ["lehmann-pmq-thickness"],
-    engineRef: "STYLES_DB.<stile>.dough.thickness_factor",
+    engineRef: "dough.thickness_factor",
     glossaryTermId: "thickness_factor",
   },
 
@@ -306,7 +306,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
   {
     id: "authenticity-fuel-cap",
     kind: "editorial",
-    engineRef: "calculateAuthenticityScore: Math.min(score, 75)",
+    engineRef: "calculateAuthenticityScore",
     sourceIds: [],
   },
   {
@@ -326,7 +326,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     kind: "editorial",
     assumptionIds: ["comfort-margins-rule-of-thumb", "comfort-yeast-unchanged"],
     sourceIds: [],
-    engineRef: "COMFORT_TOLERANCES, optimizeComfort, movesHoursBetweenColdAndRoom (use-cases/cook-plan.ts)",
+    engineRef: "COMFORT_TOLERANCES, optimizeComfort, movesHoursBetweenColdAndRoom",
   },
   {
     // Recupero del forno fra due cotture in serie (S09-A-14, S09-B-13).
@@ -334,7 +334,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     kind: "assumption",
     assumptionIds: ["recovery-by-oven-type"],
     sourceIds: [],
-    engineRef: "BAKE_ROUND_RECOVERY_SEC, generateTimeline (cotture una alla volta)",
+    engineRef: "BAKE_ROUND_RECOVERY_SEC, generateTimeline",
   },
 
   /* ── Problemi e soluzioni ── */

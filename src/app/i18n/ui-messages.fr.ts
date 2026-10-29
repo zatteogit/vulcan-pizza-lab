@@ -734,6 +734,7 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "cooking.rounds.ready": "Chaque cuisson dure environ {0}. Enfournez quand vous êtes prêt.",
   "cooking.rounds.start": "Enfourner ({0} sur {1})",
   "cooking.rounds.remaining": "Défournez dans {0}",
+  "cooking.rounds.started": "Cuisson {0} sur {1} lancée : elle dure environ {2}.",
   "cooking.rounds.turn": "À mi-cuisson : tournez-la d'un demi-tour",
   "cooking.rounds.out": "Défournez !",
   "cooking.rounds.allDone": "Toutes les cuissons sont faites ({0})",
@@ -744,6 +745,7 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "cooking.rounds.fry.ready": "Chaque friture dure environ {0}. Plongez la pizza dans l'huile quand vous êtes prêt.",
   "cooking.rounds.fry.start": "Plonger ({0} sur {1})",
   "cooking.rounds.fry.remaining": "Sortez-la de l'huile dans {0}",
+  "cooking.rounds.fry.started": "Friture {0} sur {1} lancée : elle dure environ {2}.",
   "cooking.rounds.fry.turn": "À mi-cuisson : retournez-la avec l'écumoire",
   "cooking.rounds.fry.out": "Égouttez-la sur du papier absorbant !",
   "cooking.rounds.fry.allDone": "Toutes les fritures sont faites ({0})"

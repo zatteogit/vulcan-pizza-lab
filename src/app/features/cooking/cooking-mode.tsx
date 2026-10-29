@@ -42,6 +42,7 @@ import {
   previewStartNow,
   sessionNightActions,
   sessionReadyAt,
+  startNowNeedsConfirm,
 } from "../../use-cases/cook-timing";
 import { BakeRoundsTimer } from "./bake-rounds-timer";
 import { ConfirmDialog, CtaButton } from "../../components/ds/index";
@@ -220,10 +221,21 @@ export function CookingMode() {
     else setViewIndex(viewIndex + 1);
   }, [viewIndex, total]);
 
+  const readyApprox = !!session && session.steps.some((s) => !s.done && s.flexible);
+  /* Un anticipo appena confermato (o senza effetti visibili) non si riannuncia: l'utente
+     ha appena letto il nuovo orario. */
+  const confirmedShift = useRef(false);
   const goNext = useCallback(() => {
     if (!session) return;
     if (isCurrent && early) {
-      setConfirmStart(true);
+      /* Se l'orario del pasto mostrato non cambia e non arriva niente di
+         notte, non c'è niente da confermare. */
+      if (startNowNeedsConfirm(session.steps, viewIndex, Date.now(), readyApprox)) {
+        setConfirmStart(true);
+      } else {
+        confirmedShift.current = true;
+        startStep(viewIndex);
+      }
     } else if (isCurrent && ovenToStart) {
       /* «Ho acceso il forno»: parte l'attesa, il resto slitta da adesso. */
       startStep(viewIndex);
@@ -236,7 +248,7 @@ export function CookingMode() {
     } else if (allDone) {
       setFinished(true);
     }
-  }, [session, isCurrent, early, ovenToStart, waiting, viewIndex, total, allDone, completeStep, startStep, advanceView]);
+  }, [session, isCurrent, early, ovenToStart, waiting, viewIndex, total, allDone, completeStep, startStep, advanceView, readyApprox]);
 
   /* "Ho finito prima": chiude l'attesa in anticipo, ri-ancorando il resto.
      Per il forno chiede conferma: infornare a freddo rovina la pizza. */
@@ -253,12 +265,8 @@ export function CookingMode() {
   /* FW-19 (S10-B-12): l'orario in cui si mangia, sempre visibile; se cambia
      di più di un quarto d'ora lo si annuncia. */
   const readyAtMs = session ? sessionReadyAt(session.steps) : 0;
-  const readyApprox = !!session && session.steps.some((s) => !s.done && s.flexible);
   const readyLabel = readyAtMs ? formatStepClock(readyAtMs, readyApprox, bcp47) : "";
   const prevReady = useRef(readyAtMs);
-  /* Un anticipo appena confermato nel dialogo non si riannuncia: l'utente
-     ha appena letto il nuovo orario. */
-  const confirmedShift = useRef(false);
   const [readyChange, setReadyChange] = useState<{ from: number; to: number } | null>(null);
   useEffect(() => {
     if (!readyAtMs) return;

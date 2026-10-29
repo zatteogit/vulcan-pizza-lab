@@ -15,6 +15,7 @@ import { uiMessage } from "../i18n/ui-messages";
 import { formatCalendarDate, formatPercent, formatShortList } from "../i18n/format";
 import { buildVersionText } from "../components/shared/about-links";
 import { getScienceSource } from "../data/science-sources";
+import { localizedFormula, sourceLabel } from "../features/science/source-label";
 import { latestSourceReading, methodAssumptions, methodGroups, methodSources, type MethodGroupId } from "../data/method-sections";
 import type { EvidenceKind, ScienceNote, SourceStatus } from "../domain/science/types";
 import { METHOD_ANCHORS, methodNoteHref, methodSectionHref, methodSourceAnchor, methodSourceHref } from "../features/method/method-link";
@@ -147,6 +148,7 @@ export function MethodPage() {
 
   const renderNote = (note: ScienceNote) => {
     const text = cms.science.notes[note.id];
+    const formula = localizedFormula(note.id, note.formula, cms.science.formulas);
     const relative = note.uncertainty?.relative;
     return (
       <article key={note.id} id={note.id} data-region="card" className="method-note">
@@ -171,10 +173,10 @@ export function MethodPage() {
             )}
             <dt>{uiMessage("pages.method.kind.label")}</dt>
             <dd>{kindDescription(note.kind)}</dd>
-            {note.formula && (
+            {formula && (
               <>
                 <dt>{uiMessage("pages.method.formula")}</dt>
-                <dd><code className="method-note__formula">{note.formula}</code></dd>
+                <dd><code className="method-note__formula">{formula}</code></dd>
               </>
             )}
             {relative !== undefined && (
@@ -204,7 +206,7 @@ export function MethodPage() {
                     if (!source || source.status === "wrong") return null;
                     return (
                       <li key={id} className="method-note__source">
-                        <Link to={methodSourceHref(id)} className="method-page__link">{source.title}</Link>
+                        <Link to={methodSourceHref(id)} className="method-page__link">{sourceLabel(source, cms.science.sourceNotes)}</Link>
                         <Badge tone={STATUS_TONE[source.status]} size="xs">{statusLabel(source.status)}</Badge>
                       </li>
                     );
@@ -323,9 +325,9 @@ export function MethodPage() {
                 <li key={source.id} id={methodSourceAnchor(source.id)} className="method-source">
                   <p className="method-page__item-text">
                     {source.url ? (
-                      <a href={source.url} target="_blank" rel="noopener noreferrer" className="method-page__link">{source.title}</a>
+                      <a href={source.url} target="_blank" rel="noopener noreferrer" className="method-page__link">{sourceLabel(source, cms.science.sourceNotes)}</a>
                     ) : (
-                      source.title
+                      sourceLabel(source, cms.science.sourceNotes)
                     )}
                   </p>
                   <p className="type-data-sm method-page__item-meta">

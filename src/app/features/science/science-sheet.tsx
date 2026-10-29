@@ -20,6 +20,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { useScienceNote, type ScienceLevel } from "./use-science-note";
+import { sourceLabel } from "./source-label";
 
 export type ScienceContext = Record<string, number | string>;
 
@@ -132,7 +133,12 @@ function Uncertainty({ note }: { note: ScienceNote }) {
   );
 }
 
-function HowWeCalculate({ note, assumptions }: { note: ScienceNote & { sources: SourceRef[] }; assumptions: { id: string; text: string }[] }) {
+function HowWeCalculate({ note, assumptions, formula, sourceNotes }: {
+  note: ScienceNote & { sources: SourceRef[] };
+  assumptions: { id: string; text: string }[];
+  formula?: string;
+  sourceNotes: Record<string, string>;
+}) {
   const sources = note.sources.filter((source) => source.status !== "wrong");
   return (
     <section className="science-sheet__method" data-region="science-method">
@@ -142,10 +148,10 @@ function HowWeCalculate({ note, assumptions }: { note: ScienceNote & { sources: 
           <EvidenceBadge kind={note.kind} label={evidenceLabel(note.kind)} />
           <span className="science-sheet__hint">{evidenceHint(note.kind)}</span>
         </dd>
-        {note.formula && (
+        {formula && (
           <>
             <dt className="science-sheet__term">{uiMessage("science.sheet.formula")}</dt>
-            <dd className="science-sheet__value"><code className="science-sheet__formula">{note.formula}</code></dd>
+            <dd className="science-sheet__value"><code className="science-sheet__formula">{formula}</code></dd>
           </>
         )}
         {note.variables && note.variables.length > 0 && (
@@ -185,11 +191,11 @@ function HowWeCalculate({ note, assumptions }: { note: ScienceNote & { sources: 
               <li key={source.id} className="science-sheet__source" data-status={source.status}>
                 {source.url ? (
                   <a href={source.url} target="_blank" rel="noreferrer" className="science-sheet__source-title">
-                    {source.title}
+                    {sourceLabel(source, sourceNotes)}
                     <ExternalLink size={12} aria-hidden="true" />
                   </a>
                 ) : (
-                  <cite className="science-sheet__source-title">{source.title}</cite>
+                  <cite className="science-sheet__source-title">{sourceLabel(source, sourceNotes)}</cite>
                 )}
                 {meta && <small className="science-sheet__source-meta">{meta}</small>}
                 {status && <small className="science-sheet__source-status">{status}</small>}
@@ -263,7 +269,7 @@ export function ScienceSheet({ noteId, open, onClose, initialLevel, context, chi
               defaultOpen={level === 3}
               className="science-sheet__l3"
             >
-              <HowWeCalculate note={view.note} assumptions={view.assumptions} />
+              <HowWeCalculate note={view.note} assumptions={view.assumptions} formula={view.formula} sourceNotes={view.sourceNotes} />
             </Disclosure>
           </section>
         </>

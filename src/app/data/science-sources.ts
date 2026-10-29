@@ -10,7 +10,13 @@ import type { SourceRef } from "../domain/science/types";
  * Stati: verified = V, plausible = P, unverified = D (o fonte non letta da noi),
  * wrong = una fonte che non sostiene ciò per cui era citata. `accessed` assente
  * vuol dire che la fonte non è stata riletta: va verificata prima di usarla
- * come sostegno di un fatto. */
+ * come sostegno di un fatto.
+ *
+ * Il titolo è quello bibliografico, nella lingua originale, e non si traduce.
+ * Ciò che lo descrive («scheda del produttore», «letto solo l'abstract»,
+ * «non pubblico») è una `noteKey`, tradotta nel CMS in 7 lingue
+ * (`science.sourceNotes.<noteKey>`): niente glosse in italiano nei titoli e
+ * niente percorsi del repository (test in science-registry.test.ts). */
 
 const READ_2026_10_24 = "2026-10-24";
 
@@ -40,57 +46,58 @@ export const SCIENCE_SOURCES: readonly SourceRef[] = [
   { id: "top-pizza-2022", title: "50 Top Pizza, scheda «Starita a Materdei»", year: 2022, url: "https://www.50toppizza.it/referenza/starita-a-materdei-2022", accessed: READ_2026_10_24, status: "plausible" },
 
   /* ── Farine (schede dei produttori) ── */
-  { id: "caputo-pizzeria-2025", title: "Mulino Caputo, scheda «Pizzeria»", year: 2025, url: "https://www.mulinocaputo.it/prodotti/pizzeria/", accessed: READ_2026_10_24, status: "verified" },
-  { id: "caputo-pizzeria-professional-2025", title: "Mulino Caputo, scheda «Pizzeria professional»", year: 2025, url: "https://www.mulinocaputo.it/prodotti/pizzeria-professional/", accessed: READ_2026_10_24, status: "verified" },
-  { id: "caputo-nuvola-2025", title: "Mulino Caputo, scheda «Nuvola»", year: 2025, url: "https://www.mulinocaputo.it/prodotti/nuvola/", accessed: READ_2026_10_24, status: "verified" },
-  { id: "caputo-saccorosso-2024", title: "Mulino Caputo, scheda «Saccorosso»", year: 2024, url: "https://www.mulinocaputo.it/prodotti/saccorosso/", accessed: READ_2026_10_24, status: "verified" },
-  { id: "caputo-manitoba-oro-2025", title: "Mulino Caputo, scheda «Manitoba Oro»", year: 2025, url: "https://www.mulinocaputo.it/prodotti/manitoba-oro/", accessed: READ_2026_10_24, status: "verified" },
-  { id: "quaglia-petra-5037", title: "Molino Quaglia, scheda «Petra 5037»", url: "https://www.farinapetra.it/CARDS/farina/?bn=farinapetra&ct=card&dfbg=catalogopetra&mt=no&nosh=1&nmm=1&urlplk=farine-pizzeria&permalink=/petra-5037", accessed: READ_2026_10_24, status: "verified" },
-  { id: "quaglia-petra-3", title: "Molino Quaglia, scheda «Petra 3»", url: "https://www.farinapetra.it/CARDS/farina/?bn=farinapetra&ct=card&dfbg=catalogopetra&mt=no&nosh=1&nmm=1&urlplk=macinate-a-pietra&permalink=/petra-3", accessed: READ_2026_10_24, status: "verified" },
-  { id: "agugiaro-figna-2025", title: "Le 5 Stagioni, scheda «Pizza Napoletana» (rossa)", author: "Agugiaro & Figna", year: 2025, url: "https://le5stagioni.com/prodotto/pizza-napoletana-rossa/", accessed: READ_2026_10_24, status: "verified" },
+  { id: "caputo-pizzeria-2025", title: "Mulino Caputo, «Pizzeria»", noteKey: "manufacturer-sheet", year: 2025, url: "https://www.mulinocaputo.it/prodotti/pizzeria/", accessed: READ_2026_10_24, status: "verified" },
+  { id: "caputo-pizzeria-professional-2025", title: "Mulino Caputo, «Pizzeria professional»", noteKey: "manufacturer-sheet", year: 2025, url: "https://www.mulinocaputo.it/prodotti/pizzeria-professional/", accessed: READ_2026_10_24, status: "verified" },
+  { id: "caputo-nuvola-2025", title: "Mulino Caputo, «Nuvola»", noteKey: "manufacturer-sheet", year: 2025, url: "https://www.mulinocaputo.it/prodotti/nuvola/", accessed: READ_2026_10_24, status: "verified" },
+  { id: "caputo-saccorosso-2024", title: "Mulino Caputo, «Saccorosso»", noteKey: "manufacturer-sheet", year: 2024, url: "https://www.mulinocaputo.it/prodotti/saccorosso/", accessed: READ_2026_10_24, status: "verified" },
+  { id: "caputo-manitoba-oro-2025", title: "Mulino Caputo, «Manitoba Oro»", noteKey: "manufacturer-sheet", year: 2025, url: "https://www.mulinocaputo.it/prodotti/manitoba-oro/", accessed: READ_2026_10_24, status: "verified" },
+  { id: "quaglia-petra-5037", title: "Molino Quaglia, «Petra 5037»", noteKey: "manufacturer-sheet", url: "https://www.farinapetra.it/CARDS/farina/?bn=farinapetra&ct=card&dfbg=catalogopetra&mt=no&nosh=1&nmm=1&urlplk=farine-pizzeria&permalink=/petra-5037", accessed: READ_2026_10_24, status: "verified" },
+  { id: "quaglia-petra-3", title: "Molino Quaglia, «Petra 3»", noteKey: "manufacturer-sheet", url: "https://www.farinapetra.it/CARDS/farina/?bn=farinapetra&ct=card&dfbg=catalogopetra&mt=no&nosh=1&nmm=1&urlplk=macinate-a-pietra&permalink=/petra-3", accessed: READ_2026_10_24, status: "verified" },
+  { id: "agugiaro-figna-2025", title: "Le 5 Stagioni, «Pizza Napoletana» rossa", noteKey: "manufacturer-sheet", author: "Agugiaro & Figna", year: 2025, url: "https://le5stagioni.com/prodotto/pizza-napoletana-rossa/", accessed: READ_2026_10_24, status: "verified" },
 
   /* ── Lievito e temperatura ── */
   { id: "salvado-2011", title: "Temperature adaptation markedly determines evolution within the genus Saccharomyces", author: "Z. Salvadó et al., Applied and Environmental Microbiology 77(7)", year: 2011, url: "https://doi.org/10.1128/AEM.01861-10", accessed: READ_2026_10_24, status: "verified" },
   { id: "baranyi-2017", title: "Rethinking Tertiary Models: Relationships between Growth Parameters of Bacillus cereus Strains", author: "J. Baranyi et al., Frontiers in Microbiology 8", year: 2017, url: "https://doi.org/10.3389/fmicb.2017.01890", accessed: READ_2026_10_24, status: "verified" },
   { id: "gist-brocades-1993", title: "EP 0 556 905 A1, «Cold-sensitive strain»", author: "K. A. Osinga (Gist-Brocades)", year: 1993, url: "https://data.epo.org/publication-server/rest/v1.2/patents/EP0556905NWA1/document.html", accessed: READ_2026_10_24, status: "plausible" },
   /* Citata prima per il Q10 a freddo: è una review sui soft sensor, non parla di lievito. */
-  { id: "pmc7146123", title: "PMC7146123 (review sui soft sensor di fermentazione)", accessed: READ_2026_10_24, status: "wrong" },
+  { id: "pmc7146123", title: "PMC7146123", accessed: READ_2026_10_24, status: "wrong" },
 
   /* ── Prefermenti e autolisi (docs/ricerca/prefermenti-fonti-2026-10-24.md) ── */
   { id: "king-arthur-preferment", title: "King Arthur Baking, Preferment (Pro reference)", url: "https://www.kingarthurbaking.com/pro/reference/preferment", accessed: READ_2026_10_24, status: "verified" },
   { id: "king-arthur-preferments-2020", title: "Baking with preferments", author: "M. Philip, King Arthur Baking", year: 2020, url: "https://www.kingarthurbaking.com/blog/2020/02/05/baking-with-preferments", accessed: READ_2026_10_24, status: "verified" },
-  { id: "king-arthur-autolyse-2017", title: "King Arthur Baking, articolo sull'autolisi (cita R. Calvel, 1974)", author: "B. Alpern", year: 2017, url: "https://www.kingarthurbaking.com/blog/2017/09/29/autolyse-sourdough", accessed: READ_2026_10_24, status: "verified" },
-  { id: "king-arthur-formulas", title: "King Arthur Baking, formule «French Bread with Poolish» e «Sprouted Grain Batard»", accessed: READ_2026_10_24, status: "verified" },
-  { id: "dissapore-biga-2020", title: "Dissapore, articoli su biga e poolish", author: "A. Trezzi", year: 2020, url: "https://www.dissapore.com/cucina/biga-cose-preparazione-e-usi/", accessed: READ_2026_10_24, status: "plausible" },
-  { id: "scatti-di-gusto-biga-2017", title: "Scatti di Gusto, la biga di C. Zaghini", year: 2017, url: "https://www.scattidigusto.it/2017/01/27/lezioni-di-pizza-biga-vincente/", accessed: READ_2026_10_24, status: "plausible" },
-  { id: "scatti-di-gusto-poolish-2020", title: "Scatti di Gusto, il poolish di L. Pezzetta", year: 2020, url: "https://www.scattidigusto.it/lezioni-di-pizza-il-poolish-o-biga-liquida-di-luca-pezzetta", accessed: READ_2026_10_24, status: "plausible" },
+  { id: "king-arthur-autolyse-2017", title: "King Arthur Baking (blog)", noteKey: "autolyse-calvel", author: "B. Alpern", year: 2017, url: "https://www.kingarthurbaking.com/blog/2017/09/29/autolyse-sourdough", accessed: READ_2026_10_24, status: "verified" },
+  { id: "king-arthur-formulas", title: "King Arthur Baking, «French Bread with Poolish», «Sprouted Grain Batard»", noteKey: "recipes", accessed: READ_2026_10_24, status: "verified" },
+  { id: "dissapore-biga-2020", title: "Dissapore (biga, poolish)", noteKey: "articles", author: "A. Trezzi", year: 2020, url: "https://www.dissapore.com/cucina/biga-cose-preparazione-e-usi/", accessed: READ_2026_10_24, status: "plausible" },
+  { id: "scatti-di-gusto-biga-2017", title: "Scatti di Gusto, C. Zaghini (biga)", year: 2017, url: "https://www.scattidigusto.it/2017/01/27/lezioni-di-pizza-biga-vincente/", accessed: READ_2026_10_24, status: "plausible" },
+  { id: "scatti-di-gusto-poolish-2020", title: "Scatti di Gusto, L. Pezzetta (poolish)", year: 2020, url: "https://www.scattidigusto.it/lezioni-di-pizza-il-poolish-o-biga-liquida-di-luca-pezzetta", accessed: READ_2026_10_24, status: "plausible" },
   { id: "ooni-biga-poolish", title: "Ooni, Biga vs poolish", url: "https://ooni.com/blogs/ooni-insights/biga-vs-poolish", accessed: READ_2026_10_24, status: "plausible" },
   { id: "edible-molecules-2018", title: "Indirect methods of baking: biga and poolish", author: "Edible Molecules", year: 2018, url: "https://ediblemolecules.com/blog/indirect-methods-of-baking-biga-and-poolish", accessed: READ_2026_10_24, status: "plausible" },
-  { id: "balestra-2015", title: "Journal of Texture Studies 46(4):262–271 (letto solo l'abstract)", author: "F. Balestra, G. G. Pinnavaia, S. Romani", year: 2015, url: "https://doi.org/10.1111/jtxs.12124", accessed: READ_2026_10_24, status: "plausible" },
+  { id: "balestra-2015", title: "Journal of Texture Studies 46(4):262–271", noteKey: "abstract-only", author: "F. Balestra, G. G. Pinnavaia, S. Romani", year: 2015, url: "https://doi.org/10.1111/jtxs.12124", accessed: READ_2026_10_24, status: "plausible" },
   { id: "wikipedia-pre-ferment", title: "Wikipedia, Pre-ferment", url: "https://en.wikipedia.org/wiki/Pre-ferment", accessed: READ_2026_10_24, status: "plausible" },
 
   /* ── Forni e superfici (docs/ricerca/forni-fonti-2026-10-24.md) ── */
-  { id: "ooni-2026", title: "Ooni, pagine prodotto (Koda, Karu, Fyra, Volt)", year: 2026, url: "https://ooni.com/products/ooni-koda-16", accessed: READ_2026_10_24, status: "verified" },
-  { id: "gozney-2026", title: "Gozney, pagine prodotto (Roccbox, Dome, Arc, Tread)", year: 2026, url: "https://www.gozney.com/collections/pizza-ovens", accessed: READ_2026_10_24, status: "verified" },
-  { id: "effeuno-2026", title: "Effeuno, schede P134H, P134HA, P234H 509 PRO", year: 2026, url: "https://www.effeuno.biz/products/p134h-509-pro-forno-elettrico-per-pizza-fino-a-509c", accessed: READ_2026_10_24, status: "verified" },
+  { id: "ooni-2026", title: "Ooni (Koda, Karu, Fyra, Volt)", noteKey: "manufacturer-pages", year: 2026, url: "https://ooni.com/products/ooni-koda-16", accessed: READ_2026_10_24, status: "verified" },
+  { id: "gozney-2026", title: "Gozney (Roccbox, Dome, Arc, Tread)", noteKey: "manufacturer-pages", year: 2026, url: "https://www.gozney.com/collections/pizza-ovens", accessed: READ_2026_10_24, status: "verified" },
+  { id: "effeuno-2026", title: "Effeuno P134H, P134HA, P234H 509 PRO", noteKey: "manufacturer-sheet", year: 2026, url: "https://www.effeuno.biz/products/p134h-509-pro-forno-elettrico-per-pizza-fino-a-509c", accessed: READ_2026_10_24, status: "verified" },
   { id: "g3-ferrari-delizia", title: "G3 Ferrari, Delizia", url: "https://www.g3ferrari.net/elettrodomestici-per-la-cottura/forni-pizza/delizia-red/", accessed: READ_2026_10_24, status: "verified" },
-  { id: "sage-pizzaiolo-manual", title: "Sage, manuale the Smart Oven Pizzaiolo BPZ820/SPZ820", url: "https://assets.sageappliances.com/BPZ820/SPZ820_EU_UG6_H20_WEB.pdf", accessed: READ_2026_10_24, status: "verified" },
-  { id: "witt-2026", title: "Witt, schede ETNA Rotante, Piccolo Rotante, eGNITE", year: 2026, url: "https://b2b.witt.dk/en/item/100000310", accessed: READ_2026_10_24, status: "verified" },
+  { id: "sage-pizzaiolo-manual", title: "Sage, the Smart Oven Pizzaiolo BPZ820/SPZ820", noteKey: "manual", url: "https://assets.sageappliances.com/BPZ820/SPZ820_EU_UG6_H20_WEB.pdf", accessed: READ_2026_10_24, status: "verified" },
+  { id: "witt-2026", title: "Witt ETNA Rotante, Piccolo Rotante, eGNITE", noteKey: "manufacturer-sheet", year: 2026, url: "https://b2b.witt.dk/en/item/100000310", accessed: READ_2026_10_24, status: "verified" },
   { id: "clementi-gold", title: "Clementi, Gold legna", url: "https://clementicompany.com/prodotto/gold-legna/", accessed: READ_2026_10_24, status: "verified" },
-  { id: "alfa-forni-faq", title: "Alfa Forni, caratteristiche dei forni", url: "https://help.alfaforni.com/en/en/quali-sono-le-caratteristiche-dei-forni-alfa", accessed: READ_2026_10_24, status: "verified" },
+  { id: "alfa-forni-faq", title: "Alfa Forni", noteKey: "faq", url: "https://help.alfaforni.com/en/en/quali-sono-le-caratteristiche-dei-forni-alfa", accessed: READ_2026_10_24, status: "verified" },
   { id: "bertello-2026", title: "Bertello, SimulFIRE", year: 2026, url: "https://bertello.com/", accessed: READ_2026_10_24, status: "verified" },
-  /* Rivenditori e recensioni (fonte secondaria): elenco completo nel documento di ricerca. */
-  { id: "ovens-secondary-2026", title: "Rivenditori e recensioni dei forni (fonti secondarie, docs/ricerca/forni-fonti-2026-10-24.md)", year: 2026, accessed: READ_2026_10_24, status: "plausible" },
+  /* Rivenditori e recensioni (fonte secondaria): elenco completo in
+   * docs/ricerca/forni-fonti-2026-10-24.md. Non ha un titolo: solo la nota. */
+  { id: "ovens-secondary-2026", noteKey: "ovens-secondary", year: 2026, accessed: READ_2026_10_24, status: "plausible" },
   { id: "engineering-toolbox-metals", title: "Engineering ToolBox, Metals, Metallic Elements and Alloys — Thermal Conductivities", url: "https://www.engineeringtoolbox.com/thermal-conductivity-metals-d_858.html", accessed: READ_2026_10_24, status: "verified" },
 
   /* ── Fonti interne o da verificare ── */
   /* Database di lavoro del progetto (Notion), non pubblico: coefficienti del
    * motore e soglie dei problemi che non hanno ancora una fonte esterna. */
-  { id: "vulcan-notion-db", title: "Database di lavoro del progetto (Notion), non pubblico", status: "unverified" },
+  { id: "vulcan-notion-db", title: "Notion", noteKey: "internal-db", status: "unverified" },
   /* Thickness factor in oz/in² dei calcolatori nordamericani: citato dall'audit, testo non riletto. */
   { id: "lehmann-pmq-thickness", title: "T. Lehmann, PMQ Pizza Magazine (Think Tank): thickness factor in oz/in²", status: "unverified" },
   /* Forni dell'edizione dimostrativa: marchio e dati inventati. */
-  { id: "demo", title: "Dato dimostrativo (marchio inventato)", status: "unverified" },
+  { id: "demo", title: "Demo", noteKey: "demo", status: "unverified" },
 ];
 
 const BY_ID = new Map(SCIENCE_SOURCES.map((source) => [source.id, source]));

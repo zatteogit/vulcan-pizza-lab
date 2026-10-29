@@ -734,6 +734,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "cooking.rounds.ready": "Each bake takes about {0}. Load it when you're ready.",
   "cooking.rounds.start": "Load it ({0} of {1})",
   "cooking.rounds.remaining": "Take it out in {0}",
+  "cooking.rounds.started": "Bake {0} of {1} started: it takes about {2}.",
   "cooking.rounds.turn": "Halfway: turn it half a turn",
   "cooking.rounds.out": "Take it out!",
   "cooking.rounds.allDone": "All bakes done ({0})",
@@ -744,6 +745,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "cooking.rounds.fry.ready": "Each fry takes about {0}. Lower the pizza into the oil when you're ready.",
   "cooking.rounds.fry.start": "Lower it in ({0} of {1})",
   "cooking.rounds.fry.remaining": "Take it out of the oil in {0}",
+  "cooking.rounds.fry.started": "Fry {0} of {1} started: it takes about {2}.",
   "cooking.rounds.fry.turn": "Halfway: flip it with the skimmer",
   "cooking.rounds.fry.out": "Drain it on paper towels!",
   "cooking.rounds.fry.allDone": "All fries done ({0})"

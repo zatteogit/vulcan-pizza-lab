@@ -815,4 +815,29 @@ export const SCIENCE_JA: CmsScience = {
     /* FW-02 */
     "stg-partial-check": "比べているのは一部の値だけです。材料の産地、生地の温度、作業の手順は確認していません。",
   },
+  /* Revisione ondata 2: formule nella lingua (le parole e i decimali
+   * cambiano, i simboli no) e note descrittive delle fonti. */
+  formulas: {
+    "yeast-dose": "Y = max(0.01%; min(3%; Y₀ × (t₀ / tₑ)^0.7 ÷ v(T) × s) ÷ k) · Y₀ = 0.1%（生イースト）、t₀ = 24 h、s = 生 1 / ドライ 0.33、k = 個人補正（0.5–2）· T ≥ 18 °C なら tₑ = h、それ未満なら tₑ = (h − hₐ) + hₐ ÷ v(T)（hₐ = 18 °C での最終発酵 + 折りたたみ）· v(T)：「温度と発酵の速さ」を参照",
+    "q10-fermentation": "T ≥ T_b なら v(T) = Q10ₐ^((T − 18)/10)、それ未満なら v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · イースト：T_b = 10 °C、Q10ₐ = 2.0、Q10_b = 1.6 · 天然酵母：T_b = 15 °C、Q10ₐ = 2.2、Q10_b = 1.9",
+    "equivalent-hours": "T ≥ 18 °C：h₁₈ = h × v(T) · T < 18 °C：h₁₈ = (h − hₐ) × v(T) + hₐ（hₐ = 18 °C での最終発酵 + 折りたたみ）",
+    "water-temp-rule": "T_水 = 3 × T_生地 − T_室温 − T_粉 − 摩擦 · 発酵種ありの本ごね：T_水 = 4 × T_生地 − T_室温 − T_粉 − T_発酵種 − 摩擦、発酵種の水：3 × T_発酵種 − T_室温 − T_粉",
+    "water-activity": "Aw ≈ 0.96 + (H − 55) × 0.0005 − 塩 × 0.006 − 砂糖 × 0.004",
+    "flour-pl-estimate": "P/L ≈ 0.30 + (W − 150) × 0.0015（スタイルの範囲内に制限）",
+    "baking-energy": "E = P × t · P はオーブン温度に応じて 2、3、8 kW",
+    "thickness-factor": "TF = 生地玉の重さ (g) / ピッツァの面積 (cm²) · 1 oz/in² ≈ 4.39 g/cm²",
+  },
+  sourceNotes: {
+    "internal-db": "プロジェクト内部の作業用データベース（非公開）",
+    "demo": "デモ用データ（架空のブランド）",
+    "ovens-secondary": "オーブンの販売店とレビュー（二次情報源）",
+    "autolyse-calvel": "オートリーズに関する記事（R. Calvel, 1974 を引用）",
+    "recipes": "レシピ",
+    "articles": "記事",
+    "abstract-only": "要旨のみ確認",
+    "manufacturer-sheet": "メーカーの仕様書",
+    "manufacturer-pages": "メーカーの製品ページ",
+    "manual": "取扱説明書",
+    "faq": "よくある質問",
+  },
 };

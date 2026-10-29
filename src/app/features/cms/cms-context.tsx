@@ -450,6 +450,12 @@ export interface CmsScience {
   notes: Record<string, CmsScienceNoteText>;
   /** Testi delle ipotesi del modello (ScienceNote.assumptionIds). */
   assumptions: Record<string, string>;
+  /** Formula della nota nella lingua (ScienceNote.formula è solo la versione
+   *  in simboli, di riserva): parole e decimali cambiano, i simboli no. */
+  formulas: Record<string, string>;
+  /** Note descrittive delle fonti (SourceRef.noteKey): «pagine prodotto»,
+   *  «letto solo l'abstract». Il titolo bibliografico non si traduce. */
+  sourceNotes: Record<string, string>;
 }
 
 /** Pre-ferment guide — UI labels + per-item content */

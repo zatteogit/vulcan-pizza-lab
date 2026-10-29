@@ -39,8 +39,11 @@ type IntlUnit =
   | "millimeter"
   | "inch";
 
+/* Un decimale; due sotto 0,1 (le microdosi di lievito al centesimo: 0,04 g
+ * non deve diventare «0 g»). */
 function defaultFraction(value: number): number {
-  return Number.isInteger(value) ? 0 : 1;
+  if (Number.isInteger(value)) return 0;
+  return Math.abs(value) < 0.1 ? 2 : 1;
 }
 
 export function formatNumber(
