@@ -1,36 +1,17 @@
-import { Compass } from "lucide-react";
-import { motion } from "motion/react";
-import { Link } from "react-router";
 import { useCms } from "../features/cms/cms-context";
-import { CtaButton, Heading } from "../components/ds/index";
-import { motionSpring } from "../components/ds/motion";
+import { NotFoundState } from "../components/shared/not-found-state";
 
+/* FW-09 (S01-A-07, S01-B-06): stesso stato dello stile inesistente, con la ricerca. */
 export function NotFoundPage() {
   const { cms } = useCms();
   return (
-    <main className="notfound-shell" id="main-content">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={motionSpring.pageEnter}
-        className="notfound-card"
-      >
-        <span className="type-numeric notfound-num">404</span>
-        <Heading level="page" className="notfound-title">
-          {cms.pages.notFoundTitle}
-        </Heading>
-        <p className="notfound-sub">
-          {cms.pages.notFoundSubtitle}
-        </p>
-        <CtaButton
-          as={Link}
-          to="/explore"
-          className="notfound-cta"
-        >
-          <Compass size={14} aria-hidden="true" />
-          {cms.pages.notFoundBack}
-        </CtaButton>
-      </motion.div>
-    </main>
+    <NotFoundState
+      eyebrow="404"
+      title={cms.pages.notFoundTitle}
+      subtitle={cms.pages.notFoundSubtitle}
+      backTo="/explore"
+      backLabel={cms.pages.notFoundBack}
+      searchLabel={cms.pages.notFoundSearch}
+    />
   );
 }

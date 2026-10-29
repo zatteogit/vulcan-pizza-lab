@@ -23,9 +23,10 @@ type LucideIcon,
 } from 'lucide-react';
 import { AnimatePresence,motion,useReducedMotion } from 'motion/react';
 import { motionDelay,motionSpring } from "../../components/ds/motion";
-import { createElement, useEffect, useId, useState } from 'react';
+import { createElement, useEffect, useId, useMemo, useState } from 'react';
+import { filterByQuery, searchLexicon } from "../search/text-match";
 import { useCms } from "../cms/cms-context";
-import { Disclosure, FilterChip, IconButton, ModalSheet, Surface } from "../../components/ds/index";
+import { Disclosure, EmptyState, FilterChip, IconButton, ModalSheet, Surface } from "../../components/ds/index";
 import {
 type TroubleshootingIssue,
 type StepTroubleshooting,
@@ -208,22 +209,24 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
     ? contextIssueIds.flatMap(id => { const issue = ISSUES_DB.find(item => item.id === id); return issue ? [issue] : []; })
     : ISSUES_DB;
   /* FW-13: conteggio per categoria come nel glossario; le categorie vuote non
-     compaiono (un chip «0» non porta da nessuna parte). */
+     compaiono (un chip «0» non porta da nessuna parte; FW-09: niente
+     «Algoritmo» vuoto). */
   const categories = Object.keys(CATEGORY_LABELS)
     .map((key) => [key, sourceIssues.filter((issue) => issue.category === key).length] as const)
     .filter(([, count]) => count > 0);
-  const filtered = sourceIssues.map(issue => getLocalizedIssue(issue, cms)).filter((issue) => {
-    if (activeCategory && issue.category !== activeCategory) return false;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return (
-        issue.symptom.toLowerCase().includes(q) ||
-        issue.cause.toLowerCase().includes(q) ||
-        issue.fixImmediate.toLowerCase().includes(q)
-      );
-    }
-    return true;
-  });
+  /* FW-09 (S13-A-09, S13-B-08): accenti, flessioni («bruciata»), sinonimi
+     del CMS («non lievita») e refusi; si cerca anche in test rapido,
+     prevenzione e categoria. */
+  const lexicon = useMemo(() => searchLexicon(cms.pages), [cms.pages]);
+  const inCategory = sourceIssues.map(issue => getLocalizedIssue(issue, cms)).filter((issue) => !activeCategory || issue.category === activeCategory);
+  const filtered = searchQuery.trim()
+    ? filterByQuery(inCategory, (issue) => [issue.symptom, issue.cause, issue.testRapido, issue.fixImmediate, issue.prevention, getLocalizedCategoryLabel(issue.category, cms)].join(" "), searchQuery, lexicon)
+    : inCategory;
+  const filtering = Boolean(searchQuery.trim() || activeCategory);
+  const showAll = () => {
+    setSearchQuery("");
+    setActiveCategory(null);
+  };
 
   return (
     <div data-region="section" className="troubleshooting-guide">
@@ -246,7 +249,18 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
             aria-label={cms.pages.troubleshootSearchPlaceholder}
             className="troubleshooting-guide__search-input"
           />
+          {searchQuery && (
+            <IconButton size="sm" aria-label={cms.pages.searchClearLabel} onClick={() => setSearchQuery("")} className="troubleshooting-guide__search-clear">
+              <X size={16} aria-hidden="true" />
+            </IconButton>
+          )}
         </div>
+        {/* FW-09 (S13-B-08): il numero dei risultati, anche ai lettori di schermo. */}
+        <p role="status" className="type-body-sm troubleshooting-guide__count">
+          {filtering && filtered.length > 0
+            ? filtered.length === 1 ? uiMessage("features.troubleshooting.countOne", [filtered.length]) : uiMessage("features.troubleshooting.count", [filtered.length])
+            : ""}
+        </p>
 
         {/* Category chips */}
         <motion.div
@@ -296,17 +310,20 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
       {/* Issues list */}
       <AnimatePresence mode="popLayout">
         <div className="troubleshooting-guide__list">
+          {/* FW-09 (S13-A-08): due motivi diversi e un'uscita. */}
           {filtered.length === 0 && (
-            <motion.div
+            <EmptyState
               key="empty"
-              className="troubleshooting-guide__empty"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={motionSpring.crispControl}
-            >
-              {cms.misc.noTroubleshootingResults}
-            </motion.div>
+              live
+              headingLevel={2}
+              title={searchQuery.trim() ? cms.misc.noTroubleshootingResults : uiMessage("features.troubleshooting.emptyCategory")}
+              reason={searchQuery.trim() ? uiMessage("features.troubleshooting.emptySearchReason") : uiMessage("features.troubleshooting.emptyCategoryReason")}
+              actions={contextIssueIds ? [] : [
+                { label: uiMessage("features.troubleshooting.showAll"), onClick: showAll },
+                { label: cms.glossary.searchEverywhere, onClick: () => window.dispatchEvent(new Event("vulcan:open-search")) },
+              ]}
+              className="troubleshooting-guide__empty-state"
+            />
           )}
           {filtered.map((issue, i) => (
             <motion.div

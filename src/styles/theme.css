@@ -1183,6 +1183,14 @@
   --btn-secondary-border: var(--outline-variant);
   --btn-secondary-weight: var(--type-button-weight);
 
+  /* ── FW-09. Empty state (ds/EmptyState) ── */
+  --empty-state-bg: var(--surface-container-low);
+  --empty-state-border: var(--outline-variant);
+  --empty-state-title: var(--text-default);
+  --empty-state-text: var(--text-default);
+  --empty-state-accent-neutral: var(--outline-variant);
+  --empty-state-accent-warning: var(--text-warning);
+
   /* ── I2. User Needs specifics ── */
   --needs-pantry-accent: var(--tertiary);
   --needs-pantry-badge-bg: var(--tertiary-container);
@@ -2536,6 +2544,14 @@
     color: var(--text-default);
   }
 
+  /* FW-09 (S14-A-09): prova il prefermento in una ricetta. */
+  .preferment-decision__try {
+    align-self: flex-start;
+    min-height: var(--space-11);
+    margin-top: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+  }
+
   .preferment-decision__best {
     margin-top: var(--space-1);
     font-size: var(--font-size-md);
@@ -2626,16 +2642,9 @@
     gap: var(--gap-xs);
   }
 
-  .glossary-empty {
-    text-align: center;
-    padding-block: var(--space-12);
-  }
-
-  .glossary-empty__text {
-    font-family: var(--font-serif);
-    font-style: italic;
-    color: var(--text-muted);
-    font-size: var(--font-size-2xl);
+  /* FW-09: stato vuoto del glossario (ds/EmptyState). */
+  .glossary-empty-state {
+    margin-block: var(--space-4);
   }
 
   .glossary-group {
@@ -3193,15 +3202,9 @@
     font-feature-settings: 'tnum';
   }
 
-  .explore-empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-height: var(--space-40);
-    padding: var(--space-8);
-    color: var(--text-muted);
-    font-size: var(--font-size-base);
+  /* FW-09: stato vuoto di Scopri (ds/EmptyState). */
+  .explore-empty-state {
+    margin-block: var(--space-4);
   }
 
   .explore-feature {
@@ -3795,6 +3798,19 @@
 
   .learn-path__cta-row {
     margin-top: var(--space-8);
+  }
+
+  /* FW-09 (S11-A-07): con un vincolo che blocca, le vie d'uscita. */
+  .learn-path__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+  }
+
+  .learn-path__action {
+    min-height: var(--space-11);
+    padding: var(--space-2) var(--space-4);
   }
 
   .learn-path__cta {
@@ -8364,7 +8380,7 @@
   }
 
   .needs-custom-slot__input[aria-invalid="true"] {
-    border-color: var(--text-warning);
+    border-color: var(--destructive); /* FW-09 */
   }
 
   .needs-custom-slot__hint {
@@ -8373,8 +8389,18 @@
     font-size: var(--font-size-sm);
   }
 
+  /* FW-09 (S05-A-13): l'errore non si distingue solo dal colore (WCAG 1.4.1). */
   .needs-custom-slot__error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
     margin: 0;
+    color: var(--destructive);
+  }
+
+  /* FW-09 (S05-A-01): slot in cui nessuno stile sta nei tempi. */
+  .needs-slot__none {
+    display: block;
     color: var(--text-warning);
   }
 
@@ -14311,11 +14337,22 @@
     gap: var(--gap-xs);
   }
 
-  .troubleshooting-guide__empty {
-    text-align: center;
-    padding: var(--space-8);
-    color: var(--muted-foreground);
-    font-size: var(--font-size-lg);
+  /* FW-09 (S13-A-08, S13-B-08): stato vuoto, conteggio e cancella ricerca. */
+  .troubleshooting-guide__empty-state {
+    margin-block: var(--space-2);
+  }
+
+  .troubleshooting-guide__count {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .troubleshooting-guide__count:empty {
+    display: none;
+  }
+
+  .troubleshooting-guide__search-clear {
+    flex: none;
   }
 
   /* --- Issue card --- */
@@ -16061,31 +16098,6 @@
     }
   }
 
-  /* Audit 28/10/2026 (S05-A-01): nessuno stile fattibile nel momento scelto. */
-  .recommended-rescue {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    margin: 0 0 var(--space-4);
-    padding: var(--space-4);
-    border-inline-start: var(--space-1) solid var(--text-warning);
-  }
-
-  .recommended-rescue__title {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin: 0;
-  }
-
-  .recommended-rescue__body { margin: 0; }
-
-  .recommended-rescue__action {
-    align-self: flex-start;
-    min-height: var(--space-11);
-    padding: var(--space-2) var(--space-5);
-  }
-
   .recommended-styles__search-group {
     display: flex;
     flex-direction: column;
@@ -16218,33 +16230,9 @@
     gap: var(--gap-xs);
   }
 
-  /* ── Empty state ── */
-  .recommended-empty {
-    padding: var(--space-8);
-    text-align: center;
-  }
-
-  .recommended-empty__text {
-    font-family: var(--font-serif);
-    font-style: italic;
-    color: var(--text-muted);
-    font-size: var(--font-size-2xl);
-  }
-
-  .recommended-empty__reset {
-    margin-top: var(--space-4);
-    padding-inline: var(--space-5);
-    padding-block: var(--space-2);
-    border-radius: var(--radius-xl);
-    background: var(--chip-bg-active);
-    color: var(--chip-text-active);
-    font-size: var(--font-size-lg);
-    font-weight: var(--weight-semibold);
-    transition: transform var(--duration-fast);
-  }
-
-  .recommended-empty__reset:active {
-    transform: scale(0.95);
+  /* FW-09: lo stato vuoto e il banner della dispensa sono ds/EmptyState. */
+  .recommended-pantry {
+    margin-block: var(--space-2) var(--space-4);
   }
 
   /* ── Tier header ── */
@@ -16281,17 +16269,19 @@
     font-weight: var(--weight-bold);
   }
 
+  /* FW-09 (S05-B-11): il sottotitolo dice cosa vuol dire il gruppo; prima su
+     mobile era nascosto e «Con condizioni» restava senza spiegazione. */
   .recommended-tier-header__subtitle {
-    display: none;
-    font-family: var(--font-serif);
-    font-style: italic;
+    display: block;
+    font-family: var(--font-body);
     color: var(--text-muted);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
   }
 
   @media (min-width: 640px) {
     .recommended-tier-header__subtitle {
       display: inline;
+      font-size: var(--font-size-lg);
     }
   }
 
@@ -18358,13 +18348,14 @@
     color: var(--primary);
   }
 
-  .search-page__empty {
-    padding-block: var(--space-12);
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: var(--font-size-xl);
-    color: var(--text-muted);
-    text-align: center;
+  /* FW-09 (S04-A-11): stato senza risultati e aiuti in testo regolare, leggibile. */
+  .search-page__empty-state {
+    margin-block: var(--space-4);
+  }
+
+  .search-page__hint {
+    margin: var(--space-0) var(--space-0) var(--space-3);
+    color: var(--text-default);
   }
 
   .search-page__results {
@@ -20206,6 +20197,50 @@
     }
   }
 
+  /* ═══ FW-09 — COMPONENT: ds/EmptyState ═══
+     Motivo e almeno un'azione; il tono arriva da data-tone. */
+  .ds-empty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+    padding: var(--space-4);
+    background: var(--empty-state-bg);
+    border: var(--border-width-thin) solid var(--empty-state-border);
+    border-inline-start: var(--space-1) solid var(--empty-state-accent-neutral);
+    border-radius: var(--radius-lg);
+    color: var(--empty-state-text);
+  }
+
+  .ds-empty[data-tone="warning"] {
+    border-inline-start-color: var(--empty-state-accent-warning);
+  }
+
+  .ds-empty__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    color: var(--empty-state-title);
+  }
+
+  .ds-empty__reason {
+    margin: 0;
+    color: var(--empty-state-text);
+  }
+
+  .ds-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-1) 0 0;
+  }
+
+  .ds-empty__action {
+    min-height: var(--space-11);
+    padding: var(--space-2) var(--space-4);
+  }
+
   /* ═══ DS COMPONENT: CtaButton ═══ */
   /* ═══ COMPONENT: ds/CtaButton ═══ */
 
@@ -20484,37 +20519,7 @@
     transform: scale(0.95);
   }
 
-  .recipe-page__notfound {
-    min-height: var(--dimension-viewport-height-full);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-inline: var(--space-6);
-    background: var(--container-page);
-    color: var(--text-default);
-  }
-
-  .recipe-page__notfound-inner {
-    text-align: center;
-  }
-
-  .recipe-page__notfound-sub {
-    font-family: var(--font-serif);
-    font-style: italic;
-    margin-top: var(--space-2);
-    font-size: var(--font-size-xl-5);
-    color: var(--text-muted);
-    opacity: 1;
-  }
-
-  .recipe-page__notfound-cta {
-    margin-top: var(--space-6);
-    padding-inline: var(--space-5);
-    padding-block: var(--space-2-5);
-    font-size: var(--font-size-xl);
-  }
-
-  /* ═══ DS COMPONENT: not-found.tsx ═══ */
+  /* ═══ FW-09 (S01-B-06): un solo «non trovato» (components/shared/not-found-state.tsx) ═══ */
   .notfound-shell {
     /* FW-13 (S01-B-14): la shell aggiunge già il padding del dock, niente
        scroll superfluo. */
@@ -20522,18 +20527,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-inline: var(--space-4);
     background: var(--container-page);
     color: var(--text-default);
   }
 
   .notfound-card {
+    max-width: var(--measure-md);
     text-align: center;
-    padding-inline: var(--space-6);
   }
 
   .notfound-num {
     display: block;
     font-size: var(--font-size-6-5xl); /* FW-13 (S01-B-14): non è un numero di passo */
+    margin: 0;
     font-weight: var(--weight-bold);
     color: var(--text-accent);
   }
@@ -20543,18 +20550,22 @@
   }
 
   .notfound-sub {
-    font-family: var(--font-serif);
-    font-style: italic;
     margin-top: var(--space-2);
-    font-size: var(--font-size-xl-5);
-    color: var(--text-muted);
-    opacity: 1;
+    color: var(--text-default);
+  }
+
+  .notfound-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
   }
 
   .notfound-cta {
-    margin-top: var(--space-6);
-    padding-inline: var(--space-6);
-    padding-block: var(--space-3);
+    min-height: var(--space-11);
+    padding-inline: var(--space-5);
+    padding-block: var(--space-2);
   }
 
   /* ═══ U-10 (F21) — bersagli di almeno 24 px ═══

@@ -103,10 +103,10 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
 
 /** A maximum of two useful signals, inside the photo. The duration describes
  * the complete generated timeline, not fermentation alone. */
-export function StyleMetaChip({ style, cms, recipe, context = "create" }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe; context?: "create" | "explore" }) {
+export function StyleMetaChip({ style, cms, recipe, context = "create", hidePantryChecks = false }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe; context?: "create" | "explore"; /** FW-09: dispensa sconosciuta, verifiche dette una volta sola. */ hidePantryChecks?: boolean }) {
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
-  const signals = recipe ? recipeCardSignals(recipe, context) : [];
+  const signals = recipe ? recipeCardSignals(recipe, context, { hidePantryChecks }) : [];
   const icons = { oven: Flame, time: Clock, pan: CookingPot, flour: Wheat, check: ScanLine, water: Droplets }; /* FW-13: Flame solo per il forno */
   const duration = recipe
     ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)

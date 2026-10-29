@@ -12,7 +12,7 @@ import {
 import { motion, useReducedMotion } from "motion/react";
 import { useMemo, useRef, useState, type KeyboardEvent, type MutableRefObject, type ReactNode } from "react";
 import { Link } from "react-router";
-import { Badge, Heading } from "../../components/ds/index";
+import { Badge, EmptyState, Heading } from "../../components/ds/index";
 import { motionSpring } from "../../components/ds/motion";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -23,11 +23,13 @@ import {
   buildSearchIndex,
   groupResults,
   highlightRanges,
+  isShortQuery,
   queryTokens,
   rankForKitchen,
   searchIndex,
   styleIdOf,
   type KitchenFit,
+  searchLexicon,
   type ResultType,
 } from "./search-index";
 import { STYLES_DB } from "../../domain/pizza-engine";
@@ -121,7 +123,8 @@ export function SearchResultsView({
   const listRef = useRef<HTMLElement>(null);
 
   const index = useMemo(() => buildSearchIndex(cms), [cms]);
-  const hits = useMemo(() => searchIndex(index, query), [index, query]);
+  const lexicon = useMemo(() => searchLexicon(cms.pages), [cms.pages]);
+  const hits = useMemo(() => searchIndex(index, query, lexicon), [index, query, lexicon]);
   /* FW-10 (S04-A-07): per gli stili trovati, la compatibilità con la cucina
      del profilo, con la stessa ricetta canonica delle card di Scopri. */
   const fits = useMemo(() => {
@@ -147,7 +150,10 @@ export function SearchResultsView({
   const all = useMemo(() => rankForKitchen(hits, (id) => fits.get(id)), [hits, fits]);
   const groups = useMemo(() => groupResults(all), [all]);
   const labels = categoryLabels(cms.pages);
-  const hasQuery = queryTokens(query).length > 0;
+  /* FW-09 (S04-A-10): una lettera cerca i simboli del glossario («W»). */
+  const shortQuery = isShortQuery(query);
+  const hasQuery = queryTokens(query).length > 0 || (shortQuery && all.length > 0);
+  const fuzzy = all.length > 0 && all.every((result) => result.fuzzy);
 
   /* Un chip senza più risultati torna a «Tutto». */
   const effectiveFilter: Filter = filter !== "all" && !groups.some(([type]) => type === filter) ? "all" : filter;
@@ -206,8 +212,12 @@ export function SearchResultsView({
       </Heading>
       {field}
       <p role="status" className="sr-only">
-        {hasQuery ? cms.ui.searchResultsStatus.replace("{n}", String(all.length)) : ""}
+        {hasQuery ? cms.ui.searchResultsStatus.replace("{n}", String(all.length)) : shortQuery ? uiMessage("features.search.tooShort") : ""}
       </p>
+      {shortQuery && !hasQuery && (
+        <p className="type-body search-page__hint" aria-hidden="true">{uiMessage("features.search.tooShort")}</p>
+      )}
+      {fuzzy && <p className="type-body search-page__hint">{uiMessage("features.search.fuzzyNote")}</p>}
 
       {hasQuery && all.length > 0 && (
         <nav className="search-page__chips hide-scrollbar" aria-label={uiMessage("features.search.filters")}>
@@ -241,8 +251,20 @@ export function SearchResultsView({
         </nav>
       )}
 
+      {/* FW-09 (S04-A-11, S04-B-10): senza risultati, il motivo e dove andare. */}
       {hasQuery && all.length === 0 && (
-        <p className="search-page__empty">{cms.pages.searchNoResults.replace("{query}", query.trim())}</p>
+        <EmptyState
+          headingLevel={2}
+          title={cms.pages.searchNoResults.replace("{query}", query.trim())}
+          reason={uiMessage("features.search.noResultsReason")}
+          linkAs={Link}
+          actions={[
+            { label: cms.pages.searchClearLabel, onClick: () => onQueryChange("") },
+            { label: cms.pages.searchCatGlossary, href: "/learn/glossary", onClick: () => onSelect() },
+            { label: cms.pages.searchCatProblems, href: "/learn/troubleshooting", onClick: () => onSelect() },
+          ]}
+          className="search-page__empty-state"
+        />
       )}
 
       {hasQuery && all.length > 0 ? (
@@ -323,6 +345,7 @@ export function SearchResultsView({
         </section>
       ) : (
         <section className="search-page__suggestions" aria-labelledby="search-suggestions-title">
+          {!query.trim() && <p className="type-body search-page__hint">{cms.pages.searchHint}</p>}
           <h2 id="search-suggestions-title" className="search-page__suggestions-title">
             {cms.pages.searchSuggestions}
           </h2>

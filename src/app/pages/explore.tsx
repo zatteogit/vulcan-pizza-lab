@@ -8,7 +8,7 @@ import { CompatibilityPill, StyleMetaChip } from "../features/recipe/style-card-
 import { AnimatePresence,motion } from "motion/react";
 import { useId, useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
-import { Heading, Surface } from "../components/ds/index";
+import { EmptyState, Heading, Surface } from "../components/ds/index";
 import { useCms, type CmsContent } from "../features/cms/cms-context";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../components/media/responsive-images";
@@ -413,6 +413,7 @@ export function ExplorePage() {
                     {cms.pages.exploreFilterRecipes}
                   </Heading>
                   <button
+                    type="button"
                     onClick={() => setExploreFilters("recipes")}
                     className="explore-section__link"
                   >
@@ -441,6 +442,7 @@ export function ExplorePage() {
                     {previewForKitchen ? uiMessage("explore.forKitchen") : cms.pages.exploreFilterStyles}
                   </Heading>
                   <button
+                    type="button"
                     onClick={() => setExploreFilters("styles")}
                     className="explore-section__link"
                   >
@@ -574,9 +576,13 @@ export function ExplorePage() {
                     })
                   ) : filteredStyles.length === 0 ? (
                     /* VPL-A6: empty-state esplicito invece della griglia vuota */
-                    <div className="explore-empty">
-                      {cms.misc.noStyleInFamily}
-                    </div>
+                    /* FW-09 (S02-A-13): qui il filtro famiglia non dipende dal profilo. */
+                    <EmptyState
+                      title={uiMessage("pages.explore.noStyleInFamily")}
+                      actions={[{ label: cms.misc.showAllStyles, onClick: () => setExploreFilters("styles", "all") }]}
+                      headingLevel={3}
+                      className="explore-empty-state"
+                    />
                   ) : (
                     /* Griglia piatta filtrata */
                     <>

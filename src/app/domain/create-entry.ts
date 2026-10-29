@@ -39,18 +39,20 @@ export type RecommendationSectionKey = "perfect" | "good" | "fried" | "not_feasi
 /** D-032: le fritte non usano il forno, quindi con una cucina di casa
  *  finirebbero in cima a «Perfetti per te». Stanno in una sezione a parte,
  *  dopo gli stili al forno; quelle non fattibili restano fra le non fattibili.
- *  `sort` è l'ordinamento visibile della UI, applicato dentro ogni sezione. */
+ *  `sort` è l'ordinamento visibile della UI, applicato dentro ogni sezione;
+ *  `tierOf` il gruppo in cui mostrare lo stile (FW-09: presentationTier). */
 export function recommendationSections<T extends Pick<StyleRecommendation, "tier"> & { style: PizzaStyle }>(
   items: readonly T[],
   sort: (items: T[]) => T[] = (list) => list,
+  tierOf: (item: T) => StyleRecommendation["tier"] = (item) => item.tier,
 ): { key: RecommendationSectionKey; items: T[] }[] {
   const baked = items.filter((item) => !isFriedStyle(item.style));
   const fried = items.filter((item) => isFriedStyle(item.style));
   const sections: { key: RecommendationSectionKey; items: T[] }[] = [
-    { key: "perfect", items: sort(baked.filter((item) => item.tier === "perfect")) },
-    { key: "good", items: sort(baked.filter((item) => item.tier === "good" || item.tier === "challenging")) },
-    { key: "fried", items: sort(fried.filter((item) => item.tier !== "not_feasible")) },
-    { key: "not_feasible", items: sort(items.filter((item) => item.tier === "not_feasible")) },
+    { key: "perfect", items: sort(baked.filter((item) => tierOf(item) === "perfect")) },
+    { key: "good", items: sort(baked.filter((item) => tierOf(item) === "good" || tierOf(item) === "challenging")) },
+    { key: "fried", items: sort(fried.filter((item) => tierOf(item) !== "not_feasible")) },
+    { key: "not_feasible", items: sort(items.filter((item) => tierOf(item) === "not_feasible")) },
   ];
   return sections.filter((section) => section.items.length > 0);
 }

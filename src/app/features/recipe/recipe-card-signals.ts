@@ -11,7 +11,7 @@ const msg = (key: string, fallback: string, params?: EngineMsg["params"]): Engin
 
 /** Card policy: at most two decision signals. Unverified flour is a concrete
  * condition too: an empty inventory never implies the required flour is available. */
-export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "explore" = "create"): CardSignal[] {
+export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "explore" = "create", options: { hidePantryChecks?: boolean } = {}): CardSignal[] {
   const { blockers, conditions = [], adaptations } = recipe.verdict;
   if (blockers.length) {
     const b = blockers.find(b => b.kind === "dietary_conflict" && b.filter_id.startsWith("allergen:")) ?? blockers.find(b => b.kind === "dietary_conflict") ?? blockers.find(b => b.kind === "oven_too_cold") ?? blockers[0];
@@ -49,6 +49,9 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   // remain inspectable in the detail and actionable in Create.
   if (context === "explore") return result.slice(0, 2);
   for (const c of [...conditions].sort((a, b) => Number(b.status === "missing") - Number(a.status === "missing"))) {
+    // FW-09 (S05-A-06): con la dispensa sconosciuta «Se hai farina…» vale per
+    // tutti gli stili; la pagina lo dice una volta sola.
+    if (options.hidePantryChecks && c.status === "unverified" && (c.kind === "flour" || c.kind === "flour_blend" || c.kind === "yeast")) continue;
     if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Se hai una teglia"));
     if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Se hai pietra o acciaio"));
     if (c.kind === "flour") add("flour", c.status === "missing"

@@ -10,7 +10,9 @@ import {
   highlightRanges,
   rankForKitchen,
   searchIndex,
+  searchLexicon,
 } from "./search-index";
+import { editDistance, filterByQuery } from "./text-match";
 
 /* U-5 — la ricerca trova i testi della lingua attiva, ignora accenti e
  * maiuscole, vuole tutte le parole e mette prima i titoli che corrispondono. */
@@ -129,5 +131,68 @@ describe("ricette iconiche dalla ricerca", () => {
       expect(hit?.link, rec.id).toBe(signatureRecipeLink(rec));
       if (rec.interpretation_id) expect(hit?.link, rec.id).toContain(`interpretation=${rec.interpretation_id}`);
     }
+  });
+});
+
+/* FW-09 (S04-A-02, S04-B-04, S04-B-05, S04-A-03, S04-A-10, S13-A-09): le
+ * query dei finding. Prima tutte davano 0 risultati. */
+describe("ricerca con le parole dell'utente (FW-09)", () => {
+  const LX = searchLexicon(CMS_DEFAULTS.pages);
+  const ENC = { ...CMS_DEFAULTS, ...EN_LOCALE } as CmsContent;
+  const LXE = searchLexicon(ENC.pages);
+  const find = (q: string) => searchIndex(IT, q, LX).map((r) => r.id);
+
+  it("una lettera cerca i simboli del glossario, esatti", () => {
+    expect(find("W")).toEqual(["glossary-w_alveograph"]);
+    expect(find("p")).toEqual(expect.arrayContaining(["glossary-p_tenacity", "glossary-pl_ratio"]));
+    expect(find("L")).toContain("glossary-l_extensibility");
+    expect(find("a")).toEqual([]);
+  });
+
+  it("refusi: «napoletna», «napoletanna», «mozarela»", () => {
+    expect(find("napoletna")[0]).toBe("style-napoletana_stg");
+    expect(find("napoletanna")).toContain("style-napoletana_stg");
+    expect(find("mozarela").length).toBeGreaterThan(0);
+    expect(searchIndex(IT, "napoletna", LX).every((r) => r.fuzzy)).toBe(true);
+  });
+
+  it("flessioni e parole vuote: «bruciata», «pizza bruciata»", () => {
+    expect(find("bruciata")).toContain("problem-P09");
+    expect(find("pizza bruciata")).toContain("problem-P09");
+  });
+
+  it("sinonimi del CMS: «lievito di birra», «forno di casa», «celiachia», «pinza», «non lievita»", () => {
+    expect(find("lievito di birra")).toContain("glossary-yeast");
+    expect(find("forno di casa").some((id) => id.startsWith("style-"))).toBe(true);
+    expect(find("celiachia")).toContain("glossary-gluten");
+    expect(find("pinza")[0]).toBe("style-pinsa_romana");
+    expect(find("non lievita")).toContain("problem-P04");
+  });
+
+  it("anche in inglese, col dizionario della lingua", () => {
+    const en = (q: string) => searchIndex(EN, q, LXE).map((r) => r.id);
+    expect(en("baker's yeast")).toContain("glossary-yeast");
+    expect(en("coeliac")).toContain("glossary-gluten");
+    expect(en("home oven").some((id) => id.startsWith("style-"))).toBe(true);
+  });
+
+  it("le ricerche esatte non cambiano", () => {
+    expect(find("napoletana")).toEqual(ids(IT, "napoletana"));
+    expect(find("pizza fritta")).toContain("style-pizza_fritta");
+    expect(find("xyzqq")).toEqual([]);
+  });
+
+  it("distanza di modifica con trasposizioni", () => {
+    expect(editDistance("pinsa", "pinza", 1)).toBe(1);
+    expect(editDistance("lievtio", "lievito", 1)).toBe(1);
+    expect(editDistance("mozarela", "mozzarella", 2)).toBe(2);
+    expect(editDistance("abc", "xyz", 1)).toBeGreaterThan(1);
+  });
+
+  it("le ricerche di pagina usano le stesse regole", () => {
+    const issues = [{ id: "a", text: "Base cruda ma cornicione bruciato" }, { id: "b", text: "Nessuna lievitazione dopo 6 ore" }];
+    expect(filterByQuery(issues, (i) => i.text, "bruciata", LX).map((i) => i.id)).toEqual(["a"]);
+    expect(filterByQuery(issues, (i) => i.text, "non lievita", LX).map((i) => i.id)).toEqual(["b"]);
+    expect(filterByQuery(issues, (i) => i.text, "cornicoine", LX).map((i) => i.id)).toEqual(["a"]);
   });
 });
