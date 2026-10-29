@@ -129,7 +129,7 @@ export const VOICE_IT: VoiceCatalog = {
     recipe: ["ricetta", "dosi", "impasto", "ingredienti", "come si fa", "come faccio", "come preparo", "voglio fare", "preparo", "quanta farina", "procedimento"],
   },
   countNouns: ["panetti", "panetto", "pizze", "pizza", "teglie", "teglia", "pezzi", "pezzo", "focacce", "focaccia", "pale", "pala", "pinse", "pinsa", "palline", "pallina", "calzoni", "calzone", "tranci", "trancio", "padellini", "padellino"],
-  hourWords: { hours: ["ore", "ora", "h"], days: ["giorni", "giorno"], half: ["e mezza", "e mezzo"], dayWords: ["un giorno", "una giornata"] },
+  hourWords: { hours: ["ore", "ora", "h"], days: ["giorni", "giorno", "giornate", "giornata"], half: ["e mezza", "e mezzo"], halfDay: ["mezza giornata"], dayWords: ["un giorno", "una giornata"] },
 
   /* ── Frasi ── */
   say: {
@@ -153,9 +153,10 @@ export const VOICE_IT: VoiceCatalog = {
     recommendFried: (names: string[]) => `Oppure, fritta: ${listJoin(names, "o")}.`,
     recommendScore: (name: string, score: number) => `${name} va bene con la tua cucina per ${score} su 100.`,
     recommendNone: "Con questa cucina non trovo uno stile fattibile.",
-    recommendNeedsHours: (name: string, hours: string) => `Con questo tempo non ci sta nessuna pizza: la più rapida, ${name}, chiede ${hours}.`,
+    recommendNeedsHours: (name: string, hours: string, baked: boolean) =>
+      `Con questo tempo non ci sta nessuna pizza: la più rapida${baked ? " al forno" : ""}, ${name}, chiede ${hours}.`,
     recommendNeedsOven: (name: string, temp: number) => `Il forno è troppo freddo: ${name} chiede almeno ${temp} gradi.`,
-    recommendFollowUpAlexa: "Vuoi la ricetta? Dimmi lo stile.",
+    recommendFollowUpAlexa: (name: string) => `Per la ricetta dimmi lo stile, per esempio ${name}.`,
     recommendFollowUpSiri: (name: string) => `Per la ricetta chiedi: ricetta ${name}.`,
     recipeHead: (name: string, count: number, unit: readonly [string, string], grams: string) =>
       `${name}: ${count === 1 ? unit[0] : `${count} ${unit[1]}`} da ${grams} grammi.`,

@@ -202,18 +202,19 @@ export function recognizeKitchen(text: string, catalog: VoiceCatalog): VoiceKitc
 
 export function recognizeHours(text: string, catalog: VoiceCatalog): number | undefined {
   const norm = digitize(normalizeSpeech(text), catalog);
-  const { hours, days, half, dayWords } = catalog.hourWords;
+  const { hours, days, half, halfDay, dayWords } = catalog.hourWords;
   const halfRe = half.map((h) => normalizeSpeech(h)).join("|");
+  const one = (n: string) => (n === "un" || n === "una" ? 1 : Number(n));
   const hourRe = new RegExp(`\\b(\\d+(?:\\.\\d+)?|un|una)\\s*(?:${hours.join("|")})\\b(\\s(?:${halfRe})\\b)?`);
-  const dayRe = new RegExp(`\\b(\\d+(?:\\.\\d+)?)\\s*(?:${days.join("|")})\\b`);
+  // «un giorno e mezzo» = 36 ore: il mezzo vale anche per i giorni.
+  const dayRe = new RegExp(`\\b(\\d+(?:\\.\\d+)?|un|una)\\s*(?:${days.join("|")})\\b(\\s(?:${halfRe})\\b)?`);
   let value: number | undefined;
   const h = norm.match(hourRe);
-  if (h) value = (h[1] === "un" || h[1] === "una" ? 1 : Number(h[1])) + (h[2] ? 0.5 : 0);
-  else {
-    const d = norm.match(dayRe);
-    if (d) value = Number(d[1]) * 24;
-    else if (dayWords.some((w) => containsPhrase(norm, normalizeSpeech(w)))) value = 24;
-  }
+  const d = h ? null : norm.match(dayRe);
+  if (h) value = one(h[1]) + (h[2] ? 0.5 : 0);
+  else if (d) value = one(d[1]) * 24 + (d[2] ? 12 : 0);
+  else if (halfDay.some((w) => containsPhrase(norm, normalizeSpeech(w)))) value = 12;
+  else if (dayWords.some((w) => containsPhrase(norm, normalizeSpeech(w)))) value = 24;
   return value !== undefined && value > 0 && value <= 168 ? value : undefined;
 }
 

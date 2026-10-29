@@ -112,11 +112,20 @@ niente nel bundle dell'app.
 
 Richieste gestite: `LaunchRequest`, `IntentRequest` (ConsigliaIntent,
 RicettaIntent, GlossarioIntent, AMAZON.HelpIntent, StopIntent, CancelIntent,
-FallbackIntent, NavigateHomeIntent), `SessionEndedRequest` (risposta vuota).
+FallbackIntent, NavigateHomeIntent, YesIntent, NoIntent), `SessionEndedRequest`
+(risposta vuota).
 Risposte in SSML con pause brevi, reprompt quando la sessione resta aperta,
 scheda «Simple» con il link alla pagina di Vulcan. Se alla ricetta manca lo
 stile la skill lo chiede e ricorda pezzi, ore e forno negli attributi di
-sessione; dopo un consiglio chiede «Vuoi la ricetta?» con la stessa cucina.
+sessione; dopo un consiglio invita a dire lo stile («Per la ricetta dimmi lo
+stile, per esempio Focaccia Genovese.»), senza domande sì/no. Chi risponde
+comunque «sì» riceve la ricetta del primo stile consigliato, con la stessa
+cucina; «no» saluta e chiude (i tester di Amazon rispondono così).
+
+Tempi non fattibili: quando l'MCP dà più blocchi di tempo (finestra di lavoro e
+lievitazione) la voce dice una sola frase, con il più alto (il minimo vero). Se
+nessuno stile è fattibile il consiglio nomina lo stile al forno che si sblocca
+con meno ore (D-032: le fritte dopo), con il suo minimo.
 
 ### Dove funziona
 

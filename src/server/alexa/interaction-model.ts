@@ -140,6 +140,8 @@ export function buildInteractionModel(lang = "it") {
           { name: "AMAZON.StopIntent", samples: [] },
           { name: "AMAZON.NavigateHomeIntent", samples: [] },
           { name: "AMAZON.FallbackIntent", samples: [] },
+          { name: "AMAZON.YesIntent", samples: [] },
+          { name: "AMAZON.NoIntent", samples: [] },
           {
             name: ALEXA_INTENTS.recommend,
             slots: [{ name: ALEXA_SLOTS.hours, type: number }, { name: ALEXA_SLOTS.oven, type: "FORNO" }],

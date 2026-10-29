@@ -40,6 +40,8 @@ interface PendingRecipe {
   balls?: number;
   hours?: number;
   kitchen?: VoiceKitchen;
+  /** Il primo stile consigliato: un «sì» dopo il consiglio ne dà la ricetta. */
+  suggestion?: string;
 }
 
 export interface AlexaResponseBody {
@@ -92,6 +94,15 @@ function queryFromIntent(envelope: AlexaEnvelope, lang: string): VoiceQuery {
     }
     case "AMAZON.HelpIntent":
       return { intent: "help", ...base };
+    // «Sì» a una ricetta in sospeso: lo stile consigliato, se c'è; se no lo si chiede.
+    case "AMAZON.YesIntent":
+      if (!fromSession) return { intent: "fallback", ...base };
+      return {
+        intent: "recipe",
+        ...(pending.suggestion && STYLES_DB[pending.suggestion] ? { styleId: pending.suggestion } : {}),
+        ...(pending.balls !== undefined ? { balls: pending.balls } : {}),
+        ...base,
+      };
     default:
       return { intent: "fallback", ...base };
   }
@@ -103,7 +114,7 @@ function toAlexa(answer: VoiceAnswer, lang: string, previous: Record<string, unk
   // Una domanda in sospeso sopravvive a un «non ho capito» o a un aiuto.
   const keep = !answer.endSession && (answer.intent === "fallback" || answer.intent === "help");
   const sessionAttributes: Record<string, unknown> = answer.pending && !answer.endSession
-    ? { pending: "recipe", balls: answer.pending.balls, hours: answer.pending.hours, kitchen: answer.pending.kitchen }
+    ? { pending: "recipe", balls: answer.pending.balls, hours: answer.pending.hours, kitchen: answer.pending.kitchen, suggestion: answer.pending.suggestion }
     : keep ? previous : {};
   return {
     version: "1.0",
@@ -138,7 +149,8 @@ export function handleAlexaEnvelope(envelope: AlexaEnvelope, baseUrl: string): A
       return speak(say.welcome, false, say.welcomeReprompt);
     case "IntentRequest": {
       const name = envelope.request.intent?.name;
-      if (name === "AMAZON.StopIntent" || name === "AMAZON.CancelIntent" || name === "AMAZON.NavigateHomeIntent") {
+      // «No» chiude come Stop: la skill non fa altre domande sì/no.
+      if (name === "AMAZON.StopIntent" || name === "AMAZON.CancelIntent" || name === "AMAZON.NavigateHomeIntent" || name === "AMAZON.NoIntent") {
         return speak(say.goodbye, true);
       }
       const query = queryFromIntent(envelope, lang);

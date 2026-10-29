@@ -40,7 +40,7 @@ describe("modello d'interazione Alexa it-IT", () => {
 
   it("ci sono gli intenti di Amazon richiesti", () => {
     const names = lm.intents.map((i) => i.name);
-    for (const name of ["AMAZON.HelpIntent", "AMAZON.StopIntent", "AMAZON.CancelIntent", "AMAZON.FallbackIntent", "AMAZON.NavigateHomeIntent"]) expect(names).toContain(name);
+    for (const name of ["AMAZON.HelpIntent", "AMAZON.StopIntent", "AMAZON.CancelIntent", "AMAZON.FallbackIntent", "AMAZON.NavigateHomeIntent", "AMAZON.YesIntent", "AMAZON.NoIntent"]) expect(names).toContain(name);
   });
 
   it("STILE: un valore per ogni stile del catalogo, e ogni sinonimo riporta allo stesso stile", () => {

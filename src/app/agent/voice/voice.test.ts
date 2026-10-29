@@ -3,6 +3,7 @@ import { getDefaultDoughBalls, isFriedStyle, STYLES_DB } from "../../domain/pizz
 import { GLOSSARY_TERMS } from "../../data/glossary-data";
 import { callMcpTool, recognizeStyle, recognizeTerm, understand, voiceCatalog, voiceReply } from ".";
 import { recognizeBalls, recognizeHours, recognizeKitchen, wordToNumber } from "./understand";
+import { neededHours, quickestBlocked } from "./answer";
 import { speechify, spokenGrams, spokenHours, toSsml, wordCount } from "./speech";
 
 /* D-061: la voce attinge dall'MCP. Si controlla che capisca l'italiano
@@ -76,6 +77,12 @@ describe("riconoscimento", () => {
     expect(recognizeHours("in sei ore e mezza", it_)).toBe(6.5);
     expect(recognizeHours("ho un'ora", it_)).toBe(1);
     expect(recognizeHours("ho due giorni", it_)).toBe(48);
+    // Il mezzo vale anche per i giorni: «un giorno e mezzo» non è un giorno.
+    expect(recognizeHours("in un giorno e mezzo", it_)).toBe(36);
+    expect(recognizeHours("ho due giorni e mezzo", it_)).toBe(60);
+    expect(recognizeHours("in una giornata e mezza", it_)).toBe(36);
+    expect(recognizeHours("ho mezza giornata", it_)).toBe(12);
+    expect(recognizeHours("ho una giornata", it_)).toBe(24);
     expect(recognizeHours("ricetta napoletana", it_)).toBeUndefined();
     expect(recognizeKitchen("con il forno a legna", it_)).toEqual({ ovenType: "wood" });
     expect(recognizeKitchen("forno di casa a trecento gradi", it_)).toEqual({ ovenType: "home", ovenMaxTempC: 300 });
@@ -175,8 +182,34 @@ describe("risposte", () => {
   it("tempo che non basta: dice quante ore servono, arrotondate per eccesso", () => {
     const answer = siri("napoletana col forno a legna in quattro ore");
     const mcp = callMcpTool("generate_recipe", { style_id: "napoletana_stg", dough_balls: 4, oven_type: "wood", available_hours: 4, recipe_mode: "adapted" });
-    const needed = (mcp.blockers as { kind: string; needed_h?: number }[]).find((b) => b.needed_h)!.needed_h!;
-    expect(answer.speech).toContain(spokenHours(needed, it_, true));
+    expect(answer.speech).toContain(`servono ${spokenHours(neededHours(mcp.blockers)!, it_, true)}.`);
+  });
+
+  /* Con poche ore l'MCP dà due blocchi di tempo (finestra e lievitazione):
+     la voce dice UNA frase, con il minimo vero (il più alto), mai la finestra. */
+  it.each([
+    ["ricetta pinsa in un'ora", "pinsa_romana", "home", 1],
+    ["ricetta napoletana in due ore", "napoletana_stg", "home", 2],
+    ["ricetta focaccia in due ore", "focaccia_genovese", "home", 2],
+    ["ricetta napoletana per quattro panetti in un'ora con forno a legna", "napoletana_stg", "wood", 1],
+  ])("«%s»: una sola frase sul tempo, con il blocco più alto", (text, id, oven, hours) => {
+    const answer = alexa(text);
+    const mcp = callMcpTool("generate_recipe", { style_id: id, oven_type: oven, available_hours: hours, recipe_mode: "adapted", dough_balls: oven === "wood" ? 4 : getDefaultDoughBalls(STYLES_DB[id]) });
+    const blockers = mcp.blockers as { kind: string; needed_h?: number }[];
+    expect(blockers.filter((b) => b.kind === "time_window" || b.kind === "fermentation_too_short").length).toBeGreaterThan(1);
+    const max = Math.max(...blockers.filter((b) => b.needed_h).map((b) => b.needed_h!));
+    expect(answer.speech.match(/Il tempo non basta/g)).toHaveLength(1);
+    expect(answer.speech).toContain(`servono ${spokenHours(max, it_, true)}.`);
+    if (id === "pinsa_romana") expect(max).toBeGreaterThanOrEqual(25);
+    if (id === "napoletana_stg" && oven === "home") expect(answer.speech).toContain("servono 7 ore e mezza.");
+  });
+
+  it("«un giorno e mezzo»: la teglia romana si fa (36 ore, non 24)", () => {
+    const answer = siri("ricetta teglia romana in un giorno e mezzo");
+    const mcp = callMcpTool("generate_recipe", { style_id: "teglia_romana", oven_type: "home", available_hours: 36, recipe_mode: "adapted", dough_balls: getDefaultDoughBalls(STYLES_DB.teglia_romana) });
+    expect(mcp.outcome).not.toBe("not_feasible");
+    expect(answer.speech).not.toContain("non si può fare");
+    expect(answer.speech).toContain(`Farina ${spokenGrams((mcp.ingredients as { name: string; grams: number }[])[0].grams, it_)} grammi`);
   });
 
   it("avvertenze in breve; le verifiche di dispensa non lo sono (D-060)", () => {
@@ -196,9 +229,38 @@ describe("risposte", () => {
     expect(wordCount(answer.speech)).toBeLessThanOrEqual(60);
   });
 
-  it("consiglio senza stili fattibili: dice quanto tempo serve", () => {
-    const answer = siri("che pizza posso fare con due ore");
-    expect(answer.speech).toMatch(/non ci sta nessuna pizza: la più rapida, .+, chiede (circa )?\d+ ore/);
+  /* Nessuno stile fattibile: lo stile al forno che si sblocca con meno tempo,
+     con il suo minimo vero (il blocco di tempo più alto), come dice l'MCP. */
+  it.each([1, 2, 3, 6])("consiglio senza stili fattibili in %i ore: il più rapido al forno e il suo minimo vero", (hours) => {
+    const answer = siri(`che pizza posso fare con ${hours} ore`);
+    const all = callMcpTool("recommend_styles", { oven_type: "home", available_hours: hours, recipe_mode: "adapted", include_not_feasible: true, limit: 30 }).styles as { id: string; name: string; blockers?: { kind: string; needed_h?: number }[] }[];
+    const timeOnly = all
+      .filter((s) => !isFriedStyle(STYLES_DB[s.id]) && s.blockers?.length && s.blockers.every((b) => b.kind === "time_window" || b.kind === "fermentation_too_short"))
+      .map((s) => ({ s, h: neededHours(s.blockers)! }));
+    const best = timeOnly.reduce((a, b) => (b.h < a.h ? b : a));
+    // Davvero il più rapido: nessuno stile al forno chiede meno.
+    for (const { h } of timeOnly) expect(h).toBeGreaterThanOrEqual(best.h);
+    expect(answer.speech).toContain(`la più rapida al forno, ${best.s.name}, chiede ${spokenHours(best.h, it_, true)}.`);
+    expect(answer.speech).not.toMatch(/Montanara|[Ff]ritta/);
+  });
+
+  it("neededHours: il più alto tra finestra e lievitazione; quickestBlocked: al forno prima delle fritte", () => {
+    expect(neededHours([{ kind: "time_window", needed_h: 2.2 }, { kind: "fermentation_too_short", needed_h: 7.25 }, { kind: "oven_too_cold" }])).toBe(7.25);
+    expect(neededHours([{ kind: "oven_too_cold" }])).toBeUndefined();
+    const pick = quickestBlocked([
+      { id: "pizza_montanara", blockers: [{ kind: "fermentation_too_short", needed_h: 3 }] },
+      { id: "napoletana_stg", blockers: [{ kind: "oven_too_cold" }, { kind: "fermentation_too_short", needed_h: 4 }] },
+      { id: "focaccia_genovese", blockers: [{ kind: "time_window", needed_h: 2 }, { kind: "fermentation_too_short", needed_h: 9 }] },
+      { id: "greek_pan", blockers: [{ kind: "fermentation_too_short", needed_h: 6.25 }] },
+    ]);
+    expect(pick).toMatchObject({ style: { id: "greek_pan" }, hours: 6.25, baked: true });
+  });
+
+  it("dopo un consiglio Alexa non fa una domanda sì/no e ricorda lo stile consigliato", () => {
+    const answer = alexa("che pizza posso fare");
+    expect(answer.speech).not.toMatch(/Vuoi /);
+    expect(answer.speech).toMatch(/Per la ricetta dimmi lo stile, per esempio .+\.$/);
+    expect(answer.pending?.suggestion).toBe((answer.data?.styles as { style_id: string }[])[0].style_id);
   });
 
   it("ricetta senza stile: lo chiede; Alexa tiene aperta la sessione", () => {

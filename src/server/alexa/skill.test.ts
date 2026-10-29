@@ -72,9 +72,39 @@ describe("skill Alexa", () => {
   it("ConsigliaIntent: consiglio con le ore dette e domanda di seguito", () => {
     const r = handleAlexaEnvelope(intent("ConsigliaIntent", { ore: { value: "24" }, forno: { value: "di casa", id: "home" } }), BASE);
     expect(speech(r)).toContain("Ti consiglio");
-    expect(speech(r)).toContain("Vuoi la ricetta?");
+    expect(speech(r)).toContain("Per la ricetta dimmi lo stile");
     expect(r.response.shouldEndSession).toBe(false);
     expect(r.sessionAttributes).toMatchObject({ pending: "recipe", hours: 24, kitchen: { ovenType: "home" } });
+    expect(typeof r.sessionAttributes?.suggestion).toBe("string");
+  });
+
+  /* Certificazione: i tester rispondono «sì» o «no» anche a un invito che non
+     è una domanda sì/no. «Sì» dà la ricetta dello stile consigliato, «no» chiude. */
+  it("AMAZON.YesIntent dopo un consiglio: la ricetta del primo stile consigliato, con le stesse ore", () => {
+    const rec = handleAlexaEnvelope(intent("ConsigliaIntent", { ore: { value: "24" } }), BASE);
+    const style = rec.sessionAttributes?.suggestion as string;
+    const yes = handleAlexaEnvelope(intent("AMAZON.YesIntent", {}, rec.sessionAttributes), BASE);
+    expect(yes.response.card?.content).toContain(`${BASE}/recipe/${style}?mode=adapted`);
+    expect(speech(yes)).toMatch(/Farina \d+ grammi/);
+    expect(speech(yes)).not.toContain("Non ho capito");
+    expect(yes.response.shouldEndSession).toBe(true);
+  });
+
+  it("AMAZON.YesIntent dopo «Quale stile?»: lo richiede; senza nulla in sospeso: non ho capito", () => {
+    const ask = handleAlexaEnvelope(intent("RicettaIntent", { panetti: { value: "6" } }), BASE);
+    const yes = handleAlexaEnvelope(intent("AMAZON.YesIntent", {}, ask.sessionAttributes), BASE);
+    expect(speech(yes)).toContain("Quale stile?");
+    expect(yes.response.shouldEndSession).toBe(false);
+    expect(yes.sessionAttributes).toMatchObject({ pending: "recipe", balls: 6 });
+    const lone = handleAlexaEnvelope(intent("AMAZON.YesIntent"), BASE);
+    expect(speech(lone)).toContain("Non ho capito");
+  });
+
+  it("AMAZON.NoIntent: saluta e chiude", () => {
+    const rec = handleAlexaEnvelope(intent("ConsigliaIntent"), BASE);
+    const no = handleAlexaEnvelope(intent("AMAZON.NoIntent", {}, rec.sessionAttributes), BASE);
+    expect(speech(no)).toContain("A presto");
+    expect(no.response.shouldEndSession).toBe(true);
   });
 
   it("GlossarioIntent: definizione; termine sconosciuto: lo dice", () => {

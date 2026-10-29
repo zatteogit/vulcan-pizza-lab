@@ -24,7 +24,8 @@ export interface VoiceCatalog {
   numberWords: Record<string, number>;
   cues: { help: string[]; glossary: string[]; recommend: string[]; recipe: string[] };
   countNouns: string[];
-  hourWords: { hours: string[]; days: string[]; half: string[]; dayWords: string[] };
+  /** halfDay: «mezza giornata» (12 ore); dayWords: «un giorno» senza numero (24 ore). */
+  hourWords: { hours: string[]; days: string[]; half: string[]; halfDay: string[]; dayWords: string[] };
   say: {
     welcome: string;
     welcomeReprompt: string;
@@ -43,9 +44,10 @@ export interface VoiceCatalog {
     recommendFried: (names: string[]) => string;
     recommendScore: (name: string, score: number) => string;
     recommendNone: string;
-    recommendNeedsHours: (name: string, hours: string) => string;
+    recommendNeedsHours: (name: string, hours: string, baked: boolean) => string;
     recommendNeedsOven: (name: string, temp: number) => string;
-    recommendFollowUpAlexa: string;
+    /** Dopo un consiglio: non una domanda sì/no (Alexa), lo stile da dire. */
+    recommendFollowUpAlexa: (name: string) => string;
     recommendFollowUpSiri: (name: string) => string;
     recipeHead: (name: string, count: number, unit: readonly [string, string], grams: string) => string;
     flourWater: (flour: string, water: string) => string;

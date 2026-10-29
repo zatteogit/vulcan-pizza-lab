@@ -28,7 +28,7 @@ export interface VoiceAnswer {
   endSession: boolean;
   reprompt?: string;
   /** Alexa: richiesta di ricetta in attesa dello stile, o dopo un consiglio. */
-  pending?: { intent: "recipe"; balls?: number; hours?: number; kitchen: VoiceKitchen };
+  pending?: { intent: "recipe"; balls?: number; hours?: number; kitchen: VoiceKitchen; suggestion?: string };
   /** Per ?format=json: lo stile e l'esito, senza dati dell'utente. */
   data?: Record<string, unknown>;
 }
@@ -109,6 +109,30 @@ function bakedFirst(styles: Json[]): Json[] {
   return [...styles.filter((s) => !isFried(s)), ...styles.filter(isFried)];
 }
 
+/** Il tempo minimo che chiede uno stile non fattibile: il più alto tra i blocchi
+ *  di tempo dell'MCP (finestra di lavoro e lievitazione). La finestra da sola
+ *  non è il tempo della ricetta: dirla farebbe sentire un numero falso. */
+export function neededHours(blockers: Json[] | undefined): number | undefined {
+  const hours = (blockers ?? [])
+    .filter((b) => b.kind === "time_window" || b.kind === "fermentation_too_short")
+    .map((b) => Number(b.needed_h))
+    .filter((h) => Number.isFinite(h) && h > 0);
+  return hours.length ? Math.max(...hours) : undefined;
+}
+
+/** Nessuno stile fattibile: quello che si sblocca con meno tempo in più (solo
+ *  blocchi di tempo), al forno prima delle fritte (D-032); se nessuno si
+ *  sblocca col tempo, quello che chiede il forno meno caldo. */
+export function quickestBlocked(styles: Json[]): { style: Json; hours?: number; baked: boolean } | undefined {
+  const timeOnly = styles
+    .map((style) => ({ style, hours: neededHours(style.blockers), baked: !isFried(style) }))
+    .filter((c) => c.hours !== undefined && (c.style.blockers as Json[]).every((b) => b.kind === "time_window" || b.kind === "fermentation_too_short"));
+  const pool = timeOnly.some((c) => c.baked) ? timeOnly.filter((c) => c.baked) : timeOnly;
+  if (pool.length) return pool.reduce((best, c) => (c.hours! < best.hours! ? c : best));
+  const oven = bakedFirst(styles).find((s) => (s.blockers as Json[] | undefined)?.some((b) => b.kind === "oven_too_cold"));
+  return oven ? { style: oven, baked: !isFried(oven) } : undefined;
+}
+
 function finish(intent: VoiceIntent, sentences: string[], rest: Omit<VoiceAnswer, "intent" | "sentences" | "speech" | "ssml">): VoiceAnswer {
   const clean = sentences.map((s) => s.trim()).filter(Boolean);
   return { intent, sentences: clean, speech: clean.join(" "), ssml: toSsml(clean), ...rest };
@@ -127,16 +151,15 @@ function answerRecommend(query: VoiceQuery, opts: VoiceOptions): VoiceAnswer {
   const baked = all.filter((s) => !isFried(s));
   const styles = (baked.length ? baked : all).slice(0, 3);
   const friedNames = baked.length ? all.filter(isFried).slice(0, 1).map((s) => spokenStyleName(s.id, s.name, catalog)) : [];
-  const pending = { intent: "recipe" as const, hours: query.hours, kitchen: query.kitchen };
+  const pending = { intent: "recipe" as const, hours: query.hours, kitchen: query.kitchen, suggestion: styles[0]?.id as string | undefined };
   const url = `${baseUrl}/explore`;
 
   if (!styles.length) {
-    const [blocked] = (callWithKitchen("recommend_styles", { limit: 1, include_not_feasible: true }, query).styles ?? []) as Json[];
+    const quickest = quickestBlocked((callWithKitchen("recommend_styles", { limit: 30, include_not_feasible: true }, query).styles ?? []) as Json[]);
     const sentences = [intro];
-    const time = blocked?.blockers?.find((b: Json) => b.kind === "time_window" || b.kind === "fermentation_too_short");
-    const oven = blocked?.blockers?.find((b: Json) => b.kind === "oven_too_cold");
-    const name = blocked ? spokenStyleName(blocked.id, blocked.name, catalog) : "";
-    if (time) sentences.push(say.recommendNeedsHours(name, spokenHours(time.needed_h, catalog, true)));
+    const oven = quickest?.style.blockers?.find((b: Json) => b.kind === "oven_too_cold");
+    const name = quickest ? spokenStyleName(quickest.style.id, quickest.style.name, catalog) : "";
+    if (quickest?.hours !== undefined) sentences.push(say.recommendNeedsHours(name, spokenHours(quickest.hours, catalog, true), quickest.baked));
     else if (oven) sentences.push(say.recommendNeedsOven(name, oven.style_min_c));
     else sentences.push(say.recommendNone);
     return finish("recommend", sentences, { url, title: say.cardRecommend, endSession: true, data: { styles: [] } });
@@ -149,7 +172,7 @@ function answerRecommend(query: VoiceQuery, opts: VoiceOptions): VoiceAnswer {
     friedNames.length ? say.recommendFried(friedNames) : "",
     say.recommendScore(names[0], styles[0].compatibility),
     caveatSentence(styles[0].recipe?.scores?.warnings, catalog) ?? "",
-    channel === "alexa" ? say.recommendFollowUpAlexa : say.recommendFollowUpSiri(names[0]),
+    channel === "alexa" ? say.recommendFollowUpAlexa(names[0]) : say.recommendFollowUpSiri(names[0]),
   ];
   return finish("recommend", sentences, {
     url,
@@ -184,8 +207,10 @@ function answerRecipe(query: VoiceQuery, opts: VoiceOptions): VoiceAnswer {
     const sentences = [intro, say.notFeasible(name)];
     for (const b of (r.blockers ?? []) as Json[]) {
       if (b.kind === "oven_too_cold") sentences.push(say.blockerOven(b.oven_c, b.style_min_c));
-      else if (b.kind === "time_window" || b.kind === "fermentation_too_short") sentences.push(say.blockerTime(spokenHours(b.needed_h, catalog, true)));
     }
+    // Una sola frase sul tempo, con il minimo vero (il blocco di tempo più alto).
+    const hours = neededHours(r.blockers);
+    if (hours !== undefined) sentences.push(say.blockerTime(spokenHours(hours, catalog, true)));
     if (sentences.length === 2) sentences.push(say.blockerOther);
     // La guida MCP: niente ricetta da seguire, alternative da recommend_styles.
     const alternatives = bakedFirst((callWithKitchen("recommend_styles", { limit: 6 }, query).styles ?? []) as Json[])
