@@ -9,7 +9,7 @@ import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys
 import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
 import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
-import { Suspense, lazy, useCallback,useEffect,useMemo,useRef,useState } from "react";
+import { Suspense, lazy, useCallback,useEffect,useId,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
@@ -47,7 +47,8 @@ isHeatProfileCompatible,
 } from "../data/equipment-data";
 import { OVEN_MODELS, getOvenModel, type OvenModel } from "../data/oven-models";
 import { AboutLinks, neutralityText } from "../components/shared/about-links";
-import { nextSavedOven, profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
+import { profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
+import { planFtuWrites } from "../use-cases/ftu-save";
 import { hasChosenSkill } from "../hooks/use-profile-defaults";
 
 /* FW-07 (S16-A-02): la scala del profilo arriva al forno più caldo del catalogo. */
@@ -728,6 +729,10 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const fmt = createFormatter(cms.ui, bcp47, getPreferredUnitSystem()); // FW-14: «Max 250 °C», non «250°C»
   const p = cms.profile;
   const [step, setStep] = useState(0);
+  /* G5-WP-01: il passo più alto confermato con «Avanti»; decide che cosa
+     salva «Salta» (planFtuWrites). */
+  const [confirmedUpTo, setConfirmedUpTo] = useState(-1);
+  const specialFloursId = useId();
   /* Si parte dal forno già salvato (anche quello preimpostato da un'edizione
      partner): «Avanti» non deve riportarlo al forno di casa. */
   const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string; origin?: "edition" }>(OVEN_STORAGE_KEY));
@@ -765,35 +770,27 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const toggleArrayItem = (arr: string[], id: string): string[] =>
     arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
 
-  const handleFinish = useCallback(() => {
-    // Il modello resta solo se il forno non è cambiato; confermare il forno
-    // preimpostato dall'edizione lo rende tuo (FW-07, S18-A-01).
-    saveJson(OVEN_STORAGE_KEY, savedOven?.ovenType === ovenType ? nextSavedOven(savedOven, ovenType) : { ovenType, maxTemp: ovenTemp });
-    if (skillLevel !== null) saveJson(SKILL_STORAGE_KEY, skillLevel);
-    if (offerTechnical && ftuTechnical) setDetailLevel("technical");
-    // Pantry: salviamo solo se valorizzata
-    if (ftuFlours.length > 0 || ftuYeasts.length > 0) {
-      saveJson(PANTRY_STORAGE_KEY, { ...(loadJson<Record<string, unknown>>(PANTRY_STORAGE_KEY) ?? {}), flours: ftuFlours, yeasts: ftuYeasts });
-    }
-    try {
-      localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
-    } catch { /* */ }
-    onComplete();
-  }, [savedOven, ovenType, ovenTemp, skillLevel, offerTechnical, ftuTechnical, setDetailLevel, ftuFlours, ftuYeasts, onComplete]);
-
-  /* Audit n. 33 / D-038: il percorso si può saltare. Forno e livello restano
-     «non scelti» (niente valori di default salvati come se li avessi scelti
-     tu): li chiedono Crea e il profilo quando servono. */
-  const handleSkip = useCallback(() => {
+  /* «Vai a Crea» salva tutto; «Salta» salva solo ciò che hai già confermato
+     (G5-WP-01). Al primo passo «Salta» non salva nulla: forno e livello
+     restano «non scelti» (audit n. 33 / D-038). Il modello del forno resta
+     solo se il forno non è cambiato (FW-07, S18-A-01). */
+  const complete = useCallback((mode: "finish" | "skip") => {
+    const writes = planFtuWrites({ confirmedUpTo, mode, savedOven, ovenType, ovenTemp, skillLevel, flours: ftuFlours, yeasts: ftuYeasts });
+    if (writes.oven) saveJson(OVEN_STORAGE_KEY, writes.oven);
+    if (writes.skill !== undefined) saveJson(SKILL_STORAGE_KEY, writes.skill);
+    if (writes.pantry) saveJson(PANTRY_STORAGE_KEY, { ...(loadJson<Record<string, unknown>>(PANTRY_STORAGE_KEY) ?? {}), ...writes.pantry });
     /* FW-08: un «sì» esplicito ai dettagli tecnici vale anche se salti. */
     if (offerTechnical && ftuTechnical) setDetailLevel("technical");
     try {
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [offerTechnical, ftuTechnical, setDetailLevel, onComplete]);
+  }, [confirmedUpTo, savedOven, ovenType, ovenTemp, skillLevel, ftuFlours, ftuYeasts, offerTechnical, ftuTechnical, setDetailLevel, onComplete]);
+  const handleFinish = useCallback(() => complete("finish"), [complete]);
+  const handleSkip = useCallback(() => complete("skip"), [complete]);
 
   const handleNext = useCallback(() => {
+    setConfirmedUpTo((c) => Math.max(c, step));
     if (step < lastStep) setStep((s) => s + 1);
     else handleFinish();
   }, [step, lastStep, handleFinish]);
@@ -1014,9 +1011,11 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                   <GlossaryTermLinks termIds={["flour_type", "w_alveograph", "manitoba", "semola_rimacinata"]} />
                   {/* Accordion farine speciali */}
                   <button
+                    type="button"
                     onClick={() => setShowSpecialFlours((v) => !v)}
                     className="type-data-sm profile-ftu__pantry-toggle"
                     aria-expanded={showSpecialFlours}
+                    aria-controls={specialFloursId}
                   >
                     <ChevronDown
                       size={14}
@@ -1025,7 +1024,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                     {p.specialFloursOnboarding}
                   </button>
                   {showSpecialFlours && (
-                    <div className="profile-ftu__pantry-chips profile-ftu__pantry-chips--nested">
+                    <div id={specialFloursId} className="profile-ftu__pantry-chips profile-ftu__pantry-chips--nested">
                       {FTU_FLOURS_SPECIAL.map((f) => (
                         <Chip
                           key={f.id}
@@ -1140,9 +1139,13 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step < lastStep ? p.ftuNext : p.ftuStart}
             {step < lastStep ? <ChevronRight size={16} /> : <Sparkles size={16} />}
           </CtaButton>
-          <button type="button" onClick={handleSkip} className="profile-ftu__nav-skip">
-            {uiMessage("pages.profile.ftu-skip")}
-          </button>
+          {/* Nel congedo «Salta» sembrava uguale a «Vai a Crea»: non c'è più.
+              Dopo il primo passo dice che salta solo il resto. */}
+          {step < lastStep && (
+            <button type="button" onClick={handleSkip} className="profile-ftu__nav-skip">
+              {uiMessage(step === 0 ? "pages.profile.ftu-skip" : "pages.profile.ftu-skip-rest")}
+            </button>
+          )}
         </div>
       </motion.div>
     </main>
@@ -1517,7 +1520,9 @@ export function ProfilePage() {
         size="lg"
         /* D-037: chiudendo si torna da dove si è arrivati (es. Crea). */
         onClick={() => (window.history.state?.idx > 0 ? navigate(-1) : navigate("/"))}
-        aria-label={cms.ui.close}
+        /* G5-WP-01 (S15-B-14): durante l'onboarding la X non lo chiude per
+           sempre, e lo dice. */
+        aria-label={showFtu ? uiMessage("pages.profile.ftu-close-later") : cms.ui.close}
       >
         <X size={20} aria-hidden="true" />
       </IconButton>

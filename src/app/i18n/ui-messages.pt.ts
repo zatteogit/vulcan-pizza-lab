@@ -474,6 +474,8 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433": "Estático clássico: equilíbrio entre base e calor de cima.",
   "pages.profile.tutto-pronto-0d7ff4fd": "Tudo pronto!",
   "pages.profile.ftu-skip": "Pular",
+  "pages.profile.ftu-skip-rest": "Pular o resto",
+  "pages.profile.ftu-close-later": "Fechar: voltaremos a perguntar mais tarde",
   "pages.profile.utensili-7d6ac61b": "utensílios ",
   "pages.profile.ventilato-c306cb96": "Ventilado",
   "pages.recipe.applyCorrections": "Aplicar as correções",

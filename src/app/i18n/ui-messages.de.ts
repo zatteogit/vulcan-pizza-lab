@@ -474,6 +474,8 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433": "Klassisch statisch: Gleichgewicht zwischen Boden und Oberhitze.",
   "pages.profile.tutto-pronto-0d7ff4fd": "Alles bereit!",
   "pages.profile.ftu-skip": "Überspringen",
+  "pages.profile.ftu-skip-rest": "Rest überspringen",
+  "pages.profile.ftu-close-later": "Schließen: wir fragen später noch einmal",
   "pages.profile.utensili-7d6ac61b": "Werkzeuge ",
   "pages.profile.ventilato-c306cb96": "Umluft",
   "pages.recipe.applyCorrections": "Korrekturen anwenden",

@@ -474,6 +474,8 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433": "定番の上下火：底と上面の熱のバランス。",
   "pages.profile.tutto-pronto-0d7ff4fd": "準備完了！",
   "pages.profile.ftu-skip": "スキップ",
+  "pages.profile.ftu-skip-rest": "残りをスキップ",
+  "pages.profile.ftu-close-later": "閉じる：あとでもう一度お聞きします",
   "pages.profile.utensili-7d6ac61b": "個の道具",
   "pages.profile.ventilato-c306cb96": "コンベクション",
   "pages.recipe.applyCorrections": "補正を適用",

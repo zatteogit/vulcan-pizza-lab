@@ -474,6 +474,8 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433": "Classic conventional: balanced base and top heat.",
   "pages.profile.tutto-pronto-0d7ff4fd": "All set!",
   "pages.profile.ftu-skip": "Skip",
+  "pages.profile.ftu-skip-rest": "Skip the rest",
+  "pages.profile.ftu-close-later": "Close: we'll ask again later",
   "pages.profile.utensili-7d6ac61b": "tools ",
   "pages.profile.ventilato-c306cb96": "Fan-assisted",
   "pages.recipe.applyCorrections": "Apply the corrections",

@@ -474,6 +474,8 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433": "Statique classique : équilibre entre sole et voûte.",
   "pages.profile.tutto-pronto-0d7ff4fd": "Tout est prêt !",
   "pages.profile.ftu-skip": "Passer",
+  "pages.profile.ftu-skip-rest": "Passer la suite",
+  "pages.profile.ftu-close-later": "Fermer : nous vous le redemanderons plus tard",
   "pages.profile.utensili-7d6ac61b": "ustensiles ",
   "pages.profile.ventilato-c306cb96": "Chaleur tournante",
   "pages.recipe.applyCorrections": "Appliquer les corrections",
