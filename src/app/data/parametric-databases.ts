@@ -86,29 +86,39 @@ const DOUGH_BASE_DB: DoughBaseParams[] = [
 ];
 
 /* ═══ 4. PARAMETRI SALE PER STILE ═══ */
+/* FW-11 (S03-A-06): tipo e momento del sale sono id; le etichette nelle
+ * sette lingue stanno nel CMS (parametricText.saltType / saltTiming). */
+export type SaltTypeId = "fine_sea" | "fine" | "kosher" | "kosher_or_fine" | "coarse_and_fine";
+export type SaltTimingId =
+  | "with_flour"
+  | "after_flour_water"
+  | "after_flour_water_5min"
+  | "after_hydration"
+  | "fine_in_dough_coarse_on_top";
+
 interface SaltParams {
   styleId: string;
   saltPct: number;
-  saltType: string;
-  additionTiming: string;
+  saltType: SaltTypeId;
+  additionTiming: SaltTimingId;
   note: string;
 }
 
 const SALT_DB: SaltParams[] = [
-  { styleId: "napoletana_stg", saltPct: 2.8, saltType: "Marino fino", additionTiming: "Dopo farina+acqua (5 min mixing)", note: "Disciplinare STG: 40-60 g di sale per litro d'acqua. Aggiungere dopo idratazione iniziale." },
-  { styleId: "napoletana_canotto", saltPct: 2.5, saltType: "Marino fino", additionTiming: "Dopo farina+acqua", note: "Leggermente meno per non frenare la lievitazione del canotto." },
-  { styleId: "teglia_romana", saltPct: 2.5, saltType: "Fino", additionTiming: "Con farina", note: "Sale standard. Puoi aggiungerlo all'inizio senza problemi." },
-  { styleId: "tonda_romana", saltPct: 2.5, saltType: "Fino", additionTiming: "Con farina", note: "Standard romano." },
-  { styleId: "pinsa_romana", saltPct: 1.8, saltType: "Fino", additionTiming: "Dopo idratazione", note: "Mix di farine richiede sale dopo per assorbimento corretto." },
-  { styleId: "pala_romana", saltPct: 2.5, saltType: "Fino", additionTiming: "Dopo farina+acqua", note: "Standard." },
-  { styleId: "new_york", saltPct: 2, saltType: "Kosher/Fino", additionTiming: "Con farina", note: "Tradizione americana: sale meno dominante." },
-  { styleId: "detroit", saltPct: 2, saltType: "Kosher", additionTiming: "Con farina", note: "Sale ridotto perché il formaggio ai bordi aggiunge sapidità." },
-  { styleId: "chicago_deep", saltPct: 2, saltType: "Fino", additionTiming: "Con farina", note: "Poco sale nell'impasto: il ripieno è già molto saporito." },
-  { styleId: "grandma_style", saltPct: 2, saltType: "Fino", additionTiming: "Con farina", note: "Standard americano." },
-  { styleId: "focaccia_genovese", saltPct: 2.5, saltType: "Grosso + fino", additionTiming: "Fino nell'impasto + grosso in superficie", note: "Sale grosso in salamoia superficiale (acqua+olio+sale)." },
-  { styleId: "sfincione", saltPct: 2.5, saltType: "Fino", additionTiming: "Con farina", note: "Standard siciliano." },
-  { styleId: "focaccia_recco", saltPct: 2, saltType: "Fino", additionTiming: "Con farina", note: "Sale ridotto: lo stracchino è già salato." },
-  { styleId: "padellino_torino", saltPct: 2.5, saltType: "Fino", additionTiming: "Con farina", note: "Standard piemontese." },
+  { styleId: "napoletana_stg", saltPct: 2.8, saltType: "fine_sea", additionTiming: "after_flour_water_5min", note: "Disciplinare STG: 40-60 g di sale per litro d'acqua. Aggiungere dopo idratazione iniziale." },
+  { styleId: "napoletana_canotto", saltPct: 2.5, saltType: "fine_sea", additionTiming: "after_flour_water", note: "Leggermente meno per non frenare la lievitazione del canotto." },
+  { styleId: "teglia_romana", saltPct: 2.5, saltType: "fine", additionTiming: "with_flour", note: "Sale standard. Puoi aggiungerlo all'inizio senza problemi." },
+  { styleId: "tonda_romana", saltPct: 2.5, saltType: "fine", additionTiming: "with_flour", note: "Standard romano." },
+  { styleId: "pinsa_romana", saltPct: 1.8, saltType: "fine", additionTiming: "after_hydration", note: "Mix di farine richiede sale dopo per assorbimento corretto." },
+  { styleId: "pala_romana", saltPct: 2.5, saltType: "fine", additionTiming: "after_flour_water", note: "Standard." },
+  { styleId: "new_york", saltPct: 2, saltType: "kosher_or_fine", additionTiming: "with_flour", note: "Tradizione americana: sale meno dominante." },
+  { styleId: "detroit", saltPct: 2, saltType: "kosher", additionTiming: "with_flour", note: "Sale ridotto perché il formaggio ai bordi aggiunge sapidità." },
+  { styleId: "chicago_deep", saltPct: 2, saltType: "fine", additionTiming: "with_flour", note: "Poco sale nell'impasto: il ripieno è già molto saporito." },
+  { styleId: "grandma_style", saltPct: 2, saltType: "fine", additionTiming: "with_flour", note: "Standard americano." },
+  { styleId: "focaccia_genovese", saltPct: 2.5, saltType: "coarse_and_fine", additionTiming: "fine_in_dough_coarse_on_top", note: "Sale grosso in salamoia superficiale (acqua+olio+sale)." },
+  { styleId: "sfincione", saltPct: 2.5, saltType: "fine", additionTiming: "with_flour", note: "Standard siciliano." },
+  { styleId: "focaccia_recco", saltPct: 2, saltType: "fine", additionTiming: "with_flour", note: "Sale ridotto: lo stracchino è già salato." },
+  { styleId: "padellino_torino", saltPct: 2.5, saltType: "fine", additionTiming: "with_flour", note: "Standard piemontese." },
 ];
 
 /* ═══ 5. PARAMETRI ACQUA ═══ */
@@ -687,8 +697,8 @@ function deriveSalt(styleId: string): SaltParams | undefined {
     ? {
         styleId,
         saltPct: seed.saltPct,
-        saltType: "Fino",
-        additionTiming: seed.hydrationCenter >= 75 ? "Dopo idratazione" : "Con farina",
+        saltType: "fine",
+        additionTiming: seed.hydrationCenter >= 75 ? "after_hydration" : "with_flour",
         note: `Derivato da STYLES_DB per ${seed.name}.`,
       }
     : undefined;

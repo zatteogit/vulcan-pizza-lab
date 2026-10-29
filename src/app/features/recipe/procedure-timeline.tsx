@@ -14,6 +14,8 @@ import { procedureTimelineRows } from "./procedure-step-identity";
 import type {
   GeneratedRecipe,
   getServingUnit,
+  OvenType,
+  TimelineStep,
 } from "../../domain/pizza-engine";
 import { NerdAuraBlock } from "./recipe-output-bits";
 import {
@@ -21,6 +23,7 @@ import {
   displayStepTime,
   fmtDuration,
   formatCompVal,
+  bakeSecondsPerRound,
   getParametricTip,
   type ParametricTipContext,
   localizeStep,
@@ -34,6 +37,8 @@ type Compensation = NonNullable<GeneratedRecipe["science"]>["compensations"][num
 
 interface ProcedureTimelineProps {
   recipe: GeneratedRecipe;
+  /** FW-07: forno della cucina effettiva, per la regola delle rotazioni. */
+  ovenType?: OvenType;
   isNerd: boolean;
   compensations: Compensation[];
   calendarReference: Date;
@@ -49,6 +54,7 @@ interface ProcedureTimelineProps {
 
 export function ProcedureTimeline({
   recipe,
+  ovenType,
   isNerd,
   compensations,
   calendarReference,
@@ -65,13 +71,15 @@ export function ProcedureTimeline({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
   const filled = recipe.timeline.some(step => resolveStepVisual(step) === "fill_internal");
-  const tipContext: ParametricTipContext = {
+  // FW-07: il consiglio di cottura parla del forno della ricetta, passo per passo.
+  const tipContext = (step: TimelineStep): ParametricTipContext => ({
     ovenTempC: recipe.oven_temp_c,
-    cookSec: recipe.cook_time_sec,
-    referenceMinTempC: recipe.style.baking.temp_c_range[0],
+    cookSec: step.id === "bake" ? bakeSecondsPerRound(step, recipe.cook_time_sec) : recipe.cook_time_sec,
     ovenTempLabel: fmt.celsius(recipe.oven_temp_c),
     referenceTempLabel: fmt.celsius(recipe.style.baking.temp_c_ideal),
-  };
+    ovenType,
+    frying: step.variant === "fry",
+  });
   return (
     <>
       {/* ── Procedure / Timeline with inline tips ── */}
@@ -119,8 +127,9 @@ export function ProcedureTimeline({
 
         {/* Steps with inline tips */}
         <div className="procedure-timeline-spine">
-          <div className="procedure-timeline-spine__rail" />
-          <div className="procedure-timeline-list">
+          <div className="procedure-timeline-spine__rail" aria-hidden="true" />
+          {/* FW-12 (S09-B-09): elenco ordinato, un titolo h3 per passo. */}
+          <ol className="procedure-timeline-list">
             {procedureTimelineRows(recipe.timeline).map(({ step, phase, ordinal, key }, i) => {
               const isFirst = i === 0;
               const isLast = i === recipe.timeline.length - 1;
@@ -148,7 +157,7 @@ export function ProcedureTimeline({
                   ? localizedStep.tip.nerd
                   : localizedStep.tip.beginner
                 : null;
-              const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext);
+              const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext(step), cms.parametricText);
               const trouble = getStepTroubleshooting(step, { unleavened: !!recipe.style.dough.unleavened, filled });
               const stepFooter = <>
                 {step.duration_minutes > 0 && (
@@ -180,7 +189,7 @@ export function ProcedureTimeline({
                 />
               </>;
               return (
-                <motion.div
+                <motion.li
                   key={key}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -221,9 +230,9 @@ export function ProcedureTimeline({
                           : step.timing_label}
                       </span>
                     </div>
-                    <span className="procedure-timeline-step__title">
+                    <h3 className="procedure-timeline-step__title">
                       {phase ? assemblyTitle : localizedStep.title}
-                    </span>
+                    </h3>
                     {phase ? (
                       <div className="procedure-timeline-step__topping">
                         <ToppingSection mode="timeline" recipe={recipe} activeTopping={activeTopping} toppingChoices={toppingChoices} allToppingChoices={allToppingChoices} servingUnit={servingUnit} onSelectTopping={onSelectTopping}>
@@ -242,10 +251,10 @@ export function ProcedureTimeline({
                       </>
                     )}
                   </div>
-                </motion.div>
+                </motion.li>
               );
             })}
-          </div>
+          </ol>
         </div>
       </div>
     </>

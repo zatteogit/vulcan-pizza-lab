@@ -5,9 +5,10 @@ import { RecipeChanges } from "./recipe-changes";
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
-import { ArrowUpRight, Bookmark, BookmarkCheck, ChevronDown, Info, Sparkles, TriangleAlert, WandSparkles } from "lucide-react";
+import { ArrowUpRight, Bookmark, BookmarkCheck, ChevronDown, Droplets, Info, Sparkles, TriangleAlert, WandSparkles } from "lucide-react";
 import { SCORE_DIMENSIONS, type GeneratedRecipe, type RecipeScores, type ScoreDimensionKey, type UserConstraints } from "../../domain/pizza-engine";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
+import { summarizeVerdict } from "../../domain/verdict-summary";
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
@@ -15,6 +16,9 @@ import { createFormatter, t } from "../cms/i18n";
 import { uiMessage } from "../../i18n/ui-messages";
 
 type RecipeMatchMode = "canonical" | "adapted" | "lab";
+
+/** FW-10: ancora del blocco compatibilità (il «Perché» sotto il titolo ci porta qui). */
+export const RECIPE_MATCH_ID = "recipe-match";
 
 /** Icona cuore per stato di match — 5 stati distinti (audit role-play giugno 2026). */
 type MatchIconKey = "handshake" | "heart" | "pulse" | "crack" | "off";
@@ -195,12 +199,22 @@ export function RecipeMatchCard({
     : detailsLabel;
   const detailsToggleRef = useRef<HTMLButtonElement>(null);
   const ovenGap = idealTemp - ovenTemp;
+  /* FW-10: un'unica lettura dell'esito per card, dettagli e avvisi. */
+  const summary = verdictRecipe ? summarizeVerdict(verdictRecipe.verdict, verdictRecipe.optional_aids) : null;
+  const ovenBlocker = summary?.primary?.kind === "oven_too_cold" ? summary.primary
+    : summary?.secondary.find((b) => b.kind === "oven_too_cold");
+  const blockedOvenMin = ovenBlocker?.kind === "oven_too_cold" ? ovenBlocker.style_min_c : null;
   const ovenStatus =
     minTemp < 200 ? cms.ui.statOil : ovenGap <= 0
       ? cms.cooking.ovenOptimal
       : ovenTemp >= minTemp
         ? cms.cooking.ovenLimited
         : cms.cooking.ovenNeedsAdaptation;
+  /* Con un forno che blocca la ricetta «Richiede adattamento» contraddiceva
+     «Così non è fattibile»: si dice il blocco, con minimo e ideale. */
+  const ovenLine = blockedOvenMin !== null
+    ? uiMessage("verdict.ovenBlocked", [fmt.celsius(ovenTemp), fmt.celsius(blockedOvenMin), fmt.celsius(idealTemp)])
+    : `${ovenStatus}: ${fmt.celsius(ovenTemp)}${ovenGap > 0 ? ` · ${cms.ui.statIdeal} ${fmt.celsius(idealTemp)}` : ""}`;
 
   // Audit role-play giugno 2026: per gli stili ad alta temperatura sotto il
   // minimo, il motore emette un warning netto ("non otterrai una vera X").
@@ -320,6 +334,11 @@ export function RecipeMatchCard({
   if (verdictRecipe && headroom < 2) headroomLine = null;
   // The affinity icon describes the score; bookmarks describe saving.
   const notFeasible = verdictRecipe?.verdict.outcome === "not_feasible";
+  const showScoreLimit = summary?.showScoreLimit ?? true;
+  /* Nei dettagli la riga del forno dice già temperatura e ideale; l'avviso
+     d'idratazione è già al livello 1: non si ripetono. */
+  const detailAdaptations = (summary?.adaptations ?? []).filter((m) =>
+    m !== summary?.skillWarning && m.key !== "feas.ovenSuboptimal" && m.key !== "feas.ovenTooCold");
   const presentationState = verdictRecipe ? recipePresentationState(verdictRecipe) : null;
   const statusLabel = notFeasible ? cms.ui.verdictTitle : presentationState === "check"
       ? engineMsgTexts([{key:"card.toVerify",fallback:"Da verificare"}],cms,bcp47)[0]
@@ -338,6 +357,7 @@ export function RecipeMatchCard({
       layout
       data-region="section"
       data-attention={tone.low || notFeasible ? "warning" : undefined}
+      id={RECIPE_MATCH_ID}
       className={`match-card${notFeasible ? " match-card--blocked" : ""} ${className}`}
       /* U-10 (F29): il nome lo porta già l'aside che la contiene */
     >
@@ -392,12 +412,12 @@ export function RecipeMatchCard({
 
           </div>
           <div className="match-card__context">
-            {scores.global_calculation?.limited_by === "authenticity" && (
+            {showScoreLimit && scores.global_calculation?.limited_by === "authenticity" && (
               <p className="match-notice match-notice--limit">
                 {t(cms.ui.scoreLimitedAuthenticity, { score: fmt.number(scores.authenticity) })}
               </p>
             )}
-            {scores.global_calculation?.limited_by === "feasibility" && (
+            {showScoreLimit && scores.global_calculation?.limited_by === "feasibility" && (
               <p className="match-notice match-notice--limit">{cms.ui.scoreLimitedFeasibility}</p>
             )}
             {notFeasible && verdictRecipe && verdictConstraints && (
@@ -410,6 +430,14 @@ export function RecipeMatchCard({
               />
             )}
             {!notFeasible && verdictRecipe && <RecipeConditionChips recipe={verdictRecipe} compact />}
+            {/* FW-10 (S07-A-06): l'idratazione alta per chi comincia è ciò che fa
+                fallire la pizza: la chip la dice al livello 1, qui l'azione. */}
+            {summary?.skillWarning && onPersonalize && (
+              <button type="button" className="match-notice__action" onClick={onPersonalize}>
+                <Droplets size={14} aria-hidden="true" />
+                {uiMessage("verdict.lowerHydration")}
+              </button>
+            )}
             {!notFeasible && (verdictRecipe?.dietary_warnings ?? []).map((warning, i) => (
               <p key={`${warning.filterId}-${i}`} className="match-notice match-notice--warn">
                 {engineMsgTexts([warning.message], cms, bcp47)[0]}
@@ -522,8 +550,7 @@ export function RecipeMatchCard({
                 />
               )}
               <span className="type-numeric match-oven__text">
-                {ovenStatus}: {fmt.celsius(ovenTemp)}
-                {ovenGap > 0 ? ` · ${cms.ui.statIdeal} ${fmt.celsius(idealTemp)}` : ""}
+                {ovenLine}
               </span>
             </div>
 
@@ -632,13 +659,15 @@ export function RecipeMatchCard({
               </p>
             )}
 
-            {verdictRecipe && verdictRecipe.verdict.adaptations.length > 0 && (
+            {/* FW-10: senza le ripetizioni del blocco e senza «Se hai…» quando
+                la ricetta non si può fare (summarizeVerdict). */}
+            {detailAdaptations.length > 0 && (
               <ul className="recipe-verdict__reasons">
-                {engineMsgTexts(verdictRecipe.verdict.adaptations, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}
+                {engineMsgTexts(detailAdaptations, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}
               </ul>
             )}
-            {verdictRecipe?.optional_aids && verdictRecipe.optional_aids.length > 0 && (
-              <ul className="recipe-verdict__reasons">{engineMsgTexts(verdictRecipe.optional_aids, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}</ul>
+            {summary && summary.optionalAids.length > 0 && (
+              <ul className="recipe-verdict__reasons">{engineMsgTexts(summary.optionalAids, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}</ul>
             )}
             {originalRecipe && verdictRecipe && mode !== "canonical" && (
               <RecipeChanges from={originalRecipe} to={verdictRecipe} mode="included" />

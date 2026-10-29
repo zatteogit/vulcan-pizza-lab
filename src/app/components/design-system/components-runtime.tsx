@@ -5,6 +5,8 @@ import {
   Carousel,
   ConfirmDialog,
   CtaButton,
+  Disclosure,
+  EmptyState,
   FilterChip,
   Heading,
   IconButton,
@@ -95,6 +97,25 @@ function RuntimeComponentContractSpec() {
         </div>
       </section>
 
+      {/* FW-03: ds/Disclosure nelle due varianti */}
+      <section className="surface-card p-5 flex flex-col gap-4" aria-label={showcaseMessage("components.design-system.components-runtime.disclosure-fw03")}>
+        <Heading level="sm">{showcaseMessage("components.design-system.components-runtime.disclosure-fw03")}</Heading>
+        <Disclosure
+          variant="card"
+          summary={showcaseMessage("components.design-system.components-runtime.disclosure-fw03-card")}
+          meta={showcaseMessage("components.design-system.components-runtime.disclosure-fw03-meta")}
+        >
+          <p className="type-body">{showcaseMessage("components.design-system.components-runtime.disclosure-fw03-body")}</p>
+        </Disclosure>
+        <Disclosure
+          variant="inline"
+          headingLevel={3}
+          summary={showcaseMessage("components.design-system.components-runtime.disclosure-fw03-inline")}
+        >
+          <p className="type-body">{showcaseMessage("components.design-system.components-runtime.disclosure-fw03-body")}</p>
+        </Disclosure>
+      </section>
+
       <section className="surface-card p-5 flex flex-col gap-4" aria-label={showcaseMessage("components.design-system.components-runtime.composizione-e-carousel-3bf9f777")}>
         <Heading level="sm">{showcaseMessage("components.design-system.components-runtime.composizione-e-carousel-3bf9f777")}</Heading>
         <Carousel
@@ -108,6 +129,27 @@ function RuntimeComponentContractSpec() {
             </Surface>
           ))}
         </Carousel>
+      </section>
+
+      {/* FW-09: stato vuoto con motivo e via d'uscita. */}
+      <section className="surface-card p-5 flex flex-col gap-4" aria-label={showcaseMessage("components.design-system.components-runtime.fw09-empty-state")}>
+        <Heading level="sm">{showcaseMessage("components.design-system.components-runtime.fw09-empty-state")}</Heading>
+        <EmptyState
+          title={showcaseMessage("components.design-system.components-runtime.fw09-empty-title")}
+          reason={showcaseMessage("components.design-system.components-runtime.fw09-empty-reason")}
+          actions={[{ label: showcaseMessage("components.design-system.components-runtime.fw09-empty-action"), onClick: () => setFilter("all") }]}
+          headingLevel={3}
+        />
+        <EmptyState
+          tone="warning"
+          title={showcaseMessage("components.design-system.components-runtime.fw09-empty-title")}
+          reason={showcaseMessage("components.design-system.components-runtime.fw09-empty-reason")}
+          actions={[
+            { label: showcaseMessage("components.design-system.components-runtime.fw09-empty-action"), onClick: () => setFilter("all") },
+            { label: showcaseMessage("components.design-system.components-runtime.annulla-6c3de538"), onClick: () => setFilter("all") },
+          ]}
+          headingLevel={3}
+        />
       </section>
 
       <section className="surface-card p-5 flex flex-col gap-4" aria-label={showcaseMessage("components.design-system.components-runtime.overlay-e-focus-management-f2265657")}>

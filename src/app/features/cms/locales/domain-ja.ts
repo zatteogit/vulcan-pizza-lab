@@ -3,6 +3,7 @@ import type {
   CmsPreFerment,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
+  CmsScience,
 } from "../cms-context";
 
 export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
@@ -10,7 +11,6 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
   tipsLabel: "\u30A2\u30C9\u30D0\u30A4\u30B9",
   showComparison:
     "\u30D3\u30AC vs \u30DD\u30FC\u30EA\u30C3\u30B7\u30E5 vs \u30AA\u30FC\u30C8\u30EA\u30FC\u30BA\u3092\u6BD4\u8F03",
-  hideComparison: "\u6BD4\u8F03\u3092\u975E\u8868\u793A",
   paramHydration: "\u52A0\u6C34\u7387",
   paramDuration: "\u6642\u9593",
   paramTemperature: "\u6E29\u5EA6",
@@ -28,12 +28,10 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
     "温度",
     "風味",
     "伸展性",
-    "気泡",
-    "複雑さ",
   ],
   items: {
     poolish: {
-      origin: "\u30D5\u30E9\u30F3\u30B9",
+      origin: "ポーランド、のちにフランス",
       description:
         "液種：粉と水を同量、少量のイースト、20〜22 °Cで12〜16時間。",
       hydration: "100%（粉と水が同量）",
@@ -43,9 +41,9 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
       flavor:
         "ほのかな酸味、ナッツの風味",
       crustResult:
-        "\u8EFD\u3044\u3001\u6FC3\u3044\u91D1\u8272\u3001\u30EC\u30AA\u30D1\u30FC\u30C9\u30B9\u30DD\u30C3\u30C6\u30A3\u30F3\u30B0\u304C\u7279\u5FB4\u7684",
+        "薄く黄金色。色や焼き斑は窯と温度で決まります",
       extensibility:
-        "\u9AD8\u3044 \u2014 \u4F38\u3070\u3057\u3084\u3059\u3044",
+        "高い（推定）：伸ばしやすい",
       idealStyles:
         "\u30C6\u30EA\u30A2\u30ED\u30DE\u30FC\u30CA\u3001NY\u30B9\u30BF\u30A4\u30EB\u3001\u73FE\u4EE3\u30CA\u30DD\u30EA\u3001\u30D5\u30A9\u30AB\u30C3\u30C1\u30E3",
       tips: [
@@ -55,7 +53,7 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
       ],
     },
     biga: {
-      origin: "\u30A4\u30BF\u30EA\u30A2",
+      origin: "イタリア",
       description:
         "硬い元種：粉、水44%、イースト1%、18〜20 °Cで約16時間。",
       hydration: "44%（全粒粉なら50%まで）",
@@ -66,9 +64,9 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
       flavor:
         "芳醇、花のような香り",
       crustResult:
-        "\u30AB\u30EA\u30AB\u30EA\u3001\u3082\u308D\u3044\u3001\u7D30\u304B\u3044\u6C17\u6CE1",
+        "パリッとした食感。構造は加水と成形で決まります",
       extensibility:
-        "\u4F4E\u3044 \u2014 \u5206\u5272\u5F8C\u306E\u4F11\u606F\u304C\u5FC5\u8981",
+        "粉と加水によります（要確認）",
       idealStyles:
         "ピンサ、ピッツァ・アル・タリオ、パーラ・ロマーナ、パン",
       tips: [
@@ -79,11 +77,11 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
       ],
     },
     autolisi: {
-      origin: "フランス（R. カルヴェル、1974年）",
+      origin: "R. カルヴェル、フランス 1974年",
       description:
         "元種ではない：イーストも塩も入れずに粉と水を休ませる工程。",
       hydration:
-        "55-75%\uFF08\u30EC\u30B7\u30D4\u306E\u5168\u6C34\u5206\uFF09",
+        "レシピと同じ（水を少し取り分けることが多い）",
       consistency: "\u30DA\u30FC\u30B9\u30C8\u72B6",
       fermentationType:
         "\u306A\u3057\uFF08\u9175\u7D20\u6D3B\u6027\u306E\u307F\uFF09",
@@ -105,7 +103,7 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
     hydration: {
       biga: "44%",
       poolish: "100%",
-      autolisi: "55-75%",
+      autolisi: "= レシピ",
     },
     yeast: {
       biga: "1%",
@@ -128,19 +126,9 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
       autolisi: "\u4E2D\u6027",
     },
     extensibility: {
-      biga: "\u4F4E\u3044",
-      poolish: "\u9AD8\u3044",
+      biga: "条件による",
+      poolish: "高い（推定）",
       autolisi: "\u9AD8\u3044",
-    },
-    alveolatura: {
-      biga: "\u7D30\u304B\u3044",
-      poolish: "\u5927\u304D\u3044",
-      autolisi: "\u5927\u304D\u3044",
-    },
-    complexity: {
-      biga: "\u4E2D",
-      poolish: "\u4F4E",
-      autolisi: "\u975E\u5E38\u306B\u4F4E",
     },
   },
 };
@@ -317,7 +305,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         symptom:
           "\u7E01\u306E\u30EC\u30AA\u30D1\u30FC\u30C9\u30B9\u30DD\u30C3\u30C8",
         cause:
-          "\u30AA\u30FC\u30D6\u30F3\u5929\u4E95>500\u00B0C\u3068\u306E\u63A5\u89E6 \u2014 \u5C40\u6240\u7684\u30E1\u30A4\u30E9\u30FC\u30C9\u53CD\u5FDC",
+          "縁の薄い気泡が窯の強い熱で色づく現象（局所的な焼き色と焦げ）",
         testRapido:
           "\u30B9\u30DD\u30C3\u30C8\u306F\u82E6\u3044\uFF1F",
         fixImmediate:
@@ -650,7 +638,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     thickness_factor: {
       name: "Thickness Factor\uFF08TF\u30FB\u539A\u3055\u4FC2\u6570\uFF09",
       definition: "ピザの面積あたりの生地量です。1cm²あたりに使う生地のグラム数を表します。",
-      whyImportant: "\u713C\u6210\u6642\u9593\u3001\u30AB\u30EA\u30C3\u3068\u611F\u3001\u30AB\u30ED\u30EA\u30FC\u5BC6\u5EA6\u3092\u5DE6\u53F3\u3057\u307E\u3059\u3002{brand}\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u72EC\u81EA\u306E\u6307\u6A19\u3067\u3059\u3002",
+      whyImportant: "北米の生地計算ツールで広く使われる指標です（単位はoz/in²、1 oz/in² ≈ 4.39 g/cm²）。{brand}は生地玉の大きさを決めるためにg/cm²で表します。窯とあわせて焼成時間と食感の目安になります。",
       ranges: [
         { label: "\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1", value: "0.30\u20130.36", note: "6-7 mm" },
         { label: "\u30ED\u30FC\u30DE\u98A8\uFF08\u4E38\u578B\uFF09", value: "0.20\u20130.25", note: "4-5 mm" },
@@ -700,5 +688,175 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       definition: "時間、温度、イースト、前発酵の生地に基づくモデルの推定です。個人の消化やFODMAP量を測るものではありません。",
       ranges: [{"label":"85-100","value":"高い指数"},{"label":"70-84","value":"やや高い指数"},{"label":"50-69","value":"中程度の指数"},{"label":"<50","value":"低い指数"}],
     },
+  },
+};
+/* FW-01 — 科学レジストリ：ノートと仮定のテキスト（キーは SCIENCE_I18N_DEFAULTS と同じ）。 */
+export const SCIENCE_JA: CmsScience = {
+  notes: {
+    "yeast-dose": {
+      title: "イーストの量",
+      l1: "推定値です。時間が長く温度が高いほど、イーストは少なくて済みます。",
+      l2: "ナポリの規定に沿った基準量から出発し、あなたの時間と温度に合わせて補正します。実際のイースト、粉、キッチンで時間はずれることがあります。時計より生地を見てください。",
+    },
+    "q10-fermentation": {
+      title: "温度と発酵の速さ",
+      l1: "温かいほど発酵は速く、寒いほど遅くなります。係数は推定値です。",
+      l2: "モデルは基準温度に対する段階的な速度係数を使います。室温ではイーストの研究と一致しますが、低温や冷蔵庫では出典がなく、大きくずれることがあります。生地を確認してください。",
+    },
+    "equivalent-hours": {
+      title: "換算時間",
+      l1: "あなたの時間を、基準温度で必要な時間に換算したものです。",
+      l2: "時間に、あなたの温度での速さを掛けます。基準より低い温度（冷蔵庫、貯蔵庫）で発酵させる場合、最終発酵は基準温度で行うため、その時間はそのまま数え、残りの時間だけに速さを掛けます。そのため「時間 × 速さ」だけでは計算が合いません。",
+    },
+    "kitchen-temp-default": {
+      title: "キッチンの温度",
+      l1: "入力しない場合は標準値を使います。",
+      l2: "キッチンの温度は発酵時間と水温を変えます。標準値は仮定です。キッチンがもっと暖かい、または寒い場合は入力すると、レシピが合わせて変わります。",
+    },
+    "proof-split": {
+      title: "最終発酵の時間",
+      l1: "スタイルに指定がない場合、最終発酵は総時間の一定の割合です。",
+      l2: "これはモデルの仮定で、製法のルールではありません。キッチンが想定より暖かいと生地は早く仕上がります。確認してください。",
+    },
+    "sourdough-starter-dose": {
+      title: "サワードウ種の量",
+      l1: "種の量は時間だけで決まる経験則です。",
+      l2: "温度も種の力も考慮していません。種に含まれる粉と水は表示の加水率に入っていないため、実際の生地は少し加水が高くなります。",
+    },
+    "pre-ferment": {
+      title: "ビガとポーリッシュ",
+      l1: "加水率、時間、温度は、一致する業界の情報源に基づいています。",
+      l2: "ビガは涼しい場所でゆっくり熟成する硬い前発酵種、ポーリッシュは液状で早く熟成します。クラストと気泡は前発酵種だけでなく、主に窯、加水、成形で決まります。",
+    },
+    autolysis: {
+      title: "オートリーズ",
+      l1: "こねる前に、粉と水をイーストも塩も入れずに休ませます。",
+      l2: "前発酵ではなく、発酵は起きません。粉に水がなじみ、生地が扱いやすくなります（R. カルヴェル、1974年）。",
+    },
+    "water-temp-rule": {
+      title: "水の温度",
+      l1: "キッチンについていくつかの仮定から出発する、正確な計算です。",
+      l2: "キッチン、粉、水、ミキサーの熱を合計すると、目標の生地温度の3倍になります。計算は正確ですが、キッチンと粉は測らなければ推定値で、ミキサーの熱は代表値です。",
+    },
+    "water-activity": {
+      title: "水分活性（Aw）",
+      l1: "測定値ではなく、推定した指標です。",
+      l2: "加水率、塩、砂糖から簡単な式で計算します。レシピの比較に使うもので、ピザの日持ちを示すものではありません。本当の値には測定器が必要です。",
+    },
+    "dough-indices": {
+      title: "生地の指標",
+      l1: "グルテンネットワークとタンパク質分解はモデルの指標で、測定値ではありません。",
+      l2: "粉の強さ、加水率、時間を{brand}が選んだ重みで組み合わせます。2つのレシピの比較に使うもので、実験室の値ではありません。",
+    },
+    "salt-range": {
+      title: "塩の範囲",
+      l1: "塩の目盛りは{brand}の選択で、出典のある範囲ではありません。",
+      l2: "ナポレターナSTGでは規定が正確な範囲を示しています。ほかのスタイルでは、レシピの値の周りに狭い幅を表示します。",
+    },
+    "stg-salt-timing": {
+      title: "ナポレターナSTGの塩",
+      l1: "規定では、粉を加える前に塩を水に溶かします。",
+      l2: "これはSTGのEU規則の順序です。ほかの製法では塩を後から加えますが、このスタイルでは規定に従います。",
+    },
+    "flour-w-by-grade": {
+      title: "粉のタイプと強さ",
+      l1: "00、0、1、全粒粉は粉の精製度を表し、強さではありません。",
+      l2: "強さ（W）は同じタイプでも袋ごとに違います。袋に記載がなければ、モデルはタイプごとの推定値を使います。本当の値は製粉会社の仕様書で確認してください。",
+    },
+    "flour-pl-estimate": {
+      title: "推定P/L",
+      l1: "P/Lを入力しない場合、粉の強さから推定します。",
+      l2: "スタイルの範囲内に収めた近似の関係です。本当の値は粉の仕様書にあります。",
+    },
+    "stg-flour-w": {
+      title: "STGの粉の強さ",
+      l1: "STGの規定より狭い、AVPNの範囲を使っています。",
+      l2: "STGのEU規則はより弱い粉も強い粉も認めていますが、AVPNの規定は範囲を狭めています。これは{brand}の選択で、両方の出典を示しています。",
+    },
+    "oven-max-temp": {
+      title: "窯の最高温度",
+      l1: "あなたの機種について公表されている温度です。",
+      l2: "空気の温度か石の温度かを示すメーカーはほとんどありません。販売店やレビューからのデータにはその旨を表示します。デモの窯のデータは架空のものです。",
+    },
+    "oven-preset-max-temp": {
+      title: "窯の種類ごとの代表温度",
+      l1: "代表値です。お使いの窯の値に直してください。",
+      l2: "一部の窯の種類には、メーカーの仕様書や規格がありません。お使いの窯をご存じなら温度を入力してください。レシピが合わせて変わります。",
+    },
+    "stg-oven-temp": {
+      title: "ナポレターナSTGの窯",
+      l1: "2つの出典は同じ温度を、異なる面について示しています。",
+      l2: "STGの規定は窯床、AVPNの規定はドームの温度としています。どちらもエンジンが使う範囲の上限には達していないため、その値は要確認です。",
+    },
+    "style-min-oven-temp": {
+      title: "スタイルの最低温度",
+      l1: "多くのスタイルで、最低温度は出典のないモデルの選択です。",
+      l2: "最低温度を下回ると、レシピは実現できないか、忠実さが下がります。規定がある場合はそれに従い、ほかは要確認の値です。",
+    },
+    "bake-time-home-preheat": {
+      title: "家庭用オーブンの予熱",
+      l1: "予熱時間はモデルの仮定です。",
+      l2: "石や鉄板は空気よりゆっくり温まります。冷たいオーブンに入れてから点火し、できれば焼く前に表面の温度を測ってください。",
+    },
+    "surface-conductivity": {
+      title: "焼き面の熱伝導率",
+      l1: "焼き面がピザに熱を伝える速さです。",
+      l2: "素材の代表的な熱伝導率で、単位はW/(m·K)です。金属は技術資料の値、石と耐火レンガは要確認の値です。網には接触面がありません。",
+    },
+    "baking-energy": {
+      title: "焼成エネルギー",
+      l1: "おおよその規模で、測定値ではありません。",
+      l2: "焼成時間に、窯の温度で決めた代表的な出力を掛けます。薪、ガス、電気で同じ値です。予熱は含みません。",
+    },
+    "thickness-factor": {
+      title: "Thickness factor",
+      l1: "ピザ1cm²あたりの生地のグラム数です。",
+      l2: "北米の生地計算ツールで広く使われる指標で、単位は1平方インチあたりのオンスです。{brand}は生地玉の大きさを決めるためにg/cm²で表します。",
+    },
+    "score-weights": {
+      title: "スコアの重み",
+      l1: "各項目の重みは{brand}の選択です。",
+      l2: "最終的な数値で各項目がどれだけ効くかを示します。測定から来たものではなく、全員に同じアプリのルールです。",
+    },
+    "non-feasible-ceiling": {
+      title: "実現できないレシピの上限",
+      l1: "作れないレシピは低い帯にとどまります。アプリのルールです。",
+      l2: "ほかの項目が高くても、実現できないレシピが作れるレシピを上回ることはありません。",
+    },
+    "authenticity-fuel-cap": {
+      title: "燃料による本格度の上限",
+      l1: "スタイルが求める窯がないと、本格度に上限があります。{brand}の選択です。",
+      l2: "薪や石炭が必要なスタイルでは、ほかの窯でもよく焼けますが製法には沿っていません。上限は編集上の線引きで、品質の測定ではありません。",
+    },
+    digestibility: {
+      title: "消化性指数",
+      l1: "工程についてのモデルの指標で、健康を約束するものではありません。",
+      l2: "熟成の時間と温度を考慮します。人がピザをどう消化するかは測っておらず、食事法への適合を保証するものでもありません。",
+    },
+    "troubleshooting-thresholds": {
+      title: "トラブルの目安",
+      l1: "トラブルに出てくる数値の目安は参考値です。",
+      l2: "公表された出典のない経験則で、スタイルを考慮していません。たとえば天板の生地はナポリピッツァよりずっと加水が高めです。診断ではなく、ヒントとして使ってください。",
+    },
+  },
+  assumptions: {
+    "constant-ferment-temp": "その工程の間、温度は一定とします。",
+    "time-exponent-no-source": "時間の補正には、モデルが選んだ出典のない指数を使います。",
+    "kitchen-temp-standard": "キッチンの温度を入力しない場合は標準値を使います。",
+    "q10-cold-no-source": "低温や冷蔵庫では速度係数に出典がなく、誤差が大きくなることがあります。",
+    "proof-share-default": "スタイルに指定がない場合、最終発酵は時間の一定の割合です。",
+    "starter-steps-by-hours": "種の量は温度を考えず、時間に応じて段階的に減ります。",
+    "starter-not-in-hydration": "種に含まれる粉と水は加水率に入っていません。",
+    "flour-at-kitchen-temp": "粉はキッチンの温度とします。",
+    "mixer-friction-values": "ミキサーの熱は要確認の代表値で、手ごねでは0です。",
+    "coefficients-not-measured": "式の係数はモデルが選んだもので、測定値ではありません。",
+    "grade-is-not-strength": "粉のタイプは精製度を表し、強さではありません。タイプごとのWは推定値です。",
+    "oven-temp-surface-unspecified": "公表温度が空気の温度か石の温度かは分かりません。",
+    "style-min-temp-no-source": "スタイルの最低温度には文書の出典がありません。",
+    "preheat-home-minutes": "予熱時間は窯の温度だけで決まり、焼き面は考慮しません。",
+    "rack-no-contact": "網には接触面がなく、底は放射と空気で焼けます。",
+    "oven-power-steps": "温度帯ごとの代表的な出力で、どの燃料でも同じです。",
+    "no-health-claim": "健康に関する主張はしません。指数は人の消化を測るものではありません。",
+    "thresholds-rules-of-thumb": "目安は一般的な経験則で、スタイルに合わせて調整していません。",
   },
 };

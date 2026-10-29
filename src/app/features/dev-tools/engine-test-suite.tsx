@@ -137,7 +137,7 @@ function runDbIntegrity(): TestResult[] {
   // T01-03: Famiglie valide
   {
     const { ms } = timed(() => null);
-    const validFamilies = ["napoletana", "romana", "americana", "contemporanea"];
+    const validFamilies = ["napoletana", "romana", "americana", "contemporanea", "regionale"];
     const invalid = styles.filter(s => !validFamilies.includes(s.family));
     results.push({ id: "T01-03", name: "Famiglie valide", status: invalid.length === 0 ? "pass" : "fail", detail: invalid.length ? `Invalide: ${invalid.map(s => s.id).join(", ")}` : `Tutte in ${validFamilies.join("/")}`, ms });
   }

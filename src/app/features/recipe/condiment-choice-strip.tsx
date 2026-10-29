@@ -15,17 +15,22 @@ import {
   type ToppingRecipe,
 } from "../../data/topping-library";
 import { authenticityLabel, engineMessage } from "./recipe-output-format";
+import { uiMessage } from "../../i18n/ui-messages";
 
-const FLAVOR_PROFILE_LABELS: Record<FlavorProfile, string> = {
-  fresh: "Freschi",
-  earthy: "Bosco",
-  spicy: "Piccanti",
-  creamy: "Cremosi",
-  rich: "Ricchi",
-  salty_savory: "Sapidi",
-  sweet_savory: "Agrodolci",
-  light: "Leggeri",
-};
+/* FW-11 (S06-A-21, S06-B-05): filtri di gusto dal catalogo, nelle 7 lingue. */
+function flavorProfileLabel(profile: FlavorProfile): string {
+  const labels: Record<FlavorProfile, string> = {
+    fresh: uiMessage("topping.flavor.fresh"),
+    earthy: uiMessage("topping.flavor.earthy"),
+    spicy: uiMessage("topping.flavor.spicy"),
+    creamy: uiMessage("topping.flavor.creamy"),
+    rich: uiMessage("topping.flavor.rich"),
+    salty_savory: uiMessage("topping.flavor.saltySavory"),
+    sweet_savory: uiMessage("topping.flavor.sweetSavory"),
+    light: uiMessage("topping.flavor.light"),
+  };
+  return labels[profile];
+}
 
 const FLAVOR_PROFILE_ORDER: FlavorProfile[] = [
   "fresh",
@@ -38,9 +43,9 @@ const FLAVOR_PROFILE_ORDER: FlavorProfile[] = [
   "sweet_savory",
 ];
 
-function normalizeSearch(value: string): string {
+function normalizeSearch(value: string, locale: string): string {
   return value
-    .toLocaleLowerCase("it")
+    .toLocaleLowerCase(locale)
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 }
@@ -134,7 +139,7 @@ export function CondimentChoiceStrip({
   );
 
   const filteredPickerChoices = useMemo(() => {
-    const q = normalizeSearch(query.trim());
+    const q = normalizeSearch(query.trim(), cms.locale.id);
     return pickerChoices.filter(({ recipe, authenticity }) => {
       const concept = toppingConcept(recipe.concept_ref, cms.toppingI18n);
       if (activeFlavor !== "all" && concept?.flavor_profile !== activeFlavor) {
@@ -148,11 +153,12 @@ export function CondimentChoiceStrip({
           concept?.name,
           concept?.description,
           concept?.occasions?.join(" "),
-          concept ? FLAVOR_PROFILE_LABELS[concept.flavor_profile] : "",
+          concept ? flavorProfileLabel(concept.flavor_profile) : "",
           authenticityLabel(authenticity, cms),
         ]
           .filter(Boolean)
           .join(" "),
+        cms.locale.id,
       );
       return searchable.includes(q);
     });
@@ -172,6 +178,8 @@ export function CondimentChoiceStrip({
         ref={scrollRef}
         onScroll={updateFades}
         className="condiment-strip__rail hide-scrollbar"
+        /* FW-12 (S06-B-21): senza ruolo l'aria-label veniva ignorato. */
+        role="group"
         aria-label={cms.cooking.chooseTopping}
       >
         {railChoices.map(({ recipe }) => {
@@ -257,7 +265,7 @@ export function CondimentChoiceStrip({
             onClick={() => setPickerOpen(true)}
             className="condiment-strip__more type-data"
           >
-            <Utensils size={14} />
+            <Utensils size={14} aria-hidden="true" />
             <span data-region="label">
               {engineMessage(cms, "topping.viewAll", "Vedi tutti")}
             </span>
@@ -301,14 +309,16 @@ export function CondimentChoiceStrip({
                       className="condiment-strip-picker__close"
                       aria-label={cms.ui.close}
                     >
-                      <X size={16} />
+                      <X size={16} aria-hidden="true" />
                     </IconButton>
                   </div>
 
                   <div className="condiment-strip-picker__body">
                     <div className="condiment-strip-picker__search">
-                      <Search size={16} className="condiment-strip-picker__search-icon" />
+                      <Search size={16} aria-hidden="true" className="condiment-strip-picker__search-icon" />
                       <input
+                        type="search"
+                        aria-label={engineMessage(cms, "topping.searchPlaceholder", "Cerca gusto, ingrediente o occasione")}
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder={engineMessage(cms, "topping.searchPlaceholder", "Cerca gusto, ingrediente o occasione")}
@@ -324,7 +334,7 @@ export function CondimentChoiceStrip({
                           className="condiment-strip-picker__search-clear"
                           aria-label={cms.pages.searchClearLabel}
                         >
-                          <X size={14} />
+                          <X size={14} aria-hidden="true" />
                         </IconButton>
                       )}
                     </div>
@@ -350,7 +360,7 @@ export function CondimentChoiceStrip({
                             activeFlavor === profile ? " condiment-strip-picker__filter--active" : ""
                           }`}
                         >
-                          {FLAVOR_PROFILE_LABELS[profile]}
+                          {flavorProfileLabel(profile)}
                         </button>
                       ))}
                     </div>

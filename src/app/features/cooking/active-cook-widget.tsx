@@ -9,7 +9,8 @@ import {
   useCookSession,
 } from "./cook-session";
 import { useCms } from "../cms/cms-context";
-import { t } from "../cms/i18n";
+import { formatAtClock, formatRelative } from "../../i18n/format";
+import { uiMessage } from "../../i18n/ui-messages";
 import { motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
 
 export function ActiveCookWidget({
@@ -25,7 +26,7 @@ export function ActiveCookWidget({
   inline?: boolean;
 }) {
   const { session, overlayOpen, openOverlay } = useCookSession();
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const recipeSetupOpen = useRecipeSetupOpen();
   const prefersReducedMotion = useReducedMotion();
   const [, setTick] = useState(0);
@@ -42,15 +43,13 @@ export function ActiveCookWidget({
   const active = Boolean(session);
   const metrics = session ? getSessionMetrics(session) : null;
   const due = Boolean(metrics?.isDue);
-  const countdown = metrics ? getCompactCountdown(metrics.actionAt, cms.cooking) : "";
-  const actionLabel = metrics ? getActionLead(metrics, cms.cooking) : cms.cooking.startShort;
+  const lead = metrics ? getActionLead(metrics, cms.cooking, bcp47) : null;
+  const actionLabel = lead ? lead.before : cms.cooking.startShort;
+  const countdown = lead?.eta ?? "";
   const activeAccessibleLabel = metrics?.finished
     ? cms.cooking.completed
-    : `${actionLabel} ${countdown}`.trim();
-  const actionHeight = compact ? 40 : 44;
+    : lead?.accessible ?? "";
   const iconBox = compact ? 24 : 28;
-
-  const rightVal = inline ? 0 : hasProfileButton ? (compact ? 64 : 68) : 16;
 
   const handleClick = () => {
     if (session) {
@@ -67,14 +66,10 @@ export function ActiveCookWidget({
         data-region="widget"
         key={active ? "cook-active-action" : "cook-start-action"}
         type="button"
-        initial={{ opacity: 0, y: -8, scale: 0.98, height: actionHeight, right: rightVal }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          height: actionHeight,
-          right: rightVal,
-        }}
+        /* FW-13 (S01-A-10/B-14): altezza da token (.cook-widget--compact), il
+           posto accanto al profilo da .cook-actions--beside-profile. */
+        initial={{ opacity: 0, y: -8, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -6, scale: 0.98 }}
         whileHover={prefersReducedMotion ? undefined : { scale: 1.018, y: -1 }}
         whileTap={{ scale: 0.96 }}
@@ -126,6 +121,9 @@ export function ActiveCookWidget({
           <span className="cook-widget__countdown type-data">
             {metrics?.finished ? cms.cooking.completed : countdown}
           </span>
+        )}
+        {active && lead?.after && (
+          <span className="cook-widget__label" data-part="suffix">{lead.after}</span>
         )}
       </motion.button>
     </AnimatePresence>
@@ -187,34 +185,45 @@ function getSessionMetrics(session: NonNullable<ReturnType<typeof useCookSession
     finished,
     isDue: step ? Date.now() >= actionAt : false,
     progress,
+    flexible: Boolean(step?.flexible),
     stepTitle: step?.title ?? "",
   };
 }
 
+/* FW-11 (S01-A-03, S10-B-06, S01-B-04, S01-A-04, S10-B-17): niente
+ * preposizioni né unità nel codice. Il testo viene dai template già tradotti
+ * widgetStepDueIn / widgetStepReadyAt, divisi sul segnaposto {eta} perché il
+ * tempo resti uno span a sé. Un'attesa (lievitazione, prefermento) dice
+ * «pronta», non «fra»: la fase è già in corso. Entro un'ora si conta alla
+ * rovescia («tra 35 min»), oltre si dà l'orario («verso le 21:00»). */
 function getActionLead(
   metrics: ReturnType<typeof getSessionMetrics>,
   copy: ReturnType<typeof useCms>["cms"]["cooking"],
-) {
-  if (metrics.finished) return copy.done;
-  if (!metrics.stepTitle) return copy.inProgressShort;
-  if (metrics.isDue) return metrics.stepTitle;
-
-  const inLabel = copy.etaInMinutes.trim().toLowerCase().startsWith("tra") ? "fra" : "in";
-  return `${metrics.stepTitle} ${inLabel}`;
-}
-
-function getCompactCountdown(actionAt: number, copy: ReturnType<typeof useCms>["cms"]["cooking"]) {
-  const ms = actionAt - Date.now();
-  if (ms <= 0) return copy.etaNow;
-  const seconds = Math.ceil(ms / 1000);
-  if (seconds < 60) return t(copy.compactSeconds, { n: seconds });
-  const minutes = Math.ceil(seconds / 60);
-  if (minutes < 60) return t(copy.compactMinutes, { n: minutes });
-  const hours = Math.floor(minutes / 60);
-  const restMinutes = minutes % 60;
-  return restMinutes > 0
-    ? t(copy.compactHoursMinutes, { h: hours, m: restMinutes })
-    : t(copy.compactHours, { h: hours });
+  locale: string,
+): { before: string; eta: string; after: string; accessible: string } {
+  const plain = (text: string) => ({ before: text, eta: "", after: "", accessible: text });
+  if (metrics.finished) return plain(copy.done);
+  if (!metrics.stepTitle) return plain(copy.inProgressShort);
+  const now = Date.now();
+  const relative = formatRelative(metrics.actionAt, now, locale, { seconds: true });
+  const withinHour = metrics.isDue || metrics.actionAt - now < 3_600_000;
+  const eta = withinHour
+    ? relative
+    : formatAtClock(metrics.actionAt, locale, { approximate: metrics.flexible, nowMs: now });
+  const template =
+    metrics.flexible && !metrics.isDue ? copy.widgetStepReadyAt : copy.widgetStepDueIn;
+  const [rawBefore = "", rawAfter = ""] = template.split("{eta}");
+  const before = rawBefore.replace("{title}", metrics.stepTitle).trim();
+  const after = rawAfter.replace("{title}", metrics.stepTitle).trim();
+  const sentence = [before, eta, after].filter(Boolean).join(" ");
+  return {
+    before,
+    eta,
+    after,
+    accessible: withinHour
+      ? sentence
+      : uiMessage("cooking.widget.withRelative", [sentence, relative], locale),
+  };
 }
 
 function useRecipeSetupOpen() {

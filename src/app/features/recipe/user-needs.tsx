@@ -3,7 +3,7 @@ import { migrateEquipment, syncLegacyFlags } from "../../data/equipment-data";
 import { PantryEditor } from "./pantry-editor";
 import { savePantryConstraints } from "../../adapters/browser/pantry-storage";
 import { SupplyPolicyControls } from "./supply-policy-controls";
-import { WoodOvenIcon } from "../../components/shared/wood-oven-icon";
+import { ovenIcon } from "../../components/shared/oven-icons";
 import {
 CalendarDays,
 Check,
@@ -12,10 +12,8 @@ ChevronRight,
 Clock,
 CloudSun,
 CookingPot,
-Flame,
 FlaskConical,
 HelpCircle,
-Home,
 MapPin,
 Minus,
 Moon,
@@ -24,17 +22,18 @@ Plus,
 Sun,Sunset,
 Thermometer,
 Timer,
-Wheat,
-Zap
+Wheat
 } from "lucide-react";
 import { pantryFlourName } from "./pantry-flour-names";
 import { AnimatePresence,motion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
-import React,{ useEffect,useMemo,useState } from "react";
+import React,{ useEffect,useMemo,useRef,useState } from "react";
 import { Chip, SelectionMark } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { timeSlotText } from "./time-slot-text";
 import { CustomTimeSlot } from "./custom-time-slot";
+import { useRecommend } from "./use-recommend";
+import { earliestFeasibleMeal, slotsWithoutFeasibleStyle, type EarliestFeasibleMeal } from "../../domain/feasible-slot";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import {
 DEFAULT_KITCHEN_TEMP,
@@ -49,6 +48,9 @@ type TimeSlot,
 type UserConstraints,
 } from "../../domain/pizza-engine";
 import { uiMessage } from "../../i18n/ui-messages";
+import { Link } from "react-router";
+import { getOvenModel } from "../../data/oven-models";
+import { kitchenConstraints, nextSavedOven, resolveEffectiveKitchen, type SavedOvenPref } from "../../use-cases/effective-kitchen";
 
 interface UserNeedsProps {
   constraints: UserConstraints;
@@ -101,18 +103,6 @@ const TIME_ICONS: Record<
   no_preference: Clock,
 };
 
-const OVEN_ICONS: Record<
-  string,
-  React.ComponentType<any>
-> = {
-  home: Home,
-  electric_standard: Zap,
-  electric_high: Zap,
-  gas: Flame,
-  gas_pizza: Flame,
-  wood: WoodOvenIcon,
-};
-
 /* Dietary filters moved to recommended-styles — data defined there */
 
 /* ═══ PANTRY DATA ═══ */
@@ -126,23 +116,26 @@ interface FlourOption {
   shortName?: string;
 }
 
+/* FW-01 (S05-A-04/B-07): il tipo (00, 0, 1, integrale, semola) è il grado di
+ * raffinazione, non la forza: niente W sulle chip generiche (era una stima
+ * mostrata come dato). La W compare solo se l'utente la dichiara. */
 const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
   {
     id: "00",
     get name() { return pantryFlourName("00"); },
-    w: "W170–220",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.classica-versatile-21c9cc66"); },
   },
   {
     id: "0",
     get name() { return pantryFlourName("0"); },
-    w: "W220–260",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.media-forza-1dea8ed0"); },
   },
   {
     id: "tipo_1",
     get name() { return pantryFlourName("tipo_1"); },
-    w: "W220–280",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.rustica-profumo-di-cereale-766e58ac"); },
   },
   {
@@ -154,13 +147,13 @@ const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
   {
     id: "integrale",
     get name() { return pantryFlourName("integrale"); },
-    w: "W200–260",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.piu-fibra-e-sapore-e0f02324"); },
   },
   {
     id: "semola",
     get name() { return pantryFlourName("semola"); },
-    w: "W220–280",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.croccantezza-colore-dorato-0119e353"); },
   },
 ];
@@ -228,10 +221,14 @@ function fallbackWeather(): WeatherData {
   return { city: "", temp: DEFAULT_KITCHEN_TEMP, kitchenTemp: DEFAULT_KITCHEN_TEMP };
 }
 
+/* FW-16 (D-N, S05-B-09): posizione e meteo partono solo da un gesto esplicito
+ * («Stima dal meteo della tua zona»), con i servizi nominati accanto; il
+ * risultato è una proposta che l'utente applica, mai un cambio silenzioso. */
 function useLocationWeather(enabled: boolean) {
   const [data, setData] = useState<WeatherData>(fallbackWeather);
   const [loading, setLoading] = useState(false);
   const [available, setAvailable] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [activated, setActivated] = useState(false);
 
   // Latch the first use: closing/reopening the drawer does not ask again or
@@ -244,6 +241,7 @@ function useLocationWeather(enabled: boolean) {
     if (!activated) return;
     let cancelled = false;
     setLoading(true);
+    setFailed(false);
 
     /* Check for saved location from Profile first */
     let savedLat: number | null = null;
@@ -296,6 +294,7 @@ function useLocationWeather(enabled: boolean) {
         }
       } catch {
         /* Weather API failed — if we have a saved city, still show it */
+        if (!cancelled) setFailed(true);
         if (!cancelled && city) {
           setData({ city, temp: DEFAULT_KITCHEN_TEMP, kitchenTemp: DEFAULT_KITCHEN_TEMP });
         }
@@ -314,25 +313,23 @@ function useLocationWeather(enabled: boolean) {
         },
         () => {
           /* Geolocation denied/unavailable — keep fallback */
-          if (!cancelled) setLoading(false);
+          if (!cancelled) { setLoading(false); setFailed(true); }
         },
         { timeout: 8000, maximumAge: 300000 },
       );
     } else {
       setLoading(false);
+      setFailed(true);
     }
 
     return () => { cancelled = true; };
   }, [activated]);
 
-  return { data, loading, available };
+  return { data, loading, available, failed };
 }
 
 const OVEN_STORAGE_KEY = "vulcan_oven_pref";
-function loadSavedOven(): {
-  ovenType: OvenType;
-  maxTemp: number;
-} | null {
+function loadSavedOven(): SavedOvenPref | null {
   try {
     const raw = localStorage.getItem(OVEN_STORAGE_KEY);
     if (raw) return JSON.parse(raw);
@@ -341,15 +338,19 @@ function loadSavedOven(): {
   }
   return null;
 }
-function saveOven(ovenType: OvenType, maxTemp: number) {
+/* FW-07 (S05-A-03, S18-A-02): si salva il forno intero (modello compreso),
+ * non solo tipo e temperatura. */
+function saveOven(oven: SavedOvenPref) {
   try {
-    localStorage.setItem(
-      OVEN_STORAGE_KEY,
-      JSON.stringify({ ovenType, maxTemp }),
-    );
+    localStorage.setItem(OVEN_STORAGE_KEY, JSON.stringify(oven));
   } catch {
     /* */
   }
+}
+/** Vincoli del forno dalla cucina effettiva, senza la bocca di un modello tolto. */
+function withOven(constraints: UserConstraints, oven: SavedOvenPref | null): UserConstraints {
+  const { oven_max_pizza_cm: _mouth, ...rest } = constraints;
+  return { ...rest, ...kitchenConstraints(resolveEffectiveKitchen({ oven })) };
 }
 
 /* ═══ INLINE TIP ═══ */
@@ -404,6 +405,8 @@ interface SettingsSummaryBarProps {
   /** Microcopy sotto i chip. Solo al primo incontro (step 1): allo step
    *  successivo il sottotitolo di pagina dice già la stessa cosa. */
   showHelp?: boolean;
+  /** FW-12: il focus torna qui dopo la scelta del momento. */
+  timeChipRef?: React.Ref<HTMLButtonElement>;
 }
 
 function SettingsSummaryBar({
@@ -416,6 +419,7 @@ function SettingsSummaryBar({
   timeActive = false,
   onChangeTime,
   showHelp = true,
+  timeChipRef,
 }: SettingsSummaryBarProps) {
   /* R10: la chip rappresenta la cucina nel suo insieme, non solo il forno.
      Label "La tua cucina"; il tipo di forno e la temperatura vivono nel drawer. */
@@ -425,8 +429,8 @@ function SettingsSummaryBar({
   const pantryLabel = cms.sections.pantry.title;
   const pantryText = count > 0 ? `${pantryLabel} (${count})` : pantryLabel;
 
-  const SKILL_NAMES: Record<number, string> = { 1: "Principiante", 2: "Intermedio", 3: "Esperto" };
-  const skillLabel = cms.skillLevels[String(constraints.skill_level)]?.name ?? SKILL_NAMES[constraints.skill_level] ?? `Skill ${constraints.skill_level}`;
+  // FW-14 (S05-B-18): un solo elenco dei livelli, quello del CMS.
+  const skillLabel = cms.skillLevels[String(constraints.skill_level)]?.name ?? String(constraints.skill_level);
   const tuText = skillLabel;
 
   const tabs = [
@@ -439,24 +443,8 @@ function SettingsSummaryBar({
   return (
     <div className="needs-summary">
     <div className="needs-summary__row">
-      {tabs.map((tab) => {
-        const isActive = activeTab === tab.id;
-        const Icon = tab.icon;
-        return (
-          <button
-            key={tab.id}
-            type="button"
-            aria-expanded={isActive}
-            onClick={() => onTabSelect(isActive ? null : tab.id)}
-            className={isActive ? "needs-summary__tab needs-summary__tab--active" : "needs-summary__tab"}
-          >
-            <Icon size={13} className="needs-summary__tab-icon" />
-            <span data-slot="label">{tab.text}</span>
-          </button>
-        );
-      })}
-
-      {/* Chip "Quando" — "atterra" qui salendo dalle card scelte poco sotto:
+      {/* FW-12 (S05-B-13): primo nel DOM come a schermo, niente order:-1.
+          Chip "Quando" — "atterra" qui salendo dalle card scelte poco sotto:
           ingresso da sotto con overshoot + un pulse di glow una tantum che
           guida l'occhio sul punto in cui la scelta si è posata. */}
       <AnimatePresence>
@@ -479,6 +467,7 @@ function SettingsSummaryBar({
               default: motionSpring.emphaticMark,
               boxShadow: { duration: motionDuration.slow,ease: motionEase.exit,delay: motionDelay.medium },
             }}
+            ref={timeChipRef}
             onClick={onChangeTime}
             aria-pressed={timeActive}
             className={timeActive ? "needs-summary__time-chip needs-summary__time-chip--active" : "needs-summary__time-chip"}
@@ -493,6 +482,23 @@ function SettingsSummaryBar({
           </motion.button>
         )}
       </AnimatePresence>
+
+      {tabs.map((tab) => {
+        const isActive = activeTab === tab.id;
+        const Icon = tab.icon;
+        return (
+          <button
+            key={tab.id}
+            type="button"
+            aria-expanded={isActive}
+            onClick={() => onTabSelect(isActive ? null : tab.id)}
+            className={isActive ? "needs-summary__tab needs-summary__tab--active" : "needs-summary__tab"}
+          >
+            <Icon size={13} className="needs-summary__tab-icon" />
+            <span data-slot="label">{tab.text}</span>
+          </button>
+        );
+      })}
     </div>
 
       {/* VPL-C1: microcopy — spiega a cosa servono questi dati */}
@@ -522,6 +528,16 @@ export function UserNeeds({
 }: UserNeedsProps) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
+  /* FW-12 (S05-B-12): scelto un momento nel pannello compatto, il pannello si
+     chiude e i bottoni spariscono. Il focus torna sul chip «Quando» (non su
+     body) e una regione di stato conferma la scelta. */
+  const timeChipRef = useRef<HTMLButtonElement>(null);
+  const [timeAnnouncement, setTimeAnnouncement] = useState("");
+  const handleCompactSlotPick = (slot: TimeSlot) => {
+    onTimeSlotChange(slot);
+    setTimeAnnouncement(uiMessage("features.recipe.user-needs.time-set"));
+    requestAnimationFrame(() => timeChipRef.current?.focus());
+  };
   const update = (
     key: keyof UserConstraints,
     value: unknown,
@@ -548,6 +564,21 @@ export function UserNeeds({
   const suggestedSlot = useMemo(() => getSuggestedSlot(), []);
   /* VPL-065: dynamic time slots based on current time */
   const dynamicSlots = useMemo(() => [...generateTimeSlots(), NO_PREFERENCE_SLOT], []);
+  /* FW-09 (S05-A-01): gli slot in cui con questa cucina nessuno stile sta nei
+     tempi lo dicono, invece di portare a 29 card «non fattibili». Il conto non
+     dipende dal momento scelto, solo dalla cucina. */
+  const recommend = useRecommend();
+  const kitchenKey = JSON.stringify({ ...constraints, available_hours: 0, meal_deadline: true });
+  const slotsWithoutStyle = useMemo(
+    () => hideTimeSlots ? new Set<string>() : slotsWithoutFeasibleStyle(JSON.parse(kitchenKey) as UserConstraints, dynamicSlots, recommend),
+    [hideTimeSlots, kitchenKey, dynamicSlots, recommend],
+  );
+  /* S05-A-13: il primo orario possibile per «Scegli giorno e ora», calcolato
+     solo quando serve (alla conferma). */
+  const earliestMeal = React.useCallback(
+    () => earliestFeasibleMeal(JSON.parse(kitchenKey) as UserConstraints, new Date(), recommend),
+    [kitchenKey, recommend],
+  );
   /* Label della tempistica scelta — alimenta il chip "Quando" nella barra. */
   const selectedTimeLabel = useMemo(() => {
     if (!selectedTimeSlot) return null;
@@ -560,7 +591,8 @@ export function UserNeeds({
   const activeTab =
     controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
   const setActiveTab = onActiveTabChange ?? setInternalActiveTab;
-  const weather = useLocationWeather(activeTab === "cucina");
+  const [weatherRequested, setWeatherRequested] = useState(false);
+  const weather = useLocationWeather(weatherRequested);
 
   const [kitchenTempManual, setKitchenTempManual] =
     useState(false);
@@ -568,17 +600,18 @@ export function UserNeeds({
     constraints.kitchen_temp_c ?? weather.data?.kitchenTemp ?? DEFAULT_KITCHEN_TEMP,
   );
 
-  useEffect(() => {
-    if (weather.available && !kitchenTempManual)
-      setKitchenTemp(weather.data.kitchenTemp);
-  }, [weather.data, weather.available, kitchenTempManual]);
+  /* FW-16 (D-N): la stima dal meteo si propone, non si applica da sola. */
+  const weatherProposal =
+    weather.available && weather.data.kitchenTemp !== kitchenTemp ? weather.data : null;
 
   useEffect(() => {
     update("kitchen_temp_c", kitchenTemp);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kitchenTemp]);
 
-  const [ovenSet, setOvenSet] = useState(false);
+  const [savedOven, setSavedOven] = useState<SavedOvenPref | null>(null);
+  /* FW-07 (S18-B-05): cambiare tipo toglie il modello; si può annullare. */
+  const [ovenUndo, setOvenUndo] = useState<{ prev: SavedOvenPref; label: string } | null>(null);
   const [pantryOpen, setPantryOpen] = useState(false);
   const [recentFlours, setRecentFlours] = useState<string[]>([]);
   const [recentYeasts, setRecentYeasts] = useState<string[]>([]);
@@ -586,32 +619,41 @@ export function UserNeeds({
   useEffect(() => {
     const saved = loadSavedOven();
     const pantry = loadPantry();
-    const updates: Partial<UserConstraints> = {};
-    if (saved) {
-      updates.oven_type = saved.ovenType;
-      updates.oven_max_temp_c = saved.maxTemp;
-      updates.oven_capacity_temp_c = saved.maxTemp;
-      setOvenSet(true);
-    }
+    if (saved) setSavedOven(saved);
     if (pantry) {
       setRecentFlours(pantry.flours);
       setRecentYeasts(pantry.yeasts);
     }
-    if (Object.keys(updates).length > 0)
-      onConstraintsChange({ ...constraints, ...updates });
+    if (saved) onConstraintsChange(withOven(constraints, saved));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleOvenSelect = (id: string, maxTemp: number) => {
-    onConstraintsChange({
-      ...constraints,
-      oven_type: id as OvenType,
-      oven_max_temp_c: maxTemp,
-      oven_capacity_temp_c: maxTemp,
-    });
-    saveOven(id as OvenType, maxTemp);
-    setOvenSet(true);
+  const handleOvenSelect = (id: OvenType) => {
+    const prev = loadSavedOven();
+    const next = nextSavedOven(prev, id);
+    if (prev?.ovenType === id && constraints.oven_type === id) {
+      // Lo stesso forno: un tocco non cambia nulla; conferma solo quello
+      // preimpostato dall'edizione (S05-A-03, S18-A-01).
+      if (prev.origin === "edition") {
+        saveOven(next);
+        setSavedOven(next);
+      }
+      return;
+    }
+    onConstraintsChange(withOven(constraints, next));
+    saveOven(next);
+    setSavedOven(next);
+    const lost = prev?.ovenType !== id ? getOvenModel(prev?.modelId) : undefined;
+    setOvenUndo(prev && lost ? { prev, label: `${lost.brand} ${lost.model}` } : null);
   };
+  const undoOvenChange = () => {
+    if (!ovenUndo) return;
+    onConstraintsChange(withOven(constraints, ovenUndo.prev));
+    saveOven(ovenUndo.prev);
+    setSavedOven(ovenUndo.prev);
+    setOvenUndo(null);
+  };
+  const savedModel = savedOven?.ovenType === constraints.oven_type ? getOvenModel(savedOven.modelId) : undefined;
 
   const toggleFlour = (id: string) => {
     const current = constraints.pantry_flours;
@@ -682,7 +724,10 @@ export function UserNeeds({
               timeActive={compact && !hideTimeSlots}
               onChangeTime={onChangeTime}
               showHelp={!compact}
+              timeChipRef={timeChipRef}
             />
+            {/* FW-12 (S05-B-12): conferma della scelta per chi usa lo screen reader. */}
+            <p className="sr-only" role="status">{timeAnnouncement}</p>
 
             <AnimatePresence mode="wait">
               {activeTab === 'cucina' && (
@@ -712,7 +757,7 @@ export function UserNeeds({
                           <Minus size={14} />
                         </button>
                         <span className="type-numeric needs-kitchen-temp__value">
-                          {kitchenTemp}°C
+                          {fmt.celsius(kitchenTemp)}
                         </span>
                         <button
                           onClick={() => { setKitchenTempManual(true); setKitchenTemp((prev) => Math.min(40, prev + 1)); }}
@@ -741,6 +786,36 @@ export function UserNeeds({
                           <HelpCircle size={16} className={showTempTip ? "needs-kitchen-temp__help-icon needs-kitchen-temp__help-icon--active" : "needs-kitchen-temp__help-icon"} />
                         </button>
                       </div>
+                      {/* FW-16 (D-N): meteo solo su richiesta, con i servizi nominati. */}
+                      <div className="needs-weather-request" data-region="weather-request">
+                        {!weatherRequested ? (
+                          <button
+                            type="button"
+                            className="needs-weather-request__action"
+                            onClick={() => setWeatherRequested(true)}
+                          >
+                            {uiMessage("needs.weather.use")}
+                          </button>
+                        ) : weather.loading ? (
+                          <p className="needs-weather-request__status" role="status">{uiMessage("needs.weather.loading")}</p>
+                        ) : weatherProposal ? (
+                          <p className="needs-weather-request__status" role="status">
+                            {uiMessage("needs.weather.proposal", [fmt.celsius(weatherProposal.kitchenTemp), fmt.celsius(weatherProposal.temp)])}
+                            <button
+                              type="button"
+                              className="needs-weather-request__action"
+                              onClick={() => { setKitchenTempManual(false); setKitchenTemp(weatherProposal.kitchenTemp); }}
+                            >
+                              {uiMessage("needs.weather.apply")}
+                            </button>
+                          </p>
+                        ) : weather.failed ? (
+                          <p className="needs-weather-request__status" role="status">{uiMessage("needs.weather.failed")}</p>
+                        ) : null}
+                        <p className="needs-weather-request__note">
+                          {weatherRequested && weather.available ? uiMessage("needs.weather.estimate") : uiMessage("needs.weather.privacy")}
+                        </p>
+                      </div>
                       <AnimatePresence>
                         {showTempTip && (
                           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="needs-kitchen-temp__tip">
@@ -755,11 +830,32 @@ export function UserNeeds({
 
                     {/* Oven Preset */}
                     <div data-slot="oven-preset">
-                      <SectionHeader title={cms.sections.oven.title} subtitle={ovenSet ? cms.ui.editOven : cms.sections.oven.description} compact={compact} />
+                      <SectionHeader title={cms.sections.oven.title} subtitle={cms.sections.oven.description} compact={compact} />
+                      {/* FW-07: il modello salvato si vede in Crea e si cambia dal profilo. */}
+                      {savedModel && (
+                        <p className="type-data-sm needs-oven-model" data-edition={savedOven?.origin === "edition" ? "true" : undefined}>
+                          <span data-region="oven-model-name">
+                            {savedOven?.origin === "edition"
+                              ? uiMessage("recipe.editionOven.note", [`${savedModel.brand} ${savedModel.model}`, fmt.celsius(constraints.oven_max_temp_c)])
+                              : uiMessage("features.profile.oven-model-search.selected", [`${savedModel.brand} ${savedModel.model}`])}
+                          </span>
+                          <Link to="/profile?tab=setup" className="needs-oven-model__link">
+                            {savedOven?.origin === "edition" ? uiMessage("recipe.editionOven.change") : cms.ui.editOven}
+                          </Link>
+                        </p>
+                      )}
+                      {ovenUndo && (
+                        <p role="status" className="type-data-sm needs-oven-model" data-tone="caution">
+                          <span data-region="oven-model-name">{uiMessage("recipe.oven.changed", [ovenUndo.label])}</span>
+                          <button type="button" className="needs-oven-model__link" onClick={undoOvenChange}>
+                            {cms.ui.cancel}
+                          </button>
+                        </p>
+                      )}
                       <div className={compact ? "needs-oven-grid needs-oven-grid--compact" : "needs-oven-grid"}>
                         {OVEN_PRESETS.map((preset) => {
                           const active = constraints.oven_type === preset.id;
-                          const Icon = OVEN_ICONS[preset.id] || Thermometer;
+                          const Icon = ovenIcon(preset.id);
                           const cmsOven = cms.ovenPresets[preset.id];
                           const displayName = cmsOven?.name ?? preset.name;
                           return (
@@ -767,7 +863,7 @@ export function UserNeeds({
                               key={preset.id}
                               type="button"
                               aria-pressed={active}
-                              onClick={() => handleOvenSelect(preset.id, preset.maxTemp)}
+                              onClick={() => handleOvenSelect(preset.id)}
                               className={
                                 active
                                   ? (compact ? "needs-oven-card needs-oven-card--compact needs-oven-card--active" : "needs-oven-card needs-oven-card--active")
@@ -777,7 +873,7 @@ export function UserNeeds({
                               <Icon size={18} className={active ? "needs-oven-card__icon needs-oven-card__icon--active" : "needs-oven-card__icon"} />
                               <div data-slot="body">
                                 <div className="needs-oven-card__name">{displayName}</div>
-                                <div className="type-numeric needs-oven-card__temp">{preset.maxTemp}°C</div>
+                                <div className="type-numeric needs-oven-card__temp">{fmt.celsius(active ? constraints.oven_max_temp_c : preset.maxTemp)}</div>
                               </div>
                             </motion.button>
                           );
@@ -841,6 +937,7 @@ export function UserNeeds({
                         <span className="needs-pantry__group-title">{cms.ui.pantryFlours}</span>
                       </div>
                       <FlourChipGrid options={FLOUR_OPTIONS_GENERIC.map(option=>constraints.pantry_flour_details?.[option.id]?.w ? {...option,w:`W${constraints.pantry_flour_details[option.id].w}`} : option)} activeFlours={constraints.pantry_flours} recentFlours={recentFlours} onToggle={toggleFlour} cms={cms} />
+                      <p className="pantry-quick__hint">{cms.science.notes["flour-w-by-grade"]?.l1}</p>
 
                     </div>
                     {/* Yeasts */}
@@ -917,10 +1014,12 @@ export function UserNeeds({
                     slots={dynamicSlots}
                     suggestedSlot={suggestedSlot}
                     selectedTimeSlot={selectedTimeSlot}
-                    onTimeSlotChange={onTimeSlotChange}
+                    onTimeSlotChange={handleCompactSlotPick}
                     customTimeSlot={customTimeSlot}
                     cms={cms}
                     compact
+                    slotsWithoutStyle={slotsWithoutStyle}
+                    earliestMeal={earliestMeal}
                   />
                 </motion.div>
               )}
@@ -942,6 +1041,8 @@ export function UserNeeds({
                   onTimeSlotChange={onTimeSlotChange}
                   customTimeSlot={customTimeSlot}
                   cms={cms}
+                  slotsWithoutStyle={slotsWithoutStyle}
+                  earliestMeal={earliestMeal}
                 />
               </div>
               <InlineTip>
@@ -963,7 +1064,12 @@ function TimeSlotPicker({
   customTimeSlot,
   cms,
   compact = false,
+  slotsWithoutStyle,
+  earliestMeal,
 }: {
+  /** FW-09: slot in cui nessuno stile sta nei tempi. */
+  slotsWithoutStyle: ReadonlySet<string>;
+  earliestMeal: () => EarliestFeasibleMeal | null;
   slots: TimeSlot[];
   suggestedSlot: string;
   selectedTimeSlot: string | null;
@@ -981,7 +1087,8 @@ function TimeSlotPicker({
       >
         {slots.map((slot) => {
           const active = selectedTimeSlot === slot.id;
-          const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
+          // D-036 (FW-20): «Consigliato» resta visibile anche dopo una scelta.
+          const suggested = slot.id === suggestedSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
           const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
@@ -1022,6 +1129,9 @@ function TimeSlotPicker({
                   >
                     {displaySublabel}
                   </span>
+                  {slotsWithoutStyle.has(slot.id) && (
+                    <span className="type-body-xs needs-slot__none">{uiMessage("ui.slotNoneFeasible")}</span>
+                  )}
                 </div>
               </div>
 
@@ -1047,7 +1157,8 @@ function TimeSlotPicker({
       <div className={compact ? "needs-slot-grid needs-slot-grid--compact" : "needs-slot-grid"}>
         {slots.map((slot) => {
           const active = selectedTimeSlot === slot.id;
-          const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
+          // D-036 (FW-20): «Consigliato» resta visibile anche dopo una scelta.
+          const suggested = slot.id === suggestedSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
           const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
@@ -1106,6 +1217,9 @@ function TimeSlotPicker({
                 >
                   {displaySublabel}
                 </span>
+                {slotsWithoutStyle.has(slot.id) && (
+                  <span className="type-body-xs needs-slot__none">{uiMessage("ui.slotNoneFeasible")}</span>
+                )}
               </div>
 
               {active && (
@@ -1128,6 +1242,7 @@ function TimeSlotPicker({
         onSelect={onTimeSlotChange}
         cms={cms}
         bcp47={bcp47}
+        earliestMeal={earliestMeal}
       />
     </div>
   );
@@ -1205,9 +1320,11 @@ function FlourChip({
           {flour.producer}
         </span>
       )}
-      <span className="type-numeric needs-flour-chip__w">
-        {flour.w}
-      </span>
+      {flour.w && (
+        <span className="type-numeric needs-flour-chip__w">
+          {flour.w}
+        </span>
+      )}
     </motion.button>
   );
 }

@@ -1,10 +1,12 @@
 import { encodePan } from "../features/recipe/pan-url";
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
-import { recipeDisplayName } from "../domain/recipe-reference";
+import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
+import { referenceEyebrow } from "../features/recipe/reference-label";
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { Bookmark, ChevronRight, Heart, Sparkles } from "lucide-react";
 import {
+AnimatePresence,
 motion,
 useReducedMotion,
 } from "motion/react";
@@ -44,13 +46,16 @@ import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { RecommendedStyles,STYLE_PHOTOS } from "../features/recipe/recommended-styles";
+import { OvenFirstNotice } from "../features/recipe/oven-first-notice";
+import { focusOvenChoice } from "../features/recipe/kitchen-drawer-focus";
+import { createEntryTime } from "../domain/create-entry";
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
 import { useCms } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { t as tpl } from "../features/cms/i18n";
-import { findSavedRecipe, removeRecipe, renameSavedRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
+import { findSavedRecipe, loadSavedRecipes, removeRecipe, renameSavedRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
 import {
   getInterpretationById,
   getInterpretationsForStyle,
@@ -66,6 +71,7 @@ import { useStylesOverride } from "../context/styles-override-context";
 import { ContextualWarnings } from "../features/recipe/troubleshooting-panel";
 import { normalizeRecipeName, recipeSourceUrl } from "../data/saved-recipes";
 import { mergeDraftConstraints, useProfileDefaults } from "../hooks/use-profile-defaults";
+import { useDetailLevel } from "../hooks/use-detail-level";
 import {
   defaultRecipePL,
   styleWithSelectedTopping,
@@ -306,13 +312,16 @@ function resolveCreateDraft(
   profileConstraints: UserConstraints,
   styles: Record<string, PizzaStyle>,
 ): ResolvedCreateDraft {
+  /* D-036 (FW-20): senza bozza si entra col momento consigliato, non con
+     «Nessuna preferenza» (che resta sceglibile nel chip). */
+  const entry = createEntryTime(Date.now());
   const fallback: ResolvedCreateDraft = {
     step: "styles",
     selectedStyle: null,
-    selectedTimeSlot: NO_PREFERENCE_SLOT.id,
-    selectedTimeMeta: null,
+    selectedTimeSlot: entry?.slotId ?? NO_PREFERENCE_SLOT.id,
+    selectedTimeMeta: entry ? { selectedAt: entry.selectedAt, hours: entry.hours, targetAt: entry.targetAt } : null,
     styleSettingsPanel: null,
-    constraints: { ...profileConstraints, available_hours: 0 },
+    constraints: { ...profileConstraints, available_hours: entry?.hours ?? 0 },
     recipeInitial: null,
   };
   const draft = readCreateDraft();
@@ -387,6 +396,8 @@ export function HomePage() {
   if (initialCreateDraftRef.current === null) {
     const draft = resolveCreateDraft(profileDefaults.constraints, effectiveStyles);
     initialCreateDraftRef.current = sourceStyle ? { ...draft, step: "styles", selectedStyle: null, recipeInitial: null, recipeName: undefined, constraints: { ...draft.constraints, oven_max_temp_c: draft.constraints.oven_capacity_temp_c ?? draft.constraints.oven_max_temp_c } } : draft;
+    /* FW-16 (S16-A-14): «Modifica in Crea» dal Profilo apre il pannello Dispensa. */
+    if (entrySearch.get("panel") === "pantry") initialCreateDraftRef.current = { ...initialCreateDraftRef.current, step: "styles", styleSettingsPanel: "pantry" };
   }
   const initialCreateDraft = initialCreateDraftRef.current;
   const [recipeName, setRecipeName] = useState<string | undefined>(initialCreateDraft.recipeName);
@@ -414,7 +425,6 @@ export function HomePage() {
     );
   const [setupPanelOpen, setSetupPanelOpen] = useState(false);
   const [setupNotice, setSetupNotice] = useState<string | null>(null);
-  const [nerdMode, setNerdMode] = useState(false);
 
   /* Redesign lug 2026: niente bozze/parcheggi — all'uscita dal result con
      modifiche non salvate si avvisa e basta. */
@@ -443,7 +453,6 @@ export function HomePage() {
     setConstraints(c => ({...c, oven_max_temp_c: c.oven_capacity_temp_c ?? c.oven_max_temp_c}));
     setSetupPanelOpen(false);
     setSetupNotice(null);
-    setNerdMode(false);
     setStyleSettingsPanel(null);
     window.scrollTo({
       top: 0,
@@ -452,8 +461,9 @@ export function HomePage() {
     setCurrentStep("styles");
   }, []);
 
-  const nerdAvailable = profileDefaults.pizzaNerdEnabled;
-  const effectiveNerdMode = nerdAvailable && nerdMode;
+  /* FW-08: «Dettagli tecnici» è uno stato globale (useDetailLevel): si
+     accende dal Profilo o dall'interruttore nella testata della ricetta. */
+  const effectiveNerdMode = useDetailLevel().level === "technical";
   const [constraints, setConstraints] =
     useState<UserConstraints>(initialCreateDraft.constraints);
   /* ENG-4: i vincoli che vanno al motore. Solo un orario del pasto vero è una
@@ -750,6 +760,8 @@ export function HomePage() {
     // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
     [selectedStyle, currentSaveParams, savedTick],
   );
+  /* FW-09 (S05-A-16): «Ricette salvate» in Crea solo se ce n'è almeno una. */
+  const savedRecipeCount = useMemo(() => loadSavedRecipes().length, [savedTick, currentStep]);
   const resolvedRecipeName = recipeName ?? normalizeRecipeName(savedEntry?.name) ?? "";
   useEffect(() => {
     if (recipeName === undefined && savedEntry?.name) setRecipeName(normalizeRecipeName(savedEntry.name));
@@ -875,6 +887,11 @@ export function HomePage() {
   // interpretazione, e i parametri correnti coincidono con l'ultimo ottimo. In quel
   // caso mostriamo la rationale e NASCONDIAMO il pulsante (sarebbe ridondante). Se
   // l'utente è su canonico o ha spostato gli slider, il pulsante riappare.
+  /* FW-14: riferimento sugli stessi vincoli della ricetta mostrata. */
+  const createReferenceRecipe = useMemo(
+    () => (createReferenceEntry ? recipeFromEntry(createReferenceEntry, engineConstraints) : undefined),
+    [createReferenceEntry, engineConstraints],
+  );
   const createRecipeOptimized = useMemo(() => {
     const p = lastOptimization?.params;
     return (
@@ -1200,13 +1217,29 @@ export function HomePage() {
                         {cms.steps.styles.subtitle}
                       </p>
                     </div>
+                    {savedRecipeCount > 0 && (
                     <CtaButton as={Link} to="/profile?tab=recipes" variant="secondary" elevated={false} className="home-saved-recipes">
                       <Bookmark size={18} aria-hidden="true" />
                       <span data-region="label">{uiMessage("pages.profile.ricette-salvate-b5c99ac7")}</span>
+                      <span data-region="count" className="type-numeric">{savedRecipeCount}</span>
                       <ChevronRight size={16} aria-hidden="true" />
                     </CtaButton>
+                    )}
                   </div>
                 </div>
+                {/* D-038 (FW-20): chiede solo il forno, finché non è scelto. */}
+                {!sourceStyle && (
+                  <OvenFirstNotice
+                    constraints={constraints}
+                    onChooseOven={() => {
+                      setStyleSettingsPanel("cucina");
+                      /* FW-20 (WCAG 2.4.3): la scheda col focus sparisce, il focus va nel cassetto. */
+                      const scope = document.querySelector<HTMLElement>(".home-step--styles") ?? document;
+                      focusOvenChoice({ querySelector: (selector) => scope.querySelector<HTMLElement>(selector) });
+                    }}
+                    onClosed={() => requestAnimationFrame(() => focusStep("styles"))}
+                  />
+                )}
                 {sourceStyle && (
                   <section className="home-onboarding">
                     <p className="type-label">{tpl(cms.ui.createSourceTitle, {style: sourceStyle.name})}</p>
@@ -1220,6 +1253,10 @@ export function HomePage() {
                   onSelectStyle={applySelectStyle}
                   timeSlots={rescueTimeSlots}
                   onSelectTimeSlot={handleTimeSlotChange}
+                  onOpenSettings={(tab) => {
+                    setStyleSettingsPanel(tab);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 />
               </div>
             </div>
@@ -1263,11 +1300,17 @@ export function HomePage() {
                   ? cms.cooking.tabRecipe
                   : cms.cooking.tabRecipeTailored
               }
-              eyebrow={
-                createDirty || resolvedRecipeName
-                  ? cms.ui.scoreBasisTailored
-                  : cms.ui.scoreBasisOriginal
-              }
+              eyebrow={referenceEyebrow({
+                styleId: selectedStyle.id,
+                tailored: createDirty || Boolean(resolvedRecipeName),
+                tailoredLabel: cms.ui.scoreBasisTailored,
+                referenceLabel: cms.ui.scoreBasisOriginal,
+                interpretation: createOrigin ?? null,
+                version: activeVersion,
+                versionLabel: activeVersion ? cms.messages?.[`version.label.${activeVersion.label}`] ?? activeVersion.label : undefined,
+                adaptedToOven: stgDepartures(recipe, engineConstraints.oven_type).length > 0
+                  || (!isFriedStyle(selectedStyle) && recipe.oven_temp_c < selectedStyle.baking.temp_c_range[0]),
+              })}
               eyebrowTone={createDirty || resolvedRecipeName ? "tailored" : "canonical"}
               shareUrl={shareUrl}
               selectedToppingConcept={selectedToppingConcept}
@@ -1276,8 +1319,6 @@ export function HomePage() {
                 setSelectedToppingConcept(conceptId);
               }}
               nerdMode={effectiveNerdMode}
-              nerdAvailable={nerdAvailable}
-              onNerdModeChange={setNerdMode}
               selectedFlourId={selectedFlourId}
               onSelectFlour={(flour) => {
                 setCreateRecipeMode("adapted");
@@ -1324,6 +1365,9 @@ export function HomePage() {
                 <RecipeStatStrip
                   recipe={recipe}
                   isPersonalized={createDirty}
+                  reference={createReferenceRecipe}
+                  optimized={createRecipeOptimized}
+                  ovenType={constraints.oven_type}
                 />
                 {/* Il dialog Personalizza: si apre dal pulsante sulla match
                     card (niente trigger proprio — nota Matteo lug 2026). */}
@@ -1386,15 +1430,11 @@ export function HomePage() {
                       setCreateRecipeMode("adapted");
                       setPreFermentChoice(value);
                     }}
-                    customFlourPL={effectiveNerdMode ? customFlourPL : undefined}
-                    onFlourPLChange={
-                      effectiveNerdMode
-                        ? (value) => {
-                            setCreateRecipeMode("adapted");
-                            setCustomFlourPL(value);
-                          }
-                        : undefined
-                    }
+                    customFlourPL={customFlourPL}
+                    onFlourPLChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setCustomFlourPL(value);
+                    }}
                     customSalt={customSalt}
                     onSaltChange={(value) => {
                       setCreateRecipeMode("adapted");
@@ -1544,6 +1584,8 @@ export function HomePage() {
       )}
 
       {/* ═══ STYLE DETAIL SHEET — bottom sheet with selected style details ═══ */}
+      {/* FW-03 (S03-B-17): AnimatePresence fa partire l'animazione di uscita */}
+      <AnimatePresence>
       {currentStep === "styles" && selectedStyle && (
           <StyleDetailSheet
             key={selectedStyle.id}
@@ -1553,6 +1595,7 @@ export function HomePage() {
             onDismiss={() => setSelectedStyle(null)}
           />
       )}
+      </AnimatePresence>
 
       {recipe && recipeSource && <SaveRecipeDialog open={saveFlow.open} onClose={saveFlow.cancel} onConfirm={saveFlow.confirm}
         defaultName={resolvedRecipeName || recipeDisplayName(recipe, engineConstraints.oven_type)} source={recipeSource} />}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { STYLES_DB, recommendStyles, type UserConstraints } from "../domain/pizza-engine";
-import { buildGeneratedRecipe, canonicalRecipe, canonicalRecipeEntry, tailoredRecipeEntry } from "./recipe-entry";
+import { buildGeneratedRecipe, canonicalRecipe, canonicalRecipeEntry, getCanonicalVersion, tailoredRecipeEntry } from "./recipe-entry";
+import { getStyleReference, getVersions } from "../data/style-versions";
 
 const weights = { authenticity: .3, feasibility: .25, digestibility: .2, sustainability: .15, experimentation: .1 };
 const base: UserConstraints = { oven_type: "home", oven_max_temp_c: 250, oven_capacity_temp_c: 250, skill_level: 2,
@@ -121,5 +122,29 @@ describe("ottimizzazione con un blocco indipendente dal tempo", () => {
   expect(r.verdict.outcome).toBe("not_feasible");
   expect(r.fermentation_hours).toBeLessThanOrEqual(r.style.dough.fermentation_hours_range[1]);
   expect(r.verdict.blockers.map(b=>b.kind)).toEqual(["resource_excluded"]);
+ });
+});
+
+/* FW-14 (D-B, S03-V-01): il riferimento è dichiarato nei dati e cade negli
+ * intervalli che la scheda dello stile mostra nelle pill. */
+describe("FW-14 · riferimento dello stile", () => {
+ const inRange=(v:number,[lo,hi]:[number,number])=>v>=lo&&v<=hi;
+ it("ogni riferimento rientra negli intervalli dello stile", () => {
+  for(const style of Object.values(STYLES_DB)) {
+   const o=canonicalRecipeEntry(style).options; const d=style.dough;
+   expect(inRange(o.customHydration!,d.hydration_pct_range),`${style.id} idratazione ${o.customHydration}`).toBe(true);
+   expect(inRange(o.customFlourW!,d.flour_w_range),`${style.id} W ${o.customFlourW}`).toBe(true);
+   expect(inRange(o.customFermentationHours!,d.fermentation_hours_range),`${style.id} ore ${o.customFermentationHours}`).toBe(true);
+  }
+ });
+ it("ogni stile con versioni dichiara il riferimento; i disciplinari prevalgono", () => {
+  for(const style of Object.values(STYLES_DB)) {
+   const ref=getStyleReference(style.id);
+   if(ref.referenceVersionId) expect(getVersions(style.id).map(v=>v.id),style.id).toContain(ref.referenceVersionId);
+   if(ref.basis==="disciplinare") expect(canonicalRecipeEntry(style).interpretation?.type,style.id).toBe("disciplinare");
+   else expect(canonicalRecipeEntry(style).interpretation,style.id).toBeNull();
+  }
+  expect(canonicalRecipeEntry(STYLES_DB.teglia_romana).interpretation?.id).toBe("apiter_teglia");
+  expect(getCanonicalVersion("teglia_romana")).toBeNull();
  });
 });

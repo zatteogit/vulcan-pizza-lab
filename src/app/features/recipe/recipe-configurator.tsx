@@ -1,8 +1,6 @@
 import { engineMsgTexts } from "./engine-msg-text";
-import { Check,ChevronDown,Circle,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
-import { motionSpring,motionTiming } from "../../components/ds/motion";
-import React,{ useEffect,useMemo,useRef,useState } from "react";
+import { ChevronDown,Circle,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
+import React,{ useId,useMemo,useRef,useState } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter,t } from "../cms/i18n";
 import { InfoTip } from "../../components/shared/info-tip";
@@ -17,187 +15,17 @@ PreFermentChoice,
 preFermentKind,
 UserConstraints,
 defaultPanShape,
+isFriedStyle,
 needsPan,
 optimizeRecipe,
 supportsThickness,
 } from "../../domain/pizza-engine";
-import { SegmentedControl, Stepper, Switch } from "../../components/ds/index";
+import { SegmentedControl, Select, Stepper, Switch } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
+import { useDetailLevel } from "../../hooks/use-detail-level";
+import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
+import { kitchenConstraints, resolveEffectiveKitchen } from "../../use-cases/effective-kitchen";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
-
-interface PremiumSelectOption {
-  value: string;
-  label: string;
-  subLabel?: string;
-  icon?: string | React.ReactNode;
-  suggested?: boolean;
-}
-
-interface PremiumSelectGroup {
-  label: string;
-  options: PremiumSelectOption[];
-}
-
-/* ═══ PREMIUM ANIME SELECT COMPONENT ═══ */
-export function PremiumSelect({
-  value,
-  onChange,
-  options,
-  groups,
-  placeholder = "Seleziona...",
-}: {
-  value: string;
-  onChange: (val: string) => void;
-  options?: PremiumSelectOption[];
-  groups?: PremiumSelectGroup[];
-  placeholder?: string;
-}) {
-  const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
-
-  const allOptions = useMemo(() => {
-    const list: PremiumSelectOption[] = [];
-    if (options) list.push(...options);
-    if (groups) {
-      groups.forEach((g) => list.push(...g.options));
-    }
-    return list;
-  }, [options, groups]);
-
-  const activeOption = allOptions.find((o) => o.value === value);
-
-  return (
-    <div ref={containerRef} className="config-select">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className={open ? "config-select__trigger config-select__trigger--open" : "config-select__trigger"}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-      >
-        {activeOption?.icon && (
-          <span className="config-select__icon">
-            {activeOption.icon}
-          </span>
-        )}
-        <div className="config-select__body">
-          <span className="config-select__value">{activeOption?.label || placeholder}</span>
-          {activeOption?.subLabel && (
-            <span className="config-select__sublabel">
-              {activeOption.subLabel}
-            </span>
-          )}
-        </div>
-        <ChevronDown size={16} className="config-select__chevron" />
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.97 }}
-            transition={motionSpring.configuratorControl}
-            className="config-select__menu"
-            role="listbox"
-          >
-            {options &&
-              options.map((opt) => (
-                <PremiumSelectRow
-                  key={opt.value}
-                  option={opt}
-                  active={value === opt.value}
-                  onClick={() => {
-                    onChange(opt.value);
-                    setOpen(false);
-                  }}
-                />
-              ))}
-            {groups &&
-              groups.map((g, idx) => (
-                <div key={idx} className="config-select__group">
-                  {idx > 0 && (
-                    <div className="config-select__group-divider" />
-                  )}
-                  <div className="config-select__group-label">
-                    {g.label}
-                  </div>
-                  {g.options.map((opt) => (
-                    <PremiumSelectRow
-                      key={opt.value}
-                      option={opt}
-                      active={value === opt.value}
-                      onClick={() => {
-                        onChange(opt.value);
-                        setOpen(false);
-                      }}
-                    />
-                  ))}
-                </div>
-              ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-function PremiumSelectRow({
-  option,
-  active,
-  onClick,
-}: {
-  option: PremiumSelectOption;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <motion.button
-      type="button"
-      onClick={onClick}
-      className={active ? "config-select__row config-select__row--active" : "config-select__row"}
-      whileHover={{
-        backgroundColor: active
-          ? "var(--chip-bg-active)"
-          : "color-mix(in srgb, var(--text-default) 6%, transparent)",
-      }}
-      whileTap={{ scale: 0.985 }}
-      transition={motionTiming.instant}
-      role="option"
-      aria-selected={active}
-    >
-      {option.icon && (
-        <span className="config-select__icon">
-          {option.icon}
-        </span>
-      )}
-      <div className="config-select__body">
-        <span className="config-select__value">{option.label}</span>
-        {option.subLabel && (
-          <span className="config-select__sublabel">
-            {option.subLabel}
-          </span>
-        )}
-      </div>
-      {option.suggested && (
-        <span className="config-select__row-badge">
-          {uiMessage("features.recipe.recipe-configurator.consigliato-f488c665")}</span>
-      )}
-      {active && <Check size={14} className="config-select__row-check" />}
-    </motion.button>
-  );
-}
 
 interface RecipeConfiguratorProps {
   style: PizzaStyle;
@@ -247,6 +75,9 @@ function computeAdaptiveHints(
   fermentTemp: number,
   flourPL: number | undefined,
   cfg: any,
+  /* FW-11 (S06-A-10): le temperature già formattate, perché i testi
+     {fridgeTemp}/{coolTemp}/{ambientTemp} non restino segnaposto. */
+  temps: { fridgeTemp: string; coolTemp: string; ambientTemp: string },
 ): AdaptiveHints {
   const hints: AdaptiveHints = {
     hydration: null,
@@ -303,19 +134,19 @@ function computeAdaptiveHints(
   if (fPos > 0.6 && fermentTemp > 16) {
     // Upper 40% of fermentation range + ambient temp → suggest fridge
     hints.fermentTemp = {
-      hint: t(cfg.hintLongFermentUseFridge, { hours: String(fermentHours) }),
+      hint: t(cfg.hintLongFermentUseFridge, { hours: String(fermentHours), ...temps }),
       suggestedTemp: "fridge",
     };
   } else if (fPos < 0.3 && fermentTemp <= 6) {
     // Lower 30% of fermentation range + fridge → suggest ambient
     hints.fermentTemp = {
-      hint: t(cfg.hintShortFermentUseWarm, { hours: String(fermentHours) }),
+      hint: t(cfg.hintShortFermentUseWarm, { hours: String(fermentHours), ...temps }),
       suggestedTemp: "ambient",
     };
   } else if (fPos >= 0.3 && fPos <= 0.6 && (fermentTemp <= 6 || fermentTemp > 16)) {
     // Middle range → suggest cool
     hints.fermentTemp = {
-      hint: t(cfg.hintMediumFermentUseCool, { hours: String(fermentHours) }),
+      hint: t(cfg.hintMediumFermentUseCool, { hours: String(fermentHours), ...temps }),
       suggestedTemp: "cool",
     };
   }
@@ -425,7 +256,7 @@ export function RecipeConfigurator({
   usePreFerment,
   onPreFermentChange,
   customFlourPL,
-  onFlourPLChange,
+  onFlourPLChange: onFlourPLChangeProp,
   customSalt,
   onSaltChange,
   panConfig,
@@ -433,18 +264,25 @@ export function RecipeConfigurator({
   preFermentChoice,
   onPreFermentChoiceChange,
 }: RecipeConfiguratorProps) {
+  /* FW-08 (S06-A-19/B-17): P/L si modifica negli avanzati con «Dettagli
+     tecnici» attivo; altrimenti gli avanzati ne mostrano il valore e dicono
+     dove si sblocca. Senza dettagli tecnici P/L non segue nemmeno i
+     «Parametri collegati», come prima. */
+  const { level: detailLevel, setLevel: setDetailLevel } = useDetailLevel();
+  const onFlourPLChange = detailLevel === "technical" ? onFlourPLChangeProp : undefined;
+  /* FW-07 (S06-B-04): il forno della cucina effettiva, con il modello del
+     profilo; un altro tipo scelto qui vale solo per questa ricetta. */
+  const kitchen = useMemo(() => loadEffectiveKitchen(), []);
   /* Single-call update for oven to avoid the double-update bug */
-  const handleOvenSelect = (id: string, maxTemp: number) => {
-    onConstraintsChange({
-      ...constraints,
-      oven_type: id as OvenType,
-      oven_max_temp_c: maxTemp,
-      oven_capacity_temp_c: maxTemp,
-    });
+  const handleOvenSelect = (id: OvenType) => {
+    const oven = kitchenConstraints(resolveEffectiveKitchen({ oven: kitchen.oven.type === id ? { ovenType: id, maxTemp: kitchen.oven.maxTempC, modelId: kitchen.oven.modelId } : null }, undefined, { ovenType: id }));
+    const { oven_max_pizza_cm: _mouth, ...rest } = constraints;
+    onConstraintsChange({ ...rest, ...oven });
   };
 
   const { cms, bcp47 } = useCms();
   const cfg = cms.configurator;
+  const preFermentSwitchId = useId();
   const fmt = createFormatter(cms.ui, bcp47);
   /* Temperature di riferimento per i tre regimi di fermentazione (°C),
      formattate secondo il sistema di unità dell'utente. */
@@ -560,9 +398,17 @@ export function RecipeConfigurator({
     customFermentTemp,
     customFlourPL,
     cfg,
+    { fridgeTemp, coolTemp, ambientTemp },
   );
 
-  const suggestedTemp = adaptiveHints.fermentTemp?.suggestedTemp;
+  /* FW-14 (S06-B-02): una sola fonte per la raccomandazione. Il badge
+     «Consigliato» segue l'ottimo del motore (lo stesso del triangolo sugli
+     slider), non l'euristica dei suggerimenti: prima diceva «Fresco» mentre
+     la ricetta ottimizzata sceglieva 22 °C. */
+  const optimumTemp = optimum?.fermentation_temp_c;
+  const suggestedTemp: "fridge" | "cool" | "ambient" | undefined = optimumTemp === undefined
+    ? adaptiveHints.fermentTemp?.suggestedTemp
+    : optimumTemp <= 6 ? "fridge" : optimumTemp <= 16 ? "cool" : "ambient";
 
   const changedAdvanced = [
     !smartLink,
@@ -746,6 +592,23 @@ export function RecipeConfigurator({
               )}
             </div>
           )}
+          {/* FW-08: P/L in sola lettura, con la via per modificarlo. */}
+          {customFlourPL !== undefined && onFlourPLChangeProp && !onFlourPLChange && (
+            <p className="config-field config-pl-readonly" data-region="pl-readonly">
+              <span className="config-pl-readonly__value">
+                {uiMessage("detailLevel.plReadOnly", [
+                  fmt.number(customFlourPL, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                ])}
+              </span>
+              <button
+                type="button"
+                className="config-pl-readonly__action"
+                onClick={() => setDetailLevel("technical")}
+              >
+                {uiMessage("detailLevel.enable")}
+              </button>
+            </p>
+          )}
           </>
           )}
 
@@ -783,8 +646,8 @@ export function RecipeConfigurator({
                   name={style.dough.unleavened ? cfg.restLabel : cfg.fermentLabel}
                   label={
                     style.dough.unleavened
-                      ? <><Label>{cfg.restLabel}</Label><InfoTip>{cfg.restTip}</InfoTip></>
-                      : <><Label>{cfg.fermentLabel}</Label><InfoTip>{cfg.fermentTip}</InfoTip></>
+                      ? <><Label>{cfg.restLabel}</Label><InfoTip label={cfg.restLabel}>{cfg.restTip}</InfoTip></>
+                      : <><Label>{cfg.fermentLabel}</Label><InfoTip label={cfg.fermentLabel}>{cfg.fermentTip}</InfoTip></>
                   }
                   value={customFermentHours}
                   onChange={handleFH}
@@ -820,13 +683,16 @@ export function RecipeConfigurator({
               {showAdvanced && (
               <div className="config-toggle-row">
                 <div className="config-toggle-row__label-group">
-                  <span className="config-toggle-row__label">
+                  {/* FW-12 (S06-B-12): toccare il testo attiva lo switch. */}
+                  <label htmlFor={preFermentSwitchId} className="config-toggle-row__label">
                     {cfg.preFermentLabel}
-                  </span>
-                  <InfoTip size={14}>{cfg.preFermentTip}</InfoTip>
+                  </label>
+                  <InfoTip size={14} label={cfg.preFermentLabel}>{cfg.preFermentTip}</InfoTip>
                 </div>
                 <Switch
+                  id={preFermentSwitchId}
                   checked={usePreFerment}
+                  aria-label={cfg.preFermentLabel}
                   onCheckedChange={onPreFermentChange}
                 />
               </div>
@@ -883,7 +749,7 @@ export function RecipeConfigurator({
                 <div className="config-temp-header">
                   <div className="config-temp-header__label-group">
                     <Label>{uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}</Label>
-                    <InfoTip>{uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-dell-impasto-737f1c50")}</InfoTip>
+                    <InfoTip label={uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}>{uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-dell-impasto-737f1c50")}</InfoTip>
                   </div>
                   {suggestedTemp && (
                     <span className="config-temp-header__badge">
@@ -909,6 +775,7 @@ export function RecipeConfigurator({
                     max={30}
                     step={1}
                     unit="°C"
+                    format={fmt.celsius}
                     gradient={SLIDER_GRADIENTS.temperature}
                   />
                 ) : (() => {
@@ -984,8 +851,8 @@ export function RecipeConfigurator({
           {/* Temperatura di cottura */}
           <div className="config-field">
             <GradientSlider
-              name={uiMessage("features.recipe.recipe-configurator.temperatura-di-cottura-85a0cbf5")}
-              label={<Label>{uiMessage("features.recipe.recipe-configurator.temperatura-di-cottura-85a0cbf5")}</Label>}
+              name={uiMessage("recipe.oven.maxLabel")}
+              label={<Label>{uiMessage("recipe.oven.maxLabel")}</Label>}
               value={constraints.oven_max_temp_c}
               onChange={(v) =>
                 onConstraintsChange({
@@ -997,31 +864,46 @@ export function RecipeConfigurator({
               max={constraints.oven_capacity_temp_c ?? OVEN_PRESETS.find((preset) => preset.id === constraints.oven_type)?.maxTemp ?? 550}
               step={5}
               unit="°C"
+              format={fmt.celsius}
               rangeMin={style.baking.temp_c_range[0]}
               rangeMax={style.baking.temp_c_range[1]}
+              ceiling
               gradient={SLIDER_GRADIENTS.temperature}
               optimalValue={style.baking.temp_c_ideal}
             />
+            {/* FW-07 (S06-A-02): il cursore è un tetto; il motore cuoce
+                alla temperatura ideale dello stile quando il forno la supera. */}
+            {constraints.oven_max_temp_c > style.baking.temp_c_ideal && !isFriedStyle(style) && (
+              <p className="type-data-sm recipe-config-oven-hint">
+                {uiMessage("recipe.oven.bakeAt", [fmt.celsius(style.baking.temp_c_ideal)])}
+              </p>
+            )}
           </div>
 
           {/* Oven Selector */}
           <div className="config-field">
-            <PremiumSelect
+            {/* FW-12 (S06-B-11): Select del DS, con etichetta e listbox da tastiera. */}
+            <Select
+              label={uiMessage("features.recipe.recipe-configurator.oven-select-label")}
               value={constraints.oven_type}
-              onChange={(val) => {
+              onValueChange={(val) => {
                 const preset = OVEN_PRESETS.find((p) => p.id === val);
                 if (preset) {
-                  handleOvenSelect(preset.id, preset.maxTemp);
+                  handleOvenSelect(preset.id);
                 }
               }}
-              options={OVEN_PRESETS.map((preset) => {
-                const name = cms.ovenPresets[preset.id]?.name ?? preset.name;
-                return {
-                  value: preset.id,
-                  label: name,
-                  subLabel: `max ${preset.maxTemp}°C`,
-                };
-              })}
+              options={[...OVEN_PRESETS]
+                // FW-07: il forno del profilo per primo, col nome del modello e la sua massima.
+                .sort((a, b) => Number(b.id === kitchen.oven.type) - Number(a.id === kitchen.oven.type))
+                .map((preset) => {
+                  const mine = preset.id === kitchen.oven.type;
+                  const name = cms.ovenPresets[preset.id]?.name ?? preset.name;
+                  return {
+                    id: preset.id,
+                    label: mine && kitchen.oven.modelId ? uiMessage("features.profile.oven-model-search.selected", [kitchen.oven.label]) : name,
+                    desc: uiMessage("features.profile.oven-model-search.upTo", [fmt.celsius(mine ? kitchen.oven.maxTempC : preset.maxTemp)]),
+                  };
+                })}
             />
           </div>
 
@@ -1054,18 +936,19 @@ export function RecipeConfigurator({
                 <div className="config-field">
                   <div className="config-field-label">
                     <Label>{cfg.panLabel}</Label>
-                    <InfoTip>
+                    <InfoTip label={cfg.panLabel}>
                       {defaultPanShape(style) === "rectangular" ? cfg.panTipRect : cfg.panTipRound}
                     </InfoTip>
                   </div>
 
                   {/* Shape selector dropdown */}
-                  <PremiumSelect
+                  <Select
+                    ariaLabel={cfg.panLabel}
                     value={currentShape}
-                    onChange={(val) => handleShapeChange(val as PanShape)}
+                    onValueChange={(val) => handleShapeChange(val as PanShape)}
                     options={[
-                      { value: "rectangular", label: cfg.panRectangular },
-                      { value: "round", label: cfg.panRound },
+                      { id: "rectangular", label: cfg.panRectangular },
+                      { id: "round", label: cfg.panRound },
                     ]}
                   />
                 </div>
@@ -1085,6 +968,7 @@ export function RecipeConfigurator({
                         max={60}
                         step={1}
                         unit=" cm"
+                        format={fmt.centimeters}
                         rangeMin={style.shape.length_cm ? style.shape.length_cm - 5 : undefined}
                         rangeMax={style.shape.length_cm ? style.shape.length_cm + 5 : undefined}
                         gradient={SLIDER_GRADIENTS.flourW}
@@ -1103,6 +987,7 @@ export function RecipeConfigurator({
                         max={45}
                         step={1}
                         unit=" cm"
+                        format={fmt.centimeters}
                         rangeMin={style.shape.width_cm ? style.shape.width_cm - 5 : undefined}
                         rangeMax={style.shape.width_cm ? style.shape.width_cm + 5 : undefined}
                         gradient={SLIDER_GRADIENTS.flourW}
@@ -1126,6 +1011,7 @@ export function RecipeConfigurator({
                       max={45}
                       step={1}
                       unit=" cm"
+                      format={fmt.centimeters}
                       rangeMin={style.shape.diameter_cm ? style.shape.diameter_cm - 3 : undefined}
                       rangeMax={style.shape.diameter_cm ? style.shape.diameter_cm + 3 : undefined}
                       gradient={SLIDER_GRADIENTS.flourW}
@@ -1178,7 +1064,7 @@ export function RecipeConfigurator({
             <div className="config-field">
               <div className="config-thickness-header">
                 <Label>{cfg.thicknessLabel}</Label>
-                <InfoTip>{cfg.thicknessTip}</InfoTip>
+                <InfoTip label={cfg.thicknessLabel}>{cfg.thicknessTip}</InfoTip>
               </div>
               {(() => {
                 const tf = style.shape.thickness_factor;
@@ -1299,6 +1185,7 @@ function GradientSlider({
   unit,
   rangeMin,
   rangeMax,
+  ceiling,
   gradient,
   adaptiveMin,
   adaptiveMax,
@@ -1307,6 +1194,7 @@ function GradientSlider({
   valueText,
   zoneLabels,
   name,
+  format,
 }: {
   value: number;
   onChange: (v: number) => void;
@@ -1316,6 +1204,8 @@ function GradientSlider({
   unit: string;
   rangeMin?: number;
   rangeMax?: number;
+  /** FW-07: il valore è un tetto, sopra rangeMax non è «fuori range». */
+  ceiling?: boolean;
   gradient: string;
   adaptiveMin?: number;
   adaptiveMax?: number;
@@ -1327,10 +1217,15 @@ function GradientSlider({
   zoneLabels?: [string, string];
   /** Nome accessibile dell'input (U-10, F05): il testo dell'etichetta visibile. */
   name?: string;
+  /** FW-11 (S06-B-06): valore con unità nel sistema dell'utente (°F, in).
+   *  Il dominio resta metrico; nell'imperiale il valore non si digita. */
+  format?: (value: number) => string;
 }) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
   const numberLabel = (n: number) => fmt.number(n, { maximumFractionDigits: 2 });
+  const valueLabel = (n: number) => (format ? format(n) : `${numberLabel(n)}${unit}`);
+  const editable = !format || fmt.unitSystem === "metric";
   /* Fix di Matteo: al tocco del valore si digita il numero, per chi non ama
      gli slider. Invio o tocco fuori conferma, Esc annulla. */
   const [editing, setEditing] = useState(false);
@@ -1344,10 +1239,15 @@ function GradientSlider({
     if (clamped !== value) onChange(clamped);
   };
   const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+  /* FW-13 (S06-A-23) e FW-14 (S06-B-02): il valore consigliato dal motore non
+     si colora mai come «fuori range», anche quando l'ottimo esce dalla
+     forbice dello stile. */
+  const atOptimum = optimalValue !== undefined && Math.abs(value - optimalValue) < step;
   const inRange =
-    rangeMin !== undefined && rangeMax !== undefined
-      ? value >= rangeMin && value <= rangeMax
-      : true;
+    atOptimum ||
+    (rangeMin !== undefined && rangeMax !== undefined
+      ? value >= rangeMin && (ceiling || value <= rangeMax)
+      : true);
 
   const zoneLeftPct =
     rangeMin !== undefined
@@ -1378,6 +1278,10 @@ function GradientSlider({
           <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
             {valueText}
           </span>
+        ) : !editable ? (
+          <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
+            {valueLabel(value)}
+          </span>
         ) : editing ? (
           <span className="type-numeric config-slider__value config-slider__value--editing">
             <input
@@ -1390,7 +1294,7 @@ function GradientSlider({
               onBlur={commitDraft}
               onKeyDown={(e) => {
                 if (e.key === "Enter") commitDraft();
-                if (e.key === "Escape") setEditing(false);
+                if (e.key === "Escape") { e.preventDefault(); setEditing(false); }
               }}
               className="config-slider__value-input"
             />
@@ -1405,10 +1309,9 @@ function GradientSlider({
             }}
             className={inRange ? "type-numeric config-slider__value config-slider__value--button" : "type-numeric config-slider__value config-slider__value--button config-slider__value--oor"}
             title={uiMessage("features.recipe.recipe-configurator.typeValue")}
-            aria-label={`${name ?? ""}: ${numberLabel(value)}${unit} · ${uiMessage("features.recipe.recipe-configurator.typeValue")}`}
+            aria-label={`${name ?? ""}: ${valueLabel(value)} · ${uiMessage("features.recipe.recipe-configurator.typeValue")}`}
           >
-            {numberLabel(value)}
-            {unit}
+            {valueLabel(value)}
           </button>
         )}
       </div>
@@ -1480,7 +1383,7 @@ function GradientSlider({
         <input
           type="range"
           aria-label={name}
-          aria-valuetext={valueText ?? `${numberLabel(value)}${unit}`}
+          aria-valuetext={valueText ?? valueLabel(value)}
           min={min}
           max={max}
           step={step}
@@ -1494,10 +1397,10 @@ function GradientSlider({
       {rangeMin !== undefined && rangeMax !== undefined && (
         <div className="config-slider__zone-labels">
           <span className="type-numeric config-slider__zone-label">
-            {zoneLabels?.[0] ?? numberLabel(rangeMin)}
+            {zoneLabels?.[0] ?? (format ? format(rangeMin) : numberLabel(rangeMin))}
           </span>
           <span className="type-numeric config-slider__zone-label config-slider__zone-label--end">
-            {zoneLabels?.[1] ?? numberLabel(rangeMax)}
+            {zoneLabels?.[1] ?? (format ? format(rangeMax) : numberLabel(rangeMax))}
           </span>
         </div>
       )}

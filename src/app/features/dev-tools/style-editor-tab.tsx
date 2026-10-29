@@ -80,7 +80,7 @@ const SHAPE_TYPES: { id: ShapeType; label: string; icon: React.ReactNode }[] = [
 ];
 
 const HYDRATION_CATS: HydrationCategory[] = ["low", "medium", "high", "extreme"];
-const FAMILY_IDS: FamilyId[] = ["napoletana", "romana", "americana", "contemporanea"];
+const FAMILY_IDS: FamilyId[] = ["napoletana", "romana", "americana", "contemporanea", "regionale"];
 
 const FAT_TYPES = [
   { id: "none", label: "Nessuno" },
@@ -848,7 +848,7 @@ const PIZZA_STYLE_SCHEMA = `{
   // ─── Identità ───
   "id": "string",              // ID unico, snake_case (es. "pizza_fritta_napoletana")
   "name": "string",            // Nome display (es. "Pizza Fritta Napoletana")
-  "family": "napoletana" | "romana" | "americana" | "contemporanea",
+  "family": "napoletana" | "romana" | "americana" | "contemporanea" | "regionale",
   "origin": "string",          // Luogo d'origine (es. "Napoli, Italia")
   "emoji": "string",           // Singola emoji rappresentativa
   "description": "string",     // 1-2 frasi, tono editoriale

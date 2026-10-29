@@ -21,7 +21,7 @@ import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cook
 import { resolveStepVisual } from "../cooking/step-visual";
 import type { FlourEntry } from "../../data/flour-database";
 import { GeneratedRecipe, generateTimeSlots, getServingUnit, normalizeDoughBallCount, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
-import { RecipeFeedbackForm } from "./recipe-feedback";
+import { feedbackContextFromRecipe } from "./feedback-context";
 import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
 import { ConfirmDialog } from "../../components/ds/index";
 import { motionSpring } from "../../components/ds/motion";
@@ -48,13 +48,13 @@ interface RecipeOutputProps {
   hideContextSummary?: boolean;
   recipeControls?: ReactNode;
   matchSlot?: ReactNode;
-  showFeedback?: boolean;
   selectedToppingConcept?: string | null;
   onSelectTopping?: (conceptId: string) => void;
   onTabChange?: (tab: PagerTabId) => void;
-  nerdAvailable?: boolean;
-  onNerdModeChange?: (nerd: boolean) => void;
   isPersonalized?: boolean;
+  /** FW-14: nome del riferimento come nell'eyebrow («Disciplinare AVPN»,
+   *  «Ispirata a…»); senza, la pill dice «Riferimento». */
+  referenceLabel?: string;
   onRequestPersonalization?: () => void;
   /** Nasconde la capsula flottante in alto a destra (Inizia + condividi):
    *  usato nella sezione Crea, dove la shell ha già il pulsante Profilo lì e
@@ -96,13 +96,11 @@ export function RecipeOutput({
   hideContextSummary = false,
   recipeControls,
   matchSlot,
-  showFeedback = false,
   selectedToppingConcept,
   onSelectTopping,
   onTabChange,
-  nerdAvailable = false,
-  onNerdModeChange,
   isPersonalized = true,
+  referenceLabel,
   onRequestPersonalization,
 }: RecipeOutputProps) {
   const reduceMotion = useReducedMotion();
@@ -227,8 +225,9 @@ export function RecipeOutput({
     () => Boolean(mealTargetAt || (selectedTimeSlotId && selectedTimeSlotId !== "no_preference" && constraints.available_hours > 0)),
   );
 
-  const showNerdToggle = nerdAvailable && !!onNerdModeChange;
-  const isNerd = showNerdToggle && !!nerdMode;
+  /* FW-08: il livello «Dettagli tecnici» arriva già risolto dalla pagina
+     (useDetailLevel); l'interruttore vive nella testata della scheda. */
+  const isNerd = !!nerdMode;
 
   /* ── Timeline comoda (feedback giugno 2026): minuti extra per fase ──
    * Le fasi flessibili possono stirarsi/accorciarsi entro tolleranze: un'ora
@@ -407,9 +406,9 @@ export function RecipeOutput({
     } else if (conflictingSession) {
       setConfirmReplace(true);
     } else {
-      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps);
+      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level));
     }
-  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, recipe.verdict.outcome, cookingSteps]);
+  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps]);
 
   React.useEffect(() => {
     const handler = () => handleStartCooking();
@@ -430,8 +429,8 @@ export function RecipeOutput({
     if (recipe.verdict.outcome === "not_feasible") return;
     setConfirmReplace(false);
     setConfirmPersonalize(false);
-    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps);
-  }, [startSession, recipe.style.id, recipe, constraints.oven_type, recipe.verdict.outcome, cookingSteps]);
+    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level));
+  }, [startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps]);
 
   const handlePersonalizeBeforeCooking = React.useCallback(() => {
     setConfirmPersonalize(false);
@@ -556,6 +555,8 @@ export function RecipeOutput({
               setPrintOpen(false);
               window.setTimeout(() => window.print(), 150);
             },
+            /* FW-12 (S08-B-21): niente stampa vuota. */
+            disabled: !printSections.dough && !printSections.steps && !printSections.topping,
           },
           {
             label: uiMessage("features.recipe.print-sheet.cancel"),
@@ -565,6 +566,8 @@ export function RecipeOutput({
         ]}
       >
         <fieldset className="print-options">
+          {/* FW-12 (S08-B-21): il gruppo ha un nome per lo screen reader. */}
+          <legend className="sr-only">{uiMessage("features.recipe.print-sheet.dialogTitle")}</legend>
           <Checkbox
             checked={printSections.dough}
             onCheckedChange={(v) => setPrintSections((p) => ({ ...p, dough: v }))}
@@ -580,6 +583,11 @@ export function RecipeOutput({
             onCheckedChange={(v) => setPrintSections((p) => ({ ...p, topping: v }))}
             label={uiMessage("features.recipe.print-sheet.sectionTopping")}
           />
+          <p className="print-options__empty" role="status">
+            {!printSections.dough && !printSections.steps && !printSections.topping
+              ? uiMessage("features.recipe.print-sheet.noneSelected")
+              : ""}
+          </p>
         </fieldset>
       </ConfirmDialog>
       <PrintSheet
@@ -662,7 +670,7 @@ export function RecipeOutput({
       {!hideContextSummary && (
         <div className="recipe-output-context type-body">
           <span className="recipe-output-context__pill">
-            {isPersonalized ? cms.cooking.recipeAdapted : cms.cooking.recipeCanonical}
+            {isPersonalized ? cms.cooking.recipeAdapted : (referenceLabel ?? cms.cooking.recipeCanonical)}
           </span>
           <span className="recipe-output-context__summary">
             {t(cms.cooking.ovenSummary, { temp: fmt.celsius(constraints.oven_max_temp_c) })} · {recipe.dough_balls}{" "}
@@ -751,6 +759,11 @@ export function RecipeOutput({
       </div>
 
       <div className="recipe-output-ingredients" data-slot="recipe-main">
+        {/* FW-10 (S07-B-05): sotto un esito non fattibile la ricetta più vicina
+            resta consultabile, ma lo dice in testa agli ingredienti. */}
+        {matchSlot && recipe.verdict.outcome === "not_feasible" && (
+          <p className="type-body-sm recipe-output-blocked-note" role="note">{cms.ui.verdictRecipeBelow}</p>
+        )}
         <IngredientsSection
           recipe={recipe}
           constraints={constraints}
@@ -816,6 +829,7 @@ export function RecipeOutput({
 
       <ProcedureTimeline
         recipe={recipe}
+        ovenType={constraints.oven_type}
         isNerd={isNerd}
         compensations={compensations}
         calendarReference={calendarReference}
@@ -854,13 +868,8 @@ export function RecipeOutput({
 
       </AnimatePresence>
 
-      {/* ── Feedback form — solo nel tab Ricetta: ripetuto in tutti e tre i
-          tab era rumore (audit fruibilità luglio 2026). ── */}
-      {showFeedback && activeTabView === "ricetta" && (
-        <div className="recipe-output-feedback-wrap">
-          <RecipeFeedbackForm recipe={recipe} skillLevel={constraints.skill_level} />
-        </div>
-      )}
+      {/* FW-16 (D-M): il feedback si chiede alla fine della pizzata
+          (cooking-mode), non più da un form nascosto in fondo alla ricetta. */}
 
     </div>
   );

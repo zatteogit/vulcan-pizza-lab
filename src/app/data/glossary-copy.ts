@@ -90,7 +90,7 @@ export const GLOSSARY_COPY_IT = {
   },
   "autolysis": {
     "name": "Autolisi",
-    "definition": "Riposo di farina e acqua, senza lievito né sale, per 20–60 minuti prima dell'impasto (R. Calvel, 1974). Non è un pre-fermento.",
+    "definition": "Riposo di farina e acqua, senza lievito né sale, per 20–60 minuti prima dell'impasto (R. Calvel, 1974). Non è un prefermento.",
     "whyImportant": "L'impasto diventa più estensibile e più facile da lavorare."
   },
   "bulk_fermentation": {

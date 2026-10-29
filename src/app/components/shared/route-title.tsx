@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useMatches } from "react-router";
 import { BRAND } from "../../config/brand";
 import { useCms } from "../../features/cms/cms-context";
 import { CtaButton } from "../ds/index";
@@ -24,12 +24,20 @@ function sectionTitle(pathname: string, pages: ReturnType<typeof useCms>["cms"][
 export function RouteTitle() {
   const { pathname } = useLocation();
   const { cms } = useCms();
+  /* FW-12 (S01-A-08/B-09): anche la 404 dice che è un errore (WCAG 2.4.2). */
+  const notFound = useMatches().some(
+    (match) => (match.handle as { notFound?: boolean } | undefined)?.notFound === true,
+  );
 
   useEffect(() => {
+    if (notFound) {
+      document.title = `${cms.pages.notFoundTitle} · ${BRAND.name}`;
+      return;
+    }
     if (pathname.startsWith("/recipe/")) return;
     const section = sectionTitle(pathname, cms.pages);
     document.title = section ? `${section} · ${BRAND.name}` : BRAND.name;
-  }, [pathname, cms.pages]);
+  }, [pathname, cms.pages, notFound]);
 
   return null;
 }

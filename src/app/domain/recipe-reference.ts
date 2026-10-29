@@ -1,5 +1,11 @@
 import type { GeneratedRecipe, OvenType } from "./pizza-engine";
 
+/** FW-11 (S07-A-18): il disciplinare STG (PDF, MASAF) accanto alle regole che
+ *  ne derivano, non incollato nel componente. Fonte verificata in
+ *  docs/ricerca/identita-stg-2026-10-25.md. */
+export const STG_SPECIFICATION_URL =
+  "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F4%252Fa%252FD.54ec78491c37356fe33f/P/BLOB:ID=24230/E/pdf?mode=download";
+
 export type StgDeparture = "wood" | "bake" | "flour" | "pl" | "fermentation" | "cold" | "preferment" | "yeast" | "additions" | "weight" | "topping";
 
 /** Known departures from the MASAF STG specification, art. 3.
@@ -29,4 +35,55 @@ export function stgDepartures(recipe: GeneratedRecipe, oven?: OvenType): StgDepa
  * lose the protected qualifier, including when their numeric score is high. */
 export function recipeDisplayName(recipe: GeneratedRecipe, oven?: OvenType): string {
   return stgDepartures(recipe, oven).length ? "Napoletana" : recipe.style.name;
+}
+
+/* ═══ FW-14 · Delta dal riferimento (S07-A-04, S07-B-01) ═══
+ * I «Prima → Ora» della tabella parametri si calcolano dalla ricetta di
+ * riferimento effettivamente generata (preset attivo), mai dal centro degli
+ * intervalli dello stile. Solo i parametri mostrati nella tabella. */
+export type ReferenceParam = "hydration" | "flourW" | "fermentation";
+export interface ReferenceDelta {
+  param: ReferenceParam;
+  reference: { value: number; tempC?: number };
+  current: { value: number; tempC?: number };
+}
+
+export function compareToReference(recipe: GeneratedRecipe, reference: GeneratedRecipe): ReferenceDelta[] {
+  const side = (r: GeneratedRecipe, param: ReferenceParam) => param === "hydration" ? { value: r.hydration_pct }
+    : param === "flourW" ? { value: r.flour_w } : { value: r.fermentation_hours, tempC: r.fermentation_temp_c };
+  // Idratazione e ore mostrate con un decimale al massimo: sotto non è una modifica.
+  const changed: Record<ReferenceParam, boolean> = {
+    hydration: Math.abs(recipe.hydration_pct - reference.hydration_pct) >= 0.05,
+    flourW: Math.round(recipe.flour_w) !== Math.round(reference.flour_w),
+    fermentation: Math.abs(recipe.fermentation_hours - reference.fermentation_hours) >= 0.05
+      // La temperatura si mostra in gradi interi: sotto il grado non è una modifica.
+      || Math.round(recipe.fermentation_temp_c) !== Math.round(reference.fermentation_temp_c),
+  };
+  return (Object.keys(changed) as ReferenceParam[]).filter((p) => changed[p])
+    .map((param) => ({ param, reference: side(reference, param), current: side(recipe, param) }));
+}
+
+/** FW-14 (revisione): testo della cella «Lievitazione» e del suo «Prima».
+ *  La cella dichiara di solito l'ambiente (frigo/ambiente); se il delta sta
+ *  nella temperatura e l'ambiente non cambia, l'etichetta d'ambiente
+ *  renderebbe identici i due lati («12 h ambiente → 12 h ambiente»): allora
+ *  entrambi i lati mostrano la temperatura, con lo stesso formatter. */
+export interface FermentationCellFormat {
+  duration: (hours: number) => string;
+  celsius: (tempC: number) => string;
+  env: (tempC: number) => string;
+}
+export function fermentationCellText(
+  current: { hours: number; tempC: number },
+  delta: ReferenceDelta | undefined,
+  fmt: FermentationCellFormat,
+): { value: string; canonical?: string } {
+  const ref = delta?.param === "fermentation"
+    ? { hours: delta.reference.value, tempC: delta.reference.tempC ?? current.tempC }
+    : undefined;
+  const tempOnly = !!ref && Math.round(ref.tempC) !== Math.round(current.tempC)
+    && fmt.env(ref.tempC) === fmt.env(current.tempC);
+  const text = (s: { hours: number; tempC: number }) =>
+    `${fmt.duration(s.hours)} ${tempOnly ? fmt.celsius(s.tempC) : fmt.env(s.tempC)}`;
+  return ref ? { value: text(current), canonical: text(ref) } : { value: text(current) };
 }

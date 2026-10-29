@@ -6,7 +6,7 @@ import { motionDuration,motionEase } from "../../components/ds/motion";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import { X } from "lucide-react";
-import { GLOSSARY_TERMS } from "../../data/glossary-data";
+import { getTermById } from "../../data/glossary-data";
 import { useCms } from "../cms/cms-context";
 import { ModalSheet } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -99,7 +99,8 @@ export function IngRow({
 export function GlossaryWLink({ w }: { w: number }) {
   const [open, setOpen] = useState(false);
   const { cms } = useCms();
-  const term = GLOSSARY_TERMS.find((t) => t.id === "w_alveograph");
+  /* FW-11 (S08-B-08): la voce nella lingua attiva, come nel Glossario. */
+  const term = getTermById("w_alveograph", cms);
 
   if (!term) return <>W{w}</>;
 

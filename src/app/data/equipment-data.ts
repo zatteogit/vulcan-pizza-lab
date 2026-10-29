@@ -1,3 +1,5 @@
+import type { OvenType } from "../domain/pizza-engine";
+
 /* === EQUIPMENT DATA — basato su Database Notion ===
    Fonte: 🔥 Forni, ♨️ Teglie & Piastre, 🥣 Impastatrici, 🔧 Utensili
    Sincronizzato: 17 marzo 2026 */
@@ -85,6 +87,31 @@ export type OvenHeatProfile =
   | "gas_rear"
   | "wood_side_flame";
 
+/* ═══ FW-07 — distribuzione del calore valida per tipo di forno ═══
+ * Scelta di Vulcan (mappatura editoriale, non una misura): quali disposizioni
+ * di resistenze o bruciatori esistono su ciascun tipo di forno. Un forno a
+ * legna non ha un grill superiore e un forno di casa non ha una fiamma
+ * laterale: il profilo mostra solo le opzioni valide e il motore ignora una
+ * combinazione impossibile (audit 28/10/2026, S16-B-03/A-13). */
+export const HEAT_PROFILE_OVENS: Record<OvenHeatProfile, readonly OvenType[]> = {
+  static_top_bottom: ["home", "electric_standard", "electric_high"],
+  top_grill: ["home", "electric_standard"],
+  bottom_boost: ["home", "electric_standard", "electric_high"],
+  fan_assisted: ["home", "electric_standard"],
+  gas_bottom: ["gas", "gas_pizza"],
+  gas_rear: ["gas", "gas_pizza"],
+  wood_side_flame: ["wood"],
+};
+
+export function isHeatProfileCompatible(profile: OvenHeatProfile | undefined | null, ovenType: OvenType): boolean {
+  return !!profile && (HEAT_PROFILE_OVENS[profile]?.includes(ovenType) ?? false);
+}
+
+/** Distribuzioni valide per il forno, nell'ordine in cui si mostrano. */
+export function compatibleHeatProfiles(ovenType: OvenType): OvenHeatProfile[] {
+  return (Object.keys(HEAT_PROFILE_OVENS) as OvenHeatProfile[]).filter((id) => HEAT_PROFILE_OVENS[id].includes(ovenType));
+}
+
 interface SurfaceOption {
   id: SurfaceType;
   label: string;
@@ -111,7 +138,7 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: "cordierite_stone",
     label: "Pietra cordierite",
-    description: "1.5 cm, compromesso massa/velocità — Effeuno, Ooni",
+    description: "1.5 cm, compromesso massa/velocità — forni da pizza elettrici e a gas",
     emoji: "🪨",
     conductivity: 1.5,
     heatClass: "medium",
@@ -181,6 +208,8 @@ const TOOL_OPTIONS: ToolOption[] = [
   { id: "digital_scale", label: "Bilancia digitale", emoji: "⚖️", category: "essential", description: "Precisione 1g, capacità 5kg+" },
   { id: "thermometer", label: "Termometro", emoji: "🌡️", category: "essential", description: "IR o a sonda, per impasto e forno" },
   { id: "scraper", label: "Raschietto", emoji: "🔪", category: "essential", description: "Plastica flessibile per pieghe e taglio" },
+  /* FW-16: «Cassette per lievitazione» era lo stesso oggetto: unito qui
+     (gli id salvati «proofing_boxes» migrano a «containers»). */
   { id: "containers", label: "Contenitori lievitazione", emoji: "📦", category: "essential", description: "Cassette impilabili o ciotole con coperchio" },
   /* Precision */
   { id: "dough_cutter", label: "Tagliapasta", emoji: "📏", category: "precision", description: "Inox, per porzionare panetti con precisione" },
@@ -191,7 +220,6 @@ const TOOL_OPTIONS: ToolOption[] = [
   { id: "pizza_peel_metal", label: "Pala in alluminio", emoji: "🪩", category: "handling", description: "Per girare e sfornare — sottile e reattiva" },
   { id: "pizza_screen", label: "Retina forata", emoji: "🕸️", category: "handling", description: "Alluminio perforato per cottura croccante" },
   /* Containment */
-  { id: "proofing_boxes", label: "Cassette per lievitazione", emoji: "🗃️", category: "containment", description: "Impilabili con coperchio — 30×40 o 40×60 cm" },
   { id: "bannetons", label: "Cestini lievitazione", emoji: "🧺", category: "containment", description: "Per forme tonde, con telo in lino" },
 ];
 
@@ -247,7 +275,12 @@ export function syncLegacyFlags(state: EquipmentState): EquipmentState {
 export function migrateEquipment(saved: Record<string, any>): EquipmentState {
   // Already in new format
   if ("mixer_type" in saved) {
-    return { ...DEFAULT_EQUIPMENT, ...saved };
+    const merged: EquipmentState = { ...DEFAULT_EQUIPMENT, ...saved };
+    /* FW-16: le cassette sono confluite nei contenitori di lievitazione. */
+    if (Array.isArray(merged.tools) && merged.tools.includes("proofing_boxes")) {
+      merged.tools = [...new Set(merged.tools.map((t) => (t === "proofing_boxes" ? "containers" : t)))];
+    }
+    return merged;
   }
   // Old format: { mixer: bool, pizza_stone: bool, pizza_steel: bool, baking_pan: bool }
   const state: EquipmentState = { ...DEFAULT_EQUIPMENT, inventory_complete: saved.inventory_complete, allow_purchase: saved.allow_purchase, surfaces: [...DEFAULT_EQUIPMENT.surfaces] };
@@ -296,7 +329,6 @@ type EquipCmsLabels = Partial<{
   toolPeelWood: string; toolPeelWoodDesc: string;
   toolPeelMetal: string; toolPeelMetalDesc: string;
   toolPizzaScreen: string; toolPizzaScreenDesc: string;
-  toolProofingBoxes: string; toolProofingBoxesDesc: string;
   toolBannetons: string; toolBannetonsDesc: string;
 }>;
 
@@ -329,7 +361,6 @@ const TOOL_CMS_MAP: Record<string, { label: keyof EquipCmsLabels; desc: keyof Eq
   pizza_peel_wood: { label: "toolPeelWood", desc: "toolPeelWoodDesc" },
   pizza_peel_metal: { label: "toolPeelMetal", desc: "toolPeelMetalDesc" },
   pizza_screen: { label: "toolPizzaScreen", desc: "toolPizzaScreenDesc" },
-  proofing_boxes: { label: "toolProofingBoxes", desc: "toolProofingBoxesDesc" },
   bannetons: { label: "toolBannetons", desc: "toolBannetonsDesc" },
 };
 

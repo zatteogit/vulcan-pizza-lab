@@ -1,9 +1,10 @@
 /* === LEARN PAGE — ridisegnata (feedback giugno 2026) ===
    Da repository freddo a hub caldo: percorso consigliato per il tuo livello,
    card fotografiche, termine del giorno dal glossario.
-   Deep-link ?style=<id>: pre-filtra contestualmente (invariato). */
+   Deep-link ?style=<id>: mostra solo il banner dello stile; le guide restano
+   generali (FW-16, S11-A-01: nessuna sottopagina filtra per stile). */
 
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { t } from "../features/cms/i18n";
 import { motion } from "motion/react";
 import {
@@ -12,7 +13,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
-import { Heading } from "../components/ds/index";
+import { CtaButton, Heading } from "../components/ds/index";
+import { blockerText, primaryBlocker } from "../features/recipe/blocker-text";
 import { useCms } from "../features/cms/cms-context";
 import { STYLES_DB, SKILL_LEVELS, type SkillLevel } from "../domain/pizza-engine";
 import {
@@ -55,11 +57,15 @@ export function LearnPage() {
   const { cms, bcp47 } = useCms();
   const { constraints } = useProfileDefaults();
   const pg = cms.pages;
+  /* FW-12 (S11-B-14): i link card hanno come nome il titolo e come
+     descrizione il testo, non l'intero contenuto della card. */
+  const cardIds = useId();
   const [searchParams, setSearchParams] = useSearchParams();
   const styleParam = searchParams.get("style");
   const activeStyle =
     styleParam && STYLES_DB[styleParam] ? STYLES_DB[styleParam] : null;
-  const linkSearch = activeStyle ? `?style=${activeStyle.id}` : "";
+  /* FW-16 (S11-A-01): le sottopagine non filtrano per stile, quindi il
+     parametro non si propaga e il banner dice che le guide sono generali. */
 
   const skill = loadSkill();
 
@@ -93,16 +99,38 @@ export function LearnPage() {
     : learningStyleForKitchen(PATH_STYLE_IDS[skill], constraints, STYLES_DB), [activeStyle, constraints, skill]);
   const theoretical = !practicalStyle;
   const fallbackPath = practicalStyle && practicalStyle.id !== PATH_STYLE_IDS[skill];
+  /* FW-09 (S11-A-07, S11-B-04, S11-B-09): quando la proposta cambia o manca,
+     si dice perché, con il primo blocco del verdetto dello stile preferito. */
+  const preferredStyle = activeStyle ?? STYLES_DB[PATH_STYLE_IDS[skill]];
+  const preferredBlocker = useMemo(
+    () => (theoretical || fallbackPath) && preferredStyle
+      ? primaryBlocker(tailoredRecipeEntry(preferredStyle, constraints).recipe.verdict)
+      : null,
+    [theoretical, fallbackPath, preferredStyle, constraints],
+  );
+  const glutenOnly = preferredBlocker?.kind === "dietary_conflict" && preferredBlocker.filter_id === "allergen:gluten";
+  const blockerReason = preferredBlocker && preferredStyle
+    ? glutenOnly
+      ? uiMessage("pages.learn.glutenNone")
+      : uiMessage("pages.learn.blockerLead", [preferredStyle.name, blockerText(preferredBlocker, cms, bcp47)])
+    : null;
+  const allergenBlocked = preferredBlocker?.kind === "dietary_conflict";
   const path = activeStyle
-    ? { title: activeStyle.name, copy: activeStyle.description, styleId: activeStyle.id }
+    ? { title: activeStyle.name, copy: cms.styleDescriptions?.[activeStyle.id] ?? activeStyle.description, styleId: activeStyle.id }
     : theoretical
       ? { title: engineMsgTexts([{key:"learn.theoryTitle",fallback:"Prima la teoria"}],cms,bcp47)[0], copy: "", styleId: "" }
       : fallbackPath
         ? { title: practicalStyle.name, copy: engineMsgTexts([{key:"learn.compatiblePath",fallback:"Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta."}],cms,bcp47)[0], styleId: practicalStyle.id }
         : localizedPaths[skill];
-  if (theoretical) path.copy = engineMsgTexts([{key:"learn.theoryOnly",fallback:"Con i vincoli attivi non c'è una ricetta verificata da proporti. Puoi approfondire le tecniche nella teoria."}],cms,bcp47)[0];
-  const skillName = SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
-  const pathContextLabel = activeStyle
+  if (theoretical) path.copy = blockerReason ?? engineMsgTexts([{key:"learn.theoryOnly",fallback:"Con i vincoli attivi non c'è una ricetta verificata da proporti. Puoi approfondire le tecniche nella teoria."}],cms,bcp47)[0];
+  else if (fallbackPath && blockerReason && practicalStyle && !activeStyle) {
+    path.copy = uiMessage("pages.learn.fallbackReason", [blockerReason, practicalStyle.name]);
+  }
+  /* FW-11 (S11-A-08): il nome del livello dal CMS, non il dato italiano del motore. */
+  const skillName = cms.skillLevels[String(skill)]?.name ?? SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
+  const pathContextLabel = theoretical || fallbackPath
+    ? uiMessage("pages.learn.contextProfile")
+    : activeStyle
     ? uiMessage("pages.learn.contextByStyle", [pg.learnPathLabel, activeStyle.name])
     : hasChosenSkill()
       ? uiMessage("pages.learn.contextByLevel", [skillName])
@@ -116,7 +144,6 @@ export function LearnPage() {
       desc: pg.learnGlossaryDesc,
       illustration: Slice,
       to: "/learn/glossary",
-      color: "var(--primary)",
     },
     {
       id: "troubleshooting",
@@ -124,7 +151,6 @@ export function LearnPage() {
       desc: pg.learnTroubleshootingDesc,
       illustration: OvenIllustration,
       to: "/learn/troubleshooting",
-      color: "var(--tertiary)",
     },
     {
       id: "prefermenti",
@@ -132,7 +158,6 @@ export function LearnPage() {
       desc: pg.learnPreFermentsDesc,
       illustration: Flask,
       to: "/learn/pre-ferments",
-      color: "var(--cta)",
     },
   ];
 
@@ -199,9 +224,11 @@ export function LearnPage() {
         >
           <div className="learn-path__label">{pathContextLabel}</div>
           <Link
-            to={theoretical ? `/learn/glossary${linkSearch}` : `/recipe/${path.styleId}?mode=adapted`}
+            to={theoretical ? "/learn/glossary" : `/recipe/${path.styleId}?mode=adapted`}
             className="learn-path__card"
             data-attention="recommended"
+            aria-labelledby={`${cardIds}-path-title`}
+            aria-describedby={`${cardIds}-path-copy`}
           >
             {/* Hand-drawn illustration — rising dough for the learning path */}
             <div className="learn-path__illustration">
@@ -210,8 +237,8 @@ export function LearnPage() {
 
             <div className="learn-path__content">
               <div className="learn-path__body">
-                <h2 className="learn-path__title">{path.title}</h2>
-                <p className="learn-path__copy">{path.copy}</p>
+                <h2 id={`${cardIds}-path-title`} className="learn-path__title">{path.title}</h2>
+                <p id={`${cardIds}-path-copy`} className="learn-path__copy">{path.copy}</p>
               </div>
 
               <div className="learn-path__cta-row">
@@ -222,6 +249,21 @@ export function LearnPage() {
               </div>
             </div>
           </Link>
+          {(theoretical || fallbackPath) && (
+            <p className="learn-path__actions">
+              <CtaButton as={Link} to="/profile" variant="secondary" radius="lg" elevated={false} className="learn-path__action">
+                {uiMessage("pages.learn.changeConstraints")}
+              </CtaButton>
+              <CtaButton as={Link} to="/explore" variant="secondary" radius="lg" elevated={false} className="learn-path__action">
+                {uiMessage("pages.learn.compatibleStyles")}
+              </CtaButton>
+              {theoretical && preferredStyle && !allergenBlocked && (
+                <CtaButton as={Link} to={`/recipe/${preferredStyle.id}?mode=canonical`} variant="secondary" radius="lg" elevated={false} className="learn-path__action">
+                  {uiMessage("pages.learn.seeReference", [preferredStyle.name])}
+                </CtaButton>
+              )}
+            </p>
+          )}
         </motion.section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -237,18 +279,26 @@ export function LearnPage() {
           className="learn-term"
         >
           {/* Decorative thin rule — magazine section break */}
-          <div className="learn-term__rule" />
-          <div className="learn-term__kicker">
+          <div className="learn-term__rule" aria-hidden="true" />
+          {/* FW-13 (S11-A-13) e FW-12 (S11-B-14): il kicker è il titolo h2 della
+              sezione, così il termine (h3) non finisce sotto la card del percorso. */}
+          <h2 className="learn-term__kicker">
             {t(pg.learnTermOfTheDay, { category: glossaryCategoryLabel(term.category, cms.glossary) })}
-          </div>
+          </h2>
 
-          <Link to="/learn/glossary" className="learn-term__card">
+          <Link
+            to="/learn/glossary"
+            className="learn-term__card"
+            aria-labelledby={`${cardIds}-term-name`}
+            aria-describedby={`${cardIds}-term-def`}
+          >
             <div className="learn-term__body">
               <div className="learn-term__icon">
                 <Bowl size={52} />
               </div>
               <div className="learn-term__content">
                 <h3
+                  id={`${cardIds}-term-name`}
                   className={
                     /* Audit lug 2026: i termini lunghi ("P/L (Rapporto
                        Tenacità/Estensibilità)") a 8xl traboccano dalla card su
@@ -268,7 +318,7 @@ export function LearnPage() {
                     </span>
                   )}
                 </h3>
-                <p className="learn-term__definition">{term.definition}</p>
+                <p id={`${cardIds}-term-def`} className="learn-term__definition">{term.definition}</p>
               </div>
             </div>
             <footer className="learn-term__footer">
@@ -308,9 +358,9 @@ export function LearnPage() {
                   }}
                 >
                   <Link
-                    to={section.to + linkSearch}
+                    to={section.to}
                     className="learn-resources__card"
-                    style={{ ["--tone" as any]: section.color }}
+                    data-tone={section.id}
                   >
                     <div className="learn-resources__icon">
                       <section.illustration size={52} />

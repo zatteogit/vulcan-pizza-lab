@@ -1,7 +1,9 @@
-import { Heart, HeartCrack, HeartHandshake, HeartOff, HeartPulse, type LucideProps } from "lucide-react";
+import { Ban, Gauge, type LucideProps } from "lucide-react";
 
-/** Affinity is the score's visual language; saving keeps the bookmark icon. */
-export function RecipeMatchIcon({ score, blocked = false, ...props }: LucideProps & { score: number; blocked?: boolean }) {
-  const Icon = blocked || score < 40 ? HeartOff : score < 60 ? HeartCrack : score < 75 ? HeartPulse : score < 90 ? Heart : HeartHandshake;
+/** Compatibility with the user's kitchen reads as a gauge, not as a heart:
+ * the heart reads as «like» or «favourites» (FW-13, S02-A-12). Saving keeps
+ * the bookmark icon. A blocked recipe shows a ban sign. */
+export function RecipeMatchIcon({ score: _score, blocked = false, ...props }: LucideProps & { score: number; blocked?: boolean }) {
+  const Icon = blocked ? Ban : Gauge;
   return <Icon {...props} />;
 }

@@ -1,5 +1,12 @@
 import type { CmsUiStrings } from "./cms-context";
 import { interpolate } from "../../i18n/interpolate";
+import {
+  formatDuration,
+  formatMass,
+  formatPercent,
+  formatTemp,
+  formatUnit,
+} from "../../i18n/format";
 
 /* ═══ VULCAN I18N HELPERS ═══
  * Lightweight template + formatting utilities driven by CMS ui strings.
@@ -12,6 +19,14 @@ import { interpolate } from "../../i18n/interpolate";
  *   fmt.cookTime(90)                            // "90 secondi" (it) / "90 seconds" (en)
  *   fmt.fermentTime(24)                         // "24 ore" (it) / "24 hours" (en)
  */
+
+/** FW-11: nome di luogo nella lingua attiva, con l'italiano dei dati come
+ *  ripiego. Da passare a shortOrigin / formatOrigin. */
+export function placeNameLocalizer(
+  cms: { placeNames?: Record<string, string> },
+): (italianName: string) => string {
+  return (name) => cms.placeNames?.[name] ?? name;
+}
 
 /** Simple template interpolation: replaces {key} placeholders */
 export function t(template: string | undefined, vars: Record<string, string | number>): string {
@@ -119,16 +134,8 @@ export function formatLengthCopy(
     );
 }
 
-function celsiusToFahrenheit(value: number): number {
-  return value * 9 / 5 + 32;
-}
-
 function celsiusDeltaToFahrenheit(value: number): number {
   return value * 9 / 5;
-}
-
-function gramsToOunces(value: number): number {
-  return value / 28.349523125;
 }
 
 function millilitersToFluidOunces(value: number): number {
@@ -147,17 +154,6 @@ function squareCentimetersToSquareInches(value: number): number {
   return value / 6.4516;
 }
 
-function formatImperialWeight(bcp47: string, grams: number): string {
-  const ounces = gramsToOunces(grams);
-  if (Math.abs(ounces) >= 16) {
-    const pounds = Math.trunc(ounces / 16);
-    const remainder = Math.abs(ounces - pounds * 16);
-    if (remainder < 0.05) return `${formatNumber(bcp47, pounds)} lb`;
-    return `${formatNumber(bcp47, pounds)} lb ${formatNumber(bcp47, remainder, { maximumFractionDigits: 1 })} oz`;
-  }
-  return `${formatNumber(bcp47, ounces, { maximumFractionDigits: ounces < 1 ? 2 : 1 })} oz`;
-}
-
 function formatMeasure(
   bcp47: string,
   value: number,
@@ -165,10 +161,9 @@ function formatMeasure(
   unitSystem: UnitSystem,
 ): string {
   if (unitSystem === "imperial") {
-    if (unit === "celsius") {
-      return `${formatNumber(bcp47, celsiusToFahrenheit(value), { maximumFractionDigits: 0 })}°F`;
-    }
-    if (unit === "gram") return formatImperialWeight(bcp47, value);
+    if (unit === "celsius") return formatTemp(value, bcp47, "imperial");
+    /* FW-11 (S17-A-01, D-J): le microdosi restano in grammi. */
+    if (unit === "gram") return formatMass(value, bcp47, "imperial");
     if (unit === "milliliter") {
       return `${formatNumber(bcp47, millilitersToFluidOunces(value), { maximumFractionDigits: 1 })} fl oz`;
     }
@@ -183,10 +178,11 @@ function formatMeasure(
     }
   }
   const n = formatNumber(bcp47, value);
-  if (unit === "percent") return `${n}%`;
-  if (unit === "celsius") return `${n}°C`;
-  if (unit === "gram") return `${n}g`;
-  if (unit === "milliliter") return `${n}ml`;
+  /* FW-11: spazio e simboli secondo la lingua («387 g», «250 °C», «12 %» in de/fr). */
+  if (unit === "percent") return formatPercent(value, bcp47);
+  if (unit === "celsius") return formatTemp(value, bcp47);
+  if (unit === "gram") return formatMass(value, bcp47);
+  if (unit === "milliliter") return `${n} ml`;
   if (unit === "centimeter") return `${n} cm`;
   if (unit === "millimeter") return `${n} mm`;
   if (unit === "squareCentimeter") return `${n} cm²`;
@@ -218,44 +214,15 @@ export function createFormatter(
       const h = Math.floor(hours);
       const m = Math.round((hours - h) * 60);
       if (m === 0) return `${h} ${h === 1 ? ui.hour : ui.hours}`;
-      return `${h}h ${m}min`;
+      return formatDuration(h * 60 + m, bcp47);
     },
 
     /** Compact duration from hours, e.g. "3 h 45 min" / "3 hr 45 min" / "3時間45分". */
-    durationShort: (hours: number): string => {
-      const total = Math.max(0, Math.round(hours * 60));
-      const h = Math.floor(total / 60);
-      const m = total % 60;
-      const unit = (value: number, u: "hour" | "minute") =>
-        new Intl.NumberFormat(bcp47, { style: "unit", unit: u, unitDisplay: "short" }).format(value);
-      if (h === 0) return unit(m, "minute");
-      return m === 0 ? unit(h, "hour") : `${unit(h, "hour")} ${unit(m, "minute")}`;
-    },
+    durationShort: (hours: number): string => formatDuration(hours * 60, bcp47),
 
     /** Format a generic duration expressed in minutes. */
-    durationMinutes: (minutes: number): string => {
-      if (minutes <= 0) return "";
-      if (minutes < 60) {
-        return `${formatNumber(bcp47, minutes)} ${minutes === 1 ? ui.minute : ui.minutes}`;
-      }
-      const totalH = Math.floor(minutes / 60);
-      const m = minutes % 60;
-      if (totalH < 24) {
-        return m === 0
-          ? `${formatNumber(bcp47, totalH)} ${totalH === 1 ? ui.hour : ui.hours}`
-          : `${formatNumber(bcp47, totalH)} ${totalH === 1 ? ui.hour : ui.hours} ${formatNumber(bcp47, m)} ${m === 1 ? ui.minute : ui.minutes}`;
-      }
-      const d = Math.floor(totalH / 24);
-      const h = totalH % 24;
-      const day = new Intl.NumberFormat(bcp47, {
-        style: "unit",
-        unit: "day",
-        unitDisplay: "long",
-        maximumFractionDigits: 0,
-      }).format(d);
-      return [day, h > 0 ? `${formatNumber(bcp47, h)} ${h === 1 ? ui.hour : ui.hours}` : "",
-        m > 0 ? `${formatNumber(bcp47, m)} ${m === 1 ? ui.minute : ui.minutes}` : ""].filter(Boolean).join(" ");
-    },
+    durationMinutes: (minutes: number): string =>
+      minutes <= 0 ? "" : formatDuration(minutes, bcp47),
 
     number: (value: number, options?: Intl.NumberFormatOptions) =>
       formatNumber(bcp47, value, options),
@@ -271,8 +238,8 @@ export function createFormatter(
     celsius: (value: number) => formatMeasure(bcp47, value, "celsius", unitSystem),
     celsiusDelta: (value: number) =>
       unitSystem === "imperial"
-        ? `${formatNumber(bcp47, celsiusDeltaToFahrenheit(value))}°F`
-        : `${formatNumber(bcp47, value)}°C`,
+        ? formatUnit(celsiusDeltaToFahrenheit(value), "fahrenheit", bcp47)
+        : formatUnit(value, "celsius", bcp47),
     percent: (value: number) => formatMeasure(bcp47, value, "percent", unitSystem),
 
     /** Format clock time with locale */

@@ -47,7 +47,9 @@ describe("parseEdition", () => {
     ["generalista con partner", { ...base, kind: "generalist", indexing: "index" }],
     ["id con maiuscole", { ...base, id: "Prova" }],
     ["url non https", { ...base, partner: { name: "X", invented: true, url: "http://x.it" } }],
-    ["forno fuori scala", { ...base, ovens: { extra: [{ id: "x-1", brand: "X", model: "1", fuel: "gas", ovenType: "gas_pizza", maxTempC: 900, source: "P" }] } }],
+    ["forno fuori scala", { ...base, ovens: { extra: [{ id: "x-1", brand: "X", model: "1", fuel: "gas", ovenType: "gas_pizza", maxTempC: 900, source: "demo" }] } }],
+    ["forno di un marchio inventato con fonte secondaria", { ...base, ovens: { extra: [{ id: "x-1", brand: "X", model: "1", fuel: "gas", ovenType: "gas_pizza", maxTempC: 480, source: "P" }] } }],
+    ["dato dimostrativo in un'edizione partner", { ...base, kind: "partner", partner: { name: "Forni Veri" }, ovens: { extra: [{ id: "x-1", brand: "X", model: "1", fuel: "gas", ovenType: "gas_pizza", maxTempC: 480, source: "demo" }] } }],
     ["filtro vuoto", { ...base, ovens: { only: [] } }],
   ])("rifiuta: %s", (_, value) => {
     expect(() => parseEdition(value)).toThrow(/Edizione non valida/);
@@ -56,7 +58,7 @@ describe("parseEdition", () => {
   it("filtro per prefisso e modelli in più", () => {
     const edition = parseEdition({ ...base, ovens: {
       only: ["effeuno-", "x-"],
-      extra: [{ id: "x-1", brand: "X", model: "1", fuel: "gas", ovenType: "gas_pizza", maxTempC: 480, source: "P" }],
+      extra: [{ id: "x-1", brand: "X", model: "1", fuel: "gas", ovenType: "gas_pizza", maxTempC: 480, source: "demo" }],
     } });
     const ids = editionOvenModels(edition).map((model) => model.id);
     expect(ids).toContain("x-1");

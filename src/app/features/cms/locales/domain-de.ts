@@ -3,13 +3,13 @@ import type {
   CmsPreFerment,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
+  CmsScience,
 } from "../cms-context";
 
 export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
   sectionLabel: "Vorteig",
   tipsLabel: "Tipps",
   showComparison: "Biga vs Poolish vs Autolyse vergleichen",
-  hideComparison: "Vergleich ausblenden",
   paramHydration: "Hydratation",
   paramDuration: "Dauer",
   paramTemperature: "Temperatur",
@@ -26,12 +26,10 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
     "Temperatur",
     "Geschmack",
     "Dehnbarkeit",
-    "Porung",
-    "Komplexität",
   ],
   items: {
     poolish: {
-      origin: "Franz\u00F6sisch",
+      origin: "Polen, dann Frankreich",
       description:
         "Flüssiger Vorteig: Mehl und Wasser zu gleichen Teilen mit wenig Hefe, 12–16 h bei 20–22 °C.",
       hydration: "100 % (Mehl und Wasser zu gleichen Teilen)",
@@ -40,8 +38,8 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
         "Schnell: mit viel Wasser reift er in wenigen Stunden",
       flavor: "Leicht säuerlich, nussige Noten",
       crustResult:
-        "Leicht, intensiv golden, ausgepr\u00E4gtes Leopardenmuster",
-      extensibility: "Hoch \u2014 einfach zu dehnen",
+        "Dünn und goldbraun; Farbe und Flecken hängen von Ofen und Temperatur ab",
+      extensibility: "Hoch (Schätzung): leicht zu dehnen",
       idealStyles:
         "Teglia Romana, NY Style, Zeitgen\u00F6ssische Neapolitanische, Focaccia",
       tips: [
@@ -51,7 +49,7 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
       ],
     },
     biga: {
-      origin: "Italienisch",
+      origin: "Italien",
       description:
         "Fester Vorteig: Mehl, 44 % Wasser und 1 % Hefe, etwa 16 h bei 18–20 °C.",
       hydration: "44 % (bis 50 % mit Vollkornmehl)",
@@ -59,9 +57,9 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
       fermentationType:
         "Langsam: mit wenig Wasser reift sie in 16–48 h",
       flavor: "Aromatisch, blumig",
-      crustResult: "Knusprig, br\u00FCchig, feine Porung",
+      crustResult: "Knusprig; die Struktur hängt von Hydration und Formen ab",
       extensibility:
-        "Niedrig \u2014 Ruhezeit nach Portionierung n\u00F6tig",
+        "Hängt von Mehl und Hydration ab (noch zu prüfen)",
       idealStyles:
         "Pinsa, Pizza al taglio, Pala romana, Brot",
       tips: [
@@ -72,10 +70,10 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
       ],
     },
     autolisi: {
-      origin: "Frankreich (R. Calvel, 1974)",
+      origin: "R. Calvel, Frankreich 1974",
       description:
         "Kein Vorteig: Mehl und Wasser ruhen ohne Hefe und Salz vor dem Kneten.",
-      hydration: "55-75% (gesamtes Rezeptwasser)",
+      hydration: "Die des Rezepts (oft hält man etwas Wasser zurück)",
       consistency: "Teigig",
       fermentationType: "Keine (nur Enzymaktivit\u00E4t)",
       flavor:
@@ -95,7 +93,7 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
     hydration: {
       biga: "44 %",
       poolish: "100%",
-      autolisi: "55-75%",
+      autolisi: "= Rezept",
     },
     yeast: {
       biga: "1 %",
@@ -118,19 +116,9 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
       autolisi: "Neutral",
     },
     extensibility: {
-      biga: "Niedrig",
-      poolish: "Hoch",
+      biga: "Variabel",
+      poolish: "Hoch (Schätzung)",
       autolisi: "Hoch",
-    },
-    alveolatura: {
-      biga: "Fein",
-      poolish: "Gro\u00DF",
-      autolisi: "Gro\u00DF",
-    },
-    complexity: {
-      biga: "Mittel",
-      poolish: "Niedrig",
-      autolisi: "Sehr niedrig",
     },
   },
 };
@@ -289,7 +277,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         symptom:
           "Leopardenflecken auf dem Rand (Leopard Spotting)",
         cause:
-          "Kontakt mit Ofengew\u00F6lbe >500\u00B0C \u2014 lokalisierte Maillard-Reaktion",
+          "Dünne Blasen am Rand, die bei sehr starker Ofenhitze dunkel werden (örtliche Bräunung und Verkohlung)",
         testRapido: "Schmecken die Flecken bitter?",
         fixImmediate:
           "KEIN Problem! Ist das gew\u00FCnschte Merkmal der neapolitanischen Pizza",
@@ -609,7 +597,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     thickness_factor: {
       name: "Thickness Factor (TF)",
       definition: "Teigmenge pro Fläche: Gramm Teig je cm² Pizza.",
-      whyImportant: "Bestimmt Backzeit, Knusprigkeit und Kaloriendichte. Eigene Kennzahl des Projekts {brand}.",
+      whyImportant: "Eine in nordamerikanischen Teigrechnern verbreitete Kennzahl (in oz/in²; 1 oz/in² ≈ 4,39 g/cm²). {brand} gibt sie in g/cm² an, um die Teiglinge zu bemessen; zusammen mit dem Ofen bestimmt sie Backzeit und Knusprigkeit mit.",
       ranges: [
         { label: "Neapolitanische", value: "0.30\u20130.36", note: "6-7 mm" },
         { label: "Tonda Romana", value: "0.20\u20130.25", note: "4-5 mm" },
@@ -659,5 +647,175 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       definition: "Modellschätzung anhand von Zeit, Temperatur, Hefe und Vorteigen. Sie misst weder die persönliche Verdaulichkeit noch den FODMAP-Gehalt.",
       ranges: [{"label":"85-100","value":"Hoher Index"},{"label":"70-84","value":"Mittelhoher Index"},{"label":"50-69","value":"Mittlerer Index"},{"label":"<50","value":"Niedriger Index"}],
     },
+  },
+};
+/* FW-01 — Wissenschaftsregister: Texte der Notizen und Annahmen (Schlüssel wie SCIENCE_I18N_DEFAULTS). */
+export const SCIENCE_DE: CmsScience = {
+  notes: {
+    "yeast-dose": {
+      title: "Hefemenge",
+      l1: "Das ist eine Schätzung: mehr Stunden und mehr Wärme brauchen weniger Hefe.",
+      l2: "Wir gehen von einer Referenzmenge aus, die zu den neapolitanischen Regelwerken passt, und passen sie an deine Stunden und deine Temperatur an. Echte Hefe, echtes Mehl und echte Küchen können die Zeiten verschieben: achte mehr auf den Teig als auf die Uhr.",
+    },
+    "q10-fermentation": {
+      title: "Temperatur und Gärgeschwindigkeit",
+      l1: "Wärmer heißt schneller, kälter heißt langsamer. Der Faktor ist eine Schätzung.",
+      l2: "Das Modell nutzt einen stufenweisen Geschwindigkeitsfaktor bezogen auf eine Referenztemperatur. Bei Raumtemperatur passt er zu Studien über Hefe; kühl und im Kühlschrank hat er keine Quelle und kann stark abweichen: prüfe den Teig.",
+    },
+    "equivalent-hours": {
+      title: "Äquivalente Stunden",
+      l1: "Deine Stunden, umgerechnet in die Stunden bei Referenztemperatur.",
+      l2: "Wir multiplizieren die Stunden mit der Geschwindigkeit bei deiner Temperatur. Wenn du kühler als die Referenz gärst (Kühlschrank, Keller), findet die Stückgare bei der Referenztemperatur statt: Diese Stunden zählen so, wie sie sind, und nur die übrigen werden multipliziert. Deshalb geht «Stunden × Geschwindigkeit» allein nicht auf.",
+    },
+    "kitchen-temp-default": {
+      title: "Küchentemperatur",
+      l1: "Wenn du sie nicht angibst, nutzen wir einen Standardwert.",
+      l2: "Die Küchentemperatur verändert Gärzeiten und Wassertemperatur. Der Standardwert ist eine Annahme: Ist deine Küche wärmer oder kälter, gib es an, und das Rezept passt sich an.",
+    },
+    "proof-split": {
+      title: "Dauer der Stückgare",
+      l1: "Wenn der Stil sie nicht angibt, ist die Stückgare ein fester Anteil der Gesamtstunden.",
+      l2: "Das ist eine Annahme des Modells, keine Regel der Methode. Ist die Küche wärmer als erwartet, ist der Teig früher fertig: prüfe ihn.",
+    },
+    "sourdough-starter-dose": {
+      title: "Menge Sauerteig",
+      l1: "Die Sauerteigmenge ist eine Faustregel, die nur von den Stunden abhängt.",
+      l2: "Sie berücksichtigt weder Temperatur noch die Kraft deines Sauerteigs. Mehl und Wasser des Sauerteigs zählen nicht zur angezeigten Hydration: Der echte Teig ist etwas feuchter.",
+    },
+    "pre-ferment": {
+      title: "Biga und Poolish",
+      l1: "Hydration, Stunden und Temperaturen stammen aus übereinstimmenden Fachquellen.",
+      l2: "Biga ist ein fester Vorteig, der langsam im Kühlen reift; Poolish ist flüssig und reift schneller. Kruste und Krume hängen vor allem von Ofen, Hydration und Formen ab, nicht vom Vorteig allein.",
+    },
+    autolysis: {
+      title: "Autolyse",
+      l1: "Mehl und Wasser ruhen ohne Hefe und Salz vor dem Kneten.",
+      l2: "Das ist kein Vorteig: Es gärt nichts. Das Mehl quillt, und der Teig lässt sich leichter verarbeiten (R. Calvel, 1974).",
+    },
+    "water-temp-rule": {
+      title: "Wassertemperatur",
+      l1: "Eine exakte Rechnung, die von einigen Annahmen über deine Küche ausgeht.",
+      l2: "Küche, Mehl, Wasser und Knetwärme ergeben zusammen das Dreifache der gewünschten Teigtemperatur. Die Rechnung ist exakt; Küche und Mehl sind Schätzungen, wenn du sie nicht misst, und die Knetwärme ist ein typischer Wert.",
+    },
+    "water-activity": {
+      title: "Wasseraktivität (aw)",
+      l1: "Ein geschätzter Index, kein Messwert.",
+      l2: "Wir berechnen ihn mit einer einfachen Formel aus Hydration, Salz und Zucker. Er dient dem Vergleich von Rezepten, nicht der Haltbarkeit: Für einen echten Wert braucht es ein Messgerät.",
+    },
+    "dough-indices": {
+      title: "Teig-Indizes",
+      l1: "Glutennetz und Proteolyse sind Indizes des Modells, keine Messwerte.",
+      l2: "Sie kombinieren Mehlstärke, Hydration und Stunden mit Gewichten, die {brand} gewählt hat. Sie dienen dem Vergleich zweier Rezepte, sind aber keine Laborwerte.",
+    },
+    "salt-range": {
+      title: "Salzbereich",
+      l1: "Die Salzmarken sind eine Wahl von {brand}, kein Bereich aus einer Quelle.",
+      l2: "Für die Napoletana STG gibt das Regelwerk einen genauen Bereich vor; bei anderen Stilen zeigen wir ein enges Band um den Rezeptwert.",
+    },
+    "stg-salt-timing": {
+      title: "Salz in der Napoletana STG",
+      l1: "Das Regelwerk löst das Salz im Wasser, bevor das Mehl dazukommt.",
+      l2: "So steht es in der EU-Verordnung zur STG. Andere Methoden geben das Salz später dazu: Bei diesem Stil folgen wir dem Regelwerk.",
+    },
+    "flour-w-by-grade": {
+      title: "Mehltyp und Stärke",
+      l1: "00, 0, 1 und Vollkorn sagen, wie fein das Mehl ausgemahlen ist, nicht wie stark es ist.",
+      l2: "Die Stärke (W) schwankt von Sack zu Sack, auch beim selben Typ. Steht sie nicht auf dem Sack, nutzt das Modell eine Schätzung für den Typ: Den echten Wert findest du im Datenblatt der Mühle.",
+    },
+    "flour-pl-estimate": {
+      title: "Geschätztes P/L",
+      l1: "Wenn du kein P/L angibst, schätzen wir es aus der Mehlstärke.",
+      l2: "Das ist eine Näherung, begrenzt auf den Bereich des Stils. Der echte Wert steht im Datenblatt des Mehls.",
+    },
+    "stg-flour-w": {
+      title: "Mehlstärke in der STG",
+      l1: "Wir nutzen den Bereich der AVPN, der enger ist als der des STG-Regelwerks.",
+      l2: "Die EU-Verordnung zur STG erlaubt schwächere und stärkere Mehle; die AVPN-Regeln engen den Bereich ein. Das ist eine Wahl von {brand}: Beide Quellen sind angegeben.",
+    },
+    "oven-max-temp": {
+      title: "Höchsttemperatur des Ofens",
+      l1: "Das ist die für dein Modell angegebene Temperatur.",
+      l2: "Fast kein Hersteller sagt, ob es die Temperatur der Luft oder des Steins ist. Stammt der Wert von einem Händler oder einem Test, weisen wir darauf hin; Demo-Öfen haben erfundene Daten.",
+    },
+    "oven-preset-max-temp": {
+      title: "Typische Temperatur der Ofenart",
+      l1: "Ein typischer Wert: Korrigiere ihn mit dem deines Ofens.",
+      l2: "Für einige Ofenarten haben wir kein Herstellerdatenblatt und keine Norm. Kennst du deinen Ofen, gib seine Temperatur an: Das Rezept passt sich an.",
+    },
+    "stg-oven-temp": {
+      title: "Ofen der Napoletana STG",
+      l1: "Die beiden Quellen nennen dieselbe Temperatur für verschiedene Flächen.",
+      l2: "Das STG-Regelwerk bezieht sie auf den Ofenboden, die AVPN-Regeln auf die Kuppel. Keine erreicht das obere Ende des Bereichs, den das Modell nutzt: Dieser Wert ist noch zu prüfen.",
+    },
+    "style-min-oven-temp": {
+      title: "Mindesttemperatur des Stils",
+      l1: "Bei vielen Stilen ist das Minimum eine Wahl des Modells, ohne Quelle.",
+      l2: "Unter dem Minimum ist das Rezept nicht machbar oder weniger stiltreu. Wo es ein Regelwerk gibt, folgen wir ihm; sonst ist die Schwelle noch zu prüfen.",
+    },
+    "bake-time-home-preheat": {
+      title: "Vorheizen des Haushaltsofens",
+      l1: "Die Vorheizdauer ist eine Annahme des Modells.",
+      l2: "Stein und Stahl erwärmen sich langsamer als die Luft: Lege sie in den kalten Ofen, schalte ihn ein und miss, wenn möglich, die Fläche vor dem Einschießen.",
+    },
+    "surface-conductivity": {
+      title: "Wärmeleitfähigkeit der Fläche",
+      l1: "Wie schnell die Fläche Wärme an die Pizza abgibt.",
+      l2: "Das ist die typische Wärmeleitfähigkeit des Materials in W/(m·K): Metalle stammen aus technischen Tabellen, Stein und Schamotte sind noch zu prüfen. Der Rost hat keine Kontaktfläche.",
+    },
+    "baking-energy": {
+      title: "Backenergie",
+      l1: "Eine Größenordnung, kein Messwert.",
+      l2: "Wir multiplizieren die Backzeit mit einer typischen Leistung je nach Ofentemperatur, gleich für Holz, Gas und Strom. Das Vorheizen zählt nicht mit.",
+    },
+    "thickness-factor": {
+      title: "Thickness Factor",
+      l1: "Gramm Teig je cm² Pizza.",
+      l2: "Eine in nordamerikanischen Teigrechnern verbreitete Kennzahl, in Unzen pro Quadratzoll; {brand} gibt sie in g/cm² an, um die Teiglinge zu bemessen.",
+    },
+    "score-weights": {
+      title: "Gewichte der Bewertung",
+      l1: "Die Gewichte der Dimensionen sind eine Wahl von {brand}.",
+      l2: "Sie sagen, wie viel jede Dimension in der Endzahl zählt. Sie stammen aus keiner Messung: Es ist eine Regel der App, für alle gleich.",
+    },
+    "non-feasible-ceiling": {
+      title: "Obergrenze für nicht machbare Rezepte",
+      l1: "Ein Rezept, das du nicht machen kannst, bleibt im unteren Bereich: eine Regel der App.",
+      l2: "So schlägt ein nicht machbares Rezept nie eines, das du machen kannst, auch wenn die anderen Dimensionen hoch sind.",
+    },
+    "authenticity-fuel-cap": {
+      title: "Obergrenze der Authentizität beim Brennstoff",
+      l1: "Ohne den Ofen, den der Stil verlangt, hat die Authentizität eine Obergrenze: eine Wahl von {brand}.",
+      l2: "Verlangt ein Stil Holz oder Kohle, kann ein anderer Ofen gut backen, folgt aber nicht der Methode. Die Grenze ist redaktionell, kein Qualitätsmaß.",
+    },
+    digestibility: {
+      title: "Verdaulichkeitsindex",
+      l1: "Ein Modellindex für den Prozess, kein Gesundheitsversprechen.",
+      l2: "Er berücksichtigt Reifestunden und -temperaturen. Er misst nicht, wie ein Mensch eine Pizza verdaut, und bescheinigt keine Eignung für eine Ernährungsweise.",
+    },
+    "troubleshooting-thresholds": {
+      title: "Schwellen bei Problemen",
+      l1: "Die Zahlenschwellen bei den Problemen sind Richtwerte.",
+      l2: "Es sind Faustregeln ohne veröffentlichte Quelle, und sie berücksichtigen den Stil nicht: Ein Blechteig ist zum Beispiel viel feuchter als ein neapolitanischer. Nutze sie als Hinweis, nicht als Diagnose.",
+    },
+  },
+  assumptions: {
+    "constant-ferment-temp": "Die Temperatur bleibt während der ganzen Phase gleich.",
+    "time-exponent-no-source": "Die Korrektur für die Stunden nutzt einen vom Modell gewählten Exponenten, ohne Quelle.",
+    "kitchen-temp-standard": "Wenn du die Küchentemperatur nicht angibst, nutzen wir einen Standardwert.",
+    "q10-cold-no-source": "Kühl und im Kühlschrank hat der Geschwindigkeitsfaktor keine Quelle: Der Fehler kann groß sein.",
+    "proof-share-default": "Ohne Angabe des Stils ist die Stückgare ein fester Anteil der Stunden.",
+    "starter-steps-by-hours": "Die Sauerteigmenge sinkt stufenweise mit den Stunden, ohne die Temperatur zu berücksichtigen.",
+    "starter-not-in-hydration": "Mehl und Wasser des Sauerteigs zählen nicht zur Hydration.",
+    "flour-at-kitchen-temp": "Das Mehl hat Küchentemperatur.",
+    "mixer-friction-values": "Die Knetwärme ist ein typischer, noch zu prüfender Wert; von Hand ist sie null.",
+    "coefficients-not-measured": "Die Koeffizienten der Formel wählt das Modell, sie sind nicht gemessen.",
+    "grade-is-not-strength": "Der Mehltyp gibt die Ausmahlung an, nicht die Stärke: W je Typ ist eine Schätzung.",
+    "oven-temp-surface-unspecified": "Wir wissen nicht, ob die angegebene Temperatur die der Luft oder des Steins ist.",
+    "style-min-temp-no-source": "Die Mindesttemperatur des Stils hat keine schriftliche Quelle.",
+    "preheat-home-minutes": "Die Vorheizdauer hängt nur von der Ofentemperatur ab, nicht von der Fläche.",
+    "rack-no-contact": "Der Rost hat keine Kontaktfläche: Der Boden backt durch Strahlung und Luft.",
+    "oven-power-steps": "Eine typische Leistung je Temperaturbereich, gleich für jeden Brennstoff.",
+    "no-health-claim": "Keine Gesundheitsaussage: Der Index misst nicht, wie ein Mensch verdaut.",
+    "thresholds-rules-of-thumb": "Die Schwellen sind allgemeine Faustregeln, nicht auf den Stil abgestimmt.",
   },
 };

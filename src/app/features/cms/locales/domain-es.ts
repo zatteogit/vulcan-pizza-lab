@@ -3,13 +3,13 @@ import type {
   CmsPreFerment,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
+  CmsScience,
 } from "../cms-context";
 
 export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
-  sectionLabel: "Pre-fermento",
+  sectionLabel: "Prefermento",
   tipsLabel: "Consejos",
   showComparison: "Comparar Biga vs Poolish vs Autólisis",
-  hideComparison: "Ocultar comparación",
   paramHydration: "Hidratación",
   paramDuration: "Duración",
   paramTemperature: "Temperatura",
@@ -26,12 +26,10 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
     "Temperatura",
     "Sabor",
     "Extensibilidad",
-    "Alveolado",
-    "Complejidad",
   ],
   items: {
     poolish: {
-      origin: "Francés",
+      origin: "Polonia, después Francia",
       description:
         "Prefermento líquido: harina y agua a partes iguales con poca levadura, 12–16 h a 20–22 °C.",
       hydration: "100 % (harina y agua a partes iguales)",
@@ -40,8 +38,8 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
         "Rápida: con tanta agua madura en pocas horas",
       flavor: "Ligeramente ácido, notas de avellana",
       crustResult:
-        "Ligera, dorado intenso, leopard spotting marcado",
-      extensibility: "Alta — fácil de estirar",
+        "Fina y dorada; el color y las manchas dependen del horno y la temperatura",
+      extensibility: "Alta (estimación): fácil de estirar",
       idealStyles:
         "Teglia Romana, NY Style, Napolitana contemporánea, Focaccia",
       tips: [
@@ -51,15 +49,15 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
       ],
     },
     biga: {
-      origin: "Italiano",
+      origin: "Italia",
       description:
         "Prefermento seco: harina, 44 % de agua y 1 % de levadura, unas 16 h a 18–20 °C.",
       hydration: "44 % (hasta 50 % con harinas integrales)",
       consistency: "Seca, compacta",
       fermentationType: "Lenta: con poca agua madura en 16–48 h",
       flavor: "Aromático, floral",
-      crustResult: "Crujiente, quebradiza, alveolado fino",
-      extensibility: "Baja — requiere reposo tras el boleado",
+      crustResult: "Crujiente; la estructura depende de la hidratación y el estirado",
+      extensibility: "Depende de la harina y la hidratación (por verificar)",
       idealStyles:
         "Pinsa, Pizza al taglio, Pala romana, Pan",
       tips: [
@@ -70,10 +68,10 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
       ],
     },
     autolisi: {
-      origin: "Francia (R. Calvel, 1974)",
+      origin: "R. Calvel, Francia 1974",
       description:
         "No es un prefermento: harina y agua reposan sin levadura ni sal antes de amasar.",
-      hydration: "55-75% (toda el agua de la receta)",
+      hydration: "La de la receta (a menudo se reserva un poco de agua)",
       consistency: "Pastosa",
       fermentationType: "Ninguna (solo actividad enzimática)",
       flavor: "Neutro — no altera el sabor",
@@ -90,7 +88,7 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
     hydration: {
       biga: "44 %",
       poolish: "100%",
-      autolisi: "55-75%",
+      autolisi: "= receta",
     },
     yeast: {
       biga: "1 %",
@@ -113,19 +111,9 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
       autolisi: "Neutro",
     },
     extensibility: {
-      biga: "Baja",
-      poolish: "Alta",
+      biga: "Variable",
+      poolish: "Alta (estimación)",
       autolisi: "Alta",
-    },
-    alveolatura: {
-      biga: "Fino",
-      poolish: "Grande",
-      autolisi: "Grande",
-    },
-    complexity: {
-      biga: "Media",
-      poolish: "Baja",
-      autolisi: "Muy baja",
     },
   },
 };
@@ -279,7 +267,7 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         symptom:
           "Manchas leopardo en el borde (leopard spotting)",
         cause:
-          "Contacto con bóveda del horno >500°C — reacción de Maillard localizada",
+          "Burbujas finas del borde que se oscurecen con el calor muy fuerte del horno (tostado y quemado localizados)",
         testRapido: "¿Las manchas son amargas al gusto?",
         fixImmediate:
           "¡NO es un problema! Es la característica deseada de la pizza napolitana",
@@ -388,8 +376,8 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
       },
       flat_long_ferment: {
         message:
-          "{h}h en nevera sin pre-fermento: posible sabor plano",
-        tip: "Añade un pre-fermento (poolish o biga) para complejidad aromática",
+          "{h}h en nevera sin prefermento: posible sabor plano",
+        tip: "Añade un prefermento (poolish o biga) para complejidad aromática",
       },
     },
   };
@@ -598,7 +586,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     thickness_factor: {
       name: "Thickness Factor (TF, factor de grosor)",
       definition: "Cantidad de masa por unidad de superficie: los gramos de masa por cada cm² de pizza.",
-      whyImportant: "Determina el tiempo de cocci\u00F3n, el crujiente y la densidad cal\u00F3rica. M\u00E9trica original del Proyecto {brand}.",
+      whyImportant: "Una métrica habitual en las calculadoras de masa norteamericanas (en oz/in²; 1 oz/in² ≈ 4,39 g/cm²). {brand} la expresa en g/cm² para dimensionar los bollos; junto con el horno orienta el tiempo de cocción y el crujiente.",
       ranges: [
         { label: "Napolitana", value: "0.30\u20130.36", note: "6-7 mm" },
         { label: "Tonda romana", value: "0.20\u20130.25", note: "4-5 mm" },
@@ -648,5 +636,175 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       definition: "Estimación del modelo basada en tiempo, temperatura, levadura y prefermentos. No mide la digestibilidad individual ni calcula los FODMAP.",
       ranges: [{"label":"85-100","value":"Índice alto"},{"label":"70-84","value":"Índice medio-alto"},{"label":"50-69","value":"Índice medio"},{"label":"<50","value":"Índice bajo"}],
     },
+  },
+};
+/* FW-01 — Registro científico: textos de notas e hipótesis (claves como SCIENCE_I18N_DEFAULTS). */
+export const SCIENCE_ES: CmsScience = {
+  notes: {
+    "yeast-dose": {
+      title: "Dosis de levadura",
+      l1: "Es una estimación: más horas y más calor piden menos levadura.",
+      l2: "Partimos de una dosis de referencia coherente con los reglamentos napolitanos y la ajustamos a tus horas y tu temperatura. La levadura, la harina y la cocina reales pueden mover los tiempos: mira la masa más que el reloj.",
+    },
+    "q10-fermentation": {
+      title: "Temperatura y velocidad de fermentación",
+      l1: "Más calor, fermentación más rápida; más frío, más lenta. El factor es una estimación.",
+      l2: "El modelo usa un factor de velocidad por tramos respecto a una temperatura de referencia. A temperatura ambiente coincide con los estudios sobre levadura; en fresco y en la nevera no tiene fuente y puede equivocarse mucho: revisa la masa.",
+    },
+    "equivalent-hours": {
+      title: "Horas equivalentes",
+      l1: "Tus horas traducidas a las horas necesarias a la temperatura de referencia.",
+      l2: "Multiplicamos las horas por la velocidad a tu temperatura. Si fermentas más fresco que la referencia (nevera, bodega), el apresto final se hace a la temperatura de referencia: esas horas cuentan tal cual y solo las demás se multiplican. Por eso la cuenta «horas × velocidad» sola no cuadra.",
+    },
+    "kitchen-temp-default": {
+      title: "Temperatura de la cocina",
+      l1: "Si no la indicas, usamos un valor estándar.",
+      l2: "La temperatura de la cocina cambia los tiempos de fermentación y la temperatura del agua. El valor estándar es una hipótesis: si tu cocina está más caliente o más fría, indícalo y la receta se adapta.",
+    },
+    "proof-split": {
+      title: "Duración del apresto",
+      l1: "Cuando el estilo no la indica, el apresto es una parte fija de las horas totales.",
+      l2: "Es una hipótesis del modelo, no una regla del método. Si la cocina está más caliente de lo previsto, la masa está lista antes: revísala.",
+    },
+    "sourdough-starter-dose": {
+      title: "Dosis de masa madre",
+      l1: "La dosis de masa madre es una regla práctica que depende solo de las horas.",
+      l2: "No tiene en cuenta la temperatura ni la fuerza de tu masa madre. La harina y el agua de la masa madre no entran en la hidratación mostrada: la masa real está algo más hidratada.",
+    },
+    "pre-ferment": {
+      title: "Biga y poolish",
+      l1: "Hidratación, horas y temperaturas vienen de fuentes del sector concordantes.",
+      l2: "La biga es un prefermento seco que madura despacio en fresco; el poolish es líquido y madura más rápido. Corteza y miga dependen sobre todo del horno, la hidratación y el estirado, no solo del prefermento.",
+    },
+    autolysis: {
+      title: "Autólisis",
+      l1: "Harina y agua reposan sin levadura ni sal antes del amasado.",
+      l2: "No es un prefermento: no fermenta. Hidrata la harina y hace la masa más fácil de trabajar (R. Calvel, 1974).",
+    },
+    "water-temp-rule": {
+      title: "Temperatura del agua",
+      l1: "Una cuenta exacta que parte de algunas hipótesis sobre tu cocina.",
+      l2: "Cocina, harina, agua y calor de la amasadora suman tres veces la temperatura de masa que quieres. La aritmética es exacta; cocina y harina son estimaciones si no las mides, y el calor de la amasadora es un valor típico.",
+    },
+    "water-activity": {
+      title: "Actividad de agua (aw)",
+      l1: "Un índice estimado, no medido.",
+      l2: "Lo calculamos con una fórmula sencilla a partir de hidratación, sal y azúcar. Sirve para comparar recetas, no para saber cuánto se conserva la pizza: un valor real necesita un instrumento.",
+    },
+    "dough-indices": {
+      title: "Índices de la masa",
+      l1: "Red de gluten y proteólisis son índices del modelo, no medidas.",
+      l2: "Combinan fuerza de la harina, hidratación y horas con pesos elegidos por {brand}. Sirven para comparar dos recetas, no son valores de laboratorio.",
+    },
+    "salt-range": {
+      title: "Rango de sal",
+      l1: "Las marcas de la sal son una elección de {brand}, no un rango con fuente.",
+      l2: "Para la Napoletana STG el reglamento da un rango preciso; para los demás estilos mostramos una franja estrecha alrededor del valor de la receta.",
+    },
+    "stg-salt-timing": {
+      title: "La sal en la Napoletana STG",
+      l1: "El reglamento disuelve la sal en el agua antes de añadir la harina.",
+      l2: "Es el orden del Reglamento UE de la STG. Otros métodos añaden la sal más tarde: para este estilo seguimos el reglamento.",
+    },
+    "flour-w-by-grade": {
+      title: "Tipo de harina y fuerza",
+      l1: "00, 0, 1 e integral dicen cuán refinada es la harina, no cuán fuerte.",
+      l2: "La fuerza (W) cambia de un saco a otro incluso en el mismo tipo. Si el saco no la indica, el modelo usa una estimación por tipo: para un valor real consulta la ficha del molino.",
+    },
+    "flour-pl-estimate": {
+      title: "P/L estimado",
+      l1: "Si no indicas el P/L, lo estimamos a partir de la fuerza de la harina.",
+      l2: "Es una relación aproximada, limitada al rango del estilo. El valor real está en la ficha técnica de la harina.",
+    },
+    "stg-flour-w": {
+      title: "Fuerza de la harina en la STG",
+      l1: "Usamos el rango de la AVPN, más estrecho que el del reglamento STG.",
+      l2: "El Reglamento UE de la STG admite harinas más débiles y más fuertes; el reglamento de la AVPN estrecha el rango. Es una elección de {brand}: se indican las dos fuentes.",
+    },
+    "oven-max-temp": {
+      title: "Temperatura máxima del horno",
+      l1: "Es la temperatura declarada para tu modelo.",
+      l2: "Casi ningún fabricante dice si es la temperatura del aire o de la piedra. Cuando el dato viene de un vendedor o de una reseña lo indicamos; los hornos de las demos tienen datos inventados.",
+    },
+    "oven-preset-max-temp": {
+      title: "Temperatura típica del tipo de horno",
+      l1: "Un valor típico: corrígelo con el de tu horno.",
+      l2: "Para algunos tipos de horno no tenemos ficha del fabricante ni norma. Si conoces tu horno, indica su temperatura: la receta se adapta.",
+    },
+    "stg-oven-temp": {
+      title: "Horno de la Napoletana STG",
+      l1: "Las dos fuentes dan la misma temperatura para superficies distintas.",
+      l2: "El reglamento STG la refiere a la solera, el de la AVPN a la bóveda. Ninguna llega al extremo alto del rango que usa el motor: ese valor está por verificar.",
+    },
+    "style-min-oven-temp": {
+      title: "Temperatura mínima del estilo",
+      l1: "En muchos estilos el mínimo es una elección del modelo, sin fuente.",
+      l2: "Por debajo del mínimo la receta no es factible o es menos fiel. Donde hay un reglamento lo seguimos; en los demás casos el umbral está por verificar.",
+    },
+    "bake-time-home-preheat": {
+      title: "Precalentamiento del horno de casa",
+      l1: "La duración del precalentamiento es una hipótesis del modelo.",
+      l2: "La piedra y el acero se calientan más despacio que el aire: ponlos en el horno frío, enciéndelo y, si puedes, mide la superficie antes de hornear.",
+    },
+    "surface-conductivity": {
+      title: "Conductividad de la superficie",
+      l1: "Lo rápido que la superficie pasa calor a la pizza.",
+      l2: "Es la conductividad térmica típica del material, en W/(m·K): los metales vienen de tablas técnicas; piedra y refractario son valores por verificar. La rejilla no tiene superficie de contacto.",
+    },
+    "baking-energy": {
+      title: "Energía de cocción",
+      l1: "Un orden de magnitud, no una medida.",
+      l2: "Multiplicamos el tiempo de cocción por una potencia típica elegida según la temperatura del horno, igual para leña, gas y eléctrico. No cuenta el precalentamiento.",
+    },
+    "thickness-factor": {
+      title: "Thickness factor",
+      l1: "Gramos de masa por cada cm² de pizza.",
+      l2: "Es una métrica habitual en las calculadoras de masa norteamericanas, en onzas por pulgada cuadrada; {brand} la expresa en g/cm² para dimensionar los bollos.",
+    },
+    "score-weights": {
+      title: "Pesos de la puntuación",
+      l1: "Los pesos de las dimensiones son una elección de {brand}.",
+      l2: "Dicen cuánto cuenta cada dimensión en el número final. No vienen de una medida: son una regla de la app, igual para todos.",
+    },
+    "non-feasible-ceiling": {
+      title: "Techo para recetas no factibles",
+      l1: "Una receta que no puedes hacer se queda en la franja baja: es una regla de la app.",
+      l2: "Así una receta no realizable nunca supera a una que sí puedes hacer, aunque las demás dimensiones sean altas.",
+    },
+    "authenticity-fuel-cap": {
+      title: "Techo de autenticidad por el combustible",
+      l1: "Sin el horno que pide el estilo, la autenticidad tiene un techo: es una elección de {brand}.",
+      l2: "Cuando un estilo exige leña o carbón, otro horno puede cocer bien pero no sigue el método. El techo es un límite editorial, no una medida de calidad.",
+    },
+    digestibility: {
+      title: "Índice de digestibilidad",
+      l1: "Un índice del modelo sobre el proceso, no una promesa de salud.",
+      l2: "Tiene en cuenta horas y temperaturas de maduración. No mide cómo digiere una pizza una persona ni certifica que sea adecuada para una dieta.",
+    },
+    "troubleshooting-thresholds": {
+      title: "Umbrales de los problemas",
+      l1: "Los umbrales numéricos de los problemas son orientativos.",
+      l2: "Son reglas prácticas sin fuente publicada y no tienen en cuenta el estilo: una masa en bandeja, por ejemplo, está mucho más hidratada que una napolitana. Úsalos como pista, no como diagnóstico.",
+    },
+  },
+  assumptions: {
+    "constant-ferment-temp": "La temperatura se mantiene constante durante toda la fase.",
+    "time-exponent-no-source": "La corrección por horas usa un exponente elegido por el modelo, sin fuente.",
+    "kitchen-temp-standard": "Si no indicas la temperatura de la cocina, usamos un valor estándar.",
+    "q10-cold-no-source": "En fresco y en la nevera el factor de velocidad no tiene fuente: el error puede ser grande.",
+    "proof-share-default": "Sin indicaciones del estilo, el apresto es una parte fija de las horas.",
+    "starter-steps-by-hours": "La dosis de masa madre baja por escalones con las horas, sin considerar la temperatura.",
+    "starter-not-in-hydration": "La harina y el agua de la masa madre no cuentan en la hidratación.",
+    "flour-at-kitchen-temp": "La harina está a la temperatura de la cocina.",
+    "mixer-friction-values": "El calor de la amasadora es un valor típico por verificar; a mano es cero.",
+    "coefficients-not-measured": "Los coeficientes de la fórmula los elige el modelo, no están medidos.",
+    "grade-is-not-strength": "El tipo de harina indica el refinado, no la fuerza: la W por tipo es una estimación.",
+    "oven-temp-surface-unspecified": "No sabemos si la temperatura declarada es la del aire o la de la piedra.",
+    "style-min-temp-no-source": "La temperatura mínima del estilo no tiene fuente escrita.",
+    "preheat-home-minutes": "La duración del precalentamiento depende solo de la temperatura del horno, no de la superficie.",
+    "rack-no-contact": "La rejilla no tiene superficie de contacto: la base se cuece por radiación y aire.",
+    "oven-power-steps": "Una potencia típica por franja de temperatura, igual para todos los combustibles.",
+    "no-health-claim": "Ninguna afirmación de salud: el índice no mide la digestión de una persona.",
+    "thresholds-rules-of-thumb": "Los umbrales son reglas prácticas generales, no ajustadas al estilo.",
   },
 };

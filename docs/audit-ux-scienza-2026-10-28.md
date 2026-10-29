@@ -256,6 +256,7 @@ Le prime quattro scelte da Matteo con domande a scelta; le altre accettate in bl
 
 - **Budget del JS (900 kB gzip, margine 0,4 kB dopo #143)**
   - Deciso (raccomandazione accettata in blocco): prima si recupera peso (cataloghi delle lingue caricati solo per la lingua attiva, dati non usati); un aumento del budget solo se motivato e misurato in `docs/budget-prestazioni.md`.
+  - Superata da D-059 (29/10/2026): i cataloghi erano già caricati solo per la lingua attiva; il budget ora misura il JS per utente (codice ≤ 500 kB, codice + lingua più pesante ≤ 600 kB).
 
 ## Pacchetti di lavoro
 

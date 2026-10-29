@@ -579,7 +579,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       },
     },
     cacio_e_pepe_crema: {
-      variant_name: "post-bake",
+      variant_name: "after baking",
       ingredients: {
         "0": { name: "Grated Pecorino Romano", notes: "For the cream" },
         "1": { name: "Freshly ground black peppercorns" },

@@ -9,32 +9,17 @@ import type { FamilyId, PizzaStyle, StyleOrigin } from "./pizza-engine";
 
 export const PIZZA_FAMILIES: Record<
   FamilyId,
-  { name: string; description: string; emoji: string }
+  { name: string }
 > = {
-  napoletana: {
-    name: "Napoletana",
-    description:
-      "Cornicione pronunciato, centro sottile e cottura ad alta temperatura.",
-    emoji: "🇮🇹",
-  },
-  romana: {
-    name: "Romana",
-    description:
-      "Dalla tonda sottile e croccante alla pizza alta in teglia.",
-    emoji: "🏛️",
-  },
-  americana: {
-    name: "Americana",
-    description:
-      "Formati, impasti e tradizioni regionali della pizza negli Stati Uniti.",
-    emoji: "🗽",
-  },
-  contemporanea: {
-    name: "Contemporanea",
-    description:
-      "Nuove interpretazioni di impasti, consistenze e tecniche.",
-    emoji: "🔬",
-  },
+  napoletana: { name: "Napoletana" },
+  romana: { name: "Romana" },
+  americana: { name: "Americana" },
+  contemporanea: { name: "Contemporanea" },
+  // FW-14 (D-G, S02-A-04): stili storici non napoletani né romani, prima
+  // classificati come «Contemporanea». Da confermare da Matteo stile per stile.
+  // Le famiglie hanno solo il nome: descrizioni ed emoji non le mostrava
+  // nessuna schermata (budget JS); il nome localizzato è in cms.families.
+  regionale: { name: "Tradizioni regionali" },
 };
 
 /** Uno stile appartiene a una famiglia se è la sua primaria O una secondaria.
@@ -43,13 +28,32 @@ export function styleMatchesFamily(style: PizzaStyle, family: FamilyId): boolean
   return style.family === family || (style.families?.includes(family) ?? false);
 }
 
+/** FW-11 (S02-A-11, S05-A-14): i nomi di luogo sono dati in italiano; chi
+ *  mostra l'origine passa il nome nella lingua attiva (esonimi del CMS). */
+export type PlaceNameLocalizer = (italianName: string) => string;
+const samePlaceName: PlaceNameLocalizer = (name) => name;
+
 /** Compact origin for cards, with provincial context for smaller localities. */
-export function shortOrigin(origin: StyleOrigin): string {
-  return origin.province ? `${origin.city} (${origin.province})` : origin.city;
+export function shortOrigin(
+  origin: StyleOrigin,
+  place: PlaceNameLocalizer = samePlaceName,
+): string {
+  return origin.province
+    ? `${place(origin.city)} (${place(origin.province)})`
+    : place(origin.city);
 }
 /** Origine completa per viste di dettaglio: "Napoli, Campania, Italia". */
-export function formatOrigin(origin: StyleOrigin): string {
-  return [shortOrigin(origin), origin.region, origin.country].filter(Boolean).join(", ");
+export function formatOrigin(
+  origin: StyleOrigin,
+  place: PlaceNameLocalizer = samePlaceName,
+): string {
+  return [
+    shortOrigin(origin, place),
+    origin.region && place(origin.region),
+    origin.country && place(origin.country),
+  ]
+    .filter(Boolean)
+    .join(", ");
 }
 
 export const STYLES_DB: Record<string, PizzaStyle> = {
@@ -151,7 +155,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       'Cornicione 3-4cm "canotto"',
       "Alveolatura estrema",
       "Maturazione 24-72h",
-      "Digeribilità alta",
+      "Mollica aperta e leggera",
     ],
     hydration_category: "high",
     emoji: "🎈",
@@ -466,7 +470,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "focaccia_genovese",
     proof_in_pan: true,
     name: "Focaccia Genovese",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Genova", region: "Liguria", country: "Italia" },
     dough: {
       flour_w_range: [240, 280], // Farina 0 standard ligure W200-250 — era [220,280]
@@ -514,7 +518,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "sfincione",
     proof_in_pan: true,
     name: "Sfincione",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Palermo", region: "Sicilia", country: "Italia" },
     dough: {
       flour_w_range: [240, 280],
@@ -656,7 +660,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   focaccia_recco: {
     id: "focaccia_recco",
     name: "Focaccia di Recco",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Recco", province: "Genova", region: "Liguria", country: "Italia" },
     dough: {
       // C-4 (D-017): disciplinare IGP, CCIAA Genova 2024 (art. 5): «W > 300;
@@ -716,7 +720,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "padellino_torino",
     proof_in_pan: true,
     name: "Pizza al Padellino",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Torino", region: "Piemonte", country: "Italia" },
     dough: {
       flour_w_range: [220, 260], // Farina 0/1 forte — era [280,330]
@@ -823,7 +827,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   ciaccino_senese: {
     id: "ciaccino_senese",
     name: "Ciaccino Senese",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Siena", region: "Toscana", country: "Italia" },
     dough: {
       flour_w_range: [220, 280],
@@ -944,7 +948,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   trancio_milanese: {
     id: "trancio_milanese",
     name: "Trancio Milanese",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Milano", region: "Lombardia", country: "Italia" },
     dough: {
       flour_w_range: [280, 340], // Farina forte 0/1 — pizzerie Spontini, Cocco, Di Gennaro
@@ -1044,7 +1048,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     formula_variant: { key: "formula.withoutPotato", fallback: METHOD_MESSAGES_IT["formula.withoutPotato"] },
     proof_in_pan: true,
     name: "Focaccia Barese",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Bari", region: "Puglia", country: "Italia" },
     dough: {
       flour_w_range: [220, 280], // Farina media + semola rimacinata

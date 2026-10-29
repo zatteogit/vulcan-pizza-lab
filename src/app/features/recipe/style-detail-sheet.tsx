@@ -1,5 +1,6 @@
 import { useDecorativeMotion } from "../../context/visual-quality-context";
 import { RecipeAllergens } from "./recipe-allergens";
+import { recipeAllergenScope } from "../../domain/allergen-scope";
 import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName, stgDepartures } from "../../domain/recipe-reference";
 import { CompatibilityPill } from "./style-card-parts";
@@ -7,11 +8,12 @@ import { RecipeChanges } from "./recipe-changes";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { RecipeDietaryAlternatives } from "./recipe-dietary-notice";
 import { canonicalRecipe } from "../../use-cases/recipe-entry";
+import { summarizeVerdict } from "../../domain/verdict-summary";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
-import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle } from "lucide-react";
+import { Droplets, Wheat, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle, Info } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -29,13 +31,16 @@ import {
 import { getStyleDeviation, DEVIATION_CATEGORY_LABELS } from "../../domain/deviation-tags";
 import { getInterpretationsForStyle } from "../../data/interpretation-library";
 import { getStyleParametrics } from "../../data/parametric-databases";
+import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
-import { createFormatter, t } from "../cms/i18n";
+import { createFormatter, placeNameLocalizer, t } from "../cms/i18n";
 import { CtaButton, IconButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
+import { useDetailLevel } from "../../hooks/use-detail-level";
+import { formatNumber, formatRange, formatSeconds, pluralPick } from "../../i18n/format";
 
 interface StyleDetailSheetProps {
   style: PizzaStyle;
@@ -91,9 +96,17 @@ export function StyleDetailSheet({
      deve scorrere. Prima si bloccava il body, ma la pagina scorre su <html>:
      ora il blocco condiviso dei dialoghi (html.ds-dialog-open). Da 640 px la
      scheda è una card centrata, non un foglio largo quanto lo schermo. */
-  const [isWide] = React.useState(
+  const [isWide, setIsWide] = React.useState(
     () => typeof window !== "undefined" && window.matchMedia("(min-width: 640px)").matches,
   );
+  /* FW-03 (S03-B-17): il layout segue rotazione e ridimensionamento, non
+     solo il montaggio; l'uscita animata la gestisce AnimatePresence in home. */
+  React.useEffect(() => {
+    const mql = window.matchMedia("(min-width: 640px)");
+    const onChange = () => setIsWide(mql.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
   const panelRef = useDialogFocus<HTMLDivElement>({ open: true, onClose: onDismiss });
 
   const rec = React.useMemo(() => {
@@ -112,21 +125,41 @@ export function StyleDetailSheet({
     const texts = engineMsgTexts(rec.reasons, cms, bcp47);
     return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
   }, [rec, cms, bcp47]);
-  const matchWarnings = React.useMemo(
-    () => engineMsgTexts(rec?.warnings ?? [], cms, bcp47),
-    [rec, cms, bcp47],
+  /* FW-10: avvisi senza le ripetizioni del blocco; le condizioni («Se hai…»)
+     separate dagli avvisi, e assenti quando lo stile non è fattibile. */
+  const matchNotes = React.useMemo(() => {
+    if (!rec) return [];
+    const summary = summarizeVerdict(rec.recipe.verdict);
+    const conditionKeys = new Set(summary.conditions.map((c) => c.message.key));
+    const notes = summary.adaptations.map((m) => ({ msg: m, condition: conditionKeys.has(m.key) || m.key.startsWith("need.") }));
+    const texts = engineMsgTexts(notes.map((n) => n.msg), cms, bcp47);
+    return notes.map((n, i) => ({ text: texts[i], condition: n.condition }));
+  }, [rec, cms, bcp47]);
+  const notFeasible = rec?.tier === "not_feasible";
+  const noteRow = ({ text, condition }: { text: string; condition: boolean }) => (
+    <div key={text} className="style-detail-match__row" data-warning={condition ? undefined : "true"} data-tone={condition ? "muted" : undefined} data-condition={condition ? "true" : undefined}>
+      <span className="style-detail-match__icon">
+        {condition ? <Info size={13} aria-hidden="true" /> : <AlertTriangle size={13} aria-hidden="true" />}
+      </span>
+      <span className="style-detail-match__text">{text}</span>
+    </div>
   );
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "");
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();
-  const [showNerd, setShowNerd] = useState(false);
+  /* FW-08 (S03-B-11): con «Dettagli tecnici» attivo la scheda si apre già
+     sui dettagli tecnici; il bottone resta per chiuderli o aprirli qui. */
+  const { level: detailLevel } = useDetailLevel();
+  const [showNerd, setShowNerd] = useState(() => detailLevel === "technical");
   const [fav, setFav] = useState(() => isFavoriteStyle(style.id));
 
-  const hRange = `${style.dough.hydration_pct_range[0]}–${style.dough.hydration_pct_range[1]}%`;
-  const wRange = `W ${style.dough.flour_w_range[0]}–${style.dough.flour_w_range[1]}`;
-  const fRange = `${style.dough.fermentation_hours_range[0]}–${style.dough.fermentation_hours_range[1]}h`;
-  const plRange = `${style.dough.flour_pl_range[0]}–${style.dough.flour_pl_range[1]}`;
-  const thickness = `${doughThicknessGPerCm2(style).toFixed(2)} g/cm²`;
+  /* FW-11 (S03-A-17, S03-B-09): numeri, intervalli e unità nella lingua attiva. */
+  const hRange = formatRange(style.dough.hydration_pct_range[0], style.dough.hydration_pct_range[1], bcp47, { unit: "percent" });
+  const wRange = uiMessage("format.flourW", [formatRange(style.dough.flour_w_range[0], style.dough.flour_w_range[1], bcp47)]);
+  const fRange = formatRange(style.dough.fermentation_hours_range[0], style.dough.fermentation_hours_range[1], bcp47, { unit: "hour" });
+  const plRange = formatRange(style.dough.flour_pl_range[0], style.dough.flour_pl_range[1], bcp47, { maximumFractionDigits: 2 });
+  const thickness = uiMessage("format.gramsPerSquareCm", [formatNumber(doughThicknessGPerCm2(style), bcp47, { maximumFractionDigits: 2 })]);
+  const ptext = cms.parametricText;
   const dev = getStyleDeviation(style.id);
   const devCmsLabel = cms.deviationLabels[dev.category] ?? DEVIATION_CATEGORY_LABELS[dev.category].label;
   const devEmoji = DEVIATION_CATEGORY_LABELS[dev.category].emoji;
@@ -134,6 +167,13 @@ export function StyleDetailSheet({
      ora deriva dalla Interpretation library (unica fonte di verità). */
   const compatVariants = getInterpretationsForStyle(style.id);
   const params = getStyleParametrics(style.id);
+  // FW-07 (S03-A-02): per le fritte la temperatura è dell'olio, non del forno.
+  const frying = params.ovenTemp?.ovenType === "frittura";
+  // FW-07: il nome del forno della cucina effettiva (il modello, se è lo stesso tipo).
+  const kitchen = React.useMemo(() => loadEffectiveKitchen(), []);
+  const yourOvenName = constraints && kitchen.oven.modelId && kitchen.oven.type === constraints.oven_type
+    ? kitchen.oven.label
+    : constraints ? (cms.ovenPresets[constraints.oven_type]?.name ?? constraints.oven_type) : "";
 
   /* CMS-backed description & characteristics */
   const cmsDescription = cms.styleDescriptions[style.id] ?? style.description;
@@ -143,7 +183,7 @@ export function StyleDetailSheet({
 
   const DATA_PILLS: { icon: typeof Droplets; label: string; value: string }[] = [
     { icon: Droplets, label: pt.pillHydration, value: hRange },
-    { icon: Flame, label: pt.pillFlour, value: wRange },
+    { icon: Wheat, label: pt.pillFlour, value: wRange }, /* FW-13: Flame è il forno */
     { icon: Ratio, label: pt.pillPL, value: plRange },
     { icon: Clock, label: pt.pillFermentation, value: fRange },
     { icon: Layers, label: pt.pillThickness, value: thickness },
@@ -160,7 +200,9 @@ export function StyleDetailSheet({
       className={`style-detail-cta style-detail-cta--${placement}`}
     >
       {placement === "footer" && <Sparkles size={15} aria-hidden="true" />}
-      {placement === "toolbar" ? cms.pages.navCreate : pt.sheetGenerateBtn}
+      {/* FW-14 (S03-A-16): stessa etichetta su ogni breakpoint; «Crea» era il
+          nome della tab in cui l'utente si trova già. */}
+      {pt.sheetGenerateBtn}
     </CtaButton>
   );
 
@@ -252,7 +294,7 @@ export function StyleDetailSheet({
                 ·
               </span>
               <span className="style-detail-title__origin">
-                {formatOrigin(style.origin)}
+                {formatOrigin(style.origin, placeNameLocalizer(cms))}
               </span>
 
               {rec && (
@@ -260,15 +302,15 @@ export function StyleDetailSheet({
                   <span className="style-detail-title__dot">
                     ·
                   </span>
-                  <CompatibilityPill now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
+                  <CompatibilityPill context="detail" now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
                     blocked={rec.recipe.verdict.outcome === "not_feasible"} className="style-detail-title__match" />
                 </>
               )}
 
               {/* Title */}
-              <h3 id={`style-detail-title-${style.id}`} className="style-detail-title__heading">
+              <h2 id={`style-detail-title-${style.id}`} className="style-detail-title__heading">
                 {displayName}
-              </h3>
+              </h2>
             </div>
           </div>
 
@@ -314,9 +356,10 @@ export function StyleDetailSheet({
                 {/* ── Author variants — compatible methods ── */}
                 {compatVariants.length > 0 && (
                   <div className="style-detail-techniques">
-                    <span className="style-detail-techniques__label">
+                    {/* FW-12 (S03-B-24): sezioni h3 sotto il titolo h2 del pannello. */}
+                    <h3 className="style-detail-techniques__label">
                       {pt.sheetTechniquesLabel}
-                    </span>
+                    </h3>
                     <div className="style-detail-techniques__list">
                       {compatVariants.map((v) => {
                         /* Etichetta autore: maestro/pizzeria/ente, + firma tecnica. */
@@ -372,42 +415,59 @@ export function StyleDetailSheet({
                     }}
                     className="style-detail-params"
                   >
-                    <span className="style-detail-params__label">
+                    <h3 className="style-detail-params__label">
                       {pt.sheetSectionTitle}
-                    </span>
+                    </h3>
+                    {/* FW-07 (S03-A-10): prima la cottura che farai tu, poi il riferimento dello stile. */}
+                    {rec && !frying && (
+                      <div className="style-detail-params__box" data-region="your-bake">
+                        <ParamRow
+                          label={pt.sheetYourBakeLabel}
+                          value={`${fmt.celsius(rec.recipe.oven_temp_c)} · ${fmt.cookTime(rec.recipe.cook_time_sec)}`}
+                          sub={yourOvenName}
+                        />
+                      </div>
+                    )}
                     <div className="style-detail-params__box">
                       {params.ovenTemp && (
                         <ParamRow
-                          label={pt.sheetOvenLabel}
+                          label={frying ? pt.sheetOilLabel : pt.sheetOvenLabel}
                           value={`${fmt.celsius(params.ovenTemp.idealTemp_c)} (${fmt.celsius(params.ovenTemp.minTemp_c)}–${fmt.celsius(params.ovenTemp.maxTemp_c)})`}
-                          sub={t(pt.sheetOvenPreheat, { min: params.ovenTemp.preheatingMin })}
+                          sub={frying ? pt.sheetOilHeat : t(pt.sheetOvenPreheat, { min: params.ovenTemp.preheatingMin })}
                         />
                       )}
                       {params.bakingTime && (
                         <ParamRow
                           label={pt.sheetBakeLabel}
-                          value={formatBakingTime(params.bakingTime.idealSeconds)}
-                          sub={params.bakingTime.turns > 0 ? t(pt.sheetBakeTurns, { n: params.bakingTime.turns }) : pt.sheetBakeNoTurns}
+                          value={formatSeconds(params.bakingTime.idealSeconds, bcp47)}
+                          sub={frying
+                            ? pt.sheetFryTurn
+                            : params.bakingTime.turns > 0
+                              ? pluralPick(params.bakingTime.turns, bcp47, {
+                                  one: uiMessage("recipe.sheet.rotationsOne", [params.bakingTime.turns]),
+                                  other: uiMessage("recipe.sheet.rotationsOther", [params.bakingTime.turns]),
+                                })
+                              : pt.sheetBakeNoTurns}
                         />
                       )}
                       {params.doughBase && (
                         <ParamRow
                           label={pt.sheetDoughLabel}
                           value={fmt.grams(params.doughBase.ballWeight_g)}
-                          sub={params.doughBase.stretchMethod}
+                          sub={ptext?.stretch?.[style.id] ?? params.doughBase.stretchMethod}
                         />
                       )}
                       {params.salt && (
                         <ParamRow
                           label={pt.sheetSaltLabel}
-                          value={`${fmt.percent(params.salt.saltPct)} ${params.salt.saltType}`}
-                          sub={params.salt.additionTiming}
+                          value={`${fmt.percent(params.salt.saltPct)} ${ptext?.saltType?.[params.salt.saltType] ?? params.salt.saltType}`}
+                          sub={ptext?.saltTiming?.[params.salt.additionTiming] ?? params.salt.additionTiming}
                         />
                       )}
                       {params.folding && params.folding.foldCount > 0 && (
                         <ParamRow
                           label={pt.sheetFoldLabel}
-                          value={`${params.folding.foldCount}× ${params.folding.foldType.replace("_", " ")}`}
+                          value={`${params.folding.foldCount}× ${ptext?.fold?.[params.folding.foldType] ?? params.folding.foldType.replace("_", " ")}`}
                           sub={t(pt.sheetFoldInterval, { min: params.folding.foldInterval_min })}
                         />
                       )}
@@ -424,25 +484,19 @@ export function StyleDetailSheet({
               <h3 className="style-detail-match__heading">
                 {cms.tiers[rec.tier].label}
               </h3>
-              {constraints && (
+              {constraints && !frying && (
                 <p className="style-detail-match__text">
-                  {cms.ovenPresets[constraints.oven_type]?.name ?? constraints.oven_type}
+                  {yourOvenName}
                   {" · "}{fmt.celsius(constraints.oven_max_temp_c)}
                 </p>
               )}
               <div className="style-detail-match__list">
-                {rec.tier === "not_feasible" && constraints && (
-                  <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false} />
+                {notFeasible && constraints && (
+                  <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false}
+                    details={matchNotes.length > 0 ? <div className="style-detail-match__list">{matchNotes.map(noteRow)}</div> : undefined} />
                 )}
                 {constraints && <RecipeDietaryAlternatives recipe={rec.recipe} constraints={constraints} onSelect={id => onGenerate(id)} />}
-                {matchWarnings.map((text) => (
-                  <div key={text} className="style-detail-match__row" data-warning="true">
-                    <span className="style-detail-match__icon">
-                      <AlertTriangle size={13} aria-hidden="true" />
-                    </span>
-                    <span className="style-detail-match__text">{text}</span>
-                  </div>
-                ))}
+                {!notFeasible && matchNotes.map(noteRow)}
                 {matchReasons.map((r, i) => {
                   const DimIcon = MATCH_DIMENSION_ICON[r.dim];
                   return (
@@ -460,8 +514,8 @@ export function StyleDetailSheet({
             </div>
           )}
 
-          {rec && <RecipeAllergens report={rec.recipe.allergens} scope="recipe" />}
-          {rec && originalRecipe && (
+          {rec && <RecipeAllergens report={rec.recipe.allergens} scope={recipeAllergenScope(rec.recipe).scope} />}
+          {rec && originalRecipe && !notFeasible && (
             <RecipeChanges from={originalRecipe} to={rec.recipe} mode="included" />
           )}
 
@@ -492,8 +546,4 @@ function ParamRow({ label, value, sub }: { label: string; value: string; sub: st
   );
 }
 
-function formatBakingTime(seconds: number) {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes}m ${remainingSeconds}s`;
-}
+

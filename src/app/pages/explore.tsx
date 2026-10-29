@@ -6,9 +6,9 @@
 import { ArrowRight } from "lucide-react";
 import { CompatibilityPill, StyleMetaChip } from "../features/recipe/style-card-parts";
 import { AnimatePresence,motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
-import { Heading, Surface } from "../components/ds/index";
+import { EmptyState, Heading, Surface } from "../components/ds/index";
 import { useCms, type CmsContent } from "../features/cms/cms-context";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../components/media/responsive-images";
@@ -27,14 +27,19 @@ import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
 SIGNATURE_RECIPES,
+signatureRecipeLink,
 type SignatureRecipe,
 } from "../data/signature-recipes";
+import { canonicalRecipeEntry, recipeFromEntry } from "../use-cases/recipe-entry";
+import { stgDepartures } from "../domain/recipe-reference";
 import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
-import { kitchenCompatibility, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
+import { canonicalRecipe, kitchenCompatibility, scoreWeightsFromCms, styleWithSelectedTopping } from "../features/recipe/kitchen-compatibility";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { useDetailLevel } from "../hooks/use-detail-level";
+import { createFormatter, placeNameLocalizer } from "../features/cms/i18n";
 
 /** Badge delle ricette iconiche nella lingua attiva: i dati restano in
  *  italiano (servono anche al dedup con l'autore), il testo mostrato no. */
@@ -63,7 +68,10 @@ function signatureCardText(recipe: SignatureRecipe, styleName: string) {
   };
 }
 
-function getAcronymTooltip(text: string | null | undefined): string | undefined {
+/** FW-03 (S02-A-10): spiegazione delle sigle per aria-describedby sul link
+ * della card, non più in title= (irraggiungibile al tocco e da tastiera). */
+function getAcronymTooltip(...texts: (string | null | undefined)[]): string | undefined {
+  const text = texts.filter(Boolean).join(" ");
   if (!text) return undefined;
   const acronyms: Record<string, string> = {
     AVPN: uiMessage("pages.explore.acronym.avpn"),
@@ -90,6 +98,7 @@ const FAMILY_IDS: (FamilyId | "all")[] = [
   "romana",
   "americana",
   "contemporanea",
+  "regionale",
 ];
 
 type ExploreFilter = "all" | "styles" | "recipes";
@@ -104,6 +113,20 @@ function isFamilyFilter(value: string | null): value is FamilyId | "all" {
   return FAMILY_IDS.includes(value as FamilyId | "all");
 }
 
+
+/* FW-12 (S02-A-14): ordine del nome accessibile delle card ricetta. */
+function cardLabelIds(
+  baseId: string,
+  text: { context?: string | null; author?: string | null },
+  hasBadge: boolean,
+): string {
+  return [
+    `${baseId}-title`,
+    text.context ? `${baseId}-context` : null,
+    text.author ? `${baseId}-author` : null,
+    hasBadge ? `${baseId}-badge` : null,
+  ].filter(Boolean).join(" ");
+}
 
 /* ── Componente Editoriale per la Ricetta in Primo Piano ── */
 function FeaturedRecipeCard({
@@ -125,19 +148,21 @@ function FeaturedRecipeCard({
   const styleName = STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
 
   const cardText = signatureCardText(recipe, styleName);
+  const acronymHelpId = useId();
+  const acronymHelp = getAcronymTooltip(recipe.authenticity_badge, cardText.context);
+  /* FW-12 (S02-A-14): il nome del link parte dal titolo, poi contesto,
+     autore e badge, separati (aria-labelledby unisce con spazi). */
+  const nameId = useId();
+  const labelledBy = cardLabelIds(nameId, cardText, !!recipe.authenticity_badge);
 
-  const linkParams = new URLSearchParams();
-  linkParams.set("mode", "canonical");
-  linkParams.set("tab", "condimento");
-  linkParams.set("topping", recipe.topping_concept_id);
-  if (recipe.interpretation_id)
-    linkParams.set("interpretation", recipe.interpretation_id);
-  const linkTo = `/recipe/${recipe.style_id}?${linkParams.toString()}`;
+  const linkTo = signatureRecipeLink(recipe);
 
   return (
     <article className="explore-feature-shell">
     <Link
       to={linkTo}
+      aria-labelledby={labelledBy}
+      aria-describedby={acronymHelp ? `${nameId}-desc ${acronymHelpId}` : `${nameId}-desc`}
       state={{ exploreBackTo }}
       data-region="feature"
       onMouseEnter={() => setHovered(true)}
@@ -148,17 +173,14 @@ function FeaturedRecipeCard({
       <div className="explore-feature__media">
         <ImageWithFallback
           src={photo}
-          alt={recipe.name}
+          alt=""
           className="explore-feature__image"
           priority
           sizes={IMAGE_SIZES.feature}
         />
         {/* Badge autenticità posizionato sull'immagine */}
         {recipe.authenticity_badge && (
-          <div
-            className="explore-feature__badge"
-            title={getAcronymTooltip(recipe.authenticity_badge)}
-          >
+          <div id={`${nameId}-badge`} className="explore-feature__badge">
             {signatureBadgeText(recipe.authenticity_badge, cms)}
           </div>
         )}
@@ -167,19 +189,17 @@ function FeaturedRecipeCard({
       {/* Colonna Testo Solido */}
       <div className="explore-feature__body">
         <div className="explore-feature__head">
-          {cardText.context && <span
-            className="explore-feature__eyebrow"
-            title={getAcronymTooltip(cardText.context)}
-          >
+          {acronymHelp && <span hidden id={acronymHelpId}>{acronymHelp}</span>}
+          {cardText.context && <span id={`${nameId}-context`} className="explore-feature__eyebrow">
             {cardText.context}
           </span>}
-          <h2 className="explore-feature__title">
+          <h2 id={`${nameId}-title`} className="explore-feature__title">
             {cardText.title}
           </h2>
-          <p className="explore-feature__desc">
+          <p id={`${nameId}-desc`} className="explore-feature__desc">
             {recipe.description}
           </p>
-          {cardText.author && <p className="explore-feature__desc">{uiMessage("pages.explore.recipeBy", [cardText.author])}</p>}
+          {cardText.author && <p id={`${nameId}-author`} className="explore-feature__desc">{uiMessage("pages.explore.recipeBy", [cardText.author])}</p>}
         </div>
 
         <div className="explore-feature__cta">
@@ -226,18 +246,64 @@ export function ExplorePage() {
     );
   };
 
-  const isNerd = useMemo(() => {
-    try {
-      return localStorage.getItem("vulcan_nerd_on") === "true";
-    } catch {
-      return false;
-    }
-  }, []);
+  /* FW-08: stesso stato «Dettagli tecnici» di Profilo, Crea e scheda. */
+  const isNerd = useDetailLevel().level === "technical";
 
   const styles = useMemo(() => {
     const db = effectiveStyles ?? STYLES_DB;
     return Object.values(db);
   }, [effectiveStyles]);
+
+  /* FW-10 (D-H, S02-A-03): l'anteprima apre con ciò che la tua cucina
+     permette. Prima gli stili fattibili, poi per compatibilità decrescente;
+     a parità resta l'ordine del database. La vista completa non cambia. */
+  const kitchenRank = useMemo(() => {
+    const weights = scoreWeightsFromCms(cms);
+    const rank = (style: PizzaStyle | undefined) => {
+      if (!style) return { blocked: true, now: 0 };
+      try {
+        const recipe = canonicalRecipe(style, profileConstraints, weights);
+        return { blocked: recipe.verdict.outcome === "not_feasible", now: recipe.scores.composite };
+      } catch {
+        return { blocked: true, now: 0 };
+      }
+    };
+    const sortBy = <T,>(items: readonly T[], styleOf: (item: T) => PizzaStyle | undefined) => {
+      const ranked = items.map((item, index) => ({ item, index, ...rank(styleOf(item)) }));
+      ranked.sort((a, b) => Number(a.blocked) - Number(b.blocked) || b.now - a.now || a.index - b.index);
+      return ranked;
+    };
+    const stylesRanked = sortBy(styles, (style) => style);
+    const recipesRanked = sortBy(SIGNATURE_RECIPES, (recipe) => {
+      const base = (effectiveStyles ?? STYLES_DB)[recipe.style_id];
+      return base ? styleWithSelectedTopping(base, recipe.topping_concept_id) : undefined;
+    });
+    /* FW-14 (S02-A-01): in primo piano la prima ricetta iconica che sulla tua
+     * cucina si apre davvero come promette la card: fattibile e, se è STG,
+     * senza scostamenti dal disciplinare. Prima era sempre la Margherita
+     * «Disciplinare AVPN», che col forno di casa apriva «fuori disciplinare». */
+    const opensAsPromised = (rec: SignatureRecipe) => {
+      const style = STYLES_DB[rec.style_id];
+      if (!style) return false;
+      try {
+        const interpretation = rec.interpretation_id ? getInterpretationById(rec.interpretation_id) ?? null : undefined;
+        const recipe = recipeFromEntry(canonicalRecipeEntry(style, undefined, interpretation), profileConstraints);
+        return recipe.verdict.outcome !== "not_feasible"
+          && stgDepartures(recipe, profileConstraints.oven_type).length === 0;
+      } catch {
+        return false;
+      }
+    };
+    const featured = recipesRanked.find((r) => !r.blocked && opensAsPromised(r.item))?.item
+      ?? recipesRanked.find((r) => !r.blocked)?.item
+      ?? SIGNATURE_RECIPES[0];
+    return {
+      styles: stylesRanked.slice(0, 4),
+      featured,
+      recipes: recipesRanked.filter((r) => r.item !== featured).slice(0, 4).map((r) => r.item),
+    };
+  }, [styles, effectiveStyles, profileConstraints, cms]);
+  const previewForKitchen = kitchenRank.styles.some((entry) => !entry.blocked);
 
   const filteredStyles = useMemo(() => {
     if (activeFamily === "all") return styles;
@@ -245,34 +311,26 @@ export function ExplorePage() {
     return styles.filter((s) => styleMatchesFamily(s, activeFamily as FamilyId));
   }, [styles, activeFamily]);
 
-  /* Group styles by family for "all" and style tab when no family filter is applied */
-  const groupedStyles = useMemo(() => {
-    if (activeFamily !== "all") return null;
-    const groups: Record<FamilyId, PizzaStyle[]> = {
-      napoletana: [],
-      romana: [],
-      americana: [],
-      contemporanea: [],
-    };
+  /* FW-14 (S02-A-08): gruppi e conteggi delle chip dalla stessa funzione
+   * (styleMatchesFamily, filtro non esclusivo). Un gruppo elenca anche i membri
+   * secondari, con la famiglia principale in didascalia: così «Contemporanea 8»
+   * sulla chip e «(8)» sul gruppo coincidono. Prima il gruppo contava solo la
+   * primaria (7). */
+  const stylesByFamily = useMemo(() => {
+    const groups = Object.fromEntries(
+      FAMILY_IDS.filter((f): f is FamilyId => f !== "all").map((f) => [f, [] as PizzaStyle[]]),
+    ) as Record<FamilyId, PizzaStyle[]>;
     for (const s of styles) {
-      if (groups[s.family]) groups[s.family].push(s);
-    }
-    return groups;
-  }, [styles, activeFamily]);
-
-  /* Family counts for badges — coerenti col filtro non esclusivo: uno stile
-   * conta nella primaria e in ogni secondaria (la somma può superare il totale). */
-  const familyCounts = useMemo(() => {
-    const counts: Record<string, number> = {
-      all: styles.length,
-    };
-    for (const s of styles) {
-      for (const fam of [s.family, ...(s.families ?? [])]) {
-        counts[fam] = (counts[fam] || 0) + 1;
+      for (const fam of Object.keys(groups) as FamilyId[]) {
+        if (styleMatchesFamily(s, fam)) groups[fam].push(s);
       }
     }
-    return counts;
+    return groups;
   }, [styles]);
+  const groupedStyles = activeFamily === "all" ? stylesByFamily : null;
+  const familyCounts: Record<string, number> = { all: styles.length };
+  for (const [fam, list] of Object.entries(stylesByFamily)) familyCounts[fam] = list.length;
+
 
   return (
     <main
@@ -342,7 +400,7 @@ export function ExplorePage() {
               {/* 1. Hero Card "In primo piano" */}
               {SIGNATURE_RECIPES.length > 0 && (
                 <FeaturedRecipeCard
-                  recipe={SIGNATURE_RECIPES[0]}
+                  recipe={kitchenRank.featured}
                   isNerd={isNerd}
                   exploreBackTo={exploreBackTo}
                 />
@@ -355,6 +413,7 @@ export function ExplorePage() {
                     {cms.pages.exploreFilterRecipes}
                   </Heading>
                   <button
+                    type="button"
                     onClick={() => setExploreFilters("recipes")}
                     className="explore-section__link"
                   >
@@ -362,7 +421,7 @@ export function ExplorePage() {
                   </button>
                 </div>
                 <div data-region="collection" className="explore-grid--preview">
-                  {SIGNATURE_RECIPES.slice(1, 5).map((recipe, i) => (
+                  {kitchenRank.recipes.map((recipe, i) => (
                     <SignatureRecipeCard
                       key={recipe.id}
                       recipe={recipe}
@@ -370,6 +429,7 @@ export function ExplorePage() {
                       cms={cms}
                       isNerd={isNerd}
                       exploreBackTo={exploreBackTo}
+                      constraints={profileConstraints}
                     />
                   ))}
                 </div>
@@ -379,9 +439,10 @@ export function ExplorePage() {
               <section>
                 <div className="explore-section__head">
                   <Heading level="md" as="h2">
-                    {cms.misc.exploreSectionTraditional}
+                    {previewForKitchen ? uiMessage("explore.forKitchen") : cms.pages.exploreFilterStyles}
                   </Heading>
                   <button
+                    type="button"
                     onClick={() => setExploreFilters("styles")}
                     className="explore-section__link"
                   >
@@ -389,7 +450,7 @@ export function ExplorePage() {
                   </button>
                 </div>
                 <div data-region="collection" className="explore-grid--preview">
-                  {styles.slice(0, 4).map((style, i) => (
+                  {kitchenRank.styles.map(({ item: style }, i) => (
                     <StyleCatalogCard
                       key={style.id}
                       style={style}
@@ -422,6 +483,7 @@ export function ExplorePage() {
                     cms={cms}
                     isNerd={isNerd}
                     exploreBackTo={exploreBackTo}
+                    constraints={profileConstraints}
                   />
                 ))}
               </div>
@@ -442,7 +504,7 @@ export function ExplorePage() {
                   const active = activeFamily === fam;
                   const label =
                     fam === "all"
-                      ? "Tutti"
+                      ? uiMessage("pages.explore.familyAll")
                       : cms.families[fam]?.name ||
                         PIZZA_FAMILIES[fam]?.name ||
                         fam;
@@ -485,9 +547,10 @@ export function ExplorePage() {
                       return (
                         <div key={familyId} className="explore-family-group">
                           <div className="explore-family-group__head">
-                            <h3 className="explore-family-group__title">
+                            {/* FW-12 (S02-B-11): gruppo h2, card h3 (prima h1 → h3). */}
+                            <h2 className="explore-family-group__title">
                               {cmsFam?.name || fam?.name}
-                            </h3>
+                            </h2>
                             <span className="type-data explore-family-group__count">
                               ({familyStyles.length})
                             </span>
@@ -502,6 +565,9 @@ export function ExplorePage() {
                                 isNerd={isNerd}
                                 exploreBackTo={exploreBackTo}
                                 constraints={profileConstraints}
+                                primaryFamily={style.family !== familyId
+                                  ? cms.families[style.family]?.name || PIZZA_FAMILIES[style.family]?.name
+                                  : undefined}
                               />
                             ))}
                           </div>
@@ -510,11 +576,20 @@ export function ExplorePage() {
                     })
                   ) : filteredStyles.length === 0 ? (
                     /* VPL-A6: empty-state esplicito invece della griglia vuota */
-                    <div className="explore-empty">
-                      {cms.misc.noStyleInFamily}
-                    </div>
+                    /* FW-09 (S02-A-13): qui il filtro famiglia non dipende dal profilo. */
+                    <EmptyState
+                      title={uiMessage("pages.explore.noStyleInFamily")}
+                      actions={[{ label: cms.misc.showAllStyles, onClick: () => setExploreFilters("styles", "all") }]}
+                      headingLevel={3}
+                      className="explore-empty-state"
+                    />
                   ) : (
                     /* Griglia piatta filtrata */
+                    <>
+                    {/* FW-12 (S02-B-11): titolo h2 della famiglia per chi naviga per titoli. */}
+                    <h2 className="sr-only">
+                      {cms.families[activeFamily as FamilyId]?.name || PIZZA_FAMILIES[activeFamily as FamilyId]?.name}
+                    </h2>
                     <div data-region="collection" className="explore-grid">
                       {filteredStyles.map((style, i) => (
                         <StyleCatalogCard
@@ -528,6 +603,7 @@ export function ExplorePage() {
                         />
                       ))}
                     </div>
+                    </>
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -549,14 +625,27 @@ function SignatureRecipeCard({
   cms,
   isNerd,
   exploreBackTo,
+  constraints,
 }: {
   recipe: SignatureRecipe;
   index: number;
   cms: any;
   isNerd?: boolean;
   exploreBackTo: string;
+  constraints: UserConstraints;
 }) {
   const recipe = localizeSignatureRecipe(rawRecipe, cms.inspirationI18n);
+  /* FW-10 (S02-A-07): le ricette iconiche dicono se si possono fare, come gli
+     stili, con il condimento della ricetta. */
+  const baseStyle = STYLES_DB[rawRecipe.style_id];
+  const match = useMemo(() => {
+    if (!baseStyle) return null;
+    try {
+      return kitchenCompatibility(styleWithSelectedTopping(baseStyle, rawRecipe.topping_concept_id), constraints, scoreWeightsFromCms(cms));
+    } catch {
+      return null;
+    }
+  }, [baseStyle, rawRecipe.topping_concept_id, constraints, cms]);
   const photo =
     recipe.photo ||
     cms.media?.stylePhotos?.[recipe.style_id] ||
@@ -566,14 +655,17 @@ function SignatureRecipeCard({
     STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
 
   const cardText = signatureCardText(recipe, styleName);
+  const acronymHelpId = useId();
+  const acronymHelp = getAcronymTooltip(recipe.authenticity_badge, cardText.context);
+  /* FW-12 (S02-A-14): vedi FeaturedRecipeCard. */
+  const nameId = useId();
+  const labelledBy = cardLabelIds(nameId, cardText, !!recipe.authenticity_badge);
+  /* I segnali di blocco (forno, allergeni, dieta, tempi) stanno nel link ma
+     fuori da aria-labelledby: entrano nella descrizione accessibile. */
+  const showSignals = !!(baseStyle && match);
+  const signalsId = showSignals ? `${nameId}-signals` : "";
 
-  const linkParams = new URLSearchParams();
-  linkParams.set("mode", "canonical");
-  linkParams.set("tab", "condimento");
-  linkParams.set("topping", recipe.topping_concept_id);
-  if (recipe.interpretation_id)
-    linkParams.set("interpretation", recipe.interpretation_id);
-  const linkTo = `/recipe/${recipe.style_id}?${linkParams.toString()}`;
+  const linkTo = signatureRecipeLink(recipe);
 
   return (
     <motion.article
@@ -591,49 +683,72 @@ function SignatureRecipeCard({
           variant="container"
           to={linkTo}
           state={{ exploreBackTo }}
+          aria-labelledby={labelledBy}
+          aria-describedby={[signalsId, acronymHelp ? acronymHelpId : ""].filter(Boolean).join(" ") || undefined}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
           <figure className="explore-card__media">
           <ImageWithFallback
             src={photo}
-            alt={recipe.name}
+            alt=""
             className="explore-card__image"
             loading="lazy"
             sizes={IMAGE_SIZES.card}
           />
 
-          {/* Badge autenticità — top right */}
-          {recipe.authenticity_badge && (
-            <div
-              className="explore-card__badge explore-card__badge--auth"
-              title={getAcronymTooltip(recipe.authenticity_badge)}
-            >
-              {signatureBadgeText(recipe.authenticity_badge, cms)}
-            </div>
-          )}
-
           {/* Title + sotto-titolo stile */}
           <figcaption className="explore-card__caption">
-            {cardText.context && <div
-              className="explore-card__eyebrow"
-              title={getAcronymTooltip(cardText.context)}
-            >
+            {acronymHelp && <span hidden id={acronymHelpId}>{acronymHelp}</span>}
+            {/* Badge autenticità: nella didascalia, l'angolo in alto è della
+                compatibilità con la tua cucina (FW-10). */}
+            {recipe.authenticity_badge && (
+              <div id={`${nameId}-badge`} className="explore-card__badge explore-card__badge--auth">
+                {signatureBadgeText(recipe.authenticity_badge, cms)}
+              </div>
+            )}
+            {cardText.context && <div id={`${nameId}-context`} className="explore-card__eyebrow">
               {cardText.context}
             </div>}
-            <h3 className="explore-card__title explore-card__title--recipe">
+            <h3 id={`${nameId}-title`} className="explore-card__title explore-card__title--recipe">
               {cardText.title}
             </h3>
             {/* Sprint 12 — autore/locale dell'interpretazione (se mappata). */}
             {cardText.author && (
-              <div className="explore-card__author">
+              <div id={`${nameId}-author`} className="explore-card__author">
                 {uiMessage("pages.explore.recipeBy", [cardText.author])}
               </div>
             )}
+            {baseStyle && match && <StyleMetaChip id={signalsId} style={baseStyle} cms={cms} recipe={match.recipe} context="explore" />}
           </figcaption>
         </figure>
       </Surface>
+          {match && (
+            <div className="explore-card__match">
+              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
+            </div>
+          )}
       </TiltCard>
     </motion.article>
+  );
+}
+
+/* ═══ FW-08 (S02-A-05/B-13): riga tecnica delle card con «Dettagli tecnici» ═══
+   Valori di riferimento dello stile (idratazione, forno ideale, lievitazione),
+   per confrontare gli stili senza aprire ogni scheda. */
+function StyleTechLine({ style, cms }: { style: PizzaStyle; cms: CmsContent }) {
+  const { bcp47 } = useCms();
+  const fmt = createFormatter(cms.ui, bcp47);
+  const [hLo, hHi] = style.dough.hydration_pct_range;
+  const [fLo, fHi] = style.dough.fermentation_hours_range;
+  const range = (lo: number, hi: string) => uiMessage("detailLevel.range", [fmt.number(lo), hi]);
+  return (
+    <p className="type-data-xs explore-card__tech" data-region="tech">
+      {uiMessage("detailLevel.styleTechLine", [
+        range(hLo, fmt.percent(hHi)),
+        fmt.celsius(style.baking.temp_c_ideal),
+        range(fLo, fmt.durationShort(fHi)),
+      ])}
+    </p>
   );
 }
 
@@ -645,6 +760,7 @@ function StyleCatalogCard({
   isNerd,
   exploreBackTo,
   constraints,
+  primaryFamily,
 }: {
   style: PizzaStyle;
   index: number;
@@ -652,6 +768,8 @@ function StyleCatalogCard({
   isNerd?: boolean;
   exploreBackTo: string;
   constraints: UserConstraints;
+  /** FW-14: in un gruppo di famiglia secondaria, il nome della primaria. */
+  primaryFamily?: string;
 }) {
   const photo =
     cms.media?.stylePhotos?.[style.id] ||
@@ -668,6 +786,8 @@ function StyleCatalogCard({
       return null;
     }
   }, [style, constraints, cms]);
+  const acronymHelpId = useId();
+  const acronymHelp = getAcronymTooltip(style.name);
 
   return (
     <motion.article
@@ -685,6 +805,7 @@ function StyleCatalogCard({
           variant="container"
           to={`/recipe/${style.id}?mode=canonical`}
           state={{ exploreBackTo }}
+          aria-describedby={acronymHelp ? acronymHelpId : undefined}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
           {/* Photo area — 3/4 aspect like Create cards */}
@@ -699,16 +820,20 @@ function StyleCatalogCard({
 
           {/* Title + subtitle — overlaid on image (editorial style) */}
           <figcaption className="explore-card__caption">
-            <h3
-              className="explore-card__title explore-card__title--style"
-              title={getAcronymTooltip(style.name)}
-            >
+            <h3 className="explore-card__title explore-card__title--style">
               {style.name}
             </h3>
+            {acronymHelp && <span hidden id={acronymHelpId}>{acronymHelp}</span>}
             <div className="explore-card__origin">
-              {shortOrigin(style.origin)}
+              {shortOrigin(style.origin, placeNameLocalizer(cms))}
             </div>
+            {primaryFamily && (
+              <p className="explore-card__family-note">
+                {uiMessage("pages.explore.primaryFamily", [primaryFamily])}
+              </p>
+            )}
             <StyleMetaChip style={style} cms={cms} recipe={match?.recipe} context="explore" />
+            {isNerd && <StyleTechLine style={style} cms={cms} />}
           </figcaption>
         </figure>
       </Surface>

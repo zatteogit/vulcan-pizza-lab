@@ -1,5 +1,6 @@
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
-import { recipeDisplayName } from "../domain/recipe-reference";
+import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
+import { referenceEyebrow } from "../features/recipe/reference-label";
 import { buildGeneratedRecipe, recipeFromEntry, canonicalRecipeEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 /* === RECIPE PAGE — VPL-058 + VPL-064 ===
@@ -10,20 +11,19 @@ import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 
 import {
 Bookmark,
-ChevronLeft,
 Sparkles,
 } from "lucide-react";
-import { motion } from "motion/react";
 import {
 useCallback,
 useEffect,
 useMemo,
 useState,
 } from "react";
-import { Link,useLocation,useNavigate,useParams,useSearchParams } from "react-router";
+import { useLocation,useNavigate,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { loadProfileDefaults, profileEquipment } from "../hooks/use-profile-defaults";
+import { useDetailLevel } from "../hooks/use-detail-level";
 import { t as tpl } from "../features/cms/i18n";
 import {
 getInterpretationById,
@@ -39,6 +39,7 @@ defaultPanShape,
 getDefaultDoughBalls,
 MAX_DOUGH_BALLS,
 thermalViability,
+isFriedStyle,
 type EngineMsg,
 type GeneratedRecipe,
 type OvenType,
@@ -67,8 +68,8 @@ import { RecipeView } from "../features/recipe/recipe-view";
 import { decodePan, encodePan } from "../features/recipe/pan-url";
 import { decodePreFermentChoice, writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
-import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
-import { motionSpring } from "../components/ds/motion";
+import { ConfirmDialog } from "../components/ds/index";
+import { NotFoundState } from "../components/shared/not-found-state";
 import {
 getDefaultVersion,
 getVersionById,
@@ -220,8 +221,6 @@ function RecipeContent({
      propria impastatrice e le proprie superfici. La canonica no: è la scheda
      dello stile, uguale per tutti. */
   const [personalEquipment] = useState(() => profileEquipment(loadProfileDefaults().constraints));
-  // Storage bloccato (navigazione privata, cookie disattivati): getItem lancia.
-  const nerdAvailable = loadJson<boolean>("vulcan_nerd_on") === true;
   const initialRecipeMode = readRecipeMode(searchParams);
   const [recipeMode, setRecipeMode] = useState<RecipeMode>(initialRecipeMode);
   const [recipeName, setRecipeName] = useState<string | undefined>(() => normalizeRecipeName(searchParams.get("name")));
@@ -349,8 +348,9 @@ function RecipeContent({
       else next.set("tab", tab);
     });
   }, []);
-  const [nerdMode, setNerdMode] = useState(false);
-  const effectiveNerdMode = nerdAvailable && nerdMode;
+  /* FW-08: un solo stato «Dettagli tecnici» per tutta l'app; l'interruttore
+     sta nella testata della scheda (RecipeView) e nel Profilo. */
+  const effectiveNerdMode = useDetailLevel().level === "technical";
 
   const [setupNotice, setSetupNotice] = useState<string | null>(null);
   const [learningOpen, setLearningOpen] = useState(false);
@@ -695,6 +695,13 @@ function RecipeContent({
     customFermentTemp === lastOptimization.params.fermentation_temp_c &&
     usePreFerment === lastOptimization.params.use_pre_ferment;
 
+  /* FW-14: la ricetta di riferimento (preset attivo) sugli stessi vincoli della
+     ricetta mostrata: i «Prima → Ora» della tabella partono da qui. */
+  const referenceRecipe = useMemo(
+    () => recipeFromEntry(originalEntry, effectiveConstraints),
+    [originalEntry, effectiveConstraints],
+  );
+
   // F2 (parità con Crea): "Vulcan ha imparato dai tuoi tentativi" anche su Scopri.
   const feedbackCorrection = useMemo(
     () => deriveFeedbackCorrections(style.id, loadFeedback()),
@@ -829,12 +836,23 @@ function RecipeContent({
   };
   const saveFlow = useRecipeSave({ personalized: isDirty || Boolean(resolvedRecipeName), saved: Boolean(savedEntry), onCommit: handleCommitRecipe });
   const handleToggleSaveRecipe = () => saveFlow.requestSave();
+  /* FW-14 (S07-A-05): l'eyebrow dice da dove parte la ricetta, non sempre
+     «Originale»: riferimento, disciplinare, «Ispirata a…», sul tuo forno. */
+  const shownRecipe = recipe ?? matchRecipe;
   const recipeTabLabel =
     recipeMode === "lab"
       ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
-      : isDirty || resolvedRecipeName
-        ? cms.ui.scoreBasisTailored
-        : cms.ui.scoreBasisOriginal;
+      : referenceEyebrow({
+          styleId: style.id,
+          tailored: isDirty || Boolean(resolvedRecipeName),
+          tailoredLabel: cms.ui.scoreBasisTailored,
+          referenceLabel: cms.ui.scoreBasisOriginal,
+          interpretation: originInterpretation ?? null,
+          version: activeVersion,
+          versionLabel: activeVersion ? cmsMessage(cms, `version.label.${activeVersion.label}`, activeVersion.label) : undefined,
+          adaptedToOven: stgDepartures(shownRecipe, effectiveConstraints.oven_type).length > 0
+            || (!isFriedStyle(style) && shownRecipe.oven_temp_c < style.baking.temp_c_range[0]),
+        });
 
   /* Photo */
   const photo =
@@ -927,8 +945,6 @@ function RecipeContent({
           setSelectedToppingConcept(recipeId);
         }}
         nerdMode={effectiveNerdMode}
-        nerdAvailable={nerdAvailable}
-        onNerdModeChange={setNerdMode}
         matchSlot={
           <>
             {/* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
@@ -945,6 +961,9 @@ function RecipeContent({
             <RecipeStatStrip
               recipe={recipe}
               isPersonalized={isDirty}
+              reference={referenceRecipe}
+              optimized={isOptimized}
+              ovenType={effectiveConstraints.oven_type}
             />
             {/* Il dialog Personalizza: si apre dal pulsante sulla match card
                 (niente trigger proprio — nota Matteo lug 2026). */}
@@ -1013,6 +1032,11 @@ function RecipeContent({
                   onSaltChange={(v) => {
                     markAdapted();
                     setCustomSalt(v);
+                  }}
+                  customFlourPL={customFlourPL}
+                  onFlourPLChange={(v) => {
+                    markAdapted();
+                    setCustomFlourPL(v);
                   }}
                   panConfig={panConfig}
                   onPanConfigChange={(config) => {markAdapted(); setPanConfig(config);}}
@@ -1123,7 +1147,7 @@ function RecipeContent({
         body={tpl(
           cms.cooking.unsavedBody ??
             "Se esci ora, la tua versione di {style} andrà persa. Vuoi salvarla nel ricettario?",
-          { style: style.name },
+          { style: recipeDisplayName(recipe ?? matchRecipe, effectiveConstraints.oven_type) },
         )}
         actions={[
           {
@@ -1153,32 +1177,18 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
   const { cms } = useCms();
   const location = useLocation();
   const exploreBackTo = readExploreBackTo(location.state);
+  /* FW-14 (S01-B-13): stesso schema di titolo delle altre viste («… · Vulcan»),
+     non il «Vulcan Pizza Lab» rimasto dall'index. */
+  useEffect(() => {
+    document.title = `${cms.pages.recipeStyleNotFound} · ${BRAND.name}`;
+  }, [cms.pages.recipeStyleNotFound]);
   return (
-    <main id="main-content" className="recipe-page__notfound">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={motionSpring.standard}
-        className="recipe-page__notfound-inner"
-      >
-        <Heading level="page">
-          {cms.pages.recipeStyleNotFound}
-        </Heading>
-        <p className="recipe-page__notfound-sub">
-          {cms.pages.recipeStyleNotFoundDesc.replace(
-            "{id}",
-            styleId || "?",
-          )}
-        </p>
-        <CtaButton
-          as={Link}
-          to={exploreBackTo}
-          className="recipe-page__notfound-cta"
-        >
-          <ChevronLeft size={16} />
-          {cms.pages.recipeExploreStyles}
-        </CtaButton>
-      </motion.div>
-    </main>
+    <NotFoundState
+      title={cms.pages.recipeStyleNotFound}
+      subtitle={cms.pages.recipeStyleNotFoundDesc.replace("{id}", styleId || "?")}
+      backTo={exploreBackTo}
+      backLabel={cms.pages.recipeExploreStyles}
+      searchLabel={cms.pages.notFoundSearch}
+    />
   );
 }

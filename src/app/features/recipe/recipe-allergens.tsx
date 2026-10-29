@@ -10,6 +10,7 @@ import { pantryIngredientNames } from "./pantry-ingredient-names";
 import { pantryIngredientId } from "../../domain/pantry-ingredients";
 import { allergenName } from "./allergen-names";
 import { allergenSummary, allergensForSection, needsMilkNote } from "./allergen-copy";
+import type { AllergenScope } from "../../domain/allergen-scope";
 
 function sectionName(section: AllergenSource["section"]): string {
   if (section === "dough") return uiMessage("allergen.dough");
@@ -17,9 +18,24 @@ function sectionName(section: AllergenSource["section"]): string {
   return uiMessage("allergen.topping");
 }
 
+/** FW-18 — the visible title states what the list covers. "full" is the whole
+ * recipe (dough, cooking, topping or filling); "dough" means the topping is not
+ * chosen yet; "topping" is the Condimento tab's own slice. */
+export type RecipeAllergensScope = AllergenScope | "topping";
+function scopeTitle(scope: RecipeAllergensScope): string {
+  if (scope === "full") return uiMessage("allergen.title");
+  if (scope === "topping") return uiMessage("allergen.scope.topping");
+  return uiMessage("allergen.scope.dough");
+}
+/** «Nella ricetta» only when the list really is the whole recipe. */
+function scopeHeading(scope: RecipeAllergensScope): string {
+  return scope === "full" ? uiMessage("allergen.contains") : sectionName(scope);
+}
+
 /** A quiet ingredient disclosure; compatibility still uses the whole recipe. */
-export function RecipeAllergens({ report: fullReport, scope }: { report: RecipeAllergens; scope: "recipe" | "topping" }) {
-  const report = allergensForSection(fullReport, scope);
+export function RecipeAllergens({ report: fullReport, scope }: { report: RecipeAllergens; scope: RecipeAllergensScope }) {
+  const report = scope === "full" ? fullReport : allergensForSection(fullReport, scope === "topping" ? "topping" : "recipe");
+  const title = scopeTitle(scope);
   const detailsId = useId();
   const [open, setOpen] = useState(false);
   const scroll = useDisclosureScroll(open);
@@ -51,13 +67,13 @@ export function RecipeAllergens({ report: fullReport, scope }: { report: RecipeA
     </div>)}</dl>
   </section>;
 
-  return <aside className="recipe-allergens" data-allergen-scope={scope}
-    aria-label={`${uiMessage("allergen.title")} · ${uiMessage(scope === "topping" ? "allergen.topping" : "allergen.dough")}`}>
+  return <aside className="recipe-allergens" data-allergen-scope={scope} aria-label={title}>
     <button type="button" className="recipe-allergens__toggle" ref={scroll.anchorRef}
       onClick={() => { if (!open) scroll.prepare(); setOpen(!open); }} aria-expanded={open} aria-controls={detailsId}>
       <Info size={14} aria-hidden="true" />
       <span className="recipe-allergens__copy">
-        <strong>{uiMessage("allergen.title")}</strong>
+        <strong>{title}</strong>
+        {scope === "dough" && <span className="recipe-allergens__summary">{uiMessage("allergen.scope.toppingPending")}</span>}
         {allergenSummary(report).map(part => <span className="recipe-allergens__summary" key={part}>{part}</span>)}
       </span>
       <ChevronDown size={16} className={open ? "recipe-allergens__chevron--open" : ""} aria-hidden="true" />
@@ -67,7 +83,7 @@ export function RecipeAllergens({ report: fullReport, scope }: { report: RecipeA
       transition={reduced ? { duration: 0 } : motionSpring.denseDisclosure}
       onUpdate={latest => { if (latest.height !== undefined) scroll.follow(latest.height); }} onAnimationComplete={() => scroll.complete()}>
       <div className="recipe-allergens__body">
-        {report.contains.length > 0 && groups(report.contains, uiMessage("allergen.contains"))}
+        {report.contains.length > 0 && groups(report.contains, scopeHeading(scope))}
         {report.conditional.length > 0 && groups(report.conditional, uiMessage("allergen.ifAdded"))}
         {report.may_contain.length > 0 && groups(report.may_contain, uiMessage("allergen.mayContain"), true)}
         {report.unverified.length > 0 && <section className="recipe-allergens__group">

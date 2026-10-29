@@ -12,7 +12,7 @@ import {
 import { motion, useReducedMotion } from "motion/react";
 import { useMemo, useRef, useState, type KeyboardEvent, type MutableRefObject, type ReactNode } from "react";
 import { Link } from "react-router";
-import { Heading } from "../../components/ds/index";
+import { Badge, EmptyState, Heading } from "../../components/ds/index";
 import { motionSpring } from "../../components/ds/motion";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -23,10 +23,21 @@ import {
   buildSearchIndex,
   groupResults,
   highlightRanges,
+  isShortQuery,
   queryTokens,
+  rankForKitchen,
   searchIndex,
+  styleIdOf,
+  type KitchenFit,
+  searchLexicon,
   type ResultType,
 } from "./search-index";
+import { STYLES_DB } from "../../domain/pizza-engine";
+import { useProfileDefaults } from "../../hooks/use-profile-defaults";
+import { canonicalRecipe, scoreWeightsFromCms } from "../recipe/kitchen-compatibility";
+import { recipeCardSignals } from "../recipe/recipe-card-signals";
+import { RecipeMatchIcon } from "../recipe/recipe-match-icon";
+import { engineMsgTexts } from "../recipe/engine-msg-text";
 
 /* ═══ U-5 — risultati della ricerca a tutta pagina ═══
  * Prende il posto della pagina corrente (che resta montata, nascosta) invece
@@ -105,16 +116,44 @@ export function SearchResultsView({
   /** Campo proprio quando il dock non c'è (desktop, pagina ricetta). */
   field?: ReactNode;
 }) {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const reduceMotion = useReducedMotion();
+  const { constraints: kitchen } = useProfileDefaults();
   const [filter, setFilter] = useState<Filter>("all");
   const listRef = useRef<HTMLElement>(null);
 
   const index = useMemo(() => buildSearchIndex(cms), [cms]);
-  const all = useMemo(() => searchIndex(index, query), [index, query]);
+  const lexicon = useMemo(() => searchLexicon(cms.pages), [cms.pages]);
+  const hits = useMemo(() => searchIndex(index, query, lexicon), [index, query, lexicon]);
+  /* FW-10 (S04-A-07): per gli stili trovati, la compatibilità con la cucina
+     del profilo, con la stessa ricetta canonica delle card di Scopri. */
+  const fits = useMemo(() => {
+    const weights = scoreWeightsFromCms(cms);
+    const map = new Map<string, KitchenFit & { signal?: string }>();
+    for (const hit of hits) {
+      const id = styleIdOf(hit);
+      const style = id ? STYLES_DB[id] : undefined;
+      if (!id || !style) continue;
+      try {
+        const recipe = canonicalRecipe(style, kitchen, weights);
+        const blocked = recipe.verdict.outcome === "not_feasible";
+        const signal = blocked ? recipeCardSignals(recipe, "explore")[0] : undefined;
+        map.set(id, {
+          blocked,
+          now: Math.round(recipe.scores.composite),
+          signal: signal ? engineMsgTexts([signal.message], cms, bcp47)[0] : undefined,
+        });
+      } catch { /* senza esito, nessun segnale */ }
+    }
+    return map;
+  }, [hits, kitchen, cms, bcp47]);
+  const all = useMemo(() => rankForKitchen(hits, (id) => fits.get(id)), [hits, fits]);
   const groups = useMemo(() => groupResults(all), [all]);
   const labels = categoryLabels(cms.pages);
-  const hasQuery = queryTokens(query).length > 0;
+  /* FW-09 (S04-A-10): una lettera cerca i simboli del glossario («W»). */
+  const shortQuery = isShortQuery(query);
+  const hasQuery = queryTokens(query).length > 0 || (shortQuery && all.length > 0);
+  const fuzzy = all.length > 0 && all.every((result) => result.fuzzy);
 
   /* Un chip senza più risultati torna a «Tutto». */
   const effectiveFilter: Filter = filter !== "all" && !groups.some(([type]) => type === filter) ? "all" : filter;
@@ -137,6 +176,12 @@ export function SearchResultsView({
   keyHandlerRef.current = (event) => {
     if (event.key === "Enter" && first) {
       event.preventDefault();
+      /* FW-12 (S04-B-11): su touch il tasto «Cerca» della tastiera vuol dire
+         «mostra i risultati»: chiude la tastiera e lascia la lista. */
+      if (typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches) {
+        (event.target as HTMLElement | null)?.blur?.();
+        return;
+      }
       onSelect(first.link);
     } else if (event.key === "ArrowDown" && first) {
       event.preventDefault();
@@ -159,14 +204,20 @@ export function SearchResultsView({
   const enter = reduceMotion ? undefined : { opacity: 0, y: 8 };
 
   return (
-    <section id={SEARCH_RESULTS_ID} className="search-page" data-region="page" aria-labelledby="search-page-title">
+    /* FW-12 (S04-B-18): mentre la ricerca è aperta la pagina (con il suo
+       <main>) è nascosta, quindi i risultati sono il landmark main. */
+    <main id={SEARCH_RESULTS_ID} className="search-page" data-region="page" aria-labelledby="search-page-title">
       <Heading level="xl" id="search-page-title" className="search-page__heading">
         {cms.pages.navSearch}
       </Heading>
       {field}
       <p role="status" className="sr-only">
-        {hasQuery ? cms.ui.searchResultsStatus.replace("{n}", String(all.length)) : ""}
+        {hasQuery ? cms.ui.searchResultsStatus.replace("{n}", String(all.length)) : shortQuery ? uiMessage("features.search.tooShort") : ""}
       </p>
+      {shortQuery && !hasQuery && (
+        <p className="type-body search-page__hint" aria-hidden="true">{uiMessage("features.search.tooShort")}</p>
+      )}
+      {fuzzy && <p className="type-body search-page__hint">{uiMessage("features.search.fuzzyNote")}</p>}
 
       {hasQuery && all.length > 0 && (
         <nav className="search-page__chips hide-scrollbar" aria-label={uiMessage("features.search.filters")}>
@@ -200,8 +251,20 @@ export function SearchResultsView({
         </nav>
       )}
 
+      {/* FW-09 (S04-A-11, S04-B-10): senza risultati, il motivo e dove andare. */}
       {hasQuery && all.length === 0 && (
-        <p className="search-page__empty">{cms.pages.searchNoResults.replace("{query}", query.trim())}</p>
+        <EmptyState
+          headingLevel={2}
+          title={cms.pages.searchNoResults.replace("{query}", query.trim())}
+          reason={uiMessage("features.search.noResultsReason")}
+          linkAs={Link}
+          actions={[
+            { label: cms.pages.searchClearLabel, onClick: () => onQueryChange("") },
+            { label: cms.pages.searchCatGlossary, href: "/learn/glossary", onClick: () => onSelect() },
+            { label: cms.pages.searchCatProblems, href: "/learn/troubleshooting", onClick: () => onSelect() },
+          ]}
+          className="search-page__empty-state"
+        />
       )}
 
       {hasQuery && all.length > 0 ? (
@@ -251,6 +314,20 @@ export function SearchResultsView({
                               <Highlight text={item.subtitle} query={query} />
                             </small>
                           )}
+                          {(() => {
+                            const styleId = styleIdOf(item);
+                            const fit = styleId ? fits.get(styleId) : undefined;
+                            if (!fit) return null;
+                            return (
+                              <Badge tone={fit.blocked ? "error" : fit.now >= 60 ? "success" : "warning"} size="xs" className="search-page__fit">
+                                <RecipeMatchIcon score={fit.now} blocked={fit.blocked} size={12} aria-hidden="true" />
+                                {fit.blocked && fit.signal ? <span data-slot="label">{fit.signal}</span> : <>
+                                  <span className="sr-only">{uiMessage("pages.explore.compatibility", [fit.now])}</span>
+                                  <span data-slot="label" aria-hidden="true">{fit.now}</span>
+                                </>}
+                              </Badge>
+                            );
+                          })()}
                         </span>
                         <CornerDownLeft size={14} aria-hidden="true" className="search-page__enter" />
                       </Link>
@@ -268,6 +345,7 @@ export function SearchResultsView({
         </section>
       ) : (
         <section className="search-page__suggestions" aria-labelledby="search-suggestions-title">
+          {!query.trim() && <p className="type-body search-page__hint">{cms.pages.searchHint}</p>}
           <h2 id="search-suggestions-title" className="search-page__suggestions-title">
             {cms.pages.searchSuggestions}
           </h2>
@@ -285,6 +363,6 @@ export function SearchResultsView({
           </ul>
         </section>
       )}
-    </section>
+    </main>
   );
 }

@@ -1,4 +1,5 @@
 import { RecipeAllergens } from "./recipe-allergens";
+import { recipeAllergenScope } from "../../domain/allergen-scope";
 /* ═══ INGREDIENTS SECTION — tab Ricetta (estratto fase 2, lug 2026) ═══
  * Stepper panetti, lista ingredienti (baker's % in nerd), scorporo
  * pre-fermento, Regola 55 e blocchi scienza PizzaNerd. */
@@ -30,8 +31,16 @@ import {
   getServingUnitLabel,
   normalizeMeasureUnitSuffixes,
   yeastPracticalHint,
+  yeastBakerPctText,
 } from "./recipe-output-format";
 import { uiMessage } from "../../i18n/ui-messages";
+import { getScienceNote } from "../../data/science-notes";
+import { roundForEvidence } from "../../domain/science/evidence";
+
+/* FW-01 (S06-A-06/B-08): Aw e fattore Q10 sono stime, non misure: non più
+ * decimali di quelli che la nota del registro consente. */
+const AW_NOTE = getScienceNote("water-activity");
+const Q10_NOTE = getScienceNote("q10-fermentation");
 
 interface IngredientsSectionProps {
   recipe: GeneratedRecipe;
@@ -376,8 +385,9 @@ export function IngredientsSection({
                 </div>
               </div>
               <div className="type-body ingredients-preferment__note">
-                {cms.cooking.prefermentSaltNote ??
-                  uiMessage("features.recipe.ingredients-section.il-sale-va-sempre-e-solo-nell-impasto-fina-0ceb4736")}
+                {/* FW-14 (S08-A-18): una sola nota sul sale, quella del CMS
+                    (il testo di riserva diceva il perché ma non si vedeva mai). */}
+                {cms.cooking.prefermentSaltNote}
               </div>
             </div>
           );
@@ -386,7 +396,7 @@ export function IngredientsSection({
           <span className="ingredients-total__amount">{fmt.grams(recipe.total_dough_g)}</span>
           <span className="ingredients-total__label">{ui.totalDough}</span>
         </div>
-        <RecipeAllergens report={recipe.allergens} scope="recipe" />
+        <RecipeAllergens report={recipe.allergens} scope={recipeAllergenScope(recipe).scope} />
 
         {/* Regola 55: da round 7 vive SOLO come tip della riga Acqua. */}
 
@@ -401,10 +411,10 @@ export function IngredientsSection({
               </h4>
               <div className="ingredients-science__grid">
                 {[
-                  { l: `${cms.scienceLabels.yeastBaker} (baker's %)`, v: fmt.percent(recipe.science.yeast_baker_pct) },
-                  { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: `${recipe.science.effective_hours_18c}h` },
-                  { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: `${recipe.science.q10_factor}×` },
-                  { l: cms.scienceLabels.waterActivity, v: `${recipe.science.water_activity}` },
+                  { l: `${cms.scienceLabels.yeastBaker} (baker's %)`, v: yeastBakerPctText(recipe.science.yeast_baker_pct, bcp47) },
+                  { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: fmt.durationShort(recipe.science.effective_hours_18c) },
+                  { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: uiMessage("format.timesFactor", [fmt.number(roundForEvidence(recipe.science.q10_factor, Q10_NOTE))]) },
+                  { l: cms.scienceLabels.waterActivity, v: fmt.number(roundForEvidence(recipe.science.water_activity, AW_NOTE), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
                   { l: cms.scienceLabels.glutenNetwork, v: `${recipe.science.gluten_network}/100` },
                   { l: cms.scienceLabels.proteolysis, v: `${recipe.science.proteolysis_index}/100` },
                   { l: cms.scienceLabels.desiredDoughTemp, v: fmt.celsius(recipe.science.desired_dough_temp_c) },

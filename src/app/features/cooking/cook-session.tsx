@@ -18,23 +18,14 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useCms, type CmsContent } from "../cms/cms-context";
+import { useCms } from "../cms/cms-context";
+import { formatClock, formatRelative } from "../../i18n/format";
 import { t } from "../cms/i18n";
 import type { StepVisual } from "./step-visual";
+import { showReminder, truncateAtWord } from "../../adapters/browser/cook-reminders";
+import type { PredictedScores, RecipeSnapshot } from "../../domain/recipe-feedback";
 
 const STORAGE_KEY = "vulcan_cook_session";
-type CookingCopy = CmsContent["cooking"];
-
-const FALLBACK_COOKING_COPY = {
-  etaNow: "ora",
-  etaInMinutes: "tra {n} min",
-  etaInHours: "tra {h} ore",
-  etaInHoursMinutes: "tra {h}h {m}m",
-  etaInDaysHours: "tra {d}g {h}h",
-} as Pick<
-  CookingCopy,
-  "etaNow" | "etaInMinutes" | "etaInHours" | "etaInHoursMinutes" | "etaInDaysHours"
->;
 
 /* Fasi "flessibili": lunghe attese passive dove ±minuti non cambiano nulla.
  * Le altre sono azioni attive con le mani in pasta. */
@@ -56,6 +47,13 @@ export interface CookSessionStep {
   done: boolean;
 }
 
+/** FW-16 (D-M, S10-B-07): parametri della ricetta cucinata, per chiedere
+ *  com'è venuta alla fine della pizzata. */
+export interface CookFeedbackContext {
+  snapshot: RecipeSnapshot;
+  predicted: PredictedScores;
+}
+
 interface CookSession {
   styleName: string;
   styleId: string;
@@ -63,6 +61,7 @@ interface CookSession {
   steps: CookSessionStep[];
   /** id step per cui è già stata mostrata una notifica */
   notified: string[];
+  feedback?: CookFeedbackContext;
 }
 
 function loadSession(): CookSession | null {
@@ -109,6 +108,7 @@ interface CookSessionCtx {
     styleId: string,
     styleName: string,
     steps: Omit<CookSessionStep, "done">[],
+    feedback?: CookFeedbackContext,
   ) => void;
   endSession: () => void;
   setStepDone: (index: number, done: boolean) => void;
@@ -129,29 +129,12 @@ export function useCookSession(): CookSessionCtx {
   return ctx;
 }
 
-/** Richiede il permesso notifiche senza bloccare (best effort). */
-function requestNotificationPermission() {
-  try {
-    if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission().catch(() => {});
-    }
-  } catch {
-    /* niente notifiche: il widget resta la fonte primaria */
-  }
-}
-
-function notify(title: string, body: string) {
-  try {
-    if ("Notification" in window && Notification.permission === "granted") {
-      new Notification(title, { body, icon: "/favicon.ico", tag: "vulcan-cook" });
-    }
-  } catch {
-    /* ignora */
-  }
-}
+/* FW-16 (S10-B-03): il permesso non si chiede più da solo all'avvio: lo
+ * chiede la riga «Promemoria» della modalità cucina, con un gesto dell'utente
+ * (adapters/browser/cook-reminders.ts). */
 
 export function CookSessionProvider({ children }: { children: React.ReactNode }) {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const [session, setSession] = useState<CookSession | null>(loadSession);
   const [overlayOpen, setOverlayOpen] = useState(false);
 
@@ -161,17 +144,17 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const startSession = useCallback(
-    (styleId: string, styleName: string, steps: Omit<CookSessionStep, "done">[]) => {
+    (styleId: string, styleName: string, steps: Omit<CookSessionStep, "done">[], feedback?: CookFeedbackContext) => {
       const s: CookSession = {
         styleId,
         styleName,
         createdAt: Date.now(),
         steps: steps.map((st) => ({ ...st, done: false })),
         notified: [],
+        ...(feedback ? { feedback } : {}),
       };
       persist(s);
       setOverlayOpen(true);
-      requestNotificationPermission();
     },
     [persist],
   );
@@ -237,11 +220,10 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
               title: nextStep ? nextStep.title : cms.cooking.continueAction,
             })
           : t(cms.cooking.notificationDueTitle, { title: step.title });
-        const description = (step.flexible && nextStep
+        const description = truncateAtWord(step.flexible && nextStep
           ? nextStep.description
-          : step.description
-        ).slice(0, 90);
-        notify(
+          : step.description, 90);
+        void showReminder(
           title,
           t(cms.cooking.notificationBody, {
             style: session.styleName,
@@ -279,7 +261,7 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
         diffMin <= 0
           ? t(cms.cooking.documentTitleDue, { title: step.title })
           : t(cms.cooking.documentTitleCountdown, {
-              eta: formatEta(actionAt, Date.now(), cms.cooking),
+              eta: formatEta(actionAt, Date.now(), bcp47),
               title: step.title,
             });
     };
@@ -288,7 +270,7 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
       clearInterval(interval);
       document.title = original;
     };
-  }, [session, cms.cooking]);
+  }, [session, cms.cooking, bcp47]);
 
   const value = useMemo(
     () => ({
@@ -307,37 +289,17 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
-/* ── Format helpers (condivisi col widget e la modalità cucina) ── */
+/* ── Format helpers (condivisi col widget e la modalità cucina) ──
+ * FW-11 (S10-B-17, S10-A-23): un solo formato di durata e di tempo relativo
+ * per tutta la sessione, da i18n/format.ts; il «circa» è una chiave tradotta. */
 
-/** Human ETA, i18n-aware when cooking copy is provided. */
-export function formatEta(
-  targetMs: number,
-  now: number = Date.now(),
-  copy: Pick<
-    CookingCopy,
-    "etaNow" | "etaInMinutes" | "etaInHours" | "etaInHoursMinutes" | "etaInDaysHours"
-  > = FALLBACK_COOKING_COPY,
-): string {
-  const diffMin = Math.round((targetMs - now) / 60_000);
-  if (diffMin <= 0) return copy.etaNow;
-  if (diffMin < 60) return t(copy.etaInMinutes, { n: diffMin });
-  const h = Math.floor(diffMin / 60);
-  const m = diffMin % 60;
-  if (h < 24) {
-    return m > 0
-      ? t(copy.etaInHoursMinutes, { h, m })
-      : t(copy.etaInHours, { h });
-  }
-  const d = Math.floor(h / 24);
-  return t(copy.etaInDaysHours, { d, h: h % 24 });
+/** «tra 3 h 30 min» nella lingua attiva. */
+export function formatEta(targetMs: number, now: number, locale: string): string {
+  return formatRelative(targetMs, now, locale);
 }
 
-/** Orario "onesto": esatto per fasi attive, ~arrotondato ai 15' per le flessibili. */
-export function formatStepClock(ms: number, flexible: boolean, locale = "it-IT"): string {
-  const d = new Date(ms);
-  if (!flexible) {
-    return d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
-  }
-  const rounded = new Date(Math.round(ms / 900_000) * 900_000);
-  return `~${rounded.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}`;
+/** Orario "onesto": esatto per fasi attive, arrotondato ai 15 minuti e
+ *  marcato «ca.» per le attese flessibili. */
+export function formatStepClock(ms: number, flexible: boolean, locale: string): string {
+  return formatClock(ms, locale, { approximate: flexible, nowMs: Date.now() });
 }

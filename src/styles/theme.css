@@ -517,7 +517,9 @@
   --dimension-fixed-018: 18px;
   --dimension-fixed-022: 22px;
   --dimension-fixed-024: 24px;
+  --dimension-fixed-040: 40px;
   --dimension-fixed-042: 42px;
+  --dimension-fixed-044: 44px;
   --dimension-fixed-046: 46px;
   --dimension-fixed-058: 58px;
   --dimension-fixed-060: 60px;
@@ -536,7 +538,6 @@
   --dimension-relative-190: 1.9rem;
   --dimension-relative-275: 2.75rem;
   --dimension-relative-280: 2.8rem;
-  --dimension-relative-2375: 23.75rem;
   --dimension-viewport-48: 48vh;
   --dimension-viewport-height-40: 40vh;
   --dimension-viewport-height-50: 50vh;
@@ -853,7 +854,6 @@
   --control-content-gap-tight: var(--space-1-5);
   --motion-selection-duration: var(--duration-fast);
   --motion-selection-ease: var(--ease-standard);
-  --dialog-compact-measure: var(--dimension-relative-2375);
 
   /* ── Elevation / Shadows ── */
   --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.03);
@@ -954,6 +954,8 @@
   --font-size-cooking-step-title-min: var(--dimension-relative-190);
   /* 30.4px — clamp min titolo fase */
   --font-size-cooking-step-title-max: var(--dimension-relative-280);
+  /* FW-13 (S10-B-16): il countdown della fase domina il corpo del passo. */
+  --cooking-countdown-size: clamp(var(--font-size-7xl), var(--dimension-viewport-width-060), var(--font-size-9xl));
   /* 44.8px — clamp max titolo fase */
   --leading-cooking-step-title: 1.08;
   /* line-height titolo fase (fra tight 1.05 e snug 1.1) */
@@ -988,6 +990,10 @@
   --nav-dock-max-width: var(--dimension-fixed-352);
   --profile-close-size: var(--dimension-fixed-046);
   --nav-dock-target-min: var(--dimension-fixed-046);
+  /* FW-13 (S01-A-10/B-14): misure dei controlli flottanti della shell
+     (profilo, widget pizzata), prima numeri dentro motion.animate. */
+  --shell-action-size: var(--dimension-fixed-044);
+  --shell-action-size-compact: var(--dimension-fixed-040);
   /* larghezza max capsula nav mobile (min con 92vw) */
   /* cap altezza pannello ricerca */
   --drop-shadow-step-accent: drop-shadow(0 1px 2px color-mix(in srgb, var(--shadow-color) 24%, transparent));
@@ -1021,6 +1027,16 @@
   --forge-deep: var(--color-terracotta-600);
   --forge-abyss: var(--color-terracotta-700);
 
+  /* ── FW-13 · Stati: un solo significato per colore ──
+     positivo (va bene) · attenzione (si può fare, con riserva) · bloccante
+     (non si può) · neutro (dato, nessun giudizio) · consigliato (la proposta
+     di Vulcan, identità «su misura»). Mai terracotta/rosso per un esito buono. */
+  --status-positive: var(--cta);
+  --status-caution: var(--tertiary);
+  --status-blocking: var(--destructive);
+  --status-neutral: var(--muted-foreground);
+  --status-recommended: var(--color-sage-800);
+
   /* ── Gradiente PizzaNerd (consumato da explore/badge nerd) ── */
   --gradient-nerd: linear-gradient(135deg,
       var(--accent-nerd) 0%,
@@ -1050,6 +1066,34 @@
   --icon-success: var(--cta);
   --icon-warning: var(--tertiary);
   --icon-error: var(--destructive);
+
+  /* ── B2. FW-13 · Ruoli di stato (fg/bg/border/icon) ──
+     Contrasto misurato (fg sul proprio bg al 12% sopra card, surface-low e
+     surface-container): ≥ 4,5:1 in chiaro e scuro; icone ≥ 3:1.
+     Tabella in docs/design-system-tiers.md §Stati. */
+  --status-positive-fg: var(--status-positive);
+  --status-positive-bg: color-mix(in srgb, var(--status-positive) 12%, transparent);
+  --status-positive-border: color-mix(in srgb, var(--status-positive) 35%, transparent);
+  --status-positive-icon: var(--status-positive);
+  --status-caution-fg: var(--status-caution);
+  --status-caution-bg: color-mix(in srgb, var(--status-caution) 12%, transparent);
+  --status-caution-border: color-mix(in srgb, var(--status-caution) 35%, transparent);
+  --status-caution-icon: var(--status-caution);
+  --status-blocking-fg: var(--status-blocking);
+  --status-blocking-bg: color-mix(in srgb, var(--status-blocking) 12%, transparent);
+  --status-blocking-border: color-mix(in srgb, var(--status-blocking) 35%, transparent);
+  --status-blocking-icon: var(--status-blocking);
+  --status-neutral-fg: var(--status-neutral);
+  --status-neutral-bg: var(--surface-container-low);
+  --status-neutral-border: var(--outline-variant);
+  --status-neutral-icon: var(--status-neutral);
+  --status-recommended-fg: var(--status-recommended);
+  --status-recommended-bg: color-mix(in srgb, var(--status-recommended) 12%, transparent);
+  --status-recommended-border: color-mix(in srgb, var(--status-recommended) 35%, transparent);
+  --status-recommended-icon: var(--status-recommended);
+  /* FW-13 (S13-B-15): pressione di una superficie larga quanto lo schermo:
+     appena percettibile, non una contrazione del 5%. */
+  --press-scale-surface: 0.99;
 
   /* ── C. Container / Surface ── */
   --container-bg: var(--surface-container);
@@ -1115,6 +1159,17 @@
   --switch-track-h: var(--control-track-height);
   /* 18.4px — altezza track Switch (Radix Root) */
 
+  /* ── D2. Disclosure (FW-03) — ds/Disclosure, l'unico «mostra di più» in pagina ── */
+  --disclosure-gap: var(--control-content-gap);
+  --disclosure-border: var(--outline-variant);
+  --disclosure-bg: transparent;
+  --disclosure-bg-hover: var(--surface-container-low);
+  --disclosure-text: var(--text-default);
+  --disclosure-meta: var(--text-muted);
+  --disclosure-chevron: var(--icon-muted);
+  --disclosure-weight: var(--type-button-weight);
+  --disclosure-focus: var(--primary);
+
   /* ── E. CTA Button ── */
   --cta-btn-bg: var(--grad-sage);
   --cta-btn-text: var(--cta-foreground);
@@ -1127,6 +1182,14 @@
   --btn-secondary-text: var(--foreground);
   --btn-secondary-border: var(--outline-variant);
   --btn-secondary-weight: var(--type-button-weight);
+
+  /* ── FW-09. Empty state (ds/EmptyState) ── */
+  --empty-state-bg: var(--surface-container-low);
+  --empty-state-border: var(--outline-variant);
+  --empty-state-title: var(--text-default);
+  --empty-state-text: var(--text-default);
+  --empty-state-accent-neutral: var(--outline-variant);
+  --empty-state-accent-warning: var(--text-warning);
 
   /* ── I2. User Needs specifics ── */
   --needs-pantry-accent: var(--tertiary);
@@ -1185,11 +1248,10 @@
   --config-bg: var(--surface-container);
   --config-border: var(--outline-variant);
   --config-value-color: var(--foreground);
-  --config-value-oor: var(--destructive);
+  --config-value-oor: var(--status-caution-fg);
   --config-divider: var(--outline);
   --recipe-stepper-value-size: var(--type-stepper-value-size);
   --recipe-stepper-value-weight: var(--type-stepper-value-weight);
-  --snackbar-action: var(--inverse-action);
   --snackbar-action-success: var(--inverse-action);
   --snackbar-action-error: var(--inverse-action-error);
   --recipe-section-offset-compact: var(--layout-recipe-offset-compact);
@@ -1385,9 +1447,6 @@
   --dialog-scrim: var(--scrim-black-modal);
   --dialog-scrim-strong: var(--overlay-backdrop);
   --dialog-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
-  --dialog-shadow-compact: 0 24px 48px rgba(0, 0, 0, 0.18);
-  --dialog-measure-compact: var(--dialog-compact-measure);
-  /* 380px — card modale compatta */
 
   /* ── AE2. Glass (backdrop-filter) — scala unica per scrim e superfici ── */
   /* «initial» rende il custom property invalido: var() usa il materiale
@@ -1492,6 +1551,8 @@
   --cta: var(--color-sage-300);
   --cta-foreground: var(--color-night-1000);
   --cta-shadow: 0 4px 14px rgba(114, 200, 166, 0.18);
+  /* FW-13: «consigliato» in scuro, salvia chiara (≥ 8:1 sul proprio fondo). */
+  --status-recommended: var(--color-sage-200);
 
   /* Time-of-day palette (dark — vivid) */
   --time-tonight: var(--color-tonight-300);
@@ -1571,7 +1632,6 @@
   --image-check-overlay: var(--scrim-black-track);
   --card-scrim-subtle: var(--scrim-black-soft);
   --dialog-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
-  --dialog-shadow-compact: 0 24px 48px rgba(0, 0, 0, 0.28);
 }
 
 @theme inline {
@@ -2428,6 +2488,20 @@
     font-weight: var(--weight-semibold);
   }
 
+  /* FW-13 (S14-A-16/B-17): a 390 px il maiuscolo spaziato spezzava le parole
+     a metà («IDRATAZIO-NE»). Su schermi stretti: frase normale, sillabazione. */
+  @media (max-width: 480px) {
+    .preferment-table__rowlabel {
+      text-transform: none;
+      letter-spacing: normal;
+      hyphens: auto;
+    }
+
+    .preferment-table__td {
+      hyphens: auto;
+    }
+  }
+
   .preferment-decisions {
     margin-top: var(--space-8);
   }
@@ -2468,6 +2542,14 @@
     font-size: var(--font-size-lg);
     line-height: var(--leading-relaxed);
     color: var(--text-default);
+  }
+
+  /* FW-09 (S14-A-09): prova il prefermento in una ricetta. */
+  .preferment-decision__try {
+    align-self: flex-start;
+    min-height: var(--space-11);
+    margin-top: var(--space-3);
+    padding: var(--space-2) var(--space-4);
   }
 
   .preferment-decision__best {
@@ -2560,16 +2642,9 @@
     gap: var(--gap-xs);
   }
 
-  .glossary-empty {
-    text-align: center;
-    padding-block: var(--space-12);
-  }
-
-  .glossary-empty__text {
-    font-family: var(--font-serif);
-    font-style: italic;
-    color: var(--text-muted);
-    font-size: var(--font-size-2xl);
+  /* FW-09: stato vuoto del glossario (ds/EmptyState). */
+  .glossary-empty-state {
+    margin-block: var(--space-4);
   }
 
   .glossary-group {
@@ -2743,6 +2818,33 @@
 
   .glossary-card__reveal {
     overflow: hidden;
+  }
+
+  /* FW-03: card del glossario con ds/Disclosure + heading (S12-A-18/B-10) */
+  .glossary-group__title { margin: 0; }
+
+  .glossary-card .ds-disclosure__trigger.glossary-card__toggle {
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3-5);
+    font-size: inherit;
+    font-weight: var(--weight-regular);
+  }
+
+  .glossary-card__toggle .ds-disclosure__summary {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+  }
+
+  .glossary-card__toggle .ds-disclosure__chevron {
+    margin-top: var(--space-1);
+    color: var(--text-muted);
+  }
+
+  .glossary-card__content {
+    display: block;
   }
 
   .glossary-card__body {
@@ -3088,6 +3190,9 @@
     color: var(--text-default);
     font-size: var(--font-size-2-5xl);
     font-weight: var(--weight-bold);
+    /* FW-12: ora h2 (era h3), stesso aspetto di prima. */
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-snug);
     margin: 0;
   }
 
@@ -3097,15 +3202,9 @@
     font-feature-settings: 'tnum';
   }
 
-  .explore-empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-height: var(--space-40);
-    padding: var(--space-8);
-    color: var(--text-muted);
-    font-size: var(--font-size-base);
+  /* FW-09: stato vuoto di Scopri (ds/EmptyState). */
+  .explore-empty-state {
+    margin-block: var(--space-4);
   }
 
   .explore-feature {
@@ -3432,7 +3531,7 @@
 
   .compat-pill--blocked .compat-pill__icon,
   .compat-pill--blocked .compat-pill__now {
-    color: var(--text-error);
+    color: var(--status-blocking-fg); /* FW-13 */
   }
 
   .compat-pill__now {
@@ -3534,6 +3633,18 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  /* FW-14 (S02-A-08): nel gruppo di una famiglia secondaria la card dice la
+     famiglia principale dello stile. */
+  .explore-card__family-note {
+    margin: var(--space-0-5) 0 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    font-family: var(--font-sans);
+    color: var(--overlay-text-warm);
+    text-shadow: var(--overlay-shadow-text-sm);
+    line-height: var(--leading-normal);
   }
 
   /* ═══ PAGE: learn (resto pagina, hero già in .page-lead) ═══ */
@@ -3668,18 +3779,6 @@
     display: block;
   }
 
-  .learn-path__kicker {
-    font-size: var(--font-size-2xs);
-    font-weight: var(--weight-bold);
-    letter-spacing: var(--tracking-extreme);
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--overlay-text) 90%, transparent);
-    border-bottom: var(--border-w) solid color-mix(in srgb, var(--overlay-text) 25%, transparent);
-    padding-bottom: var(--space-0-75);
-    display: inline-block;
-    margin-bottom: var(--space-2);
-  }
-
   .learn-path__title {
     font-family: var(--font-serif);
     font-size: clamp(var(--font-size-7xl), var(--dimension-viewport-width-060), var(--font-size-9xl));
@@ -3699,6 +3798,19 @@
 
   .learn-path__cta-row {
     margin-top: var(--space-8);
+  }
+
+  /* FW-09 (S11-A-07): con un vincolo che blocca, le vie d'uscita. */
+  .learn-path__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+  }
+
+  .learn-path__action {
+    min-height: var(--space-11);
+    padding: var(--space-2) var(--space-4);
   }
 
   .learn-path__cta {
@@ -3738,12 +3850,17 @@
   }
 
   .learn-term__kicker {
+    font-family: var(--font-sans); /* FW-13: ora è un h2, resta un occhiello */
     font-size: var(--font-size-md);
     letter-spacing: var(--tracking-ultra);
     text-transform: uppercase;
     color: var(--tertiary);
     font-weight: var(--weight-bold);
     margin-bottom: var(--space-4);
+    /* FW-12 (S11-B-14): ora h2 (era div), stesso aspetto. */
+    margin-top: 0;
+    font-family: inherit;
+    line-height: inherit;
   }
 
   .learn-term__card {
@@ -4032,6 +4149,71 @@
 
   .home-onboarding__cta:active {
     transform: scale(0.95);
+  }
+
+  /* FW-20 · D-038: avviso di Crea che chiede solo il forno (OvenFirstNotice). */
+  .oven-first-notice {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+    margin: 0 0 var(--space-4);
+    padding: var(--space-4);
+  }
+
+  .oven-first-notice__icon {
+    grid-row: 1 / span 2;
+    margin-top: var(--space-0-5);
+    color: var(--text-accent);
+  }
+
+  .oven-first-notice__title,
+  .oven-first-notice__body {
+    margin: 0;
+  }
+
+  .oven-first-notice__body {
+    color: var(--text-muted);
+  }
+
+  .oven-first-notice__actions {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-2);
+  }
+
+  .oven-first-notice__cta {
+    gap: var(--space-1);
+    min-height: var(--space-11);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+  }
+
+  .oven-first-notice__dismiss,
+  .oven-first-notice__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--space-11);
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .oven-first-notice__link {
+    color: var(--text-accent);
+  }
+
+  .oven-first-notice__dismiss:hover,
+  .oven-first-notice__link:hover {
+    text-decoration: underline;
   }
 
   /* ── Override / CMS banners ── */
@@ -4871,35 +5053,23 @@
     transform: scale(0.99);
   }
 
-  .profile-equip-cat__body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .profile-equip-cat__step-row {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
-  }
-
-  .profile-equip-cat__step {
-    font-size: var(--font-size-2xs);
-    letter-spacing: var(--tracking-ultra);
-    text-transform: uppercase;
-    font-weight: var(--weight-semibold);
-    color: var(--text-muted);
-  }
-
-  .profile-equip-cat__step--selected {
-    color: var(--primary);
+  /* FW-03: ds/Disclosure; titolo e riepilogo su due righe, senza eyebrow */
+  .profile-equip-cat .ds-disclosure__trigger.profile-equip-cat__trigger {
+    gap: var(--gap-sm);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3-5);
+    font-size: inherit;
+    font-weight: var(--weight-regular);
   }
 
   .profile-equip-cat__title {
+    display: block;
     font-weight: var(--weight-medium);
     color: var(--text-default);
   }
 
   .profile-equip-cat__summary {
+    display: block;
     color: var(--text-muted);
     margin-top: var(--space-px);
     opacity: 1;
@@ -4908,14 +5078,6 @@
   .profile-equip-cat__summary--selected {
     color: var(--text-default);
     opacity: 1;
-  }
-
-  .profile-equip-cat__chevron {
-    flex-shrink: 0;
-  }
-
-  .profile-equip-cat__chevron-icon {
-    color: var(--icon-muted);
   }
 
   .profile-equip-cat__panel {
@@ -5106,7 +5268,7 @@
   .profile-ftu__pantry-skip {
     text-align: center;
     color: var(--text-muted);
-    opacity: 0.6;
+    /* FW-13 (S15-B-09): niente opacità sul testo d'aiuto, era 2,7:1. */
   }
 
   /* ── FtuOnboarding step 3 — done ── */
@@ -5165,7 +5327,7 @@
   .profile-ftu__done-footnote {
     color: var(--text-muted);
     text-align: center;
-    opacity: 0.7;
+    /* FW-13 (S15-B-09): niente opacità sul testo d'aiuto, era 3,3:1. */
   }
 
   /* ── FtuOnboarding nav ── */
@@ -5227,106 +5389,10 @@
   }
 
   /* ── LocaleConfirmModal ── */
-  .profile-locale-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-6);
-  }
-
-  .profile-locale-modal__backdrop {
-    position: absolute;
-    inset: 0;
-    background: var(--dialog-scrim);
-    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
-  }
-
-  .profile-locale-modal__card {
-    position: relative;
-    border-radius: var(--radius-2xl);
-    overflow: hidden;
-    background: var(--container-bg);
-    border: var(--border-width-thin) solid var(--container-border);
-    width: 100%;
-    max-width: var(--dialog-measure-compact);
-    box-shadow: var(--dialog-shadow-compact);
-  }
-
-  .profile-locale-modal__body {
-    padding-inline: var(--space-6);
-    padding-top: var(--space-6);
-    padding-bottom: var(--space-2);
-    text-align: center;
-  }
-
-  .profile-locale-modal__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-3);
-    width: var(--space-12);
-    height: var(--space-12);
-    border-radius: var(--radius-ml);
-    background: var(--surface-container);
-  }
-
-  .profile-locale-modal__icon-glyph {
-    color: var(--primary);
-  }
-
-  .profile-locale-modal__echo {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: var(--font-size-base);
-    color: var(--text-muted);
-    opacity: 0.55;
-    margin-top: var(--space-0-5);
-  }
-
-  .profile-locale-modal__desc {
-    color: var(--text-muted);
-    margin-top: var(--space-2);
-    line-height: var(--leading-relaxed);
-  }
-
+  /* FW-12: il dialog di cambio lingua è un ds/ConfirmDialog; qui restano solo i nomi in grassetto. */
   .profile-locale-modal__name {
     font-weight: var(--weight-semibold);
     color: var(--text-default);
-  }
-
-  .profile-locale-modal__actions {
-    display: flex;
-    gap: var(--gap-sm);
-    padding-inline: var(--space-6);
-    padding-bottom: var(--space-6);
-    padding-top: var(--space-4);
-  }
-
-  .profile-locale-modal__cancel {
-    flex: 1;
-    padding-inline: var(--space-4);
-    padding-block: var(--space-2-5);
-    border-radius: var(--radius-xl);
-    background: var(--surface-container);
-    border: var(--border-width-thin) solid var(--container-border);
-    color: var(--text-default);
-    font-weight: var(--weight-medium);
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .profile-locale-modal__cancel:active {
-    transform: scale(0.95);
-  }
-
-  .profile-locale-modal__confirm {
-    flex: 1;
-    padding-inline: var(--space-4);
-    padding-block: var(--space-2-5);
-    font-size: var(--font-size-base);
   }
 
   /* ── ProfilePage shell/header ── */
@@ -5558,37 +5624,16 @@
     accent-color: var(--primary);
   }
 
+  /* FW-03: ds/Disclosure (card) al posto del <details> */
   .profile-oven-heat {
     margin-top: var(--space-5);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-    border-radius: var(--radius-xl);
+    --disclosure-border: var(--container-border-subtle);
   }
 
-  .profile-oven-heat__head {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--space-1) var(--space-3);
-    min-height: var(--dimension-fixed-046);
-    padding: var(--space-3);
-    cursor: pointer;
-    list-style: none;
-    border-radius: inherit;
-  }
-
-  .profile-oven-heat__head::-webkit-details-marker { display: none; }
-  .profile-oven-heat__head > svg { grid-column: 2; grid-row: 1 / span 2; }
-  .profile-oven-heat[open] .profile-oven-heat__head > svg { transform: rotate(180deg); }
-  .profile-oven-heat__current { grid-column: 1; color: var(--text-muted); font-size: var(--font-size-sm); }
-
-  .profile-oven-heat__label {
-    color: var(--text-default);
-    font-weight: var(--weight-semibold);
-  }
+  .profile-oven-heat .ds-disclosure__meta { font-size: var(--font-size-sm); }
 
   .profile-oven-heat__hint {
     color: var(--text-muted);
-    padding-inline: var(--space-3);
     margin-block-end: var(--space-3);
   }
 
@@ -5596,7 +5641,6 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--gap-xs);
-    padding: 0 var(--space-3) var(--space-3);
   }
 
   @media (max-width: 520px) {
@@ -6091,178 +6135,125 @@
     gap: var(--gap-xs);
   }
 
-  .profile-prefs__lang-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
-    padding-inline: var(--space-4);
-    padding-block: var(--space-2-5);
-    border-radius: var(--radius-xl);
-    border-width: var(--border-width-thin);
-    border-style: solid;
-    font-size: var(--font-size-md);
-    font-weight: var(--weight-medium);
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .profile-prefs__lang-btn:active {
-    transform: scale(0.95);
-  }
-
-  /* ── Unit system section ── */
-  .profile-unit-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--gap-xs);
-  }
-
-  @media (min-width: 640px) {
-    .profile-unit-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  .profile-unit-option {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--gap-sm);
-    padding: var(--space-3);
-    border-radius: var(--radius-xl);
-    text-align: left;
-    border-width: var(--border-width-medium);
-    border-style: solid;
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  @media (min-width: 640px) {
-    .profile-unit-option {
-      padding: var(--space-4);
-    }
-  }
-
-  .profile-unit-option:active {
-    transform: scale(0.98);
-  }
-
-  .profile-unit-option__icon {
-    color: var(--text-muted);
-    flex-shrink: 0;
-    margin-top: var(--space-px);
-  }
-
-  .profile-unit-option__icon--active {
-    color: var(--primary);
-  }
-
-  .profile-unit-option__body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .profile-unit-option__label {
-    display: block;
-    font-weight: var(--weight-semibold);
-    color: var(--text-default);
-  }
-
-  .profile-unit-option__desc {
-    display: block;
-    margin-top: var(--space-0-75);
+  /* FW-13 (S17-B-06): Lingua = ds/Chip, Misure = ds/SegmentedControl;
+     sotto, la descrizione dell'opzione scelta. */
+  .profile-unit-desc {
+    margin-top: var(--space-2);
     color: var(--text-muted);
     line-height: var(--leading-normal);
   }
 
-  .profile-unit-option__check {
-    color: var(--primary);
-    flex-shrink: 0;
-  }
-
-  /* ── PizzaNerd toggle ── */
-  .profile-nerd-toggle {
-    width: 100%;
+  /* ── FW-08 — «Mostra i dettagli tecnici» (PizzaNerd) e livello ── */
+  .detail-level-setting {
     display: flex;
-    align-items: center;
-    gap: var(--gap-sm);
+    flex-direction: column;
+    gap: var(--space-1-5);
+    margin-top: var(--space-4);
     border-radius: var(--radius-2xl);
     padding-inline: var(--space-4);
     padding-block: var(--space-3-5);
-    text-align: left;
     background: var(--container-bg-low);
     border: var(--border-width-thin) solid var(--container-border);
     color: var(--text-default);
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
   }
 
-  .profile-nerd-toggle:active {
-    transform: scale(0.99);
-  }
-
-  .profile-nerd-toggle--active {
-    background: color-mix(in srgb, var(--primary) 10%, var(--container-bg));
-    border-color: color-mix(in srgb, var(--primary) 32%, var(--container-border));
-  }
-
-  .profile-nerd-toggle__icon {
+  .detail-level-setting__head {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-xl);
-    flex-shrink: 0;
-    width: var(--space-9-5);
-    height: var(--space-9-5);
-    background: var(--surface-container);
-    color: var(--text-muted);
+    gap: var(--gap-sm);
   }
 
-  .profile-nerd-toggle__icon--active {
-    background: color-mix(in srgb, var(--primary) 14%, var(--container-bg));
+  .detail-level-setting__icon {
+    flex-shrink: 0;
     color: var(--primary);
   }
 
-  .profile-nerd-toggle__body {
+  .detail-level-setting__title {
     flex: 1;
     min-width: 0;
-  }
-
-  .profile-nerd-toggle__title {
-    display: block;
-    font-size: var(--font-size-lg);
     font-weight: var(--weight-semibold);
     line-height: var(--leading-tight);
+    cursor: pointer;
   }
 
-  .profile-nerd-toggle__desc {
-    display: block;
+  .detail-level-setting__desc,
+  .detail-level-setting__relation {
+    margin: 0;
     color: var(--text-muted);
-    font-size: var(--font-size-md);
     line-height: var(--leading-normal);
-    margin-top: var(--space-0-5);
   }
 
-  .profile-nerd-toggle__track {
-    position: relative;
-    border-radius: var(--radius-full);
-    flex-shrink: 0;
-    width: var(--space-11);
-    height: var(--space-6-5);
-    background: var(--container-border);
+  .detail-level-setting__relation {
+    padding-top: var(--space-1-5);
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
   }
 
-  .profile-nerd-toggle__track--active {
-    background: var(--primary);
+  .skill-level-effect {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
   }
 
-  .profile-nerd-toggle__thumb {
-    position: absolute;
-    top: var(--space-1);
-    border-radius: var(--radius-full);
-    width: var(--space-4-5);
-    height: var(--space-4-5);
-    background: var(--container-bg);
-    box-shadow: var(--switch-thumb-shadow);
+  .skill-level-effect__text {
+    margin: 0;
+    color: var(--text-default);
+    line-height: var(--leading-normal);
+  }
+
+  .skill-level-effect__note {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .detail-level-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .detail-level-switch__label {
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .config-field.config-pl-readonly {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--gap-sm);
+    row-gap: var(--gap-xs);
+    margin: 0;
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+  }
+
+  .config-pl-readonly__value {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .config-pl-readonly__action {
+    font: inherit;
+    font-weight: var(--weight-semibold);
+    color: var(--primary);
+    background: none;
+    border: 0;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-5);
+    cursor: pointer;
+  }
+
+  .explore-card__tech {
+    margin-top: var(--space-1-5);
+    color: var(--overlay-text-warm);
+    text-shadow: var(--overlay-shadow-text-sm);
+    font-variant-numeric: tabular-nums;
   }
 
   /* ── Footer: reset + dev mode ── */
@@ -6329,176 +6320,6 @@
   }
 
   /* ═══ COMPONENT: recipe-configurator (PREFIX: config) ═══ */
-
-  /* ── PremiumSelect ── */
-  .config-select {
-    position: relative;
-    width: 100%;
-  }
-
-  .config-select__trigger {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: var(--space-2-5);
-    padding-inline: var(--space-4);
-    padding-block: var(--space-3);
-    border-radius: var(--radius-xl);
-    text-align: left;
-    border: var(--border-width-thin) solid var(--outline-variant);
-    background: var(--surface-container);
-    color: var(--text-default);
-    font-size: var(--font-size-md);
-    font-weight: var(--weight-semibold);
-    cursor: pointer;
-    transition: background-color var(--duration-normal) var(--ease-standard), border-color var(--duration-normal) var(--ease-standard), color var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard), transform var(--duration-normal) var(--ease-standard), opacity var(--duration-normal) var(--ease-standard);
-  }
-
-  .config-select__trigger:hover {
-    border-color: var(--tertiary);
-    background: color-mix(in srgb, var(--surface-container) 96%, var(--text-default));
-  }
-
-  .config-select__trigger:active {
-    transform: scale(0.99);
-  }
-
-  .config-select__trigger--open {
-    border-color: var(--tertiary);
-    box-shadow: 0 0 0 var(--space-px) color-mix(in srgb, var(--tertiary) 15%, transparent);
-  }
-
-  .config-select__icon {
-    flex-shrink: 0;
-    font-size: var(--font-size-3xl);
-  }
-
-  .config-select__body {
-    flex: 1 1 0%;
-    min-width: 0;
-  }
-
-  .config-select__value {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .config-select__sublabel {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--text-muted);
-    margin-top: var(--space-px);
-    font-size: var(--font-size-sm);
-  }
-
-  .config-select__row .config-select__sublabel {
-    opacity: 0.9;
-  }
-
-  .config-select__row--active .config-select__sublabel {
-    color: inherit;
-    /* la var originale non fu mai definita: il colore ereditava dal genitore */
-  }
-
-  .config-select__chevron {
-    color: var(--text-muted);
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .config-select__trigger--open .config-select__chevron {
-    transform: rotate(180deg);
-  }
-
-  .config-select__menu {
-    position: absolute;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    margin-top: var(--space-1-5);
-    max-height: var(--space-60);
-    overflow-y: auto;
-    border-radius: var(--radius-xl);
-    padding: var(--space-1-5);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-0-5);
-    background: var(--popover-surface);
-    border: var(--border-width-thin) solid var(--popover-border-color);
-    box-shadow: var(--popover-shadow);
-    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-lg)));
-    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-lg)));
-  }
-
-  .config-select__group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-0-5);
-  }
-
-  .config-select__group-divider {
-    margin-block: var(--space-1);
-    border-top: var(--border-width-thin) solid var(--container-border-subtle);
-  }
-
-  .config-select__group-label {
-    padding-inline: var(--space-3);
-    padding-block: var(--space-1);
-    font-size: var(--font-size-2xs);
-    font-weight: var(--weight-bold);
-    letter-spacing: var(--tracking-wider);
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .config-select__row {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: var(--space-2-5);
-    padding-inline: var(--space-3);
-    padding-block: var(--space-2);
-    border-radius: var(--radius-lg);
-    text-align: left;
-    background: transparent;
-    color: var(--text-default);
-    font-size: var(--font-size-md);
-    font-weight: var(--weight-medium);
-    border: none;
-    cursor: pointer;
-    transition: color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard);
-  }
-
-  .config-select__row--active {
-    background: var(--chip-bg-active);
-    color: var(--chip-text-active);
-    font-weight: var(--weight-semibold);
-  }
-
-  .config-select__row-badge {
-    padding-inline: var(--space-1-5);
-    padding-block: var(--space-0-5);
-    border-radius: var(--radius-xs);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-semibold);
-    flex-shrink: 0;
-    margin-right: var(--space-1);
-    background: color-mix(in srgb, var(--tertiary) 15%, transparent);
-    color: var(--tertiary);
-  }
-
-  .config-select__row--active .config-select__row-badge {
-    background: color-mix(in srgb, var(--overlay-text) 20%, transparent);
-    color: inherit;
-  }
-
-  .config-select__row-check {
-    margin-left: auto;
-    flex-shrink: 0;
-  }
 
   /* ── AdaptiveHint ── */
   .config-hint {
@@ -6899,10 +6720,12 @@
   }
 
   .config-flour-picker__option-sub {
-    display: block;
+    /* FW-13 (S06-A-23): due righe, l'esempio non si taglia a 390 px. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-size: var(--font-size-sm);
     color: var(--text-muted);
   }
@@ -6914,7 +6737,8 @@
   }
 
   .config-flour-picker__fit--ideal {
-    color: var(--text-accent);
+    /* FW-13 (S06-A-23/B-18): giudizio positivo, non terracotta. */
+    color: var(--status-positive-fg);
   }
 
   /* ── GradientSlider ── */
@@ -7452,8 +7276,8 @@
       border: var(--border-width-thin) solid var(--chip-border);
     }
 
+    /* FW-12 (S05-B-13): primo nel DOM, quindi niente order:-1 (ordine di focus = ordine visivo). */
     .needs-summary__time-chip {
-      order: -1;
       margin-inline-end: var(--space-1);
     }
 
@@ -7597,6 +7421,10 @@
     font-family: var(--font-serif);
     font-size: var(--font-size-xl);
     color: var(--text-default);
+    /* FW-12 (S17-B-10): ora h2 sotto l'h1 della pagina (era h3), stesso aspetto. */
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-snug);
   }
 
   .account-panel__meta {
@@ -8547,7 +8375,7 @@
   }
 
   .needs-custom-slot__input[aria-invalid="true"] {
-    border-color: var(--text-warning);
+    border-color: var(--destructive); /* FW-09 */
   }
 
   .needs-custom-slot__hint {
@@ -8556,8 +8384,18 @@
     font-size: var(--font-size-sm);
   }
 
+  /* FW-09 (S05-A-13): l'errore non si distingue solo dal colore (WCAG 1.4.1). */
   .needs-custom-slot__error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
     margin: 0;
+    color: var(--destructive);
+  }
+
+  /* FW-09 (S05-A-01): slot in cui nessuno stile sta nei tempi. */
+  .needs-slot__none {
+    display: block;
     color: var(--text-warning);
   }
 
@@ -9248,9 +9086,10 @@
   .recipe-allergens__body > .recipe-allergens__note { margin-block-start: 0; }
   .recipe-allergens__chevron--open { transform: rotate(180deg); }
   .allergen-preferences { margin-block: var(--space-4); }
-  .allergen-preferences summary { cursor: pointer; min-height: var(--allergen-target-min); font-weight: var(--weight-semibold); }
-  .allergen-preferences summary span { display: block; color: var(--text-muted); font-size: var(--font-size-sm); font-weight: var(--weight-regular); margin-block-start: var(--space-1); }
-  .allergen-preferences p { color: var(--text-muted); font-size: var(--font-size-sm); margin-block: var(--space-3); }
+  /* FW-03: ds/Disclosure al posto del <details> col triangolo del browser */
+  .allergen-preferences .ds-disclosure__trigger { min-height: var(--allergen-target-min); }
+  .allergen-preferences .ds-disclosure__meta { font-size: var(--font-size-sm); overflow-wrap: anywhere; text-align: end; flex-shrink: 1; }
+  .allergen-preferences p { color: var(--text-muted); font-size: var(--font-size-sm); margin-block: 0 var(--space-3); }
   .allergen-preferences__choices { display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .allergen-preferences__choices .ds-chip { min-height: var(--allergen-target-min); }
 
@@ -9527,12 +9366,13 @@
     gap: var(--space-1-5);
   }
 
+  /* FW-13 (S07-B-18): forno pronto = positivo, forno da adattare = attenzione. */
   .match-oven--gap {
-    color: var(--text-muted);
+    color: var(--status-caution-fg);
   }
 
   .match-oven--ready {
-    color: var(--text-accent);
+    color: var(--status-positive-fg);
   }
 
   .match-oven__alert-icon {
@@ -9613,6 +9453,24 @@
 
   .match-bar__label-icon--explained {
     opacity: 0.9;
+  }
+
+  /* FW-11 (S07-A-13, S07-B-12): con le etichette lunghe (en, de, fr) il
+     numero non va a capo cifra per cifra; l'etichetta si restringe lei. */
+  .match-bar__head > .match-bar__label {
+    min-width: 0;
+  }
+
+  .match-bar__head > .type-numeric {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* FW-11 (S17-A-01, D-J): nota sulle microdosi sotto il sistema di misura. */
+  .profile-unit-note {
+    margin-top: var(--space-2);
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
   }
 
   .match-bar-track {
@@ -9704,6 +9562,10 @@
     font-size: var(--font-size-md);
     font-weight: var(--weight-semibold);
     color: var(--text-default);
+    /* FW-03: ora è la <caption> della tabella */
+    caption-side: top;
+    text-align: start;
+    padding-block-end: var(--space-2);
   }
 
   .recipe-comparison__table {
@@ -9757,7 +9619,8 @@
 
   .recipe-comparison__table td:last-child {
     font-weight: var(--weight-semibold);
-    color: var(--text-accent);
+    /* FW-13 (S07-B-18): la «Proposta» è il su misura (salvia), non l'Originale. */
+    color: var(--status-recommended-fg);
   }
 
   .recipe-comparison__table tbody tr + tr {
@@ -10427,12 +10290,18 @@
     padding: 0;
     cursor: pointer;
     color: var(--text-muted);
-    opacity: 0.5;
+    /* FW-03 (S08-B-11): opacità piena (contrasto ≥ 3:1) e area di tocco ≥ 24 px */
+    opacity: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--space-6);
+    min-height: var(--space-6);
     line-height: var(--leading-none);
   }
 
   .ingredients-rule55-toggle--active {
-    opacity: 0.85;
+    color: var(--text-accent);
   }
 
   .ingredients-rule55-toggle:active {
@@ -11022,8 +10891,10 @@
     line-height: var(--leading-normal);
     font-weight: var(--weight-semibold);
     flex-shrink: 0;
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-    color: var(--primary);
+    /* FW-13 (S09-B-16): il tempo totale è un dato, non un avviso. */
+    background: var(--status-neutral-bg);
+    border: var(--border-width-thin) solid var(--status-neutral-border);
+    color: var(--text-default);
   }
 
   .procedure-hero__times {
@@ -11492,6 +11363,11 @@
     color: var(--text-default);
     font-size: var(--font-size-4xl);
     font-weight: var(--weight-bold);
+    /* FW-12 (S09-B-09): ora h3 (era span), stesso aspetto di prima. */
+    font-family: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    margin: 0;
   }
 
   .procedure-timeline-step__desc {
@@ -11783,9 +11659,96 @@
     text-underline-offset: var(--space-0-75);
   }
 
-  .recipe-output-feedback-wrap {
-    margin-top: var(--space-6);
+  /* ═══ FW-10 — esito di fattibilità deduplicato e ordinato ═══
+     Una causa, prima, con il rimedio; il resto in «Perché e cosa servirebbe». */
+  .recipe-verdict__more {
+    display: grid;
+    gap: var(--space-2);
   }
+
+  .recipe-verdict__more .recipe-verdict__reasons {
+    color: var(--text-muted);
+  }
+
+  .match-card {
+    scroll-margin-block-start: var(--space-20);
+  }
+
+  .match-notice__action {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    min-height: var(--space-11);
+    margin-top: var(--space-1);
+    padding: 0;
+    color: var(--cta);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .recipe-verdict-badge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-2) 0 0;
+  }
+
+  .recipe-verdict-badge__label {
+    gap: var(--space-1);
+  }
+
+  .recipe-verdict-badge__why {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--space-11);
+    padding: 0;
+    color: var(--cta);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .recipe-output-blocked-note {
+    margin: 0 0 var(--space-3);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--space-1) solid var(--text-error);
+    color: var(--text-muted);
+  }
+
+  .style-detail-match__row[data-tone="muted"] .style-detail-match__icon {
+    color: var(--text-muted);
+  }
+
+  .search-page__fit {
+    align-self: flex-start;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+  }
+
+  /* Il badge d'autenticità sta nella didascalia: l'angolo è della compatibilità. */
+  .explore-card__caption .explore-card__badge--auth {
+    position: static;
+    display: inline-block;
+    margin-bottom: var(--space-2);
+  }
+
+  .profile-diet-note {
+    display: grid;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--space-1) solid var(--text-warning);
+  }
+
+  .profile-diet-note__why p {
+    color: var(--text-muted);
+  }
+  /* ═══ /FW-10 ═══ */
 
   /* ═══ ONDATA 3 — COMPONENT: recipe-output-bits (PREFIX: bits) ═══ */
   /* ═══ COMPONENT: recipe-output-bits (NerdAuraBlock, IngRow, GlossaryWLink) ═══ */
@@ -12135,8 +12098,14 @@
     min-height: var(--space-9);
   }
 
-  .step-details__trouble-link--indented {
-    margin-left: var(--space-4);
+  /* FW-03 (S09-B-12): disclosure in linea con chevron, link a foglio con freccia */
+  .step-details__glossary-chevron {
+    flex-shrink: 0;
+    transition: transform var(--duration-normal) var(--ease-standard);
+  }
+
+  .step-details__glossary-toggle[aria-expanded="true"] .step-details__glossary-chevron {
+    transform: rotate(180deg);
   }
 
   .step-details > .step-details__trouble-link { margin-top: 0; }
@@ -12791,6 +12760,20 @@
     .stat-strip__value-prev,
     .stat-strip__value-arrow {
       display: none;
+    }
+  }
+
+  /* FW-14 (S07-A-04): su mobile il valore di riferimento non sparisce (prima
+     restava solo la stellina): va su una riga sua sopra il valore attuale. */
+  @media (max-width: 479px) {
+    .stat-strip__value--changed {
+      flex-wrap: wrap;
+      row-gap: 0;
+    }
+
+    .stat-strip__value-prev {
+      display: inline;
+      flex-basis: 100%;
     }
   }
 
@@ -14119,16 +14102,17 @@
     height: var(--space-4);
   }
 
+  /* FW-13: severità = ruoli di stato (bloccante / attenzione / neutro). */
   .troubleshooting-severity-icon--critical {
-    color: var(--destructive);
+    color: var(--status-blocking-icon);
   }
 
   .troubleshooting-severity-icon--warning {
-    color: var(--tertiary);
+    color: var(--status-caution-icon);
   }
 
   .troubleshooting-severity-icon--info {
-    color: var(--secondary);
+    color: var(--status-neutral-icon);
   }
 
   /* --- ContextualWarnings (inline in recipe) --- */
@@ -14173,18 +14157,18 @@
   }
 
   .troubleshooting-warnings__item--critical {
-    background: color-mix(in srgb, var(--destructive) 8%, transparent);
-    border-color: color-mix(in srgb, var(--destructive) 20%, transparent);
+    background: var(--status-blocking-bg);
+    border-color: var(--status-blocking-border);
   }
 
   .troubleshooting-warnings__item--warning {
-    background: color-mix(in srgb, var(--tertiary) 8%, transparent);
-    border-color: color-mix(in srgb, var(--tertiary) 20%, transparent);
+    background: var(--status-caution-bg);
+    border-color: var(--status-caution-border);
   }
 
   .troubleshooting-warnings__item--info {
-    background: color-mix(in srgb, var(--secondary) 6%, transparent);
-    border-color: color-mix(in srgb, var(--secondary) 12%, transparent);
+    background: var(--status-neutral-bg);
+    border-color: var(--status-neutral-border);
   }
 
   .troubleshooting-warnings__item-row {
@@ -14293,8 +14277,8 @@
   }
 
   .troubleshooting-guide__title-icon {
-    width: var(--font-size-3xl);
-    height: var(--font-size-3xl);
+    width: var(--space-4-5);
+    height: var(--space-4-5);
     color: var(--primary);
   }
 
@@ -14315,8 +14299,8 @@
   }
 
   .troubleshooting-guide__search-icon {
-    width: var(--font-size-xl);
-    height: var(--font-size-xl);
+    width: var(--space-3-5);
+    height: var(--space-3-5);
     color: var(--muted-foreground);
     flex-shrink: 0;
   }
@@ -14344,11 +14328,22 @@
     gap: var(--gap-xs);
   }
 
-  .troubleshooting-guide__empty {
-    text-align: center;
-    padding: var(--space-8);
-    color: var(--muted-foreground);
-    font-size: var(--font-size-lg);
+  /* FW-09 (S13-A-08, S13-B-08): stato vuoto, conteggio e cancella ricerca. */
+  .troubleshooting-guide__empty-state {
+    margin-block: var(--space-2);
+  }
+
+  .troubleshooting-guide__count {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .troubleshooting-guide__count:empty {
+    display: none;
+  }
+
+  .troubleshooting-guide__search-clear {
+    flex: none;
   }
 
   /* --- Issue card --- */
@@ -14362,7 +14357,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2-5);
-    padding: var(--font-size-xl) var(--space-4);
+    padding: var(--space-3-5) var(--space-4); /* FW-13: spazio, non font-size */
     background: transparent;
     border: none;
     cursor: pointer;
@@ -14371,7 +14366,7 @@
   }
 
   .troubleshooting-card__toggle:active {
-    transform: scale(0.95);
+    transform: scale(var(--press-scale-surface));
   }
 
   .troubleshooting-card__toggle-body {
@@ -14394,6 +14389,26 @@
     border-radius: var(--radius-xs);
   }
 
+  /* FW-12 (S13-A-15/B-10): severità a parole, il colore solo sul bordo
+     (il testo resta --text-default per il contrasto). */
+  .troubleshooting-card__severity {
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-default);
+    padding: var(--space-px) var(--space-1-5);
+    border-radius: var(--radius-xs);
+    border: var(--border-width-thin) solid var(--troubleshooting-severity-tone, var(--secondary));
+    background: color-mix(in srgb, var(--troubleshooting-severity-tone, var(--secondary)) 12%, transparent);
+  }
+
+  .troubleshooting-card__severity[data-severity="critical"] {
+    --troubleshooting-severity-tone: var(--destructive);
+  }
+
+  .troubleshooting-card__severity[data-severity="warning"] {
+    --troubleshooting-severity-tone: var(--tertiary);
+  }
+
   .troubleshooting-card__symptom {
     font-size: var(--font-size-lg);
     color: var(--text-default);
@@ -14413,6 +14428,31 @@
 
   .troubleshooting-card__detail {
     overflow: hidden;
+  }
+
+  /* FW-03: card dei problemi con ds/Disclosure + heading (S13-B-11) */
+  .troubleshooting-card .ds-disclosure__trigger.troubleshooting-card__toggle {
+    gap: var(--space-2-5);
+    padding: var(--font-size-xl) var(--space-4);
+    font-size: inherit;
+    font-weight: var(--weight-regular);
+  }
+
+  .troubleshooting-card__toggle .ds-disclosure__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2-5);
+  }
+
+  .troubleshooting-card__toggle-body,
+  .troubleshooting-card__symptom {
+    display: block;
+  }
+
+  .troubleshooting-card__toggle .ds-disclosure__chevron {
+    width: var(--space-4);
+    height: var(--space-4);
+    color: var(--muted-foreground);
   }
 
   .troubleshooting-card__detail-body {
@@ -14471,6 +14511,15 @@
     overflow: hidden;
   }
 
+  /* FW-12 (S14-B-11): il titolo h2 avvolge il bottone, senza stile proprio. */
+  .preferment-guide-card__heading {
+    margin: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    word-spacing: inherit;
+    color: inherit;
+  }
+
   .preferment-guide-card__header {
     width: 100%;
     display: flex;
@@ -14497,6 +14546,7 @@
   }
 
   .preferment-guide-card__title-block {
+    display: block; /* FW-12: span (contenuto frasale nel bottone) */
     flex: 1;
     min-width: 0;
   }
@@ -14517,6 +14567,7 @@
   }
 
   .preferment-guide-card__name {
+    display: block; /* FW-12: span */
     font-size: var(--font-size-xl);
     color: var(--text-default);
     line-height: var(--leading-normal);
@@ -14533,6 +14584,7 @@
   }
 
   .preferment-guide-card__chevron {
+    display: flex; /* FW-12: span */
     color: var(--muted-foreground);
     flex-shrink: 0;
   }
@@ -14618,6 +14670,44 @@
 
   .preferment-guide-card__compare-toggle:active {
     transform: scale(0.95);
+  }
+
+  /* FW-03: card e confronto con ds/Disclosure (aria-expanded, heading).
+     Il summary vive in un <button>: niente div, solo span resi a blocchi. */
+  .preferment-guide-card .ds-disclosure__trigger.preferment-guide-card__header {
+    padding-block: var(--toggle-padding-block);
+    padding-inline: var(--space-6);
+    font-weight: var(--weight-regular);
+    font-size: inherit;
+  }
+
+  .preferment-guide-card__header .ds-disclosure__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3-5);
+  }
+
+  .preferment-guide-card__title-block,
+  .preferment-guide-card__name {
+    display: block;
+  }
+
+  .preferment-guide-card__disclosure > .ds-disclosure__panel {
+    padding: 0;
+  }
+
+  .preferment-guide-card .ds-disclosure__trigger.preferment-guide-card__compare-toggle {
+    width: 100%;
+    min-height: var(--space-11);
+    justify-content: center;
+    padding-inline: var(--space-3);
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-regular);
+    color: var(--primary);
+  }
+
+  .preferment-guide-card__compare-toggle .ds-disclosure__summary {
+    flex: 0 1 auto;
   }
 
   .preferment-guide-card__compare-panel {
@@ -15345,7 +15435,7 @@
   }
 
   .pantry-editor__flour-details,
-  .pantry-editor__policies[open] {
+  .pantry-editor__policies .ds-disclosure__panel:not([hidden]) {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
@@ -15373,10 +15463,10 @@
     border-top: var(--border-width-thin) solid var(--container-border-subtle);
   }
 
-  .pantry-editor__policies summary {
-    cursor: pointer;
+  /* FW-03: ds/Disclosure (inline) al posto del <details> col triangolo */
+  .pantry-editor__policies .ds-disclosure__trigger {
     color: var(--text-accent);
-    font-weight: var(--weight-semibold);
+    font-size: var(--font-size-sm);
   }
 
   .pantry-editor__saved {
@@ -15694,6 +15784,7 @@
 
   .style-detail-title__heading {
     font-family: var(--font-serif);
+    letter-spacing: var(--tracking-snug); /* FW-12: ora h2 (era h3) */
     margin-top: var(--space-0-5);
     font-size: clamp(var(--font-size-5xl), var(--dimension-viewport-width-040), var(--font-size-7xl));
     font-weight: var(--weight-bold);
@@ -15768,6 +15859,11 @@
     letter-spacing: var(--tracking-ultra);
     text-transform: uppercase;
     color: var(--text-muted);
+    /* FW-12 (S03-B-24): ora h3 (era span), stesso aspetto di prima. */
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    margin: 0;
   }
 
   .style-detail-techniques__list {
@@ -15846,6 +15942,10 @@
     text-transform: uppercase;
     color: var(--text-muted);
     font-weight: var(--weight-semibold);
+    /* FW-12 (S03-B-24): ora h3 (era span). */
+    font-family: inherit;
+    line-height: inherit;
+    margin: 0;
   }
 
   .style-detail-params__box {
@@ -15880,12 +15980,12 @@
     line-height: var(--leading-compact);
   }
 
+  /* FW-13 (S03-B-19, D-019): sono istruzioni, non eyebrow. Frase normale
+     a 12 px, niente maiuscolo spaziato. */
   .style-detail-param-row__sub {
-    font-size: var(--font-size-2xs);
+    font-size: var(--font-size-sm);
     color: var(--text-muted);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    line-height: var(--leading-display);
+    line-height: var(--leading-normal);
   }
 
   /* ── Match reasons (VPL-C3) ── */
@@ -15933,7 +16033,12 @@
   }
 
   .style-detail-match__row[data-warning="true"] .style-detail-match__icon {
-    color: var(--text-warning);
+    color: var(--status-caution-icon);
+  }
+
+  /* FW-13 (S03-B-22): condizione da verificare, nessun giudizio. */
+  .style-detail-match__row[data-condition="true"] .style-detail-match__icon {
+    color: var(--status-neutral-icon);
   }
 
   /* ── CTA — Genera ricetta ── */
@@ -15982,31 +16087,6 @@
     .recommended-styles__results {
       gap: var(--gap-xl);
     }
-  }
-
-  /* Audit 28/10/2026 (S05-A-01): nessuno stile fattibile nel momento scelto. */
-  .recommended-rescue {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    margin: 0 0 var(--space-4);
-    padding: var(--space-4);
-    border-inline-start: var(--space-1) solid var(--text-warning);
-  }
-
-  .recommended-rescue__title {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin: 0;
-  }
-
-  .recommended-rescue__body { margin: 0; }
-
-  .recommended-rescue__action {
-    align-self: flex-start;
-    min-height: var(--space-11);
-    padding: var(--space-2) var(--space-5);
   }
 
   .recommended-styles__search-group {
@@ -16141,33 +16221,9 @@
     gap: var(--gap-xs);
   }
 
-  /* ── Empty state ── */
-  .recommended-empty {
-    padding: var(--space-8);
-    text-align: center;
-  }
-
-  .recommended-empty__text {
-    font-family: var(--font-serif);
-    font-style: italic;
-    color: var(--text-muted);
-    font-size: var(--font-size-2xl);
-  }
-
-  .recommended-empty__reset {
-    margin-top: var(--space-4);
-    padding-inline: var(--space-5);
-    padding-block: var(--space-2);
-    border-radius: var(--radius-xl);
-    background: var(--chip-bg-active);
-    color: var(--chip-text-active);
-    font-size: var(--font-size-lg);
-    font-weight: var(--weight-semibold);
-    transition: transform var(--duration-fast);
-  }
-
-  .recommended-empty__reset:active {
-    transform: scale(0.95);
+  /* FW-09: lo stato vuoto e il banner della dispensa sono ds/EmptyState. */
+  .recommended-pantry {
+    margin-block: var(--space-2) var(--space-4);
   }
 
   /* ── Tier header ── */
@@ -16204,17 +16260,19 @@
     font-weight: var(--weight-bold);
   }
 
+  /* FW-09 (S05-B-11): il sottotitolo dice cosa vuol dire il gruppo; prima su
+     mobile era nascosto e «Con condizioni» restava senza spiegazione. */
   .recommended-tier-header__subtitle {
-    display: none;
-    font-family: var(--font-serif);
-    font-style: italic;
+    display: block;
+    font-family: var(--font-body);
     color: var(--text-muted);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
   }
 
   @media (min-width: 640px) {
     .recommended-tier-header__subtitle {
       display: inline;
+      font-size: var(--font-size-lg);
     }
   }
 
@@ -16807,7 +16865,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-2xl); /* FW-13: ≥ 14 px anche a 390 px */
     font-weight: var(--weight-semibold);
   }
 
@@ -17037,6 +17095,7 @@
   }
 
   .cooking-mode-step__long-desc {
+    font-size: var(--font-size-2xl); /* FW-13: ≥ 14 px anche a 390 px */
     line-height: var(--leading-reading);
     color: var(--text-muted);
   }
@@ -17059,6 +17118,7 @@
   }
 
   .cooking-mode-step__tip-text {
+    font-size: var(--font-size-2xl); /* FW-13: ≥ 14 px anche a 390 px */
     color: var(--text-default);
   }
 
@@ -17072,8 +17132,9 @@
   }
 
   .cooking-mode-phase--done {
-    background: color-mix(in srgb, var(--recipe-success) 12%, var(--surface-container-low));
-    border-color: color-mix(in srgb, var(--recipe-success) 35%, transparent);
+    /* FW-13: fase finita = positivo. */
+    background: var(--status-positive-bg);
+    border-color: var(--status-positive-border);
   }
 
   .cooking-mode-phase__head {
@@ -17088,7 +17149,7 @@
   }
 
   .cooking-mode-phase--done .cooking-mode-phase__icon {
-    color: var(--recipe-success);
+    color: var(--status-positive-icon);
   }
 
   .cooking-mode-phase__body {
@@ -17097,14 +17158,14 @@
   }
 
   .cooking-mode-phase__value {
-    font-size: var(--font-size-3xl);
+    font-size: var(--cooking-countdown-size);
     font-weight: var(--weight-bold);
     line-height: var(--leading-heading);
     color: var(--text-default);
   }
 
   .cooking-mode-phase--done .cooking-mode-phase__value {
-    color: var(--recipe-success);
+    color: var(--status-positive-fg);
   }
 
   .cooking-mode-phase__meta {
@@ -17120,9 +17181,12 @@
     padding-block: var(--space-1);
     border-radius: var(--radius-full);
     flex-shrink: 0;
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-    color: var(--snackbar-action);
-    font-size: var(--font-size-sm);
+    /* FW-13 (S10-A-10/B-13): era --snackbar-action (token invertito, 1,5:1).
+       Fondo pieno sopra la fase già tinta: positivo ≥ 6:1 nei due temi. */
+    background: var(--container-card);
+    border: var(--border-width-thin) solid var(--status-positive-border);
+    color: var(--status-positive-fg);
+    font-size: var(--font-size-md);
     font-weight: var(--weight-semibold);
   }
 
@@ -17266,6 +17330,27 @@
 
   .cook-actions[hidden] { display: none; }
 
+  /* FW-13 (S01-A-10/B-14): accanto al profilo, a un passo dal suo bordo. */
+  .cook-actions {
+    transition: right var(--duration-normal) var(--ease-standard);
+  }
+
+  .cook-actions--beside-profile {
+    right: calc(var(--space-4) + var(--shell-action-size) + var(--space-2));
+  }
+
+  .cook-actions--beside-profile.cook-actions--compact {
+    right: calc(var(--space-4) + var(--shell-action-size-compact) + var(--space-2));
+  }
+
+  .cook-widget {
+    height: var(--shell-action-size);
+  }
+
+  .cook-widget--compact {
+    height: var(--shell-action-size-compact);
+  }
+
   .cook-actions__recipe {
     display: flex;
     align-items: center;
@@ -17398,9 +17483,10 @@
   /* ═══ COMPONENT: dough-mascot (DoughBlob) ═══
    * 5-layer expressive blob mascot. Colors/opacities/edge/static-radius are
    * runtime-dynamic (depend on `variant`/`energy`/`size`) and arrive as inline
-   * custom properties from dough-mascot.tsx: --mascot-size, --blob-glow,
-   * --blob-body(-opacity), --blob-accent(-opacity), --blob-core(-opacity),
-   * --blob-edge, --blob-satellite(-opacity), --static-radius-main/-accent/-highlight.
+   * custom properties from dough-mascot.tsx: --mascot-size,
+   * --blob-body-opacity, --blob-accent-opacity, --blob-core-opacity,
+   * --blob-satellite-opacity, --static-radius-main/-accent/-highlight.
+   * Colors are chosen per variant below (--mascot-*), not inline.
    * Layer size RATIOS (0.82/0.58/0.62/0.3/0.28/0.1) and the -20%/-25% glow inset
    * are unitless/percentage — not flagged as hard-written, kept as calc() ratios
    * of --mascot-size (one-off decorative geometry, no scale token fits, same
@@ -17411,17 +17497,45 @@
    * and the non-animated base geometry.
    */
 
+  /* FW-13 (S10-B-19): i layer leggono variabili locali --mascot-*, scelte qui
+     per variante. Prima il TSX scriveva inline `--blob-body: var(--blob-body)`:
+     una variabile che rimanda a se stessa è ciclica, quindi non valida, e la
+     mascotte «dough» restava senza sfondo. */
   .dough-mascot {
     position: relative;
     width: var(--mascot-size);
     height: var(--mascot-size);
+    --mascot-glow: var(--blob-glow);
+    --mascot-body: var(--blob-body);
+    --mascot-accent: var(--blob-accent);
+    --mascot-core: var(--blob-core);
+    --mascot-edge: var(--blob-edge);
+    --mascot-satellite: var(--blob-satellite);
+  }
+
+  .dough-mascot--forge {
+    --mascot-glow: var(--blob-glow-forge);
+    --mascot-body: var(--blob-body-forge);
+    --mascot-accent: var(--blob-accent-forge);
+    --mascot-core: var(--blob-core-forge);
+    --mascot-edge: var(--blob-edge-forge);
+    --mascot-satellite: var(--blob-satellite-forge);
+  }
+
+  .dough-mascot--neural {
+    --mascot-glow: var(--blob-glow-neural);
+    --mascot-body: var(--blob-body-neural);
+    --mascot-accent: var(--blob-accent-neural);
+    --mascot-core: var(--blob-core-neural);
+    --mascot-edge: var(--blob-edge-neural);
+    --mascot-satellite: var(--blob-satellite-neural);
   }
 
   /* Layer 0: ambient glow */
   .dough-mascot__glow {
     position: absolute;
     inset: -20%;
-    background: var(--blob-glow);
+    background: var(--mascot-glow);
     border-radius: var(--radius-full);
     filter: blur(var(--blur-blob-glow));
     pointer-events: none;
@@ -17442,7 +17556,7 @@
     height: calc(var(--mascot-size) * 0.82);
     margin-top: calc(var(--mascot-size) * 0.82 / -2);
     margin-left: calc(var(--mascot-size) * 0.82 / -2);
-    background: var(--blob-body);
+    background: var(--mascot-body);
     opacity: var(--blob-body-opacity);
     border-radius: var(--static-radius-main);
     will-change: border-radius, transform;
@@ -17457,7 +17571,7 @@
     height: calc(var(--mascot-size) * 0.58);
     margin-top: calc(var(--mascot-size) * 0.58 / -2);
     margin-left: calc(var(--mascot-size) * 0.58 / -2);
-    background: var(--blob-accent);
+    background: var(--mascot-accent);
     opacity: var(--blob-accent-opacity);
     border-radius: var(--static-radius-accent);
     will-change: border-radius, transform;
@@ -17480,7 +17594,7 @@
     height: calc(var(--mascot-size) * 0.3);
     margin-top: calc(var(--mascot-size) * 0.3 / -2);
     margin-left: calc(var(--mascot-size) * 0.3 / -2);
-    background: var(--blob-core);
+    background: var(--mascot-core);
     opacity: var(--blob-core-opacity);
     border-radius: var(--static-radius-highlight);
     will-change: border-radius, transform;
@@ -17503,7 +17617,7 @@
     height: calc(var(--mascot-size) * 0.82 + var(--space-1));
     margin-top: calc((var(--mascot-size) * 0.82 + var(--space-1)) / -2);
     margin-left: calc((var(--mascot-size) * 0.82 + var(--space-1)) / -2);
-    border: var(--blob-edge);
+    border: var(--mascot-edge);
     border-radius: var(--static-radius-main);
     will-change: border-radius, transform;
   }
@@ -17513,7 +17627,7 @@
     position: absolute;
     width: calc(var(--mascot-size) * 0.1);
     height: calc(var(--mascot-size) * 0.1);
-    background: var(--blob-satellite);
+    background: var(--mascot-satellite);
     opacity: var(--blob-satellite-opacity);
   }
 
@@ -17672,7 +17786,7 @@
 
   /* Edizioni dedicate: «per <partner>» accanto al nome (co-branding). */
   .app-shell-brand__partner {
-    align-self: flex-end;
+    align-self: baseline; /* FW-13 (S01-A-10): sulla linea di base del nome */
     color: var(--text-muted);
   }
 
@@ -18043,6 +18157,21 @@
     background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 72%, transparent));
   }
 
+  /* FW-13 (S01-A-10/B-14): misura e raggio del profilo da token, non da
+     motion.animate; cambiano con lo scroll per transizione CSS. */
+  .app-shell-profile {
+    width: var(--shell-action-size);
+    height: var(--shell-action-size);
+    border-radius: var(--radius-lg);
+    transition: width var(--duration-normal) var(--ease-standard), height var(--duration-normal) var(--ease-standard), border-radius var(--duration-normal) var(--ease-standard), background-color var(--duration-normal) var(--ease-standard);
+  }
+
+  .app-shell-profile--scrolled {
+    width: var(--shell-action-size-compact);
+    height: var(--shell-action-size-compact);
+    border-radius: var(--radius-ml);
+  }
+
   .app-shell-profile[aria-current="page"] {
     background: color-mix(in srgb, var(--primary) 16%, var(--container-page));
     border-color: color-mix(in srgb, var(--primary) 24%, transparent);
@@ -18210,13 +18339,14 @@
     color: var(--primary);
   }
 
-  .search-page__empty {
-    padding-block: var(--space-12);
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: var(--font-size-xl);
-    color: var(--text-muted);
-    text-align: center;
+  /* FW-09 (S04-A-11): stato senza risultati e aiuti in testo regolare, leggibile. */
+  .search-page__empty-state {
+    margin-block: var(--space-4);
+  }
+
+  .search-page__hint {
+    margin: var(--space-0) var(--space-0) var(--space-3);
+    color: var(--text-default);
   }
 
   .search-page__results {
@@ -18650,6 +18780,20 @@
     font-size: var(--font-size-sm);
     color: var(--text-muted);
     line-height: var(--leading-body);
+  }
+
+  /* FW-03: InfoTip v2 — dalla definizione breve alla voce del glossario */
+  .info-tip__glossary-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    align-self: flex-start;
+    min-height: var(--space-8);
+    color: var(--text-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
   }
 
   /* ── image-fallback ── */
@@ -19213,6 +19357,83 @@
     transform: translateX(calc(100% - var(--border-width-strong)));
   }
 
+  /* ═══ DS COMPONENT: Disclosure (FW-03) ═══ */
+  .ds-disclosure {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .ds-disclosure__heading {
+    margin: 0;
+    font: inherit;
+  }
+
+  .ds-disclosure__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--disclosure-gap);
+    width: 100%;
+    min-height: var(--space-11);
+    padding: 0;
+    border: none;
+    background: var(--disclosure-bg);
+    color: var(--disclosure-text);
+    font: inherit;
+    font-size: var(--font-size-md);
+    font-weight: var(--disclosure-weight);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .ds-disclosure__trigger:focus-visible {
+    outline: var(--border-width-thick) solid var(--disclosure-focus);
+    outline-offset: var(--space-0-5);
+  }
+
+  .ds-disclosure__summary {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  .ds-disclosure__meta {
+    flex-shrink: 0;
+    color: var(--disclosure-meta);
+    font-weight: var(--weight-regular);
+  }
+
+  .ds-disclosure__chevron {
+    flex-shrink: 0;
+    color: var(--disclosure-chevron);
+    transition: transform var(--duration-normal) var(--ease-standard);
+  }
+
+  .ds-disclosure__trigger[aria-expanded="true"] .ds-disclosure__chevron {
+    transform: rotate(180deg);
+  }
+
+  .ds-disclosure--card {
+    border: var(--border-width-thin) solid var(--disclosure-border);
+    border-radius: var(--radius-xl);
+  }
+
+  .ds-disclosure--card .ds-disclosure__trigger {
+    padding: var(--space-2) var(--space-3-5);
+    border-radius: var(--radius-xl);
+  }
+
+  .ds-disclosure--card .ds-disclosure__trigger:hover {
+    background: var(--disclosure-bg-hover);
+  }
+
+  .ds-disclosure--card .ds-disclosure__panel {
+    padding: 0 var(--space-3-5) var(--space-3-5);
+  }
+
+  .ds-disclosure--inline .ds-disclosure__panel {
+    padding-block-start: var(--space-2);
+  }
+
   /* ═══ DS COMPONENT: SegmentedControl ═══ */
   /* ds/SegmentedControl — T4 selector (group + item matrix) */
 
@@ -19634,6 +19855,15 @@
     margin: 0;
   }
 
+  /* FW-12: sottotitolo opzionale (es. il titolo nella lingua di arrivo). */
+  .ds-confirm__subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    margin: 0;
+  }
+
   .ds-confirm__actions {
     display: flex;
     flex-direction: column;
@@ -19958,6 +20188,50 @@
     }
   }
 
+  /* ═══ FW-09 — COMPONENT: ds/EmptyState ═══
+     Motivo e almeno un'azione; il tono arriva da data-tone. */
+  .ds-empty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+    padding: var(--space-4);
+    background: var(--empty-state-bg);
+    border: var(--border-width-thin) solid var(--empty-state-border);
+    border-inline-start: var(--space-1) solid var(--empty-state-accent-neutral);
+    border-radius: var(--radius-lg);
+    color: var(--empty-state-text);
+  }
+
+  .ds-empty[data-tone="warning"] {
+    border-inline-start-color: var(--empty-state-accent-warning);
+  }
+
+  .ds-empty__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    color: var(--empty-state-title);
+  }
+
+  .ds-empty__reason {
+    margin: 0;
+    color: var(--empty-state-text);
+  }
+
+  .ds-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-1) 0 0;
+  }
+
+  .ds-empty__action {
+    min-height: var(--space-11);
+    padding: var(--space-2) var(--space-4);
+  }
+
   /* ═══ DS COMPONENT: CtaButton ═══ */
   /* ═══ COMPONENT: ds/CtaButton ═══ */
 
@@ -20236,52 +20510,28 @@
     transform: scale(0.95);
   }
 
-  .recipe-page__notfound {
-    min-height: var(--dimension-viewport-height-full);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-inline: var(--space-6);
-    background: var(--container-page);
-    color: var(--text-default);
-  }
-
-  .recipe-page__notfound-inner {
-    text-align: center;
-  }
-
-  .recipe-page__notfound-sub {
-    font-family: var(--font-serif);
-    font-style: italic;
-    margin-top: var(--space-2);
-    font-size: var(--font-size-xl-5);
-    color: var(--text-muted);
-    opacity: 1;
-  }
-
-  .recipe-page__notfound-cta {
-    margin-top: var(--space-6);
-    padding-inline: var(--space-5);
-    padding-block: var(--space-2-5);
-    font-size: var(--font-size-xl);
-  }
-
-  /* ═══ DS COMPONENT: not-found.tsx ═══ */
+  /* ═══ FW-09 (S01-B-06): un solo «non trovato» (components/shared/not-found-state.tsx) ═══ */
   .notfound-shell {
-    min-height: var(--dimension-viewport-height-full);
+    /* FW-13 (S01-B-14): la shell aggiunge già il padding del dock, niente
+       scroll superfluo. */
+    min-height: calc(100dvh - var(--space-20));
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-inline: var(--space-4);
     background: var(--container-page);
     color: var(--text-default);
   }
 
   .notfound-card {
+    max-width: var(--measure-md);
     text-align: center;
-    padding-inline: var(--space-6);
   }
 
   .notfound-num {
+    display: block;
+    font-size: var(--font-size-6-5xl); /* FW-13 (S01-B-14): non è un numero di passo */
+    margin: 0;
     font-weight: var(--weight-bold);
     color: var(--text-accent);
   }
@@ -20291,18 +20541,22 @@
   }
 
   .notfound-sub {
-    font-family: var(--font-serif);
-    font-style: italic;
     margin-top: var(--space-2);
-    font-size: var(--font-size-xl-5);
-    color: var(--text-muted);
-    opacity: 1;
+    color: var(--text-default);
+  }
+
+  .notfound-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
   }
 
   .notfound-cta {
-    margin-top: var(--space-6);
-    padding-inline: var(--space-6);
-    padding-block: var(--space-3);
+    min-height: var(--space-11);
+    padding-inline: var(--space-5);
+    padding-block: var(--space-2);
   }
 
   /* ═══ U-10 (F21) — bersagli di almeno 24 px ═══
@@ -20375,6 +20629,85 @@
 .app-shell-dock__nav--search:focus-within {
   outline: var(--space-0-5) solid var(--ring);
   outline-offset: var(--space-0-5);
+}
+
+/* ═══ FW-12 — focus, bersagli e campi (audit UX 28/10/2026) ═══
+   Fuori dai layer come U-10/U-5: deve vincere sull'anello globale. */
+
+/* S12-A-21, S16-B-09: un solo anello, sulla pillola e non sull'input. */
+.glossary-searchbox__input:focus-visible,
+.oven-model-search__input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.glossary-searchbox:focus-within,
+.oven-model-search__field:focus-within {
+  outline: var(--space-0-5) solid var(--ring);
+  outline-offset: var(--space-0-5);
+}
+
+/* Titoli che ricevono il focus da codice (tabIndex=-1) per farsi leggere
+   (modalità cottura, passi dell'onboarding): niente anello, non sono comandi. */
+.cooking-mode-step__title:focus,
+.profile-ftu__step-header:focus {
+  outline: none;
+}
+
+/* S04-B-12, S05-B-14: campi di testo a 16 px o più, così Safari iOS non
+   ingrandisce la pagina al focus (stesso schema di .recipe-save-dialog__input). */
+.search-field__input,
+.glossary-searchbox__input,
+.needs-custom-slot__input,
+.oven-model-search__input,
+.condiment-strip-picker__search-input {
+  font-size: max(var(--font-size-xl), var(--dimension-fixed-016));
+}
+
+/* S04-B-15: la X del campo di ricerca resta 25 px a vista, il tocco arriva a 44. */
+.search-field__clear {
+  position: relative;
+}
+
+.search-field__clear::before {
+  content: "";
+  position: absolute;
+  inset: calc((var(--space-11) - var(--space-7)) / -2);
+}
+
+/* S04-B-15, S02-B-12: chip e suggerimenti della ricerca, chip famiglia e
+   «Vedi tutte» di Scopri all'altezza dei controlli primari (44 px). */
+.search-page__chip,
+.search-page__tag,
+.explore-families__chip,
+.explore-section__link {
+  min-block-size: var(--space-11);
+}
+
+/* S06-B-12: summary della dispensa e S09-B-10: orari della tabella di marcia
+   almeno a 24 px. */
+.pantry-editor__policies > summary {
+  padding-block: var(--space-1);
+}
+
+.procedure-hero__time-display {
+  min-block-size: var(--space-7);
+}
+
+/* S16-B-09: opzione attiva della ricerca forno (aria-activedescendant). */
+.oven-model-search__result--active {
+  border-color: var(--primary);
+}
+
+/* S08-B-21: messaggio «scegli almeno una parte» nel dialog di stampa. */
+.print-options__empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.print-options__empty:empty {
+  display: none;
 }
 
 /* U-10 (F20): il dock in basso e le barre sticky in alto coprivano l'elemento
@@ -20876,11 +21209,6 @@ html {
   color: var(--text-muted);
 }
 
-[data-theme="editorial-fire"] [data-page="learn"] .learn-path__kicker {
-  color: var(--primary);
-  border-color: var(--container-border-subtle);
-}
-
 [data-theme="editorial-fire"] [data-page="learn"] .learn-path__cta {
   color: var(--primary);
   background: var(--surface-container-lowest);
@@ -21027,7 +21355,8 @@ html {
   font-weight: var(--weight-semibold);
   margin-block-end: var(--space-1);
 }
-.recipe-reference-note summary { cursor: pointer; }
+/* FW-03: ds/Disclosure al posto del <details> (bersaglio da 19 px → 44 px) */
+.recipe-reference-note .ds-disclosure__trigger { font-size: var(--font-size-sm); color: var(--text-default); }
 .recipe-reference-note ul { padding-inline-start: var(--space-5); margin-block: var(--space-2); }
 .recipe-reference-note a { text-decoration: underline; text-underline-offset: var(--space-1); }
 
@@ -21088,3 +21417,72 @@ html {
 .cooking-screen__detail { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 .cooking-screen__status { color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
 .cooking-screen__retry { min-height: var(--dimension-fixed-046); color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); cursor: pointer; text-decoration: underline; text-underline-offset: var(--space-1); background: transparent; border: 0; }
+
+/* ═══ FW-16 — ogni impostazione dichiara il suo effetto; niente promesse vuote ═══ */
+.setting-effect { margin-block: 0 var(--space-3); color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.setting-effect[data-effect="changesRecipe"] { color: var(--text-default); }
+.setting-effect[data-effect="noEffectYet"] { font-style: italic; }
+.setting-effect-details { margin-block: var(--space-3); }
+.setting-effect-details__list { margin: 0; padding: 0 var(--space-3) var(--space-2) var(--space-6); color: var(--text-default); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.setting-effect-details__item + .setting-effect-details__item { margin-block-start: var(--space-1); }
+.setting-effect-details__rule { margin: 0; padding: 0 var(--space-3) var(--space-3); color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.profile-ftu__option-list > .setting-effect-details { grid-column: 1 / -1; }
+.profile-diet-group + .profile-diet-group { margin-block-start: var(--space-5); }
+.profile-diet-group__title { margin: 0 0 var(--space-1); color: var(--text-default); font-size: var(--font-size-md); font-weight: var(--weight-semibold); }
+.profile-diet-group .profile-diet-chips { margin-block-end: var(--space-2); }
+.profile-diet-note { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-block: var(--space-2) 0; padding: var(--space-2) var(--space-3); border-inline-start: var(--border-width-thick) solid var(--container-border); border-radius: var(--radius-md); background: var(--container-bg); color: var(--text-default); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.profile-diet-note[data-tone="caution"] { border-inline-start-color: var(--text-warning); }
+.profile-diet-note__action { min-height: var(--dimension-fixed-046); padding-inline: var(--space-2); border: 0; background: transparent; color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); text-decoration: underline; text-underline-offset: var(--space-1); cursor: pointer; }
+.profile-pantry-summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.profile-pantry-summary__list { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.profile-pantry-summary__item { padding: var(--space-1) var(--space-2-5); border: var(--border-width-thin) solid var(--container-border); border-radius: var(--radius-full); color: var(--text-default); font-size: var(--font-size-sm); }
+.profile-pantry-summary__empty { margin: 0; color: var(--text-muted); }
+.profile-pantry-summary__edit { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--dimension-fixed-046); color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); text-decoration: none; }
+.profile-pantry-summary__edit:hover { text-decoration: underline; text-underline-offset: var(--space-1); }
+.profile-location__error { margin: 0; color: var(--text-error); }
+.profile-location__privacy { margin: 0; color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.profile-ftu__pantry-note { margin-block: var(--space-2) 0; color: var(--text-default); }
+.needs-weather-request { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); margin-block-start: var(--space-2); }
+.needs-weather-request__action { min-height: var(--dimension-fixed-046); padding-inline: 0; border: 0; background: transparent; color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); text-decoration: underline; text-underline-offset: var(--space-1); cursor: pointer; }
+.needs-weather-request__status { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-3); margin: 0; color: var(--text-default); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.needs-weather-request__note { margin: 0; color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.cooking-reminders { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-3); margin-bottom: var(--space-5); padding: var(--space-3); border: var(--border-width-thin) solid var(--container-border-subtle); border-radius: var(--radius-lg); background: var(--container-bg); }
+.cooking-reminders__label { display: flex; align-items: center; gap: var(--space-2); min-height: var(--dimension-fixed-046); margin: 0; color: var(--text-default); font-size: var(--font-size-sm); }
+.cooking-reminders__label > svg { flex-shrink: 0; }
+.cooking-reminders__enable { min-height: var(--dimension-fixed-046); color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); cursor: pointer; text-decoration: underline; text-underline-offset: var(--space-1); background: transparent; border: 0; }
+.cooking-reminders__status { grid-column: 1 / -1; margin: 0; color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.cooking-reminders[data-status="denied"] .cooking-reminders__status { color: var(--text-warning); }
+.cooking-mode-finished .recipe-feedback { width: 100%; margin-block: var(--space-4); text-align: start; }
+/* ═══ FW-07 — cucina effettiva: modello del forno in Crea, scheda stile, profilo ═══ */
+.needs-oven-model {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.needs-oven-model[data-tone="caution"] { color: var(--text-warning); }
+.needs-oven-model [data-region="oven-model-name"] { color: var(--text-default); font-weight: var(--weight-medium); }
+.needs-oven-model__link {
+  min-height: var(--dimension-fixed-046);
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-accent);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  text-decoration: underline;
+  text-underline-offset: var(--space-1);
+  cursor: pointer;
+}
+.style-detail-params [data-region="your-bake"] { margin-bottom: var(--space-2); }
+.recipe-config-oven-hint { margin-top: var(--space-1); color: var(--text-muted); line-height: var(--leading-normal); }
+.oven-model-search__adjusted { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3); color: var(--text-muted); line-height: var(--leading-normal); }
+.recipe-oven-model { display: block; color: var(--text-muted); }
+.stat-strip [data-region="edition-oven"] { grid-column: 1 / -1; }
+.stat-strip__cell .recipe-oven-model { overflow-wrap: anywhere; }
+[data-slot="oven-preset"] .needs-oven-model { justify-content: center; text-align: center; }

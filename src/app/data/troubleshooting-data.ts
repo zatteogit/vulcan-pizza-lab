@@ -180,7 +180,8 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
   {
     id: 'P14', category: 'false_positive',
     symptom: 'Macchie leopardate sul cornicione (leopard spotting)',
-    cause: 'Contatto con volta forno >500°C — reazione di Maillard localizzata',
+    // FW-01 (S04-A-05, D-F): non è il contatto con la volta né la sola Maillard.
+    cause: 'Bolle sottili del cornicione che si scuriscono col calore molto forte del forno (imbrunimento e bruciatura localizzati)',
     testRapido: 'Le macchie sono amare al gusto?',
     fixImmediate: 'NON e un problema! E la caratteristica desiderata della pizza napoletana',
     prevention: 'Se troppo marcate: ruota pizza ogni 20s durante cottura',
@@ -255,14 +256,16 @@ export function getStepTroubleshooting(
 }
 
 /* === CATEGORY LABELS === */
-export const CATEGORY_LABELS: Record<string, { label: string; emoji: string }> = {
-  dough: { label: 'Impasto', emoji: '🫗' },
-  fermentation: { label: 'Fermentazione', emoji: '🫧' },
-  shaping: { label: 'Stesura', emoji: '🤲' },
-  baking: { label: 'Cottura', emoji: '🔥' },
-  frying: { label: 'Frittura', emoji: '🫕' },
-  solver: { label: 'Algoritmo', emoji: '⚙️' },
-  false_positive: { label: 'Falsi Allarmi', emoji: '✅' },
+/* FW-13 (S13-B-12): niente emoji (letti dallo screen reader, resi diversi fra
+ * piattaforme); le icone Lucide delle categorie vivono nella UI. */
+export const CATEGORY_LABELS: Record<string, { label: string }> = {
+  dough: { label: 'Impasto' },
+  fermentation: { label: 'Fermentazione' },
+  shaping: { label: 'Stesura' },
+  baking: { label: 'Cottura' },
+  frying: { label: 'Frittura' },
+  solver: { label: 'Algoritmo' },
+  false_positive: { label: 'Falsi allarmi' },
 };
 
 /* === i18n: LOCALIZED GETTERS === */
@@ -413,8 +416,8 @@ export function getContextualWarnings(params: {
     warnings.push({
       issueId: 'P06',
       message: loc ? interpolate(loc.message, { h: String(params.fermentHours) })
-        : `${params.fermentHours}h in frigo senza pre-fermento: possibile sapore piatto`,
-      tip: loc?.tip ?? 'Aggiungi un pre-fermento (poolish o biga) per complessita aromatica',
+        : `${params.fermentHours}h in frigo senza prefermento: possibile sapore piatto`,
+      tip: loc?.tip ?? 'Aggiungi un prefermento (poolish o biga) per complessita aromatica',
       severity: 'info',
     });
   }

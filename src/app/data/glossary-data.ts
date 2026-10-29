@@ -374,7 +374,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
       { label: "New York", value: "0.40–0.50", note: "8-10 mm" },
       { label: "Chicago deep dish", value: "1.00–1.30", note: "20-26 mm" },
     ],
-    whyImportant: `Determina tempo cottura, croccantezza e densità calorica. Metrica originale Progetto ${BRAND.name}.`,
+    whyImportant: `Metrica diffusa nei calcolatori d'impasto nordamericani (in oz/in²; 1 oz/in² ≈ 4,39 g/cm²). ${BRAND.name} la esprime in g/cm² per dimensionare i panetti; insieme al forno orienta tempo di cottura e croccantezza.`,
   },
   {
     id: "friction_factor",

@@ -1,8 +1,9 @@
 import type { GeneratedRecipe, OvenType } from "../../domain/pizza-engine";
-import { stgDepartures, type StgDeparture } from "../../domain/recipe-reference";
+import { STG_SPECIFICATION_URL, stgDepartures, type StgDeparture } from "../../domain/recipe-reference";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { uiMessage } from "../../i18n/ui-messages";
+import { Disclosure } from "../../components/ds";
 
 export function RecipeReferenceNote({ recipe, oven }: { recipe: GeneratedRecipe; oven?: OvenType }) {
   const { cms, bcp47 } = useCms();
@@ -21,16 +22,15 @@ export function RecipeReferenceNote({ recipe, oven }: { recipe: GeneratedRecipe;
   return (
     <aside className="recipe-reference-note">
       <p className="recipe-reference-note__title">{departures.length ? uiMessage("recipe.reference.outside") : uiMessage("recipe.reference.source")}</p>
-      <details>
-        <summary>{uiMessage("recipe.reference.details")}</summary>
+      <Disclosure variant="inline" summary={uiMessage("recipe.reference.details")}>
         {recipe.style.method_profile?.id === "avpn_disciplinare" && <p>
           <a href={recipe.style.method_profile.source_url} target="_blank" rel="noreferrer">{uiMessage("recipe.reference.avpn")}</a>
           {recipe.has_pre_ferment && <> · {engineMsgTexts([{key:"auth.directMethod",fallback:cms.engineMessages["auth.directMethod"]}], cms, bcp47)[0]}</>}
         </p>}
         {departures.length > 0 && <ul>{departures.map(key => <li key={key}>{descriptions[key]}</li>)}</ul>}
         <p>{uiMessage("recipe.reference.disclaimer")}</p>
-        <a href="https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F4%252Fa%252FD.54ec78491c37356fe33f/P/BLOB:ID=24230/E/pdf?mode=download" target="_blank" rel="noreferrer">{uiMessage("recipe.reference.specification")}</a>
-      </details>
+        <a href={STG_SPECIFICATION_URL} target="_blank" rel="noreferrer">{uiMessage("recipe.reference.specification")}</a>
+      </Disclosure>
     </aside>
   );
 }

@@ -1,6 +1,8 @@
 import { RecipeShare } from "./recipe-share";
+import { DetailLevelSwitch } from "./detail-level-switch";
 import { useDecorativeMotion, useVisualMotionPreference } from "../../context/visual-quality-context";
 import { RecipeReferenceNote } from "./recipe-reference-note";
+import { RecipeVerdictBadge } from "./recipe-verdict-badge";
 import { recipeDisplayName } from "../../domain/recipe-reference";
 /* ═══ RECIPE VIEW — impianto condiviso scheda ricetta (VPL-081) ═══
  * Unifica la scheda raggiunta da Scopri (/recipe/:id) e quella generata da
@@ -50,6 +52,7 @@ import {
   type PanConfig,
 } from "../../domain/pizza-engine";
 import { uiMessage } from "../../i18n/ui-messages";
+import { preFermentName } from "./pre-ferment-guide";
 
 interface RecipeViewBack {
   label: string;
@@ -91,9 +94,8 @@ interface RecipeViewProps {
   showStickyHeader?: boolean;
   selectedToppingConcept?: string | null;
   onSelectTopping?: (conceptId: string) => void;
+  /** FW-08: livello «Dettagli tecnici» già risolto (useDetailLevel). */
   nerdMode?: boolean;
-  nerdAvailable?: boolean;
-  onNerdModeChange?: (nerd: boolean) => void;
   isPersonalized?: boolean;
   onRequestPersonalization?: () => void;
   /** "Torna all'originale" (round 6, nota Matteo): riporta alla BASE attiva
@@ -138,8 +140,6 @@ export function RecipeView({
   selectedToppingConcept,
   onSelectTopping,
   nerdMode = false,
-  nerdAvailable = false,
-  onNerdModeChange,
   isPersonalized = true,
   onRequestPersonalization,
   onResetToOriginal,
@@ -296,8 +296,9 @@ export function RecipeView({
   }, [selectedToppingConcept, style, toppingChoices, allToppingChoices, cms.cooking.toppingTitle]);
 
   const preFermentText = recipe.has_pre_ferment
-    ? (recipe.pre_ferment_type 
-        ? recipe.pre_ferment_type.charAt(0).toUpperCase() + recipe.pre_ferment_type.slice(1) 
+    ? /* FW-11 (S07-A-18): nome del prefermento dal catalogo, non l'id. */
+      (recipe.pre_ferment_type === "biga" || recipe.pre_ferment_type === "poolish"
+        ? preFermentName(recipe.pre_ferment_type)
         : cms.ui.procedurePreferment)
     : recipe.style.dough.unleavened
       ? cms.ui.procedureUnleavened
@@ -504,6 +505,7 @@ export function RecipeView({
             </motion.div>
 
             <RecipeReferenceNote recipe={recipe} oven={constraints.oven_type} />
+            <RecipeVerdictBadge recipe={recipe} hasMatchSlot={Boolean(matchSlot)} activeTab={activeTab} onTabChange={onTabChange} />
 
             {/* Description + Tags inside the card (rendered only in Ricetta tab) */}
             <AnimatePresence>
@@ -542,10 +544,13 @@ export function RecipeView({
                 </motion.div>
               )}
             </AnimatePresence>
-            {(introExtraSlot || shareUrl) && <div className="recipe-view-meta-row">
+            {/* FW-08: «Dettagli tecnici» sempre raggiungibile dalla testata,
+                accanto alle azioni quiete (Approfondisci, Condividi). */}
+            <div className="recipe-view-meta-row">
               {!isHeroReduced && introExtraSlot}
               {shareUrl && <RecipeShare url={shareUrl} title={recipeName || recipeDisplayName(recipe, constraints.oven_type)} />}
-            </div>}
+              <DetailLevelSwitch />
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -601,9 +606,8 @@ export function RecipeView({
               onSelectFlour={onSelectFlour}
               selectedTimeSlotId={selectedTimeSlotId}
               mealTargetAt={mealTargetAt}
-              nerdAvailable={nerdAvailable}
-              onNerdModeChange={onNerdModeChange}
               isPersonalized={isPersonalized}
+              referenceLabel={eyebrowIsTailored ? undefined : heroEyebrow}
               onRequestPersonalization={onRequestPersonalization}
               matchSlot={matchSlot}
             />

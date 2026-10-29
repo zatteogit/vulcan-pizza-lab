@@ -5,21 +5,28 @@
 import {
 AlertTriangle,
 ChevronDown,ChevronUp,
+Cog,
+Droplet,
+Flame,
 FlaskConical,
+Hand,
 Info,
 Lightbulb,
+Microscope,
 Search,
 ShieldCheck,
+Wheat,
 Wrench,
 XCircle,
 X,
 type LucideIcon,
 } from 'lucide-react';
-import { AnimatePresence,motion } from 'motion/react';
+import { AnimatePresence,motion,useReducedMotion } from 'motion/react';
 import { motionDelay,motionSpring } from "../../components/ds/motion";
-import { createElement, useEffect, useId, useState } from 'react';
+import { createElement, useEffect, useId, useMemo, useState } from 'react';
+import { filterByQuery, searchLexicon } from "../search/text-match";
 import { useCms } from "../cms/cms-context";
-import { FilterChip, IconButton, ModalSheet, Surface } from "../../components/ds/index";
+import { Disclosure, EmptyState, FilterChip, IconButton, ModalSheet, Surface } from "../../components/ds/index";
 import {
 type TroubleshootingIssue,
 type StepTroubleshooting,
@@ -31,12 +38,31 @@ ISSUES_DB
 } from "../../data/troubleshooting-data";
 import { uiMessage } from "../../i18n/ui-messages";
 
-/* === SEVERITY ICON MAP === */
-const SeverityIcon = ({ severity }: { severity: string }) => {
-  if (severity === 'critical') return <XCircle className="troubleshooting-severity-icon troubleshooting-severity-icon--critical" />;
-  if (severity === 'warning') return <AlertTriangle className="troubleshooting-severity-icon troubleshooting-severity-icon--warning" />;
-  return <Info className="troubleshooting-severity-icon troubleshooting-severity-icon--info" />;
+/* === FW-13 (S13-B-12): icone delle categorie, sul modello del glossario === */
+const TROUBLESHOOTING_CATEGORY_ICONS: Record<string, LucideIcon> = {
+  dough: Wheat,
+  fermentation: Microscope,
+  shaping: Hand,
+  baking: Flame,
+  frying: Droplet,
+  solver: Cog,
+  false_positive: ShieldCheck,
 };
+
+/* === SEVERITY ICON MAP === */
+/* FW-12 (S13-A-15/B-10): l'icona è decorativa; la severità si dice a parole
+   (badge visibile nella card, testo per lo screen reader negli avvisi). */
+const SeverityIcon = ({ severity }: { severity: string }) => {
+  if (severity === 'critical') return <XCircle aria-hidden="true" className="troubleshooting-severity-icon troubleshooting-severity-icon--critical" />;
+  if (severity === 'warning') return <AlertTriangle aria-hidden="true" className="troubleshooting-severity-icon troubleshooting-severity-icon--warning" />;
+  return <Info aria-hidden="true" className="troubleshooting-severity-icon troubleshooting-severity-icon--info" />;
+};
+
+function severityLabel(severity: string): string {
+  if (severity === 'critical') return uiMessage("features.recipe.troubleshooting-panel.severity-critical");
+  if (severity === 'warning') return uiMessage("features.recipe.troubleshooting-panel.severity-warning");
+  return uiMessage("features.recipe.troubleshooting-panel.severity-info");
+}
 
 /* Classe modifier per severità della card avviso (costruita in JS, non nel JSX:
    evita literal className dinamici — vedi CSS per le 3 varianti). */
@@ -107,6 +133,7 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
               </div>
               <div className="troubleshooting-warnings__item-body">
                 <div className="troubleshooting-warnings__item-message">
+                  <span className="sr-only">{severityLabel(w.severity)}: </span>
                   {w.message}
                 </div>
                 <div className="troubleshooting-warnings__item-tip">
@@ -121,7 +148,9 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
       {/* Show more */}
       {hasMore && (
         <motion.button
+          type="button"
           className="troubleshooting-warnings__toggle"
+          aria-expanded={expanded}
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? (
@@ -157,35 +186,47 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(initialIssueId ?? null);
   const [activeCategory, setActiveCategory] = useState<string | null>(filterCategory || null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (!initialIssueId || contextIssueIds) return;
     // Dopo lo stagger di entrata delle card, porta l'issue aperta in vista.
+    // FW-03 (S13-B-11): rispetta «riduci movimento» e sposta il focus sul
+    // pulsante della card aperta, così lo screen reader la annuncia.
     const timer = window.setTimeout(() => {
       document
         .getElementById(`trouble-${initialIssueId}`)
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        ?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      document
+        .getElementById(`trouble-${initialIssueId}-toggle`)
+        ?.focus({ preventScroll: true });
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [initialIssueId, contextIssueIds]);
+  }, [initialIssueId, contextIssueIds, reduceMotion]);
 
-  const categories = Object.entries(CATEGORY_LABELS);
 
   const sourceIssues = contextIssueIds
     ? contextIssueIds.flatMap(id => { const issue = ISSUES_DB.find(item => item.id === id); return issue ? [issue] : []; })
     : ISSUES_DB;
-  const filtered = sourceIssues.map(issue => getLocalizedIssue(issue, cms)).filter((issue) => {
-    if (activeCategory && issue.category !== activeCategory) return false;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return (
-        issue.symptom.toLowerCase().includes(q) ||
-        issue.cause.toLowerCase().includes(q) ||
-        issue.fixImmediate.toLowerCase().includes(q)
-      );
-    }
-    return true;
-  });
+  /* FW-13: conteggio per categoria come nel glossario; le categorie vuote non
+     compaiono (un chip «0» non porta da nessuna parte; FW-09: niente
+     «Algoritmo» vuoto). */
+  const categories = Object.keys(CATEGORY_LABELS)
+    .map((key) => [key, sourceIssues.filter((issue) => issue.category === key).length] as const)
+    .filter(([, count]) => count > 0);
+  /* FW-09 (S13-A-09, S13-B-08): accenti, flessioni («bruciata»), sinonimi
+     del CMS («non lievita») e refusi; si cerca anche in test rapido,
+     prevenzione e categoria. */
+  const lexicon = useMemo(() => searchLexicon(cms.pages), [cms.pages]);
+  const inCategory = sourceIssues.map(issue => getLocalizedIssue(issue, cms)).filter((issue) => !activeCategory || issue.category === activeCategory);
+  const filtered = searchQuery.trim()
+    ? filterByQuery(inCategory, (issue) => [issue.symptom, issue.cause, issue.testRapido, issue.fixImmediate, issue.prevention, getLocalizedCategoryLabel(issue.category, cms)].join(" "), searchQuery, lexicon)
+    : inCategory;
+  const filtering = Boolean(searchQuery.trim() || activeCategory);
+  const showAll = () => {
+    setSearchQuery("");
+    setActiveCategory(null);
+  };
 
   return (
     <div data-region="section" className="troubleshooting-guide">
@@ -208,7 +249,18 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
             aria-label={cms.pages.troubleshootSearchPlaceholder}
             className="troubleshooting-guide__search-input"
           />
+          {searchQuery && (
+            <IconButton size="sm" aria-label={cms.pages.searchClearLabel} onClick={() => setSearchQuery("")} className="troubleshooting-guide__search-clear">
+              <X size={16} aria-hidden="true" />
+            </IconButton>
+          )}
         </div>
+        {/* FW-09 (S13-B-08): il numero dei risultati, anche ai lettori di schermo. */}
+        <p role="status" className="type-body-sm troubleshooting-guide__count">
+          {filtering && filtered.length > 0
+            ? filtered.length === 1 ? uiMessage("features.troubleshooting.countOne", [filtered.length]) : uiMessage("features.troubleshooting.count", [filtered.length])
+            : ""}
+        </p>
 
         {/* Category chips */}
         <motion.div
@@ -223,7 +275,8 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
           <FilterChip
             active={!activeCategory}
             onClick={() => setActiveCategory(null)}
-            radius="md"
+            radius="xl"
+            count={sourceIssues.length}
             variants={{
               hidden: { opacity: 0, y: 8, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
@@ -231,39 +284,46 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
             transition={motionSpring.crispDisclosure}
           >
             {uiMessage("features.recipe.troubleshooting-panel.tutti-d4ef129b")}</FilterChip>
-          {categories.map(([key, { emoji }]) => (
+          {categories.map(([key, count]) => {
+            const Icon = TROUBLESHOOTING_CATEGORY_ICONS[key] ?? Info;
+            return (
             <FilterChip
               key={key}
               active={activeCategory === key}
-              onClick={() => setActiveCategory(activeCategory === key ? null : key)}
-              size="sm"
-              radius="lg"
+              onClick={() => setActiveCategory(key)}
+              radius="xl"
+              count={count}
               variants={{
                 hidden: { opacity: 0, y: 8, scale: 0.95 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
               transition={motionSpring.crispDisclosure}
             >
-              {emoji} {getLocalizedCategoryLabel(key, cms)}
+              <Icon size={14} aria-hidden="true" className="glossary-chip__icon" />
+              {getLocalizedCategoryLabel(key, cms)}
             </FilterChip>
-          ))}
+            );
+          })}
         </motion.div>
 
       </>}
       {/* Issues list */}
       <AnimatePresence mode="popLayout">
         <div className="troubleshooting-guide__list">
+          {/* FW-09 (S13-A-08): due motivi diversi e un'uscita. */}
           {filtered.length === 0 && (
-            <motion.div
+            <EmptyState
               key="empty"
-              className="troubleshooting-guide__empty"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={motionSpring.crispControl}
-            >
-              {cms.misc.noTroubleshootingResults}
-            </motion.div>
+              live
+              headingLevel={2}
+              title={searchQuery.trim() ? cms.misc.noTroubleshootingResults : uiMessage("features.troubleshooting.emptyCategory")}
+              reason={searchQuery.trim() ? uiMessage("features.troubleshooting.emptySearchReason") : uiMessage("features.troubleshooting.emptyCategoryReason")}
+              actions={contextIssueIds ? [] : [
+                { label: uiMessage("features.troubleshooting.showAll"), onClick: showAll },
+                { label: cms.glossary.searchEverywhere, onClick: () => window.dispatchEvent(new Event("vulcan:open-search")) },
+              ]}
+              className="troubleshooting-guide__empty-state"
+            />
           )}
           {filtered.map((issue, i) => (
             <motion.div
@@ -277,6 +337,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
             >
               <IssueCard
                 issue={issue}
+                headingLevel={contextIssueIds ? 3 : 2}
                 expanded={expandedId === issue.id}
                 onToggle={() => setExpandedId(expandedId === issue.id ? null : issue.id)}
               />
@@ -318,10 +379,13 @@ export function TroubleshootingSheet({ open, context, onClose }: {
 /* === ISSUE CARD === */
 function IssueCard({
   issue,
+  headingLevel,
   expanded,
   onToggle,
 }: {
   issue: TroubleshootingIssue;
+  /** FW-03: h2 nella pagina (sotto l'h1), h3 nel foglio della fase (sotto il titolo h2). */
+  headingLevel: 2 | 3;
   expanded: boolean;
   onToggle: () => void;
 }) {
@@ -330,41 +394,34 @@ function IssueCard({
 
   return (
     <Surface as={motion.div} variant="card" className="troubleshooting-card">
-      {/* Header — always visible */}
-      <motion.button
-        className="troubleshooting-card__toggle"
-        aria-expanded={expanded}
-        onClick={onToggle}
-      >
-        <SeverityIcon severity={issue.severity} />
-        <div className="troubleshooting-card__toggle-body">
-          <div className="troubleshooting-card__meta-row">
-            <span className="troubleshooting-card__badge">
-              {catLabel}
+      {/* FW-03: ds/Disclosure con heading, aria-controls e id per il deep link;
+          dentro il pulsante solo span (S13-B-11). */}
+      <Disclosure
+        variant="inline"
+        headingLevel={headingLevel}
+        id={`trouble-${issue.id}-toggle`}
+        open={expanded}
+        onOpenChange={onToggle}
+        triggerClassName="troubleshooting-card__toggle"
+        panelClassName="troubleshooting-card__detail"
+        summary={<>
+          <SeverityIcon severity={issue.severity} />
+          <span className="troubleshooting-card__toggle-body">
+            <span className="troubleshooting-card__meta-row">
+              {/* FW-12 (S13-A-15/B-10): la severità anche a parole. */}
+              <span className="troubleshooting-card__severity" data-severity={issue.severity}>
+                {severityLabel(issue.severity)}
+              </span>
+              <span className="troubleshooting-card__badge">
+                {catLabel}
+              </span>
             </span>
-          </div>
-          <div className="troubleshooting-card__symptom">
-            {issue.symptom}
-          </div>
-        </div>
-        <div className="troubleshooting-card__chevron">
-          {expanded
-            ? <ChevronUp className="troubleshooting-card__chevron-icon" />
-            : <ChevronDown className="troubleshooting-card__chevron-icon" />
-          }
-        </div>
-      </motion.button>
-
-      {/* Detail — expandable */}
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            className="troubleshooting-card__detail"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={motionSpring.standard}
-          >
+            <span className="troubleshooting-card__symptom">
+              {issue.symptom}
+            </span>
+          </span>
+        </>}
+      >
             <div className="troubleshooting-card__detail-body">
               {/* Causa */}
               <DetailRow icon={Search} label={uiMessage("features.recipe.troubleshooting-panel.causa-2cff0350")} value={issue.cause} />
@@ -380,9 +437,7 @@ function IssueCard({
               {/* Prevenzione */}
               <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </Disclosure>
     </Surface>
   );
 }

@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useRef,
@@ -5,10 +6,13 @@ import React, {
   useCallback,
 } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { HelpCircle, BookOpen } from "lucide-react";
+import { HelpCircle, BookOpen, ArrowRight } from "lucide-react";
+import { Link, useInRouterContext } from "react-router";
 import { useCms } from "../../features/cms/cms-context";
 import { getTermById } from "../../data/glossary-data";
+import { uiMessage } from "../../i18n/ui-messages";
 import { motionSpring } from "../ds/motion";
+import { useEscapeLayer } from "../ds/escape-stack";
 
 interface InfoTipProps {
   children: React.ReactNode;
@@ -16,14 +20,40 @@ interface InfoTipProps {
   size?: number;
   /** Optional glossary term ID to unify explanation + glossary definition */
   termId?: string;
+  /** FW-03 (S06-A-22): what the «?» explains, for its accessible name when
+   * there is no glossary term (e.g. the label of the field next to it). */
+  label?: string;
+}
+
+/** «Idratazione (H%)» already carries its symbol: never print it twice. */
+function termTitle(name: string, symbol?: string): string {
+  if (!symbol || name.includes(symbol)) return name;
+  return `${name} (${symbol})`;
+}
+
+/** Link to the full glossary entry; a plain anchor outside a router (DS sync). */
+function GlossaryLink({ termId }: { termId: string }) {
+  const inRouter = useInRouterContext();
+  const href = `/learn/glossary#${termId}`;
+  const content = <>
+    {uiMessage("ds.disclosure.openGlossary")}
+    <ArrowRight size={12} aria-hidden="true" />
+  </>;
+  return inRouter
+    ? <Link to={href} className="info-tip__glossary-link">{content}</Link>
+    : <a href={href} className="info-tip__glossary-link">{content}</a>;
 }
 
 /**
- * M3 Rich Tooltip — floating popover that overlays content
- * without layout shift. Uses HelpCircle for universal affordance.
+ * InfoTip v2 (FW-03) — short definition of a term, M3 rich tooltip.
+ * - Accessible name «Definizione: <termine>» (or «Più informazioni: <label>»),
+ *   never the same «Più informazioni» for every «?».
+ * - With `termId`: short definition + «Apri nel glossario» (formula, unit,
+ *   ranges and sources live in the glossary entry, level 3).
+ * - Escape closes only the popover, not the dialog or sheet around it.
  * Positions above or below depending on viewport space.
  */
-export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
+export function InfoTip({ children, size = 15, termId, label }: InfoTipProps) {
   const { cms } = useCms();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -33,6 +63,11 @@ export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
   );
 
   const term = termId ? getTermById(termId, cms) : null;
+  const accessibleName = term
+    ? uiMessage("ds.disclosure.definitionOf", [term.name])
+    : label
+      ? uiMessage("ds.disclosure.moreInfoAbout", [label])
+      : cms.misc.moreInfo;
 
   const toggle = useCallback(
     (e: React.MouseEvent) => {
@@ -65,16 +100,11 @@ export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
       document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Close on Escape
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () =>
-      document.removeEventListener("keydown", handler);
-  }, [open]);
+  // FW-12: Esc closes only the popover (escape stack), not the sheet below.
+  useEscapeLayer(open, () => {
+    setOpen(false);
+    triggerRef.current?.focus({ preventScroll: true });
+  });
 
   return (
     <span className="info-tip">
@@ -84,7 +114,7 @@ export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
         onClick={toggle}
         className={`info-tip__trigger${open ? " info-tip__trigger--active" : ""}`}
         style={{ ["--tip-size" as any]: `${size + 6}px` }}
-        aria-label={cms.misc.moreInfo}
+        aria-label={accessibleName}
         aria-expanded={open}
       >
         <HelpCircle size={size} />
@@ -116,17 +146,18 @@ export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
               <div className="info-tip__content">
                 <div data-slot="body">{children}</div>
 
-                {term && (
+                {term && termId && (
                   <div className="info-tip__term">
                     <div className="info-tip__term-head">
                       <BookOpen size={11} />
                       <span data-slot="term-name">
-                        {term.name} {term.symbol ? `(${term.symbol})` : ""}
+                        {termTitle(term.name, term.symbol)}
                       </span>
                     </div>
                     <p className="info-tip__definition">
                       {term.definition}
                     </p>
+                    <GlossaryLink termId={termId} />
                   </div>
                 )}
               </div>

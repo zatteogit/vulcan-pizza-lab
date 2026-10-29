@@ -40,6 +40,7 @@ import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../data/glossary-data";
 import { searchOvenModels } from "../data/oven-models";
+import { kitchenConstraints, resolveEffectiveKitchen } from "../use-cases/effective-kitchen";
 import { kitchenCompatibility } from "../features/recipe/kitchen-compatibility";
 import { GLOSSARY_TERMS_DEFAULTS } from "../features/cms/domain-i18n-defaults";
 import { GLOSSARY_TERMS_DE } from "../features/cms/locales/domain-de";
@@ -95,19 +96,26 @@ function styleById(args: Json): PizzaStyle {
 function constraintsFrom(args: Json): UserConstraints {
   if (args.available_hours === 0 && args.meal_deadline === true) throw new ToolInputError('available_hours:0 means no time preference; use meal_deadline:false');
   // D-048: un modello di forno («Koda 16», «Effeuno P134H») dà tipo e temperatura.
+  let modelId: string | undefined;
   if (args.oven_model) {
     const [model] = searchOvenModels(String(args.oven_model), 1);
     if (!model) throw new ToolInputError(`no oven model matches "${args.oven_model}"; use oven_type and oven_max_temp_c`);
-    args = { ...args, oven_type: model.ovenType, oven_max_temp_c: args.oven_max_temp_c ?? model.maxTempC };
+    modelId = model.id;
+    args = { ...args, oven_type: model.ovenType };
   }
   const ovenType = String(args.oven_type ?? "home");
   if (!OVEN_TYPES.includes(ovenType as OvenType)) {
     throw new ToolInputError(`"oven_type" must be one of ${OVEN_TYPES.join(", ")}`);
   }
-  const preset = OVEN_PRESETS.find((p) => p.id === ovenType);
+  // FW-07: la stessa cucina effettiva del browser (modello, temperatura, bocca).
+  const kitchen = resolveEffectiveKitchen(
+    { oven: { ovenType: ovenType as OvenType, ...(modelId ? { modelId } : {}) } },
+    undefined,
+    args.oven_max_temp_c !== undefined ? { maxTempC: num(args, "oven_max_temp_c", 150, 550) } : {},
+  );
+  const { oven_capacity_temp_c: _capacity, ...kitchenOven } = kitchenConstraints(kitchen);
   const constraints: UserConstraints = {
-    oven_type: ovenType as OvenType,
-    oven_max_temp_c: num(args, "oven_max_temp_c", 150, 550, preset?.maxTemp ?? 250),
+    ...kitchenOven,
     ...(args.oven_capacity_temp_c !== undefined ? { oven_capacity_temp_c: num(args, "oven_capacity_temp_c", 150, 550) } : {}),
     skill_level: wholeNumber(args, "skill_level", 1, 4, 2) as SkillLevel,
     available_hours: num(args, "available_hours", 0, 168, 24),

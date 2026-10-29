@@ -15,6 +15,8 @@ export type SemanticRule =
   | "navigation-landmark"
   | "figure-caption"
   | "details-summary"
+  | "native-details"
+  | "title-only-explanation"
   | "image-alt"
   | "route-contract-sync";
 
@@ -43,6 +45,8 @@ export interface RouteContract {
 export interface SemanticGuardOptions {
   entryFiles?: readonly string[];
   routeContracts?: readonly RouteContract[];
+  /** Debito congelato di `title-only-explanation` per file (default: TITLE_ONLY_BASELINE). */
+  titleOnlyBaseline?: Readonly<Record<string, number>>;
 }
 
 /**
@@ -92,6 +96,38 @@ const EXCLUDED_REACHABLE_SEGMENTS = [
 const INTERACTIVE_ROLES = new Set([
   "button",
   "link",
+]);
+
+/**
+ * FW-03 — divieti di disclosure. `<details>`/`<summary>` vivono solo dentro
+ * il design system (components/ds/): in pagina si usa ds/Disclosure.
+ * `title=` su un elemento non interattivo è invisibile al tocco, alla
+ * tastiera e (in modo incoerente) agli screen reader: non può essere l'unica
+ * spiegazione. Ammesso solo con aria-describedby verso un testo nel DOM.
+ */
+const DS_SEGMENT = "/src/app/components/ds/";
+/**
+ * FW-03: debito congelato al 28/10/2026 (`title=` come unica spiegazione).
+ * Un file può solo scendere: se ne ha di più fallisce, se ne ha di meno
+ * fallisce finché il numero qui non viene abbassato. File nuovi: 0.
+ */
+export const TITLE_ONLY_BASELINE: Readonly<Record<string, number>> = {
+  "src/app/features/recipe/procedure-hero.tsx": 2,
+  "src/app/features/recipe/recipe-configurator.tsx": 3,
+  "src/app/features/recipe/recipe-match-card.tsx": 1,
+  "src/app/features/recipe/recipe-setup-panel.tsx": 2,
+  "src/app/features/recipe/recipe-stat-strip.tsx": 2,
+};
+
+const TITLE_ALLOWED_TAGS = new Set([
+  "button",
+  "a",
+  "input",
+  "select",
+  "textarea",
+  "iframe",
+  "svg",
+  "title",
 ]);
 
 const normalize = (filePath: string): string => filePath.split(path.sep).join("/");
@@ -425,6 +461,30 @@ function checkSourceFile(
       });
     }
 
+    if ((tag === "details" || tag === "summary") && !`/${file}`.includes(DS_SEGMENT)) {
+      addViolation(violations, seen, {
+        rule: "native-details",
+        file,
+        line: sourceLine(sourceFile, opening),
+        detail: `<${tag}> outside components/ds: use ds/Disclosure (chevron, aria-expanded, aria-controls)`,
+      });
+    }
+
+    if (
+      tag &&
+      attrs.has("title") &&
+      !TITLE_ALLOWED_TAGS.has(tag) &&
+      !interactiveKind(opening) &&
+      !attrs.has("aria-describedby")
+    ) {
+      addViolation(violations, seen, {
+        rule: "title-only-explanation",
+        file,
+        line: sourceLine(sourceFile, opening),
+        detail: `title= on non-interactive <${tag}> is not reachable by touch, keyboard or screen readers: show the text, use InfoTip/TermLink, or add aria-describedby`,
+      });
+    }
+
     if (ts.isJsxSelfClosingElement(opening) && (tag === "figure" || tag === "details")) {
       const required = tag === "figure" ? "figcaption" : "summary";
       addViolation(violations, seen, {
@@ -585,6 +645,34 @@ function checkRouteContractSync(
   }
 }
 
+/** Il cricchetto: tollera il debito congelato, mai di più, e chiede di abbassarlo. */
+function applyTitleOnlyBaseline(
+  violations: SemanticViolation[],
+  baseline: Readonly<Record<string, number>>,
+  scannedFiles: ReadonlySet<string>,
+): void {
+  const counts = new Map<string, number>();
+  for (const violation of violations) {
+    if (violation.rule !== "title-only-explanation") continue;
+    counts.set(violation.file, (counts.get(violation.file) ?? 0) + 1);
+  }
+  for (let index = violations.length - 1; index >= 0; index -= 1) {
+    const violation = violations[index];
+    if (violation.rule !== "title-only-explanation") continue;
+    if ((counts.get(violation.file) ?? 0) <= (baseline[violation.file] ?? 0)) violations.splice(index, 1);
+  }
+  for (const [file, allowed] of Object.entries(baseline)) {
+    const found = counts.get(file) ?? 0;
+    if (found >= allowed || !scannedFiles.has(file)) continue;
+    violations.push({
+      rule: "title-only-explanation",
+      file,
+      line: 1,
+      detail: `baseline is stale: ${found} < ${allowed}; lower TITLE_ONLY_BASELINE in scripts/semantic-guard.ts`,
+    });
+  }
+}
+
 export function runSemanticGuard(
   root = process.cwd(),
   options: SemanticGuardOptions = {},
@@ -609,6 +697,11 @@ export function runSemanticGuard(
     seen,
   );
   checkRouteContractSync(absoluteRoot, routeContracts, violations, seen);
+  applyTitleOnlyBaseline(
+    violations,
+    options.titleOnlyBaseline ?? TITLE_ONLY_BASELINE,
+    new Set(scanned.map((sourceFile) => relative(absoluteRoot, sourceFile.fileName))),
+  );
 
   violations.sort(
     (a, b) =>

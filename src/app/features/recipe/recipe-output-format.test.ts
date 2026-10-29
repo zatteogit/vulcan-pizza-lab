@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip } from "./recipe-output-format";
+import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip, bakeSecondsPerRound, yeastBakerPctText } from "./recipe-output-format";
+import { generateRecipe, STYLES_DB, type UserConstraints } from "../../domain/pizza-engine";
 import { CMS_DEFAULTS } from "../cms/cms-context";
 
 describe("fine stimata: precisione del riepilogo", () => {
@@ -52,8 +53,10 @@ describe('orari e dosi: secondo collaudo',()=>{
   const start=new Date(2026,9,26,9,30);
   expect(displayStepTime('bulk',addMinutes(start,20),start,'it-IT')).toBe('ca. 09:50');
   expect(displayStepTime('shape',addMinutes(start,23),start,'it-IT')).toBe('09:53');
-  expect(fmtDuration(24*60+8)).toBe('1 giorno 8min');
-  expect(fmtDuration(68)).toBe('1h 8min');expect(fmtDuration(1134)).toBe('18h 54min');
+  /* FW-11: un solo formato di durata, anche oltre le 24 h (spazi della lingua). */
+  const plain=(s:string)=>s.replace(/[\u00a0\u202f]/g,' ');
+  expect(plain(fmtDuration(24*60+8))).toBe('24 h 8 min');
+  expect(plain(fmtDuration(68))).toBe('1 h 8 min');expect(plain(fmtDuration(1134))).toBe('18 h 54 min');
  });
  it('pasto 15:30, 368 minuti: inizio 09:22 e fine 15:30, senza arrotondamento tardivo',()=>{
   const meal=new Date(2026,9,26,15,30), now=new Date(2026,9,26,8,0);
@@ -68,16 +71,17 @@ describe('orari e dosi: secondo collaudo',()=>{
  });
 });
 
-describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09-A-01)", () => {
+describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09-A-01; FW-07)", () => {
   const pt = CMS_DEFAULTS.parametricTips;
-  const home = { ovenTempC: 250, cookSec: 360, referenceMinTempC: 430, ovenTempLabel: "250 °C", referenceTempLabel: "485 °C" };
-  const wood = { ovenTempC: 485, cookSec: 75, referenceMinTempC: 430, ovenTempLabel: "485 °C", referenceTempLabel: "485 °C" };
+  const home = { ovenTempC: 250, cookSec: 360, ovenTempLabel: "250 °C", referenceTempLabel: "485 °C", ovenType: "home" as const };
+  const wood = { ovenTempC: 485, cookSec: 75, ovenTempLabel: "485 °C", referenceTempLabel: "485 °C", ovenType: "wood" as const };
 
-  it("forno di casa con la napoletana: tempo dalla stima del motore, non 1–2 min", () => {
+  it("forno di casa con la napoletana: tempo dalla stima del motore (±20 %), non 1–2 min", () => {
     const tip = getParametricTip("bake", "napoletana_stg", false, pt, home)!;
-    expect(tip).toContain("5–7 min");
+    expect(tip).toContain("4–8 min");
     expect(tip).not.toContain("1–2 min");
     expect(tip).not.toMatch(/Ruota 3/);
+    expect(tip).toContain(pt.turnsHalfway);
   });
 
   it("in modalità Nerd mostra la stima e, come confronto, il riferimento dello stile", () => {
@@ -86,14 +90,63 @@ describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09
     expect(tip).toContain("60–90 s a 485 °C");
   });
 
-  it("nel regime di riferimento resta il consiglio dello stile", () => {
-    expect(getParametricTip("bake", "napoletana_stg", false, pt, wood)).toContain("1–2 min");
-    expect(getParametricTip("bake", "napoletana_stg", false, pt)).toContain("1–2 min");
+  it("forno a legna: tempo del motore e rotazioni frequenti; senza ricetta, nessun consiglio", () => {
+    const tip = getParametricTip("bake", "napoletana_stg", false, pt, wood)!;
+    expect(tip).toContain("1–2 min");
+    expect(tip).toContain(pt.turnsFrequent);
+    expect(getParametricTip("bake", "napoletana_stg", false, pt)).toBeNull();
+  });
+
+  it("forno elettrico ad alta temperatura: una volta a metà, come il passo (non «Ruota 3 volte»)", () => {
+    const tip = getParametricTip("bake", "napoletana_stg", false, pt, { ...wood, ovenType: "electric_high" })!;
+    expect(tip).toContain(pt.turnsHalfway);
+    expect(tip).not.toMatch(/Ruota 3/);
+  });
+
+  it("frittura: nessun consiglio di forno", () => {
+    expect(getParametricTip("bake", "pizza_fritta", false, pt, { ...home, frying: true })).toBeNull();
   });
 
   it("il consiglio dell'impasto non parla del forno", () => {
     const tip = getParametricTip("mix", "napoletana_stg", false, pt, home)!;
     expect(tip).not.toMatch(/Forno|°C/);
     expect(tip.endsWith(" ")).toBe(false);
+  });
+
+  const kitchen: UserConstraints = { oven_type: "home", oven_max_temp_c: 250, skill_level: 2, available_hours: 0, dough_balls: 4, has_mixer: false, has_pizza_stone: false, has_pizza_steel: false, has_baking_pan: false, dietary_filters: [], pantry_flours: [], pantry_yeasts: [] };
+  const interval = (tip: string) => tip.match(/(\d+)–(\d+) min/)!.slice(1).map(Number);
+
+  for (const id of ["napoletana_stg", "teglia_romana", "new_york"]) {
+    it(`${id} col forno di casa a 250 °C: l'intervallo del consiglio contiene la durata per giro del passo`, () => {
+      const recipe = generateRecipe(STYLES_DB[id], kitchen);
+      const bake = recipe.timeline.find((s) => s.id === "bake")!;
+      const perRound = bakeSecondsPerRound(bake, recipe.cook_time_sec);
+      const tip = getParametricTip("bake", id, false, pt, { ...home, cookSec: perRound })!;
+      const [minM, maxM] = interval(tip);
+      expect(perRound / 60).toBeGreaterThanOrEqual(minM);
+      expect(perRound / 60).toBeLessThanOrEqual(maxM);
+      // Un solo tempo per la cottura: niente intervallo del riferimento dello stile.
+      if (id === "teglia_romana") expect(tip).not.toContain("8–15 min");
+    });
+  }
+});
+
+describe("lievito in baker's % con la precisione del registro (yeast-dose)", () => {
+  const kitchen: UserConstraints = {
+    oven_type: "home", oven_max_temp_c: 250, oven_capacity_temp_c: 250, skill_level: 2,
+    available_hours: 0, dough_balls: 4, has_mixer: false, has_pizza_stone: false, has_pizza_steel: false,
+    has_baking_pan: false, pantry_flours: [], pantry_yeasts: ["dry"], dietary_filters: [],
+  };
+  it("lievito secco 24 h: mai «0 %» nella griglia scientifica", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, kitchen, { customFermentationHours: 24 });
+    expect(recipe.yeast_type).toBe("dry");
+    expect(recipe.science.yeast_baker_pct).toBeGreaterThan(0);
+    for (const locale of ["it-IT", "en-US", "fr-FR", "de-DE", "es-ES", "pt-PT", "ja-JP"]) {
+      const text = yeastBakerPctText(recipe.science.yeast_baker_pct, locale);
+      expect(text.replace(/[\u00a0\u202f ]/g, "")).not.toMatch(/^0%$/);
+      expect(text).toMatch(/[1-9]/);
+    }
+    expect(yeastBakerPctText(0.033, "it-IT").replace(/[\u00a0\u202f ]/g, "")).toBe("0,03%");
+    expect(yeastBakerPctText(0.04, "en-US")).toBe("0.04%");
   });
 });

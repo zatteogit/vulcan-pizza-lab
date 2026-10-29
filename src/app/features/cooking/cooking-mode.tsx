@@ -1,4 +1,6 @@
 import { KeepScreenAwake } from "./keep-screen-awake";
+import { CookRemindersRow } from "./cook-reminders-row";
+import { RecipeFeedbackForm } from "../recipe/recipe-feedback";
 /* ═══ COOKING MODE — vista della Pizzata attiva (v2, giugno 2026) ═══
  * Ripensata dopo feedback: le fasi durano ore, quindi NON è un wizard da
  * tenere aperto. È la vista full-screen di una sessione persistente
@@ -20,10 +22,12 @@ ChevronDown,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
-import { useCallback,useEffect,useMemo,useState } from "react";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
-import { useCms,type CmsContent } from "../cms/cms-context";
+import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
+import { formatDuration } from "../../i18n/format";
+import { uiMessage } from "../../i18n/ui-messages";
 import {
 currentStepIndex,
 formatEta,
@@ -32,32 +36,15 @@ useCookSession,
 type CookSessionStep
 } from "./cook-session";
 import { ConfirmDialog, CtaButton } from "../../components/ds/index";
+import { useDialogFocus } from "../../components/ds/use-dialog-focus";
+import type { EscapeLayerHandle } from "../../components/ds/escape-stack";
+import { cookingKeyAction, nextViewIndex } from "./cooking-keys";
 import { DoughBlob } from "./dough-mascot";
 import { StepIllustration } from "./step-illustrations";
 import { resolveStepVisual } from "./step-visual";
 import { STYLES_DB } from "../../domain/styles-db";
 import { isFriedStyle } from "../../domain/pizza-engine";
 
-type CookingCopy = CmsContent["cooking"];
-
-function formatDurationLabel(min: number, copy: CookingCopy): string {
-  if (min < 60) return t(copy.durationMinutes, { n: min });
-  const h = Math.floor(min / 60);
-  const m = min % 60;
-  if (h < 24) {
-    return m > 0
-      ? t(copy.durationHoursMinutes, { h, m })
-      : t(copy.durationHours, { h });
-  }
-  const d = Math.floor(h / 24);
-  const hr = h % 24;
-  return hr > 0
-    ? t(copy.durationDaysHours, { d, h: hr })
-    : t(copy.durationDays, {
-        d,
-        unit: d === 1 ? copy.durationDayUnit : copy.durationDaysUnit,
-      });
-}
 
 /* ── Countdown automatico della fase, ancorato a endMs ── */
 function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent: boolean }) {
@@ -77,14 +64,11 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
 
   const remainingLabel = (() => {
     const min = Math.ceil(remainingMs / 60_000);
-    if (min >= 60) return formatDurationLabel(min, cms.cooking);
-    if (min > 1 || step.duration_minutes >= 90) {
-      return t(cms.cooking.durationMinutes, { n: min });
-    }
+    if (min > 1 || step.duration_minutes >= 90) return formatDuration(min, bcp47);
     const sec = Math.ceil(remainingMs / 1000);
     return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
   })();
-  const phaseDuration = formatDurationLabel(step.duration_minutes, cms.cooking);
+  const phaseDuration = formatDuration(step.duration_minutes, bcp47);
   const phaseEnd = formatStepClock(step.endMs, step.flexible, bcp47);
 
   return (
@@ -95,7 +79,7 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
           <div className="type-numeric cooking-mode-phase__value">
             {notStarted
               ? t(cms.cooking.stepStartsIn, {
-                  eta: formatEta(step.startMs, Date.now(), cms.cooking),
+                  eta: formatEta(step.startMs, Date.now(), bcp47),
                 })
               : phaseDone
                 ? cms.cooking.phaseDone
@@ -115,11 +99,15 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
         </div>
         {phaseDone && isCurrent && (
           <span className="cooking-mode-phase__badge">
-            <BellRing size={12} />
+            <BellRing size={14} aria-hidden="true" />
             {cms.cooking.yourTurn}
           </span>
         )}
       </div>
+      {/* FW-13 (S10-B-13): il cambio di stato si annuncia una volta, non a ogni tick. */}
+      <p role="status" className="sr-only">
+        {phaseDone && isCurrent ? cms.cooking.phaseDone : ""}
+      </p>
       {!notStarted && !phaseDone && (
         <div className="cooking-mode-phase__track">
           <div
@@ -213,15 +201,34 @@ export function CookingMode() {
     else if (viewIndex > 0) setViewIndex(viewIndex - 1);
   }, [finished, viewIndex]);
 
+  /* FW-12 (S10-A-09/B-02): la vista è un dialog vero. Focus iniziale sul
+     titolo del passo, Tab che resta dentro, Esc via escape-stack (chiude solo
+     lo strato in cima: con «Interrompi?» aperto chiude il dialog, non la
+     vista), ritorno del focus al widget della pizzata. */
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const layerRef = useRef<EscapeLayerHandle | null>(null);
+  const dialogRef = useDialogFocus<HTMLDivElement>({
+    open: true,
+    onClose: closeOverlay,
+    lockScroll: false,
+    initialFocusRef: titleRef,
+    fallbackFocus: () => document.querySelector<HTMLElement>(".cook-widget"),
+    layerRef,
+  });
+
+  /* FW-12 (S10-A-08/B-01): le frecce sfogliano soltanto, mai «Fatto», e
+     tacciono se sopra c'è un altro strato o il focus è in un controllo. */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") goNext();
-      else if (e.key === "ArrowLeft") goPrev();
-      else if (e.key === "Escape") closeOverlay();
+      const action = cookingKeyAction(e, { isTopLayer: layerRef.current?.isTop() ?? false });
+      if (!action) return;
+      e.preventDefault();
+      if (action === "prev") goPrev();
+      else if (!finished) setViewIndex(nextViewIndex(viewIndex, { activeIdx, total, allDone }));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goNext, goPrev, closeOverlay]);
+  }, [goPrev, finished, viewIndex, activeIdx, total, allDone]);
 
   const doneCount = useMemo(() => steps.filter((s) => s.done).length, [steps]);
   const progressPct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
@@ -230,6 +237,8 @@ export function CookingMode() {
 
   const overlay = (
     <motion.div
+      ref={dialogRef}
+      tabIndex={-1}
       data-region="overlay"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -308,7 +317,15 @@ export function CookingMode() {
       />
 
       {/* ── Progress ── */}
-      <div className="cooking-mode-progress">
+      <div
+        className="cooking-mode-progress"
+        role="progressbar"
+        aria-label={uiMessage("cooking.a11y.progress-label")}
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-valuenow={finished ? total : doneCount}
+        aria-valuetext={uiMessage("cooking.a11y.progress-value", [finished ? total : doneCount, total])}
+      >
         <motion.div
           animate={{ width: `${finished ? 100 : progressPct}%` }}
           transition={motionSpring.cookingPanel}
@@ -316,10 +333,18 @@ export function CookingMode() {
         />
       </div>
 
+      {/* FW-12 (S10-A-09): annuncio del passo al cambio di vista. */}
+      <p className="sr-only" role="status" aria-live="polite">
+        {finished
+          ? cms.cooking.completed
+          : uiMessage("cooking.a11y.step-announce", [Math.min(viewIndex + 1, total), total, step.title])}
+      </p>
+
       {/* ── Contenuto ── */}
       <div className="cooking-mode-body">
         <div className="cooking-mode-body__inner">
           {!finished && <KeepScreenAwake />}
+          {!finished && <CookRemindersRow />}
           <AnimatePresence mode="wait">
             {finished ? (
               <motion.div
@@ -347,6 +372,14 @@ export function CookingMode() {
                 <p className="cooking-mode-finished__body">
                   {t(cms.cooking.doneBody, { style: session.styleName })}
                 </p>
+                {/* FW-16 (D-M, S10-B-07): com'è venuta? Prima di chiudere la pizzata. */}
+                {session.feedback && (
+                  <RecipeFeedbackForm
+                    snapshot={session.feedback.snapshot}
+                    predicted={session.feedback.predicted}
+                    question={cms.feedback.cookedQuestion}
+                  />
+                )}
                 <CtaButton
                   onClick={endSession}
                   className="cooking-mode-finished__cta"
@@ -381,7 +414,12 @@ export function CookingMode() {
                 {/* Orario onesto + stato */}
                 <div className="cooking-mode-step__status-row">
                   <span className="type-numeric cooking-mode-step__clock">
-                    {formatStepClock(step.startMs, step.flexible, bcp47)}
+                    {/* FW-11 (S10-B-18): l'orario dice se è inizio o fine. */}
+                    {step.flexible
+                      ? uiMessage("cooking.chip.readyAt", [formatStepClock(step.endMs, true, bcp47)])
+                      : isCurrent && !viewingDone && now >= step.startMs
+                        ? uiMessage("cooking.chip.now")
+                        : uiMessage("cooking.chip.startsAt", [formatStepClock(step.startMs, false, bcp47)])}
                   </span>
                   {viewingDone && (
                     <span className="cooking-mode-step__done-badge">
@@ -391,7 +429,7 @@ export function CookingMode() {
                 </div>
 
                 {/* Titolo */}
-                <h2 className="cooking-mode-step__title">
+                <h2 ref={titleRef} tabIndex={-1} className="cooking-mode-step__title">
                   {step.title}
                 </h2>
 
@@ -472,7 +510,7 @@ export function CookingMode() {
                   <>
                     <Clock size={18} />
                     {t(cms.cooking.waitingReadyAt, {
-                      eta: formatEta(step.endMs, Date.now(), cms.cooking),
+                      eta: formatEta(step.endMs, Date.now(), bcp47),
                     })}
                   </>
                 ) : waitOver ? (

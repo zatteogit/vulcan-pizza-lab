@@ -1,8 +1,10 @@
 import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
+import { SKILL_WARNING_KEYS } from "../../domain/verdict-summary";
+import { PANTRY_CHECK_KEYS } from "../../use-cases/recommendation-groups";
 
 export interface CardSignal {
-  icon: "oven" | "time" | "pan" | "flour" | "check";
+  icon: "oven" | "time" | "pan" | "flour" | "check" | "water";
   tone: "warning" | "error";
   message: EngineMsg;
 }
@@ -10,7 +12,7 @@ const msg = (key: string, fallback: string, params?: EngineMsg["params"]): Engin
 
 /** Card policy: at most two decision signals. Unverified flour is a concrete
  * condition too: an empty inventory never implies the required flour is available. */
-export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "explore" = "create"): CardSignal[] {
+export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "explore" = "create", options: { hidePantryChecks?: boolean } = {}): CardSignal[] {
   const { blockers, conditions = [], adaptations } = recipe.verdict;
   if (blockers.length) {
     const b = blockers.find(b => b.kind === "dietary_conflict" && b.filter_id.startsWith("allergen:")) ?? blockers.find(b => b.kind === "dietary_conflict") ?? blockers.find(b => b.kind === "oven_too_cold") ?? blockers[0];
@@ -28,6 +30,11 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   const optionalAllergen=recipe.dietary_warnings?.find(w=>w.message.key==="allergen.optional");
   if (optionalAllergen) add("check", msg("allergen.cardOptional", ALLERGEN_MESSAGES_IT["allergen.cardOptional"], optionalAllergen.message.params));
   else if (recipe.allergens?.avoided.length) add("check", msg("allergen.cardCheck", ALLERGEN_MESSAGES_IT["allergen.cardCheck"]));
+  // FW-10 (S07-A-06): l'impasto troppo idratato per chi comincia viene prima
+  // del metodo e delle condizioni: è ciò che fa fallire la pizza.
+  if (adaptations.some(a => SKILL_WARNING_KEYS.includes(a.key))) {
+    add("water", msg("card.hydrationBeginner", "Impasto difficile per chi inizia"));
+  }
   const method = adaptations.find(a => ["gen.homeBakingMethod", "gen.notCoalOven", "gen.notWoodOven", "feas.ovenSuboptimal"].includes(a.key));
   if (method) {
     const keys: Record<string, [string, string]> = {
@@ -43,6 +50,12 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   // remain inspectable in the detail and actionable in Create.
   if (context === "explore") return result.slice(0, 2);
   for (const c of [...conditions].sort((a, b) => Number(b.status === "missing") - Number(a.status === "missing"))) {
+    // FW-09 (S05-A-06): con la dispensa sconosciuta «Se hai farina…» vale per
+    // tutti gli stili; la pagina lo dice una volta sola.
+    // Per chiave, non per tipo: la verifica delle esclusioni (rifiuto esplicito
+    // dell'utente) ha kind «flour» ma non dipende dalla dispensa e resta.
+    if (options.hidePantryChecks && c.status === "unverified" && PANTRY_CHECK_KEYS.has(c.message.key)) continue;
+    if (c.message.key === "need.checkExclusions") { add("flour", c.message); continue; }
     if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Se hai una teglia"));
     if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Se hai pietra o acciaio"));
     if (c.kind === "flour") add("flour", c.status === "missing"

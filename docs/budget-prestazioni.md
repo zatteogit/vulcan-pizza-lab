@@ -22,7 +22,9 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 | Build | Oggi | Budget (`npm run check:budget`) |
 |---|---|---|
 | Chunk JS più grande (gzip) | 75 kB (React) | 100 kB |
-| JS totale emesso (gzip) | 769 kB in 65 chunk (642 prima dei condimenti tradotti) | 900 kB |
+| JS senza i cataloghi delle lingue (gzip) | 486 kB (29/10/2026, ondata 1 dell'audit) | 500 kB |
+| JS per utente: codice + la lingua più pesante (gzip) | 575 kB (con `ja`, 88 kB) | 600 kB |
+| JS emesso in tutto, 7 lingue (gzip) | 974 kB in 73 chunk | solo informazione (D-059) |
 | CSS (gzip) | 61 kB (443 kB non compresso) | 75 kB |
 | Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
 | Video totali | 2,6 MB (6 file; erano 48,6) | 3 MB |
@@ -33,6 +35,15 @@ sono un cricchetto: si abbassano quando si migliora, non si alzano per far
 passare lavoro nuovo. Con la traduzione dei condimenti (I18N-2) ogni bundle di
 lingua cresce di circa 20 kB gzip (ja: 65 kB in tutto); si scarica solo quello
 della lingua attiva.
+
+**D-059 (29/10/2026): si misura il JS per utente, non il totale.** Il vecchio
+tetto (900 kB su tutto il JS emesso) sommava i sei cataloghi delle lingue, che
+sono caricati solo per la lingua attiva: ogni testo nuovo in 7 lingue contava
+6 volte, e ogni pacchetto dell'audit lo superava pur aggiungendo poco a quello
+che un utente scarica (534 → 572 kB con l'ondata 1, +7 %). Ora i limiti sono
+due: il codice senza lingue e il codice più il catalogo più pesante. Il totale
+resta stampato come informazione. I cataloghi si riconoscono dai file in
+`src/app/features/cms/locales/<lingua>.ts`.
 
 ## Perché l'LCP è lento
 

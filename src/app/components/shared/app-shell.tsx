@@ -39,10 +39,11 @@ import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
 import { ThemeSwitcher } from "../../features/dev-tools/theme-switcher";
 import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { IconButton } from "../ds/index";
+import { useEscapeLayer } from "../ds/escape-stack";
 import { VulcanHero } from "./vulcan-hero";
 import { BRAND } from "../../config/brand";
 import { EDITION } from "../../config/edition";
-import { motionDuration, motionSpring } from "../ds/motion";
+import { motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../../config/tools";
 
@@ -338,8 +339,11 @@ function SidebarRail({
   devMode,
   onSearchOpen,
   onAboutOpen,
+  searchOpen = false,
 }: {
   activeTab: string | null;
+  /** FW-12 (S04-B-18): a ricerca aperta la lente è lo stato attivo, non la tab. */
+  searchOpen?: boolean;
   devMode: boolean;
   onSearchOpen: () => void;
   onAboutOpen: () => void;
@@ -370,7 +374,8 @@ function SidebarRail({
           aria-label={cms.ui.aboutLabel}
           aria-haspopup="dialog"
         >
-          <VulcanHero size={48} energy={35} markRatio={0.46} loops={Infinity} />
+          {/* FW-12 (S01-B-05): un solo ciclo, poi fermo (WCAG 2.2.2). */}
+          <VulcanHero size={48} energy={35} markRatio={0.46} loops={0} />
         </IconButton>
 
         {/* Tabs */}
@@ -389,6 +394,7 @@ function SidebarRail({
           <SearchButton
             size="sm"
             onOpen={onSearchOpen}
+            active={searchOpen}
           />
         </div>
 
@@ -419,7 +425,8 @@ function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
   return (
     <IconButton variant="bare" type="button" onClick={onAboutOpen} className="app-shell-brand"
       aria-label={partner ? `${cms.ui.aboutLabel} · ${partner}` : cms.ui.aboutLabel} aria-haspopup="dialog">
-      <VulcanHero size={42} energy={45} markRatio={0.5} loops={Infinity} />
+      {/* FW-12 (S01-B-05): un solo ciclo, poi fermo (WCAG 2.2.2). */}
+      <VulcanHero size={42} energy={45} markRatio={0.5} loops={0} />
       <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
       {partner && <span className="app-shell-brand__partner type-data-sm" aria-hidden="true">{partner}</span>}
     </IconButton>
@@ -432,16 +439,11 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
   const { cms } = useCms();
   const label = (cms.pages as any)?.navProfile || "Profilo";
   const { scrolled } = navState;
-  const size = scrolled ? 40 : 44;
+  /* FW-13: misura e raggio vivono in CSS (.app-shell-profile--scrolled). */
   return (
     <MotionLink
       to="/profile"
       className={`app-shell-profile${scrolled ? " app-shell-profile--scrolled" : ""}`}
-      animate={{
-        width: size,
-        height: size,
-        borderRadius: scrolled ? "14px" : "16px",
-      }}
       transition={motionSpring.quick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.92 }}
@@ -468,12 +470,13 @@ function CookSessionUI({
   compact: boolean;
 }) {
   const { session, overlayOpen } = useCookSession();
-  const reduceMotion = useReducedMotion();
   return (
     <>
-      <motion.div className="cook-actions" hidden={!showAction || overlayOpen} initial={false}
-        animate={{ right: hasProfileButton ? (compact ? 64 : 68) : 16 }}
-        transition={reduceMotion ? { duration: motionDuration.reduced } : motionSpring.quick}>
+      {/* FW-13: la posizione accanto al profilo è una classe con token. */}
+      <div
+        className={`cook-actions${hasProfileButton ? " cook-actions--beside-profile" : ""}${compact ? " cook-actions--compact" : ""}`}
+        hidden={!showAction || overlayOpen}
+      >
         {showAction && (
         <ActiveCookWidget
           canStartRecipe={canStartRecipe}
@@ -483,7 +486,7 @@ function CookSessionUI({
         />
         )}
         <div id="recipe-floating-actions" className="cook-actions__recipe" />
-      </motion.div>
+      </div>
       <AnimatePresence>
         {overlayOpen && session && (
           <Suspense fallback={null}>
@@ -646,15 +649,10 @@ export function AppShell() {
     if (!searchOpen) return;
     window.scrollTo(0, 0);
     const frame = requestAnimationFrame(() => searchInputRef.current?.focus({ preventScroll: true }));
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") cancelSearch();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [searchOpen, cancelSearch]);
+    return () => cancelAnimationFrame(frame);
+  }, [searchOpen]);
+  /* FW-12: la ricerca aperta è uno strato dell'escape-stack, come i dialog. */
+  useEscapeLayer(searchOpen, cancelSearch);
 
   /* Apply .dark on <html> so portals inherit tokens */
   useEffect(() => {
@@ -728,7 +726,8 @@ export function AppShell() {
           {/* Sidebar rail — desktop */}
           {showNav && (
             <SidebarRail
-              activeTab={activeTab}
+              activeTab={searchOpen ? null : activeTab}
+              searchOpen={searchOpen}
               devMode={devMode}
               onAboutOpen={() => setAboutOpen(true)}
               onSearchOpen={openSearch}
@@ -746,6 +745,17 @@ export function AppShell() {
               {TABS.some((tab) => tab.path === location.pathname) && <ShellBrand onAboutOpen={() => setAboutOpen(true)} />}
             </header>
           )}
+
+          {/* Pizzata attiva: sticky action + overlay (cross-page).
+              FW-12 (S07-B-10): prima di <main> nel DOM, come a schermo (in
+              alto a destra): il segnalibro della ricetta, portato qui, è la
+              seconda fermata del Tab e non la 32ª. */}
+          <CookSessionUI
+            canStartRecipe={cookAvailable}
+            hasProfileButton={hasProfileButton}
+            showAction={showCookAction && !searchOpen}
+            compact={navState.scrolled}
+          />
 
           {/* Main content area */}
           <div
@@ -802,14 +812,6 @@ export function AppShell() {
               />
             </>
           )}
-
-          {/* Pizzata attiva: sticky action + overlay (cross-page) */}
-          <CookSessionUI
-            canStartRecipe={cookAvailable}
-            hasProfileButton={hasProfileButton}
-            showAction={showCookAction && !searchOpen}
-            compact={navState.scrolled}
-          />
 
           {/* Strumento di debug AI per annotazioni e bug-fix (se non disattivato nelle impostazioni) */}
           {!isOverlayDeactivated && (

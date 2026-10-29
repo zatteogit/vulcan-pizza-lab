@@ -36,7 +36,7 @@ const cleanRoot = fixture({
   `,
   "src/detail.tsx": `
     export function Detail() {
-      return <article><figure><img src="/pizza.jpg" alt="Pizza" /><figcaption>Pizza</figcaption></figure><details><summary>More</summary><p>Details</p></details></article>;
+      return <article><figure><img src="/pizza.jpg" alt="Pizza" /><figcaption>Pizza</figcaption></figure><button type="button" title="Save">Save</button><abbr aria-describedby="x" title="Unità">U</abbr></article>;
     }
   `,
 });
@@ -51,6 +51,7 @@ const badRoot = fixture({
         <div role="dialog"><img src="/missing-alt.jpg" /></div>
         <figure><img src="/x.jpg" alt="" /></figure>
         <details><p>No summary</p></details>
+        <span title="Only explanation">AVPN</span>
         <BadImported />
       </div>;
     }
@@ -109,12 +110,51 @@ try {
     "image-alt",
     "figure-caption",
     "details-summary",
+    "native-details",
+    "title-only-explanation",
     "route-main-landmark",
     "heading-contract",
   ]) {
     assert.ok(rules.has(expected as never), `missing expected rule: ${expected}`);
   }
   assert.equal(bad.scannedFileCount, 2, "violations in imported files must remain in scope");
+
+  // FW-03: il debito congelato di title= passa, uno in più no, uno in meno chiede di abbassarlo.
+  const titleRule = (result: ReturnType<typeof runSemanticGuard>) =>
+    result.violations.filter((violation) => violation.rule === "title-only-explanation");
+  const badOptions = {
+    entryFiles: ["src/entry.tsx"],
+    routeContracts: [] as RouteContract[],
+  };
+  assert.equal(
+    titleRule(runSemanticGuard(badRoot, { ...badOptions, titleOnlyBaseline: { "src/entry.tsx": 1 } })).length,
+    0,
+    "frozen title= debt must pass",
+  );
+  assert.equal(
+    titleRule(runSemanticGuard(badRoot, { ...badOptions, titleOnlyBaseline: {} })).length,
+    1,
+    "new title= debt must fail",
+  );
+  assert.ok(
+    titleRule(runSemanticGuard(badRoot, { ...badOptions, titleOnlyBaseline: { "src/entry.tsx": 2 } }))
+      .some((violation) => violation.detail.includes("baseline is stale")),
+    "a lower count must ask to lower the baseline",
+  );
+  // FW-03: <details>/<summary> solo dentro components/ds.
+  const dsRoot = fixture({
+    "src/entry.tsx": `import { D } from "./app/components/ds/D"; export function P() { return <main><h1>T</h1><D /></main>; }`,
+    "src/app/components/ds/D.tsx": `export function D() { return <details><summary>More</summary><p>x</p></details>; }`,
+  });
+  try {
+    const ds = runSemanticGuard(dsRoot, { entryFiles: ["src/entry.tsx"], routeContracts: [] });
+    assert.ok(
+      !ds.violations.some((violation) => violation.rule === "native-details"),
+      "native details are allowed inside components/ds",
+    );
+  } finally {
+    rmSync(dsRoot, { recursive: true, force: true });
+  }
   const drift = runSemanticGuard(syncRoot, {
     entryFiles: ["src/app/pages/known.tsx"],
     routeContracts: [{
@@ -127,7 +167,7 @@ try {
     drift.violations.some((violation) => violation.rule === "route-contract-sync"),
     "a mounted page without a contract must fail",
   );
-  console.log("semantic-guard tests: 3 fixture graphs, all assertions passed.");
+  console.log("semantic-guard tests: 4 fixture graphs, all assertions passed.");
 } finally {
   rmSync(cleanRoot, { recursive: true, force: true });
   rmSync(badRoot, { recursive: true, force: true });

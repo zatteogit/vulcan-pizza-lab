@@ -1,4 +1,3 @@
-import { AllergenPreferences } from "../features/recipe/allergen-preferences";
 import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 /* === PROFILE PAGE — VPL-057 ===
    Setup utente: forno, skill, pantry, dieta, lingua, dark mode.
@@ -7,14 +6,14 @@ import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 
 import { TOOLS_ENABLED } from "../config/tools";
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
-import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Egg, Flame, Globe, GraduationCap, Heart, Home, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Thermometer, Timer, Upload, User, WheatOff, X, Zap } from "lucide-react";
-import { WoodOvenIcon } from "../components/shared/wood-oven-icon";
+import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
+import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
-import { useCallback,useEffect,useMemo,useRef,useState, useId } from "react";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
-import { Chip, CtaButton, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
+import { Chip, ConfirmDialog, CtaButton, Disclosure, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
 import {
 createFormatter,
 getPreferredUnitSystem,
@@ -42,8 +41,16 @@ getLocalizedSurfaceOptions,
 getLocalizedToolCategories,
 getLocalizedToolOptions,
 migrateEquipment,
-syncLegacyFlags
+syncLegacyFlags,
+compatibleHeatProfiles,
+isHeatProfileCompatible,
 } from "../data/equipment-data";
+import { OVEN_MODELS, type OvenModel } from "../data/oven-models";
+import { nextSavedOven, profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
+import { hasChosenSkill } from "../hooks/use-profile-defaults";
+
+/* FW-07 (S16-A-02): la scala del profilo arriva al forno più caldo del catalogo. */
+const OVEN_SLIDER_MAX = Math.max(500, ...OVEN_MODELS.map((model) => model.maxTempC));
 import type { OvenType,SkillLevel } from "../domain/pizza-engine";
 import {
 OVEN_PRESETS,
@@ -68,11 +75,19 @@ import {
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { MICRO_DOSE_GRAMS, formatMass } from "../i18n/format";
 import { AccountPanel } from "../features/account/account-panel";
 import { OvenModelSearch } from "../features/profile/oven-model-search";
+import { SettingEffectNote } from "../features/profile/setting-effect-note";
+import { SkillEffectDetails } from "../features/profile/skill-effect-details";
+import { DietPreferences } from "../features/profile/diet-preferences";
+import { PantrySummary } from "../features/profile/pantry-summary";
 import { encodePan } from "../features/recipe/pan-url";
 import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { BRAND } from "../config/brand";
+import { DetailLevelSetting, DetailLevelOffer } from "../features/profile/detail-level-setting";
+import { SkillLevelEffect } from "../features/profile/skill-level-effect";
+import { useDetailLevel } from "../hooks/use-detail-level";
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
@@ -82,7 +97,6 @@ const PANTRY_STORAGE_KEY = "vulcan_pantry";
 const DIETARY_STORAGE_KEY = "vulcan_dietary";
 const LOCATION_STORAGE_KEY = "vulcan_location";
 const EQUIPMENT_STORAGE_KEY = "vulcan_equipment";
-const NERD_STORAGE_KEY = "vulcan_nerd_on";
 
 /* ═══ FTU pantry options — versione semplificata per onboarding ═══ */
 const FTU_FLOURS = [
@@ -167,15 +181,6 @@ function loadString(key: string): string | null {
 }
 
 /* ═══ DATA ═══ */
-const OVEN_ICONS: Record<string, typeof Flame> = {
-  home: Home,
-  electric_standard: Zap,
-  electric_high: Thermometer,
-  gas: Flame,
-  gas_pizza: Flame,
-  wood: WoodOvenIcon,
-};
-
 const OVEN_HEAT_PROFILES: {
   id: OvenHeatProfile;
   label: string;
@@ -231,7 +236,7 @@ const OVEN_HEAT_PROFILES: {
 const DIETARY_OPTIONS = [
   { id: "gluten_free", labelKey: "dietGlutenFree" as const, icon: WheatOff },
   { id: "lactose_free", labelKey: "dietLactoseFree" as const, icon: Milk },
-  { id: "vegan", labelKey: "dietVegan" as const, icon: Egg },
+  { id: "vegan", labelKey: "dietVegan" as const, icon: Leaf }, /* FW-13: l'uovo diceva il contrario */
   { id: "low_fodmap", labelKey: "dietLowFodmap" as const, icon: Beaker },
   { id: "histamine", labelKey: "dietHistamine" as const, icon: Timer },
   { id: "nickel", labelKey: "dietNickel" as const, icon: CircleDot },
@@ -516,7 +521,9 @@ function SavedRecipesSection() {
       ) : (
         <ul ref={(el) => { sectionRef.current = el; }} tabIndex={-1} className="profile-saved-recipes">
           {recipes.map((r) => {
-            const styleName = r.styleId === "napoletana_stg" ? (r.params.ovenType && r.params.ovenType !== "wood" ? "Napoletana" : r.styleName) : STYLES_DB[r.styleId]?.name ?? r.styleName;
+            /* FW-11 (S17-A-05): il nome salvato è già quello giusto
+               (recipeDisplayName al salvataggio), niente ramo per stile. */
+            const styleName = r.styleName || STYLES_DB[r.styleId]?.name || "";
             const name = normalizeRecipeName(r.name);
             const displayName = name || styleName;
             const meta = [
@@ -646,9 +653,10 @@ function SavedRecipesSection() {
 const PROFILE_TAB_IDS = ["recipes", "setup", "app"] as const;
 
 /* ═══ EQUIPMENT CATEGORY ACCORDION ═══ */
+/* FW-03 (S16-B-10/A-15, S16-B-11): ds/Disclosure come gli altri «mostra di
+   più» del Profilo; niente eyebrow che ripeteva il titolo (doppio annuncio). */
 function EquipmentCategory({
   title,
-  stepLabel,
   expanded,
   onToggle,
   summary,
@@ -656,76 +664,44 @@ function EquipmentCategory({
   children,
 }: {
   title: string;
-  stepLabel: string;
   expanded: boolean;
   onToggle: () => void;
   summary: string;
   hasSelection: boolean;
   children: React.ReactNode;
 }) {
-  const panelId = useId();
   return (
-    <div
+    <Disclosure
+      variant="inline"
+      open={expanded}
+      onOpenChange={onToggle}
       className={`profile-equip-cat${hasSelection ? " profile-equip-cat--selected" : ""}`}
-    >
-      <motion.button
-        type="button"
-        aria-expanded={expanded}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className="profile-equip-cat__trigger"
-      >
-        <div className="profile-equip-cat__body">
-          <div className="profile-equip-cat__step-row">
-            <span
-              className={`profile-equip-cat__step${hasSelection ? " profile-equip-cat__step--selected" : ""}`}
-            >
-              {stepLabel}
-            </span>
-          </div>
-          <span className="type-data-base profile-equip-cat__title">
-            {title}
-          </span>
-          <div
-            className={`type-data-xs profile-equip-cat__summary${hasSelection ? " profile-equip-cat__summary--selected" : ""}`}
-          >
-            {summary}
-          </div>
-        </div>
-        <motion.div
-          animate={{ rotate: expanded ? 180 : 0 }}
-          transition={motionSpring.crispControl}
-          className="profile-equip-cat__chevron"
+      triggerClassName="profile-equip-cat__trigger"
+      panelClassName="profile-equip-cat__panel"
+      summary={<>
+        <span className="type-data-base profile-equip-cat__title">
+          {title}
+        </span>
+        <span
+          className={`type-data-xs profile-equip-cat__summary${hasSelection ? " profile-equip-cat__summary--selected" : ""}`}
         >
-          <ChevronDown size={16} className="profile-equip-cat__chevron-icon" />
-        </motion.div>
-      </motion.button>
-
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={motionSpring.standard}
-            id={panelId}
-            className="profile-equip-cat__panel"
-          >
-            <div className="profile-equip-cat__panel-inner">
-              <div className="profile-equip-cat__panel-content">
-                {children}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          {summary}
+        </span>
+      </>}
+    >
+      <div className="profile-equip-cat__panel-inner">
+        <div className="profile-equip-cat__panel-content">
+          {children}
+        </div>
+      </div>
+    </Disclosure>
   );
 }
 
 /* ═══ FTU ONBOARDING ═══ */
 function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; closeControl: React.ReactNode }) {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
+  const fmt = createFormatter(cms.ui, bcp47, getPreferredUnitSystem()); // FW-14: «Max 250 °C», non «250°C»
   const p = cms.profile;
   const [step, setStep] = useState(0);
   /* Si parte dal forno già salvato (anche quello preimpostato da un'edizione
@@ -733,7 +709,14 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string }>(OVEN_STORAGE_KEY));
   const [ovenType, setOvenType] = useState<OvenType>(savedOven?.ovenType ?? "home");
   const [ovenTemp, setOvenTemp] = useState(savedOven?.maxTemp ?? 250);
-  const [skillLevel, setSkillLevel] = useState<SkillLevel>(1);
+  /* FW-07 (S15-V-01, S15-A-06): il livello parte da quello salvato e, se non
+     c'è, da nessuno: «Avanti» non sceglie «Principiante» al posto tuo. */
+  const [skillLevel, setSkillLevel] = useState<SkillLevel | null>(() => loadJson<SkillLevel>(SKILL_STORAGE_KEY));
+  /* FW-08 (S15-B-11, D-C): a chi sceglie Esperto proponiamo «Mostra i
+     dettagli tecnici», spento di default; si salva solo alla fine. */
+  const { setLevel: setDetailLevel } = useDetailLevel();
+  const [ftuTechnical, setFtuTechnical] = useState(false);
+  const offerTechnical = skillLevel === 4;
   /* Pantry: farine e lieviti per onboarding */
   const [ftuFlours, setFtuFlours] = useState<string[]>([]);
   const [ftuYeasts, setFtuYeasts] = useState<string[]>([]);
@@ -755,10 +738,11 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
     arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
 
   const handleFinish = useCallback(() => {
-    // Il modello resta solo se il forno non è cambiato.
-    const keepModel = savedOven?.modelId && savedOven.ovenType === ovenType && savedOven.maxTemp === ovenTemp;
-    saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp, ...(keepModel ? { modelId: savedOven.modelId } : {}) });
-    saveJson(SKILL_STORAGE_KEY, skillLevel);
+    // Il modello resta solo se il forno non è cambiato; confermare il forno
+    // preimpostato dall'edizione lo rende tuo (FW-07, S18-A-01).
+    saveJson(OVEN_STORAGE_KEY, savedOven?.ovenType === ovenType ? nextSavedOven(savedOven, ovenType) : { ovenType, maxTemp: ovenTemp });
+    if (skillLevel !== null) saveJson(SKILL_STORAGE_KEY, skillLevel);
+    if (offerTechnical && ftuTechnical) setDetailLevel("technical");
     // Pantry: salviamo solo se valorizzata
     if (ftuFlours.length > 0 || ftuYeasts.length > 0) {
       saveJson(PANTRY_STORAGE_KEY, { ...(loadJson<Record<string, unknown>>(PANTRY_STORAGE_KEY) ?? {}), flours: ftuFlours, yeasts: ftuYeasts });
@@ -767,22 +751,36 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [savedOven, ovenType, ovenTemp, skillLevel, ftuFlours, ftuYeasts, onComplete]);
+  }, [savedOven, ovenType, ovenTemp, skillLevel, offerTechnical, ftuTechnical, setDetailLevel, ftuFlours, ftuYeasts, onComplete]);
 
   /* Audit n. 33 / D-038: il percorso si può saltare. Forno e livello restano
      «non scelti» (niente valori di default salvati come se li avessi scelti
      tu): li chiedono Crea e il profilo quando servono. */
   const handleSkip = useCallback(() => {
+    /* FW-08: un «sì» esplicito ai dettagli tecnici vale anche se salti. */
+    if (offerTechnical && ftuTechnical) setDetailLevel("technical");
     try {
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [onComplete]);
+  }, [offerTechnical, ftuTechnical, setDetailLevel, onComplete]);
 
   const handleNext = useCallback(() => {
     if (step < lastStep) setStep((s) => s + 1);
     else handleFinish();
   }, [step, lastStep, handleFinish]);
+
+  /* FW-12 (S15-B-08): al cambio di passo il focus va sull'intestazione del
+     passo, così lo screen reader legge la nuova domanda. Non al primo render. */
+  const stepHeaderRef = useRef<HTMLDivElement>(null);
+  const firstStepRender = useRef(true);
+  useEffect(() => {
+    if (firstStepRender.current) {
+      firstStepRender.current = false;
+      return;
+    }
+    stepHeaderRef.current?.focus();
+  }, [step]);
 
   return (
     <main
@@ -797,7 +795,15 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
         className="profile-ftu__card"
       >
         {/* Progress dots */}
-        <div className="profile-ftu__dots">
+        <div
+          className="profile-ftu__dots"
+          role="progressbar"
+          aria-label={uiMessage("pages.profile.ftu-progress-label")}
+          aria-valuemin={1}
+          aria-valuemax={steps.length}
+          aria-valuenow={step + 1}
+          aria-valuetext={uiMessage("pages.profile.ftu-step-of", [step + 1, steps.length])}
+        >
           {steps.map((_, i) => (
             <div
               key={i}
@@ -807,7 +813,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
         </div>
 
         {/* Step header */}
-        <div className="profile-ftu__step-header">
+        <div ref={stepHeaderRef} tabIndex={-1} className="profile-ftu__step-header">
           <span className="type-label-compact profile-ftu__step-label">
             {steps[step].num} — {p.ftuWelcome}
           </span>
@@ -828,10 +834,13 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             exit={{ opacity: 0, x: -20 }}
             transition={motionSpring.standard}
           >
+            {step === 0 && <SettingEffectNote settingId="oven" />}
+            {step === 1 && <SettingEffectNote settingId="skill" />}
+            {step === 2 && <SettingEffectNote settingId="pantry" />}
             {step === 0 && (
               <div className="profile-ftu__option-list">
                 {OVEN_PRESETS.map((preset) => {
-                  const Icon = OVEN_ICONS[preset.id] || Flame;
+                  const Icon = ovenIcon(preset.id);
                   const active = ovenType === preset.id;
                   return (
                     <motion.button
@@ -839,6 +848,8 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                       type="button"
                       aria-pressed={active}
                       onClick={() => {
+                        // FW-07: il forno già attivo non torna alla temperatura del tipo.
+                        if (active) return;
                         setOvenType(preset.id);
                         setOvenTemp(preset.maxTemp);
                       }}
@@ -868,7 +879,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                           {cms.ovenPresets[preset.id]?.name ?? preset.name}
                         </div>
                         <div className="type-data-sm profile-ftu__option-meta">
-                          {uiMessage("pages.profile.max-3c624fea")}{preset.maxTemp}°C
+                          {uiMessage("pages.profile.maxTemp", [fmt.celsius(active ? ovenTemp : preset.maxTemp)])}
                         </div>
                       </div>
                       {active && (
@@ -887,6 +898,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             )}
 
             {step === 1 && (
+              <>
               <div className="profile-ftu__option-list">
                 {SKILL_LEVELS.map((skill) => {
                   const active = skillLevel === skill.level;
@@ -933,7 +945,14 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                     </motion.button>
                   );
                 })}
+                <SkillEffectDetails />
               </div>
+              {/* FW-08 (S15-A-02/B-02): cosa cambia scegliendo il livello. */}
+              {skillLevel !== null && <SkillLevelEffect level={skillLevel} />}
+              {offerTechnical && (
+                <DetailLevelOffer checked={ftuTechnical} onCheckedChange={setFtuTechnical} />
+              )}
+              </>
             )}
 
             {step === 2 && (
@@ -994,6 +1013,11 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                     ))}
                   </div>
                 </div>
+                {ftuYeasts.includes("sourdough") && (
+                  <p className="type-data-sm profile-ftu__pantry-note" role="status">
+                    {p.ftuSourdoughNote}
+                  </p>
+                )}
                 {ftuFlours.length === 0 && ftuYeasts.length === 0 && (
                   <p className="type-data-sm profile-ftu__pantry-skip">
                     {p.ftuSkipMessage}
@@ -1116,93 +1140,39 @@ function LocaleConfirmModal({
   }, [target.id, tgtBundle]);
   const tgtProfile = tgtBundle?.profile ?? CMS_DEFAULTS.profile;
 
-  const fromLabel = `${current.flag} ${current.name}`;
-  const toLabel = `${target.flag} ${target.name}`;
+  /* FW-13 (S17-B-16): una lingua non è un paese, niente bandiere. */
+  const fromLabel = current.name;
+  const toLabel = target.name;
 
-  /* Close on Escape */
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [onCancel]);
-
-  return createPortal(
-    <div className="profile-locale-modal">
-      {/* Backdrop */}
-      <motion.button
-        type="button"
-        aria-label={srcProfile.localeModalCancel}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onCancel}
-        className="profile-locale-modal__backdrop border-0 p-0"
-      />
-      {/* Card */}
-      <motion.div
-        role="alertdialog"
-        aria-modal="true"
-        aria-label={srcProfile.localeModalTitle}
-        initial={{ opacity: 0, scale: 0.92, y: 12 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.92, y: 12 }}
-        transition={motionSpring.crispSettled}
-        className="profile-locale-modal__card"
-      >
-        <div className="profile-locale-modal__body">
-          <div className="profile-locale-modal__icon">
-            <Globe size={22} className="profile-locale-modal__icon-glyph" />
-          </div>
-          <Heading level="sm">
-            {srcProfile.localeModalTitle}
-          </Heading>
-          {/* Target language echo */}
-          {tgtProfile.localeModalTitle !== srcProfile.localeModalTitle && (
-            <p className="profile-locale-modal__echo">
-              {tgtProfile.localeModalTitle}
-            </p>
-          )}
-          <p className="type-body-sm profile-locale-modal__desc">
-            {(() => {
-              /* Render description with bold from/to names inline */
-              const desc = srcProfile.localeModalDesc;
-              const parts = desc.split("{from}");
-              const before = parts[0];
-              const afterFrom = (parts[1] || "").split("{to}");
-              const middle = afterFrom[0];
-              const after = afterFrom[1] || "";
-              return (
-                <span data-slot="locale-desc">
-                  {before}
-                  <span className="profile-locale-modal__name">{fromLabel}</span>
-                  {middle}
-                  <span className="profile-locale-modal__name">{toLabel}</span>
-                  {after}
-                </span>
-              );
-            })()}
-          </p>
-        </div>
-        <div className="profile-locale-modal__actions">
-          <button
-            onClick={onCancel}
-            className="type-data-base profile-locale-modal__cancel"
-          >
-            {srcProfile.localeModalCancel}
-          </button>
-          <CtaButton
-            onClick={onConfirm}
-            radius="xl"
-            className="profile-locale-modal__confirm"
-          >
-            {tgtProfile.localeModalConfirm}
-          </CtaButton>
-        </div>
-      </motion.div>
-    </div>,
-    document.body,
+  /* FW-12 (S17-B-02): ConfirmDialog del DS — focus su «Annulla», Tab che
+     resta nel dialog, Esc via escape-stack, ritorno del focus al chip. */
+  const desc = srcProfile.localeModalDesc;
+  const [before, rest = ""] = desc.split("{from}");
+  const [middle, after = ""] = rest.split("{to}");
+  return (
+    <ConfirmDialog
+      open
+      onDismiss={onCancel}
+      ariaLabel={srcProfile.localeModalTitle}
+      icon={<Globe size={22} />}
+      title={srcProfile.localeModalTitle}
+      subtitle={tgtProfile.localeModalTitle !== srcProfile.localeModalTitle ? tgtProfile.localeModalTitle : undefined}
+      subtitleLang={target.id}
+      body={
+        <>
+          {before}
+          <strong className="profile-locale-modal__name">{fromLabel}</strong>
+          {middle}
+          <strong className="profile-locale-modal__name" lang={target.id}>{toLabel}</strong>
+          {after}
+        </>
+      }
+      initialFocusAction={1}
+      actions={[
+        { label: <span lang={target.id}>{tgtProfile.localeModalConfirm}</span>, onClick: onConfirm, variant: "cta" },
+        { label: srcProfile.localeModalCancel, onClick: onCancel, variant: "secondary" },
+      ]}
+    />
   );
 }
 
@@ -1225,6 +1195,10 @@ export function ProfilePage() {
     return (
       !PROFILE_TAB_IDS.some(tab => tab === searchParams.get("tab")) &&
       loadString(PROFILE_COMPLETE_KEY) !== "true" &&
+      // FW-07 (S15-V-01): chi ha già scelto livello o forno non rifà il percorso
+      // (il forno preimpostato da un'edizione non conta come scelta).
+      !hasChosenSkill() &&
+      !(loadJson<SavedOvenPref>(OVEN_STORAGE_KEY)?.ovenType && loadJson<SavedOvenPref>(OVEN_STORAGE_KEY)?.origin !== "edition") &&
       loadSavedRecipes().length === 0 &&
       loadFavoriteStyles().length === 0
     );
@@ -1233,36 +1207,32 @@ export function ProfilePage() {
   /* Locale confirmation modal */
   const [pendingLocale, setPendingLocale] = useState<LocaleMeta | null>(null);
 
+  /* FW-07: il forno del profilo è quello della cucina effettiva
+   * (`vulcan_oven_pref`, scritto anche da Crea); `vulcan_ovens` e il vecchio
+   * `vulcan_oven` valgono solo come ripiego. */
   const [ovens, setOvens] = useState<string[]>(() => {
+    let legacyList: unknown;
+    let legacyOven: string | null = null;
     try {
       const saved = localStorage.getItem("vulcan_ovens");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-      const legacyOven = localStorage.getItem("vulcan_oven");
-      if (legacyOven) {
-        localStorage.removeItem("vulcan_oven");
-        const val = [legacyOven];
-        localStorage.setItem("vulcan_ovens", JSON.stringify(val));
-        return val;
-      }
-      const savedPref = localStorage.getItem(OVEN_STORAGE_KEY);
-      if (savedPref) {
-        const parsed = JSON.parse(savedPref);
-        if (parsed?.ovenType) {
-          const val = [parsed.ovenType];
-          localStorage.setItem("vulcan_ovens", JSON.stringify(val));
-          return val;
-        }
-      }
-    } catch (e) {
+      legacyList = saved ? JSON.parse(saved) : undefined;
+      legacyOven = localStorage.getItem("vulcan_oven");
+      if (legacyOven) localStorage.removeItem("vulcan_oven");
+    } catch {
       // ignore
     }
-    return ["home"];
+    const val = [profileOvenType(loadJson<SavedOvenPref>(OVEN_STORAGE_KEY), legacyList, legacyOven)];
+    try {
+      localStorage.setItem("vulcan_ovens", JSON.stringify(val));
+    } catch {
+      // ignore
+    }
+    return val;
   });
 
   const ovenType = ovens[0] as OvenType;
+  /* FW-07 (S16-B-03): solo le distribuzioni del calore che questo forno ha. */
+  const heatProfiles = OVEN_HEAT_PROFILES.filter((profile) => isHeatProfileCompatible(profile.id, ovenType));
 
   const [ovenTemp, setOvenTemp] = useState(() => {
     const saved = loadJson<{ ovenType: OvenType; maxTemp: number }>(OVEN_STORAGE_KEY);
@@ -1308,16 +1278,6 @@ export function ProfilePage() {
     const saved = loadJson<SkillLevel>(SKILL_STORAGE_KEY);
     return saved ?? 1;
   });
-  const [pizzaNerd, setPizzaNerd] = useState<boolean>(() => {
-    try {
-      return (
-        localStorage.getItem(NERD_STORAGE_KEY) === "true" ||
-        localStorage.getItem("vulcan_view_mode") === "nerd"
-      );
-    } catch {
-      return false;
-    }
-  });
   const [unitSystem, setUnitSystem] = useState<UnitSystem>(() => getPreferredUnitSystem());
   const fmt = useMemo(
     () => createFormatter(cms.ui, bcp47, unitSystem),
@@ -1346,15 +1306,10 @@ export function ProfilePage() {
     });
   }, []);
 
+  /* FW-07 (S16-A-01): una scelta sola, «con cosa impasti di solito»: è
+     quella che usano le ricette (mixer_type). */
   const toggleMixer = useCallback((id: string) => {
-    setMixers((prev) => {
-      if (prev.includes(id)) {
-        if (prev.length === 1) return prev;
-        return prev.filter((x) => x !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
+    setMixers((prev) => (prev.length === 1 && prev[0] === id ? prev : [id]));
   }, []);
 
   const toggleSurface = useCallback((id: SurfaceType) => {
@@ -1366,6 +1321,9 @@ export function ProfilePage() {
     });
   }, [updateEquipment]);
 
+  const currentHeat = isHeatProfileCompatible(equipment.oven_heat_profile ?? "static_top_bottom", ovenType)
+    ? (equipment.oven_heat_profile ?? "static_top_bottom")
+    : undefined; // quella salvata non vale per questo forno: il motore usa il testo del tipo
   const setOvenHeatProfile = useCallback((id: OvenHeatProfile) => {
     updateEquipment((prev) => ({ ...prev, oven_heat_profile: id }));
   }, [updateEquipment]);
@@ -1387,6 +1345,7 @@ export function ProfilePage() {
   const [locationResults, setLocationResults] = useState<GeoSearchResult[]>([]);
   const [locationSearching, setLocationSearching] = useState(false);
   const [locationDetecting, setLocationDetecting] = useState(false);
+  const [locationError, setLocationError] = useState(false);
 
   /* Location search via Nominatim */
   const searchLocation = useCallback(async (query: string) => {
@@ -1426,7 +1385,8 @@ export function ProfilePage() {
   }, []);
 
   const detectCurrentLocation = useCallback(() => {
-    if (!("geolocation" in navigator)) return;
+    setLocationError(false);
+    if (!("geolocation" in navigator)) { setLocationError(true); return; }
     setLocationDetecting(true);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
@@ -1446,7 +1406,7 @@ export function ProfilePage() {
         saveJson(LOCATION_STORAGE_KEY, loc);
         setLocationDetecting(false);
       },
-      () => { setLocationDetecting(false); },
+      () => { setLocationDetecting(false); setLocationError(true); },
       { timeout: 8000, maximumAge: 300000 },
     );
   }, []);
@@ -1487,13 +1447,6 @@ export function ProfilePage() {
   useSaveOnChange(skillLevel, () => saveJson(SKILL_STORAGE_KEY, skillLevel));
 
   useSaveOnChange(dietary, () => saveJson(DIETARY_STORAGE_KEY, dietary));
-
-  useSaveOnChange(pizzaNerd, () => {
-    try {
-      localStorage.setItem(NERD_STORAGE_KEY, String(pizzaNerd));
-      localStorage.removeItem("vulcan_view_mode");
-    } catch { /* */ }
-  });
 
   useSaveOnChange(unitSystem, () => savePreferredUnitSystem(unitSystem));
   const toggleDietary = (id: string) =>
@@ -1635,41 +1588,41 @@ export function ProfilePage() {
           stepNum={p.ovenStep}
           delay={motionDelay.short}
         >
+          <SettingEffectNote settingId="oven" />
           <OvenModelSearch
             selectedId={ovenModelId}
             formatTemp={(c) => fmt.celsius(c)}
             onPick={(model) => {
               setOvenModelId(model.id);
-              setOvens((prev) => [model.ovenType, ...prev.filter((x) => x !== model.ovenType)]);
+              setOvens([model.ovenType]);
               setOvenTemp(model.maxTempC);
             }}
             onClear={() => setOvenModelId(null)}
+            currentTempC={ovenTemp}
+            onRestore={(model: OvenModel) => setOvenTemp(model.maxTempC)}
           />
-          <div className="profile-oven-list">
+          <div className="profile-oven-list" role="radiogroup" aria-label={p.ovenTitle}>
             {OVEN_PRESETS.map((preset) => {
-              const Icon = OVEN_ICONS[preset.id] || Flame;
-              const active = ovens.includes(preset.id);
+              const Icon = ovenIcon(preset.id);
+              // FW-07 (S16-A-10): un solo forno, quello che usano le ricette.
+              const active = ovenType === preset.id;
               return (
                 <motion.button
                   key={preset.id}
                   layout
                   type="button"
-                  aria-pressed={active}
+                  role="radio"
+                  aria-checked={active}
                   onClick={() => {
-                    // Un tipo scelto a mano non è più il modello cercato.
+                    if (active) return;
+                    // Un altro tipo non è più il modello cercato.
                     setOvenModelId(null);
-                    if (ovens.includes(preset.id)) {
-                      if (ovens.length === 1) return;
-                      const next = ovens.filter((id) => id !== preset.id);
-                      setOvens(next);
-                      // Tipo e temperatura devono cambiare insieme anche quando
-                      // si rimuove il forno principale da una selezione multipla.
-                      if (ovens[0] === preset.id) {
-                        setOvenTemp(OVEN_PRESETS.find((p) => p.id === next[0])?.maxTemp ?? 250);
-                      }
-                    } else {
-                      setOvens([preset.id, ...ovens]);
-                      setOvenTemp(preset.maxTemp);
+                    setOvens([preset.id]);
+                    setOvenTemp(preset.maxTemp);
+                    // FW-07 (S16-B-03): la distribuzione del calore resta solo se il nuovo forno ce l'ha.
+                    const heat = equipment.oven_heat_profile;
+                    if (heat && !isHeatProfileCompatible(heat, preset.id)) {
+                      updateEquipment((prev) => ({ ...prev, oven_heat_profile: compatibleHeatProfiles(preset.id)[0] }));
                     }
                   }}
                   className="profile-oven-list__item"
@@ -1694,7 +1647,7 @@ export function ProfilePage() {
                     </span>
                   </div>
                   <span className="type-data profile-oven-list__temp">
-                    {fmt.celsius(preset.maxTemp)}
+                    {fmt.celsius(active ? ovenTemp : preset.maxTemp)}
                   </span>
                   <AnimatePresence>
                     {active && (
@@ -1724,33 +1677,32 @@ export function ProfilePage() {
                 {fmt.celsius(ovenTemp)}
               </span>
             </div>
+            {/* FW-07 (S16-A-02, S16-B-15): la scala arriva al forno più caldo del
+                catalogo (509, 550 °C) e il lettore di schermo sente l'unità. */}
             <input
               type="range"
               min={180}
-              max={500}
-              step={10}
+              max={OVEN_SLIDER_MAX}
+              step={1}
               value={ovenTemp}
               onChange={(e) => setOvenTemp(Number(e.target.value))}
               className="profile-oven-temp__slider"
               aria-label={p.tempAria}
+              aria-valuetext={fmt.celsius(ovenTemp)}
             />
           </div>
 
-          <details className="profile-oven-heat">
-            <summary className="profile-oven-heat__head">
-              <span className="type-data-sm profile-oven-heat__label">
-                {uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}</span>
-              <span className="profile-oven-heat__current">
-                {OVEN_HEAT_PROFILES.find(profile => profile.id === (equipment.oven_heat_profile ?? "static_top_bottom"))?.label}
-              </span>
-              <ChevronDown size={16} aria-hidden="true" />
-            </summary>
-            <p className="type-data-xs profile-oven-heat__hint">
-              {uiMessage("pages.profile.cambia-preriscaldo-ripiano-e-rotazioni-8f2fcd03")}
-            </p>
+          {heatProfiles.length > 0 && (
+          <Disclosure
+            className="profile-oven-heat"
+            variant="card"
+            summary={uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}
+            meta={heatProfiles.find(profile => profile.id === currentHeat)?.label}
+          >
+            <SettingEffectNote settingId="ovenHeat" className="type-data-xs profile-oven-heat__hint" />
             <div className="profile-oven-heat__grid">
-              {OVEN_HEAT_PROFILES.map((profile) => {
-                const active = (equipment.oven_heat_profile ?? "static_top_bottom") === profile.id;
+              {heatProfiles.map((profile) => {
+                const active = currentHeat === profile.id;
                 const suggested = profile.bestFor.includes(ovenType);
                 return (
                   <motion.button
@@ -1785,7 +1737,8 @@ export function ProfilePage() {
                 );
               })}
             </div>
-          </details>
+          </Disclosure>
+          )}
         </ProfileSection>
 
         {/* ── SKILL ── */}
@@ -1795,6 +1748,7 @@ export function ProfilePage() {
           stepNum={p.skillStep}
           delay={motionDelay.medium}
         >
+          <SettingEffectNote settingId="skill" />
           <div className="profile-skill-grid">
             {SKILL_LEVELS.map((skill) => {
               const active = skillLevel === skill.level;
@@ -1819,7 +1773,7 @@ export function ProfilePage() {
                       transition={motionSpring.crispPanel}
                       className="profile-skill-grid__level"
                     >
-                      LV{skill.level}
+                      {uiMessage("pages.profile.skillLevel", [skill.level])}
                     </motion.span>
                     <span className="type-body-sm profile-skill-grid__name">
                       {cms.skillLevels[String(skill.level)]?.name ?? skill.name}
@@ -1845,9 +1799,23 @@ export function ProfilePage() {
               );
             })}
           </div>
+          {/* FW-08 (S15-A-02, S16-B-14, S17-A-07/B-13): cosa cambia il livello
+              e, subito accanto, «Mostra i dettagli tecnici» (D-C). FW-16: il
+              dettaglio per tutti i livelli resta richiudibile. */}
+          <SkillLevelEffect level={skillLevel} />
+          <SkillEffectDetails />
+          <DetailLevelSetting />
         </ProfileSection>
 
-        {/* Dispensa rimossa dal profilo — gestita nel wizard Crea */}
+        {/* FW-16 (S16-A-14): la dispensa si modifica in Crea, ma qui si vede e si raggiunge. */}
+        <ProfileSection
+          title={p.pantryTitle}
+          subtitle={p.pantrySubtitle}
+          delay={motionDelay.medium}
+        >
+          <SettingEffectNote settingId="pantry" />
+          <PantrySummary />
+        </ProfileSection>
 
         {/* ── ATTREZZATURA AVANZATA ── */}
         <ProfileSection
@@ -1860,17 +1828,17 @@ export function ProfilePage() {
             {/* ── Impastamento ── */}
             <EquipmentCategory
               title={p.equipMixerTitle}
-              stepLabel={p.equipMixerTitle}
               expanded={equipExpandedCat === "mixer"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "mixer" ? null : "mixer")}
               summary={mixers.length > 0
-                ? mixers.map(id => localMixers.find((m) => m.id === id)?.label ?? "").filter(Boolean).join(", ")
+                ? localMixers.find((m) => m.id === mixers[0])?.label ?? p.equipSummaryNone
                 : p.equipSummaryNone}
               hasSelection={mixers.length > 0}
             >
-              <div className="profile-equip-option-list">
+              <SettingEffectNote settingId="mixer" />
+              <div className="profile-equip-option-list" role="radiogroup" aria-label={p.equipMixerTitle}>
                 {localMixers.map((mixer) => {
-                  const active = mixers.includes(mixer.id);
+                  const active = mixers[0] === mixer.id;
                   const levelModifier =
                     mixer.level === "professional"
                       ? " profile-equip-option__badge--pro"
@@ -1881,7 +1849,8 @@ export function ProfilePage() {
                     <motion.button
                       key={mixer.id}
                       type="button"
-                      aria-pressed={active}
+                      role="radio"
+                      aria-checked={active}
                       onClick={() => toggleMixer(mixer.id)}
                       className="profile-equip-option"
                       animate={{
@@ -1925,7 +1894,6 @@ export function ProfilePage() {
             {/* ── Superficie di cottura ── */}
             <EquipmentCategory
               title={p.equipSurfaceTitle}
-              stepLabel={p.equipSurfaceTitle}
               expanded={equipExpandedCat === "surface"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "surface" ? null : "surface")}
               summary={equipment.surfaces.length > 0
@@ -1933,6 +1901,7 @@ export function ProfilePage() {
                 : p.equipSummaryNone}
               hasSelection={equipment.surfaces.length > 0}
             >
+              <SettingEffectNote settingId="surfaces" />
               <div className="profile-equip-option-list">
                 {localSurfaces.map((surface) => {
                   const active = equipment.surfaces.includes(surface.id);
@@ -1961,7 +1930,10 @@ export function ProfilePage() {
                             {surface.label}
                           </span>
                           <span className={`type-data profile-equip-option__k-badge${heatModifier}`}>
-                            {uiMessage("pages.profile.k-a2a64040")}{surface.conductivity}
+                            {/* FW-01 (S16-A-08): unità esplicita; la griglia non ha superficie di contatto. */}
+                            {surface.conductivity > 0
+                              ? uiMessage("pages.profile.surfaceConductivity", [fmt.number(surface.conductivity)])
+                              : uiMessage("pages.profile.surfaceNoContact")}
                           </span>
                         </div>
                         <div className="type-data-xs profile-equip-option__desc">
@@ -1990,7 +1962,6 @@ export function ProfilePage() {
             {/* ── Utensili ── */}
             <EquipmentCategory
               title={p.equipToolsTitle}
-              stepLabel={p.equipToolsTitle}
               expanded={equipExpandedCat === "tools"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "tools" ? null : "tools")}
               summary={equipment.tools.length > 0
@@ -1998,6 +1969,7 @@ export function ProfilePage() {
                 : p.equipSummaryNone}
               hasSelection={equipment.tools.length > 0}
             >
+              <SettingEffectNote settingId="tools" />
               <div className="profile-equip-tools">
                 {(Object.keys(localToolCats) as ToolCategory[]).map((catId) => {
                   const cat = localToolCats[catId];
@@ -2062,21 +2034,16 @@ export function ProfilePage() {
           stepNum={p.dietStep}
           delay={motionDelay.profileSection}
         >
-          <div className="profile-diet-chips">
-            {DIETARY_OPTIONS.map((d) => {
+          <DietPreferences
+            options={DIETARY_OPTIONS.map((d) => {
               const Icon = d.icon;
-              return (
-                <Chip
-                  key={d.id}
-                  label={(p as any)[d.labelKey] || d.labelKey}
-                  active={dietary.includes(d.id)}
-                  onToggle={() => toggleDietary(d.id)}
-                  icon={<Icon size={14} />}
-                />
-              );
+              return { id: d.id, label: p[d.labelKey] || d.labelKey, icon: <Icon size={14} /> };
             })}
-          </div>
-          <AllergenPreferences value={allergens} onChange={setAllergens}/>
+            dietary={dietary}
+            onToggleDiet={toggleDietary}
+            allergens={allergens}
+            onAllergensChange={setAllergens}
+          />
           {dietary.length === 0 && allergens.length === 0 && (
             <p className="type-data-sm profile-diet-empty">
               {p.noDietNote}
@@ -2091,6 +2058,7 @@ export function ProfilePage() {
           stepNum={p.locationStep}
           delay={motionDelay.profileSectionStep}
         >
+          <SettingEffectNote settingId="location" />
           <div className="profile-location">
             {/* Current saved location */}
             {savedLocation && (
@@ -2211,12 +2179,22 @@ export function ProfilePage() {
               {p.locationAuto}
             </motion.button>
 
+            {/* FW-16 (S16-A-18): l'errore si vede, i servizi esterni hanno un nome. */}
+            {locationError && (
+              <p className="type-data-sm profile-location__error" role="status">
+                {uiMessage("profile.location.detectFailed")}
+              </p>
+            )}
+
             {/* Hint when no location */}
             {!savedLocation && (
               <p className="type-data-sm profile-location__hint">
                 {p.locationNone}
               </p>
             )}
+            <p className="type-data-xs profile-location__privacy">
+              {uiMessage("profile.location.privacy")}
+            </p>
           </div>
         </ProfileSection>
           </div>
@@ -2225,12 +2203,9 @@ export function ProfilePage() {
         {/* ── LINGUA & TEMA ── */}
         {profileTab === "app" && (
           <div role="tabpanel" id="profile-panel-app" aria-labelledby="profile-tab-app" tabIndex={0}>
-        {/* D-046 / D-047: accesso, ruolo riconosciuto, demo */}
-        <AccountPanel locale={bcp47} />
         <ProfileSection
           title={p.prefsTitle}
           subtitle={p.prefsSubtitle}
-          stepNum={p.prefsStep}
           delay={motionDelay.profileSectionLate}
         >
           <div className="profile-prefs">
@@ -2239,27 +2214,21 @@ export function ProfilePage() {
               <div className="type-data profile-prefs__label">
                 {p.langLabel}
               </div>
-              <div className="profile-prefs__lang-list">
+              {/* FW-13 (S17-B-06/B-16): ds/Chip (aria-pressed), nome nella propria
+                  lingua, senza bandiera. FW-12 (S17-A-10/B-05): gruppo con nome
+                  e attributo lang sul nome nativo. */}
+              <div className="profile-prefs__lang-list" role="group" aria-label={p.langLabel}>
                 {LOCALE_META.filter((l) => l.available).map((locale) => (
-                  <motion.button
+                  <Chip
                     key={locale.id}
-                    onClick={() => {
+                    label={<span lang={locale.id}>{locale.name}</span>}
+                    active={currentLocale.id === locale.id}
+                    onToggle={() => {
                       if (locale.id !== currentLocale.id) {
                         setPendingLocale(locale);
                       }
                     }}
-                    className="profile-prefs__lang-btn"
-                    initial={false}
-                    animate={{
-                      backgroundColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-bg)",
-                      color: currentLocale.id === locale.id ? "var(--chip-text-active)" : "var(--chip-text)",
-                      borderColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-border)",
-                    }}
-                    transition={motionSpring.crispPanel}
-                  >
-                    <span data-slot="flag">{locale.flag}</span>
-                    {locale.name}
-                  </motion.button>
+                  />
                 ))}
               </div>
             </div>
@@ -2289,98 +2258,37 @@ export function ProfilePage() {
         <ProfileSection
           title={p.unitTitle}
           subtitle={p.unitSubtitle}
-          stepNum={p.unitStep}
           delay={motionDelay.deliberate}
         >
           <div data-slot="unit-system">
             <div className="type-data profile-prefs__label">
               {p.unitSystemLabel}
             </div>
-            <div className="profile-unit-grid">
-              {([
-                {
-                  id: "metric" as UnitSystem,
-                  label: p.unitMetric,
-                  desc: p.unitMetricDesc,
-                },
-                {
-                  id: "imperial" as UnitSystem,
-                  label: p.unitImperial,
-                  desc: p.unitImperialDesc,
-                },
-              ]).map((option) => {
-                const active = unitSystem === option.id;
-                return (
-                  <motion.button
-                    key={option.id}
-                    type="button"
-                    onClick={() => setUnitSystem(option.id)}
-                    className="profile-unit-option"
-                    initial={false}
-                    animate={{
-                      backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
-                      borderColor: active ? "var(--primary)" : "var(--container-border)",
-                    }}
-                    transition={motionSpring.crispPanel}
-                    aria-pressed={active}
-                  >
-                    <Thermometer
-                      size={17}
-                      className={`profile-unit-option__icon${active ? " profile-unit-option__icon--active" : ""}`}
-                    />
-                    <span className="profile-unit-option__body">
-                      <span className="type-body-sm profile-unit-option__label">
-                        {option.label}
-                      </span>
-                      <span className="type-data-xs profile-unit-option__desc">
-                        {option.desc}
-                      </span>
-                    </span>
-                    {active && <Check size={15} className="profile-unit-option__check" />}
-                  </motion.button>
-                );
-              })}
-            </div>
+            {/* FW-13 (S17-B-06/B-16): scelta singola con ds/SegmentedControl;
+                la descrizione dell'opzione attiva sta sotto, senza icone ripetute. */}
+            <SegmentedControl
+              ariaLabel={p.unitSystemLabel}
+              tone="brand"
+              value={unitSystem}
+              onValueChange={(value) => setUnitSystem(value)}
+              options={[
+                { value: "metric" as UnitSystem, label: p.unitMetric },
+                { value: "imperial" as UnitSystem, label: p.unitImperial },
+              ]}
+            />
+            <p className="type-data-xs profile-unit-desc" aria-live="polite">
+              {unitSystem === "imperial" ? p.unitImperialDesc : p.unitMetricDesc}
+            </p>
+            {/* FW-11 (S17-A-01, D-J): le microdosi restano in grammi. */}
+            <p className="type-data-xs profile-unit-note">
+              {uiMessage("profile.unitImperialSmallNote", [formatMass(MICRO_DOSE_GRAMS, bcp47)])}
+            </p>
           </div>
         </ProfileSection>
 
-        {/* ── PIZZANERD ── */}
-        <ProfileSection
-          title={p.pizzaNerdTitle}
-          subtitle={p.pizzaNerdSubtitle}
-          stepNum={p.pizzaNerdStep}
-          delay={motionDelay.profileSectionFinal}
-        >
-          <button
-            type="button"
-            onClick={() => setPizzaNerd((value) => !value)}
-            className={`profile-nerd-toggle${pizzaNerd ? " profile-nerd-toggle--active" : ""}`}
-            aria-pressed={pizzaNerd}
-          >
-            <span
-              className={`profile-nerd-toggle__icon${pizzaNerd ? " profile-nerd-toggle__icon--active" : ""}`}
-            >
-              <Beaker size={17} />
-            </span>
-            <span className="profile-nerd-toggle__body">
-              <span className="profile-nerd-toggle__title">
-                {p.pizzaNerdCardTitle}
-              </span>
-              <span className="profile-nerd-toggle__desc">
-                {p.pizzaNerdCardDesc}
-              </span>
-            </span>
-            <span
-              className={`profile-nerd-toggle__track${pizzaNerd ? " profile-nerd-toggle__track--active" : ""}`}
-            >
-              <motion.span
-                className="profile-nerd-toggle__thumb"
-                animate={{ left: pizzaNerd ? 22 : 4 }}
-                transition={motionSpring.crispSettled}
-              />
-            </span>
-          </button>
-        </ProfileSection>
+        {/* D-046 / D-047: accesso, ruolo riconosciuto, demo. FW-16 (S17-A-02):
+            dopo le preferenze, e solo se c'è un'azione possibile. */}
+        <AccountPanel locale={bcp47} />
 
         {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}
         <div className="profile-page__footer">

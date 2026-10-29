@@ -794,6 +794,55 @@ export function getVersionById(versionId: string): StyleVersion | null {
   return null;
 }
 
+/* ═══ FW-14 · RIFERIMENTO DELLO STILE (D-B) ═══
+ * Un solo «Riferimento» per stile, scritto nei dati e non dedotto dalla
+ * difficoltà (prima: versione con skill_hint massimo, che per la Teglia dava
+ * l'88 % fuori dalla forbice 75–85 % dello stile). Tutti i delta («Prima →
+ * Dopo», «ottimizzato», «Cosa cambia») partono da qui.
+ *   - disciplinare: dove esiste un disciplinare (STG, IGP, APITER) il
+ *     riferimento è lui (`referenceInterpretationId`);
+ *   - provisional: regola precedente tenuta finché i parametri cadono negli
+ *     intervalli dello stile, altrimenti la versione che ci cade (o il centro
+ *     degli intervalli se nessuna ci cade). Da confermare da Matteo stile per
+ *     stile (docs/fonti-dati.md §5.1). */
+export type StyleReferenceBasis = "disciplinare" | "provisional";
+export interface StyleReference {
+  /** Versione di riferimento; null = centro degli intervalli dello stile. */
+  referenceVersionId: string | null;
+  /** Disciplinare di riferimento (interpretation-library): prevale sulla versione. */
+  referenceInterpretationId?: string;
+  basis: StyleReferenceBasis;
+}
+
+const disciplinare = (id: string): StyleReference => ({ referenceVersionId: null, referenceInterpretationId: id, basis: "disciplinare" });
+const provisional = (id: string | null): StyleReference => ({ referenceVersionId: id, basis: "provisional" });
+
+const STYLE_REFERENCES: Record<string, StyleReference> = {
+  napoletana_stg: disciplinare("avpn_disciplinare"),
+  focaccia_recco: disciplinare("igp_recco"),
+  teglia_romana: disciplinare("apiter_teglia"),
+  napoletana_canotto: provisional("canotto_martucci"),
+  tonda_romana: provisional("tonda_scrocchiarella"),
+  pinsa_romana: provisional("pinsa_tradizionale"),
+  new_york: provisional("ny_classica"),
+  detroit: provisional("detroit_classica"),
+  chicago_deep: provisional("chicago_tradizionale"),
+  focaccia_genovese: provisional(null),
+  sfincione: provisional("sfincione_casalingo"),
+  pala_romana: provisional("pala_pro"),
+  grandma_style: provisional("grandma_long_island"),
+  padellino_torino: provisional(null),
+  pizza_baciata: provisional("baciata_bonci"),
+  pizza_spaccata: provisional("spaccata_tradizionale"),
+  trancio_milanese: provisional("trancio_pizzeria"),
+  chicago_tavern: provisional("tavern_cracker"),
+};
+
+/** Riferimento dichiarato dello stile; senza voce: centro degli intervalli. */
+export function getStyleReference(styleId: string): StyleReference {
+  return STYLE_REFERENCES[styleId] ?? { referenceVersionId: null, basis: "provisional" };
+}
+
 /** Sceglie la versione adatta allo skill level, o null se lo stile non ne ha.
  *
  * Se `availableHours` è valorizzato (l'utente ha scelto QUANDO vuole la pizza),

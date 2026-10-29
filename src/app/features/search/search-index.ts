@@ -1,13 +1,27 @@
 import { FLOURS_DB } from "../../data/flour-database";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../../data/glossary-data";
-import { SIGNATURE_RECIPES } from "../../data/signature-recipes";
+import { SIGNATURE_RECIPES, signatureRecipeLink } from "../../data/signature-recipes";
 import { TOPPING_CONCEPTS, getVariantsForConcept } from "../../data/topping-library";
 import { toppingConcept } from "../../data/topping-i18n/localize";
 import { localizeSignatureRecipe } from "../../data/inspiration-i18n/localize";
 import { ISSUES_DB, getLocalizedIssue } from "../../data/troubleshooting-data";
-import { formatOrigin, PIZZA_FAMILIES, STYLES_DB } from "../../domain/pizza-engine";
+import { formatOrigin, PIZZA_FAMILIES, shortOrigin, STYLES_DB } from "../../domain/pizza-engine";
+import { getStyleTags } from "../../domain/deviation-tags";
+import {
+  EMPTY_LEXICON,
+  fold,
+  fuzzyMatches,
+  isShortQuery,
+  queryTokens,
+  queryVariants,
+  textWords,
+  tokenMatches,
+  type SearchLexicon,
+} from "./text-match";
 import { uiMessage } from "../../i18n/ui-messages";
+import { formatNumber, formatPercent } from "../../i18n/format";
 import type { CmsContent } from "../cms/cms-context";
+import { placeNameLocalizer } from "../cms/i18n";
 import { PRE_FERMENT_IDS, preFermentName } from "../recipe/pre-ferment-guide";
 import { STYLE_PHOTOS } from "../recipe/recommended-styles";
 
@@ -43,27 +57,21 @@ export interface SearchResult {
   /** Pertinenza: 3 titolo che inizia con la ricerca, 2 parola del titolo,
    *  1 titolo che la contiene, 0 trovata solo nel resto del testo. */
   score: number;
+  /** FW-09: trovato solo tollerando un refuso. */
+  fuzzy?: boolean;
 }
 
 interface SearchEntry extends Omit<SearchResult, "score"> {
   /** Titolo e testo completo già normalizzati. */
   foldedTitle: string;
   haystack: string;
+  /** FW-09 (S04-A-10): simboli del glossario («W», «P/L» → w, p, l, p/l). */
+  symbols?: string[];
 }
 
-export const MIN_QUERY_LENGTH = 2;
-
-/** Minuscole e senza accenti latini. Lascia stare i segni giapponesi
- *  (dakuten), che cambiano la parola. */
-export function fold(text: string): string {
-  return text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-}
-
-export function queryTokens(query: string): string[] {
-  const folded = fold(query.trim());
-  if (folded.length < MIN_QUERY_LENGTH) return [];
-  return folded.split(/\s+/).filter(Boolean);
-}
+/* FW-09: normalizzazione, sinonimi, flessioni e refusi in ./text-match
+ * (pure e senza dati, condivise con le ricerche di pagina). */
+export { MIN_QUERY_LENGTH, fold, isShortQuery, queryTokens } from "./text-match";
 
 function clip(text: string, max: number): string {
   return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
@@ -91,18 +99,23 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
       cms.families?.[style.family]?.name ||
       PIZZA_FAMILIES[style.family as keyof typeof PIZZA_FAMILIES]?.name ||
       "";
-    /* Luogo e maestro nell'indice: «Bonci», «Napoli», «Genova» trovano gli stili. */
+    /* Luogo e maestro nell'indice: «Bonci», «Napoli», «Genova» trovano gli stili.
+     * FW-10 (S04-A-07): il sottotitolo dice origine e prima caratteristica,
+     * non la famiglia (che ripeteva il titolo); la famiglia resta cercabile. */
+    const firstChar = (cms.styleChars?.[style.id] ?? "").split("|")[0]?.trim();
     out.push(
       entry(
         {
           id: `style-${style.id}`,
           type: "style",
           title: style.name,
-          subtitle: familyName,
+          subtitle: [shortOrigin(style.origin), firstChar].filter(Boolean).join(" · "),
           link: `/recipe/${style.id}?mode=canonical`,
           photo: STYLE_PHOTOS[style.id],
         },
-        `${style.id.replace(/_/g, " ")} ${formatOrigin(style.origin)} ${cms.styleDescriptions?.[style.id] ?? ""} ${cms.styleChars?.[style.id] ?? ""}`,
+        /* FW-11 (S04-A-14): il nome italiano della famiglia resta indicizzato
+           in ogni lingua, come i nomi propri («napoletana» trova gli stili anche in en). */
+        `${familyName} ${style.id.replace(/_/g, " ")} ${PIZZA_FAMILIES[style.family as keyof typeof PIZZA_FAMILIES]?.name ?? ""} ${formatOrigin(style.origin)} ${formatOrigin(style.origin, placeNameLocalizer(cms))} ${cms.styleDescriptions?.[style.id] ?? ""} ${cms.styleChars?.[style.id] ?? ""} ${styleOvenWords(style.id, cms)}`,
       ),
     );
   }
@@ -120,7 +133,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           type: "recipe",
           title: rec.name,
           subtitle: style?.name ?? "",
-          link: `/recipe/${rec.style_id}?mode=canonical&tab=condimento&topping=${rec.topping_concept_id}`,
+          link: signatureRecipeLink(rec),
           photo: rec.photo || STYLE_PHOTOS[rec.style_id],
         },
         `${rec.description} ${raw.name} ${concept?.name ?? ""} ${(rec.occasion_tags ?? []).join(" ")}`,
@@ -163,10 +176,14 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           id: `flour-${flour.id}`,
           type: "flour",
           title: flour.name,
+          /* FW-11 (S04-A-06): niente «W0» per le farine senza glutine,
+             decimali e percentuale nella lingua attiva. */
           subtitle: uiMessage("components.shared.search-overlay.value-w-value-value-prot-value-98984423", [
-            flour.producer,
-            flour.w,
-            flour.proteine_pct,
+            flour.producer === "Generico" ? uiMessage("features.search.flourGenericProducer") : flour.producer,
+            flour.w > 0
+              ? uiMessage("format.flourW",[formatNumber(flour.w, cms.locale.id)])
+              : uiMessage("features.search.flourWNotApplicable"),
+            formatPercent(flour.proteine_pct, cms.locale.id),
             catLabel,
           ]),
           link: "/profile",
@@ -178,18 +195,21 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
 
   for (const raw of GLOSSARY_TERMS) {
     const term = getLocalizedTerm(raw, cms);
-    out.push(
-      entry(
-        {
-          id: `glossary-${term.id}`,
-          type: "glossary",
-          title: term.symbol && !term.name.includes(term.symbol) ? `${term.name} (${term.symbol})` : term.name,
-          subtitle: clip(term.definition, 100),
-          link: `/learn/glossary#${term.id}`,
-        },
-        `${term.definition} ${term.id.replace(/_/g, " ")}`,
-      ),
+    const glossaryEntry = entry(
+      {
+        id: `glossary-${term.id}`,
+        type: "glossary",
+        title: term.symbol && !term.name.includes(term.symbol) ? `${term.name} (${term.symbol})` : term.name,
+        subtitle: clip(term.definition, 100),
+        link: `/learn/glossary#${term.id}`,
+      },
+      `${term.definition} ${term.id.replace(/_/g, " ")}`,
     );
+    if (term.symbol) {
+      const symbol = fold(term.symbol);
+      glossaryEntry.symbols = [symbol, ...symbol.split("/")];
+    }
+    out.push(glossaryEntry);
   }
 
   for (const id of PRE_FERMENT_IDS) {
@@ -236,19 +256,90 @@ function scoreTitle(foldedTitle: string, tokens: string[]): number {
   return 0;
 }
 
+export { searchLexicon, type SearchLexicon } from "./text-match";
+
 /** Tutti i risultati che contengono ogni parola della ricerca, ordinati per
  *  pertinenza (a parità, l'ordine del database). */
-export function searchIndex(index: readonly SearchEntry[], query: string): SearchResult[] {
-  const tokens = queryTokens(query);
-  if (tokens.length === 0) return [];
-  const hits: SearchResult[] = [];
-  index.forEach((e) => {
-    if (!tokens.every((t) => e.haystack.includes(t))) return;
-    const { foldedTitle: _t, haystack: _h, ...result } = e;
-    hits.push({ ...result, score: scoreTitle(e.foldedTitle, tokens) });
-  });
-  /* sort stabile: a parità di punteggio resta l'ordine dell'indice */
-  return hits.sort((a, b) => b.score - a.score);
+export function searchIndex(index: readonly SearchEntry[], query: string, lexicon: SearchLexicon = EMPTY_LEXICON): SearchResult[] {
+  const strip = (e: SearchEntry, score: number): SearchResult => {
+    const { foldedTitle: _t, haystack: _h, symbols: _s, ...result } = e;
+    return { ...result, score };
+  };
+  /* Una lettera: solo i simboli del glossario, esatti («W», «P», «L»). */
+  if (isShortQuery(query)) {
+    const symbol = fold(query.trim());
+    return index.filter((e) => e.symbols?.includes(symbol)).map((e) => strip(e, 3));
+  }
+  if (queryTokens(query).length === 0) return [];
+  const variants = queryVariants(query, lexicon);
+  const collect = (matches: (e: SearchEntry, tokens: string[]) => boolean): SearchResult[] => {
+    const hits: SearchResult[] = [];
+    index.forEach((e) => {
+      let best = -1;
+      for (const tokens of variants) {
+        if (matches(e, tokens)) best = Math.max(best, scoreTitle(e.foldedTitle, tokens));
+      }
+      if (best >= 0) hits.push(strip(e, best));
+    });
+    /* sort stabile: a parità di punteggio resta l'ordine dell'indice */
+    return hits.sort((a, b) => b.score - a.score);
+  };
+  const exact = collect((e, tokens) => tokens.every((t) => tokenMatches(e.haystack, t)));
+  if (exact.length > 0) return exact;
+  const wordsOf = new Map<SearchEntry, string[]>();
+  return collect((e, tokens) => {
+    let words = wordsOf.get(e);
+    if (!words) {
+      words = textWords(e.haystack);
+      wordsOf.set(e, words);
+    }
+    const list = words;
+    return tokens.every((t) => tokenMatches(e.haystack, t) || fuzzyMatches(list, t));
+  }).map((result) => {
+    /* Prima chi ha la parola corretta nel titolo («napoletna» → Napoletana). */
+    const titleWords = textWords(fold(result.title));
+    const inTitle = variants.some((tokens) => tokens.some((t) => fuzzyMatches(titleWords, t)));
+    return { ...result, score: inTitle ? 1 : 0, fuzzy: true };
+  }).sort((a, b) => b.score - a.score);
+}
+
+/** Parole del forno con cui si cerca uno stile («forno di casa», «legna»). */
+function styleOvenWords(styleId: string, cms: CmsContent): string {
+  const methods = getStyleTags(styleId)?.baking_method ?? [];
+  const filters = cms.filters;
+  return [
+    methods.includes("home_oven_compatible") ? filters?.ovenHome : "",
+    methods.includes("wood_fired") ? filters?.ovenWood : "",
+    methods.includes("pan_baked") ? filters?.ovenPan : "",
+  ].filter(Boolean).join(" ");
+}
+
+/** FW-10 (S04-A-07): come la tua cucina accoglie uno stile. */
+export interface KitchenFit {
+  blocked: boolean;
+  now: number;
+}
+
+/** Id dello stile di un risultato «Stili», o null. */
+export function styleIdOf(result: Pick<SearchResult, "id" | "type">): string | null {
+  return result.type === "style" ? result.id.slice("style-".length) : null;
+}
+
+/** A parità di pertinenza, prima gli stili che la tua cucina permette; uno
+ *  stile bloccato apre la versione adattata alla tua cucina invece della
+ *  canonica. Gli altri risultati non cambiano. */
+export function rankForKitchen(
+  results: readonly SearchResult[],
+  fit: (styleId: string) => KitchenFit | undefined,
+): SearchResult[] {
+  const blockedOf = (r: SearchResult) => {
+    const id = styleIdOf(r);
+    return id ? fit(id)?.blocked === true : false;
+  };
+  return results
+    .map((r, index) => ({ r, index, blocked: blockedOf(r) }))
+    .sort((a, b) => b.r.score - a.r.score || Number(a.blocked) - Number(b.blocked) || a.index - b.index)
+    .map(({ r, blocked }) => (blocked ? { ...r, link: r.link.replace("mode=canonical", "mode=adapted") } : r));
 }
 
 /** Gruppi per tipo; prima i gruppi col risultato più pertinente, poi

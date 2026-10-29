@@ -30,6 +30,14 @@ Ricerca per l'audit totale (n. 3 e n. 10). Stati come in `docs/fonti-dati.md`:
   procedimento invece di dare intervalli fissi in conflitto con le timeline.
   Non verificati e rimasti com'erano: crosta, estensibilità, alveolatura e
   complessità nella tabella di confronto (stato D).
+  Aggiornamento del 28/10/2026 (FW-01, decisione D-F): tolte dal confronto le
+  righe alveolatura e complessità; crosta riscritta senza «leopard spotting» per
+  il poolish (dipende dal forno) né «alveolatura fine» per la biga;
+  estensibilità marcata «stima» (poolish) o «da verificare» (biga); autolisi con
+  l'acqua della ricetta invece di «55–75 %»; origini in un solo formato
+  (poolish: Polonia, poi Francia, come Wikipedia, *Pre-ferment*). Le fonti di
+  questa pagina sono nel registro `src/app/data/science-sources.ts` (nota
+  `pre-ferment`).
 - Lo scorporo usa biga al 45 %: le fonti dicono 44 %. Differenza di 1 punto
   sull'acqua della biga, da correggere col selettore del prefermento (D-043).
 - Nessuna fonte per la regola «1 ora per ogni 1 % di lievito»: le tabelle dicono

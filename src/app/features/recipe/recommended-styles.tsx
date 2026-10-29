@@ -1,11 +1,11 @@
 import { recipeDisplayName } from "../../domain/recipe-reference";
-import { Award,CalendarClock,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
+import { Award,CalendarClock,Check,ChefHat,Clock,CookingPot,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
 import { useEffect,useMemo,useRef,useState,type ReactNode } from "react";
 import { useCms, type CmsContent } from "../cms/cms-context";
-import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
-import { CtaButton, FilterChip, Surface } from "../../components/ds/index";
+import { createFormatter,formatTemperatureCopy,placeNameLocalizer,t } from "../cms/i18n";
+import { EmptyState, FilterChip } from "../../components/ds/index";
 import { getStyleTags } from "../../domain/deviation-tags";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -19,6 +19,7 @@ StyleRecommendation,
 UserConstraints,
 type FamilyId,
 type TimeSlot,
+customMealSlot,
 } from "../../domain/pizza-engine";
 import { type Interpretation } from "../../data/interpretation-library";
 import { CompatibilityPill, StyleMetaChip } from "./style-card-parts";
@@ -31,13 +32,18 @@ import { getVersions } from "../../data/style-versions";
 import { TOPPING_CONCEPTS, TOPPING_LIBRARY } from "../../data/topping-library";
 import { uiMessage } from "../../i18n/ui-messages";
 import { timeSlotText } from "./time-slot-text";
-import { firstFeasibleSlot } from "../../domain/feasible-slot";
+import { earliestFeasibleMeal, firstFeasibleSlot } from "../../domain/feasible-slot";
+import { recommendationSections } from "../../domain/create-entry";
+import { pantryUnknown, presentationTier } from "../../use-cases/recommendation-groups";
 
 interface RecommendedStylesProps {
   /** Momenti proponibili, dal più vicino: se in quello scelto nessuno stile
    *  è fattibile si propone il primo che ne ha (audit 28/10/2026, S05-A-01). */
   timeSlots?: TimeSlot[];
   onSelectTimeSlot?: (slot: TimeSlot) => void;
+  /** FW-09: apre un pannello delle impostazioni (Dispensa quando non sappiamo
+   *  cosa c'è, S05-A-06; «La tua cucina» quando il limite è il forno). */
+  onOpenSettings?: (tab: "cucina" | "pantry") => void;
   constraints: UserConstraints;
   selectedStyle: PizzaStyle | null;
   /** La scelta porta con sé la variante migliore (round 7, nota Matteo):
@@ -117,33 +123,14 @@ function normalizeQuery(s: string): string {
   return s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-const TIER_META: Record<
-  string,
-  {
-    label: string;
-    subtitle: string;
-    color: string;
-    Icon: typeof Award;
-  }
-> = {
-  perfect: {
-    get label() { return uiMessage("features.recipe.recommended-styles.perfetti-per-te-3530eb1d"); },
-    get subtitle() { return uiMessage("features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d"); },
-    color: "var(--text-success)",
-    Icon: Award,
-  },
-  good: {
-    get label() { return uiMessage("features.recipe.recommended-styles.fattibili-f3ba54d3"); },
-    get subtitle() { return uiMessage("features.recipe.recommended-styles.richiedono-qualche-compromesso-170fe3d8"); },
-    color: "var(--text-warning)",
-    Icon: Sparkles,
-  },
-  not_feasible: {
-    get label() { return uiMessage("features.recipe.recommended-styles.non-fattibili-327346d5"); },
-    get subtitle() { return uiMessage("features.recipe.recommended-styles.mancano-requisiti-chiave-763f98f6"); },
-    color: "var(--text-muted)",
-    Icon: Triangle,
-  },
+/* Etichette e sottotitoli delle sezioni stanno nel CMS (cms.tiers). */
+const TIER_META: Record<string, { color: string; Icon: typeof Award }> = {
+  perfect: { color: "var(--text-success)", Icon: Award },
+  good: { color: "var(--text-warning)", Icon: Sparkles },
+  /* D-032 (Matteo, 24/10/2026): le fritte non usano il forno, quindi con una
+     cucina di casa finivano in cima ai consigli. Stanno a parte. */
+  fried: { color: "var(--text-accent)", Icon: CookingPot },
+  not_feasible: { color: "var(--text-muted)", Icon: Triangle },
 };
 
 export function RecommendedStyles({
@@ -152,6 +139,7 @@ export function RecommendedStyles({
   onSelectStyle,
   timeSlots,
   onSelectTimeSlot,
+  onOpenSettings,
 }: RecommendedStylesProps) {
   const { effectiveStyles, isOverrideActive } = useStylesOverride();
   const { cms, bcp47 } = useCms();
@@ -210,6 +198,21 @@ export function RecommendedStyles({
       : null,
     [noneFeasible, timeSlots, constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
   );
+  /* FW-09 (S05-A-01): l'ora esatta del primo pasto possibile, dalle stesse
+     ricette delle card (non da soglie fisse), da proporre come orario scelto. */
+  const earliestMeal = useMemo(
+    () => noneFeasible && rescueSlot
+      ? earliestFeasibleMeal(constraints, new Date(), (candidate) => recommendStyles(
+          candidate,
+          isOverrideActive ? effectiveStyles : undefined,
+          cms.recommendationWeights,
+          (style, current) => tailoredRecipeEntry(style, current, scoreWeights).recipe,
+        ), constraints.available_hours)
+      : null,
+    [noneFeasible, rescueSlot, constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
+  );
+  const earliestSlot = earliestMeal ? customMealSlot(earliestMeal.at) : null;
+  const unknownPantry = pantryUnknown(constraints);
   const [familyFilter, setFamilyFilter] = useState<FamilyId | "all">("all");
   const [styleQuery, setStyleQuery] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -274,24 +277,10 @@ export function RecommendedStyles({
     [recommendations, familyFilter, hydrationFilter, textureFilter, skillFilter, ovenFilter, styleQuery],
   );
 
-  const tiers: { key: string; items: RecommendationWithVariant[] }[] =
-    [
-      {
-        key: "perfect",
-        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "perfect")),
-      },
-      {
-        key: "good",
-        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "good")),
-      },
-      {
-        // Audit Sprint 12 — Sezione "Non fattibili": stili con incompatibilità
-        // hard (forno legna assente, ecc.) o score molto basso. Mostrati per
-        // trasparenza ("cosa non puoi fare e perché"), in stile muted.
-        key: "not_feasible",
-        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "not_feasible")),
-      },
-    ].filter((t) => t.items.length > 0);
+  /* D-032: le fritte in una sezione a parte (domain/create-entry.ts).
+     FW-09 (S05-A-06): con la dispensa sconosciuta le sole verifiche di
+     farina/lievito non tolgono lo stile da «Perfetti per te». */
+  const tiers = recommendationSections(filtered, sortByVisibleMatch, (r) => presentationTier(r, constraints));
 
   let idx = 0;
 
@@ -324,6 +313,7 @@ export function RecommendedStyles({
     { id: "romana", label: cms.families.romana?.name ?? PIZZA_FAMILIES.romana.name },
     { id: "americana", label: cms.families.americana?.name ?? PIZZA_FAMILIES.americana.name },
     { id: "contemporanea", label: cms.families.contemporanea?.name ?? PIZZA_FAMILIES.contemporanea.name },
+    { id: "regionale", label: cms.families.regionale?.name ?? PIZZA_FAMILIES.regionale.name },
   ];
 
   return (
@@ -473,57 +463,69 @@ export function RecommendedStyles({
       </p>
 
       {noneFeasible && (
-        <Surface as="section" className="recommended-rescue" aria-labelledby="recommended-rescue-title">
-          <p id="recommended-rescue-title" className="type-label recommended-rescue__title">
-            <CalendarClock size={16} aria-hidden="true" />
-            {uiMessage("recipe.slots.noneFeasibleTitle")}
-          </p>
-          <p className="type-body-sm recommended-rescue__body">
-            {rescueSlot
+        <EmptyState
+          id="recommended-rescue"
+          tone="warning"
+          live
+          icon={<CalendarClock size={16} aria-hidden="true" />}
+          title={uiMessage("recipe.slots.noneFeasibleTitle")}
+          reason={earliestSlot
+            ? uiMessage("ui.slotEarliestReady", [timeSlotText(earliestSlot, cms, bcp47).label])
+            : rescueSlot
               ? uiMessage("recipe.slots.noneFeasibleBody", [timeSlotText(rescueSlot, cms, bcp47).label])
               : uiMessage("recipe.slots.noneFeasibleNoSlot")}
-          </p>
-          {rescueSlot && onSelectTimeSlot && (
-            <CtaButton elevated={false} className="recommended-rescue__action" onClick={() => onSelectTimeSlot(rescueSlot)}>
-              {uiMessage("recipe.slots.chooseSlot", [timeSlotText(rescueSlot, cms, bcp47).label])}
-            </CtaButton>
-          )}
-        </Surface>
+          actions={onSelectTimeSlot
+            ? [
+                ...(earliestSlot ? [{ label: uiMessage("ui.slotMoveTo", [timeSlotText(earliestSlot, cms, bcp47).label]), onClick: () => onSelectTimeSlot(earliestSlot) }] : []),
+                ...(rescueSlot ? [{ label: uiMessage("recipe.slots.chooseSlot", [timeSlotText(rescueSlot, cms, bcp47).label]), onClick: () => onSelectTimeSlot(rescueSlot) }] : []),
+                ...(!rescueSlot && onOpenSettings ? [{ label: uiMessage("ui.kitchenOpen"), onClick: () => onOpenSettings("cucina") }] : []),
+              ]
+            : []}
+        />
+      )}
+
+      {/* FW-09 (S05-A-06): senza dispensa le verifiche di farina e lievito
+          valgono per tutti gli stili: si dicono una volta qui, non su ogni card. */}
+      {unknownPantry && !noneFeasible && onOpenSettings && (
+        <EmptyState
+          id="recommended-pantry"
+          headingLevel={3}
+          icon={<Wheat size={16} aria-hidden="true" />}
+          title={uiMessage("ui.pantryUnknownTitle")}
+          reason={uiMessage("ui.pantryUnknownBanner")}
+          actions={[{ label: uiMessage("ui.pantryUnknownAction"), onClick: () => onOpenSettings("pantry") }]}
+          className="recommended-pantry"
+        />
       )}
 
       {/* ═══ Tier groups ═══ */}
       <motion.div className="recommended-styles__results" animate={resultsControls}>
       {tiers.length === 0 && (
-        <Surface
-          as={motion.div}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={motionSpring.balanced}
-          className="recommended-empty"
-        >
-          <p className="recommended-empty__text">
-            {styleQuery.trim()
-              ? t(cms.filters.stylesSearchNoResults ?? 'Nessuno stile per "{query}"', {
-                  query: styleQuery.trim(),
-                })
-              : cms.misc.noStyleInFamily}
-          </p>
-          <motion.button
-            onClick={() => {
+        <EmptyState
+          headingLevel={3}
+          live
+          title={styleQuery.trim()
+            ? t(cms.filters.stylesSearchNoResults ?? 'Nessuno stile per "{query}"', { query: styleQuery.trim() })
+            : cms.misc.noStyleInFamily}
+          reason={uiMessage("ui.stylesEmptyReason")}
+          actions={[{
+            label: cms.misc.showAllStyles,
+            onClick: () => {
               setFamilyFilter("all");
               setStyleQuery("");
-            }}
-            className="recommended-empty__reset"
-          >
-            {cms.misc.showAllStyles}
-          </motion.button>
-        </Surface>
+              setHydrationFilter(null);
+              setTextureFilter(null);
+              setSkillFilter(null);
+              setOvenFilter(null);
+            },
+          }]}
+        />
       )}
       {tiers.map(({ key, items }) => {
         const meta = TIER_META[key];
         const cmsTier = cms.tiers[key];
-        const tierLabel = cmsTier?.label ?? meta.label;
-        const tierSubtitle = cmsTier?.subtitle ?? meta.subtitle;
+        const tierLabel = cmsTier?.label ?? "";
+        const tierSubtitle = cmsTier?.subtitle ?? "";
         const TierIcon = meta.Icon;
         return (
           <motion.div
@@ -581,6 +583,7 @@ export function RecommendedStyles({
                     hasSelection={hasSelection}
                     onSelect={() => handleSelect(rec)}
                     index={i}
+                    hidePantryChecks={unknownPantry}
                   />
                 );
               })}
@@ -601,7 +604,9 @@ function StyleCard({
   hasSelection,
   onSelect,
   index,
+  hidePantryChecks = false,
 }: {
+  hidePantryChecks?: boolean;
   rec: RecommendationWithVariant;
   tierColor: string;
   isSelected: boolean;
@@ -629,6 +634,7 @@ function StyleCard({
     >
       <motion.button
         onClick={onSelect}
+        aria-haspopup="dialog"
         initial={{ opacity: 0, y: 14 }}
         animate={{
           opacity: 1,
@@ -707,14 +713,14 @@ function StyleCard({
 
               {/* Subtitle — ALL CAPS, tracked, warm cream */}
               <div className="recommended-card__subtitle">
-                {shortOrigin(style.origin)}
+                {shortOrigin(style.origin, placeNameLocalizer(cms))}
                 {rec.bestInterpretation
                   ? ` · ${variantShortName(rec.bestInterpretation)}`
                   : ""}
               </div>
 
               {/* Livello e durata — stessa chip delle card di Scopri */}
-              <StyleMetaChip style={style} cms={cms} recipe={rec.recipe} />
+              <StyleMetaChip style={style} cms={cms} recipe={rec.recipe} hidePantryChecks={hidePantryChecks} />
               {rec.dietary_alternatives?.length ? <span className="recommended-card__subtitle">{cms.engineMessages["diet.variantAvailable"]}</span> : null}
             </div>
           </div>

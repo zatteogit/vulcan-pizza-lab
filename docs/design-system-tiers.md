@@ -61,6 +61,16 @@ template T6 e monta le implementazioni di produzione.
    accessibile, label e descrizioni fanno parte dello stesso requisito.
 9. I valori framework isolati sono ammessi solo se esatti, file-specifici e
    coperti da fixture. Non esistono baseline numeriche di debito DS.
+10. Tre soli contenitori per «mostrare di più» (FW-03, audit UX 28/10/2026):
+    `ds/Disclosure` in pagina (pulsante con `aria-expanded`/`aria-controls`,
+    chevron, heading opzionale, varianti `card` e `inline`, token
+    `--disclosure-*`), `InfoTip` per la definizione breve di un termine (nome
+    accessibile «Definizione: …», link alla voce del glossario, Esc chiude solo
+    il popover) e il foglio «Perché?» (FW-02). Vietati `<details>` fuori da
+    `components/ds/` e `title=` su elementi non interattivi come unica
+    spiegazione: li blocca `npm run semantics:check` (regole `native-details`
+    e `title-only-explanation`, debito `title=` congelato per file in
+    `TITLE_ONLY_BASELINE`, che può solo scendere).
 
 ## Motion
 
@@ -82,6 +92,42 @@ sola famiglia. Il guard verifica presenza, dimensioni raster e parità del path
 vettoriale. Ogni evoluzione del marchio aggiorna insieme runtime, showcase e
 asset; il brand è documentato nella fondazione dedicata dello showcase.
 
+## Stati
+
+Un colore di stato ha un solo significato in tutta l'app (FW-13, audit UX e
+scienza del 28/10/2026). I ruoli base sono T2.5 (`--status-*`), i contratti T3
+(`--status-{ruolo}-{fg,bg,border,icon}`) in `theme.css`; i componenti usano
+solo questi, mai `--primary`, `--text-accent` o un token di un altro
+componente (come `--snackbar-action`) per dire «va bene» o «attenzione».
+
+| Ruolo | Significato | Base | Esempi |
+|---|---|---|---|
+| `positive` | va bene, fatto | `--cta` (salvia) | «Perfetta per questo stile», forno pronto, «tocca a te» a fase finita |
+| `caution` | si può fare, con riserva | `--tertiary` (ambra) | valore fuori range, forno da adattare, avvisi |
+| `blocking` | non si può fare | `--destructive` (rosso) | ricetta non fattibile, errori |
+| `neutral` | dato, nessun giudizio | `--muted-foreground` | tempo totale, condizioni da verificare («Se hai una teglia») |
+| `recommended` | la proposta di Vulcan, identità «su misura» | salvia scura (chiaro) / chiara (scuro) | colonna «Proposta» del confronto |
+
+Il terracotta (`--primary`, `--text-accent`) resta il colore del marchio e
+dell'«Originale»: non si usa per un esito.
+
+Contrasto minimo misurato del testo (`fg`) sul proprio fondo al 12% sopra la
+superficie più scura fra card, pagina, surface-low e surface-container:
+
+| Ruolo | Chiaro | Scuro |
+|---|---|---|
+| `positive` | 4,8:1 | 6,2:1 |
+| `caution` | 6,2:1 | 6,0:1 |
+| `blocking` | 7,2:1 | 4,8:1 |
+| `neutral` | 5,9:1 | 6,9:1 |
+| `recommended` | 6,4:1 | 8,2:1 |
+
+Le icone usano la stessa tinta (≥ 3:1). `npm run check:type-floor` ricalcola
+la tabella da `theme.css` (`scripts/status-contrast.mjs`) e fallisce sotto
+4,5:1. Lo stesso controllo vieta il maiuscolo sugli elementi di testo
+corrente (`__sub`, `__desc`, `__text`, `__note`…): D-019 ammette il maiuscolo
+a 11 px solo per gli eyebrow.
+
 ## Accessibilità del sistema
 
 Semantica, focus e tastiera sono proprietà dei componenti e dei pattern, non
@@ -89,6 +135,12 @@ patch delle singole pagine. Dialog e sheet condividono autofocus, focus trap,
 Escape, scroll lock e ripristino del trigger. Controlli compositi espongono
 ruoli, stati, naming e navigazione coerenti. Contrasto e target size sono
 verificati sulla build production con Axe e controlli geometrici.
+
+Card di stile (FW-14, S03-B-18): in Crea la card apre il pannello dello stile
+(`aria-haspopup="dialog"`), perché si sceglie uno stile da configurare; in
+Scopri la card è un link alla scheda ricetta (`/recipe/<id>`), perché si
+consulta il riferimento. La CTA del pannello ha la stessa etichetta su ogni
+breakpoint («Genera ricetta»), mai il nome della tab corrente.
 
 ## Enforcement
 

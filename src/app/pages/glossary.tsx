@@ -1,14 +1,13 @@
 import {
   BookOpen,
-  ChevronDown,
   Search,
 } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
+import { motion } from "motion/react";
 import { useEffect,useMemo,useState } from "react";
 import { useLocation } from "react-router";
 import { useCms } from "../features/cms/cms-context";
 import { t } from "../features/cms/i18n";
-import { FilterChip, Surface } from "../components/ds/index";
+import { Disclosure, EmptyState, FilterChip, Surface } from "../components/ds/index";
 import { motionDelay,motionSpring } from "../components/ds/motion";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import {
@@ -23,9 +22,15 @@ import type {
 import {
   GLOSSARY_CATEGORIES,
   GLOSSARY_TERMS,
+  getLocalizedTerm,
   getTermById,
   getTermsByCategory,
 } from "../data/glossary-data";
+
+/* FW-09 (S12-A-19): accenti e maiuscole non contano («stabilita», «perche»). */
+function foldText(text: string): string {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
 
 export function GlossaryPage() {
   const location = useLocation();
@@ -68,36 +73,32 @@ export function GlossaryPage() {
     }
   }, [location.hash, cms]);
 
-  const filteredTerms = useMemo(() => {
-    let terms =
-      activeCategory === "all"
-        ? GLOSSARY_TERMS
-        : GLOSSARY_TERMS.filter(
-            (t) => t.category === activeCategory,
-          );
+  /* FW-09 (S12-A-19, S12-B-15): la ricerca guarda i testi della lingua
+     attiva senza badare agli accenti, e i conteggi dei chip la seguono. */
+  const searchedTerms = useMemo(() => {
+    const q = foldText(search.trim());
+    if (!q) return GLOSSARY_TERMS;
+    return GLOSSARY_TERMS.filter((raw) => {
+      const term = getLocalizedTerm(raw, cms);
+      return [term.name, term.definition, term.symbol ?? "", raw.name, raw.id.replace(/_/g, " ")]
+        .some((field) => foldText(field).includes(q));
+    });
+  }, [search, cms]);
 
-    if (search.trim()) {
-      const q = search.toLowerCase().trim();
-      terms = terms.filter(
-        (t) =>
-          t.name.toLowerCase().includes(q) ||
-          t.definition.toLowerCase().includes(q) ||
-          (t.symbol && t.symbol.toLowerCase().includes(q)) ||
-          t.id.includes(q),
-      );
-    }
-    return terms;
-  }, [activeCategory, search]);
+  const filteredTerms = useMemo(
+    () => activeCategory === "all" ? searchedTerms : searchedTerms.filter((t) => t.category === activeCategory),
+    [activeCategory, searchedTerms],
+  );
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {
-      all: GLOSSARY_TERMS.length,
+      all: searchedTerms.length,
     };
-    for (const t of GLOSSARY_TERMS) {
+    for (const t of searchedTerms) {
       counts[t.category] = (counts[t.category] || 0) + 1;
     }
     return counts;
-  }, []);
+  }, [searchedTerms]);
 
   const handleNavigateToTerm = (termId: string) => {
     setExpandedTerm(termId);
@@ -123,7 +124,7 @@ export function GlossaryPage() {
         title={gl.pageTitle}
         meta={
           <span className="glossary-meta">
-            {t(gl.termCount, {
+            {t(filteredTerms.length === 1 ? gl.termCountOne : gl.termCount, {
               count: String(filteredTerms.length),
             })}
           </span>
@@ -145,6 +146,7 @@ export function GlossaryPage() {
             />
             {search && (
               <motion.button
+                type="button"
                 onClick={() => setSearch("")}
                 className="glossary-searchbox__clear"
               >
@@ -213,16 +215,26 @@ export function GlossaryPage() {
         </div>
 
         {/* ── Terms list ── */}
+        {/* FW-09 (S12-A-19, S12-B-15): il motivo e le vie d'uscita. */}
         {filteredTerms.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="glossary-empty"
-          >
-            <p className="glossary-empty__text">
-              {t(gl.noResults, { query: search })}
-            </p>
-          </motion.div>
+          <EmptyState
+            live
+            title={search.trim() ? t(gl.noResults, { query: search.trim() }) : gl.emptyCategory}
+            reason={search.trim() && activeCategory !== "all" && searchedTerms.length > 0
+              ? t(gl.emptyInCategory, { count: String(searchedTerms.length) })
+              : gl.emptyReason}
+            actions={[
+              {
+                label: activeCategory !== "all" && searchedTerms.length > 0 ? gl.showAllCategories : gl.cancelSearchLong,
+                onClick: () => {
+                  if (!(activeCategory !== "all" && searchedTerms.length > 0)) setSearch("");
+                  setActiveCategory("all");
+                },
+              },
+              { label: gl.searchEverywhere, onClick: () => window.dispatchEvent(new Event("vulcan:open-search")) },
+            ]}
+            className="glossary-empty-state"
+          />
         )}
 
         {activeCategory === "all" && !search.trim() ? (
@@ -242,9 +254,9 @@ export function GlossaryPage() {
                   <span className="glossary-group__emoji">
                     <CatIcon size={22} aria-hidden="true" />
                   </span>
-                  <span className="glossary-group__title">
+                  <h2 className="glossary-group__title">
                     {catLabel(catId, gl)}
-                  </span>
+                  </h2>
                   <span className="glossary-group__count">
                     {catTerms.length}
                   </span>
@@ -257,6 +269,7 @@ export function GlossaryPage() {
                   <TermCard
                     key={term.id}
                     term={term}
+                    headingLevel={3}
                     isExpanded={expandedTerm === term.id}
                     onToggle={() =>
                       setExpandedTerm(
@@ -278,6 +291,7 @@ export function GlossaryPage() {
               <TermCard
                 key={term.id}
                 term={term}
+                headingLevel={2}
                 isExpanded={expandedTerm === term.id}
                 onToggle={() =>
                   setExpandedTerm(
@@ -297,11 +311,14 @@ export function GlossaryPage() {
 /* ═══ TERM CARD ═══ */
 function TermCard({
   term,
+  headingLevel,
   isExpanded,
   onToggle,
   onNavigateToTerm,
 }: {
   term: GlossaryTerm;
+  /** FW-03 (S12-B-10): h3 sotto i gruppi (h2), h2 nella lista filtrata. */
+  headingLevel: 2 | 3;
   isExpanded: boolean;
   onToggle: () => void;
   onNavigateToTerm?: (termId: string) => void;
@@ -319,53 +336,42 @@ function TermCard({
       className={`glossary-card${isExpanded ? " glossary-card--expanded" : ""}`}
       transition={motionSpring.standard}
     >
-      <motion.button
-        onClick={onToggle}
-        className="glossary-card__toggle"
-      >
-        <div className="glossary-card__icon">
-          <TermIcon size={16} aria-hidden="true" className="glossary-card__emoji" />
-        </div>
-
-        <div className="glossary-card__content">
-          <div className="glossary-card__titlerow">
-            <span className="glossary-card__name">
-              {term.name}
-            </span>
-            {term.symbol && (
-              <span className="glossary-card__symbol">
-                {term.symbol}
-              </span>
-            )}
-            {term.unit && (
-              <span className="glossary-card__unit">
-                [{term.unit}]
-              </span>
-            )}
-          </div>
-          <span className="glossary-card__definition">
-            {term.definition}
+      {/* FW-03: ds/Disclosure con heading (aria-expanded, aria-controls);
+          il contenuto del pulsante sono solo span. */}
+      <Disclosure
+        variant="inline"
+        headingLevel={headingLevel}
+        id={`glossary-${term.id}-toggle`}
+        open={isExpanded}
+        onOpenChange={onToggle}
+        triggerClassName="glossary-card__toggle"
+        panelClassName="glossary-card__reveal"
+        summary={<>
+          <span className="glossary-card__icon">
+            <TermIcon size={16} aria-hidden="true" className="glossary-card__emoji" />
           </span>
-        </div>
-
-        <motion.div
-          animate={{ rotate: isExpanded ? 180 : 0 }}
-          transition={motionSpring.crispControl}
-          className="glossary-card__chevron"
-        >
-          <ChevronDown size={16} />
-        </motion.div>
-      </motion.button>
-
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={motionSpring.standard}
-            className="glossary-card__reveal"
-          >
+          <span className="glossary-card__content">
+            <span className="glossary-card__titlerow">
+              <span className="glossary-card__name">
+                {term.name}
+              </span>
+              {term.symbol && (
+                <span className="glossary-card__symbol">
+                  {term.symbol}
+                </span>
+              )}
+              {term.unit && (
+                <span className="glossary-card__unit">
+                  [{term.unit}]
+                </span>
+              )}
+            </span>
+            <span className="glossary-card__definition">
+              {term.definition}
+            </span>
+          </span>
+        </>}
+      >
             <div className="glossary-card__body">
               {term.formula && (
                 <div className="glossary-formula">
@@ -430,6 +436,7 @@ function TermCard({
                         if (!rel) return null;
                         return (
                           <button
+                            type="button"
                             key={relId}
                             onClick={() =>
                               onNavigateToTerm?.(relId)
@@ -444,9 +451,7 @@ function TermCard({
                   </div>
                 )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </Disclosure>
     </Surface>
   );
 }

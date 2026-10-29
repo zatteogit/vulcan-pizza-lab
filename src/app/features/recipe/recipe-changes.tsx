@@ -7,6 +7,8 @@ import { localizeToppingRecipe, toppingConcept } from "../../data/topping-i18n/l
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { engineMsgTexts } from "./engine-msg-text";
+import { InfoTip } from "../../components/shared/info-tip";
+import { PRE_FERMENT_IDS, preFermentName, type PreFermentId } from "./pre-ferment-guide";
 
 /** Same underlying differences as the recipe; aligned values make the before
  * and after readable without parsing sentences or repeating units in labels. */
@@ -18,8 +20,11 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
   const differences = recipeDifferences(from, to);
   if (!differences.length) return null;
   const pct = (n: number) => `${fmt.number(n, { maximumFractionDigits: 2 })}%`;
+  // FW-03 (S08-A-19): nome localizzato del prefermento, non l'id grezzo («biga»).
+  const preName = (type: string | undefined) => type && (PRE_FERMENT_IDS as readonly string[]).includes(type)
+    ? preFermentName(type as PreFermentId) : type ?? "";
   const pre = (r: GeneratedRecipe) => r.has_pre_ferment
-    ? `${r.pre_ferment_type ?? ""} · ${pct(r.pre_ferment_flour_pct ?? 0)}`
+    ? `${preName(r.pre_ferment_type)} · ${pct(r.pre_ferment_flour_pct ?? 0)}`
     : engineMsgTexts([{key:"card.directDough",fallback:"Impasto diretto"}], cms, bcp47)[0];
   const rows = differences.map(d => {
     const p = d.params ?? {};
@@ -34,7 +39,7 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
       }
       case "change.hydration": return { key: d.key, label: cms.ui.statHydration, icon: Droplets, before: pct(from.hydration_pct), after: pct(to.hydration_pct) };
       case "change.flour": return { key: d.key, label: cms.ui.statFlourStrength, icon: Wheat, before: `W${fmt.number(from.flour_w)}`, after: `W${fmt.number(to.flour_w)}` };
-      case "change.flourPL": return { key: d.key, label: cms.configurator.plLabel, icon: Wheat, before: fmt.number(from.flour_pl, { maximumFractionDigits: 2 }), after: fmt.number(to.flour_pl, { maximumFractionDigits: 2 }), tip: cms.configurator.plTip };
+      case "change.flourPL": return { key: d.key, label: cms.configurator.plLabel, icon: Wheat, before: fmt.number(from.flour_pl, { maximumFractionDigits: 2 }), after: fmt.number(to.flour_pl, { maximumFractionDigits: 2 }), tip: cms.configurator.plTip, termId: "pl_ratio" };
       case "change.fermentation": return { key: d.key, label: cms.ui.statFermentation, icon: Timer, before: fmt.durationShort(from.fermentation_hours), after: fmt.durationShort(to.fermentation_hours), beforeSub: fmt.celsius(from.fermentation_temp_c), afterSub: fmt.celsius(to.fermentation_temp_c) };
       case "change.cooking": return { key: d.key, label: cms.ui.statOven, icon: Flame, before: fmt.celsius(from.oven_temp_c), after: fmt.celsius(to.oven_temp_c), beforeSub: fmt.cookTime(from.cook_time_sec), afterSub: fmt.cookTime(to.cook_time_sec) };
       case "change.prefermentOn": case "change.prefermentOff": case "change.prefermentDetails": return { key: d.key, label: cms.configurator.preFermentLabel, icon: FlaskConical, before: pre(from), after: pre(to) };
@@ -46,7 +51,9 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
   return (
     <section className="recipe-comparison" data-recipe-changes={mode}>
       <table className="recipe-comparison__table">
-        <thead><tr><th scope="col"><h4 className="recipe-comparison__title">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</h4></th><th scope="col">{beforeLabel}</th><td aria-hidden="true" /><th scope="col">{afterLabel}</th></tr></thead>
+        {/* FW-03 (S08-B-18): il titolo è la caption della tabella, non un h4 dentro un th */}
+        <caption className="recipe-comparison__title">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</caption>
+        <thead><tr><td /><th scope="col">{beforeLabel}</th><td aria-hidden="true" /><th scope="col">{afterLabel}</th></tr></thead>
         <tbody>
           <tr className="recipe-comparison__score">
             <th scope="row"><span data-slot="label"><Gauge size={15} aria-hidden="true" />{cms.ui.recipeScoreLabel}</span></th>
@@ -57,7 +64,7 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
           {rows.map(row => {
             const Icon = row.icon;
             return <tr key={row.key}>
-              <th scope="row" title={row.tip}><span data-slot="label"><Icon size={15} aria-hidden="true" />{row.label}</span></th>
+              <th scope="row"><span data-slot="label"><Icon size={15} aria-hidden="true" />{row.label}{"tip" in row && row.tip && <InfoTip termId={"termId" in row ? row.termId : undefined} label={row.label}>{row.tip}</InfoTip>}</span></th>
               <td>{row.before}{row.beforeSub && <small>{row.beforeSub}</small>}</td>
               <td aria-hidden="true"><ArrowRight size={14} /></td>
               <td>{row.after}{row.afterSub && <small>{row.afterSub}</small>}</td>

@@ -14,6 +14,7 @@ mergeImpastoIntoDough,
 type ImpastoRecipe,
 } from "../data/impasto-library";
 import { getToppingByStyle } from "../data/parametric-databases";
+import { isHeatProfileCompatible } from "../data/equipment-data";
 import {
 getToppingForStyle,
 getRecipesByAuthenticity,
@@ -56,7 +57,8 @@ export type FamilyId =
   | "napoletana"
   | "romana"
   | "americana"
-  | "contemporanea";
+  | "contemporanea"
+  | "regionale";
 
 export interface DoughParameters {
   flour_w_range: [number, number];
@@ -352,6 +354,9 @@ export interface UserConstraints {
    *  cucina lievita più veloce»). 1 = come il modello; 1,25 = lievita il 25%
    *  più in fretta, quindi serve meno lievito. Limitata a 0,5–2. */
   yeast_speed_factor?: number;
+  /** FW-07 (S18-A-06): diametro massimo della pizza dichiarato dal
+   *  produttore del forno, cm (OvenModel.pizzaCm). Assente = non noto. */
+  oven_max_pizza_cm?: number;
   /** Advanced oven heat profile — resistances/burner layout from profile */
   oven_heat_profile?:
     | "static_top_bottom"
@@ -2058,6 +2063,7 @@ export function generateRecipe(
     ovenType: constraints.oven_type,
     surfaces: constraints.surfaces,
     ovenHeatProfile: constraints.oven_heat_profile,
+    ovenMaxTempC: constraints.oven_max_temp_c,
   };
   const buildTimeline = (
     hours: number,
@@ -2333,6 +2339,14 @@ export function generateRecipe(
     timelineMinutes > constraints.available_hours * 60;
   const neededHours = Math.ceil(timelineMinutes / 6) / 10;
 
+  // FW-07 (S18-A-06): confronto geometrico esatto fra il diametro della pizza
+  // e il diametro massimo dichiarato dal produttore del forno (pizzaCm).
+  const roundPizza = (panConfig?.panShape ?? defaultPanShape(style)) === "round" && style.shape.shape_type !== "oval";
+  const pizzaDiameterCm = roundPizza ? (panConfig?.panDiameter ?? style.shape.diameter_cm) : undefined;
+  const ovenMouthCm = !isFriedStyle(style) && pizzaDiameterCm !== undefined &&
+    constraints.oven_max_pizza_cm !== undefined && pizzaDiameterCm > constraints.oven_max_pizza_cm
+    ? constraints.oven_max_pizza_cm
+    : undefined;
   const prerequisites = kitchenPrerequisites(style, constraints, flourW, yeastType);
   const excludedFlours = excludedRecipeFlours(style, constraints.excluded_flours ?? []);
   if (constraints.excluded_flours?.some(id => ["00", "0", "tipo_1", "manitoba"].includes(id) && !excludedFlours.includes(id))) {
@@ -2360,6 +2374,10 @@ export function generateRecipe(
         : []),
       ...prerequisites.map(condition => condition.message),
       ...(homeMethod ? [em("gen.homeBakingMethod", METHOD_MESSAGES_IT["gen.homeBakingMethod"], { temp: ovenTemp, ideal: style.baking.temp_c_ideal })] : []),
+      // FW-07 (S18-A-06): la bocca del forno dichiarata dal produttore.
+      ...(ovenMouthCm !== undefined
+        ? [em("gen.ovenTooNarrow", METHOD_MESSAGES_IT["gen.ovenTooNarrow"], { max: ovenMouthCm, diameter: pizzaDiameterCm! })]
+        : []),
       // D-020: stesso avviso dei consigli sul forno a legna dello stile.
       ...(style.requires_wood_oven && constraints.oven_type !== "wood"
         ? [
@@ -2845,6 +2863,18 @@ function _hydrationCeilingForSkill(skill: SkillLevel): number {
   }
 }
 
+/** FW-16 — tetto d'idratazione finale che l'ottimizzatore propone per livello
+ *  (regola del modello, non legge fisica); null = nessun tetto (Esperto).
+ *  Esposto per i testi «Cosa cambia» del Profilo: i numeri non si scrivono nel copy. */
+export function hydrationCeilingForSkill(skill: SkillLevel): number | null {
+  const ceiling = _hydrationCeilingForSkill(skill);
+  return ceiling >= 200 ? null : ceiling;
+}
+
+/** FW-16 — livello minimo da cui l'ottimizzatore propone biga o poolish negli
+ *  stili che li ammettono (gli stili che li richiedono li tengono a ogni livello). */
+export const PRE_FERMENT_MIN_SKILL: SkillLevel = 2;
+
 /** ENG-4 — ore di fermentazione massime che stanno nella finestra fino al
  *  pasto, tolto l'overhead fisso della timeline (stesso calcolo del clamp di
  *  generateRecipe), arrotondate per difetto al quarto d'ora e mai sotto il
@@ -2976,7 +3006,7 @@ export function optimizeRecipe(
   const allowsPreferment = /biga|poolish/.test(effStyle.dough.process_type);
   let prefCands: boolean[];
   if (effStyle.requires_pre_ferment) prefCands = [true];
-  else if (allowsPreferment && constraints.skill_level >= 2) prefCands = [false, true];
+  else if (allowsPreferment && constraints.skill_level >= PRE_FERMENT_MIN_SKILL) prefCands = [false, true];
   else prefCands = [false];
 
   // ── Pesi obiettivo: default = pesi di scoring, così l'ottimo = composite mostrato ──
@@ -3119,13 +3149,13 @@ export function optimizeRecipe(
   }
   if (r.has_pre_ferment && !style.requires_pre_ferment) {
     rationale.push(
-      em("opt.prefermentAdded", `Pre-fermento (${r.pre_ferment_type}) aggiunto: più struttura, alveolatura e aroma.`, {
+      em("opt.prefermentAdded", `Prefermento (${r.pre_ferment_type}) aggiunto: più struttura, alveolatura e aroma.`, {
         type: r.pre_ferment_type ?? "",
       }),
     );
   } else if (r.has_pre_ferment) {
     rationale.push(
-      em("opt.preferment", `Pre-fermento (${r.pre_ferment_type}): più struttura, alveolatura e aroma.`, {
+      em("opt.preferment", `Prefermento (${r.pre_ferment_type}): più struttura, alveolatura e aroma.`, {
         type: r.pre_ferment_type ?? "",
       }),
     );
@@ -3203,6 +3233,9 @@ interface EquipmentContext {
   ovenType?: OvenType;
   surfaces?: string[];
   ovenHeatProfile?: UserConstraints["oven_heat_profile"];
+  /** FW-07: massima del forno, per non dire «al massimo» quando la cottura
+   *  chiede una temperatura più bassa (audit 28/10/2026, S10-A-22). */
+  ovenMaxTempC?: number;
 }
 
 /* ═══ I18N-2 — testi dei passi con chiave ═══ */
@@ -3307,41 +3340,57 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
 }
 
 /** Setup forno specifico per tipo: "a quanto metto le resistenze". */
-function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
+function ovenBakeSetup(eq: EquipmentContext | undefined, bakeTempC?: number): EngineMsg {
   const hasStone = (eq?.surfaces ?? []).some((s) =>
     ["refractory_brick", "cordierite_stone", "steel_plate"].includes(s),
   );
-  if (eq?.ovenHeatProfile === "top_grill") {
+  // FW-07 (S16-B-03): una distribuzione del calore che il tipo di forno non
+  // ha (grill superiore in un forno a legna) non decide più le istruzioni.
+  const heat = eq?.ovenType && !isHeatProfileCompatible(eq.ovenHeatProfile, eq.ovenType) ? undefined : eq?.ovenHeatProfile;
+  if (heat === "top_grill") {
     return hasStone
       ? em("timeline.oven.topGrillStone", METHOD_MESSAGES_IT["timeline.oven.topGrillStone"])
       : em("timeline.oven.topGrillShelf", METHOD_MESSAGES_IT["timeline.oven.topGrillShelf"]);
   }
-  if (eq?.ovenHeatProfile === "bottom_boost") {
+  if (heat === "bottom_boost") {
     return em("timeline.oven.bottomBoost", METHOD_MESSAGES_IT["timeline.oven.bottomBoost"]);
   }
-  if (eq?.ovenHeatProfile === "fan_assisted") {
+  if (heat === "fan_assisted") {
     return em("timeline.oven.fanAssisted", METHOD_MESSAGES_IT["timeline.oven.fanAssisted"]);
   }
-  if (eq?.ovenHeatProfile === "gas_rear") {
+  if (heat === "gas_rear") {
     return em("timeline.oven.gasRear", METHOD_MESSAGES_IT["timeline.oven.gasRear"]);
   }
-  if (eq?.ovenHeatProfile === "wood_side_flame") {
+  if (heat === "wood_side_flame") {
     return em("timeline.oven.woodSideFlame", METHOD_MESSAGES_IT["timeline.oven.woodSideFlame"]);
   }
+  // FW-07 (S10-A-22): «al massimo» solo se la cottura usa davvero la massima
+  // del forno (entro 10 °C); altrimenti si imposta la temperatura. Vale per
+  // tutti i forni che hanno un comando di potenza (casa, elettrico, gas).
+  const belowMax = bakeTempC !== undefined && eq?.ovenMaxTempC !== undefined && bakeTempC < eq.ovenMaxTempC - 10;
   switch (eq?.ovenType) {
     case "coal":
       return em("timeline.oven.coal", METHOD_MESSAGES_IT["timeline.oven.coal"]);
     case "wood":
       return em("timeline.oven.wood", METHOD_MESSAGES_IT["timeline.oven.wood"]);
     case "electric_high":
-      return em("timeline.oven.electricHigh", METHOD_MESSAGES_IT["timeline.oven.electricHigh"]);
+      return belowMax
+        ? em("timeline.oven.electricHighSet", METHOD_MESSAGES_IT["timeline.oven.electricHighSet"], { temp: bakeTempC })
+        : em("timeline.oven.electricHigh", METHOD_MESSAGES_IT["timeline.oven.electricHigh"]);
     case "gas":
-      return em("timeline.oven.gas", METHOD_MESSAGES_IT["timeline.oven.gas"]);
+      return belowMax
+        ? em("timeline.oven.gasSet", METHOD_MESSAGES_IT["timeline.oven.gasSet"], { temp: bakeTempC })
+        : em("timeline.oven.gas", METHOD_MESSAGES_IT["timeline.oven.gas"]);
     case "gas_pizza":
       return em("timeline.oven.gasPizza", METHOD_MESSAGES_IT["timeline.oven.gasPizza"]);
     case "home":
     case "electric_standard":
     default:
+      if (belowMax) {
+        return hasStone
+          ? em("timeline.oven.staticStoneSet", METHOD_MESSAGES_IT["timeline.oven.staticStoneSet"], { temp: bakeTempC })
+          : em("timeline.oven.staticShelfSet", METHOD_MESSAGES_IT["timeline.oven.staticShelfSet"], { temp: bakeTempC });
+      }
       return hasStone
         ? em("timeline.oven.staticStone", METHOD_MESSAGES_IT["timeline.oven.staticStone"])
         : em("timeline.oven.staticShelf", METHOD_MESSAGES_IT["timeline.oven.staticShelf"]);
@@ -3417,15 +3466,15 @@ function generateTimeline(
   if (hasPreFerment) {
     steps.push({
       id: "preferment",
-      title: "Pre-Fermento",
+      title: "Prefermento",
       description: `Mescolare ${preFermentType} e far maturare`,
       duration_minutes: Math.round(phases.preferment * 60),
       icon: "beaker",
       timing_label: `${Math.round(phases.preferment)}h prima`,
       tip: {
         beginner:
-          'Il pre-fermento è come un "antipasto" per il lievito. Mescola e lascia riposare coperto.',
-        nerd: "Il pre-fermento produce acidi organici (lattico/acetico) che abbassano il pH a ~4.5, migliorando la rete glutinica e la shelf life.",
+          'Il prefermento è come un "antipasto" per il lievito. Mescola e lascia riposare coperto.',
+        nerd: "Il prefermento produce acidi organici (lattico/acetico) che abbassano il pH a ~4.5, migliorando la rete glutinica e la shelf life.",
       },
     });
   }
@@ -3810,7 +3859,7 @@ function generateTimeline(
         [
           em("timeline.bakeWhite.desc", METHOD_MESSAGES_IT["timeline.bakeWhite.desc"], { temp: ovenTempLabel }),
           ...toppingBakeNote,
-          ovenBakeSetup(equipment),
+          ovenBakeSetup(equipment, ovenTempLabel),
         ],
         {
           beginner: em("timeline.bakeWhite.tipBeginner", METHOD_MESSAGES_IT["timeline.bakeWhite.tipBeginner"]),
@@ -3863,7 +3912,7 @@ function generateTimeline(
         em("timeline.bake.title", "Cottura"),
         [em("timeline.bake.desc", "Cuocere a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, homeMethod
           ? em("timeline.homeTray.bake", METHOD_MESSAGES_IT["timeline.homeTray.bake"])
-          : ovenBakeSetup(equipment)],
+          : ovenBakeSetup(equipment, ovenTempLabel)],
         {
           beginner: em("timeline.bake.tipBeginner", METHOD_MESSAGES_IT["timeline.bake.tipBeginner"]),
           nerd: em(
@@ -3971,9 +4020,10 @@ function generateTips(
     );
   }
 
-  if (constraints.oven_heat_profile === "gas_rear" || constraints.oven_heat_profile === "wood_side_flame") {
+  if ((constraints.oven_heat_profile === "gas_rear" || constraints.oven_heat_profile === "wood_side_flame")
+    && isHeatProfileCompatible(constraints.oven_heat_profile, constraints.oven_type)) {
     tips.push(
-      "La sorgente di calore e laterale/posteriore: prepara la pala per ruotare spesso la pizza, non aspettare che un lato sia gia scuro.",
+      "La sorgente di calore è laterale/posteriore: prepara la pala per ruotare spesso la pizza, non aspettare che un lato sia già scuro.",
     );
   }
 
@@ -4026,13 +4076,13 @@ export const OVEN_PRESETS: {
 }[] = [
   {
     id: "home",
-    name: "Forno Domestico",
+    name: "Forno di casa",
     maxTemp: 250,
     icon: "home",
   },
   {
     id: "electric_standard",
-    name: "Elettrico Standard",
+    name: "Elettrico standard",
     maxTemp: 300,
     icon: "zap",
   },
@@ -4042,6 +4092,16 @@ export const OVEN_PRESETS: {
     id: "gas",
     name: "Forno a gas a platea",
     maxTemp: 350,
+    icon: "flame",
+  },
+  // FW-14 (S15-B-13): elenco in ordine di temperatura massima.
+  {
+    id: "coal",
+    name: "Forno a carbone",
+    // Valore iniziale dal range di lavoro del modello Apizza, da sostituire
+    // con la temperatura effettiva della propria dotazione; non è un massimo
+    // universale dei forni a carbone. Fonte identità: sallysapizza.com/experience/.
+    maxTemp: 400,
     icon: "flame",
   },
   {
@@ -4059,18 +4119,9 @@ export const OVEN_PRESETS: {
   },
   {
     id: "wood",
-    name: "Forno a Legna",
+    name: "Forno a legna",
     maxTemp: 500,
     icon: "flame-kindling",
-  },
-  {
-    id: "coal",
-    name: "Forno a carbone",
-    // Valore iniziale dal range di lavoro del modello Apizza, da sostituire
-    // con la temperatura effettiva della propria dotazione; non è un massimo
-    // universale dei forni a carbone. Fonte identità: sallysapizza.com/experience/.
-    maxTemp: 400,
-    icon: "flame",
   },
 ];
 

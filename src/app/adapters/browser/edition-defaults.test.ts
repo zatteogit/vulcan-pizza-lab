@@ -12,7 +12,7 @@ describe("seedEditionOven", () => {
   it("preimposta il forno dell'edizione al primo avvio", () => {
     const storage = memory();
     expect(seedEditionOven(storage, oven)).toBe(true);
-    expect(JSON.parse(storage.data.get("vulcan_oven_pref")!)).toEqual({ ovenType: "electric_high", maxTemp: 450, modelId: "aurora-e1" });
+    expect(JSON.parse(storage.data.get("vulcan_oven_pref")!)).toEqual({ ovenType: "electric_high", maxTemp: 450, modelId: "aurora-e1", origin: "edition" });
   });
   it("non tocca una scelta già salvata", () => {
     const storage = memory({ vulcan_oven_pref: JSON.stringify({ ovenType: "home", maxTemp: 250 }) });

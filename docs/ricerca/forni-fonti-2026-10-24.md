@@ -176,6 +176,11 @@ valori vengono dagli estratti di ricerca di AO, Best Buy e Kohl's.
 
 ## Fonti
 
+Nel registro del codice (`src/app/data/science-sources.ts`, FW-01) queste fonti
+sono raggruppate per produttore (`ooni-2026`, `gozney-2026`, `effeuno-2026`…) e
+le secondarie in `ovens-secondary-2026`; lo stato del singolo modello resta il
+campo `source` di `oven-models.ts` (V, P, oppure `demo` per i marchi inventati).
+
 Produttori (lette il 24/10/2026):
 
 - Ooni Koda 12: https://ooni.com/products/ooni-koda

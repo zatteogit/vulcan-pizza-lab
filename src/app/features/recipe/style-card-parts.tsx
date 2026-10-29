@@ -1,8 +1,9 @@
 import { useCms } from "../cms/cms-context";
+import { formatRange } from "../../i18n/format";
 import { createFormatter } from "../cms/i18n";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
-import { Clock, Flame, ScanLine, Wheat } from "lucide-react";
+import { Clock, CookingPot, Droplets, Flame, ScanLine, Wheat } from "lucide-react";
 import { Badge } from "../../components/ds/index";
 import { RecipeMatchIcon } from "./recipe-match-icon";
 import { recipeCardSignals } from "./recipe-card-signals";
@@ -20,7 +21,9 @@ import { uiMessage } from "../../i18n/ui-messages";
 
 /** The original is heart + score. A tailored proposal shows its actual
  * starting score, then the resulting score, even when the two are equal. */
-export function CompatibilityPill({ now, original, blocked, labelled = false, className }: { now: number; original?: number; blocked?: boolean; labelled?: boolean; className?: string }) {
+/** FW-03 (S03-A-12): `context="detail"` when the pill already sits in the
+ * detail sheet, so the tip never asks to «open the detail» the user is in. */
+export function CompatibilityPill({ now, original, blocked, labelled = false, className, context = "card" }: { now: number; original?: number; blocked?: boolean; labelled?: boolean; className?: string; context?: "card" | "detail" }) {
   const { cms } = useCms();
   const [open, setOpen] = useState(false);
   const pinned = useRef(false);
@@ -72,8 +75,10 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
       window.removeEventListener("resize", close);
     };
   }, [open, place]);
-  const label = original === undefined ? `${cms.ui.scoreBasisOriginal} · ${uiMessage("pages.explore.compatibility", [now])}`
+  const score = original === undefined ? `${cms.ui.scoreBasisOriginal} · ${uiMessage("pages.explore.compatibility", [now])}`
     : `${cms.ui.scoreBasisOriginal} ${original} → ${cms.ui.scoreBasisTailored} ${now}`;
+  /* Lo stato bloccato non si affida al solo colore: lo dice anche il nome. */
+  const label = blocked ? `${uiMessage("pages.explore.compatibilityBlocked")} · ${score}` : score;
   return (
     <>
     <button ref={trigger} type="button" className={`compat-pill${blocked ? " compat-pill--blocked" : ""}${className ? ` ${className}` : ""}`} aria-label={label} aria-expanded={open} aria-describedby={open ? id : undefined}
@@ -93,7 +98,7 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
       <div className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisOriginal}</span><strong>{original ?? now}/100</strong></div>
       <p className="score-tip__description">{cms.ui.scoreTipOriginal}</p>
       {original !== undefined && <><div className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisTailored}</span><strong>{now}/100</strong></div><p className="score-tip__description">{cms.ui.scoreTipTailored}</p></>}
-      <p className="score-tip__note">{blocked ? cms.ui.scoreTipBlocked : cms.ui.scoreTipGlobal}</p>
+      <p className="score-tip__note">{blocked && context === "card" ? cms.ui.scoreTipBlocked : cms.ui.scoreTipGlobal}</p>
     </div>, document.body)}
     </>
   );
@@ -101,16 +106,16 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
 
 /** A maximum of two useful signals, inside the photo. The duration describes
  * the complete generated timeline, not fermentation alone. */
-export function StyleMetaChip({ style, cms, recipe, context = "create" }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe; context?: "create" | "explore" }) {
+export function StyleMetaChip({ style, cms, recipe, context = "create", hidePantryChecks = false, id }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe; context?: "create" | "explore"; /** FW-09: dispensa sconosciuta, verifiche dette una volta sola. */ hidePantryChecks?: boolean; /** Per aria-describedby del link che contiene i segnali. */ id?: string }) {
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
-  const signals = recipe ? recipeCardSignals(recipe, context) : [];
-  const icons = { oven: Flame, time: Clock, pan: Flame, flour: Wheat, check: ScanLine };
+  const signals = recipe ? recipeCardSignals(recipe, context, { hidePantryChecks }) : [];
+  const icons = { oven: Flame, time: Clock, pan: CookingPot, flour: Wheat, check: ScanLine, water: Droplets }; /* FW-13: Flame solo per il forno */
   const duration = recipe
     ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
-    : `${style.dough.fermentation_hours_range[0]}–${style.dough.fermentation_hours_range[1]}h`;
+    : formatRange(style.dough.fermentation_hours_range[0], style.dough.fermentation_hours_range[1], bcp47, { unit: "hour" });
   return (
-    <div className="style-signals" data-region="meta">
+    <div id={id} className="style-signals" data-region="meta">
       {signals.map(signal => {
         const Icon = icons[signal.icon];
         const text = engineMsgTexts([signal.message], cms, bcp47)[0];
