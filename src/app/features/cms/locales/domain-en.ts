@@ -906,7 +906,7 @@ export const SCIENCE_EN: CmsScience = {
     "score-weights": {
       title: "Score weights",
       l1: "The weights of the dimensions are a {brand} choice.",
-      l2: "They say how much each dimension counts in the final number. They do not come from a measurement: they are an app rule, the same for everyone.",
+      l2: "Only authenticity and ease count in the «Fit with your kitchen» number: maturation, sustainability and experimentation are shown separately and do not move it. The weights do not come from a measurement: they are an app rule, the same for everyone. The score is then the lowest of the weighted average and authenticity.",
     },
     "non-feasible-ceiling": {
       title: "Ceiling for unfeasible recipes",

@@ -75,7 +75,7 @@ import {
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
-import { MICRO_DOSE_GRAMS, formatMass } from "../i18n/format";
+import { MICRO_DOSE_GRAMS, formatMass, pluralPick } from "../i18n/format";
 import { AccountPanel } from "../features/account/account-panel";
 import { OvenModelSearch } from "../features/profile/oven-model-search";
 import { SettingEffectNote } from "../features/profile/setting-effect-note";
@@ -409,6 +409,7 @@ type SavedRecipesNotice =
 function SavedRecipesSection() {
   const { cms, bcp47 } = useCms();
   const p = cms.profile;
+  const savedFmt = createFormatter(cms.ui, bcp47);
   const [recipes, setRecipes] = useState<SavedRecipe[]>(() => loadSavedRecipes());
   const [notice, setNotice] = useState<SavedRecipesNotice | null>(null);
   /* U-10 (F26): il tempo per «Annulla» si ferma finché l'avviso ha il focus o
@@ -529,10 +530,20 @@ function SavedRecipesSection() {
             const meta = [
               name ? styleName : null,
               formatSavedDate(r.createdAt, new Date(), bcp47),
-              r.score != null ? `${r.score}/100` : null,
             ]
               .filter(Boolean)
               .join(" · ");
+            /* FW-06 (S17-A-04, S17-B-03, S17-B-09): le versioni dello stesso
+               stile si distinguono dai parametri; il numero ha un nome e dice
+               che è la fotografia del salvataggio, non il valore di oggi. */
+            const se = cms.scoreExplainer;
+            const balls = pluralPick(r.params.doughBalls, bcp47, { one: se.savedBallsOne, other: se.savedBallsOther });
+            const params = t(se.savedParams, {
+              hydration: savedFmt.percent(r.params.hydration),
+              hours: savedFmt.durationShort(r.params.fermentHours),
+              balls: t(balls, { n: savedFmt.number(r.params.doughBalls) }),
+            });
+            const snapshot = r.score != null ? t(se.snapshot, { score: savedFmt.number(r.score) }) : null;
             return (
               <li key={r.id} className="profile-saved-recipes__item">
                 <Link
@@ -549,6 +560,14 @@ function SavedRecipesSection() {
                     <span className="type-data profile-saved-recipes__meta">
                       {meta}
                     </span>
+                    <span className="type-data profile-saved-recipes__meta" data-slot="params">
+                      {params}
+                    </span>
+                    {snapshot && (
+                      <span className="type-data profile-saved-recipes__meta" data-slot="snapshot">
+                        {snapshot}
+                      </span>
+                    )}
                   </span>
                 </Link>
                 <button

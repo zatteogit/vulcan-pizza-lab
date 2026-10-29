@@ -1,6 +1,5 @@
 export { canonicalRecipe, canonicalRecipeEntry, canonicalInterpretation, getCanonicalVersion, defaultPL, styleWithSelectedTopping, tailoredRecipeEntry } from "../../use-cases/recipe-entry";
 import { canonicalRecipe, tailoredRecipeEntry } from "../../use-cases/recipe-entry";
-import { type Interpretation } from "../../data/interpretation-library";
 import {
   type GeneratedRecipe,
   type PizzaStyle,
@@ -25,12 +24,21 @@ export function scoreWeightsFromCms(cms: Pick<CmsContent, "scoreDimensions">): S
 
 export interface KitchenCompatibility {
   recipe: GeneratedRecipe;
-  /** Punteggio dell'originale sulla tua cucina (0–100, arrotondato). */
+  /** Punteggio del riferimento sulla tua cucina (0–100, arrotondato). */
   now: number;
-  /** Il meglio raggiungibile adattando la ricetta o scegliendo una versione. */
+  /** Il meglio raggiungibile adattando la ricetta (solo per l'MCP). */
   best: number;
-  /** La versione d'autore che arriva al meglio, se batte l'ottimizzata. */
-  bestInterpretation: Interpretation | null;
+}
+
+/** FW-06 (S07-A-17, S07-B-21): Scopri mostra solo il numero del riferimento
+ *  sulla tua cucina; non serve far girare l'ottimizzatore per ogni card. */
+export function referenceCompatibility(
+  style: PizzaStyle,
+  constraints: UserConstraints,
+  scoreWeights?: ScoreWeights,
+): Pick<KitchenCompatibility, "recipe" | "now"> {
+  const recipe = canonicalRecipe(style, constraints, scoreWeights);
+  return { recipe, now: Math.round(recipe.scores.composite) };
 }
 
 export function kitchenCompatibility(
@@ -43,7 +51,6 @@ export function kitchenCompatibility(
   const optimized = tailoredRecipeEntry(style, constraints, scoreWeights).recipe;
   let best = original.verdict.outcome !== "not_feasible" ? now : 0;
   if (optimized.verdict.outcome !== "not_feasible") best = Math.max(best, optimized.scores.composite);
-  const bestInterpretation: Interpretation | null = null;
   // Nessuna candidata eseguibile: non promettere un guadagno teorico.
-  return { recipe: original, now: Math.round(now), best: Math.round(best || now), bestInterpretation };
+  return { recipe: original, now: Math.round(now), best: Math.round(best || now) };
 }

@@ -17,6 +17,8 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   "timeline.shape.round": "Allargare a mano dal centro, preservare il cornicione",
   "timeline.shape.apiter": "Prima di stendere, verificare almeno 19°C al cuore. Allargare sul piano infarinato con le dita, trasferire sulle braccia nella teglia appena oliata e accompagnare fino agli angoli.",
   "formula.withoutPotato": "Versione senza patate nell’impasto.",
+  /* FW-06 (S07-B-02): il tetto di autenticità detto come regola, non come misura. */
+  "auth.fuelCap": "Senza il forno previsto dallo stile l'autenticità si ferma a {cap}/100: è una regola dell'app, non una misura",
   "auth.notCoalOven": "Il forno a carbone definisce il metodo originale: con un altro combustibile la ricetta è adattata",
   "gen.notCoalOven": "Lo stile originale usa il carbone: il forno selezionato comporta una diversa cottura e impronta aromatica",
   "gen.homeBakingMethod": "Cottura domestica a {temp} su teglia capovolta preriscaldata; risultato diverso dalla cottura originale a {ideal}",

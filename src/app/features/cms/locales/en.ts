@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_EN } from "../../../i18n/ui-messages.en";
 import { TOPPING_I18N_EN } from "../../../data/topping-i18n/en";
 import { INSPIRATION_I18N_EN } from "../../../data/inspiration-i18n/en";
@@ -85,7 +87,7 @@ export const EN_LOCALE: CmsContent = {
     scoreTipTitle: "How to read the score",
     scoreTipOriginal: "Style reference, on your kitchen.",
     scoreTipTailored: "Version with the proposed adaptations.",
-    scoreTipGlobal: "The score considers feasibility and authenticity. It does not certify compliance with a specification.",
+    scoreTipGlobal: "The score counts only ease and authenticity, and never exceeds authenticity. Maturation, sustainability and experimentation are separate information. It does not certify compliance with a specification.",
     scoreTipBlocked: "Some requirements are unmet: open the details.",
     pantrySelectionSummary: "Selected: {n} · Excluded: {excluded}",
     pantryWValue: "W{w}",
@@ -518,37 +520,37 @@ export const EN_LOCALE: CmsContent = {
     authenticity: {
       label: "Authenticity",
       short: "Auth",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Compares dough, process and oven with the style reference. A low value limits the overall score; it does not certify compliance with a specification.",
     },
     feasibility: {
       label: "Ease",
       short: "Feas",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Estimates how demanding preparation is with your oven, flour and experience. Essential requirements are listed separately.",
     },
     digestibility: {
       label: "Estimated maturation",
       short: "Mat",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Estimates maturation from time, temperature, yeast and preferment. It does not measure how you will digest the pizza.",
     },
     sustainability: {
       label: "Estimated sustainability",
       short: "Sust",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Compares baking, fermentation and ingredients. This is a relative estimate, not measured energy use or the recipe’s carbon footprint.",
     },
     experimentation: {
       label: "Experimentation",
       short: "Exp",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "How much dough, process and baking differ from the reference. A high value means more experimentation, not greater success. Some style profiles remain unverified. Its contribution to the global score is 100 minus this value.",
+        "How much dough, process and baking differ from the reference. A high value means more experimentation, not greater success. Some style profiles remain unverified. It does not go into the fit score.",
     },
   },
   recommendationWeights: {
@@ -956,7 +958,7 @@ export const EN_LOCALE: CmsContent = {
     "auth.wOutOfRange": "Flour W out of range (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} out of range {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Not a wood-fired oven (-15%)",
+    "auth.notWoodOven": "Not a wood-fired oven: −15 points on the equipment axis (35% of authenticity)",
     "auth.tempVsIdeal":
       "Temperature {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -1049,6 +1051,8 @@ export const EN_LOCALE: CmsContent = {
     "change.prefermentDetails": "Preferment: {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Baking: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "Coal firing defines the original method: another fuel makes this an adaptation",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "Without the oven the style calls for, authenticity stops at {cap}/100: it is an app rule, not a measurement",
     "gen.notCoalOven": "The original style uses coal: the selected oven changes the bake and flavour profile",
     "timeline.oven.coal": "Coal-fired oven with a preheated deck: check the base and edges and rotate for even baking.",
     "rec.ovenIdeal":
@@ -1989,4 +1993,30 @@ export const EN_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_EN as any,
   glossaryTerms: GLOSSARY_TERMS_EN as any,
   science: SCIENCE_EN,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label}: {score} out of 100",
+    meaning: "How well the recipe can be made in your kitchen and how faithful it stays to the style.",
+    limitedAuthenticity: "Limited by authenticity ({score}/100).",
+    limitedFuel: "Limited by authenticity: without the oven the style calls for, it stops at {cap}/100.",
+    limitedFeasibility: "Limited by a requirement that is not met: by app rule it stays below {limit}.",
+    countedTitle: "What goes into the number",
+    weight: "weight {pct}",
+    ruleTitle: "How the number is reached",
+    ruleAverage: "Weighted average of the two criteria",
+    ruleAuthenticity: "Ceiling: authenticity",
+    ruleFeasibility: "Ceiling for unfeasible recipes (app rule)",
+    ruleResult: "Score: the lowest of the values above",
+    ceilingEditorial: "Product choice: a recipe you cannot make stays below {limit}, even if the other values are high.",
+    infoTitle: "Separate information",
+    infoNote: "These do not go into the number: they tell you something else about the recipe, not how well it suits your kitchen.",
+    referencePending: "The experimentation profile of this style has not been checked yet.",
+    whyLabel: "How it is calculated",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Here the tailored version scores a little lower than the reference: the search tries a limited set of combinations of hours, hydration and flour, and the best one found does not beat it.",
+    snapshot: "Fit when saved: {score}/100",
+    savedParams: "Hydration {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} dough ball",
+    savedBallsOther: "{n} dough balls",
+  },
 };

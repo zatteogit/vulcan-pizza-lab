@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_PT } from "../../../i18n/ui-messages.pt";
 import { TOPPING_I18N_PT } from "../../../data/topping-i18n/pt";
 import { INSPIRATION_I18N_PT } from "../../../data/inspiration-i18n/pt";
@@ -76,7 +78,7 @@ export const PT_LOCALE: CmsContent = {
     scoreTipTitle: "Como ler a pontuação",
     scoreTipOriginal: "Referência do estilo, na sua cozinha.",
     scoreTipTailored: "Versão com as adaptações propostas.",
-    scoreTipGlobal: "A pontuação considera viabilidade e autenticidade. Não certifica a conformidade com uma especificação.",
+    scoreTipGlobal: "A pontuação conta só facilidade e autenticidade, e nunca passa da autenticidade. Maturação, sustentabilidade e experimentação são informações à parte. Não certifica a conformidade com uma especificação.",
     scoreTipBlocked: "Existem requisitos por cumprir: abra os detalhes.",
     pantrySelectionSummary: "Selecionados: {n} · Excluídos: {excluded}",
     pantryWValue: "W{w}",
@@ -507,37 +509,37 @@ export const PT_LOCALE: CmsContent = {
     authenticity: {
       label: "Autenticidade",
       short: "Aut",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Compare massa, processo e forno com a referência do estilo. Um valor baixo limita a pontuação global; não certifica o cumprimento de um caderno de especificações.",
     },
     feasibility: {
       label: "Facilidade",
       short: "Via",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Estima a dificuldade com o seu forno, farinha e experiência. Os requisitos indispensáveis são indicados à parte.",
     },
     digestibility: {
       label: "Maturação estimada",
       short: "Mat",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Estima a maturação a partir do tempo, temperatura, levedura e pré-fermento. Não mede como você vai digerir a pizza.",
     },
     sustainability: {
       label: "Sustentabilidade estimada",
       short: "Sust",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Este critério compara cozedura, fermentação e ingredientes. É uma estimativa relativa, não o consumo medido nem a pegada de carbono da receita.",
     },
     experimentation: {
       label: "Experimenteção",
       short: "Exp",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "Desvio da massa, processo e cozedura face à referência. Um valor alto significa mais experimentação, não maior sucesso. Alguns perfis continuam por verificar. A contribuição para a pontuação global é 100 menos este valor.",
+        "Desvio da massa, processo e cozedura face à referência. Um valor alto significa mais experimentação, não maior sucesso. Alguns perfis continuam por verificar. Não entra na pontuação de compatibilidade.",
     },
   },
   recommendationWeights: {
@@ -775,7 +777,7 @@ export const PT_LOCALE: CmsContent = {
       "W da farinha fora do intervalo (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} fora do intervalo {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Não é forno a lenha (-15%)",
+    "auth.notWoodOven": "Não é forno a lenha: −15 pontos no eixo de equipamento (35% da autenticidade)",
     "auth.tempVsIdeal":
       "Temperatura {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -869,6 +871,8 @@ export const PT_LOCALE: CmsContent = {
     "change.prefermentDetails": "Pré-fermento: {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Cozedura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "A cozedura a carvão define o método original: outro combustível constitui uma adaptação",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "Sem o forno que o estilo pede, a autenticidade para em {cap}/100: é uma regra do app, não uma medida",
     "gen.notCoalOven": "O estilo original usa carvão: o forno escolhido altera a cozedura e o perfil aromático",
     "timeline.oven.coal": "Forno a carvão com base pré-aquecida: verifique o fundo e os bordos e roda para uniformizar a cozedura.",
     "rec.ovenIdeal":
@@ -1999,4 +2003,30 @@ export const PT_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_PT as any,
   glossaryTerms: GLOSSARY_TERMS_PT as any,
   science: SCIENCE_PT,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label}: {score} de 100",
+    meaning: "O quanto a receita pode ser feita com a sua cozinha e o quanto continua fiel ao estilo.",
+    limitedAuthenticity: "Limitada pela autenticidade ({score}/100).",
+    limitedFuel: "Limitada pela autenticidade: sem o forno que o estilo pede, ela para em {cap}/100.",
+    limitedFeasibility: "Limitada por um requisito não atendido: por regra do app, fica abaixo de {limit}.",
+    countedTitle: "O que entra no número",
+    weight: "peso {pct}",
+    ruleTitle: "Como se chega ao número",
+    ruleAverage: "Média ponderada dos dois critérios",
+    ruleAuthenticity: "Teto: autenticidade",
+    ruleFeasibility: "Teto para receitas inviáveis (regra do app)",
+    ruleResult: "Pontuação: o menor dos valores acima",
+    ceilingEditorial: "Escolha de produto: uma receita que você não consegue fazer fica abaixo de {limit}, mesmo que os outros valores sejam altos.",
+    infoTitle: "Informações à parte",
+    infoNote: "Não entram no número: dizem outra coisa sobre a receita, não o quanto ela combina com a sua cozinha.",
+    referencePending: "O perfil de experimentação deste estilo ainda não foi verificado.",
+    whyLabel: "Como é calculado",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Aqui a versão adaptada pontua um pouco menos que a referência: a busca testa um número limitado de combinações de horas, hidratação e farinha, e a melhor encontrada não a supera.",
+    snapshot: "Compatibilidade ao salvar: {score}/100",
+    savedParams: "Hidratação {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} bolinha",
+    savedBallsOther: "{n} bolinhas",
+  },
 };

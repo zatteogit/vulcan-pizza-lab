@@ -666,9 +666,6 @@
   --feature-media-height: var(--measure-2xs);
   /* hero media panel cap */
   --feature-media-height-cover: min(var(--viewport-64), var(--measure-sm));
-  --score-bar-basis: var(--measure-4xs);
-  /* match card: score bar min width */
-  --score-bar-basis-compact: var(--measure-5xs);
 
   /* ── Density · Semantica (ATTIVA; sovrascrivibile per tema/breakpoint) ──
      I componenti consumano --gap-* (mai --space-* per le spaziature che
@@ -3568,6 +3565,169 @@
   .compat-pill__original {
     color: var(--text-muted);
   }
+
+  /* ═══ FW-06 — ScoreExplainer: il punteggio spiegato (card, pannello, scheda) ═══ */
+  .score-explainer {
+    display: grid;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+    color: var(--text-default);
+  }
+
+  .score-explainer p {
+    margin: 0;
+  }
+
+  .score-explainer[data-variant="compact"] {
+    margin-top: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: var(--border-width-thin) solid var(--popover-border-color);
+  }
+
+  .score-explainer__meaning,
+  .score-explainer__note {
+    color: var(--text-muted);
+  }
+
+  .score-explainer__limit,
+  .score-explainer__blocker {
+    color: var(--status-caution-fg);
+    font-weight: var(--weight-medium);
+  }
+
+  .score-explainer__heading {
+    margin-top: var(--space-1);
+    font-weight: var(--weight-semibold);
+    color: var(--text-default);
+  }
+
+  .score-explainer__dims {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .score-explainer__dim[data-limiting="true"] .score-explainer__name,
+  .score-explainer__dim[data-limiting="true"] .ds-disclosure__summary {
+    color: var(--status-caution-fg);
+  }
+
+  .score-explainer__dim-head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .score-explainer__name {
+    font-weight: var(--weight-semibold);
+  }
+
+  .score-explainer__weight {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-regular);
+  }
+
+  .score-explainer__dim-head .score-explainer__value {
+    margin-inline-start: auto;
+  }
+
+  .score-explainer__track {
+    display: block;
+    height: var(--space-1-5);
+    margin-top: var(--space-1);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    background: var(--container-bg-high);
+  }
+
+  .score-explainer__fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: var(--text-muted);
+  }
+
+  .score-explainer__fill[data-axis="authenticity"] { background: var(--axis-authenticity); }
+  .score-explainer__fill[data-axis="feasibility"] { background: var(--axis-feasibility); }
+
+  .score-explainer__explain,
+  .score-explainer__penalties {
+    color: var(--text-muted);
+  }
+
+  .score-explainer__penalties {
+    display: grid;
+    gap: var(--space-1);
+    margin: var(--space-1) 0 0;
+    padding-inline-start: var(--space-4);
+  }
+
+  .score-explainer__rule {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .score-explainer__rule-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .score-explainer__rule-row dd {
+    margin: 0;
+    flex-shrink: 0;
+    color: var(--text-default);
+  }
+
+  .score-explainer__rule-row[data-limiting="true"] {
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+  }
+
+  .score-explainer__rule-row[data-result="true"] {
+    padding-top: var(--space-1);
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+  }
+
+  .score-explainer__why {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .match-score-explainer {
+    margin-top: var(--space-3);
+  }
+
+  .style-detail-match__score {
+    margin-top: var(--space-3);
+  }
+
+  /* S06-A-18: nel pannello «Personalizza» il motivo del limite sta sotto il numero. */
+  .setup-match {
+    flex-wrap: wrap;
+  }
+
+  .setup-match__limit {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+    color: var(--status-caution-fg);
+  }
+
+  .setup-match--desktop .setup-match__limit {
+    text-align: end;
+  }
+  /* ═══ /FW-06 ═══ */
 
   .explore-card__caption {
     position: relative;
@@ -9343,26 +9503,6 @@
 
   .match-card__context .recipe-condition-chips { padding-block: 0; }
 
-  .match-calculation {
-    display: grid;
-    gap: var(--space-2);
-    margin-top: var(--space-3);
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-  }
-
-  .match-calculation__row {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-3);
-  }
-
-  .match-calculation__row dd {
-    margin: 0;
-    flex-shrink: 0;
-    color: var(--text-default);
-  }
-
   .match-details__intro {
     margin-top: var(--space-3);
     padding-top: var(--space-3);
@@ -9403,166 +9543,11 @@
     font-size: var(--font-size-md);
   }
 
-  .match-bars {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: var(--gap-md);
-    row-gap: var(--gap-sm);
-    margin-top: var(--space-3);
-    width: 100%;
-  }
-
-  /* ── ScoreBar ── */
-  .match-bar--compact {
-    flex-grow: 1;
-    flex-shrink: 0;
-    flex-basis: var(--score-bar-basis-compact);
-    min-width: var(--score-bar-basis-compact);
-  }
-
-  .match-bar--wide {
-    min-width: var(--score-bar-basis);
-    flex: 1;
-  }
-
-  .match-bar--explainable {
-    text-align: left;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: transform var(--duration-fast) var(--ease-standard);
-  }
-
-  .match-bar--explainable:active {
-    transform: scale(0.98);
-  }
-
-  .match-bar__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-semibold);
-    line-height: var(--leading-tight);
-  }
-
-  .match-bar__head--compact {
-    font-size: var(--font-size-sm);
-  }
-
-  .match-bar__head--explained {
-    color: var(--text-default);
-  }
-
-  .match-bar__label {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-  }
-
-  .match-bar__label-icon {
-    flex-shrink: 0;
-    opacity: 0.55;
-  }
-
-  .match-bar__label-icon--explained {
-    opacity: 0.9;
-  }
-
-  /* FW-11 (S07-A-13, S07-B-12): con le etichette lunghe (en, de, fr) il
-     numero non va a capo cifra per cifra; l'etichetta si restringe lei. */
-  .match-bar__head > .match-bar__label {
-    min-width: 0;
-  }
-
-  .match-bar__head > .type-numeric {
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-
   /* FW-11 (S17-A-01, D-J): nota sulle microdosi sotto il sistema di misura. */
   .profile-unit-note {
     margin-top: var(--space-2);
     color: var(--text-muted);
     line-height: var(--leading-normal);
-  }
-
-  .match-bar-track {
-    border-radius: var(--radius-full);
-    overflow: hidden;
-    background: var(--container-bg-high);
-  }
-
-  .match-bar-track--compact {
-    margin-top: var(--space-1);
-    height: var(--space-1-5);
-  }
-
-  .match-bar-track--wide {
-    margin-top: var(--space-1-5);
-    height: var(--space-2);
-  }
-
-  .match-bar-fill {
-    height: 100%;
-    border-radius: var(--radius-full);
-    background: var(--bar-color);
-  }
-
-  /* ── Learn-inline: spiegazione asse ── */
-  .match-explain {
-    overflow: hidden;
-  }
-
-  .match-explain__panel {
-    margin-top: var(--space-2-5);
-    border-radius: var(--radius-xl);
-    padding-inline: var(--space-3);
-    padding-block: var(--space-2-5);
-    background: color-mix(in srgb, var(--container-bg-high) 70%, transparent);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-  }
-
-  .match-explain__head {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    color: var(--text-default);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-bold);
-  }
-
-  .match-explain__axis {
-    color: var(--axis-color);
-  }
-
-  .match-explain__weight {
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-semibold);
-  }
-
-  .match-explain__body {
-    margin: var(--space-1) 0 0;
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-normal);
-  }
-
-  .match-breakdown {
-    margin: var(--space-2-5) 0 0;
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-normal);
-    font-feature-settings: "tnum";
-  }
-
-  .match-breakdown__total {
-    color: var(--text-default);
-    font-weight: var(--weight-semibold);
   }
 
   .recipe-comparison {

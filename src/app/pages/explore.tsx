@@ -35,7 +35,7 @@ import { stgDepartures } from "../domain/recipe-reference";
 import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
-import { canonicalRecipe, kitchenCompatibility, scoreWeightsFromCms, styleWithSelectedTopping } from "../features/recipe/kitchen-compatibility";
+import { canonicalRecipe, referenceCompatibility, scoreWeightsFromCms, styleWithSelectedTopping } from "../features/recipe/kitchen-compatibility";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 import { useDetailLevel } from "../hooks/use-detail-level";
@@ -641,7 +641,7 @@ function SignatureRecipeCard({
   const match = useMemo(() => {
     if (!baseStyle) return null;
     try {
-      return kitchenCompatibility(styleWithSelectedTopping(baseStyle, rawRecipe.topping_concept_id), constraints, scoreWeightsFromCms(cms));
+      return referenceCompatibility(styleWithSelectedTopping(baseStyle, rawRecipe.topping_concept_id), constraints, scoreWeightsFromCms(cms));
     } catch {
       return null;
     }
@@ -724,7 +724,7 @@ function SignatureRecipeCard({
       </Surface>
           {match && (
             <div className="explore-card__match">
-              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
+              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} recipe={match.recipe} />
             </div>
           )}
       </TiltCard>
@@ -775,13 +775,11 @@ function StyleCatalogCard({
     cms.media?.stylePhotos?.[style.id] ||
     STYLE_PHOTOS[style.id] ||
     FALLBACK;
-  // Fase 4: match canonico (M_c) sul tuo forno + margine ottimizzabile (M_o − M_c).
-  // La pill "↗+Δ" compare solo se il margine è reale (Δ ≥ 8): auto-regolante,
-  // così il 70-80% delle card resta pulito. (La scia fantasma a 32px era illeggibile.)
+  // FW-06 (S07-A-17): il numero del riferimento sulla tua cucina; nessuna
+  // pill «↗+Δ» (non esiste) e nessuna ottimizzazione per card.
   const match = useMemo(() => {
     try {
-      // D-041: stesso numero di Crea, della scheda e della ricetta aperta.
-      return kitchenCompatibility(style, constraints, scoreWeightsFromCms(cms));
+      return referenceCompatibility(style, constraints, scoreWeightsFromCms(cms));
     } catch {
       return null;
     }
@@ -840,7 +838,7 @@ function StyleCatalogCard({
           {/* Compatibilità con la tua cucina — in alto a destra, come in Crea */}
           {match && (
             <div className="explore-card__match">
-              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
+              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} recipe={match.recipe} />
             </div>
           )}
 

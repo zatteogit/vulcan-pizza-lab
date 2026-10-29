@@ -1054,6 +1054,11 @@ interface AuthenticityCenter {
   fermentation_hours?: number;
 }
 
+/** Confine editoriale di «fedele con adattamenti» quando manca il combustibile
+ *  identitario dello stile (legna, carbone): scelta di Vulcan, non una misura
+ *  (nota `authenticity-fuel-cap`). */
+export const AUTHENTICITY_FUEL_CAP = 75;
+
 function calculateAuthenticityScore(
   style: PizzaStyle,
   hydration: number,
@@ -1125,7 +1130,7 @@ function calculateAuthenticityScore(
   // Equipment axis (35%)
   if (style.requires_wood_oven && ovenType !== "wood") {
     breakdown.attrezzatura -= 15;
-    penalties.push(em("auth.notWoodOven", "Forno non a legna (-15%)"));
+    penalties.push(em("auth.notWoodOven", "Forno non a legna: −15 punti sull’asse attrezzatura (35% dell’autenticità)"));
     const tempRatio = ovenTemp / style.baking.temp_c_ideal;
     const tempPenalty = (1 - tempRatio) * 25;
     if (tempPenalty > 0) {
@@ -1205,7 +1210,12 @@ function calculateAuthenticityScore(
   // editoriale di «fedele con adattamenti», non una misura fisica di qualità.
   if ((style.requires_wood_oven && ovenType !== "wood") ||
     (style.baking.oven_type_required === "coal" && ovenType !== "coal")) {
-    score = Math.min(score, 75);
+    // FW-06 (S07-B-02): quando il tetto abbassa davvero il valore lo si dice,
+    // come regola di Vulcan: «−15» sull'asse attrezzatura non spiega da solo 75.
+    if (score > AUTHENTICITY_FUEL_CAP) {
+      penalties.push(em("auth.fuelCap", METHOD_MESSAGES_IT["auth.fuelCap"], { cap: AUTHENTICITY_FUEL_CAP }));
+    }
+    score = Math.min(score, AUTHENTICITY_FUEL_CAP);
     if (style.baking.oven_type_required === "coal") {
       penalties.push(em("auth.notCoalOven", METHOD_MESSAGES_IT["auth.notCoalOven"]));
     }

@@ -781,7 +781,7 @@ export const SCIENCE_DE: CmsScience = {
     "score-weights": {
       title: "Gewichte der Bewertung",
       l1: "Die Gewichte der Dimensionen sind eine Wahl von {brand}.",
-      l2: "Sie sagen, wie viel jede Dimension in der Endzahl zählt. Sie stammen aus keiner Messung: Es ist eine Regel der App, für alle gleich.",
+      l2: "In die Zahl «Passt zu deiner Küche» gehen nur Authentizität und Einfachheit ein: Reifung, Nachhaltigkeit und Experimentierfreude werden separat gezeigt und verändern sie nicht. Die Gewichte stammen nicht aus einer Messung: Sie sind eine Regel der App, für alle gleich. Die Wertung ist dann der niedrigere Wert aus gewichtetem Mittel und Authentizität.",
     },
     "non-feasible-ceiling": {
       title: "Obergrenze für nicht machbare Rezepte",

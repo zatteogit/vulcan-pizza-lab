@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_FR } from "../../../i18n/ui-messages.fr";
 import { TOPPING_I18N_FR } from "../../../data/topping-i18n/fr";
 import { INSPIRATION_I18N_FR } from "../../../data/inspiration-i18n/fr";
@@ -78,7 +80,7 @@ export const FR_LOCALE: CmsContent = {
     scoreTipTitle: "Comprendre le score",
     scoreTipOriginal: "Référence du style, pour votre cuisine.",
     scoreTipTailored: "Version avec les adaptations proposées.",
-    scoreTipGlobal: "Le score tient compte de la faisabilité et de l’authenticité. Il ne certifie pas la conformité à un cahier des charges.",
+    scoreTipGlobal: "Le score ne compte que la facilité et l’authenticité, et ne dépasse jamais l’authenticité. Maturation, durabilité et expérimentation sont des informations à part. Il ne certifie pas la conformité à un cahier des charges.",
     scoreTipBlocked: "Certains prérequis ne sont pas remplis : ouvrez le détail.",
     pantrySelectionSummary: "Sélectionnés : {n} · Exclus : {excluded}",
     pantryWValue: "W{w}",
@@ -509,37 +511,37 @@ export const FR_LOCALE: CmsContent = {
     authenticity: {
       label: "Authenticité",
       short: "Auth",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Ce critère compare la pâte, le procédé et le four au style de référence. Une valeur basse limite le score global ; elle ne certifie pas le respect d’un cahier des charges.",
     },
     feasibility: {
       label: "Facilité",
       short: "Faites",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Estime la difficulté avec votre four, votre farine et votre expérience. Les conditions indispensables sont indiquées à part.",
     },
     digestibility: {
       label: "Maturation estimée",
       short: "Mat",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Estime la maturation selon le temps, la température, la levure et le préferment. Ne mesure pas votre digestion de la pizza.",
     },
     sustainability: {
       label: "Durabilité estimée",
       short: "Dur",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Ce critère compare cuisson, fermentation et ingrédients. Il s’agit d’une estimation relative, pas d’une consommation mesurée ni du bilan carbone de la recette.",
     },
     experimentation: {
       label: "Expérimentation",
       short: "Exp",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "Écart de la pâte, du procédé et de la cuisson par rapport au référentiel. Une valeur élevée indique plus d’expérimentation, pas une meilleure réussite. Certains profils restent à vérifier. Sa contribution au score global est 100 moins cette valeur.",
+        "Écart de la pâte, du procédé et de la cuisson par rapport au référentiel. Une valeur élevée indique plus d’expérimentation, pas une meilleure réussite. Certains profils restent à vérifier. Elle n’entre pas dans le score de compatibilité.",
     },
   },
   recommendationWeights: {
@@ -776,7 +778,7 @@ export const FR_LOCALE: CmsContent = {
     "auth.wOutOfRange": "W farine hors plage (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} hors plage {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Pas un four à bois (-15%)",
+    "auth.notWoodOven": "Pas un four à bois : −15 points sur l’axe équipement (35 % de l’authenticité)",
     "auth.tempVsIdeal":
       "Température {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -871,6 +873,8 @@ export const FR_LOCALE: CmsContent = {
     "change.prefermentDetails": "Préferment : {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Cuisson : {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "La cuisson au charbon définit la méthode originale : un autre combustible en fait une adaptation",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "Sans le four prévu par le style, l’authenticité s’arrête à {cap}/100 : c’est une règle de l’app, pas une mesure",
     "gen.notCoalOven": "Le style original utilise le charbon : le four choisi modifie la cuisson et le profil aromatique",
     "timeline.oven.coal": "Four à charbon avec sole préchauffée : surveillez le fond et les bords et tournez pour une cuisson uniforme.",
     "rec.ovenIdeal":
@@ -2007,4 +2011,30 @@ export const FR_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_FR as any,
   glossaryTerms: GLOSSARY_TERMS_FR as any,
   science: SCIENCE_FR,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label} : {score} sur 100",
+    meaning: "Dans quelle mesure la recette est réalisable avec votre cuisine et reste fidèle au style.",
+    limitedAuthenticity: "Limité par l’authenticité ({score}/100).",
+    limitedFuel: "Limité par l’authenticité : sans le four prévu par le style, elle s’arrête à {cap}/100.",
+    limitedFeasibility: "Limité par une condition non remplie : selon une règle de l’app, il reste sous {limit}.",
+    countedTitle: "Ce qui entre dans le nombre",
+    weight: "poids {pct}",
+    ruleTitle: "Comment on obtient le nombre",
+    ruleAverage: "Moyenne pondérée des deux critères",
+    ruleAuthenticity: "Plafond : authenticité",
+    ruleFeasibility: "Plafond pour les recettes non réalisables (règle de l’app)",
+    ruleResult: "Score : la plus basse des valeurs ci-dessus",
+    ceilingEditorial: "Choix de produit : une recette que vous ne pouvez pas réaliser reste sous {limit}, même si les autres valeurs sont élevées.",
+    infoTitle: "Informations à part",
+    infoNote: "Elles n’entrent pas dans le nombre : elles disent autre chose de la recette, pas à quel point elle convient à votre cuisine.",
+    referencePending: "Le profil d’expérimentation de ce style n’a pas encore été vérifié.",
+    whyLabel: "Comment c’est calculé",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Ici, la version sur mesure obtient un peu moins que la référence : la recherche essaie un nombre limité de combinaisons d’heures, d’hydratation et de farine, et la meilleure trouvée ne la dépasse pas.",
+    snapshot: "Compatibilité à l’enregistrement : {score}/100",
+    savedParams: "Hydratation {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} pâton",
+    savedBallsOther: "{n} pâtons",
+  },
 };

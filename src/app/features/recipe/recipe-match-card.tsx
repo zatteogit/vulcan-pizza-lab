@@ -5,11 +5,11 @@ import { RecipeChanges } from "./recipe-changes";
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
-import { ArrowUpRight, Bookmark, BookmarkCheck, ChevronDown, Droplets, Info, Sparkles, TriangleAlert, WandSparkles } from "lucide-react";
-import { SCORE_DIMENSIONS, type GeneratedRecipe, type RecipeScores, type ScoreDimensionKey, type UserConstraints } from "../../domain/pizza-engine";
+import { ArrowUpRight, Bookmark, BookmarkCheck, ChevronDown, Droplets, Sparkles, TriangleAlert, WandSparkles } from "lucide-react";
+import type { GeneratedRecipe, RecipeScores, UserConstraints } from "../../domain/pizza-engine";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { summarizeVerdict } from "../../domain/verdict-summary";
-import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
+import { ScoreExplainer, scoreAriaLabel, scoreLimitLine } from "./score-explainer";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, t } from "../cms/i18n";
@@ -105,11 +105,12 @@ const HEADROOM_TONE_CLASS = {
 } as const;
 
 /* ═══ ANIMATED SCORE — il numero "rolla" verso il valore con una spring.
-   Al mount parte da 0 (rivelazione), poi insegue ogni ricalcolo. Con
-   prefers-reduced-motion salta direttamente al valore. tnum evita jitter. */
+   FW-06 (S07-B-19): parte dal valore, non da 0: tornando sul tab Ricetta il
+   conteggio ripartiva ogni volta (movimento decorativo ripetuto). Insegue solo
+   i ricalcoli. Con prefers-reduced-motion salta al valore. tnum evita jitter. */
 function AnimatedScore({ value }: { value: number }) {
   const prefersReducedMotion = useReducedMotion();
-  const spring = useSpring(prefersReducedMotion ? value : 0, motionSpring.animatedScore);
+  const spring = useSpring(value, motionSpring.animatedScore);
   useEffect(() => {
     if (prefersReducedMotion) spring.jump(value);
     else spring.set(value);
@@ -140,10 +141,10 @@ export function RecipeMatchCard({
   hardLimited,
   softNeeds,
   saved = false,
-  nerdMode = false,
   verdictRecipe,
   verdictConstraints,
   mealDeadline = false,
+  resetKey,
   className = "",
 }: {
   scores: RecipeScores;
@@ -177,13 +178,14 @@ export function RecipeMatchCard({
    *  soffitto ma sono precondizioni per raggiungerlo → "ti serve X". */
   softNeeds?: string[];
   saved?: boolean;
-  /** Nerd mode: aggiunge la scomposizione numerica della media pesata. */
-  nerdMode?: boolean;
   /** Ricetta e vincoli per l'esito «Così non è fattibile»: quando c'è, il
    *  blocco lo dice al posto del tono e del soffitto, una volta sola. */
   verdictRecipe?: GeneratedRecipe;
   verdictConstraints?: UserConstraints;
   mealDeadline?: boolean;
+  /** FW-06 (S07-A-19): cambia quando cambia la ricetta di partenza (versione,
+   *  firma): il nuovo numero non è un miglioramento e non mostra il «+Δ». */
+  resetKey?: string;
   className?: string;
 }) {
   const { cms, bcp47 } = useCms();
@@ -224,48 +226,25 @@ export function RecipeMatchCard({
     ? engineMsgTexts([unviableWarning], cms, bcp47)[0]
     : null;
 
-  // Learn-inline (audit lug 2026): ogni asse è tappabile → spiegazione dal CMS.
-  // Tutti e cinque gli assi sono ispezionabili. La media pesata usa gli stessi
-  // pesi del motore; i tetti non compensabili determinano poi il globale.
-  const [explainKey, setExplainKey] = useState<ScoreDimensionKey | null>(null);
-  const EXTRA_DIMENSIONS = [
-    { key: "sustainability" as const, label: uiMessage("features.recipe.recipe-match-card.sostenibilita-7cea5449"), short: "Sos", color: "var(--secondary)", weight: 0 },
-    { key: "experimentation" as const, label: uiMessage("features.recipe.recipe-match-card.sperimentazione-d09679c9"), short: "Spe", color: "var(--text-accent)", weight: 0 },
-  ];
-  const axes = [
-    ...SCORE_DIMENSIONS.map((dimension) => ({
-      ...dimension,
-      color: SCORE_DIMENSION_COLORS[dimension.key],
-    })),
-    ...EXTRA_DIMENSIONS,
-  ]
-    .map((dimension) => ({
-      ...dimension,
-      label: cms.scoreDimensions[dimension.key]?.label ?? dimension.label,
-      shortLabel: cms.scoreDimensions[dimension.key]?.short ?? dimension.short,
-      value: scores[dimension.key],
-      weight: cms.scoreDimensions[dimension.key]?.weight ?? dimension.weight,
-      explain: cms.scoreDimensions[dimension.key]?.explain,
-    }));
-  const totalWeight = axes.reduce((sum, axis) => sum + axis.weight, 0);
-  const weightedAxes = totalWeight > 0
-    ? axes
-        .filter((axis) => axis.weight > 0)
-        .map((axis) => ({ ...axis, weightPct: Math.round((axis.weight / totalWeight) * 100) }))
-    : [];
-  const explainedAxis = explainKey ? axes.find((axis) => axis.key === explainKey) : undefined;
-
   const roundedScore = Math.round(scores.composite);
+  const limitLine = scoreLimitLine(scores, cms, fmt);
 
   // Il guadagno NON vive più sulla label del bottone ("Ottimizza per me +6"):
   // quando il punteggio SALE (ottimizzazione, ritocco riuscito) un "+Δ" verde
   // spunta accanto al numero e svanisce — feedback nel momento, non promessa
   // nel pulsante (Matteo, 3 lug 2026).
   const prevScoreRef = useRef(roundedScore);
+  const prevResetRef = useRef(resetKey);
   const [scoreBump, setScoreBump] = useState<{ delta: number; id: number } | null>(null);
   useEffect(() => {
     const prev = prevScoreRef.current;
     prevScoreRef.current = roundedScore;
+    // Altra ricetta di partenza: il numero si riallinea senza «+Δ».
+    if (prevResetRef.current !== resetKey) {
+      prevResetRef.current = resetKey;
+      setScoreBump(null);
+      return;
+    }
     if (roundedScore <= prev) return;
     const id = Date.now();
     setScoreBump({ delta: roundedScore - prev, id });
@@ -274,7 +253,7 @@ export function RecipeMatchCard({
       1800,
     );
     return () => window.clearTimeout(timer);
-  }, [roundedScore]);
+  }, [roundedScore, resetKey]);
 
   // ── Due livelli: match corrente vs SOFFITTO (M_o) ───────────────────────────
   // Audit role-play giugno 2026. Il soffitto è il massimo raggiungibile ottimizzando.
@@ -366,10 +345,11 @@ export function RecipeMatchCard({
           ref={detailsToggleRef}
           type="button"
           className={`match-score-group${expanded ? " match-score-group--expanded" : ""}`}
-          onClick={() => setExpanded(value => { if (value) setExplainKey(null); return !value; })}
+          onClick={() => setExpanded(value => !value)}
           aria-expanded={expanded}
           aria-controls={detailsId}
-          aria-label={`${fmt.number(roundedScore)}/100 · ${detailsActionLabel}`}
+          /* FW-06 (S07-A-15, S07-B-19): il numero con il suo nome. */
+          aria-label={`${scoreAriaLabel(roundedScore, cms, fmt)}. ${detailsActionLabel}`}
           title={detailsActionLabel}
         >
           <span className="match-score-number">
@@ -412,13 +392,10 @@ export function RecipeMatchCard({
 
           </div>
           <div className="match-card__context">
-            {showScoreLimit && scores.global_calculation?.limited_by === "authenticity" && (
-              <p className="match-notice match-notice--limit">
-                {t(cms.ui.scoreLimitedAuthenticity, { score: fmt.number(scores.authenticity) })}
-              </p>
-            )}
-            {showScoreLimit && scores.global_calculation?.limited_by === "feasibility" && (
-              <p className="match-notice match-notice--limit">{cms.ui.scoreLimitedFeasibility}</p>
+            {/* FW-06 (S07-A-02): livello 1, che cosa limita il numero (anche il
+                tetto del combustibile, detto come regola dell'app). */}
+            {showScoreLimit && limitLine && (
+              <p className="match-notice match-notice--limit">{limitLine}</p>
             )}
             {notFeasible && verdictRecipe && verdictConstraints && (
               <RecipeVerdictNotice
@@ -554,110 +531,10 @@ export function RecipeMatchCard({
               </span>
             </div>
 
-            {/* VPL-C4: barre con label ESTESA; quando non entrano sulla riga, vanno a
-             * capo (flex-wrap + min-width che contiene il nome pieno) invece di
-             * comprimersi in sigle criptiche. */}
-            <div className="match-bars">
-              {axes.map((axis) => (
-                <ScoreBar
-                  key={axis.key}
-                  label={axis.label}
-                  displayLabel={axis.label}
-                  value={axis.value}
-                  color={axis.color}
-                  compact
-                  explainable={Boolean(axis.explain)}
-                  explained={explainKey === axis.key}
-                  onToggleExplain={() =>
-                    setExplainKey((k) => (k === axis.key ? null : axis.key))
-                  }
-                />
-              ))}
-            </div>
-
-            {/* Learn-inline: spiegazione dell'asse selezionato, sotto la riga
-             * delle barre (mai dentro il flex-wrap: non sposta le colonne). */}
-            <AnimatePresence initial={false} mode="wait">
-              {explainedAxis?.explain && (
-                <motion.div
-                  key={explainedAxis.key}
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={motionSpring.matchPanel}
-                  className="match-explain"
-                >
-                  <div className="match-explain__panel">
-                    <div className="match-explain__head">
-                      <span
-                        className="match-explain__axis"
-                        style={{ ["--axis-color" as any]: explainedAxis.color }}
-                      >
-                        {explainedAxis.label}
-                      </span>
-                      {nerdMode && (() => {
-                        const weighted = weightedAxes.find((axis) => axis.key === explainedAxis.key);
-                        return weighted ? (
-                          <span className="type-numeric match-explain__weight">
-                            {t(cms.cooking.matchAxisWeight ?? "peso {pct}% del Match", { pct: weighted.weightPct })}
-                          </span>
-                        ) : null;
-                      })()}
-                    </div>
-                    <p className="match-explain__body">
-                      {explainedAxis.explain}
-                    </p>
-                    {explainedAxis.weight === 0 && explainKey !== "authenticity" && (
-                      <p className="match-explain__body">{cms.ui.scoreNotWeighted}</p>
-                    )}
-                    {explainKey === "authenticity" && scores.penalties.length > 0 && (
-                      <ul className="recipe-verdict__reasons">
-                        {engineMsgTexts(scores.penalties, cms, bcp47).map((text) => (
-                          <li key={text} className="match-explain__body">{text}</li>
-                        ))}
-                      </ul>
-                    )}
-                    {explainKey === "experimentation" && verdictRecipe?.science.deviation_category === "unclassified" && (
-                      <p className="match-notice match-notice--warn">{cms.ui.scoreReferencePending}</p>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {scores.global_calculation && (
-              <dl className="match-calculation" aria-label={cms.ui.recipeScore}>
-                <div className="match-calculation__row">
-                  <dt>{cms.ui.scoreWeightedAverage}</dt>
-                  <dd className="type-numeric">{scores.global_calculation.weighted_average}/100</dd>
-                </div>
-                <div className="match-calculation__row">
-                  <dt>{cms.ui.scoreAuthenticityCeiling}</dt>
-                  <dd className="type-numeric">{scores.global_calculation.authenticity_ceiling}/100</dd>
-                </div>
-                {scores.global_calculation.feasibility_ceiling !== null && (
-                  <div className="match-calculation__row">
-                    <dt>{cms.ui.scoreFeasibilityCeiling}</dt>
-                    <dd className="type-numeric">{scores.global_calculation.feasibility_ceiling}/100</dd>
-                  </div>
-                )}
-              </dl>
-            )}
-
-            {/* Scomposizione numerica (nerd): stessi pesi passati al motore,
-             * rinormalizzati — la somma è la media prima dei tetti. */}
-            {nerdMode && weightedAxes.length > 0 && (
-              <p className="type-numeric match-breakdown">
-                {cms.cooking.matchBreakdownLabel ?? uiMessage("features.recipe.recipe-match-card.media-pesata-e31351dd")}:{" "}
-                {weightedAxes
-                  .map((axis) => `${axis.key === "experimentation" ? `(100−${axis.shortLabel})` : axis.shortLabel} ${Math.round(scores.global_calculation?.weighted_values[axis.key] ?? axis.value)}·${axis.weightPct}%`)
-                  .join(" + ")}
-                {" ≈ "}
-                <span className="match-breakdown__total">
-                  {scores.global_calculation?.weighted_average ?? roundedScore}
-                </span>
-              </p>
-            )}
+            {/* FW-06: il punteggio spiegato una sola volta, come nelle card e nel
+                pannello stile (ScoreExplainer): criteri che contano con il peso,
+                regola del minimo, informazioni a parte, «Come si calcola». */}
+            <ScoreExplainer scores={scores} recipe={verdictRecipe} showLimit={!(showScoreLimit && limitLine)} className="match-score-explainer" />
 
             {/* FW-10: senza le ripetizioni del blocco e senza «Se hai…» quando
                 la ricetta non si può fare (summarizeVerdict). */}
@@ -700,66 +577,5 @@ export function RecipeMatchCard({
 
 
     </motion.section>
-  );
-}
-
-function ScoreBar({
-  label,
-  displayLabel,
-  value,
-  color,
-  compact = false,
-  explainable = false,
-  explained = false,
-  onToggleExplain,
-}: {
-  label: string;
-  displayLabel?: string;
-  value: number;
-  color: string;
-  compact?: boolean;
-  /** Learn-inline: la barra è tappabile e apre la spiegazione dell'asse. */
-  explainable?: boolean;
-  explained?: boolean;
-  onToggleExplain?: () => void;
-}) {
-  const rounded = Math.round(value);
-  const Wrapper = explainable ? "button" : "div";
-  return (
-    <Wrapper
-      {...(explainable
-        ? { type: "button" as const, onClick: onToggleExplain, "aria-expanded": explained }
-        : {})}
-      className={`match-bar ${compact ? "match-bar--compact" : "match-bar--wide"}${
-        explainable ? " match-bar--explainable" : ""
-      }`}
-    >
-      <div
-        className={`match-bar__head${compact ? " match-bar__head--compact" : ""}${
-          explained ? " match-bar__head--explained" : ""
-        }`}
-      >
-        <span className="match-bar__label" title={label} aria-label={label}>
-          {compact ? displayLabel ?? label : label}
-          {explainable && (
-            <Info
-              size={11}
-              aria-hidden="true"
-              className={`match-bar__label-icon${explained ? " match-bar__label-icon--explained" : ""}`}
-            />
-          )}
-        </span>
-        <span className="type-numeric">{rounded}</span>
-      </div>
-      <div className={`match-bar-track ${compact ? "match-bar-track--compact" : "match-bar-track--wide"}`}>
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${rounded}%` }}
-          transition={motionSpring.calmMatch}
-          className="match-bar-fill"
-          style={{ ["--bar-color" as any]: color }}
-        />
-      </div>
-    </Wrapper>
   );
 }

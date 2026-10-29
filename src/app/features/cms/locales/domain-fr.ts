@@ -790,7 +790,7 @@ export const SCIENCE_FR: CmsScience = {
     "score-weights": {
       title: "Poids du score",
       l1: "Les poids des dimensions sont un choix de {brand}.",
-      l2: "Ils disent combien compte chaque dimension dans le chiffre final. Ils ne viennent pas d'une mesure : c'est une règle de l'app, la même pour tous.",
+      l2: "Dans le nombre « Compatibilité avec votre cuisine », seules l’authenticité et la facilité comptent : maturation, durabilité et expérimentation sont présentées à part et ne le modifient pas. Les poids ne viennent pas d’une mesure : c’est une règle de l’app, la même pour tous. Le score est ensuite la plus basse valeur entre la moyenne pondérée et l’authenticité.",
     },
     "non-feasible-ceiling": {
       title: "Plafond des recettes non faisables",

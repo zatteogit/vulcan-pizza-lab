@@ -9,6 +9,7 @@ import {
   type UserConstraints,
 } from "./pizza-engine";
 import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { DEFAULT_UI_SCORE_WEIGHTS, explainScore } from "./recipe-score";
 
 /* Guardie delle decisioni di Matteo (docs/autorialita.md). Una PR le aveva
  * annullate senza registrarne di nuove (audit 28/10/2026, S05-V-01). Chi
@@ -113,5 +114,27 @@ describe("D-032: le fritte stanno in una sezione a parte dei consigli", () => {
   it("i consigli di Crea usano recommendationSections e la sezione ha un titolo nel CMS", () => {
     expect(source("../features/recipe/recommended-styles.tsx")).toMatch(/recommendationSections\(/);
     expect(CMS_DEFAULTS.tiers.fried?.label).toBeTruthy();
+  });
+});
+
+/* FW-06 · D-057 (D-E dell'audit): la «Compatibilità con la tua cucina» pesa solo
+ * fattibilità (facilità) e fedeltà allo stile (autenticità). Le altre
+ * dimensioni restano calcolate e si mostrano a parte, con peso 0. */
+describe("D-057: la compatibilità pesa solo facilità e autenticità", () => {
+  it("pesi dell'app e del CMS: zero per maturazione, sostenibilità e sperimentazione", () => {
+    expect(DEFAULT_UI_SCORE_WEIGHTS.digestibility).toBe(0);
+    expect(DEFAULT_UI_SCORE_WEIGHTS.sustainability).toBe(0);
+    expect(DEFAULT_UI_SCORE_WEIGHTS.experimentation).toBe(0);
+    expect(DEFAULT_UI_SCORE_WEIGHTS.authenticity).toBeGreaterThan(0);
+    expect(DEFAULT_UI_SCORE_WEIGHTS.feasibility).toBeGreaterThan(0);
+    for (const key of ["authenticity", "feasibility", "digestibility", "sustainability", "experimentation"] as const) {
+      expect(CMS_DEFAULTS.scoreDimensions[key].weight).toBe(DEFAULT_UI_SCORE_WEIGHTS[key]);
+    }
+  });
+
+  it("una ricetta con maturazione e sostenibilità a zero non perde punti", () => {
+    const full = { authenticity: 90, feasibility: 80, digestibility: 100, sustainability: 100, experimentation: 0 };
+    const empty = { ...full, digestibility: 0, sustainability: 0, experimentation: 100 };
+    expect(explainScore(empty, DEFAULT_UI_SCORE_WEIGHTS, "ok").score).toBe(explainScore(full, DEFAULT_UI_SCORE_WEIGHTS, "ok").score);
   });
 });

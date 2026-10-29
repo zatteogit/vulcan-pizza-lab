@@ -114,7 +114,6 @@ const DS_SEGMENT = "/src/app/components/ds/";
 export const TITLE_ONLY_BASELINE: Readonly<Record<string, number>> = {
   "src/app/features/recipe/procedure-hero.tsx": 2,
   "src/app/features/recipe/recipe-configurator.tsx": 3,
-  "src/app/features/recipe/recipe-match-card.tsx": 1,
   "src/app/features/recipe/recipe-setup-panel.tsx": 2,
   "src/app/features/recipe/recipe-stat-strip.tsx": 2,
 };

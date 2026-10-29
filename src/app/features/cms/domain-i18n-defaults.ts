@@ -661,7 +661,7 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "score-weights": {
       title: "Pesi del punteggio",
       l1: "I pesi delle dimensioni sono una scelta di {brand}.",
-      l2: "Dicono quanto conta ogni dimensione nel numero finale. Non vengono da una misura: sono una regola dell'app, uguale per tutti.",
+      l2: "Nel numero «Compatibilità con la tua cucina» contano solo l’autenticità e la facilità: maturazione, sostenibilità e sperimentazione si mostrano a parte e non lo spostano. I pesi non vengono da una misura: sono una regola dell’app, uguale per tutti. Il punteggio è poi il più basso fra la media pesata e l’autenticità.",
     },
     "non-feasible-ceiling": {
       title: "Tetto per le ricette non fattibili",

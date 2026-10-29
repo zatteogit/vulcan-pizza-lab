@@ -136,9 +136,10 @@ describe("MCP kitchen → browser recipe parity", () => {
     expect(recs.structuredContent.styles.some((s:{id:string})=>s.id==="focaccia_recco")).toBe(false);
   });
 
+  // FW-06 · D-E: con solo facilità e fedeltà allo stile (prima 91 e 87).
   it("reproduces scores actually observed on browser Create cards", () => {
-    expect(call("generate_recipe",{...args,style_id:"tonda_romana",recipe_mode:"adapted",skill_level:1,has_baking_pan:false}).structuredContent.scores.composite).toBe(91);
-    expect(call("generate_recipe",{...args,style_id:"focaccia_genovese",recipe_mode:"adapted",skill_level:1,has_baking_pan:false,oven_type:"home",oven_max_temp_c:250}).structuredContent.scores.composite).toBe(87);
+    expect(call("generate_recipe",{...args,style_id:"tonda_romana",recipe_mode:"adapted",skill_level:1,has_baking_pan:false}).structuredContent.scores.composite).toBe(97);
+    expect(call("generate_recipe",{...args,style_id:"focaccia_genovese",recipe_mode:"adapted",skill_level:1,has_baking_pan:false,oven_type:"home",oven_max_temp_c:250}).structuredContent.scores.composite).toBe(97);
   });
 
   it("all catalog ingredients fit a complete inventory without duplicate IDs", () => {

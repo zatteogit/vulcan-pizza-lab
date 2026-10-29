@@ -770,7 +770,7 @@ export const SCIENCE_ES: CmsScience = {
     "score-weights": {
       title: "Pesos de la puntuación",
       l1: "Los pesos de las dimensiones son una elección de {brand}.",
-      l2: "Dicen cuánto cuenta cada dimensión en el número final. No vienen de una medida: son una regla de la app, igual para todos.",
+      l2: "En el número «Compatibilidad con tu cocina» solo cuentan la autenticidad y la facilidad: maduración, sostenibilidad y experimentación se muestran aparte y no lo mueven. Los pesos no vienen de una medida: son una regla de la app, igual para todos. La puntuación es luego el valor más bajo entre la media ponderada y la autenticidad.",
     },
     "non-feasible-ceiling": {
       title: "Techo para recetas no factibles",
