@@ -269,7 +269,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "features.recipe.recipe-learning-panel.approfondimento-d68393e7": "Deep dive",
   "features.recipe.recipe-match-card.amore-a-prima-vista-d3108980": "Excellent match",
   "features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75": "Read why the score is low before deciding how to proceed.",
-  "features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050": "Important differences from the original remain. Check the details.",
+  "features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050": "Important differences from the reference remain. Check the details.",
   "features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af": "Worth a closer look",
   "features.recipe.recipe-match-card.cuore-spezzato-42157bb9": "Needs reviewing",
   "features.recipe.recipe-match-card.dettagli-8f4ce7d9": "Details",

@@ -18,7 +18,9 @@
  * migrato qui (Audit motore 2026-05). Questa libreria è l'unica fonte di
  * verità per maestri, pizzerie, disciplinari e community.
  */
-import type { MethodProcessProfile, SkillLevel } from "../domain/pizza-engine";
+import type { MethodProcessProfile, PizzaStyle, SkillLevel } from "../domain/pizza-engine";
+import { STYLES_DB } from "../domain/styles-db";
+import { getImpasto, mergeImpastoIntoDough } from "./impasto-library";
 
 type InterpretationType =
   | "master"
@@ -409,10 +411,28 @@ export function getInterpretationById(id: string): Interpretation | undefined {
   return INTERPRETATION_LIBRARY[id];
 }
 
-/** Interpretazioni compatibili con uno Style.
- *  Filtra per base_style_id OR compatible_style_ids. */
+/** FW-14 (S07-A-01): la versione chiede un processo che lo stile stesso
+ *  vieta — lievitazione fuori dalla forbice dello stile (per la STG 6–14 h)
+ *  o temperatura diversa da quella imposta. Sono gli stessi limiti per cui il
+ *  motore dà «non fattibile» su qualunque cucina: una versione così non si
+ *  offre come scelta su quello stile (Sorbillo 24 h e Bianco 18 h sulla STG). */
+export function isBlockedByStyle(interpretation: Interpretation, style: PizzaStyle): boolean {
+  const o = interpretation.parameter_overrides;
+  if (!o) return false;
+  const impasto = o.impasto_ref ? getImpasto(o.impasto_ref) : undefined;
+  const dough = impasto ? mergeImpastoIntoDough(style.dough, impasto) : style.dough;
+  const [minH, maxH] = dough.fermentation_hours_range;
+  if (o.fermentation_hours !== undefined && (o.fermentation_hours < minH || o.fermentation_hours > maxH)) return true;
+  return o.fermentation_temp_c !== undefined && dough.fermentation_temp_c !== undefined
+    && o.fermentation_temp_c !== dough.fermentation_temp_c;
+}
+
+/** Interpretazioni offerte su uno Style: base_style_id OR compatible_style_ids,
+ *  escluse quelle bloccate dai limiti dello stile stesso (isBlockedByStyle). */
 export function getInterpretationsForStyle(styleId: string): Interpretation[] {
+  const style = STYLES_DB[styleId];
   return getAllInterpretations().filter(
-    (i) => i.base_style_id === styleId || i.compatible_style_ids?.includes(styleId),
+    (i) => (i.base_style_id === styleId || i.compatible_style_ids?.includes(styleId))
+      && !(style && isBlockedByStyle(i, style)),
   );
 }

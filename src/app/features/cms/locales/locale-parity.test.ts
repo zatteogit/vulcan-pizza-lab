@@ -93,3 +93,28 @@ describe.each(Object.entries(BUNDLES))("FW-11 dati di dominio, bundle %s", (_loc
     expect(missing).toEqual([]);
   });
 });
+
+/* FW-14 (revisione): la tabella §Termini (docs/linee-guida-editoriali.md)
+ * vieta «Originale» per la ricetta di riferimento. I testi che la nominano
+ * dicono «Riferimento» in ogni lingua. */
+const ORIGINAL_TERM = /origina|オリジナル|元の/i;
+const REFERENCE_TEXTS = (c: CmsContent) => ({
+  createSourceHint: c.ui?.createSourceHint,
+  scoreExplainer: c.misc?.scoreExplainer,
+  recipeCanonical: c.cooking?.recipeCanonical,
+  recipeCanonicalEyebrow: c.cooking?.recipeCanonicalEyebrow,
+  preCookBody: c.cooking?.preCookBody,
+  preCookStart: c.cooking?.preCookStart,
+  ceilingOvenWall: c.cooking?.ceilingOvenWall,
+  ceilingCanonicalOk: c.cooking?.ceilingCanonicalOk,
+  ceilingCompromise: c.cooking?.ceilingCompromise,
+  resetToOriginal: c.cooking?.resetToOriginal,
+  needsWoodOven: c.engineMessages?.["rec.needsWoodOven"],
+});
+describe.each(Object.entries({ it: CMS_DEFAULTS, ...BUNDLES }))("FW-14 lessico del riferimento, %s", (_locale, bundle) => {
+  it("nessun testo del riferimento dice «Originale»", () => {
+    const texts = REFERENCE_TEXTS(bundle);
+    for (const [key, text] of Object.entries(texts)) expect(text, key).toBeTruthy();
+    expect(Object.entries(texts).filter(([, text]) => ORIGINAL_TERM.test(text ?? "")).map(([key]) => key)).toEqual([]);
+  });
+});

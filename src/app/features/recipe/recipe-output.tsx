@@ -52,6 +52,9 @@ interface RecipeOutputProps {
   onSelectTopping?: (conceptId: string) => void;
   onTabChange?: (tab: PagerTabId) => void;
   isPersonalized?: boolean;
+  /** FW-14: nome del riferimento come nell'eyebrow («Disciplinare AVPN»,
+   *  «Ispirata a…»); senza, la pill dice «Riferimento». */
+  referenceLabel?: string;
   onRequestPersonalization?: () => void;
   /** Nasconde la capsula flottante in alto a destra (Inizia + condividi):
    *  usato nella sezione Crea, dove la shell ha già il pulsante Profilo lì e
@@ -97,6 +100,7 @@ export function RecipeOutput({
   onSelectTopping,
   onTabChange,
   isPersonalized = true,
+  referenceLabel,
   onRequestPersonalization,
 }: RecipeOutputProps) {
   const reduceMotion = useReducedMotion();
@@ -666,7 +670,7 @@ export function RecipeOutput({
       {!hideContextSummary && (
         <div className="recipe-output-context type-body">
           <span className="recipe-output-context__pill">
-            {isPersonalized ? cms.cooking.recipeAdapted : cms.cooking.recipeCanonical}
+            {isPersonalized ? cms.cooking.recipeAdapted : (referenceLabel ?? cms.cooking.recipeCanonical)}
           </span>
           <span className="recipe-output-context__summary">
             {t(cms.cooking.ovenSummary, { temp: fmt.celsius(constraints.oven_max_temp_c) })} · {recipe.dough_balls}{" "}

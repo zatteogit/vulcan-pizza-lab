@@ -271,7 +271,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "features.recipe.recipe-learning-panel.approfondimento-d68393e7": "Approfondimento",
   "features.recipe.recipe-match-card.amore-a-prima-vista-d3108980": "Ottima compatibilità",
   "features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75": "Leggi il motivo del punteggio basso prima di scegliere come procedere.",
-  "features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050": "Restano differenze importanti rispetto all’originale: consulta il dettaglio.",
+  "features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050": "Restano differenze importanti rispetto al riferimento: consulta il dettaglio.",
   "features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af": "Da valutare",
   "features.recipe.recipe-match-card.cuore-spezzato-42157bb9": "Da rivedere",
   "features.recipe.recipe-match-card.dettagli-8f4ce7d9": "Dettagli",

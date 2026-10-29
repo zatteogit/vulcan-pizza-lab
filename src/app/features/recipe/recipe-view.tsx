@@ -607,6 +607,7 @@ export function RecipeView({
               selectedTimeSlotId={selectedTimeSlotId}
               mealTargetAt={mealTargetAt}
               isPersonalized={isPersonalized}
+              referenceLabel={eyebrowIsTailored ? undefined : heroEyebrow}
               onRequestPersonalization={onRequestPersonalization}
               matchSlot={matchSlot}
             />
