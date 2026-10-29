@@ -3,7 +3,7 @@ import { formatRange } from "../../i18n/format";
 import { createFormatter } from "../cms/i18n";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
-import { Clock, CookingPot, Droplets, Flame, ScanLine, Wheat } from "lucide-react";
+import { Clock, Droplets, Flame, ScanLine, Wheat } from "lucide-react";
 import { Badge } from "../../components/ds/index";
 import { RecipeMatchIcon } from "./recipe-match-icon";
 import { recipeCardSignals } from "./recipe-card-signals";
@@ -110,7 +110,9 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", id }: { 
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
   const signals = recipe ? recipeCardSignals(recipe, context) : [];
-  const icons = { oven: Flame, time: Clock, pan: CookingPot, flour: Wheat, check: ScanLine, water: Droplets }; /* FW-13: Flame solo per il forno */
+  /* Fiamma per il forno e per la teglia (nota di Matteo, 29/10/2026: la teglia
+     è un requisito di cottura, come pietra o acciaio). */
+  const icons = { oven: Flame, time: Clock, pan: Flame, flour: Wheat, check: ScanLine, water: Droplets };
   const duration = recipe
     ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
     : formatRange(style.dough.fermentation_hours_range[0], style.dough.fermentation_hours_range[1], bcp47, { unit: "hour" });
