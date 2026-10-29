@@ -309,7 +309,6 @@ type EquipCmsLabels = Partial<{
   mixerPlanetary: string; mixerPlanetaryDesc: string;
   mixerSpiral: string; mixerSpiralDesc: string;
   mixerFork: string; mixerForkDesc: string;
-  mixerLevelHome: string; mixerLevelSemiPro: string; mixerLevelPro: string;
   surfaceRefractory: string; surfaceRefractoryDesc: string;
   surfaceCordierite: string; surfaceCordieriteDesc: string;
   surfaceSteel: string; surfaceSteelDesc: string;

@@ -102,14 +102,12 @@ const REFERENCE_TEXTS = (c: CmsContent) => ({
   createSourceHint: c.ui?.createSourceHint,
   scoreExplainer: c.misc?.scoreExplainer,
   recipeCanonical: c.cooking?.recipeCanonical,
-  recipeCanonicalEyebrow: c.cooking?.recipeCanonicalEyebrow,
   preCookBody: c.cooking?.preCookBody,
   preCookStart: c.cooking?.preCookStart,
   ceilingOvenWall: c.cooking?.ceilingOvenWall,
   ceilingCanonicalOk: c.cooking?.ceilingCanonicalOk,
   ceilingCompromise: c.cooking?.ceilingCompromise,
   resetToOriginal: c.cooking?.resetToOriginal,
-  needsWoodOven: c.engineMessages?.["rec.needsWoodOven"],
 });
 describe.each(Object.entries({ it: CMS_DEFAULTS, ...BUNDLES }))("FW-14 lessico del riferimento, %s", (_locale, bundle) => {
   it("nessun testo del riferimento dice «Originale»", () => {

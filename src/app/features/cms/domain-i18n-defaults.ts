@@ -305,8 +305,13 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     },
     "authenticity-fuel-cap": {
       title: "Tetto di autenticità per il combustibile",
-      l1: "Senza il forno previsto dallo stile, l'autenticità ha un tetto: è una scelta di {brand}.",
-      l2: "Quando uno stile richiede legna o carbone, un altro forno può cuocere bene ma non segue il metodo. Il tetto è un confine editoriale, non una misura della qualità.",
+      l1: "Se il forno non è quello previsto dallo stile (legna o carbone) e non arriva alla temperatura minima dello stile, l'autenticità ha un tetto: è una scelta di {brand}.",
+      l2: "Il tetto vale solo quando mancano sia il combustibile sia il calore: un forno elettrico o a gas che arriva alla temperatura minima dello stile non ha il tetto. Che lo stile preveda la legna o il carbone (per la Napoletana STG lo dice il disciplinare) resta scritto nei dettagli dell'autenticità, come informazione e non come penalità. Il tetto è un confine editoriale, non una misura della qualità.",
+    },
+    "ranking-tiebreak": {
+      title: "Spareggio a pari punteggio",
+      l1: "A pari numero, viene prima lo stile che la tua cucina copre con più margine: è una scelta di {brand}.",
+      l2: "Il numero non cambia: cambia solo l'ordine, e solo fra stili dello stesso gruppo con lo stesso punteggio. Il margine è la media di due valori fra 0 e 1: di quanto il forno supera la temperatura minima dello stile e di quanto le ore a disposizione superano la maturazione minima, ciascuno in proporzione al minimo (1 vuol dire il doppio o più). Per le fritte conta solo il tempo. Vale in Crea, in Scopri e per gli assistenti.",
     },
     digestibility: {
       title: "Indice di digeribilità",
@@ -369,6 +374,7 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "baking-energy": "E = P × t · P = 2, 3 o 8 kW secondo la temperatura del forno",
     "thickness-factor": "TF = peso del panetto (g) / area della pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(media pesata di A e F; A) · pesi predefiniti: Autenticità (A) 55 %, Facilità (F) 45 % · esito non fattibile: C ≤ 39",
+    "ranking-tiebreak": "M = media di min(1; max(0; (T − T_min) / T_min)) e min(1; max(0; (H − H_min) / H_min)) · T forno, H ore a disposizione · fritte: solo H",
   },
   sourceNotes: {
     "internal-db": "database di lavoro del progetto, non pubblico",

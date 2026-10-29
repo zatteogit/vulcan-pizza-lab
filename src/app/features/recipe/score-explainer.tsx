@@ -9,7 +9,8 @@
  * Livello 2 · i criteri che contano con il peso, la regola del minimo, le
  *             informazioni che non entrano nel numero.
  * Livello 3 · «Come si calcola» (WhyButton → nota `score-weights`, più le
- *             regole di prodotto `non-feasible-ceiling` e `authenticity-fuel-cap`).
+ *             regole di prodotto `non-feasible-ceiling`, `authenticity-fuel-cap`
+ *             e lo spareggio `ranking-tiebreak`, D-062).
  * Tutti i numeri vengono da explainRecipeScores (motore), nessuno dal testo. */
 
 import { motion, useReducedMotion } from "motion/react";
@@ -162,8 +163,11 @@ export function ScoreExplainer({ scores, recipe, variant = "full", showLimit = t
           {explanation.ceilings.feasibility !== null && (
             <p className="score-explainer__note">{t(e.ceilingEditorial, { limit: fmt.number(FIRST_LIMIT) })}</p>
           )}
+          {/* D-062: a pari numero l'ordine delle liste segue il margine della cucina. */}
+          <p className="score-explainer__note">{e.tieBreak}</p>
           <p className="score-explainer__why">
             <WhyButton noteId="score-weights" label={e.whyLabel} />
+            <WhyButton noteId="ranking-tiebreak" />
             {explanation.ceilings.feasibility !== null && <WhyButton noteId="non-feasible-ceiling" />}
             {fuelCapped(scores) && <WhyButton noteId="authenticity-fuel-cap" />}
           </p>

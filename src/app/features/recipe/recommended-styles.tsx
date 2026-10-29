@@ -34,6 +34,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import { timeSlotText } from "./time-slot-text";
 import { earliestFeasibleMeal, firstFeasibleSlot } from "../../domain/feasible-slot";
 import { recommendationSections } from "../../domain/create-entry";
+import { compareByCompatibility, kitchenMargin } from "../../domain/kitchen-margin";
 import { pantryUnknown, presentationTier } from "../../use-cases/recommendation-groups";
 
 interface RecommendedStylesProps {
@@ -60,14 +61,14 @@ type RecommendationWithVariant = StyleRecommendation & {
   /** D-041: compatibilità con la tua cucina (su misura che si aprirà, 0–100). */
   kitchenNow: number;
   originalScore: number;
+  /** D-062: margine di forno e tempo oltre il minimo dello stile (spareggio). */
+  kitchenMargin: number;
 };
 
+/** Numero mostrato decrescente; a pari numero, più margine prima (D-062). */
 function sortByVisibleMatch(items: RecommendationWithVariant[]): RecommendationWithVariant[] {
-  return [...items].sort((a, b) => {
-    const aScore = a.kitchenNow;
-    const bScore = b.kitchenNow;
-    return bScore - aScore;
-  });
+  return [...items].sort((a, b) =>
+    compareByCompatibility({ score: a.kitchenNow, margin: a.kitchenMargin }, { score: b.kitchenNow, margin: b.kitchenMargin }));
 }
 
 
@@ -170,6 +171,7 @@ export function RecommendedStyles({
           kitchenNow: preview.scores.composite,
           originalScore: canonicalRecipe(rec.style, constraints, scoreWeights).scores.composite,
           optimizedComposite: preview.scores.composite,
+          kitchenMargin: kitchenMargin(rec.style, constraints),
         };
       }),
     [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],

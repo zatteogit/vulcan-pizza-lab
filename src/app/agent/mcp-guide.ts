@@ -34,7 +34,7 @@ Use allergens_avoid for explicit avoidance of the 14 EU Annex II groups, separat
 - Equipment: has_baking_pan (pan styles warn without it), has_mixer (high hydration), has_pizza_stone, has_pizza_steel.
 
 ## Choosing a style: recommend_styles
-Show 3-5 styles with "Fit with your kitchen: N/100" (compatibility). If compatibility_best is higher, add "with a few tweaks it reaches M/100". When has_caveats is true the style is feasible with reservations: repeat its warnings (oven below the style minimum, pan needed…) and never call it suitable without conditions.
+Show 3-5 styles with "Fit with your kitchen: N/100" (compatibility). If compatibility_best is higher, add "with a few tweaks it reaches M/100". When has_caveats is true the style is feasible with reservations: repeat its warnings (oven below the style minimum, pan needed…) and never call it suitable without conditions. Results are sorted by compatibility; at the same number the style with more kitchen_margin (0-1: how far the oven and the hours exceed the style's minimums) comes first, the same order as the app. It is an app choice: the number does not change.
 
 ## The recipe: generate_recipe
 - outcome ok: a normal recipe. warnings: feasible, list scores.warnings before the procedure. not_feasible: do not present it as a recipe to follow. Explain the blockers (oven_too_cold: the oven reaches oven_c, the style needs style_min_c; fermentation_too_short or time_window: not enough hours, needed_h), then call recommend_styles with the same kitchen and offer 2-3 feasible alternatives.

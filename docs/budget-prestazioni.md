@@ -58,6 +58,13 @@ Unendo FW-05, FW-15, FW-17, FW-19 e FW-02 il codice senza lingue arrivava a
 - il catalogo UI italiano (`ui-messages.it.ts`) è un chunk a sé, caricato
   subito come prima, così il chunk principale resta sotto i 100 kB.
 
+Con D-062 e D-063 il ramo d'integrazione dell'ondata 2 era già a 501,9 kB
+(600,3 per utente). Recuperati 2,8 kB togliendo dal CMS circa 180 testi che
+nessuna pagina legge più (in italiano e nelle sei lingue: vecchi motivi
+`rec.*` del consiglio, etichette del vecchio confronto, del vecchio
+configuratore e della ricetta parcheggiata): 499,9 kB senza lingue, 595,7 kB
+per utente. Il margine resta sottile.
+
 ## Perché l'LCP è lento
 
 1. **La home scarica il motore prima che serva.** `use-recipe-state` (187 kB),

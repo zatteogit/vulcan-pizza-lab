@@ -739,8 +739,13 @@ export const SCIENCE_FR: CmsScience = {
     },
     "authenticity-fuel-cap": {
       title: "Plafond d'authenticité lié au combustible",
-      l1: "Sans le four prévu par le style, l'authenticité a un plafond : c'est un choix de {brand}.",
-      l2: "Quand un style exige le bois ou le charbon, un autre four peut bien cuire mais ne suit pas la méthode. Le plafond est une limite éditoriale, pas une mesure de qualité.",
+      l1: "Si le four n'est pas celui prévu par le style (bois ou charbon) et n'atteint pas la température minimale du style, l'authenticité a un plafond : c'est un choix de {brand}.",
+      l2: "Le plafond ne s'applique que s'il manque à la fois le combustible et la chaleur : un four électrique ou à gaz qui atteint la température minimale du style n'a pas de plafond. Que le style prévoie le bois ou le charbon (pour la Napoletana STG, le cahier des charges le dit) reste écrit dans le détail de l'authenticité, comme une information et non comme une pénalité. Le plafond est une limite éditoriale, pas une mesure de qualité.",
+    },
+    "ranking-tiebreak": {
+      title: "Départage à score égal",
+      l1: "À nombre égal, le style que votre cuisine couvre avec le plus de marge passe en premier : c'est un choix de {brand}.",
+      l2: "Le nombre ne change pas : seul l'ordre change, et seulement entre styles du même groupe ayant le même score. La marge est la moyenne de deux valeurs entre 0 et 1 : de combien le four dépasse la température minimale du style et de combien les heures disponibles dépassent la maturation minimale, chacune en proportion du minimum (1 signifie le double ou plus). Pour les fritures, seul le temps compte. Cela vaut dans Créer, dans Découvrir et pour les assistants.",
     },
     digestibility: {
       title: "Indice de digestibilité",
@@ -803,6 +808,7 @@ export const SCIENCE_FR: CmsScience = {
     "baking-energy": "E = P × t · P = 2, 3 ou 8 kW selon la température du four",
     "thickness-factor": "TF = poids du pâton (g) / surface de la pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(moyenne pondérée de A et F ; A) · poids par défaut : Authenticité (A) 55 %, Facilité (F) 45 % · non réalisable : C ≤ 39",
+    "ranking-tiebreak": "M = moyenne de min(1 ; max(0 ; (T − T_min) / T_min)) et min(1 ; max(0 ; (H − H_min) / H_min)) · T four, H heures disponibles · fritures : H seul",
   },
   sourceNotes: {
     "internal-db": "base de travail interne du projet, non publique",
