@@ -1621,7 +1621,7 @@ export const PT_LOCALE: CmsContent = {
     ftuSkipMessage: "Nada para escolher? Tudo bem: toque em Próximo.",
     // FW-16 — effetto delle impostazioni
     skillEffectSummary: "O que muda em cada nível",
-    skillEffectRule: "Regra do modelo, não lei física: o limite vale para a água que propomos, sempre dentro da faixa do estilo. Os estilos que exigem pré-fermento o mantêm em todos os níveis.",
+    skillEffectRule: "Regra do modelo, não lei física: o limite vale para a água que propomos nas receitas adaptadas a você, compensação do forno incluída. Se o estilo pede mais água do que o limite, a proposta fica abaixo da sua faixa típica. Os estilos que exigem pré-fermento o mantêm em todos os níveis.",
     skillEffectHydration: "água até {h}",
     skillEffectNoCeiling: "sem limite de água",
     skillEffectPreFerment: "também biga ou poolish quando ajudam",

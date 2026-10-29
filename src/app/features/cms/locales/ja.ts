@@ -1742,7 +1742,7 @@ export const JA_LOCALE: CmsContent = {
     ftuSkipMessage: "選ぶものがなくても大丈夫です。「次へ」を押してください。",
     // FW-16 — effetto delle impostazioni
     skillEffectSummary: "レベルごとに変わること",
-    skillEffectRule: "物理法則ではなくモデルのルールです。上限は提案する水の量にかかり、常にスタイルの範囲内です。予備発酵が必須のスタイルは、どのレベルでも予備発酵を使います。",
+    skillEffectRule: "物理法則ではなくモデルのルールです。上限は、あなたに合わせたレシピで提案する水の量（オーブン補正を含む）にかかります。スタイルが上限より多くの水を必要とする場合、提案はそのスタイルの通常の範囲を下回ります。予備発酵が必須のスタイルは、どのレベルでも予備発酵を使います。",
     skillEffectHydration: "加水{h}まで",
     skillEffectNoCeiling: "加水の上限なし",
     skillEffectPreFerment: "役立つときはビガやポーリッシュも",

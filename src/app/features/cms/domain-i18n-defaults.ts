@@ -545,7 +545,7 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "equivalent-hours": {
       title: "Ore equivalenti",
       l1: "Le tue ore tradotte nelle ore che servirebbero alla temperatura di riferimento.",
-      l2: "Moltiplichiamo le ore per la velocità alla tua temperatura e per un fattore del metodo (prefermento, frigo). Per questo il conto «ore × velocità» da solo non torna.",
+      l2: "Moltiplichiamo le ore per la velocità alla tua temperatura. Se fermenti più al fresco del riferimento (frigo, cantina), l'appretto finale si fa alla temperatura di riferimento: quelle ore contano così come sono e solo le altre si moltiplicano. Per questo il conto «ore × velocità» da solo non torna.",
     },
     "kitchen-temp-default": {
       title: "Temperatura della cucina",

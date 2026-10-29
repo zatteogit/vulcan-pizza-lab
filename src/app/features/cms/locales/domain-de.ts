@@ -665,7 +665,7 @@ export const SCIENCE_DE: CmsScience = {
     "equivalent-hours": {
       title: "Äquivalente Stunden",
       l1: "Deine Stunden, umgerechnet in die Stunden bei Referenztemperatur.",
-      l2: "Wir multiplizieren die Stunden mit der Geschwindigkeit bei deiner Temperatur und mit einem Methodenfaktor (Vorteig, Kühlschrank). Deshalb geht «Stunden × Geschwindigkeit» allein nicht auf.",
+      l2: "Wir multiplizieren die Stunden mit der Geschwindigkeit bei deiner Temperatur. Wenn du kühler als die Referenz gärst (Kühlschrank, Keller), findet die Stückgare bei der Referenztemperatur statt: Diese Stunden zählen so, wie sie sind, und nur die übrigen werden multipliziert. Deshalb geht «Stunden × Geschwindigkeit» allein nicht auf.",
     },
     "kitchen-temp-default": {
       title: "Küchentemperatur",

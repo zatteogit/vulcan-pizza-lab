@@ -654,7 +654,7 @@ export const SCIENCE_ES: CmsScience = {
     "equivalent-hours": {
       title: "Horas equivalentes",
       l1: "Tus horas traducidas a las horas necesarias a la temperatura de referencia.",
-      l2: "Multiplicamos las horas por la velocidad a tu temperatura y por un factor del método (prefermento, nevera). Por eso la cuenta «horas × velocidad» sola no cuadra.",
+      l2: "Multiplicamos las horas por la velocidad a tu temperatura. Si fermentas más fresco que la referencia (nevera, bodega), el apresto final se hace a la temperatura de referencia: esas horas cuentan tal cual y solo las demás se multiplican. Por eso la cuenta «horas × velocidad» sola no cuadra.",
     },
     "kitchen-temp-default": {
       title: "Temperatura de la cocina",

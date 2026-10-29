@@ -790,7 +790,7 @@ export const SCIENCE_EN: CmsScience = {
     "equivalent-hours": {
       title: "Equivalent hours",
       l1: "Your hours translated into the hours needed at the reference temperature.",
-      l2: "We multiply the hours by the speed at your temperature and by a method factor (pre-ferment, fridge). That is why «hours × speed» alone does not add up.",
+      l2: "We multiply the hours by the speed at your temperature. If you ferment cooler than the reference (fridge, cellar), the final proof happens at the reference temperature: those hours count as they are and only the others are multiplied. That is why «hours × speed» alone does not add up.",
     },
     "kitchen-temp-default": {
       title: "Kitchen temperature",

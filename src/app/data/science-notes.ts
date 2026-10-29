@@ -22,21 +22,31 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
   {
     id: "yeast-dose",
     kind: "estimate",
-    formula: "Y = Y₀ × (t₀ / tₑ)^0,7 · Y₀ = 0,1 %, t₀ = 24 h a 18 °C",
+    // FW-01: è il conto di calculateYeastPercentage + generateRecipe, passo per
+    // passo (test in science-registry.test.ts che ricalcola yeast_baker_pct).
+    formula:
+      "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fresco), t₀ = 24 h, s = 1 fresco / 0,33 secco, k = correzione personale (0,5–2) · tₑ = h se T ≥ 18 °C; sotto: tₑ = (h − hₐ) + hₐ ÷ v(T), con l'appretto hₐ a 18 °C · v(T) dalla nota q10-fermentation",
     variables: [
       { symbol: "Y", unitKey: "percent" },
       { symbol: "tₑ", unitKey: "hours" },
+      { symbol: "h", unitKey: "hours" },
+      { symbol: "hₐ", unitKey: "hours" },
+      { symbol: "v", unitKey: "ratio" },
+      { symbol: "s", unitKey: "ratio" },
+      { symbol: "k", unitKey: "ratio" },
     ],
     assumptionIds: ["constant-ferment-temp", "time-exponent-no-source", "kitchen-temp-standard"],
     sourceIds: ["avpn-2024", "masaf-stg-2010"],
     uncertainty: { relative: 0.3, displayDecimals: 2 },
-    engineRef: "calculateYeastPercentage, YEAST_DOSE_MARGIN",
+    engineRef: "calculateYeastPercentage, equivalentFermentationHours, clampYeastSpeedFactor, YEAST_DOSE_MARGIN",
     glossaryTermId: "yeast",
   },
   {
     id: "q10-fermentation",
     kind: "estimate",
-    formula: "v(T) = Q10^((T − 18)/10) · Q10 = 2,0 sopra 10 °C, 1,6 sotto (a tratti)",
+    // FW-01: getQ10 + fermentationSpeedRatio, a tratti continui per tipo di lievito.
+    formula:
+      "v(T) = Q10ₐ^((T − 18)/10) se T ≥ T_b; sotto: v(T) = Q10ₐ^((T_b − 18)/10) × Q10_b^((T − T_b)/10) · lievito di birra: T_b = 10 °C, Q10ₐ = 2,0, Q10_b = 1,6 · lievito madre: T_b = 15 °C, Q10ₐ = 2,2, Q10_b = 1,9",
     variables: [
       { symbol: "v", unitKey: "ratio" },
       { symbol: "T", unitKey: "celsius" },
@@ -50,15 +60,19 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
   {
     id: "equivalent-hours",
     kind: "estimate",
-    formula: "h₁₈ = h × fattore del metodo × v(T)",
+    // FW-01: equivalentFermentationHours × fermentationSpeedRatio. Sotto i
+    // 18 °C l'appretto si fa a 18 °C (PROOF_MIN_TEMP_C) e conta per le sue ore.
+    formula: "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, con l'appretto hₐ a 18 °C (fermentationPhases)",
     variables: [
       { symbol: "h₁₈", unitKey: "hours" },
       { symbol: "h", unitKey: "hours" },
+      { symbol: "hₐ", unitKey: "hours" },
+      { symbol: "v", unitKey: "ratio" },
     ],
     assumptionIds: ["constant-ferment-temp", "q10-cold-no-source"],
     sourceIds: ["salvado-2011"],
     uncertainty: { displayDecimals: 0 },
-    engineRef: "equivalentFermentationHours, fermentationSpeedRatio",
+    engineRef: "equivalentFermentationHours, fermentationSpeedRatio, fermentationPhases",
   },
   {
     id: "kitchen-temp-default",

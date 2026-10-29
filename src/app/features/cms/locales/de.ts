@@ -1607,7 +1607,7 @@ export const DE_LOCALE: CmsContent = {
     ftuSkipMessage: "Nichts auszuwählen? Kein Problem: Tippe auf Weiter.",
     // FW-16 — effetto delle impostazioni
     skillEffectSummary: "Was jede Stufe ändert",
-    skillEffectRule: "Eine Modellregel, kein Naturgesetz: Die Obergrenze gilt für das vorgeschlagene Wasser, immer innerhalb des Bereichs des Stils. Stile, die einen Vorteig verlangen, behalten ihn auf jeder Stufe.",
+    skillEffectRule: "Eine Modellregel, kein Naturgesetz: Die Obergrenze gilt für das Wasser, das wir in den an dich angepassten Rezepten vorschlagen, Ofenausgleich inbegriffen. Verlangt der Stil mehr Wasser als die Obergrenze, liegt der Vorschlag unter seinem typischen Bereich. Stile, die einen Vorteig verlangen, behalten ihn auf jeder Stufe.",
     skillEffectHydration: "Wasser bis {h}",
     skillEffectNoCeiling: "keine Wasser-Obergrenze",
     skillEffectPreFerment: "auch Biga oder Poolish, wenn sie helfen",

@@ -1629,7 +1629,7 @@ export const FR_LOCALE: CmsContent = {
     ftuSkipMessage: "Rien à choisir ? Pas de souci : appuyez sur Suivant.",
     // FW-16 — effetto delle impostazioni
     skillEffectSummary: "Ce que change chaque niveau",
-    skillEffectRule: "Règle du modèle, pas une loi physique : le plafond s’applique à l’eau que nous proposons, toujours dans la plage du style. Les styles qui exigent un préferment le gardent à tous les niveaux.",
+    skillEffectRule: "Règle du modèle, pas une loi physique : le plafond s’applique à l’eau que nous vous proposons dans les recettes adaptées pour vous, compensation du four comprise. Si le style demande plus d’eau que le plafond, la proposition descend sous sa plage habituelle. Les styles qui exigent un préferment le gardent à tous les niveaux.",
     skillEffectHydration: "eau jusqu’à {h}",
     skillEffectNoCeiling: "pas de plafond d’eau",
     skillEffectPreFerment: "aussi biga ou poolish quand ils aident",

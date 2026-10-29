@@ -68,4 +68,30 @@ describe("FW-16 · effetti delle impostazioni", () => {
       { level: 4, hydrationCeilingPct: null, offersPreFerment: true },
     ]);
   });
+
+  /* FW-16/FW-08: le frasi del livello dicono dove vale il tetto. Il tetto è in
+   * optimizeRecipe (hCeil = min(hMax, tetto), hLo = min(hMin, hCeil)): vale per
+   * le ricette adattate (Crea, modalità adattata) e può scendere sotto
+   * l'intervallo dello stile; generateRecipe (scheda di riferimento) non lo applica. */
+  it("Principiante: il tetto porta l'acqua proposta sotto l'intervallo dello stile, la scheda di riferimento no", () => {
+    const below = Object.values(STYLES_DB).filter((style) => {
+      const proposed = optimizeRecipe(style, { ...kitchen, skill_level: 1 }).recipe.hydration_pct;
+      return proposed < style.dough.hydration_pct_range[0];
+    });
+    expect(below.map((style) => style.id)).toContain("teglia_romana");
+    const teglia = STYLES_DB.teglia_romana;
+    expect(optimizeRecipe(teglia, { ...kitchen, skill_level: 1 }).recipe.hydration_pct).toBeLessThanOrEqual(68);
+    expect(generateRecipe(teglia, { ...kitchen, skill_level: 1 }).hydration_pct).toBeGreaterThan(68);
+    // Il testo non promette più «sempre dentro l'intervallo dello stile».
+    expect(CMS_DEFAULTS.profile.skillEffectRule).not.toMatch(/sempre dentro/);
+  });
+
+  /* FW-10: «Senza glutine» blocca ogni ricetta (glutenConflict o glutenUnsupported
+   * in dietary-data.ts, entrambi critici), non solo quelle con farina di frumento. */
+  it("«Senza glutine»: ogni stile risulta non fattibile", () => {
+    const feasible = Object.values(STYLES_DB)
+      .filter((style) => recipe({ dietary_filters: ["gluten_free"] }, style).verdict.outcome !== "not_feasible")
+      .map((style) => style.id);
+    expect(feasible).toEqual([]);
+  });
 });

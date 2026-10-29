@@ -674,7 +674,7 @@ export const SCIENCE_FR: CmsScience = {
     "equivalent-hours": {
       title: "Heures équivalentes",
       l1: "Vos heures traduites en heures nécessaires à la température de référence.",
-      l2: "Nous multiplions les heures par la vitesse à votre température et par un facteur de méthode (préferment, réfrigérateur). C'est pourquoi « heures × vitesse » seul ne tombe pas juste.",
+      l2: "Nous multiplions les heures par la vitesse à votre température. Si vous fermentez plus au frais que la référence (réfrigérateur, cave), l'apprêt final se fait à la température de référence : ces heures comptent telles quelles et seules les autres sont multipliées. C'est pourquoi « heures × vitesse » seul ne tombe pas juste.",
     },
     "kitchen-temp-default": {
       title: "Température de la cuisine",

@@ -1623,7 +1623,7 @@ export const ES_LOCALE: CmsContent = {
     ftuSkipMessage: "¿Nada que elegir? No pasa nada: pulsa Siguiente.",
     // FW-16 — effetto delle impostazioni
     skillEffectSummary: "Qué cambia en cada nivel",
-    skillEffectRule: "Regla del modelo, no ley física: el tope vale para el agua que te proponemos, siempre dentro del rango del estilo. Los estilos que requieren prefermento lo mantienen en todos los niveles.",
+    skillEffectRule: "Regla del modelo, no ley física: el tope vale para el agua que te proponemos en las recetas adaptadas a ti, compensación del horno incluida. Si el estilo pide más agua que el tope, la propuesta baja por debajo de su rango típico. Los estilos que requieren prefermento lo mantienen en todos los niveles.",
     skillEffectHydration: "agua hasta el {h}",
     skillEffectNoCeiling: "sin tope de agua",
     skillEffectPreFerment: "también biga o poolish cuando ayudan",

@@ -668,7 +668,7 @@ export const SCIENCE_PT: CmsScience = {
     "equivalent-hours": {
       title: "Horas equivalentes",
       l1: "Suas horas traduzidas nas horas necessárias à temperatura de referência.",
-      l2: "Multiplicamos as horas pela velocidade na sua temperatura e por um fator do método (pré-fermento, geladeira). Por isso a conta «horas × velocidade» sozinha não fecha.",
+      l2: "Multiplicamos as horas pela velocidade na sua temperatura. Se você fermenta mais frio do que a referência (geladeira, adega), a fermentação final acontece na temperatura de referência: essas horas contam como são e só as outras são multiplicadas. Por isso a conta «horas × velocidade» sozinha não fecha.",
     },
     "kitchen-temp-default": {
       title: "Temperatura da cozinha",

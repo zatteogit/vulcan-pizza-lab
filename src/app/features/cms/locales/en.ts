@@ -1792,7 +1792,7 @@ export const EN_LOCALE: CmsContent = {
     ftuSkipMessage: "Nothing to pick? That’s fine: press Next.",
     // FW-16 — effetto delle impostazioni
     skillEffectSummary: "What each level changes",
-    skillEffectRule: "A model rule, not a law of physics: the cap applies to the water we suggest, always within the style’s range. Styles that require a pre-ferment keep it at every level.",
+    skillEffectRule: "A model rule, not a law of physics: the cap applies to the water we suggest in recipes adapted to you, oven compensation included. If the style calls for more water than the cap, the suggestion goes below its typical range. Styles that require a pre-ferment keep it at every level.",
     skillEffectHydration: "water up to {h}",
     skillEffectNoCeiling: "no cap on water",
     skillEffectPreFerment: "biga or poolish too, when they help",
