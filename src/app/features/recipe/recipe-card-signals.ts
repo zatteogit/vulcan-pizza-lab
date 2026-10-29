@@ -20,13 +20,13 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   if (blockers.length) {
     const b = blockers.find(b => b.kind === "dietary_conflict" && b.filter_id.startsWith("allergen:")) ?? blockers.find(b => b.kind === "dietary_conflict") ?? blockers.find(b => b.kind === "oven_too_cold") ?? blockers[0];
     return [{ icon: b.kind === "oven_too_cold" ? "oven" : b.kind === "resource_excluded" || b.kind === "dietary_conflict" ? "check" : "time", tone: "error",
-      message: b.kind === "oven_too_cold" ? msg("need.blockedOven", "Forno insufficiente")
+      message: b.kind === "oven_too_cold" ? msg("need.blockedOven", "Forno non adatto")
         : b.kind === "dietary_conflict" ? b.filter_id.startsWith("allergen:")
           ? msg(b.message.key === "allergen.traceConflict" ? "allergen.cardTrace" : "allergen.cardConflict", ALLERGEN_MESSAGES_IT[b.message.key === "allergen.traceConflict" ? "allergen.cardTrace" : "allergen.cardConflict"], b.message.params)
-          : msg("diet.cardConflict", "Incompatibile con i filtri alimentari")
+          : msg("diet.cardConflict", "Fuori dieta")
         : b.kind === "resource_excluded" ? msg("card.resourceExcluded", "Requisito escluso")
-        : b.kind === "fermentation_temperature" ? msg("need.blockedMethod", "Regime non compatibile")
-        : msg("need.blockedTime", "Tempi non compatibili") }];
+        : b.kind === "fermentation_temperature" ? msg("need.blockedMethod", "Metodo inadatto")
+        : msg("need.blockedTime", "Poco tempo") }];
   }
   const result: CardSignal[] = [];
   const add = (icon: CardSignal["icon"], message: EngineMsg) => result.push({ icon, tone: "warning", message });
@@ -36,19 +36,19 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   // FW-10 (S07-A-06): l'impasto troppo idratato per chi comincia viene prima
   // del metodo e delle condizioni: è ciò che fa fallire la pizza.
   if (adaptations.some(a => SKILL_WARNING_KEYS.includes(a.key))) {
-    add("water", msg("card.hydrationBeginner", "Impasto difficile per chi inizia"));
+    add("water", msg("card.hydrationBeginner", "Impasto esigente"));
   }
   const method = adaptations.find(a => ["gen.homeBakingMethod", "gen.notCoalOven", "gen.notWoodOven", "feas.ovenSuboptimal"].includes(a.key));
   if (method) {
     const keys: Record<string, [string, string]> = {
       "gen.homeBakingMethod": ["need.invertedTray", "Teglia capovolta"],
-      "gen.notCoalOven": ["need.withoutCoal", "Cottura senza carbone"],
+      "gen.notCoalOven": ["need.withoutCoal", "Senza carbone"],
       "gen.notWoodOven": ["need.withoutWood", "Anche senza legna"],
       "feas.ovenSuboptimal": ["need.adaptedBake", "Cottura adattata"],
     };
     add("oven", msg(...keys[method.key]));
   }
-  if (!method && recipe.scores.authenticity < 60) add("check", msg("card.authenticity", "Autenticità ridotta"));
+  if (!method && recipe.scores.authenticity < 60) add("check", msg("card.authenticity", "Meno autentica"));
   // Discovery cards introduce the style. Pantry/equipment prerequisites
   // remain inspectable in the detail and actionable in Create.
   if (context === "explore") return result.slice(0, 2);
@@ -57,14 +57,14 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
     // Per chiave, non per tipo: la verifica delle esclusioni (rifiuto esplicito
     // dell'utente) ha kind «flour» ma non dipende dalla dispensa e resta.
     if (c.status === "unverified" && PANTRY_CHECK_KEYS.has(c.message.key)) continue;
-    if (c.message.key === "need.checkExclusions") { add("flour", c.message); continue; }
+    if (c.message.key === "need.checkExclusions") { add("flour", msg("card.exclusionsCheck", "Esclusioni?")); continue; }
     if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Se hai una teglia"));
-    if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Se hai pietra o acciaio"));
-    if (c.kind === "flour") add("flour", c.status === "missing"
-      ? msg("need.flour", "Serve farina W {range}", c.message.params)
-      : msg("need.checkFlour", "Se hai farina W {range}", c.message.params));
-    if (c.kind === "flour_blend") add("flour", msg("card.blendCheck", "Se hai le farine del mix"));
-    if (c.kind === "ingredient" && c.status === "missing" && !result.some(signal=>signal.message.key==="card.ingredientsMissing")) add("check",msg("card.ingredientsMissing","Ingredienti da procurare"));
+    if (c.kind === "deck") add("oven", c.status === "missing" ? msg("card.deckMissing", "Pietra o acciaio") : msg("card.deckCheck", "Pietra o acciaio?"));
+    // Le verifiche di farina «Se hai…» sono già escluse sopra (D-060): qui
+    // resta solo la mancanza certa.
+    if (c.kind === "flour") add("flour", msg("card.flourMissing", "Farina W {range}", c.message.params));
+    if (c.kind === "flour_blend") add("flour", msg("card.blendCheck", "Verifica le farine"));
+    if (c.kind === "ingredient" && c.status === "missing" && !result.some(signal=>signal.message.key==="card.ingredientsMissing")) add("check",msg("card.ingredientsMissing","Da comprare"));
     if (c.kind === "yeast" && c.status === "missing") add("flour", msg("card.yeastMissing", "Serve il lievito"));
   }
   return result.slice(0, 2);

@@ -3383,6 +3383,9 @@
   .explore-card__media {
     display: grid;
     grid-template-rows: minmax(var(--photo-clear-space), 1fr) auto;
+    /* Una colonna larga quanto la card: con «auto» un testo su una riga
+       (badge con ellissi) allargava la colonna e tagliava il titolo. */
+    grid-template-columns: minmax(0, 1fr);
     position: relative;
     overflow: hidden;
     container-type: inline-size;
@@ -11734,7 +11737,11 @@
   .explore-card__caption .explore-card__badge--auth {
     position: static;
     display: inline-block;
+    max-width: 100%;
     margin-bottom: var(--space-2);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .profile-diet-note {
@@ -16485,6 +16492,19 @@
 
   .style-signal svg {
     flex-shrink: 0;
+  }
+
+  /* Pill su una riga sola (nota di Matteo, 29/10/2026): copy corti e, per
+     sicurezza, ellissi. Il testo intero resta nel DOM per i lettori di schermo. */
+  .style-signal.badge-base {
+    min-width: 0;
+  }
+
+  .style-signal [data-slot="label"] {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .style-signal--warning svg {
