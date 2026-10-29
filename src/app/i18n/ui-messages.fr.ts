@@ -509,7 +509,7 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "features.troubleshooting.count": "{0} problèmes",
   "features.troubleshooting.countOne": "{0} problème",
   "features.troubleshooting.emptyCategory": "Aucun problème dans cette catégorie",
-  "features.troubleshooting.emptyCategoryReason": "Cette catégorie est vide pour l'instant. Parcours tous les problèmes.",
+  "features.troubleshooting.emptyCategoryReason": "Cette catégorie est vide pour l'instant. Parcourez tous les problèmes.",
   "features.troubleshooting.emptySearchReason": "Décrivez ce que vous voyez avec d'autres mots (par exemple « brûlée dessous », « ne lève pas ») ou cherchez dans toute l'app.",
   "features.troubleshooting.showAll": "Afficher tous les problèmes",
   "pages.learn.glutenNone": "{brand} n'a pas encore de recettes sans gluten vérifiées : pour l'instant, il n'y a pas de parcours pratique.",
