@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getContextualWarnings, getStepTroubleshooting, ISSUES_DB } from "./troubleshooting-data";
+import { getContextualWarnings, getStepTroubleshooting, groupIssuesByPhase, ISSUE_GLOSSARY_TERMS, ISSUE_SCIENCE_NOTES, ISSUES_DB, QUICK_HELP_ISSUE_IDS, TROUBLESHOOTING_PHASE_ORDER } from "./troubleshooting-data";
+import { getScienceNote } from "./science-notes";
 import { thresholdFor } from "../domain/science/engine-facts";
 import { STYLES_DB } from "../domain/styles-db";
 import { TROUBLESHOOTING_I18N_DEFAULTS } from "../features/cms/domain-i18n-defaults";
@@ -84,7 +85,7 @@ describe("FW-05 diagnosi della fase", () => {
 
   it("con un mix senza glutine niente diagnosi sul glutine (S13-B-14)", () => {
     const shape = getStepTroubleshooting({ id: "shape" }, { glutenFree: true })!;
-    expect(shape.issueIds).toEqual(["P08"]);
+    expect(shape.issueIds).toEqual(["P23", "P08"]);
     expect(getStepTroubleshooting({ id: "shape" }, { unleavened: true, glutenFree: true })).toBeUndefined();
   });
 
@@ -152,5 +153,70 @@ describe("troubleshooting limitato alla fase effettiva", () => {
         for (const field of ["symptom", "cause", "testRapido", "fixImmediate", "prevention"] as const) expect(issue?.[field]).toBeTruthy();
       }
     }
+  });
+
+  it("«Qualcosa non va?» di Impara: ogni id esiste, uno per categoria, con il titolo nelle sette lingue (G4a-WP-05)", () => {
+    const categories = QUICK_HELP_ISSUE_IDS.map((id) => ISSUES_DB.find((issue) => issue.id === id)?.category);
+    expect(categories.every(Boolean)).toBe(true);
+    expect(new Set(categories).size).toBe(QUICK_HELP_ISSUE_IDS.length);
+    for (const copy of [TROUBLESHOOTING_EN, TROUBLESHOOTING_DE, TROUBLESHOOTING_ES, TROUBLESHOOTING_FR, TROUBLESHOOTING_PT, TROUBLESHOOTING_JA]) {
+      for (const id of QUICK_HELP_ISSUE_IDS) expect(copy.issues?.[id]?.symptom).toBeTruthy();
+    }
+  });
+});
+
+/* G4b-WP-03 (S13-A-16, S13-B-13, S13-A-10): fasi coerenti col momento in cui
+ * il problema si vede, gruppi per fase e le voci che mancavano al principiante. */
+describe("G4b-WP-03 problemi per fase", () => {
+  const ALL = [TROUBLESHOOTING_I18N_DEFAULTS, TROUBLESHOOTING_EN, TROUBLESHOOTING_DE, TROUBLESHOOTING_ES, TROUBLESHOOTING_FR, TROUBLESHOOTING_PT, TROUBLESHOOTING_JA];
+
+  it("P03 sta nella fermentazione e P16 nella stesura", () => {
+    expect(ISSUES_DB.find((i) => i.id === "P03")!.category).toBe("fermentation");
+    expect(ISSUES_DB.find((i) => i.id === "P16")!.category).toBe("shaping");
+    expect(getStepTroubleshooting({ id: "shape" })!.issueIds).toContain("P16");
+  });
+
+  it("ogni voce ha una fase dell'ordine, senza «Algoritmo»", () => {
+    expect(ISSUES_DB.every((i) => (TROUBLESHOOTING_PHASE_ORDER as readonly string[]).includes(i.category))).toBe(true);
+    for (const copy of ALL) expect(copy.categories?.solver).toBeUndefined();
+  });
+
+  it("gruppi nell'ordine della preparazione, critici in alto, nessun gruppo vuoto", () => {
+    const groups = groupIssuesByPhase(ISSUES_DB);
+    expect(groups.map((g) => g.phase)).toEqual([...TROUBLESHOOTING_PHASE_ORDER]);
+    expect(groups.flatMap((g) => g.issues).length).toBe(ISSUES_DB.length);
+    const rank = { critical: 0, warning: 1, info: 2 };
+    for (const g of groups) {
+      const ranks = g.issues.map((i) => rank[i.severity]);
+      expect(ranks).toEqual([...ranks].sort((a, b) => a - b));
+    }
+    const baking = groups.find((g) => g.phase === "baking")!;
+    expect(baking.issues[0].id).toBe("P09");
+    expect(groupIssuesByPhase(ISSUES_DB.filter((i) => i.id === "P22")).map((g) => g.phase)).toEqual(["shaping"]);
+  });
+
+  it("pala, panetto che si allarga e buchi in stesura: stesura, in sette lingue, senza soglie numeriche", () => {
+    for (const id of ["P22", "P23", "P24"]) {
+      expect(ISSUES_DB.find((i) => i.id === id)!.category).toBe("shaping");
+      expect(getScienceNote(ISSUE_SCIENCE_NOTES[id])?.kind).toBe("editorial");
+      expect(ISSUE_GLOSSARY_TERMS[id]?.length).toBeGreaterThan(0);
+      for (const copy of ALL) {
+        const issue = copy.issues?.[id];
+        for (const field of ["symptom", "cause", "testRapido", "fixImmediate", "prevention"] as const) {
+          expect(issue?.[field], `${id}.${field}`).toBeTruthy();
+          expect(issue?.[field], `${id}.${field}`).not.toMatch(/\d/);
+        }
+      }
+    }
+  });
+
+  it("P22 solo con la pala, anche in cottura; P23 nell'appretto e in stesura", () => {
+    expect(getStepTroubleshooting({ id: "shape" })!.issueIds).not.toContain("P22");
+    expect(getStepTroubleshooting({ id: "bake" })!.issueIds).not.toContain("P22");
+    expect(getStepTroubleshooting({ id: "shape" }, { peel: true })!.issueIds).toContain("P22");
+    expect(getStepTroubleshooting({ id: "bake" }, { peel: true })!.issueIds[0]).toBe("P22");
+    expect(getStepTroubleshooting({ id: "bake", variant: "fry" }, { peel: true })!.issueIds).not.toContain("P22");
+    expect(getStepTroubleshooting({ id: "proof" })!.issueIds).toContain("P23");
+    expect(getStepTroubleshooting({ id: "shape" })!.issueIds).toEqual(expect.arrayContaining(["P23", "P24"]));
   });
 });

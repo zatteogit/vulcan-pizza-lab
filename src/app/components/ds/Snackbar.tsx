@@ -6,10 +6,14 @@
  * fondo di stato bloccante, icona e role="alert" (lo legge subito).
  * Estratto da SnackbarToastSpec.
  */
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import { AlertCircle } from "lucide-react";
 
-export interface SnackbarProps {
+/** Focus e puntatore sulla barra: chi la usa può sospendere la scadenza
+ *  finché ci si sta sopra (WCAG 2.2.1). */
+type HoldHandlers = Pick<HTMLAttributes<HTMLDivElement>, "onFocus" | "onBlur" | "onPointerEnter" | "onPointerLeave">;
+
+export interface SnackbarProps extends HoldHandlers {
   message: ReactNode;
   action?: string;
   onAction?: () => void;
@@ -31,6 +35,7 @@ export function Snackbar({
   variant = "default",
   className,
   style,
+  ...hold
 }: SnackbarProps) {
   const error = variant === "error";
   return (
@@ -38,6 +43,7 @@ export function Snackbar({
       className={["ds-snackbar", error ? "ds-snackbar--error" : null, className].filter(Boolean).join(" ")}
       role={error ? "alert" : "status"}
       style={style}
+      {...hold}
     >
       {error && <AlertCircle size={18} aria-hidden="true" className="ds-snackbar__icon" />}
       <span className="ds-snackbar__message">{message}</span>

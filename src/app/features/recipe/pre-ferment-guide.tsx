@@ -4,9 +4,6 @@
 /* i18n: all user-facing strings resolved via useCms().preFerment */
 
 import { Lightbulb } from "lucide-react";
-import { useMemo } from 'react';
-import { motion } from 'motion/react';
-import { motionSpring } from "../../components/ds/motion";
 import { Disclosure, Surface } from "../../components/ds/index";
 import { Clock, Droplets, Thermometer } from 'lucide-react';
 import { Link } from "react-router";
@@ -18,9 +15,10 @@ import { interpolate } from "../../i18n/interpolate";
 import { formatList, formatPercent } from "../../i18n/format";
 import { withBrand } from "../../config/brand";
 import { glossaryFactValues } from "../../data/glossary-data";
-import { stylesDeclaringPreFerment } from "../../domain/science/engine-facts";
+import { preFermentExample, stylesDeclaringPreFerment } from "../../domain/science/engine-facts";
 import { STYLES_DB } from "../../domain/styles-db";
 import { GlossaryTermLinks } from "../glossary/term-link";
+import { WhyButton } from "../science/why-button";
 
 /* FW-04 (S14-B-15): le parole tecniche della scheda portano al glossario. */
 const PRE_FERMENT_TERMS: Record<PreFermentId, readonly string[]> = {
@@ -54,14 +52,36 @@ export function fillPreFermentText(text: string, locale: string): string {
   return withBrand(interpolate(text, glossaryFactValues(locale)));
 }
 
-/** Righe del confronto nella lingua attiva. */
-export function localizedComparisonRows(pf: CmsPreFerment, locale = "it") {
-  return COMP_KEYS.map((key, i) => ({
-    label: pf.compLabels[i] ?? key,
-    biga: fillPreFermentText(pf.compValues[key]?.biga ?? "", locale),
-    poolish: fillPreFermentText(pf.compValues[key]?.poolish ?? "", locale),
-    autolisi: fillPreFermentText(pf.compValues[key]?.autolisi ?? "", locale),
-  }));
+/** G4b-WP-02: una sola tabella di confronto per la guida e per la ricetta
+ *  (prima due copie, con stili diversi). */
+export function PreFermentComparisonTable({ pf, locale }: { pf: CmsPreFerment; locale: string }) {
+  return (
+    <div className="preferment-table">
+      <div className="preferment-table__scroll">
+        <table className="preferment-table__grid">
+          <thead>
+            <tr>
+              {/* Angolo vuoto: td, non un th senza nome (audit n. 30). */}
+              <td className="preferment-table__th" />
+              {PRE_FERMENT_IDS.map((id) => (
+                <th key={id} className={`preferment-table__th preferment-table__th--${id}`}>{preFermentName(id)}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {COMP_KEYS.map((key, i) => (
+              <tr key={key}>
+                <td className="preferment-table__td preferment-table__rowlabel">{pf.compLabels[i]}</td>
+                {PRE_FERMENT_IDS.map((id) => (
+                  <td key={id} className="preferment-table__td">{fillPreFermentText(pf.compValues[key][id], locale)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
 
 /** FW-05 (S14-A-01/B-13): gli stili «ideali» sono quelli che nel motore
@@ -102,30 +122,21 @@ interface PreFermentCardProps {
   /** FW-04 (S14-B-16): aperta dal deep link (#pf-poolish). */
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /** G4b-WP-02 (S14-B-07): esempio su 1 kg di farina, solo nella guida
+   *  (in una ricetta le dosi vere sono negli ingredienti). */
+  showExample?: boolean;
 }
 
-export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext, open, onOpenChange }: PreFermentCardProps) {
+export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext, open, onOpenChange, showExample }: PreFermentCardProps) {
   const { cms, bcp47 } = useCms();
   const pf = cms.preFerment;
   const id: PreFermentId = (PRE_FERMENT_IDS as readonly string[]).includes(preFermentType)
     ? (preFermentType as PreFermentId)
     : "poolish";
-  const fill = (text: string | undefined) => fillPreFermentText(text ?? "", bcp47);
+  const fill = (text: string) => fillPreFermentText(text, bcp47);
   const item = pf.items[id];
-  const info = {
-    origin: item.origin,
-    description: fill(item.description),
-    hydration: fill(item.hydration),
-    fermentationType: fill(item.fermentationType),
-    flavor: item.flavor,
-    crustResult: item.crustResult,
-    extensibility: item.extensibility,
-    tips: item.tips.map(fill),
-    name: preFermentName(id),
-    yeast: fill(pf.compValues.yeast?.[id]),
-    duration: fill(pf.compValues.duration?.[id]),
-    temperature: fill(pf.compValues.temperature?.[id]),
-  };
+  const name = preFermentName(id);
+  const yeast = fill(pf.compValues.yeast[id]);
   const isTechnique = id === "autolisi";
   const fmt = createFormatter(cms.ui, bcp47);
   const contextLine = recipeContext && recipeContext.flourG > 0 && id !== "autolisi"
@@ -136,16 +147,16 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
       })
     : null;
 
-  /* Build localized comparison rows */
-  const compRows = useMemo(() => localizedComparisonRows(pf, bcp47), [pf, bcp47]);
+  /* G4b-WP-02: farina e acqua dell'esempio dallo stesso scorporo delle ricette;
+     il lievito resta la stima della guida, con il «Perché?». */
+  const ex = showExample && !isTechnique ? preFermentExample(id) : null;
+  const StepsHeading = `h${(headingLevel ?? 3) + 1}` as "h3" | "h4" | "h5";
 
   return (
+    /* G4b-WP-02: niente animazione d'ingresso propria; nella guida la card
+       entra già col suo contenitore (prima si animava due volte). */
     <Surface
-      as={motion.div}
       variant="card"
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={motionSpring.standard}
       className="preferment-guide-card"
       data-slot="pre-ferment-card"
     >
@@ -171,8 +182,8 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
               </span>
             </span>
             <span className="preferment-guide-card__name">
-              <span className="preferment-guide-card__name-text">{info.name}</span>
-              <span className="preferment-guide-card__origin"> — {info.origin}</span>
+              <span className="preferment-guide-card__name-text">{name}</span>
+              <span className="preferment-guide-card__origin"> — {item.origin}</span>
             </span>
           </span>
         </>}
@@ -180,7 +191,7 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
             <div className="preferment-guide-card__content">
               {/* Description */}
               <p className="preferment-guide-card__description">
-                {info.description}
+                {fill(item.description)}
               </p>
               {contextLine && (
                 <p className="preferment-guide-card__context" data-region="note">
@@ -188,20 +199,47 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
                 </p>
               )}
 
+              {/* G4b-WP-02 (S14-B-07): come si prepara e quando entra nell'impasto. */}
+              <section className="preferment-guide-card__how">
+                <StepsHeading className="preferment-guide-card__tips-label">{pf.stepsLabel}</StepsHeading>
+                <ol className="preferment-guide-card__tips-list preferment-guide-card__steps">
+                  {item.steps.map((step, i) => (
+                    <li key={i} className="preferment-guide-card__tips-item">{fill(step)}</li>
+                  ))}
+                </ol>
+                <WhyButton noteId="pre-ferment-procedure" />
+                {ex && (
+                  <>
+                    <p className="preferment-guide-card__context">
+                      {interpolate(pf.exampleLabel, { flour: fmt.grams(ex.flourG), hydration: formatPercent(ex.doughHydrationPct, bcp47) })}
+                    </p>
+                    <ul className="preferment-guide-card__tips-list">
+                      <li className="preferment-guide-card__tips-item">
+                        {interpolate(pf.examplePreFerment, { name, flour: fmt.grams(ex.prefermentFlourG), water: fmt.grams(ex.prefermentWaterG), yeast })}{" "}
+                        <WhyButton noteId="pre-ferment" />
+                      </li>
+                      <li className="preferment-guide-card__tips-item">
+                        {interpolate(pf.exampleFinal, { flour: fmt.grams(ex.mainFlourG), water: fmt.grams(ex.mainWaterG) })}
+                      </li>
+                    </ul>
+                  </>
+                )}
+              </section>
+
               {/* Key parameters grid */}
               <div className="preferment-guide-card__params">
-                <ParamBadge icon={<Droplets size={12} />} label={pf.paramHydration} value={info.hydration} />
-                <ParamBadge icon={<Clock size={12} />} label={pf.paramDuration} value={info.duration} />
-                <ParamBadge icon={<Thermometer size={12} />} label={pf.paramTemperature} value={info.temperature} />
-                <ParamBadge icon={<Flask size={18} />} label={pf.paramYeast} value={info.yeast} />
+                <ParamBadge icon={<Droplets size={12} />} label={pf.paramHydration} value={fill(item.hydration)} />
+                <ParamBadge icon={<Clock size={12} />} label={pf.paramDuration} value={fill(pf.compValues.duration[id])} />
+                <ParamBadge icon={<Thermometer size={12} />} label={pf.paramTemperature} value={fill(pf.compValues.temperature[id])} />
+                <ParamBadge icon={<Flask size={18} />} label={pf.paramYeast} value={yeast} />
               </div>
 
               {/* Result characteristics */}
               <div className="preferment-guide-card__details">
-                <DetailLine label={pf.detailFermentation} value={info.fermentationType} />
-                <DetailLine label={pf.detailFlavor} value={info.flavor} />
-                <DetailLine label={pf.detailCrust} value={info.crustResult} />
-                <DetailLine label={pf.detailExtensibility} value={info.extensibility} />
+                <DetailLine label={pf.detailFermentation} value={fill(item.fermentationType)} />
+                <DetailLine label={pf.detailFlavor} value={item.flavor} />
+                <DetailLine label={pf.detailCrust} value={item.crustResult} />
+                <DetailLine label={pf.detailExtensibility} value={item.extensibility} />
                 <DetailLine
                   label={pf.detailIdealStyles}
                   value={isTechnique ? (item.idealStyles ?? "") : <PreFermentStyleList kind={id as "biga" | "poolish"} locale={bcp47} />}
@@ -214,9 +252,9 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
                   <Lightbulb size={14} aria-hidden="true" className="tip-icon" /> {pf.tipsLabel}
                 </div>
                 <ul className="preferment-guide-card__tips-list">
-                  {info.tips.map((tip, i) => (
+                  {item.tips.map((tip, i) => (
                     <li key={i} className="preferment-guide-card__tips-item">
-                      {tip}
+                      {fill(tip)}
                     </li>
                   ))}
                 </ul>
@@ -232,36 +270,7 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
                   triggerClassName="preferment-guide-card__compare-toggle"
                   summary={pf.showComparison}
                 >
-                    <div className="preferment-guide-card__table-wrap">
-                      <table className="preferment-guide-card__table">
-                        <thead>
-                          <tr>
-                            <td className="preferment-guide-card__th" />
-                            <th className="preferment-guide-card__th preferment-guide-card__th--biga">{uiMessage("features.recipe.pre-ferment-guide.biga-4e43b430")}</th>
-                            <th className="preferment-guide-card__th preferment-guide-card__th--poolish">{uiMessage("features.recipe.pre-ferment-guide.poolish-40fc939a")}</th>
-                            <th className="preferment-guide-card__th preferment-guide-card__th--autolisi">{uiMessage("features.recipe.pre-ferment-guide.autolisi-c4e938cc")}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {compRows.map((row, i) => (
-                            <tr key={COMP_KEYS[i]}>
-                              <td className="preferment-guide-card__td preferment-guide-card__td--label">
-                                {row.label}
-                              </td>
-                              <td className="preferment-guide-card__td">
-                                {row.biga}
-                              </td>
-                              <td className="preferment-guide-card__td">
-                                {row.poolish}
-                              </td>
-                              <td className="preferment-guide-card__td">
-                                {row.autolisi}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                  <PreFermentComparisonTable pf={pf} locale={bcp47} />
                 </Disclosure>
               )}
             </div>

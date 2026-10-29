@@ -30,7 +30,12 @@ import {
   NON_FEASIBLE_SCORE_CEILING,
   SCORE_BANDS,
 } from "../recipe-score";
-import { computePreFermentSplit, PRE_FERMENT_FLOUR_PCT } from "../pre-ferment-split";
+import {
+  computePreFermentSplit,
+  PRE_FERMENT_FLOUR_PCT,
+  PRE_FERMENT_TARGET_HOURS,
+  PRE_FERMENT_TEMP_C,
+} from "../pre-ferment-split";
 /* G3-WP-03: soglie con cui il motore sceglie il testo dei passi. */
 export { BASIL_BEFORE_BAKE_MAX_SEC, HIGH_HYDRATION_PCT } from "../step-thresholds";
 export { FLOUR_STRENGTH_SCALE, flourFitForStyle, flourStrength, type FlourStrength } from "../flour-strength";
@@ -163,5 +168,23 @@ export function preFermentFacts(kind: "biga" | "poolish") {
     flourPctRange: [PRE_FERMENT_FLOUR_PCT.min, PRE_FERMENT_FLOUR_PCT.max] as Range,
     hydrationPct: split.hydrationPct,
     idealStyleIds: stylesDeclaringPreFerment(kind),
+    /** G4b-WP-02: ore e temperatura di maturazione del passo del prefermento. */
+    hours: PRE_FERMENT_TARGET_HOURS[kind],
+    tempC: PRE_FERMENT_TEMP_C[kind],
   };
+}
+
+/** Riposo dell'autolisi, minuti. */
+export { AUTOLYSIS_REST_MIN } from "../pre-ferment-split";
+
+/** G4b-WP-02 (S14-B-07): l'esempio della guida, su 1 kg di farina in tutto.
+ *  L'idratazione dell'impasto è il centro della forbice del primo stile che
+ *  dichiara il prefermento (scelta di Vulcan per l'esempio, non una dose).
+ *  Farina e acqua si dividono con computePreFermentSplit, come nelle ricette. */
+export function preFermentExample(kind: "biga" | "poolish") {
+  const [lo, hi] = STYLES_DB[stylesDeclaringPreFerment(kind)[0]].dough.hydration_pct_range;
+  const flourG = 1000;
+  const doughHydrationPct = Math.round((lo + hi) / 2);
+  const waterG = (flourG * doughHydrationPct) / 100;
+  return { ...computePreFermentSplit({ flourG, waterG, preFermentType: kind }), flourG, waterG, doughHydrationPct };
 }

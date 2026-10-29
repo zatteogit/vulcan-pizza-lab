@@ -136,6 +136,63 @@ la loro integrazione si valuta se abbassarli.
 3. **Font da Google Fonts** con un CSS esterno bloccante (Playfair Display, DM
    Sans, DM Mono). In parte risolto: vedi P-5b.
 
+### G4a-WP-02, modalità cottura (29/10/2026)
+
+Il ramo dell'area G4 era a 500,0 kB su 500 senza lingue (margine di circa 20 byte).
+Segnale di fine fase, interruttori dell'header e avanzamento unico valgono
+circa 0,7 kB gzip nel chunk principale; recuperati senza alzare i limiti
+togliendo codice morto: la seconda copia di `blockerText` in
+`recipe-verdict-notice.tsx` (ora importa `blocker-text.ts`), i ripieghi `??`
+su chiavi CMS che hanno sempre un default (finestra «Modifiche non salvate»,
+correzioni dal feedback, ispirazioni d'autore) con le loro chiavi uiMessage
+orfane, `setStepDone` mai usato, e un'icona per interruttore (lo stato spento
+è una barra in CSS). Risultato: 499,9 kB senza lingue, 598,2 kB per utente.
+Il chunk lazy di `cook-alert` non serve: `experimentalMinChunkSize` lo
+rifonde nel principale.
+
+### G4a-WP-03, «Prima di iniziare» (29/10/2026)
+
+Condizioni, orari e motivo del blocco nel dialog valgono circa 0,5 kB gzip
+senza lingue (il ramo partiva da 499,9 kB). Recuperati senza alzare i limiti:
+i ripieghi `??` su chiavi CMS che hanno sempre un default (dettagli e
+«Nascondi» della match card, «Personalizza», «Regola a mano», ricerca degli
+stili, farcitura, frigo/ambiente, «Forza farina», «La tua cucina») con le
+cinque chiavi uiMessage rimaste orfane; la chiave `notPersonalizedAria` (il
+dialog prende il nome dal titolo visibile); la tabella metodo → segnale, che
+le chip delle condizioni copiavano da `recipe-card-signals.ts`; una sola
+chiamata a `startSession` in `recipe-output.tsx`; le chip compatte non calcolano più
+la lista completa per poi buttarla. Risultato: 499,9 kB senza
+lingue (margine di circa 110 byte), 598,1 kB per utente.
+
+### G4b-WP-02, «Come si fa» dei prefermenti (29/10/2026)
+
+Il ramo partiva da 511 963 byte gzip senza lingue su 512 000 (margine di 37
+byte). Passi, esempio su 1 kg e nota `pre-ferment-procedure` valgono circa
+0,3 kB nel codice senza lingue e 0,5 kB nel catalogo giapponese. Recuperati
+senza alzare i limiti: una sola tabella di confronto (`PreFermentComparisonTable`)
+per guida e ricetta al posto di due copie, con il suo CSS e tre chiavi uiMessage
+orfane in 7 lingue; niente animazione d'ingresso propria della card (nella guida
+si animava due volte); la card legge i campi del CMS senza la copia `info` e
+senza ripieghi `??` su chiavi che hanno sempre un valore; tolte tre regole CSS
+morte (`__chevron`, `__body`, `__compare-panel`). Risultato: 499,8 kB senza
+lingue (511 788 byte, margine di circa 210 byte), 598,4 kB per utente, CSS 74,2 kB.
+
+### G4b-WP-03, problemi per fase e voci nuove (29/10/2026)
+
+Il ramo partiva da 511 788 byte gzip senza lingue (margine di circa 210 byte).
+Tre voci nuove (P22–P24) col testo italiano, la nota `troubleshooting-practice`
+e i gruppi per fase valgono circa 1 kB senza lingue e 0,6 kB nel catalogo
+giapponese. Recuperati senza alzare i limiti: gli avvisi contestuali di Crea
+leggono i testi solo dal CMS (in `getContextualWarnings` c'era una seconda
+copia italiana, già divergente, di tutti i messaggi); i passi «olio»,
+«preriscalda» e «frittura» del Procedimento e la nota sulle cotture in serie
+non ripetono il testo italiano che il CMS ha già nei default (il CMS è sempre
+fuso su `CMS_DEFAULTS`); tolte l'etichetta italiana delle fasi in
+`CATEGORY_LABELS`, la categoria morta «solver» in 7 lingue, l'animazione
+d'ingresso dei chip e l'etichetta della fase dentro le card (la dice l'h2 del
+gruppo). Risultato: 499,6 kB senza lingue (511 602 byte, margine di circa 400
+byte), 598,8 kB per utente, chunk giapponese 99,2 kB, CSS 74,3 kB.
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

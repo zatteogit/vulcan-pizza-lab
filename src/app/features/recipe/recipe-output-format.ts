@@ -263,8 +263,11 @@ export function normalizeMeasureUnitSuffixes(text: string): string {
  * (optimizeComfort, con le tolleranze dichiarate e la regola D-Q). */
 
 /** Vista Semplice: la forza farina in parole, non in sigle (audit roleplay). */
-export function engineMessage(cms: CmsContent | undefined, key: string, fallback: string): string {
-  return cms?.engineMessages?.[key] ?? fallback;
+/** Il CMS è sempre fuso sui default italiani (deepMerge su CMS_DEFAULTS): le
+ *  chiavi che hanno un default non portano più una copia italiana qui
+ *  (G4b-WP-03, budget). `fallback` resta per i testi dinamici del motore. */
+export function engineMessage(cms: CmsContent | undefined, key: string, fallback?: string): string {
+  return cms?.engineMessages?.[key] ?? fallback ?? key;
 }
 
 export function authenticityLabel(score: AuthenticityScore, cms: CmsContent | undefined): string {
@@ -274,7 +277,7 @@ export function authenticityLabel(score: AuthenticityScore, cms: CmsContent | un
 /** "Condimento" per le pizze normali, "Farcitura" per quelle farcite. */
 export function toppingSectionLabel(style: PizzaStyle, cms: CmsContent): string {
   return isFillingStyle(style)
-    ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle
+    ? cms.cooking.fillingTitle
     : cms.cooking.toppingTitle;
 }
 
@@ -549,13 +552,9 @@ function localizeStepBase(
       // M-6: per gli stili fritti il passo è l'olio, non il forno.
       if (step.variant === "oil") {
         return {
-          title: engineMessage(cms, "timeline.heatOil.title", "Olio a temperatura"),
+          title: engineMessage(cms, "timeline.heatOil.title"),
           description: t(
-            engineMessage(
-              cms,
-              "timeline.heatOil.desc",
-              "Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a {temp} e controllalo con un termometro. Intanto i panetti finiscono l'appretto.",
-            ),
+            engineMessage(cms, "timeline.heatOil.desc"),
             { temp: formatTemp(recipe.style.baking.temp_c_ideal) },
           ),
           tip: step.tip
@@ -567,56 +566,28 @@ function localizeStepBase(
         };
       }
       const equipmentNote = step.description.includes("pietra o acciaio")
-        ? engineMessage(cms, "timeline.preheat.equipmentNote", " (pietra o acciaio già dentro)")
+        ? engineMessage(cms, "timeline.preheat.equipmentNote")
         : "";
       // ENG-5: cosa fanno i panetti mentre il forno scalda dipende dal piano
       // del motore (appretto lungo, appretto corto, impasto non lievitato).
       const preheatDesc =
         recipe.style.proof_in_pan && step.variant !== "during_rest"
           ? step.variant === "whole_proof"
-            ? engineMessage(
-                cms,
-                "timeline.preheat.descPanWholeProof",
-                "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto fa l'appretto in teglia.",
-              )
-            : engineMessage(
-                cms,
-                "timeline.preheat.descPan",
-                "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto finisce l'appretto in teglia.",
-              )
+            ? engineMessage(cms, "timeline.preheat.descPanWholeProof")
+            : engineMessage(cms, "timeline.preheat.descPan")
           : step.variant === "whole_proof"
-          ? engineMessage(
-              cms,
-              "timeline.preheat.descWholeProof",
-              "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti fanno l'appretto.",
-            )
+          ? engineMessage(cms, "timeline.preheat.descWholeProof")
           : step.variant === "during_rest"
-            ? engineMessage(
-                cms,
-                "timeline.preheat.descDuringRest",
-                "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti riposano.",
-              )
-            : engineMessage(
-                cms,
-                "timeline.preheat.desc",
-                "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti finiscono l'appretto.",
-              );
+            ? engineMessage(cms, "timeline.preheat.descDuringRest")
+            : engineMessage(cms, "timeline.preheat.desc");
       return {
-        title: engineMessage(cms, "timeline.preheat.title", "Preriscalda il forno"),
+        title: engineMessage(cms, "timeline.preheat.title"),
         description: t(preheatDesc, { temp: formatTemp(bakeTemp), equipmentNote }),
         tip: step.tip
           ? {
-              beginner: engineMessage(
-                cms,
-                "timeline.preheat.tipBeginner",
-                "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
-              ),
+              beginner: engineMessage(cms, "timeline.preheat.tipBeginner"),
               nerd: t(
-                engineMessage(
-                  cms,
-                  "timeline.preheat.tipNerd",
-                  "La massa termica della superficie domina il primo minuto di cottura: {minutes} min di soak assicurano che pietra/acciaio siano saturi, non solo l'aria del forno.",
-                ),
+                engineMessage(cms, "timeline.preheat.tipNerd"),
                 { minutes: step.duration_minutes },
               ),
             }
@@ -626,13 +597,9 @@ function localizeStepBase(
     case "bake":
       if (step.variant === "fry") {
         return {
-          title: engineMessage(cms, "timeline.fry.title", "Frittura"),
+          title: engineMessage(cms, "timeline.fry.title"),
           description: t(
-            engineMessage(
-              cms,
-              "timeline.fry.desc",
-              "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
-            ),
+            engineMessage(cms, "timeline.fry.desc"),
             {
               temp: formatTemp(recipe.style.baking.temp_c_ideal),
               time: fmt ? fmt.cookTime(recipe.cook_time_sec) : step.timing_label,

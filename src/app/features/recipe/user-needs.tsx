@@ -428,7 +428,7 @@ function SettingsSummaryBar({
 }: SettingsSummaryBarProps) {
   /* R10: la chip rappresenta la cucina nel suo insieme, non solo il forno.
      Label "La tua cucina"; il tipo di forno e la temperatura vivono nel drawer. */
-  const cucinaText = cms.ui?.kitchenTitle ?? "La tua cucina";
+  const cucinaText = cms.ui.kitchenTitle;
 
   const count = constraints.pantry_flours.length + constraints.pantry_yeasts.length;
   const pantryLabel = cms.sections.pantry.title;

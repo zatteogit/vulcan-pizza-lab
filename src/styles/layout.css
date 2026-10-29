@@ -138,11 +138,8 @@
   }
 }
 
-[data-theme="editorial-fire"] [data-page="learn"] [data-progress="learning-path"] {
-  --learn-rail-gutter: var(--space-10);
-}
-
 [data-theme="editorial-fire"] [data-page="learn"] [data-region="page"] {
+  --learn-rail-gutter: var(--space-10);
   padding-inline-start: calc(var(--space-6) + var(--learn-rail-gutter));
 }
 
@@ -180,11 +177,8 @@
 }
 
 @media (max-width: 639px) {
-  [data-theme="editorial-fire"] [data-page="learn"] [data-progress="learning-path"] {
-    --learn-rail-gutter: var(--space-8);
-  }
-
   [data-theme="editorial-fire"] [data-page="learn"] [data-region="page"] {
+    --learn-rail-gutter: var(--space-8);
     padding-inline-start: calc(var(--space-4) + var(--learn-rail-gutter));
     padding-inline-end: var(--space-4);
   }
@@ -272,4 +266,67 @@
     size: A4;
     margin: 14mm 14mm 16mm;
   }
+}
+
+/* ═══ G4a-WP-05 · Impara: aiuto rapido, illustrazioni, desktop ═══ */
+/* S11-B-11: «Qualcosa non va?» nel primo schermo; i chip hanno il target
+   dei link di Problemi e soluzioni (almeno 44 px anche su mobile). */
+[data-page="learn"] [data-region="quick-help"] { margin-bottom: var(--space-10); }
+[data-page="learn"] [data-region="quick-help"] h2 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+[data-page="learn"] [data-region="quick-help"] ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+[data-page="learn"] [data-region="quick-help"] a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--troubleshooting-target-min);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width-thin) solid var(--outline-variant);
+  border-radius: var(--radius-2xl);
+  background: var(--container-bg-low);
+  color: var(--text-default);
+  font-size: var(--font-size-md);
+  line-height: var(--leading-snug);
+  text-decoration: none;
+}
+[data-page="learn"] [data-region="quick-help"] a:hover { border-color: var(--primary); color: var(--primary); }
+
+/* S11-B-15: l'icona del termine è quella della sua categoria nel glossario;
+   sotto i 480 px il decoro del percorso coprirebbe il titolo. */
+[data-page="learn"] .learn-term__icon { color: var(--tertiary); }
+@media (max-width: 479px) {
+  [data-page="learn"] .learn-path__illustration { display: none; }
+}
+
+/* S11-B-17: su desktop percorso e termine affiancati, risorse in griglia. */
+@media (min-width: 1024px) {
+  [data-page="learn"] [data-region="page"] {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    column-gap: var(--space-12);
+    align-items: start;
+    max-width: var(--measure-6xl);
+  }
+  [data-page="learn"] [data-region="page"] > * { grid-column: 1 / -1; }
+  [data-page="learn"] [data-region="page"] > [data-region="feature"] { grid-column: 1; }
+  [data-page="learn"] [data-region="page"] > [data-region="section"] { grid-column: 2; }
+  [data-page="learn"] .learn-resources__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+  [data-page="learn"] .learn-resources__card { height: 100%; }
 }

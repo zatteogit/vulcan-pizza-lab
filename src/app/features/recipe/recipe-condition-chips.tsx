@@ -1,5 +1,5 @@
 import { ListChecks, TriangleAlert } from "lucide-react";
-import { recipeCardSignals } from "./recipe-card-signals";
+import { METHOD_SIGNALS, recipeCardSignals } from "./recipe-card-signals";
 import { PANTRY_CHECK_KEYS } from "../../use-cases/recommendation-groups";
 import { Badge } from "../../components/ds/index";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
@@ -21,16 +21,12 @@ export function RecipeConditionChips({ recipe, id, compact = false }: { recipe: 
     : (recipe.verdict.conditions ?? []).filter(c => !(c.status === "unverified" && PANTRY_CHECK_KEYS.has(c.message.key))).map(c => c.kind === "deck" && c.status === "missing"
       ? { key: "need.deck", fallback: "Serve pietra o acciaio" } : c.message);
   if (!blocked) {
-    const keys: Record<string, string> = { "gen.homeBakingMethod": "need.invertedTray", "gen.notCoalOven": "need.withoutCoal", "gen.notWoodOven": "need.withoutWood", "feas.ovenSuboptimal": "need.adaptedBake" };
     for (const warning of recipe.verdict.adaptations) {
-      const key = keys[warning.key];
+      const key = METHOD_SIGNALS[warning.key]?.[0];
       if (key) messages.push({ key, fallback: warning.fallback, params: warning.params });
     }
   }
-  if (compact) {
-    messages.splice(0, messages.length, ...recipeCardSignals(recipe).map(s => s.message));
-  }
-  const texts = [...new Set(engineMsgTexts(messages, cms, bcp47))];
+  const texts = [...new Set(engineMsgTexts(compact ? recipeCardSignals(recipe).map(s => s.message) : messages, cms, bcp47))];
   if (texts.length === 0) return null;
   return (
     <div id={id} className="recipe-condition-chips">

@@ -50,6 +50,7 @@ import { AboutLinks, neutralityText } from "../components/shared/about-links";
 import { profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
 import { planFtuWrites } from "../use-cases/ftu-save";
 import { hasChosenSkill } from "../hooks/use-profile-defaults";
+import { useHashTarget } from "../hooks/use-hash-target";
 
 /* FW-07 (S16-A-02): la scala del profilo arriva al forno più caldo del catalogo. */
 const OVEN_SLIDER_MAX = Math.max(500, ...OVEN_MODELS.map((model) => model.maxTempC));
@@ -279,7 +280,9 @@ function ProfileSection({
   stepNum,
   children,
   delay = motionDelay.none,
+  id,
 }: {
+  id?: string;
   title?: string;
   subtitle?: string;
   stepNum?: string;
@@ -288,6 +291,7 @@ function ProfileSection({
 }) {
   return (
     <motion.section
+      id={id}
       data-region="section"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
@@ -1707,6 +1711,8 @@ export function ProfilePage() {
     }, { replace: true });
   };
   const reduceMotion = useReducedMotion();
+  /* G4a-WP-04 (S11-B-13): «Cambia livello» da Impara porta qui (#skill). */
+  useHashTarget({ onMatch: (id) => id === "skill", targetId: (id) => id });
 
   const closeControl = (
     <div className="profile-page__close">
@@ -1988,6 +1994,7 @@ export function ProfilePage() {
 
         {/* ── SKILL ── */}
         <ProfileSection
+          id="skill"
           title={p.skillTitle}
           subtitle={p.skillSubtitle}
           stepNum={p.skillStep}

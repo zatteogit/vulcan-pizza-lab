@@ -8,9 +8,13 @@ import { interpolate } from "../i18n/interpolate";
 import type { TimelineStep } from "../domain/pizza-engine";
 import type { StyleThresholds } from "../domain/science/engine-facts";
 
+/** G4b-WP-03 (S13-A-16): le fasi nell'ordine in cui il problema si vede. */
+export const TROUBLESHOOTING_PHASE_ORDER = ['dough', 'fermentation', 'shaping', 'baking', 'frying', 'false_positive'] as const;
+export type TroubleshootingPhase = typeof TROUBLESHOOTING_PHASE_ORDER[number];
+
 export interface TroubleshootingIssue {
   id: string;
-  category: 'dough' | 'fermentation' | 'shaping' | 'baking' | 'frying' | 'solver' | 'false_positive';
+  category: TroubleshootingPhase;
   symptom: string;
   cause: string;
   testRapido: string;
@@ -40,7 +44,8 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     severity: 'warning',
   },
   {
-    id: 'P03', category: 'dough',
+    // G4b-WP-03 (S13-A-16): si vede durante la lievitazione, non all'impasto.
+    id: 'P03', category: 'fermentation',
     symptom: "L'impasto collassa quando lo tocchi",
     cause: "Lievitazione andata oltre: troppo tempo, troppo caldo o troppo lievito",
     testRapido: "Premi con un dito: se il segno torna su subito è ancora indietro, se torna piano è pronto, se resta e l'impasto si sgonfia è andato oltre",
@@ -104,6 +109,32 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     prevention: "Prima di stendere sgonfia con delicatezza le bolle più grandi; nella napoletana e nel canotto qualche alveolo grande nel cornicione è voluto",
     severity: 'info',
   },
+  /* G4b-WP-03 (S13-A-10, D-G4b-2 A): incidenti frequenti di chi comincia.
+   * Testo qualitativo, senza soglie: nota troubleshooting-practice. */
+  {
+    id: 'P22', category: 'shaping', severity: 'warning',
+    symptom: 'La pizza si attacca alla pala',
+    cause: "Impasto umido a contatto diretto con la pala, pizza condita e lasciata ferma sulla pala, oppure pala senza farina o semola",
+    testRapido: "Scuoti piano la pala prima di infornare: la pizza scivola?",
+    fixImmediate: "Solleva il bordo, soffia sotto o spolvera un po' di semola e scuoti di nuovo prima di infornare",
+    prevention: "Infarina la pala, condisci in fretta direttamente sulla pala e inforna subito, senza lasciarla ferma",
+  },
+  {
+    id: 'P23', category: 'shaping', severity: 'warning',
+    symptom: 'Il panetto si allarga e non tiene la forma',
+    cause: "Più acqua di quanta la farina regga, lievitazione andata oltre, cucina calda o pirlatura poco tesa",
+    testRapido: "Il panetto si appiattisce prima del previsto e, se lo premi, il segno non torna su?",
+    fixImmediate: "Stendilo subito con poca farina sul banco; non provare a ripirlarlo",
+    prevention: "Pirla i panetti più tesi e segui idratazione e tempi della ricetta; se la cucina è calda, controlla l'impasto prima",
+  },
+  {
+    id: 'P24', category: 'shaping', severity: 'info',
+    symptom: 'Si apre un buco mentre stendo',
+    cause: "Centro tirato troppo sottile, glutine poco sviluppato, impasto ancora freddo di frigo o andato oltre",
+    testRapido: "Il buco si apre al centro mentre il bordo è ancora spesso?",
+    fixImmediate: "Ripara pizzicando i bordi del buco; se si riapre, copri il disco e lascialo riposare qualche minuto",
+    prevention: "Allarga spingendo dal centro verso il bordo e non assottigliare troppo il centro; togli i panetti dal frigo per tempo",
+  },
   /* === CATEGORIA 4: Cottura === */
   {
     id: 'P09', category: 'baking',
@@ -133,7 +164,8 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     severity: 'warning',
   },
   {
-    id: 'P16', category: 'baking',
+    // G4b-WP-03 (S13-A-16): nasce in stesura (bordi schiacciati, mattarello).
+    id: 'P16', category: 'shaping',
     symptom: 'Cornicione basso e piatto',
     cause: "Degassaggio eccessivo, farina troppo debole per lo stile, o uso del mattarello",
     testRapido: 'Altezza cornicione <1cm?',
@@ -237,8 +269,8 @@ const STEP_TROUBLE: Record<string, StepTroubleshooting> = {
   // FW-05 (S13-A-02): l'odore «chimico» è prima di tutto sovrafermentazione.
   mix: { labelKey: 'mix', issueIds: ['P01'], initialIssueId: 'P01' },
   bulk: { labelKey: 'bulk', issueIds: ['P03', 'P04', 'P05', 'P06', 'P20', 'P21'], initialIssueId: 'P03' },
-  proof: { labelKey: 'proof', issueIds: ['P03', 'P04', 'P05', 'P06', 'P20', 'P21'], initialIssueId: 'P03' },
-  shape: { labelKey: 'shape', issueIds: ['P02', 'P07', 'P08', 'P19'], initialIssueId: 'P02' },
+  proof: { labelKey: 'proof', issueIds: ['P03', 'P23', 'P04', 'P05', 'P06', 'P20', 'P21'], initialIssueId: 'P03' },
+  shape: { labelKey: 'shape', issueIds: ['P02', 'P24', 'P07', 'P19', 'P23', 'P16', 'P08', 'P22'], initialIssueId: 'P02' },
 };
 
 /** FW-05 (S13-B-02): sotto questa temperatura la puntata è una maturazione in
@@ -247,7 +279,7 @@ export const COLD_RETARD_MAX_C = 8;
 
 /** FW-05 (S13-B-14): diagnosi che presumono una rete glutinica (W, P/L,
  *  glutine da rilassare): fuori bersaglio con un mix senza glutine. */
-const GLUTEN_DEPENDENT_ISSUES = new Set(['P02', 'P07', 'P19']);
+const GLUTEN_DEPENDENT_ISSUES = new Set(['P02', 'P07', 'P16', 'P19', 'P24']);
 
 function withoutIssues(trouble: StepTroubleshooting, drop: (id: string) => boolean): StepTroubleshooting | undefined {
   const issueIds = trouble.issueIds.filter((id) => !drop(id));
@@ -259,10 +291,11 @@ function withoutIssues(trouble: StepTroubleshooting, drop: (id: string) => boole
 /** Il metodo del singolo passo prevale sul nome condiviso "bake".
  * Nessun fallback a un problema del forno per passi sconosciuti o riposi non lievitati.
  * FW-05: `coldRetard` (puntata in frigo) toglie «non cresce» (S13-B-02: al freddo
- * crescere poco è normale); `glutenFree` toglie le diagnosi sul glutine. */
+ * crescere poco è normale); `glutenFree` toglie le diagnosi sul glutine.
+ * G4b-WP-03: «si attacca alla pala» (P22) solo se la pizza va in forno con la pala. */
 export function getStepTroubleshooting(
   step: Pick<TimelineStep, 'id' | 'variant' | 'msg'>,
-  context: { unleavened?: boolean; filled?: boolean; coldRetard?: boolean; glutenFree?: boolean } = {},
+  context: { unleavened?: boolean; filled?: boolean; coldRetard?: boolean; glutenFree?: boolean; peel?: boolean } = {},
 ): StepTroubleshooting | undefined {
   if (context.unleavened && (step.id === 'bulk' || step.id === 'proof')) return undefined;
   let trouble: StepTroubleshooting | undefined;
@@ -270,17 +303,24 @@ export function getStepTroubleshooting(
   else if (step.id === 'bake' || step.id === 'bake2') {
     trouble = { labelKey: 'bake', issueIds: step.variant === 'fry'
       ? ['FR01', 'FR02', ...(context.filled ? ['FR03'] : [])]
-      : ['P09', 'P10', 'P11', 'P17', ...(step.msg?.title?.key === 'timeline.bakeWhite.title' ? [] : ['P18'])] };
+      : ['P22', 'P09', 'P10', 'P11', 'P17', ...(step.msg?.title?.key === 'timeline.bakeWhite.title' ? [] : ['P18'])] };
   } else trouble = STEP_TROUBLE[step.id];
-  if (!trouble || (!context.coldRetard && !context.glutenFree)) return trouble;
+  if (!trouble) return trouble;
   return withoutIssues(trouble, (id) =>
+    (!context.peel && id === 'P22') ||
     (!!context.coldRetard && step.id === 'bulk' && id === 'P04') ||
     (!!context.glutenFree && GLUTEN_DEPENDENT_ISSUES.has(id)));
 }
 
+/* G4a-WP-05 (S11-B-11, D-G4a-4): «Qualcosa non va?» in cima a Impara, un
+ * problema per categoria (impasto, lievitazione, stesura, cottura). */
+export const QUICK_HELP_ISSUE_IDS = ["P01", "P04", "P07", "P09"] as const;
+
 /* === CATEGORY LABELS === */
 /* FW-13 (S13-B-12): niente emoji (letti dallo screen reader, resi diversi fra
- * piattaforme); le icone Lucide delle categorie vivono nella UI. */
+ * piattaforme); le icone Lucide delle categorie vivono nella UI.
+ * G4b-WP-03: le etichette delle fasi vivono solo nel CMS
+ * (troubleshootingI18n.categories, default italiano in domain-i18n-defaults). */
 /* FW-04 (S13-A-07, S13-B-05): le sigle e i termini che la scheda usa
  * (H%, P/L, LAB, finger dent, platea/cielo, W…) portano alla voce del
  * glossario. Il test term-link.test.ts verifica che ogni id esista. */
@@ -301,17 +341,28 @@ export const ISSUE_GLOSSARY_TERMS: Record<string, readonly string[]> = {
   P17: ["hydration"],
   P19: ["w_alveograph", "manitoba", "pl_ratio"],
   P21: ["q10"],
+  P22: ["semola_rimacinata"],
+  P23: ["ball_shaping", "hydration", "poke_test"],
+  P24: ["gluten_development"],
 };
 
-export const CATEGORY_LABELS: Record<string, { label: string }> = {
-  dough: { label: 'Impasto' },
-  fermentation: { label: 'Fermentazione' },
-  shaping: { label: 'Stesura' },
-  baking: { label: 'Cottura' },
-  frying: { label: 'Frittura' },
-  solver: { label: 'Algoritmo' },
-  false_positive: { label: 'Falsi allarmi' },
+/** G4b-WP-03: «Perché?» delle voci senza soglie numeriche (pratica comune). */
+export const ISSUE_SCIENCE_NOTES: Record<string, string> = {
+  P22: "troubleshooting-practice",
+  P23: "troubleshooting-practice",
+  P24: "troubleshooting-practice",
 };
+
+const SEVERITY_RANK = { critical: 0, warning: 1, info: 2 } as const;
+
+/** G4b-WP-03 (S13-A-16): gruppi per fase nell'ordine della preparazione,
+ *  critici in alto; gruppi vuoti esclusi, ordine stabile a pari severità. */
+export function groupIssuesByPhase<T extends Pick<TroubleshootingIssue, 'category' | 'severity'>>(issues: readonly T[]) {
+  return TROUBLESHOOTING_PHASE_ORDER
+    .map((phase) => ({ phase, issues: issues.filter((issue) => issue.category === phase)
+      .sort((a, b) => SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity]) }))
+    .filter((group) => group.issues.length > 0);
+}
 
 /* === i18n: LOCALIZED GETTERS === */
 
@@ -330,14 +381,14 @@ export function getLocalizedIssue(issue: TroubleshootingIssue, cms?: Troubleshoo
 }
 
 export function getLocalizedCategoryLabel(category: string, cms?: TroubleshootingMessageSource): string {
-  const loc = cms?.troubleshootingI18n?.categories?.[category];
-  if (loc) return loc;
-  return CATEGORY_LABELS[category]?.label ?? category;
+  return cms?.troubleshootingI18n?.categories?.[category] ?? category;
 }
 
 
 /* === CONTEXTUAL WARNINGS === */
-/* Genera avvisi contestuali basati sui parametri della ricetta */
+/* Genera avvisi contestuali basati sui parametri della ricetta.
+ * G4b-WP-03: i testi vengono solo dal CMS (default italiano in
+ * domain-i18n-defaults.ts); qui restavano copie italiane divergenti. */
 
 interface ContextualWarning {
   issueId: string;
@@ -364,121 +415,52 @@ export function getContextualWarnings(params: {
   style?: StyleThresholds;
 }, cms?: TroubleshootingMessageSource): ContextualWarning[] {
   const warnings: ContextualWarning[] = [];
-  const cmsCtx = cms?.troubleshootingI18n?.contextual;
   const style = params.style;
   const styleVars: Record<string, string> = style ? {
     hMin: String(style.hydrationPct[0]), hMax: String(style.hydrationPct[1]),
     wMin: String(style.flourW[0]), wMax: String(style.flourW[1]),
   } : {};
+  const add = (issueId: string, key: string, severity: ContextualWarning['severity'], vars: Record<string, string> = {}) => {
+    const loc = cms?.troubleshootingI18n?.contextual?.[key];
+    warnings.push({ issueId, severity, message: interpolate(loc?.message, vars), tip: interpolate(loc?.tip, styleVars) });
+  };
+  const h = String(params.hydration);
+  const w = String(params.flourW);
 
   /* Idratazione alta + W basso = rischio P01, ma non se farina e acqua sono
    * quelle dello stile (FW-05: la focaccia barese al 75% con W 250 è nel suo). */
   const inStyle = style
     && params.flourW >= style.flourW[0] && params.flourW <= style.flourW[1]
     && params.hydration <= style.hydrationPct[1];
-  if (style && params.hydration > 72 && params.flourW < 280 && !inStyle) {
-    const loc = cmsCtx?.sticky_dough;
-    warnings.push({
-      issueId: 'P01',
-      message: loc ? interpolate(loc.message, { h: String(params.hydration), w: String(params.flourW) })
-        : `Idratazione ${params.hydration}% con W ${params.flourW}: rischio impasto appiccicoso`,
-      tip: interpolate(loc?.tip ?? "Questo stile prevede W {wMin}–{wMax}: usa una farina in questa forbice oppure riduci un po' l'idratazione", styleVars),
-      severity: 'warning',
-    });
-  }
+  if (style && params.hydration > 72 && params.flourW < 280 && !inStyle) add('P01', 'sticky_dough', 'warning', { h, w });
 
   /* P/L alto = rischio P02/P07 */
-  if (params.flourPL > 0.75) {
-    const loc = cmsCtx?.high_pl;
-    warnings.push({
-      issueId: 'P02',
-      message: loc ? interpolate(loc.message, { pl: params.flourPL.toFixed(2) })
-        : `P/L ${params.flourPL.toFixed(2)} alto: possibile impasto troppo tenace`,
-      tip: loc?.tip ?? 'Prevedi autolisi 45min prima di aggiungere sale e lievito',
-      severity: 'info',
-    });
-  }
+  if (params.flourPL > 0.75) add('P02', 'high_pl', 'info', { pl: params.flourPL.toFixed(2) });
 
-  /* Fermentazione lunga + temperatura ambiente = rischio P06 */
-  if (params.fermentHours > 36 && params.fermentTemp > 18) {
-    const loc = cmsCtx?.sour_risk;
-    warnings.push({
-      issueId: 'P06',
-      message: loc ? interpolate(loc.message, { h: String(params.fermentHours), t: String(params.fermentTemp) })
-        : `${params.fermentHours}h a ${params.fermentTemp}°C: rischio sapore acido`,
-      // FW-05 (S13-A-03): come P06, nessuna soglia oraria universale nel consiglio.
-      tip: loc?.tip ?? "Se la cucina è calda, sposta parte della maturazione in frigo e controlla l'impasto più dell'orologio",
-      severity: 'warning',
-    });
-  }
+  /* Fermentazione lunga + temperatura ambiente = rischio P06.
+   * FW-05 (S13-A-03): come P06, nessuna soglia oraria universale nel consiglio. */
+  if (params.fermentHours > 36 && params.fermentTemp > 18) add('P06', 'sour_risk', 'warning', { h: String(params.fermentHours), t: String(params.fermentTemp) });
 
   /* Fermentazione breve = rischio P10 + D-Score basso */
-  if (params.fermentHours < 6) {
-    const loc = cmsCtx?.pale_crust;
-    warnings.push({
-      issueId: 'P10',
-      message: loc ? interpolate(loc.message, { h: String(params.fermentHours) })
-        : "Fermentazione breve: verifica lo sviluppo dell’impasto prima di proseguire.",
-      tip: loc?.tip ?? 'Controlla volume, elasticità e risposta alla pressione: le sole ore non attestano la digeribilità.',
-      severity: 'info',
-    });
-  }
+  if (params.fermentHours < 6) add('P10', 'pale_crust', 'info', { h: String(params.fermentHours) });
 
   /* Forno sotto la temperatura dello stile: crosta pallida (P10), non «base
    * cruda e bordo bruciato» (FW-05, S13-A-11/B-03). La soglia è quella dello stile. */
-  if (params.usesOven !== false && style && params.ovenTemp < style.ovenMinC) {
-    const loc = cmsCtx?.cold_oven;
-    warnings.push({
-      issueId: 'P10',
-      message: loc ? interpolate(loc.message, { t: String(params.ovenTemp) })
-        : `Forno a ${params.ovenTemp}°C, sotto la temperatura dello stile: rischio crosta pallida e pizza secca`,
-      tip: loc?.tip ?? 'Preriscalda a lungo pietra o acciaio e, se il forno ha il grill, usalo negli ultimi minuti',
-      severity: 'warning',
-    });
-  }
+  if (params.usesOven !== false && style && params.ovenTemp < style.ovenMinC) add('P10', 'cold_oven', 'warning', { t: String(params.ovenTemp) });
 
   /* Idratazione alta + principiante (skill-aware): solo skill 1 mostra warning a 70+
-   * Skill 2 (Intermedio) lo mostra solo se davvero estrema (>85). Skill 3/4 mai. */
-  const hydrationWarnThreshold = params.skillLevel === 1 ? 70 : 85;
-  /* FW-05 (S13-V-01): dentro la forbice dello stile non è un errore (la teglia
+   * Skill 2 (Intermedio) lo mostra solo se davvero estrema (>85). Skill 3/4 mai.
+   * FW-05 (S13-V-01): dentro la forbice dello stile non è un errore (la teglia
    * romana è al 75–85% anche per chi comincia); fuori, il consiglio è relativo. */
-  if (style && params.hydration > hydrationWarnThreshold && params.skillLevel <= 2 && params.hydration > style.hydrationPct[1]) {
-    const loc = cmsCtx?.beginner_hydration;
-    warnings.push({
-      issueId: 'P01',
-      message: loc ? interpolate(loc.message, { h: String(params.hydration) })
-        : params.skillLevel === 1
-          ? `Idratazione ${params.hydration}% è impegnativa per principianti`
-          : `Idratazione ${params.hydration}% è estrema, richiede pratica`,
-      tip: interpolate(loc?.tip ?? 'Questo stile prevede {hMin}–{hMax}%: se sei alle prime armi resta vicino a {hMin}%', styleVars),
-      severity: 'warning',
-    });
-  }
+  const hydrationWarnThreshold = params.skillLevel === 1 ? 70 : 85;
+  if (style && params.hydration > hydrationWarnThreshold && params.skillLevel <= 2 && params.hydration > style.hydrationPct[1]) add('P01', 'beginner_hydration', 'warning', { h });
 
   /* W molto oltre lo stile = difficile da stendere P19. Soglia della fattibilità
    * del motore (W massima dello stile × FLOUR_W_EXCESS_FACTOR), FW-05. */
-  if (style && params.flourW > style.flourWExcess) {
-    const loc = cmsCtx?.high_w;
-    warnings.push({
-      issueId: 'P19',
-      message: loc ? interpolate(loc.message, { w: String(params.flourW) })
-        : `W ${params.flourW} molto oltre quella dello stile: impasto difficile da stendere`,
-      tip: interpolate(loc?.tip ?? "Questo stile prevede W {wMin}–{wMax}: taglia con una farina più debole oppure prevedi un'autolisi lunga", styleVars),
-      severity: 'warning',
-    });
-  }
+  if (style && params.flourW > style.flourWExcess) add('P19', 'high_w', 'warning', { w });
 
   /* Fermentazione fredda molto lunga senza pre-fermento */
-  if (params.fermentHours > 48 && params.fermentTemp <= 4 && !params.usePreFerment) {
-    const loc = cmsCtx?.flat_long_ferment;
-    warnings.push({
-      issueId: 'P06',
-      message: loc ? interpolate(loc.message, { h: String(params.fermentHours) })
-        : `${params.fermentHours}h in frigo senza prefermento: possibile sapore piatto`,
-      tip: loc?.tip ?? 'Aggiungi un prefermento (poolish o biga) per complessita aromatica',
-      severity: 'info',
-    });
-  }
+  if (params.fermentHours > 48 && params.fermentTemp <= 4 && !params.usePreFerment) add('P06', 'flat_long_ferment', 'info', { h: String(params.fermentHours) });
 
   return warnings;
 }

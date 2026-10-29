@@ -16,6 +16,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useCms } from "../cms/cms-context";
@@ -23,16 +24,22 @@ import { formatClock, formatRelative } from "../../i18n/format";
 import { t } from "../cms/i18n";
 import type { StepVisual } from "./step-visual";
 import { showReminder, truncateAtWord } from "../../adapters/browser/cook-reminders";
+import { createCookAlert, readCookAlerts, writeCookAlerts, type CookAlertKind } from "../../adapters/browser/cook-alert";
+import { uiMessage } from "../../i18n/ui-messages";
 import type { PredictedScores, RecipeSnapshot } from "../../domain/recipe-feedback";
 import type { TimelineStep } from "../../domain/pizza-engine";
+import type { StepTroubleshooting } from "../../data/troubleshooting-data";
 import {
   FLEXIBLE_STEP_IDS,
   TIMED_WAIT_STEP_IDS,
+  activeStepTimeUp,
   completeStepAt,
   startStepAt,
 } from "../../use-cases/cook-timing";
 
 const STORAGE_KEY = "vulcan_cook_session";
+/** G4a-WP-02: un segnale arrivato in ritardo (app riaperta dopo ore) non suona più. */
+const SIGNAL_STALE_MS = 5 * 60_000;
 
 /* Fasi "flessibili": lunghe attese passive dove ±minuti non cambiano nulla.
  * Le altre sono azioni attive con le mani in pasta. FW-19: l'elenco vive nel
@@ -53,6 +60,9 @@ export interface CookSessionStep {
   startMs: number;
   endMs: number;
   flexible: boolean;
+  /** Fase in frigo (isColdPhase): sceglie il criterio di prontezza.
+   *  Opzionale: le sessioni già salvate restano valide. */
+  cold?: boolean;
   done: boolean;
   /** FW-19 (S10-B-05, S10-A-02): quando l'utente ha davvero cominciato il passo. */
   actualStartMs?: number;
@@ -64,6 +74,9 @@ export interface CookSessionStep {
    *  decidono i testi del timer per giro. */
   turns?: number;
   variant?: TimelineStep["variant"];
+  /** G4b-WP-01 (S13-B-09): problemi della fase, risolti alla partenza.
+   *  Opzionale: le sessioni già salvate restano valide. */
+  trouble?: StepTroubleshooting;
 }
 
 /** FW-16 (D-M, S10-B-07): parametri della ricetta cucinata, per chiedere
@@ -127,6 +140,22 @@ export function nextActionTime(step: CookSessionStep): number {
   return stepIsWaiting(step) ? step.endMs : step.startMs;
 }
 
+/** S10-B-11: passi (orari compresi) e notifiche prima di un completamento,
+ *  per annullarlo. Copia profonda: la sessione successiva non la tocca. */
+export interface CookUndoSnapshot {
+  steps: CookSessionStep[];
+  notified: string[];
+}
+
+export function takeCookSnapshot(s: Pick<CookSession, "steps" | "notified">): CookUndoSnapshot {
+  return JSON.parse(JSON.stringify({ steps: s.steps, notified: s.notified }));
+}
+
+/** «Annulla»: la sessione torna com'era nella fotografia. */
+export function applyCookSnapshot<S extends CookUndoSnapshot>(s: S, snap: CookUndoSnapshot): S {
+  return { ...s, ...takeCookSnapshot(snap) };
+}
+
 /* ── Context ── */
 interface CookSessionCtx {
   session: CookSession | null;
@@ -142,14 +171,22 @@ interface CookSessionCtx {
   /** FW-19 (S10-A-01, S10-A-02, S10-B-05): il passo comincia adesso; il resto
    *  del piano slitta con le durate pianificate. */
   startStep: (index: number) => void;
-  setStepDone: (index: number, done: boolean) => void;
   /** Completa lo step corrente RI-ANCORANDO i tempi successivi a adesso:
    * se finisci l'impasto in ritardo, tutto il resto slitta di conseguenza;
    * se salti un'attesa in anticipo, il piano si accorcia. La timeline segue
    * la realtà, non il contrario. */
   completeStep: (index: number) => void;
+  /** S10-B-11: fotografia da prendere PRIMA di completeStep… */
+  snapshot: () => CookUndoSnapshot | null;
+  /** …e da rimettere con «Annulla»: passi, orari e notifiche come prima
+   *  (le notifiche segnate dopo tornano in coda). */
+  restore: (snap: CookUndoSnapshot) => void;
   openOverlay: () => void;
   closeOverlay: () => void;
+  /** G4a-WP-02 (S10-B-04, D-G4a-3): suono e vibrazione alla fine delle fasi. */
+  alertsOn: boolean;
+  setAlertsOn: (on: boolean) => void;
+  signal: (kind: CookAlertKind) => void;
 }
 
 const Ctx = createContext<CookSessionCtx | null>(null);
@@ -168,6 +205,8 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
   const { cms, bcp47 } = useCms();
   const [session, setSession] = useState<CookSession | null>(loadSession);
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const sessionRef = useRef(session);
+  sessionRef.current = session;
 
   const persist = useCallback((s: CookSession | null) => {
     setSession(s);
@@ -196,19 +235,6 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
     setOverlayOpen(false);
   }, [persist]);
 
-  const setStepDone = useCallback(
-    (index: number, done: boolean) => {
-      setSession((prev) => {
-        if (!prev) return prev;
-        const steps = prev.steps.map((st, i) => (i === index ? { ...st, done } : st));
-        const next = { ...prev, steps };
-        storeSession(next);
-        return next;
-      });
-    },
-    [],
-  );
-
   /* FW-19: il ri-ancoraggio è quello del piano unico (use-cases/cook-timing.ts):
      le durate sono quelle pianificate, estensioni comprese (S10-A-03). */
   const completeStep = useCallback((index: number) => {
@@ -229,14 +255,64 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
     });
   }, []);
 
+  const snapshot = useCallback(
+    () => (sessionRef.current ? takeCookSnapshot(sessionRef.current) : null),
+    [],
+  );
+
+  const restore = useCallback((snap: CookUndoSnapshot) => {
+    setSession((prev) => {
+      if (!prev) return prev;
+      const next = applyCookSnapshot(prev, snap);
+      storeSession(next);
+      return next;
+    });
+  }, []);
+
+  /* G4a-WP-02 (S10-B-04): un solo segnale per la sessione; l'interruttore
+     dell'header lo spegne. Acceso, suona subito: si sente com'è e Safari
+     sblocca l'audio nel gesto. */
+  const [alertsOn, setAlertsOnState] = useState(readCookAlerts);
+  const alertsOnRef = useRef(alertsOn);
+  alertsOnRef.current = alertsOn;
+  const [cookAlert] = useState(() => createCookAlert({ sound: true, vibrate: true }));
+  const signal = useCallback((kind: CookAlertKind) => {
+    if (alertsOnRef.current) cookAlert.signal(kind);
+  }, [cookAlert]);
+  const setAlertsOn = useCallback((on: boolean) => {
+    writeCookAlerts(on);
+    setAlertsOnState(on);
+    alertsOnRef.current = on;
+    signal("start");
+  }, [signal]);
+  const hasSession = !!session;
+  useEffect(() => {
+    if (!hasSession) return;
+    const prime = () => { if (alertsOnRef.current) cookAlert.prime(); };
+    document.addEventListener("pointerdown", prime);
+    return () => document.removeEventListener("pointerdown", prime);
+  }, [hasSession, cookAlert]);
+
   const openOverlay = useCallback(() => setOverlayOpen(true), []);
   const closeOverlay = useCallback(() => setOverlayOpen(false), []);
 
   /* ── Tick: notifiche quando arriva il MOMENTO DI AGIRE ──
    * Fase attiva → quando inizia. Fase flessibile (attesa) → quando FINISCE:
-   * l'attesa scorre da sola, tocca a te solo alla fine. */
+   * l'attesa scorre da sola, tocca a te solo alla fine.
+   * G4a-WP-02 (S10-B-04): un passo attivo cronometrato avvisa anche alla sua
+   * fine (chiave «:end»), con suono e vibrazione; le attese suonano quando
+   * scadono. */
   useEffect(() => {
     if (!session) return;
+    const mark = (key: string) =>
+      setSession((prev) => {
+        if (!prev || prev.notified.includes(key)) return prev;
+        const next = { ...prev, notified: [...prev.notified, key] };
+        storeSession(next);
+        return next;
+      });
+    const body = (description: string) =>
+      t(cms.cooking.notificationBody, { style: session.styleName, description: truncateAtWord(description, 90) });
     const check = () => {
       const now = Date.now();
       const idx = currentStepIndex(session);
@@ -253,28 +329,24 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
               title: nextStep ? nextStep.title : cms.cooking.continueAction,
             })
           : t(cms.cooking.notificationDueTitle, { title: step.title });
-        const description = truncateAtWord(waiting && nextStep
-          ? nextStep.description
-          : step.description, 90);
-        void showReminder(
-          title,
-          t(cms.cooking.notificationBody, {
-            style: session.styleName,
-            description,
-          }),
-        );
-        setSession((prev) => {
-          if (!prev) return prev;
-          const next = { ...prev, notified: [...prev.notified, noticeKey] };
-          storeSession(next);
-          return next;
-        });
+        void showReminder(title, body(waiting && nextStep ? nextStep.description : step.description));
+        /* Suona un'attesa finita, non un passo attivo che parte col «Fatto» del precedente. */
+        if (waiting && now - actionAt < SIGNAL_STALE_MS) signal("end");
+        mark(noticeKey);
+      }
+      const endKey = `${step.id}${idx}:end`;
+      if (activeStepTimeUp(step, waiting, now) && !session.notified.includes(endKey)) {
+        void showReminder(uiMessage("cooking.notify.timeUp", [step.title]), body(step.description));
+        if (now - step.endMs < SIGNAL_STALE_MS) signal("end");
+        mark(endKey);
       }
     };
     check();
-    const interval = setInterval(check, 20_000);
+    /* Ogni 2 s, non 20: una cottura da 75 s non può aspettare il giro. Il
+       controllo costa pochi confronti; scrive solo quando c'è da avvisare. */
+    const interval = setInterval(check, 2_000);
     return () => clearInterval(interval);
-  }, [session, cms.cooking]);
+  }, [session, cms.cooking, signal]);
 
   /* ── Countdown nel titolo del tab quando in background ── */
   useEffect(() => {
@@ -314,12 +386,16 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
       startSession,
       endSession,
       startStep,
-      setStepDone,
       completeStep,
+      snapshot,
+      restore,
       openOverlay,
       closeOverlay,
+      alertsOn,
+      setAlertsOn,
+      signal,
     }),
-    [session, overlayOpen, startSession, endSession, startStep, setStepDone, completeStep, openOverlay, closeOverlay],
+    [session, overlayOpen, startSession, endSession, startStep, completeStep, snapshot, restore, openOverlay, closeOverlay, alertsOn, setAlertsOn, signal],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

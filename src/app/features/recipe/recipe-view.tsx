@@ -314,7 +314,7 @@ export function RecipeView({
     const conceptName = resolvedTopping ? toppingConcept(resolvedTopping.concept_ref, cms.toppingI18n)?.name : undefined;
     const recipeName = resolvedTopping ? (resolvedTopping as any).name : undefined;
     
-    return recipeName || conceptName || resolvedTopping?.variant_name || (cms.cooking.toppingTitle ?? "Condimento");
+    return recipeName || conceptName || resolvedTopping?.variant_name || cms.cooking.toppingTitle;
   }, [selectedToppingConcept, style, toppingChoices, allToppingChoices, cms.cooking.toppingTitle]);
 
   const preFermentText = recipe.has_pre_ferment
@@ -363,7 +363,7 @@ export function RecipeView({
   return (
     <div className="recipe-view" data-page="recipe">
       {/* Sfondo caldo base. Il glow PizzaNerd vive solo nei blocchi tecnici. */}
-      <FireGlow variant="warm" intensity={0.22} />
+      <FireGlow intensity={0.22} />
 
       {/* Sticky header or Floating back button */}
       {showStickyHeader ? (

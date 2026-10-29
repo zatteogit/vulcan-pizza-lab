@@ -92,9 +92,17 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       segnalibro, con «Annulla»); WP-03 timeline.mix.hands.descHighHydration,
  *       timeline.topping.basilThreshold, tipNerd con {pct}, bulk.longDesc;
  *       WP-05 passi del procedimento all'imperativo.
+ *  44 → integrazione G4 (ondata 3), voci del ramo G4:
+ *     37 → G4a-WP-02: tolto cooking.minimizeHint (il «riduci» dell'header non
+ *     ha più title=; resta l'aria-label cooking.minimize).
+ *     40 → G4b-WP-02: passi «Come si fa» e esempio su 1 kg nella guida ai
+ *     prefermenti (preFerment.steps, stepsLabel, example*), nota
+ *     pre-ferment-procedure.
+ *     41 → G4b-WP-03: problemi P22–P24 (pala, panetto che si allarga, buchi in
+ *     stesura), nota troubleshooting-practice, tolta la categoria «solver».
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 43;
+export const LOCALE_BUNDLE_REV = 44;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

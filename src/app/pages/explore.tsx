@@ -345,7 +345,7 @@ export function ExplorePage() {
       {/* Glow sempre attivo (feedback: "rendiamolo evidente in entrambi i mode",
           non solo nerd). Un filo più intenso fuori dalla modalità nerd così
           emerge anche su light, dove il warm si legge meno che su dark. */}
-      <FireGlow intensity={isNerd ? 0.3 : 0.36} variant="warm" />
+      <FireGlow intensity={isNerd ? 0.3 : 0.36} />
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}

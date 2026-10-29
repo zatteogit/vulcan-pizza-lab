@@ -22,6 +22,11 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
   /* FW-05 */
   techniqueLabel: "Technik",
   recipeContextLine: "In diesem Rezept: {yeast} Hefe auf {flour} Vorteigmehl ({pct}). Die gesamte Hefe des Teigs kommt in den Vorteig und ist auf die Gesamtstunden des Rezepts berechnet, nicht nur auf die des Vorteigs.",
+  /* G4b-WP-02 */
+  stepsLabel: "So geht's",
+  exampleLabel: "Beispiel mit {flour} Mehl, Teig mit {hydration}",
+  examplePreFerment: "{name}: {flour} Mehl, {water} Wasser und die Hefe, etwa {yeast} seines Mehls",
+  exampleFinal: "Hauptteig: {flour} Mehl, {water} Wasser und das Salz",
   compLabels: [
     "Hydratation",
     "Frischhefe (bezogen auf das Vorteigmehl)",
@@ -42,6 +47,12 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
       crustResult:
         "Dünn und goldbraun; Farbe und Flecken hängen von Ofen und Temperatur ab",
       extensibility: "Hoch (Schätzung): leicht zu dehnen",
+      steps: [
+        "Mische Mehl und Wasser zu gleichen Teilen mit der Hefe zu einem glatten Brei.",
+        "Abdecken und etwa {poolishHours} bei {poolishTemp} reifen lassen: Er ist fertig, wenn er voller Blasen ist und die Mitte einzusinken beginnt.",
+        "Im Hauptteig löst du den Poolish im restlichen Wasser auf und gibst dann das übrige Mehl dazu.",
+        "Gib Salz und Fett erst jetzt dazu, nie in den Poolish.",
+      ],
       tips: [
         "Fertig, wenn die Oberfläche voller Bläschen ist und die Mitte einzusinken beginnt",
         "Mehr Hefe, weniger Stunden: bei 20–22 °C 0,1 % für 15–16 h, 0,3 % für 10–12 h",
@@ -58,6 +69,12 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
       crustResult: "Knusprig; die Struktur hängt von Hydration und Formen ab",
       extensibility:
         "Hängt von Mehl und Hydration ab (noch zu prüfen)",
+      steps: [
+        "Mische Mehl, Wasser und Hefe nur kurz: Die Biga soll klumpig bleiben, nicht glatt.",
+        "Abdecken und etwa {bigaHours} bei {bigaTemp} reifen lassen.",
+        "Im Hauptteig zerteilst du sie im restlichen Wasser und gibst dann das übrige Mehl dazu.",
+        "Gib das Salz erst jetzt dazu, nie in die Biga.",
+      ],
       tips: [
         "Fertig, wenn sie stellenweise aufgegangen ist, nach Joghurt riecht und leicht prickelt; schmeckt sie sauer, ist sie zu weit",
         "Lange Biga: 24 h bei 4–5 °C, dann 24 h bei 18–20 °C",
@@ -79,6 +96,11 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
       extensibility:
         "Hoch \u2014 seidiger, weniger klebriger Teig",
       idealStyles: "Alle Stile (universelle Technik)",
+      steps: [
+        "Mische nur Mehl und Wasser, ohne Hefe und Salz.",
+        "{autolysisRest} ruhen lassen.",
+        "Dann die Hefe (oder den Vorteig) und ganz zum Schluss das Salz dazugeben.",
+      ],
       tips: [
         "20–60 Minuten ruhen lassen; Hefe und Salz kommen danach dazu",
         "Lässt sich mit Biga oder Poolish kombinieren",
@@ -129,7 +151,6 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
       fermentation: "G\u00E4rung",
       shaping: "Formen",
       baking: "Backen",
-      solver: "Algorithmus",
       false_positive: "Fehlalarme",
     },
     issues: {
@@ -307,6 +328,27 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         testRapido: "Gleicher Stil, gleiche Hefemenge: Geht der Teig jedes Mal deutlich anders auf?",
         fixImmediate: "Stell den Teig ins unterste/mittlere Fach (am stabilsten) und beurteile den Teigling mit dem Auge, nicht nur nach der Uhr",
         prevention: "Temperatur am genutzten Fach messen und Teigreife beobachten. Zucker gleicht Kühlschwankungen nicht aus.",
+      },
+      P22: {
+        symptom: "Die Pizza klebt am Schieber",
+        cause: "Feuchter Teig direkt auf dem Schieber, eine belegte Pizza, die auf dem Schieber liegen bleibt, oder ein Schieber ohne Mehl oder Hartweizengrieß",
+        testRapido: "Rüttle den Schieber vor dem Einschießen leicht: Rutscht die Pizza?",
+        fixImmediate: "Heb den Rand an, puste darunter oder streu etwas Hartweizengrieß darunter und rüttle vor dem Einschießen noch einmal",
+        prevention: "Bemehl den Schieber, beleg die Pizza zügig direkt darauf und schieß sie sofort ein, ohne sie liegen zu lassen",
+      },
+      P23: {
+        symptom: "Der Teigling läuft breit und hält seine Form nicht",
+        cause: "Mehr Wasser, als das Mehl halten kann, zu weit gegangene Gare, eine warme Küche oder zu locker geformte Teiglinge",
+        testRapido: "Wird der Teigling früher als erwartet flach, und bleibt die Delle stehen, wenn du hineindrückst?",
+        fixImmediate: "Zieh ihn sofort mit wenig Mehl auf der Arbeitsfläche aus; versuch nicht, ihn neu zu formen",
+        prevention: "Forme die Teiglinge straffer und halte dich an Hydration und Zeiten des Rezepts; ist die Küche warm, prüf den Teig früher",
+      },
+      P24: {
+        symptom: "Beim Ausziehen reißt ein Loch",
+        cause: "Mitte zu dünn gezogen, Gluten wenig entwickelt, Teig noch kalt aus dem Kühlschrank oder übergärt",
+        testRapido: "Reißt das Loch in der Mitte, während der Rand noch dick ist?",
+        fixImmediate: "Drück die Ränder des Lochs zusammen; reißt es wieder auf, deck den Fladen ab und lass ihn ein paar Minuten ruhen",
+        prevention: "Schieb den Teig von der Mitte zum Rand und mach die Mitte nicht zu dünn; nimm die Teiglinge rechtzeitig aus dem Kühlschrank",
       },
     },
     contextual: {
@@ -703,6 +745,11 @@ export const SCIENCE_DE: CmsScience = {
       l1: "Hydration, Stunden und Temperaturen stammen aus übereinstimmenden Fachquellen.",
       l2: "Biga ist ein fester Vorteig, der langsam im Kühlen reift; Poolish ist flüssig und reift schneller. Kruste und Krume hängen vor allem von Ofen, Hydration und Formen ab, nicht vom Vorteig allein.",
     },
+    "pre-ferment-procedure": {
+      title: "Wie man sie ansetzt",
+      l1: "Die Schritte sind eine Wahl von {brand}; Stunden und Temperaturen kommen aus dem Rechenmodell.",
+      l2: "Die gelesenen Quellen nennen Hydration, Stunden, Temperaturen und Reifezeichen, nicht die Art des Mischens. Klumpige Biga, glatter Poolish, Vorteig im restlichen Wasser aufgelöst und Salz nur im Hauptteig sind die übliche Praxis, die {brand} zeigt: Salz bremst die Hefen, deshalb bleibt es aus dem Vorteig.",
+    },
     autolysis: {
       title: "Autolyse",
       l1: "Mehl und Wasser ruhen ohne Hefe und Salz vor dem Kneten.",
@@ -828,6 +875,11 @@ export const SCIENCE_DE: CmsScience = {
       title: "Schwellen bei Problemen",
       l1: "Die Zahlenschwellen bei den Problemen sind Richtwerte.",
       l2: "Es sind Faustregeln ohne veröffentlichte Quelle, und sie berücksichtigen den Stil nicht: Ein Blechteig ist zum Beispiel viel feuchter als ein neapolitanischer. Nutze sie als Hinweis, nicht als Diagnose.",
+    },
+    "troubleshooting-practice": {
+      title: "Praktische Tipps",
+      l1: "Schieber, breitlaufende Teiglinge und Löcher beim Ausziehen: Die Abhilfen sind gängige Praxis, die {brand} gewählt hat, keine Messungen.",
+      l2: "Für diese Tipps haben wir keine veröffentlichte Quelle, und sie enthalten keine Zahlenschwellen: Sie sagen, worauf du achten und was du sofort tun kannst. Wenn das Rezept Zeiten, Hydration oder Mehl angibt, gelten diese.",
     },
     /* FW-19: piano temporale. */
     "comfort-tolerances": {

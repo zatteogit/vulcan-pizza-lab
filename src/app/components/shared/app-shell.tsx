@@ -472,20 +472,24 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
 function CookSessionUI({
   canStartRecipe,
   hasProfileButton,
-  showAction,
+  showAction: showActionOutside,
+  profilePage,
   compact,
 }: {
   canStartRecipe: boolean;
   hasProfileButton: boolean;
   showAction: boolean;
+  /** G4a-WP-02 (S10-B-25): sul Profilo il widget c'è solo con una pizzata attiva. */
+  profilePage: boolean;
   compact: boolean;
 }) {
   const { session, overlayOpen } = useCookSession();
+  const showAction = showActionOutside && (!profilePage || !!session);
   return (
     <>
       {/* FW-13: la posizione accanto al profilo è una classe con token. */}
       <div
-        className={`cook-actions${hasProfileButton ? " cook-actions--beside-profile" : ""}${compact ? " cook-actions--compact" : ""}`}
+        className={`cook-actions${hasProfileButton ? " cook-actions--beside-profile" : ""}${profilePage ? " cook-actions--beside-close" : ""}${compact ? " cook-actions--compact" : ""}`}
         hidden={!showAction || overlayOpen}
       >
         {showAction && (
@@ -725,7 +729,8 @@ export function AppShell({ isNotFoundPath }: { isNotFoundPath?: (pathname: strin
   }, []);
   const showNav = !isToolPage && !isRecipePage && !isProfilePage && !hideNavbar;
   /* La ricetta di Crea nasconde la navigazione ma si cucina (audit n. 13). */
-  const showCookAction = !isToolPage && !isProfilePage && (!hideNavbar || cookAvailable);
+  /* G4a-WP-02 (S10-B-25): sul Profilo solo con una pizzata attiva (CookSessionUI). */
+  const showCookAction = !isToolPage && (!hideNavbar || cookAvailable);
   const hasProfileButton = showNav && activeTab !== "profile" && !searchOpen;
   /* Il campo sta nel dock solo dove il dock c'è (mobile, pagine con i tab);
      altrove la pagina dei risultati ha il suo. */
@@ -769,6 +774,7 @@ export function AppShell({ isNotFoundPath }: { isNotFoundPath?: (pathname: strin
             canStartRecipe={cookAvailable}
             hasProfileButton={hasProfileButton}
             showAction={showCookAction && !searchOpen}
+            profilePage={isProfilePage}
             compact={navState.scrolled}
           />
 

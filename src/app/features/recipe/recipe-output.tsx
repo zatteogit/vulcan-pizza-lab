@@ -11,8 +11,10 @@ import { ProcedureTimeline } from "./procedure-timeline";
 import { addMinutes, localizeStep, stepQuantities,
   startForDeadline, readyTimeForDisplay, getServingUnitLabel, toppingSectionLabel, rule55DescriptionText } from "./recipe-output-format";
 import { defaultMealStart, nightActions, optimizeComfort, recipeFingerprint } from "../../use-cases/cook-plan";
+import { isColdPhase } from "../../use-cases/cook-timing";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
+import { PreCookSummary, startBlockedText } from "./pre-cook-summary";
 import { PrintSheet, type PrintSections } from "./print-sheet";
 import { Checkbox } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -20,6 +22,8 @@ import { saveYeastSpeedFactor } from "../../adapters/browser/yeast-speed-storage
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
 import { resolveStepVisual } from "../cooking/step-visual";
+import { getStepTroubleshooting } from "../../data/troubleshooting-data";
+import { stepTroubleContext } from "./step-trouble-context";
 import type { FlourEntry } from "../../data/flour-database";
 import { GeneratedRecipe, generateTimeSlots, getServingUnit, normalizeDoughBallCount, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
 import { feedbackContextFromRecipe } from "./feedback-context";
@@ -357,9 +361,11 @@ export function RecipeOutput({
   const conflictingSession =
     hasActiveSession && session?.styleId !== recipe.style.id;
   const cookingSteps: Omit<CookSessionStep, "done">[] = React.useMemo(
-    () =>
-      recipe.timeline.map((step, i) => {
+    () => {
+      const troubleContext = stepTroubleContext(recipe);
+      return recipe.timeline.map((step, i) => {
         const loc = localizeStep(step, recipe, cms, fmt);
+        const trouble = getStepTroubleshooting(step, troubleContext);
         return {
           id: step.id,
           visual: resolveStepVisual(step, { unleavened: !!recipe.style.dough.unleavened }),
@@ -374,6 +380,7 @@ export function RecipeOutput({
           startMs: (stepTimes[i]?.start ?? startTime).getTime(),
           endMs: (stepTimes[i]?.end ?? startTime).getTime(),
           flexible: FLEXIBLE_STEP_IDS.has(step.id),
+          ...(isColdPhase(step.id, recipe.fermentation_temp_c) ? { cold: true } : {}),
           ...(step.rounds && step.round_seconds
             ? {
                 rounds: step.rounds,
@@ -383,8 +390,10 @@ export function RecipeOutput({
                 ...(step.variant ? { variant: step.variant } : {}),
               }
             : {}),
+          ...(trouble ? { trouble } : {}),
         };
-      }),
+      });
+    },
     [recipe, cms, isNerd, stepTimes, startTime, activeTopping, effDuration],
   );
   /* FW-19 (S10-B-21): impronta di ciò che si cucina (passi, testi, dosi e
@@ -399,19 +408,28 @@ export function RecipeOutput({
      - stessa ricetta già in corso → riapri la modalità cucina
      - altra ricetta in corso → chiedi conferma (sovrascrive)
      - nessuna sessione → parti subito */
+  const blocked = recipe.verdict.outcome === "not_feasible";
+  const confirmStartCooking = React.useCallback(() => {
+    if (blocked) return;
+    setConfirmReplace(false);
+    setConfirmPersonalize(false);
+    setConfirmChanged(false);
+    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level), recipeKey);
+  }, [startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, blocked, cookingSteps, recipeKey]);
+
   const handleStartCooking = React.useCallback(() => {
-    if (recipe.verdict.outcome === "not_feasible" && !isThisSession) return;
     if (isThisSession) {
       if (session?.recipeKey && session.recipeKey !== recipeKey) setConfirmChanged(true);
       else openOverlay();
-    } else if (!isPersonalized) {
+    } else if (!isPersonalized || blocked) {
+      /* G4a-WP-03 (S10-A-20): anche non fattibile «Inizia» risponde, col motivo. */
       setConfirmPersonalize(true);
     } else if (conflictingSession) {
       setConfirmReplace(true);
     } else {
-      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level), recipeKey);
+      confirmStartCooking();
     }
-  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps, session?.recipeKey, recipeKey]);
+  }, [isThisSession, isPersonalized, blocked, conflictingSession, openOverlay, confirmStartCooking, session?.recipeKey, recipeKey]);
 
   React.useEffect(() => {
     const handler = () => handleStartCooking();
@@ -420,21 +438,14 @@ export function RecipeOutput({
   }, [handleStartCooking]);
 
   /* Audit totale n. 13: la ricetta di Crea si può cucinare come quella di
-     Scopri. La shell mostra «Inizia» finché c'è una ricetta sullo schermo. */
+     Scopri. La shell mostra «Inizia» finché c'è una ricetta sullo schermo,
+     anche non fattibile: il dialog dice perché non parte (G4a-WP-03). */
   React.useEffect(() => {
-    window.dispatchEvent(new CustomEvent("vulcan:cook-available", { detail: recipe.verdict.outcome !== "not_feasible" }));
+    window.dispatchEvent(new CustomEvent("vulcan:cook-available", { detail: true }));
     return () => {
       window.dispatchEvent(new CustomEvent("vulcan:cook-available", { detail: false }));
     };
-  }, [recipe.verdict.outcome]);
-
-  const confirmStartCooking = React.useCallback(() => {
-    if (recipe.verdict.outcome === "not_feasible") return;
-    setConfirmReplace(false);
-    setConfirmPersonalize(false);
-    setConfirmChanged(false);
-    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level), recipeKey);
-  }, [startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps, recipeKey]);
+  }, []);
 
   const handlePersonalizeBeforeCooking = React.useCallback(() => {
     setConfirmPersonalize(false);
@@ -668,17 +679,22 @@ export function RecipeOutput({
         ]}
       />
 
-      {/* ── Promemoria: la ricetta canonica non è ancora adattata ── */}
+      {/* ── Prima di iniziare: il riferimento non è adattato (condizioni e
+          orari, G4a-WP-03), oppure la ricetta non si può fare (motivo). ── */}
       <ConfirmDialog
         open={confirmPersonalize}
         onDismiss={() => setConfirmPersonalize(false)}
-        ariaLabel={cms.cooking.notPersonalizedAria}
+        ariaLabel={cms.cooking.preCookTitle}
         icon={<Flame size={26} />}
         emphasis="brand"
         size="md"
         title={cms.cooking.preCookTitle}
-        body={cms.cooking.preCookBody}
-        actions={[
+        body={confirmPersonalize && blocked ? startBlockedText(recipe, cms, bcp47) : cms.cooking.preCookBody}
+        initialFocusAction={blocked ? 1 : undefined}
+        actions={blocked ? [
+          { label: cms.cooking.startShort, onClick: confirmStartCooking, variant: "primary", disabled: true },
+          { label: cms.ui.close, onClick: () => setConfirmPersonalize(false), variant: "secondary" },
+        ] : [
           ...(onRequestPersonalization
             ? [
                 {
@@ -694,7 +710,11 @@ export function RecipeOutput({
             variant: "secondary" as const,
           },
         ]}
-      />
+      >
+        {confirmPersonalize && !blocked && (
+          <PreCookSummary recipe={recipe} steps={cookingSteps} approximateEnd={hasFlexiblePhases && !preciseEndTime} cms={cms} bcp47={bcp47} />
+        )}
+      </ConfirmDialog>
 
       {/* ── Contesto: questa ricetta è SU MISURA, non quella canonica ──
           (feedback giugno 2026: "non è chiaro che parametri e punteggio si
@@ -789,7 +809,7 @@ export function RecipeOutput({
       <div className="recipe-output-ingredients" data-slot="recipe-main">
         {/* FW-10 (S07-B-05): sotto un esito non fattibile la ricetta più vicina
             resta consultabile, ma lo dice in testa agli ingredienti. */}
-        {matchSlot && recipe.verdict.outcome === "not_feasible" && (
+        {matchSlot && blocked && (
           <p className="type-body-sm recipe-output-blocked-note" role="note">{cms.ui.verdictRecipeBelow}</p>
         )}
         <IngredientsSection

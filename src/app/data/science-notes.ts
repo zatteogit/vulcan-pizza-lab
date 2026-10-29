@@ -116,6 +116,15 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     glossaryTermId: "biga",
   },
   {
+    // G4b-WP-02 (S14-B-07, D-G4b-1 A): i passi «Come si fa» sono una scelta di
+    // Vulcan; le fonti coprono ore, temperature e maturazione, non l'impasto.
+    id: "pre-ferment-procedure",
+    kind: "editorial",
+    sourceIds: ["king-arthur-preferment", "dissapore-biga-2020", "king-arthur-autolyse-2017"],
+    engineRef: "PRE_FERMENT_TARGET_HOURS, PRE_FERMENT_TEMP_C, AUTOLYSIS_REST_MIN",
+    glossaryTermId: "pre_ferment",
+  },
+  {
     id: "autolysis",
     kind: "exact",
     sourceIds: ["king-arthur-autolyse-2017"],
@@ -378,6 +387,14 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     assumptionIds: ["thresholds-rules-of-thumb"],
     sourceIds: ["vulcan-notion-db"],
     uncertainty: { displayDecimals: 0 },
+    engineRef: "ISSUES_DB",
+  },
+  {
+    // G4b-WP-03 (S13-A-10, D-G4b-2 A): pala, panetto che si allarga e buchi
+    // in stesura sono pratica comune, senza fonte e senza soglie numeriche.
+    id: "troubleshooting-practice",
+    kind: "editorial",
+    sourceIds: [],
     engineRef: "ISSUES_DB",
   },
 ];

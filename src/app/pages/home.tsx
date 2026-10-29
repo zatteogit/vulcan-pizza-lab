@@ -1530,8 +1530,7 @@ export function HomePage() {
                         <Sparkles size={15} />
                         <span className="home-feedback-panel__header-text">
                           {tpl(
-                            cms.cooking.learnedFromAttempts ??
-                              "Ho imparato dai tuoi {n} tentativi",
+                            cms.cooking.learnedFromAttempts,
                             { n: feedbackCorrection.sampleSize },
                           )}
                         </span>
@@ -1551,7 +1550,7 @@ export function HomePage() {
                           className="home-feedback-panel__cta"
                         >
                           <Sparkles size={14} />{" "}
-                          {cms.cooking.applyCorrections ?? uiMessage("pages.home.applyCorrections")}
+                          {cms.cooking.applyCorrections}
                         </button>
                       )}
                     </div>
@@ -1638,12 +1637,11 @@ export function HomePage() {
       <ConfirmDialog
         open={exitConfirm}
         onDismiss={() => setExitConfirm(false)}
-        ariaLabel={cms.cooking.unsavedTitle ?? uiMessage("shared.unsavedChanges")}
+        ariaLabel={cms.cooking.unsavedTitle}
         icon={<Bookmark size={26} />}
-        title={cms.cooking.unsavedTitle ?? uiMessage("shared.unsavedChanges")}
+        title={cms.cooking.unsavedTitle}
         body={tpl(
-          cms.cooking.unsavedBody ??
-            "Se esci ora, la tua versione di {style} andrà persa. Vuoi salvarla nel ricettario?",
+          cms.cooking.unsavedBody,
           { style: selectedStyle?.name ?? "" },
         )}
         actions={[
@@ -1656,7 +1654,7 @@ export function HomePage() {
             variant: "cta",
           },
           {
-            label: cms.cooking.unsavedDiscard ?? "Esci senza salvare",
+            label: cms.cooking.unsavedDiscard,
             onClick: () => {
               setExitConfirm(false);
               proceedBackToStyles();

@@ -20,12 +20,12 @@ export function TermLink({ termId, children }: { termId: string; children?: Reac
 }
 
 /** «Nel glossario: Staglio · Pirlatura» — le parole di un passo o di una scheda. */
-export function GlossaryTermLinks({ termIds, className }: { termIds: readonly string[]; className?: string }) {
+export function GlossaryTermLinks({ termIds, className, label }: { termIds: readonly string[]; className?: string; label?: string }) {
   const { cms } = useCms();
   if (termIds.length === 0) return null;
   return (
     <div className={["term-links", className].filter(Boolean).join(" ")} data-region="term-links">
-      <span className="term-links__label">{cms.glossary.inGlossaryLabel}</span>
+      <span className="term-links__label">{label ?? cms.glossary.inGlossaryLabel}</span>
       {termIds.map((id) => <TermLink key={id} termId={id} />)}
     </div>
   );

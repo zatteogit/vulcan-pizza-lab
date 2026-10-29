@@ -79,7 +79,7 @@ export function RecipeSectionTabs({
   }, [navbar, morph]);
 
   const toppingLabel = fillingMode
-    ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle
+    ? cms.cooking.fillingTitle
     : cms.cooking.toppingTitle;
   const tabs: RecipeTabMeta[] = [
     {

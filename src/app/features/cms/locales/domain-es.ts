@@ -22,6 +22,11 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
   /* FW-05 */
   techniqueLabel: "Técnica",
   recipeContextLine: "En esta receta: {yeast} de levadura sobre {flour} de harina del prefermento ({pct}). Toda la levadura de la masa va al prefermento y se dosifica según las horas totales de la receta, no solo las del prefermento.",
+  /* G4b-WP-02 */
+  stepsLabel: "Cómo se hace",
+  exampleLabel: "Ejemplo con {flour} de harina, masa al {hydration}",
+  examplePreFerment: "{name}: {flour} de harina, {water} de agua y la levadura, cerca del {yeast} de su harina",
+  exampleFinal: "Masa final: {flour} de harina, {water} de agua y la sal",
   compLabels: [
     "Hidratación",
     "Levadura fresca (sobre la harina del prefermento)",
@@ -42,6 +47,12 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
       crustResult:
         "Fina y dorada; el color y las manchas dependen del horno y la temperatura",
       extensibility: "Alta (estimación): fácil de estirar",
+      steps: [
+        "Mezcla harina y agua a partes iguales con la levadura hasta tener una papilla lisa.",
+        "Tapa y deja madurar unas {poolishHours} a {poolishTemp}: está listo cuando está lleno de burbujas y el centro empieza a hundirse.",
+        "En la masa final, disuelve el poolish en el agua restante y luego añade el resto de la harina.",
+        "Añade la sal y las grasas solo ahora, nunca en el poolish.",
+      ],
       tips: [
         "Listo cuando la superficie está llena de burbujas y el centro empieza a hundirse",
         "Más levadura, menos horas: a 20–22 °C, 0,1 % para 15–16 h, 0,3 % para 10–12 h",
@@ -57,6 +68,12 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
       flavor: "Aromático, floral",
       crustResult: "Crujiente; la estructura depende de la hidratación y el estirado",
       extensibility: "Depende de la harina y la hidratación (por verificar)",
+      steps: [
+        "Mezcla harina, agua y levadura muy poco: la biga debe quedar grumosa, no lisa.",
+        "Tapa y deja madurar unas {bigaHours} a {bigaTemp}.",
+        "En la masa final, desmenúzala en el agua restante y luego añade el resto de la harina.",
+        "Añade la sal solo ahora, nunca en la biga.",
+      ],
       tips: [
         "Lista cuando está hinchada a trozos, huele a yogur y burbujea un poco; si sabe ácida, se ha pasado",
         "Biga larga: 24 h a 4–5 °C y luego 24 h a 18–20 °C",
@@ -75,6 +92,11 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
       crustResult: "Variable — depende del proceso posterior",
       extensibility: "Alta — masa sedosa y menos pegajosa",
       idealStyles: "Todos los estilos (técnica universal)",
+      steps: [
+        "Mezcla solo harina y agua, sin levadura ni sal.",
+        "Deja reposar {autolysisRest}.",
+        "Después añade la levadura (o el prefermento) y, al final, la sal.",
+      ],
       tips: [
         "Reposo de 20–60 minutos; la levadura y la sal se añaden después",
         "Se combina con biga o poolish",
@@ -125,7 +147,6 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
       fermentation: "Fermentación",
       shaping: "Formado",
       baking: "Cocción",
-      solver: "Algoritmo",
       false_positive: "Falsas alarmas",
     },
     issues: {
@@ -302,6 +323,27 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         testRapido: "Mismo estilo, misma dosis de levadura: ¿el levado cambia mucho de una vez a otra?",
         fixImmediate: "Pon la masa en la balda más baja/central (la más estable) y valora el bollo a ojo, no solo por el reloj",
         prevention: "Mide la temperatura del estante usado y observa la masa. El azúcar no corrige las oscilaciones del frigorífico.",
+      },
+      P22: {
+        symptom: "La pizza se pega a la pala",
+        cause: "Masa húmeda en contacto directo con la pala, pizza ya aderezada que se queda quieta sobre la pala, o pala sin harina ni sémola",
+        testRapido: "Sacude un poco la pala antes de hornear: ¿la pizza se desliza?",
+        fixImmediate: "Levanta el borde, sopla por debajo o echa un poco de sémola y vuelve a sacudir antes de hornear",
+        prevention: "Enharina la pala, adereza la pizza deprisa directamente sobre ella y hornéala enseguida, sin dejarla quieta",
+      },
+      P23: {
+        symptom: "El bollo se extiende y no mantiene la forma",
+        cause: "Más agua de la que la harina puede retener, fermentación pasada, cocina caliente o bollos boleados flojos",
+        testRapido: "¿El bollo se aplana antes de lo previsto y, si lo presionas, la marca del dedo no se recupera?",
+        fixImmediate: "Estíralo enseguida con poca harina sobre la mesa; no intentes bolearlo de nuevo",
+        prevention: "Bolea los bollos más tensos y sigue la hidratación y los tiempos de la receta; si la cocina está caliente, revisa la masa antes",
+      },
+      P24: {
+        symptom: "Se abre un agujero mientras estiro",
+        cause: "Centro estirado demasiado fino, gluten poco desarrollado, masa todavía fría de la nevera o pasada de fermentación",
+        testRapido: "¿El agujero se abre en el centro mientras el borde sigue grueso?",
+        fixImmediate: "Junta los bordes del agujero pellizcándolos; si se vuelve a abrir, cubre el disco y déjalo reposar unos minutos",
+        prevention: "Empuja la masa del centro hacia el borde y no adelgaces demasiado el centro; saca los bollos de la nevera con tiempo",
       },
     },
     contextual: {
@@ -697,6 +739,11 @@ export const SCIENCE_ES: CmsScience = {
       l1: "Hidratación, horas y temperaturas vienen de fuentes del sector concordantes.",
       l2: "La biga es un prefermento seco que madura despacio en fresco; el poolish es líquido y madura más rápido. Corteza y miga dependen sobre todo del horno, la hidratación y el estirado, no solo del prefermento.",
     },
+    "pre-ferment-procedure": {
+      title: "Cómo se preparan",
+      l1: "Los pasos son una elección de {brand}; horas y temperaturas son las del motor.",
+      l2: "Las fuentes leídas dan hidratación, horas, temperaturas y señales de maduración, no la forma de amasar. Biga grumosa, poolish liso, prefermento disuelto en el agua restante y sal solo en la masa final son la práctica común que {brand} eligió indicar: la sal frena las levaduras, por eso queda fuera del prefermento.",
+    },
     autolysis: {
       title: "Autólisis",
       l1: "Harina y agua reposan sin levadura ni sal antes del amasado.",
@@ -822,6 +869,11 @@ export const SCIENCE_ES: CmsScience = {
       title: "Umbrales de los problemas",
       l1: "Los umbrales numéricos de los problemas son orientativos.",
       l2: "Son reglas prácticas sin fuente publicada y no tienen en cuenta el estilo: una masa en bandeja, por ejemplo, está mucho más hidratada que una napolitana. Úsalos como pista, no como diagnóstico.",
+    },
+    "troubleshooting-practice": {
+      title: "Consejos prácticos",
+      l1: "Pala, bollos que se extienden y agujeros al estirar: los remedios son práctica común elegida por {brand}, no mediciones.",
+      l2: "No tenemos una fuente publicada para estos consejos y no contienen umbrales numéricos: dicen qué mirar y qué hacer enseguida. Si la receta indica tiempos, hidratación o harina, valen esos.",
     },
     /* FW-19: piano temporale. */
     "comfort-tolerances": {

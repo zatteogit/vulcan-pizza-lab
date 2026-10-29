@@ -13,7 +13,9 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
-import { CtaButton, Heading } from "../components/ds/index";
+import { Badge, CtaButton, Heading } from "../components/ds/index";
+import { GlossaryTermLinks } from "../features/glossary/term-link";
+import { formatDuration } from "../i18n/format";
 import { blockerText, primaryBlocker } from "../features/recipe/blocker-text";
 import { useCms } from "../features/cms/cms-context";
 import { STYLES_DB, SKILL_LEVELS, type SkillLevel } from "../domain/pizza-engine";
@@ -21,20 +23,19 @@ import {
   GLOSSARY_TERMS,
   getLocalizedTerm,
 } from "../data/glossary-data";
-import { glossaryCategoryLabel } from "../features/glossary/glossary-categories";
+import { QUICK_HELP_ISSUE_IDS } from "../data/troubleshooting-data";
+import { GLOSSARY_CATEGORY_ICONS, glossaryCategoryLabel } from "../features/glossary/glossary-categories";
 import { FireGlow } from "../features/cooking/fire-glow";
 import {
   Bowl,
   Flask,
   RisingDough,
   Oven as OvenIllustration,
-  Slice,
 } from "../features/cooking/step-illustrations";
-import { learningStyleForKitchen } from "../use-cases/learning-path";
-import { tailoredRecipeEntry } from "../use-cases/recipe-entry";
+import { learningPathPreview, learningPathRecipe, learningStyleForKitchen } from "../use-cases/learning-path";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { hasChosenSkill, loadSkill, useProfileDefaults } from "../hooks/use-profile-defaults";
-import { motionDelay, motionSpring } from "../components/ds/motion";
+import { motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 import { useDetailLevel } from "../hooks/use-detail-level";
 import { METHOD_PATH } from "../features/method/method-link";
@@ -45,6 +46,14 @@ const PATH_STYLE_IDS: Record<SkillLevel, string> = {
   2: "padellino_torino",
   3: "napoletana_canotto",
   4: "teglia_romana",
+};
+
+/* G4a-WP-04 (S11-B-10): «Cosa impari», i termini che la copy del livello cita. */
+const PATH_TERMS: Record<SkillLevel, readonly string[]> = {
+  1: ["folds", "hydration", "bulk_fermentation"],
+  2: ["thermal_conductivity", "maillard"],
+  3: ["hydration", "cornicione"],
+  4: ["folds", "bulk_fermentation", "proteolysis"],
 };
 
 /* ── Termine del giorno: scelta deterministica per data ── */
@@ -72,33 +81,10 @@ export function LearnPage() {
 
   const skill = loadSkill();
 
-  const localizedPaths = useMemo(() => {
-    return {
-      1: {
-        title: pg.learnPath1Title || uiMessage("pages.learn.path1.title"),
-        copy: pg.learnPath1Copy || uiMessage("pages.learn.path1.copy"),
-        styleId: PATH_STYLE_IDS[1],
-      },
-      2: {
-        title: pg.learnPath2Title || uiMessage("pages.learn.path2.title"),
-        copy: pg.learnPath2Copy || uiMessage("pages.learn.path2.copy"),
-        styleId: PATH_STYLE_IDS[2],
-      },
-      3: {
-        title: pg.learnPath3Title || uiMessage("pages.learn.path3.title"),
-        copy: pg.learnPath3Copy || uiMessage("pages.learn.path3.copy"),
-        styleId: PATH_STYLE_IDS[3],
-      },
-      4: {
-        title: pg.learnPath4Title || uiMessage("pages.learn.path4.title"),
-        copy: pg.learnPath4Copy || uiMessage("pages.learn.path4.copy"),
-        styleId: PATH_STYLE_IDS[4],
-      },
-    };
-  }, [pg]);
+  const skillPath = { title: pg[`learnPath${skill}Title`], copy: pg[`learnPath${skill}Copy`], styleId: PATH_STYLE_IDS[skill] };
 
   const practicalStyle = useMemo(() => activeStyle
-    ? tailoredRecipeEntry(activeStyle, constraints).recipe.verdict.outcome === "not_feasible" ? null : activeStyle
+    ? learningPathRecipe(activeStyle, constraints).verdict.outcome === "not_feasible" ? null : activeStyle
     : learningStyleForKitchen(PATH_STYLE_IDS[skill], constraints, STYLES_DB), [activeStyle, constraints, skill]);
   const theoretical = !practicalStyle;
   const fallbackPath = practicalStyle && practicalStyle.id !== PATH_STYLE_IDS[skill];
@@ -107,7 +93,7 @@ export function LearnPage() {
   const preferredStyle = activeStyle ?? STYLES_DB[PATH_STYLE_IDS[skill]];
   const preferredBlocker = useMemo(
     () => (theoretical || fallbackPath) && preferredStyle
-      ? primaryBlocker(tailoredRecipeEntry(preferredStyle, constraints).recipe.verdict)
+      ? primaryBlocker(learningPathRecipe(preferredStyle, constraints).verdict)
       : null,
     [theoretical, fallbackPath, preferredStyle, constraints],
   );
@@ -121,11 +107,11 @@ export function LearnPage() {
   const path = activeStyle
     ? { title: activeStyle.name, copy: cms.styleDescriptions?.[activeStyle.id] ?? activeStyle.description, styleId: activeStyle.id }
     : theoretical
-      ? { title: engineMsgTexts([{key:"learn.theoryTitle",fallback:"Prima la teoria"}],cms,bcp47)[0], copy: "", styleId: "" }
+      ? { title: cms.engineMessages["learn.theoryTitle"], copy: "", styleId: "" }
       : fallbackPath
-        ? { title: practicalStyle.name, copy: engineMsgTexts([{key:"learn.compatiblePath",fallback:"Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta."}],cms,bcp47)[0], styleId: practicalStyle.id }
-        : localizedPaths[skill];
-  if (theoretical) path.copy = blockerReason ?? engineMsgTexts([{key:"learn.theoryOnly",fallback:"Con i vincoli attivi non c'è una ricetta verificata da proporti. Puoi approfondire le tecniche nella teoria."}],cms,bcp47)[0];
+        ? { title: practicalStyle.name, copy: cms.engineMessages["learn.compatiblePath"], styleId: practicalStyle.id }
+        : skillPath;
+  if (theoretical) path.copy = blockerReason ?? cms.engineMessages["learn.theoryOnly"];
   else if (fallbackPath && blockerReason && practicalStyle && !activeStyle) {
     path.copy = uiMessage("pages.learn.fallbackReason", [blockerReason, practicalStyle.name]);
   }
@@ -139,13 +125,24 @@ export function LearnPage() {
       ? uiMessage("pages.learn.contextByLevel", [skillName])
       : uiMessage("pages.learn.contextNoLevel");
   const term = getLocalizedTerm(termOfTheDay(), cms);
+  /* G4a-WP-05 (S11-B-15): l'icona dice di che parla il termine, la stessa
+     della sua categoria nel glossario. */
+  const TermIcon = GLOSSARY_CATEGORY_ICONS[term.category];
+  /* G4a-WP-04 (S11-A-02): durata e attrezzatura prima del clic, dalla stessa
+     ricetta adattata che apre il link. */
+  const preview = useMemo(
+    () => practicalStyle ? learningPathPreview(learningPathRecipe(practicalStyle, constraints)) : null,
+    [practicalStyle, constraints],
+  );
+  const about = (m: number) => formatDuration(m < 120 ? m : Math.round(m / 60) * 60, bcp47);
+  const levelPath = !activeStyle && !theoretical && !fallbackPath;
 
   const SECTIONS = [
     {
       id: "glossary",
       label: pg.learnGlossary,
       desc: pg.learnGlossaryDesc,
-      illustration: Slice,
+      illustration: Bowl,
       to: "/learn/glossary",
     },
     {
@@ -169,7 +166,7 @@ export function LearnPage() {
     id: "method",
     label: uiMessage("pages.method.title"),
     desc: uiMessage("pages.learn.methodDesc"),
-    illustration: Bowl,
+    illustration: RisingDough,
     to: METHOD_PATH,
   };
   if (detailLevel === "technical") SECTIONS.unshift(methodSection);
@@ -177,14 +174,13 @@ export function LearnPage() {
 
   return (
     <main id="main-content" className="learn-page" data-page="learn">
-      <FireGlow intensity={0.25} variant="warm" />
+      <FireGlow intensity={0.25} />
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={motionSpring.standard}
         className="learn-page__container"
         data-region="page"
-        data-progress="learning-path"
       >
         {/* Banner stile contestuale — visibile solo con ?style=<id> valido. */}
         {activeStyle && (
@@ -201,7 +197,6 @@ export function LearnPage() {
               onClick={() => setSearchParams({})}
               className="learn-banner__close"
               aria-label={pg.learnRemoveFilter}
-              title={pg.learnRemoveFilter}
             >
               <X size={16} />
             </button>
@@ -224,45 +219,82 @@ export function LearnPage() {
           </p>
         </header>
 
+        {/* G4a-WP-05 (S11-B-11): in cucina i problemi comuni sono nel primo
+            schermo, un tocco e si apre la soluzione. */}
+        <nav data-region="quick-help" aria-labelledby={`${cardIds}-quick-help`}>
+          <h2 id={`${cardIds}-quick-help`}>{uiMessage("cooking.trouble.cta")}</h2>
+          <ul>
+            {/* Il titolo del problema nella lingua attiva (default italiani da ISSUES_DB). */}
+            {QUICK_HELP_ISSUE_IDS.map((id) => (
+              <li key={id}>
+                <Link to={`/learn/troubleshooting?issue=${id}`}>{cms.troubleshootingI18n.issues?.[id]?.symptom}</Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
         {/* ══════════════════════════════════════════════════════════
             PERCORSO CONSIGLIATO — card ember con hero typography
            ══════════════════════════════════════════════════════════ */}
-        <motion.section
+        <section
           data-region="feature"
           data-stage="1"
           data-stage-state="recommended"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...motionSpring.standard, delay: motionDelay.short }}
           className="learn-path"
         >
-          <div className="learn-path__label">{pathContextLabel}</div>
-          <Link
-            to={theoretical ? "/learn/glossary" : `/recipe/${path.styleId}?mode=adapted`}
+          {/* S11-B-13: il livello si cambia da qui, non solo dal Profilo. */}
+          <div className="learn-path__label">
+            {pathContextLabel}
+            {levelPath && (
+              <Link to="/profile?tab=setup#skill" className="learn-path__change">{uiMessage("pages.learn.changeLevel")}</Link>
+            )}
+          </div>
+          {/* S11-A-10/B-10: una card, un solo link (il CTA, esteso alla card dal
+              CSS); i termini restano interattivi, non annidati nel link. */}
+          <article
             className="learn-path__card"
             data-attention="recommended"
             aria-labelledby={`${cardIds}-path-title`}
-            aria-describedby={`${cardIds}-path-copy`}
           >
-            {/* Hand-drawn illustration — rising dough for the learning path */}
-            <div className="learn-path__illustration">
+            <div className="learn-path__illustration" aria-hidden="true">
               <RisingDough size={90} />
             </div>
 
             <div className="learn-path__content">
               <div className="learn-path__body">
                 <h2 id={`${cardIds}-path-title`} className="learn-path__title">{path.title}</h2>
-                <p id={`${cardIds}-path-copy`} className="learn-path__copy">{path.copy}</p>
+                <p className="learn-path__copy">{path.copy}</p>
               </div>
 
+              {preview && (
+                <ul className="learn-path__facts" data-region="path-facts">
+                  <Badge as="li" color="currentColor">
+                    {preview.coldMinutes > 0
+                      ? uiMessage("pages.learn.pathDuration", [about(preview.totalMinutes), about(preview.coldMinutes)])
+                      : uiMessage("pages.learn.pathDurationAll", [about(preview.totalMinutes)])}
+                  </Badge>
+                  {engineMsgTexts(preview.equipment, cms, bcp47).map((text) => (
+                    <Badge as="li" color="currentColor" key={text}>{text}</Badge>
+                  ))}
+                </ul>
+              )}
+
+              {levelPath && (
+                <GlossaryTermLinks termIds={PATH_TERMS[skill]} label={uiMessage("pages.learn.whatYouLearn")} className="learn-path__terms" />
+              )}
+
               <div className="learn-path__cta-row">
-                <span className="learn-path__cta">
-                  {theoretical ? engineMsgTexts([{key:"learn.openTheory",fallback:"Esplora la teoria"}],cms,bcp47)[0] : pg.learnStartPath}
+                <Link
+                  to={theoretical ? "/learn/glossary" : `/recipe/${path.styleId}?mode=adapted`}
+                  className="learn-path__cta"
+                  aria-describedby={`${cardIds}-path-title`}
+                >
+                  {theoretical ? cms.engineMessages["learn.openTheory"] : pg.learnStartPath}
                   <ArrowRight size={12} className="learn-path__cta-icon" />
-                </span>
+                </Link>
               </div>
             </div>
-          </Link>
+          </article>
           {(theoretical || fallbackPath) && (
             <p className="learn-path__actions">
               <CtaButton as={Link} to="/profile" variant="secondary" radius="lg" elevated={false} className="learn-path__action">
@@ -278,18 +310,15 @@ export function LearnPage() {
               )}
             </p>
           )}
-        </motion.section>
+        </section>
 
         {/* ══════════════════════════════════════════════════════════
             TERMINE DEL GIORNO — feature editoriale autonoma
             Divisore decorativo + kicker ambra + card generosa
            ══════════════════════════════════════════════════════════ */}
-        <motion.section
+        <section
           data-region="section"
           data-stage="2"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...motionSpring.standard, delay: motionDelay.medium }}
           className="learn-term"
         >
           {/* Decorative thin rule — magazine section break */}
@@ -308,8 +337,8 @@ export function LearnPage() {
             aria-describedby={`${cardIds}-term-def`}
           >
             <div className="learn-term__body">
-              <div className="learn-term__icon">
-                <Bowl size={52} />
+              <div className="learn-term__icon" aria-hidden="true">
+                <TermIcon size={32} />
               </div>
               <div className="learn-term__content">
                 <h3
@@ -342,7 +371,7 @@ export function LearnPage() {
               <ChevronRight size={14} className="learn-term__footer-icon" />
             </footer>
           </Link>
-        </motion.section>
+        </section>
 
         {/* ══════════════════════════════════════════════════════════
             RISORSE — sezioni in calce con intestazione editoriale
@@ -359,19 +388,11 @@ export function LearnPage() {
           <div data-region="collection" className="learn-resources__list">
             {SECTIONS.map((section, i) => {
               return (
-                <motion.article
+                <article
                   key={section.id}
                   data-region="card"
                   data-stage={String(i + 3)}
                   data-stage-terminal={i === SECTIONS.length - 1 ? "true" : undefined}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    ...motionSpring.standard,
-                    delay:
-                      motionDelay.collectionStart +
-                      i * motionDelay.collectionStep,
-                  }}
                 >
                   <Link
                     to={section.to}
@@ -391,7 +412,7 @@ export function LearnPage() {
                     </div>
                     <ChevronRight size={16} className="learn-resources__chevron" />
                   </Link>
-                </motion.article>
+                </article>
               );
             })}
           </div>
