@@ -5,7 +5,8 @@ export default defineConfig({
   // I test girano sulla generalista, salvo VULCAN_EDITION esplicita.
   resolve: { alias: { "@vulcan/edition": resolveEditionFile() } },
   test: {
-    include: ["src/**/*.test.{ts,tsx}"],
+    // worker/: le rotte del Worker (D-061), fuori dal tsconfig dell'app.
+    include: ["src/**/*.test.{ts,tsx}", "worker/**/*.test.ts"],
     exclude: ["**/node_modules/**", "**/dist/**", ".claude/**"],
   },
 });

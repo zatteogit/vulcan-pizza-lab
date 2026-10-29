@@ -20,6 +20,8 @@
  */
 
 import { handleMcpBody } from "../src/app/agent/mcp-server";
+import { fetchAlexaCertChain, handleAlexaRequest } from "../src/server/alexa/handler";
+import { handleVoiceRequest } from "../src/server/voice/http";
 import { handleAuthRequest, type AuthStore, type SessionRecord } from "../src/server/auth/handler";
 import { GOOGLE_JWKS_URL } from "../src/server/auth/google";
 import type { Role } from "../src/server/auth/roles";
@@ -61,6 +63,8 @@ interface Env {
   ADMIN_EMAIL_SHA256?: string;
   EDITOR_EMAIL_SHA256?: string;
   TESTER_EMAIL_SHA256?: string;
+  /** D-061: ID della skill Alexa (amzn1.ask.skill.…). Senza, /alexa rifiuta tutto. */
+  ALEXA_SKILL_ID?: string;
 }
 
 const TOOL_API_PATHS = new Set(["/api/annotations", "/api/config"]);
@@ -81,6 +85,11 @@ const SECURITY_HEADERS: Record<string, string> = {
 function withSecurityHeaders(headers: Headers): Headers {
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) headers.set(name, value);
   return headers;
+}
+
+function withHeaders(response: Response): Response {
+  const headers = withSecurityHeaders(new Headers(response.headers));
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 }
 
 function toolsApiEnabled(env: Env): boolean {
@@ -373,6 +382,14 @@ export default {
     // D-049: server MCP per agenti (Claude, ChatGPT…). Pubblico, senza stato,
     // in sola lettura: motore e glossario, niente dati degli utenti.
     if (url.pathname === "/mcp") return handleMcp(request);
+
+    // D-061: voce. /api/voice per il Comando rapido di Siri (testo semplice),
+    // /alexa per la Custom Skill (richieste firmate da Amazon). Entrambe
+    // attingono dal server MCP, in sola lettura e senza dati degli utenti.
+    if (url.pathname === "/api/voice") return withHeaders(await handleVoiceRequest(request));
+    if (url.pathname === "/alexa") {
+      return withHeaders(await handleAlexaRequest(request, { skillId: env.ALEXA_SKILL_ID, fetchCertChain: fetchAlexaCertChain }));
+    }
 
     // D-046: accesso e ruoli. Stessa origine dell'app: niente CORS.
     if (url.pathname.startsWith("/api/auth/")) {

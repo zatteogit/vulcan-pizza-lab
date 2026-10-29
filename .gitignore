@@ -29,3 +29,5 @@ ds-bundle/
 .playwright-cli/
 # Checkout del repository privato delle edizioni (CI e sviluppo locale)
 .editions-private/
+# Stato locale di ASK CLI (ID della skill, profilo): alexa/README.md
+alexa/.ask/
