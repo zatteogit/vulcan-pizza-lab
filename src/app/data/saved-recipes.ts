@@ -109,6 +109,15 @@ export function removeSavedRecipeFrom(
   return recipes.filter((recipe) => recipe.id !== id);
 }
 
+/** «Annulla» dopo una rimozione: rimette la voce identica (id, data e nome).
+ *  Se nel frattempo c'è già (stesso id o stessa ricetta risalvata) o il
+ *  ricettario è pieno, l'elenco resta com'è: niente doppioni. */
+export function restoreSavedRecipeIn(recipes: readonly SavedRecipe[], entry: SavedRecipe): SavedRecipe[] {
+  const key = savedRecipeKey(entry.styleId, entry.params);
+  const present = recipes.some(recipe => recipe.id === entry.id || savedRecipeKey(recipe.styleId, recipe.params) === key);
+  return present || recipes.length >= MAX_SAVED_RECIPES ? [...recipes] : sortSavedRecipes([...recipes, entry]);
+}
+
 export function toggleFavoriteStyleIn(
   favoriteIds: readonly string[],
   styleId: string,

@@ -2518,9 +2518,10 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Aliño Margherita Verace",
-      description: "Extiende los pelados aplastados a mano de forma uniforme. Reparte el fior di latte en tiras o dados. Un hilo de AOVE antes del horno. Albahaca fresca antes del horno si la cocción dura un par de minutos; con horno doméstico, añádela nada más sacarla.",
+      description: "Extiende los pelados aplastados a mano de forma uniforme, reparte el fior di latte en tiras o dados y añade un hilo de AOVE. La albahaca fresca añádela nada más sacarla del horno.",
+      description_short_bake: "Extiende los pelados aplastados a mano de forma uniforme, reparte el fior di latte en tiras o dados y añade un hilo de AOVE. Termina con la albahaca fresca antes de hornear.",
       tip_beginner: "Reglamento AVPN: tomates pelados DOP, mozzarella campana, albahaca fresca. AOVE sí, pero poco.",
-      tip_nerd: "La cocción relámpago de 90s a 450°C conserva la albahaca fresca (la pizza está demasiado poco tiempo en el horno para degradarla). Distinto de los hornos domésticos lentos, donde hay que añadirla después.",
+      tip_nerd: "Con la cocción relámpago de la napolitana, la albahaca pasa demasiado poco tiempo en el horno para ennegrecerse; con una cocción larga se seca y se oscurece, así que va después.",
     },
     spread_margherita_romana: {
       title: "Aliño Margherita romana",

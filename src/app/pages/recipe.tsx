@@ -81,6 +81,8 @@ import { resolveTopping, TOPPING_LIBRARY } from "../data/topping-library";
 import {
   findSavedRecipe,
   removeRecipe,
+  restoreRecipe,
+  type SavedRecipe,
   saveRecipe,
   renameSavedRecipe,
   type SavedRecipeParams,
@@ -799,10 +801,13 @@ function RecipeContent({
     setSavedTick(tick => tick + 1);
     return true;
   }, [savedEntry]);
+  /* S07-B-09: la voce tolta col segnalibro resta qui per «Annulla». */
+  const [lastRemoved, setLastRemoved] = useState<SavedRecipe | null>(null);
   const handleCommitRecipe = useCallback((nextName?: string): boolean => {
     let ok = true;
     if (savedEntry) {
       removeRecipe(savedEntry.id);
+      setLastRemoved(savedEntry);
     } else {
       saveRecipe({
         styleId: style.id,
@@ -823,6 +828,21 @@ function RecipeContent({
     setSavedTick((v) => v + 1);
     return ok;
   }, [savedEntry, style.id, style.name, activeVersionId, currentSaveParams, recipe, matchRecipe, effectiveConstraints.oven_type, resolvedRecipeName]);
+
+  const handleUndoRemove = useCallback((): boolean => {
+    if (!lastRemoved) return false;
+    const { ok } = restoreRecipe(lastRemoved);
+    setSaveFailed(!ok);
+    // Il nome torna con la ricetta, anche nell'URL (?name=), se è quella aperta.
+    if (ok && findSavedRecipe(style.id, currentSaveParams)?.id === lastRemoved.id) {
+      const name = normalizeRecipeName(lastRemoved.name) ?? "";
+      setRecipeName(name);
+      replaceRecipeSearchParams(params => { if (name) params.set("name", name); else params.delete("name"); });
+    }
+    setLastRemoved(null);
+    setSavedTick((v) => v + 1);
+    return ok;
+  }, [lastRemoved, style.id, currentSaveParams]);
 
   const styleVersions = useMemo(() => getVersions(style.id), [style.id]);
   /* Firma d'origine (redesign lug 2026): l'eyebrow dice l'origine UNA volta,
@@ -929,6 +949,7 @@ function RecipeContent({
         showStickyHeader={false}
         favorite={Boolean(savedEntry)}
         onToggleFavorite={handleToggleSaveRecipe}
+        onUndoRemove={handleUndoRemove}
         isPersonalized={isDirty}
         onRequestPersonalization={handleOpenPersonalization}
         onResetToOriginal={isDirty || resolvedRecipeName ? handleResetToCanonical : undefined}

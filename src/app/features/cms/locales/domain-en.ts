@@ -870,6 +870,11 @@ export const SCIENCE_EN: CmsScience = {
       l1: "The time between one bake and the next is a model assumption.",
       l2: "Between pizzas you unload, load and the floor comes back to temperature: a home oven with a stone needs minutes, pizza ovens less, wood-fired ovens almost none. We use a fixed value per oven type, not measured on yours.",
     },
+    "basil-timing": {
+      title: "When to add the basil",
+      l1: "With short bakes the basil goes into the oven with the pizza, with long ones afterwards. The threshold is a {brand} choice.",
+      l2: "Basil leaves are thin and full of water: in a flash bake they stay green, in a long one they dry out and blacken. The threshold between the two instructions is our convention, not a measurement: the value is in the «How to» of the topping step.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "The temperature stays constant for the whole phase.",

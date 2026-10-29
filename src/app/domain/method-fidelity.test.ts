@@ -87,7 +87,7 @@ describe("second audit: explicit formulas and reference-specific processes",()=>
    const r=call("generate_recipe",{...kitchen,style_id:"focaccia_genovese",topping_id:id,recipe_mode:"canonical",dough_balls:3});
    expect(r.topping.ingredients_per_unit.filter((i:{section:string})=>i.section==="salamoia").map((i:{amount:{value:number}})=>i.amount.value)).toEqual([30,1.5]);
    expect(r.topping.ingredients_total.filter((i:{section:string})=>i.section==="salamoia").map((i:{amount:{value:number}})=>i.amount.value)).toEqual([90,4.5]);
-   expect(r.steps.find((s:{id:string})=>s.id===t.assembly_steps![0].id).description).toContain("Sciogliere il sale fino");
+   expect(r.steps.find((s:{id:string})=>s.id===t.assembly_steps![0].id).description).toContain("Sciogli il sale fino");
   }
   for(const lang of ["it","en","de","es","fr","pt","ja"]) {
    expect(getSectionHeader("salamoia",lang)).not.toBe(getSectionHeader("finitura",lang));

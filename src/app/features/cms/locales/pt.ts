@@ -915,9 +915,11 @@ export const PT_LOCALE: CmsContent = {
     "timeline.mix.generic.desc": "Na batedeira: gancho em velocidade baixa ~10 min até dar o ponto. Lisa e elástica.",
     "timeline.mix.generic.tipBeginner": "Está pronta quando a massa se enrola no gancho e desgruda das paredes.",
     "timeline.mix.generic.tipNerd": "Confira a temperatura final da massa (~24°C): acima disso, o glúten se degrada.",
-    "timeline.mix.hands.desc": "Sove à mão até dar o ponto (~15-20 min): dobras na bancada, slap & fold se a hidratação for alta.",
+    "timeline.mix.hands.desc": "Sove à mão até dar o ponto (~15-20 min), com dobras na bancada.",
+    "timeline.mix.hands.descHighHydration": "Sove à mão até dar o ponto (~15-20 min) com slap & fold.",
     "timeline.mix.hands.tipBeginner": "A massa está pronta quando fica lisa e desgruda das mãos. Se grudar demais, espere 5 min e tente de novo.",
-    "timeline.mix.hands.tipNerd": "O ponto acontece quando a glutenina e a gliadina formam pontes dissulfeto estáveis. O teste do véu verifica a rede de glúten.",
+    "timeline.mix.hands.tipNerd": "O ponto acontece quando a glutenina e a gliadina formam pontes dissulfeto estáveis. O teste do véu verifica a rede de glúten. Acima de {pct}% de hidratação passa-se ao slap & fold.",
+    "timeline.topping.basilThreshold": "Com assamentos de até {sec}, o manjericão vai ao forno com a pizza; senão, depois: é uma escolha nossa, não uma medida.",
     "timeline.oven.topGrillStone": "Grill/resistência superior forte: pré-aqueça com a pedra ou o aço na grade em altura média-alta e só ligue o grill nos últimos 45-75s para dourar a borda.",
     "timeline.oven.topGrillShelf": "Grill/resistência superior forte: pré-aqueça com a grade em altura média-alta e só ligue o grill nos últimos 45-75s para dourar a borda.",
     "timeline.oven.bottomBoost": "Resistência inferior dominante: asse na parte de baixo para dar impulso à base e suba um nível se o topo ficar pálido.",
@@ -947,9 +949,9 @@ export const PT_LOCALE: CmsContent = {
     "auth.layoutChanged": "Formato diferente da referência: esta versão altera a estrutura da receita",
     "auth.directMethod": "A referência usa massa direta: o pré-fermento altera o método",
     "formula.withoutPotato": "Versão sem batata na massa.",
-    "timeline.proof.apiter": "Fermentar num recipiente fechado à temperatura ambiente. O tempo inclui o pré-aquecimento; verificar elasticidade e desenvolvimento.",
-    "timeline.shape.apiter": "Antes de esticar, verificar pelo menos 19°C no centro. Esticar com os dedos numa superfície enfarinhada, transferir nos antebraços para a assadeira levemente untada e distribuir até aos cantos.",
-    "timeline.shape.doubleThinSheet": "Esticar à mão duas folhas finíssimas, quase transparentes, com o dorso das mãos por baixo; evitar rasgos.",
+    "timeline.proof.apiter": "Deixe fermentar num recipiente fechado à temperatura ambiente. O tempo inclui o pré-aquecimento; verifique a elasticidade e o desenvolvimento.",
+    "timeline.shape.apiter": "Antes de esticar, verifique se o centro está a pelo menos 19°C. Estique com os dedos numa superfície enfarinhada, transfira nos antebraços para a assadeira levemente untada e distribua até os cantos.",
+    "timeline.shape.doubleThinSheet": "Estique à mão duas folhas finíssimas, quase transparentes, com o dorso das mãos por baixo; evite rasgos.",
     "timeline.shape.stacked": "Abra o primeiro disco na assadeira untada; reserve o segundo.",
     "timeline.shape.closedStuffed": "Abra o disco de base na assadeira, reservando o segundo para fechar.",
     "timeline.shape.rectangular": "Abra a massa com as mãos na assadeira untada",
@@ -1021,7 +1023,7 @@ export const PT_LOCALE: CmsContent = {
   timelineLabels: {
     preferment: {
       title: "Pr\u00E9-Fermento",
-      desc: "Misturar {type} e deixar maturar",
+      desc: "Misture {type} e deixe maturar",
       tipBeginner:
         'O pr\u00E9-fermento \u00E9 como um "aperitivo" para o fermento. Misture e deixe repousar coberto.',
       tipNerd:
@@ -1031,9 +1033,8 @@ export const PT_LOCALE: CmsContent = {
     },
     mix: {
       title: "Amassamento",
-      desc: "Amassar at\u00E9 ficar liso e el\u00E1stico.",
-      descAlt:
-        "Misturar os ingredientes sem amassar. S\u00E9rie de dobras.",
+      desc: "Amasse até ficar liso e elástico.",
+      descAlt: "Misture os ingredientes sem amassar. Série de dobras.",
       tipBeginner:
         "A massa est\u00E1 pronta quando est\u00E1 lisa e se solta das m\u00E3os. Se grudar muito, espere 5 min e tente novamente.",
       tipNerd:
@@ -1056,7 +1057,7 @@ export const PT_LOCALE: CmsContent = {
         "A massa deve duplicar de volume. Se estiver quente, verifique mais vezes!",
       tipNerd:
         "A {temp}, o modelo estima uma velocidade de fermentação de {factor}× em relação a {refTemp}. Não mede a redução de FODMAP nem a digestibilidade.",
-      longDesc: "A massa descansa em um único bloco, dentro de um recipiente untado com azeite e coberto com filme plástico em contato. É nesta fase que o fermento trabalha e desenvolve aroma, estrutura e digestibilidade. Se o estilo prevê dobras, o número e o intervalo estão em um passo ou em uma dica à parte. A fermentação está completa quando o volume dobrou e a superfície está abaulada e lisa.",
+      longDesc: "A massa descansa em um único bloco, dentro de um recipiente untado com azeite e coberto com filme plástico em contato. É nesta fase que o fermento trabalha e desenvolve aroma, estrutura e digestibilidade. A fermentação está completa quando o volume dobrou e a superfície está abaulada e lisa.",
     },
     bulk_cold: {
       title: "Fermenta\u00E7\u00E3o em massa",
@@ -1069,13 +1070,13 @@ export const PT_LOCALE: CmsContent = {
     },
     rest: {
       title: "Descanso",
-      desc: "Deixar a massa descansar coberta a {temp}",
+      desc: "Deixe a massa descansar coberta a {temp}",
       tipBeginner: "Sem fermento a massa não cresce: o descanso relaxa o glúten e a folha estica fina sem encolher.",
       tipNerd: "O descanso completa a hidratação da farinha e relaxa a rede de glúten: menos retração elástica, folha quase transparente.",
     },
     divide: {
       title: "Divis\u00E3o",
-      desc: "Dividir em bolas do peso correto. Formar bola.",
+      desc: "Divida em porções do peso correto e forme as bolas.",
       tipBeginner:
         "Use uma balan\u00E7a! Corte com um raspador e arredonde cada peda\u00E7o numa bola lisa.",
       tipNerd:
@@ -1100,26 +1101,25 @@ export const PT_LOCALE: CmsContent = {
     },
     shape: {
       title: "Abertura",
-      desc: "Abrir com as m\u00E3os a partir do centro, preservar a borda",
-      descAlt: "Esticar na assadeira untada com as m\u00E3os",
+      desc: "Abra com as mãos a partir do centro e preserve a borda",
+      descAlt: "Estique a massa com as mãos na assadeira untada",
     },
     shape_thin: {
       title: "Abertura",
-      desc: "Abrir com rolo, ultrafina",
+      desc: "Abra com rolo, ultrafina",
     },
-    top: { title: "Cobertura", desc: "Cobrir a pizza a gosto" },
+    top: { title: "Cobertura", desc: "Cubra a pizza a gosto" },
     bake: {
       title: "Coc\u00E7\u00E3o",
-      desc: "Assar a {temp}",
-      tipBeginner:
-        "O forno deve estar muito quente. Pr\u00E9-aquecer pelo menos 30 minutos antes.",
+      desc: "Asse a {temp}",
+      tipBeginner: "O forno deve estar muito quente. Pré-aqueça pelo menos 30 minutos antes.",
       tipNerd:
         "A rea\u00E7\u00E3o de Maillard come\u00E7a a ~140\u00B0C e acelera exponencialmente. A {temp} a carameliza\u00E7\u00E3o cria ~600 compostos arom\u00E1ticos.",
       longDesc: "Pr\u00E9-aque\u00E7a o forno na temperatura m\u00E1xima por 30-45 minutos (com o forno frio n\u00E3o funciona!). Se voc\u00EA tiver pedra refrat\u00E1ria ou placa de a\u00E7o, deixe aquecer bem. Coloque a pizza na grade mais alta/central. N\u00C3O abra o forno nos primeiros 5 minutos \u2014 voc\u00EA perde o impulso t\u00E9rmico. A pizza est\u00E1 pronta quando a borda estiver dourada/leopardada e o fundo, crocante.",
     },
     divide_teglia: {
       title: "Divis\u00E3o",
-      desc: "Dividir com delicadeza, sem murchar a massa.",
+      desc: "Divida com delicadeza, sem murchar a massa.",
       longDesc: "Vire a massa sobre a bancada bem enfarinhada (com hidrata\u00e7\u00f5es altas, ajude-se com s\u00eamola). Com um raspador, corte as por\u00e7\u00f5es do peso indicado neste passo, pesando-as na balan\u00e7a. Manuseie o m\u00ednimo poss\u00edvel: para a assadeira N\u00c3O \u00e9 preciso o boleamento apertado da pizza redonda \u2014 dobre as pontas por baixo formando um fil\u00e3o macio, sem espremer o ar. As bolhas formadas na fermenta\u00e7\u00e3o em massa s\u00e3o o futuro alveolado. Coloque cada peda\u00e7o em um recipiente untado e cubra.",
       tipBeginner: "M\u00E3os delicadas! As bolhas da massa s\u00E3o preciosas: dobre as pontas por baixo, sem apertar.",
       tipNerd: "Com hidrata\u00E7\u00E3o >75%, uma divis\u00E3o agressiva colapsa os alv\u00E9olos formados na fermenta\u00E7\u00E3o em massa: tens\u00E3o m\u00EDnima, desgaseifica\u00E7\u00E3o quase nula.",
@@ -1706,7 +1706,6 @@ export const PT_LOCALE: CmsContent = {
     optimizeForMe: "Adaptar à minha cozinha",
     resetToOriginal: "Voltar à referência",
     saveVersion: "Guardar no livro de receitas",
-    savedVersion: "Salva no livro de receitas",
     optimizedForSetup: "Adaptada à sua cozinha",
     doneBody: "Voc\u00EA concluiu todas as etapas da sua {style}. Bom apetite!",
     tabProcedure: "Procedimento",

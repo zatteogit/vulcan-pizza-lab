@@ -340,6 +340,11 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
       l1: "Il tempo fra una cottura e l'altra è un'ipotesi del modello.",
       l2: "Fra una pizza e l'altra si sforna, si inforna e la platea torna in temperatura: nel forno di casa con la pietra servono minuti, nei forni da pizza meno, in quelli a legna quasi niente. Usiamo un valore fisso per tipo di forno, non misurato sul tuo.",
     },
+    "basil-timing": {
+      title: "Quando mettere il basilico",
+      l1: "Con le cotture brevi il basilico va in forno con la pizza, con quelle lunghe dopo. La soglia è una scelta di {brand}.",
+      l2: "Le foglie di basilico sono sottili e piene d'acqua: in una cottura lampo restano verdi, in una lunga si seccano e anneriscono. La soglia fra le due istruzioni è una nostra convenzione, non una misura: il valore è nel «Come si fa» del passo del condimento.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "La temperatura resta costante per tutta la fase.",

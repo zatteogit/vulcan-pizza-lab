@@ -9615,6 +9615,30 @@
     line-height: var(--leading-normal);
   }
 
+  /* S07-A-09: gruppi del pannello Dettagli, ciascuno con il suo titolo e un
+     separatore sottile; i figli si spaziano col gap, non coi propri margini. */
+  .match-details__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+
+  .match-details .match-details__group > * {
+    margin-top: 0;
+  }
+
+  .match-details__title {
+    margin: 0;
+  }
+
+  .match-details .match-details__group > .match-rationale {
+    padding-top: 0;
+    border-top: 0;
+  }
+
   .match-oven {
     margin-top: var(--space-3);
     display: flex;
@@ -9857,10 +9881,6 @@
 
   .match-action-text--save {
     color: var(--text-accent);
-  }
-
-  .match-action-text--save-active {
-    color: var(--primary);
   }
 
   .match-action-text:hover {
@@ -11061,40 +11081,14 @@
     text-transform: uppercase;
   }
 
-  .procedure-hero__time-suffix--hidden {
-    visibility: hidden;
-  }
+  /* G3-WP-01 (S09-B-15): il «circa» della Fine spiegato a vista. */
+  .procedure-hero__approx-help { margin-top: var(--space-1); text-align: center; color: var(--text-muted); }
 
-  .procedure-hero__days {
-    margin-top: var(--space-3-5);
-    display: flex;
-    gap: var(--gap-xs);
-  }
-
-  .procedure-hero__day {
-    flex: 1;
-    padding-block: var(--space-1-5);
-    padding-inline: var(--space-2-5);
-    border-radius: var(--radius-xl);
-    text-align: center;
-    font-size: var(--font-size-md);
-    line-height: var(--leading-normal);
-    font-weight: var(--weight-semibold);
-    background: var(--container-bg-low);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-    color: var(--text-default);
-    cursor: pointer;
-    transition: background-color var(--duration-normal) var(--ease-standard), border-color var(--duration-normal) var(--ease-standard), color var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard), transform var(--duration-normal) var(--ease-standard), opacity var(--duration-normal) var(--ease-standard);
-  }
-
-  .procedure-hero__day:active {
-    transform: scale(0.97);
-  }
-
-  .procedure-hero__day--active {
-    background: var(--chip-bg-active);
-    border-color: var(--tertiary);
-    color: var(--chip-text-active);
+  /* G3-WP-01 (S09-A-22): in modifica il campo prende tutta la riga, −/+ sotto. */
+  @media (max-width: 399px) {
+    .procedure-hero__time[data-editing] { grid-column: 1 / -1; }
+    .procedure-hero__time[data-editing] .procedure-hero__time-controls { flex-wrap: wrap; justify-content: center; }
+    .procedure-hero__time[data-editing] .procedure-hero__time-input { order: -1; flex-basis: 100%; font-size: var(--font-size-2xl); }
   }
 
   .procedure-hero__meals {
@@ -11131,6 +11125,9 @@
   .procedure-hero__now { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
   .procedure-hero__now-help { flex: 1 1 var(--space-40); min-width: 0; color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
   .procedure-hero__now-status { margin-top: var(--space-2); color: var(--cta); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); }
+  /* «Ricalcola da adesso» (ds/CtaButton): la CTA lascia misure e padding al
+     chiamante; senza questa regola era alta 22 px, sotto il bersaglio minimo. */
+  .procedure-hero__now .procedure-hero__now-btn { min-block-size: var(--dimension-fixed-046); padding-block: var(--space-1-5); padding-inline: var(--space-3); font-size: var(--font-size-md); }
 
   .procedure-hero__meals-row {
     display: flex;
@@ -11138,30 +11135,20 @@
     gap: var(--gap-xs);
   }
 
-  .procedure-hero__meal-chip {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-1-5);
-    min-height: var(--dimension-fixed-046);
-    padding-inline: var(--space-3);
-    padding-block: var(--space-1-5);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-md);
-    line-height: var(--leading-normal);
-    font-weight: var(--weight-semibold);
-    background: var(--container-bg-low);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-    color: var(--text-default);
-    cursor: pointer;
-    transition: background-color var(--duration-normal) var(--ease-standard), border-color var(--duration-normal) var(--ease-standard), color var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard), transform var(--duration-normal) var(--ease-standard), opacity var(--duration-normal) var(--ease-standard);
-  }
+  /* G3-WP-01 (S09-A-16): chip del pasto su due righe, «fra…» sotto. */
+  .procedure-hero__meal-chip { flex-direction: column; align-items: flex-start; gap: 0; text-align: start; }
+  .procedure-hero__meal-in { font-weight: var(--weight-regular); }
+  .procedure-hero__no-meal { margin: 0; padding: var(--space-3); }
+  .procedure-hero__no-meal .ds-empty__title { font-size: var(--font-size-xl); font-weight: var(--weight-semibold); }
 
-  .procedure-hero__meal-chip:active {
-    transform: scale(0.95);
+  /* G3-WP-01 (S09-B-14): sotto i 640 px riga riassuntiva, pasti in riga scorrevole. */
+  .procedure-hero__summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); margin: var(--space-3) 0 0; }
+  .procedure-hero__summary-arrow { color: var(--text-muted); flex-shrink: 0; }
+  .procedure-hero__plan { margin-top: var(--space-2); }
+  @media (max-width: 639px) {
+    .procedure-hero__meals-row { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; padding-block-end: var(--space-1); }
+    .procedure-hero__meals-row > * { flex-shrink: 0; scroll-snap-align: start; }
   }
-
-  .procedure-hero__meal-chip > svg { flex-shrink: 0; }
 
   .procedure-hero__comfort {
     margin-top: var(--space-3);
@@ -11434,6 +11421,9 @@
     font-size: var(--font-size-2xl);
     line-height: var(--leading-reading);
   }
+
+  /* G3-WP-01 (S09-B-14): il modello di lavoro è una nota, non un passo. */
+  .procedure-timeline__batch-model { max-width: var(--measure-md); margin: 0 0 var(--space-3); color: var(--text-muted); }
 
   .procedure-timeline-step__desc--topping {
     margin-top: var(--space-3);
@@ -12343,6 +12333,8 @@
     max-width: min(var(--measure-snackbar), calc(var(--dimension-viewport-width-full) - var(--space-24)));
     pointer-events: none;
   }
+
+  .recipe-view-favorite-feedback--action { pointer-events: auto; }
 
   .recipe-view-favorite-feedback .ds-snackbar {
     max-width: 100%;
@@ -20527,7 +20519,16 @@
     cursor: pointer;
     outline: none;
     white-space: nowrap;
-    color: var(--primary);
+    /* Fondo invertito: --primary dava 2,5:1 (chiaro) e 2,2:1 (scuro). */
+    color: var(--inverse-action);
+    min-block-size: var(--interactive-target-min);
+    padding-inline: var(--space-1);
+  }
+
+  .ds-snackbar__action:focus-visible {
+    outline: var(--border-width-medium) solid currentColor;
+    outline-offset: var(--space-0-5);
+    border-radius: var(--radius-sm);
   }
 
   .ds-snackbar__action--success {

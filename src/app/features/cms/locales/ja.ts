@@ -973,9 +973,11 @@ export const JA_LOCALE: CmsContent = {
     "timeline.mix.generic.desc": "ミキサーで：フックを低速で約10分、グルテンがつながるまでこねます。なめらかで弾力のある生地にします。",
     "timeline.mix.generic.tipBeginner": "生地がフックに巻きつき、ボウルの側面から離れたら完成です。",
     "timeline.mix.generic.tipNerd": "こね上げ温度（~24°C）を確認してください。それを超えるとグルテンが劣化します。",
-    "timeline.mix.hands.desc": "グルテンがつながるまで手でこねます（約15-20分）。台の上で折りたたみ、加水率が高い場合はスラップ＆フォールドを行います。",
+    "timeline.mix.hands.desc": "グルテンがつながるまで手でこねます（約15-20分）。台の上で折りたたみながら行います。",
+    "timeline.mix.hands.descHighHydration": "グルテンがつながるまで手でこねます（約15-20分）。スラップ＆フォールドで行います。",
     "timeline.mix.hands.tipBeginner": "生地がなめらかになり、手から離れるようになったら完成です。べたつきすぎる場合は5分待ってから再開しましょう。",
-    "timeline.mix.hands.tipNerd": "グルテンは、グルテニンとグリアジンが安定したジスルフィド結合を形成することでつながります。ウィンドウペインテストでグルテンの網目を確認します。",
+    "timeline.mix.hands.tipNerd": "グルテンは、グルテニンとグリアジンが安定したジスルフィド結合を形成することでつながります。ウィンドウペインテストでグルテンの網目を確認します。加水率が{pct}%を超えるとスラップ＆フォールドに切り替えます。",
+    "timeline.topping.basilThreshold": "焼成時間が{sec}以内ならバジルはピザと一緒に窯に入れ、それより長ければ焼いた後にのせます。私たちの判断で、測定値ではありません。",
     "timeline.oven.topGrillStone": "強いグリル/上火：石またはスチールを中段より上に置いて予熱し、最後の45-75sだけグリルに切り替えて縁に焼き色をつけます。",
     "timeline.oven.topGrillShelf": "強いグリル/上火：網を中段より上にして予熱し、最後の45-75sだけグリルに切り替えて縁に焼き色をつけます。",
     "timeline.oven.bottomBoost": "下火が強いオーブン：下段で焼いて底面にしっかり熱を入れ、上面が白いままなら一段上げます。",
@@ -1005,9 +1007,9 @@ export const JA_LOCALE: CmsContent = {
     "auth.layoutChanged": "基準とは異なる形です。このバージョンでは構造も変わります",
     "auth.directMethod": "基準は直接法の生地です。発酵種を加えると製法が変わります",
     "formula.withoutPotato": "生地にじゃがいもを使わないバージョン。",
-    "timeline.proof.apiter": "密閉容器で室温発酵。この時間には予熱も含む。生地の弾力と発酵状態を確認する。",
-    "timeline.shape.apiter": "延ばす前に生地の中心が19°C以上か確認する。打ち粉をした台で指で延ばし、前腕で支えて薄く油を塗った天板へ移し、隅まで広げる。",
-    "timeline.shape.doubleThinSheet": "手の甲を生地の下に入れ、破らないように手で薄く延ばす。ほぼ透ける薄さの生地を2枚作る。",
+    "timeline.proof.apiter": "密閉容器に入れ、室温で発酵させます。この時間には予熱も含みます。生地の弾力と発酵状態を確認します。",
+    "timeline.shape.apiter": "延ばす前に、生地の中心が19°C以上あるか確認します。打ち粉をした台で指で延ばし、前腕で支えて薄く油を塗った天板へ移し、隅まで広げます。",
+    "timeline.shape.doubleThinSheet": "手の甲を生地の下に入れ、破らないように手で薄く延ばします。ほぼ透ける薄さの生地を2枚作ります。",
     "timeline.shape.stacked": "1枚目の生地を油を塗った型に広げ、2枚目は取っておきます。",
     "timeline.shape.closedStuffed": "底になる生地を型に広げ、2枚目はふた用に取っておきます。",
     "timeline.shape.rectangular": "油を塗った型に手で広げます",
@@ -1080,7 +1082,7 @@ export const JA_LOCALE: CmsContent = {
   timelineLabels: {
     preferment: {
       title: "\u524D\u767A\u9175",
-      desc: "{type}\u3092\u6DF7\u305C\u3066\u719F\u6210\u3055\u305B\u308B",
+      desc: "{type}を混ぜて熟成させます",
       tipBeginner:
         "\u524D\u767A\u9175\u306F\u30A4\u30FC\u30B9\u30C8\u306E\u300C\u524D\u83DC\u300D\u306E\u3088\u3046\u306A\u3082\u306E\u3067\u3059\u3002\u6DF7\u305C\u3066\u84CB\u3092\u3057\u3066\u4F11\u307E\u305B\u307E\u3057\u3087\u3046\u3002",
       tipNerd:
@@ -1090,11 +1092,9 @@ export const JA_LOCALE: CmsContent = {
     },
     mix: {
       title: "\u3053\u306D",
-      desc: "\u6ED1\u3089\u304B\u3067\u5F3E\u529B\u304C\u51FA\u308B\u307E\u3067\u3053\u306D\u308B\u3002",
-      descAlt:
-        "\u6750\u6599\u3092\u3053\u306D\u305A\u306B\u6DF7\u305C\u308B\u3002\u6298\u308A\u305F\u305F\u307F\u3092\u7E70\u308A\u8FD4\u3059\u3002",
-      tipBeginner:
-        "\u751F\u5730\u304C\u6ED1\u3089\u304B\u3067\u624B\u304B\u3089\u96E2\u308C\u308B\u3088\u3046\u306B\u306A\u3063\u305F\u3089\u5B8C\u6210\u3067\u3059\u3002\u3079\u305F\u3064\u304F\u5834\u5408\u306F5\u5206\u5F85\u3063\u3066\u518D\u6311\u6226\u3002",
+      desc: "滑らかで弾力が出るまでこねます。",
+      descAlt: "材料をこねずに混ぜます。折りたたみを繰り返します。",
+      tipBeginner: "生地が滑らかで手から離れるようになったら完成です。べたつく場合は5分待ってからもう一度試します。",
       tipNerd:
         "\u30A6\u30A3\u30F3\u30C9\u30A6\u30DA\u30A4\u30F3\u30C6\u30B9\u30C8\u3067\u30B0\u30EB\u30C6\u30F3\u306E\u767A\u9054\u3092\u78BA\u8A8D\uFF1A\u30B0\u30EB\u30C6\u30CB\u30F3\u3068\u30B0\u30EA\u30A2\u30B8\u30F3\u304C\u5B89\u5B9A\u3057\u305F\u30B8\u30B9\u30EB\u30D5\u30A3\u30C9\u7D50\u5408\u3092\u5F62\u6210\u3002",
       longDesc: "\u6C34\u306B\u30A4\u30FC\u30B9\u30C8\u3092\u6EB6\u304B\u3057\u3001\u6DF7\u305C\u306A\u304C\u3089\u5C0F\u9EA6\u7C89\u3092\u5C11\u3057\u305A\u3064\u52A0\u3048\u307E\u3059\u3002\u7C89\u304C\u306A\u3058\u3093\u3060\u3089\u5869\u3092\u52A0\u3048\u3001\u6700\u5F8C\u306B\u30AA\u30A4\u30EB\u3092\u5165\u308C\u307E\u3059\u3002\u751F\u5730\u304C\u6ED1\u3089\u304B\u3067\u5F3E\u529B\u304C\u51FA\u3066\u3001\u5BB9\u5668\u306E\u5074\u9762\u304B\u3089\u96E2\u308C\u308B\u307E\u3067\uFF08\u624B\u3054\u306D\u307E\u305F\u306F\u30B9\u30BF\u30F3\u30C9\u30DF\u30AD\u30B5\u30FC\u3067\uFF09\u3053\u306D\u307E\u3059\u3002\u76EE\u5B89\u306F\u624B\u3054\u306D\u306710-15\u5206\u3001\u30B9\u30BF\u30F3\u30C9\u30DF\u30AD\u30B5\u30FC\u30676-8\u5206\u3067\u3059\u3002\u30A6\u30A3\u30F3\u30C9\u30A6\u30DA\u30A4\u30F3\u30C6\u30B9\u30C8\uFF1A\u751F\u5730\u3092\u5C11\u3057\u53D6\u3063\u3066\u6307\u3067\u8584\u304F\u4F38\u3070\u3057\u3001\u7834\u308C\u305A\u306B\u534A\u900F\u660E\u306B\u306A\u308C\u3070\u5B8C\u6210\u3067\u3059\u3002",
@@ -1115,7 +1115,7 @@ export const JA_LOCALE: CmsContent = {
         "\u751F\u5730\u304C2\u500D\u306B\u81A8\u3089\u3080\u307E\u3067\u5F85\u3061\u307E\u3057\u3087\u3046\u3002\u6696\u304B\u3044\u5834\u6240\u3067\u306F\u3053\u307E\u3081\u306B\u78BA\u8A8D\uFF01",
       tipNerd:
         "{temp}では、モデル上の発酵速度は{refTemp}に対して{factor}倍です。FODMAP削減率や消化のしやすさの測定値ではありません。",
-      longDesc: "生地をひとまとめのまま、オイルを塗った容器に入れ、ラップを生地に密着させて覆います。この段階でイーストが働き、香り、構造、消化の良さが育ちます。スタイルに折りたたみがある場合、回数と間隔は別の工程かヒントに記載しています。体積が2倍になり、表面がふっくらと滑らかになったら発酵完了です。",
+      longDesc: "生地をひとまとめのまま、オイルを塗った容器に入れ、ラップを生地に密着させて覆います。この段階でイーストが働き、香り、構造、消化の良さが育ちます。体積が2倍になり、表面がふっくらと滑らかになったら発酵完了です。",
     },
     bulk_cold: {
       title: "\u4E00\u6B21\u767A\u9175",
@@ -1134,7 +1134,7 @@ export const JA_LOCALE: CmsContent = {
     },
     divide: {
       title: "\u5206\u5272",
-      desc: "\u6B63\u3057\u3044\u91CD\u3055\u306B\u5206\u5272\u3057\u3001\u4E38\u3081\u308B\u3002",
+      desc: "正しい重さに分割し、丸めます。",
       tipBeginner:
         "\u306F\u304B\u308A\u3092\u4F7F\u3044\u307E\u3057\u3087\u3046\uFF01\u30B9\u30B1\u30C3\u30D1\u30FC\u3067\u5207\u308A\u3001\u305D\u308C\u305E\u308C\u6ED1\u3089\u304B\u306A\u7403\u306B\u4E38\u3081\u307E\u3059\u3002",
       tipNerd:
@@ -1159,21 +1159,20 @@ export const JA_LOCALE: CmsContent = {
     },
     shape: {
       title: "\u6210\u5F62",
-      desc: "\u4E2D\u5FC3\u304B\u3089\u624B\u3067\u4F38\u3070\u3057\u3001\u7E01\u3092\u6B8B\u3059",
-      descAlt:
-        "\u6CB9\u3092\u5857\u3063\u305F\u5929\u677F\u3067\u624B\u3067\u4F38\u3070\u3059",
+      desc: "中心から手で伸ばし、縁を残します",
+      descAlt: "油を塗った天板で生地を手で伸ばします",
     },
     shape_thin: {
       title: "\u6210\u5F62",
-      desc: "\u9EBA\u68D2\u3067\u6975\u8584\u306B\u4F38\u3070\u3059",
+      desc: "麺棒で極薄に伸ばします",
     },
     top: {
       title: "\u30C8\u30C3\u30D4\u30F3\u30B0",
-      desc: "\u304A\u597D\u307F\u306E\u30C8\u30C3\u30D4\u30F3\u30B0\u3092\u306E\u305B\u308B",
+      desc: "お好みのトッピングをのせます",
     },
     bake: {
       title: "\u713C\u6210",
-      desc: "{temp}\u3067\u713C\u304F",
+      desc: "{temp}で焼きます",
       tipBeginner:
         "\u30AA\u30FC\u30D6\u30F3\u306F\u975E\u5E38\u306B\u9AD8\u6E29\u3067\u3042\u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059\u3002\u5C11\u306A\u304F\u3068\u308230\u5206\u524D\u306B\u4E88\u71B1\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
       tipNerd:
@@ -1182,7 +1181,7 @@ export const JA_LOCALE: CmsContent = {
     },
     divide_teglia: {
       title: "\u5206\u5272",
-      desc: "\u751F\u5730\u3092\u3057\u307C\u307E\u305B\u306A\u3044\u3088\u3046\u3001\u3084\u3055\u3057\u304F\u5206\u5272\u3059\u308B\u3002",
+      desc: "生地をしぼませないよう、やさしく分割します。",
       longDesc: "\u305f\u3063\u3077\u308a\u6253\u3061\u7c89\u3092\u3057\u305f\u53f0\u306b\u751f\u5730\u3092\u51fa\u3057\u307e\u3059\uff08\u9ad8\u52a0\u6c34\u306e\u5834\u5408\u306f\u30bb\u30e2\u30ea\u30ca\u3092\u4f7f\u3046\u3068\u6271\u3044\u3084\u3059\u304f\u306a\u308a\u307e\u3059\uff09\u3002\u30b9\u30b1\u30c3\u30d1\u30fc\u3067\u3053\u306e\u624b\u9806\u306b\u8868\u793a\u3055\u308c\u305f\u91cd\u3055\u306b\u5207\u308a\u5206\u3051\u3001\u306f\u304b\u308a\u3067\u91cf\u308a\u307e\u3059\u3002\u89e6\u308b\u306e\u306f\u6700\u5c0f\u9650\u306b\u3057\u307e\u3057\u3087\u3046\u3002\u5929\u677f\u30d4\u30b6\u3067\u306f\u3001\u4e38\u3044\u30d4\u30b6\u306e\u3088\u3046\u306b\u304d\u3064\u304f\u4e38\u3081\u308b\u5fc5\u8981\u306f\u3042\u308a\u307e\u305b\u3093\u3002\u7aef\u3092\u4e0b\u306b\u6298\u308a\u8fbc\u3093\u3067\u67d4\u3089\u304b\u306a\u68d2\u72b6\u306b\u307e\u3068\u3081\u3001\u7a7a\u6c17\u3092\u62bc\u3057\u51fa\u3055\u306a\u3044\u3088\u3046\u306b\u3057\u307e\u3059\u3002\u4e00\u6b21\u767a\u9175\u3067\u3067\u304d\u305f\u6c17\u6ce1\u304c\u3001\u713c\u304d\u4e0a\u304c\u308a\u306e\u6c17\u6ce1\u306b\u306a\u308a\u307e\u3059\u3002\u305d\u308c\u305e\u308c\u3092\u30aa\u30a4\u30eb\u3092\u5857\u3063\u305f\u5bb9\u5668\u306b\u5165\u308c\u3001\u8986\u3044\u307e\u3059\u3002",
       tipBeginner: "\u3084\u3055\u3057\u304F\u6271\u3044\u307E\u3057\u3087\u3046\uFF01\u751F\u5730\u306E\u4E2D\u306E\u6C17\u6CE1\u306F\u5927\u5207\u3067\u3059\u3002\u62BC\u3057\u3064\u3076\u3055\u305A\u306B\u3001\u7AEF\u3092\u4E0B\u306B\u6298\u308A\u8FBC\u3093\u3067\u304F\u3060\u3055\u3044\u3002",
       tipNerd: "\u52A0\u6C34\u7387>75%\u3067\u306F\u3001\u5F37\u3044\u5206\u5272\u306F\u4E00\u6B21\u767A\u9175\u3067\u3067\u304D\u305F\u6C17\u6CE1\u3092\u3064\u3076\u3057\u307E\u3059\u3002\u5F35\u308A\u306F\u6700\u5C0F\u9650\u306B\u3001\u30AC\u30B9\u629C\u304D\u306F\u307B\u307C\u30BC\u30ED\u306B\u3057\u307E\u3059\u3002",
@@ -1834,7 +1833,6 @@ export const JA_LOCALE: CmsContent = {
     optimizeForMe: "自分のキッチンに合わせる",
     resetToOriginal: "基準に戻す",
     saveVersion: "レシピ帳に保存",
-    savedVersion: "\u30EC\u30B7\u30D4\u5E33\u306B\u4FDD\u5B58\u6E08\u307F",
     optimizedForSetup: "自分のキッチンに合わせて調整済み",
     doneBody: "{style}\u306E\u3059\u3079\u3066\u306E\u5DE5\u7A0B\u304C\u5B8C\u4E86\u3057\u307E\u3057\u305F\u3002\u53EC\u3057\u4E0A\u304C\u308C!",
     tabProcedure: "\u624B\u9806",

@@ -472,6 +472,7 @@ export function RecipeOutput({
       return {
         ...slot,
         idealStart: new Date(idealStartMs),
+        mealAt: new Date(mealTimeMs),
         isFeasible,
       };
     });
@@ -829,6 +830,7 @@ export function RecipeOutput({
           setStartTime={setStartTime}
           endTime={endTime}
           endDisplayTime={endDisplayTime}
+          preciseEndTime={preciseEndTime}
           setPreciseEndTime={setPreciseEndTime}
           totalDurationMin={totalDurationMin}
           hasFlexiblePhases={hasFlexiblePhases}

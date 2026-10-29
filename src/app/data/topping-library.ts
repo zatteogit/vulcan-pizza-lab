@@ -146,12 +146,16 @@ export type TimelineInsertPoint =
   | "after_split_fill"   // dopo sdoppiamento (sostituisce farcitura generica)
   | "after_bake2";       // dopo seconda cottura
 
-interface ToppingAssemblyStep {
+export interface ToppingAssemblyStep {
   /** The same filling can require different operations on different bases. */
   for_styles?: string[];
   id: string;
   title: string;
   description: string;
+  /** G3-WP-03: testo per le cotture brevi (fino a BASIL_BEFORE_BAKE_MAX_SEC di
+   *  cottura effettiva); `description` vale per quelle lunghe. Il motore ne
+   *  sceglie uno solo (assemblyStepDescription), niente «se la cottura…». */
+  description_short_bake?: string;
   insert_at: TimelineInsertPoint;
   duration_minutes: number;
   /** Se true, sostituisce lo step generico (es. "Farcitura" generica) al posto di aggiungersi. */
@@ -895,13 +899,16 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_margherita_avpn",
       title: "Condimento Margherita Verace",
-      description: "Stendere i pelati schiacciati a mano in modo uniforme. Disporre il fior di latte a strisce o cubetti. Olio EVO a filo prima del forno. Basilico fresco prima del forno se la cottura dura un paio di minuti; con il forno di casa aggiungilo appena sfornata.",
+      /* G3-WP-03 (S09-A-13, D-G3-02): il motore sceglie il testo con la
+         cottura effettiva; questo è quello delle cotture lunghe. */
+      description: "Stendi i pelati schiacciati a mano in modo uniforme, disponi il fior di latte a strisce o cubetti e aggiungi un filo d'olio EVO. Il basilico fresco mettilo appena sfornata.",
+      description_short_bake: "Stendi i pelati schiacciati a mano in modo uniforme, disponi il fior di latte a strisce o cubetti e aggiungi un filo d'olio EVO. Completa con il basilico fresco prima di infornare.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
       tip: {
         beginner: "Disciplinare AVPN: pomodoro pelati DOP, mozzarella campana, basilico fresco. Olio EVO sì, ma poco.",
-        nerd: "La cottura flash 90s a 450°C preserva il basilico fresco (la pizza dura troppo poco per degradarlo). Diverso dai forni casa lenti dove va aggiunto post.",
+        nerd: "Con la cottura lampo della napoletana il basilico resta in forno troppo poco per annerire; con una cottura lunga si secca e si scurisce, quindi va messo dopo.",
       },
     }],
   },
@@ -921,7 +928,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_margherita_romana",
       title: "Condimento Margherita romana",
-      description: "Stendere la passata salata uniformemente. Distribuire mozzarella a cubetti. Olio a filo. Basilico solo a fine cottura.",
+      description: "Stendi la passata salata uniformemente. Distribuisci mozzarella a cubetti. Olio a filo. Basilico solo a fine cottura.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -946,7 +953,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_margherita_us",
       title: "Condimento Margherita americana",
-      description: "Spargere la salsa lasciando bordo libero. Mozzarella shredded a manciate distribuite. Parmigiano spolverato. Olio a filo. (Niente basilico fresco: stile USA non lo prevede di base).",
+      description: "Spargi la salsa lasciando bordo libero. Mozzarella shredded a manciate distribuite. Parmigiano spolverato. Olio a filo. (Niente basilico fresco: stile USA non lo prevede di base).",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -997,8 +1004,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "stufare_scarola_metro",
-      title: "Stufare la scarola",
-      description: "Lavare la scarola e tagliarla a strisce. Stufarla in padella con olio e aglio finché appassisce e perde l'acqua, poi salare. Farla raffreddare prima di metterla sulla pizza.",
+      title: "Stufa la scarola",
+      description: "Lava la scarola e tagliala a strisce. Stufala in padella con olio e aglio finché appassisce e perde l'acqua, poi sala. Falla raffreddare prima di metterla sulla pizza.",
       duration_minutes: 15,
       timing: "just_before_assembly",
     }],
@@ -1050,7 +1057,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_bianca",
       title: "Condimento bianca",
-      description: "Spennellare con olio EVO; distribuire aghi di rosmarino freschi; sale grosso in superficie.",
+      description: "Spennella con olio EVO; distribuisci aghi di rosmarino freschi; sale grosso in superficie.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -1074,7 +1081,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_boscaiola_nap",
       title: "Condimento Boscaiola napoletana",
-      description: "Stendere i pelati schiacciati salati. Distribuire fior di latte. Aggiungere porcini scolati e salsiccia spezzata cruda. Spolverare di grana padano. Olio a filo.",
+      description: "Stendi i pelati schiacciati salati. Distribuisci fior di latte. Aggiungi porcini scolati e salsiccia spezzata cruda. Spolvera di grana padano. Olio a filo.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1100,8 +1107,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "saltare_champignon",
-      title: "Saltare champignon",
-      description: "Affettare gli champignon. Scaldare olio EVO con aglio in camicia e prezzemolo. Saltare i funghi 8-10 min a fiamma medio-alta finché perdono acqua e iniziano a dorarsi. Sale a fine cottura.",
+      title: "Salta gli champignon",
+      description: "Affetta gli champignon. Scalda olio EVO con aglio in camicia e prezzemolo. Salta i funghi 8-10 min a fiamma medio-alta finché perdono acqua e iniziano a dorarsi. Sale a fine cottura.",
       duration_minutes: 15,
       timing: "just_before_assembly",
       tip: {
@@ -1112,7 +1119,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_boscaiola_rom",
       title: "Condimento Boscaiola romana",
-      description: "Stendere passata salata. Distribuire mozzarella. Aggiungere champignon saltati (a temperatura ambiente). Spezzettare la salsiccia cruda a tocchetti distribuiti. Olio a filo.",
+      description: "Stendi passata salata. Distribuisci mozzarella. Aggiungi champignon saltati (a temperatura ambiente). Spezzetta la salsiccia cruda a tocchetti distribuiti. Olio a filo.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1182,7 +1189,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_sausage_tavern",
       title: "Salsiccia cruda fino al bordo",
-      description: "Salsa sottile fino quasi al bordo, poi la mozzarella. Distribuire la salsiccia cruda a pezzetti piccoli su tutta la superficie: cuoce in forno con la pizza. Origano. Dopo la cottura, tagliare a quadretti.",
+      description: "Salsa sottile fino quasi al bordo, poi la mozzarella. Distribuisci la salsiccia cruda a pezzetti piccoli su tutta la superficie: cuoce in forno con la pizza. Origano. Dopo la cottura, taglia a quadretti.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -1214,30 +1221,30 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     pre_prep_steps: [{
       id: "patate_mandolina_ammollo",
       title: "Preparazione patate",
-      description: "Affettare le patate sottilissime (1-2mm) con mandolina. Immergere in acqua fredda per 30 min: serve a togliere l'amido in eccesso. Scolare e asciugare bene tra panni puliti.",
+      description: "Affetta le patate sottilissime (1-2mm) con mandolina. Immergi in acqua fredda per 30 min: serve a togliere l'amido in eccesso. Scola e asciugare bene tra panni puliti.",
       duration_minutes: 35,
       timing: "just_before_assembly",
       tip: {
         beginner: "L'acqua fredda toglie l'amido: senza, le patate si attaccano tra loro in cottura e non si arricciano ai bordi.",
-        nerd: "L'amido superficiale gelatinizza a ~60°C creando una pellicola adesiva. Rimuoverlo permette la disidratazione progressiva durante il bake e l'arricciamento dei bordi (effetto chip).",
+        nerd: "L'amido superficiale gelatinizza a ~60°C creando una pellicola adesiva. Togliendolo, le patate si disidratano poco a poco in cottura e i bordi si arricciano (effetto chip).",
       },
     }],
     assembly_steps: [
       {
         id: "stesura_patate",
         title: "Disposizione patate sopra",
-        description: "Disporre le patate a scaglie sovrapposte sull'impasto. Condire con olio EVO e rosmarino. Niente sale ancora.",
+        description: "Disponi le patate a scaglie sovrapposte sull'impasto. Condisci con olio EVO e rosmarino. Niente sale ancora.",
         insert_at: "after_stack",
         duration_minutes: 6,
         tip: {
           beginner: "Non salare ora: il sale farebbe rilasciare acqua e bagnerebbe la base. Va aggiunto solo a fine cottura.",
-          nerd: "Il NaCl per osmosi estrae acqua dalle cellule vegetali (turgor pressure rilascio). Salare in anticipo significa portare le patate da ~80% acqua a poltiglia bagnata.",
+          nerd: "Il NaCl per osmosi estrae acqua dalle cellule vegetali (turgor pressure rilascio). Sala in anticipo significa portare le patate da ~80% acqua a poltiglia bagnata.",
         },
       },
       {
         id: "farcitura_porchetta",
         title: "Farcitura porchetta",
-        description: "Separare i due strati cotti. Disporre le fette di porchetta sulla metà inferiore e aggiungere il pepe, se desiderato. Richiudere con la parte alta, con le patate sopra.",
+        description: "Separa i due strati cotti. Disponi le fette di porchetta sulla metà inferiore e aggiungi il pepe, se desiderato. Richiudi con la parte alta, con le patate sopra.",
         insert_at: "after_split_fill",
         duration_minutes: 4,
         replaces_generic: true,
@@ -1245,7 +1252,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "sale_finale",
         title: "Sale e servizio",
-        description: "Spolverare di fior di sale la superficie delle patate. Servire calda, tagliata a quadrotti.",
+        description: "Spolvera di fior di sale la superficie delle patate. Servi calda, tagliata a quadrotti.",
         insert_at: "after_bake2",
         duration_minutes: 1,
       },
@@ -1273,8 +1280,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "spread_bianca_base",
         for_styles: ["pala_romana", "teglia_romana", "pizza_spaccata"],
-        title: "Preparare la base in bianco",
-        description: "Spennellare con olio EVO e cospargere di fior di sale. Lasciare la base senza farcitura: cuocerà nella fase successiva.",
+        title: "Prepara la base in bianco",
+        description: "Spennella con olio EVO e cospargi di fior di sale. Lascia la base senza farcitura: cuocerà nella fase successiva.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
@@ -1282,32 +1289,32 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "mortazza_post_bake",
         for_styles: ["pala_romana", "teglia_romana"],
-        title: "Aggiungere mortadella post-cottura",
-        description: "Sulla base cotta distribuire la mortadella a fette ondulate e la granella di pistacchio. Aggiungere la stracciatella di burrata solo se scelta. Servire senza rimettere in forno.",
+        title: "Aggiungi mortadella post-cottura",
+        description: "Sulla base cotta distribuisci la mortadella a fette ondulate e la granella di pistacchio. Aggiungi la stracciatella di burrata solo se scelta. Servi senza rimettere in forno.",
         insert_at: "after_bake",
         duration_minutes: 3,
       },
       {
         id: "mortazza_spaccata_fill",
         for_styles: ["pizza_spaccata"],
-        title: "Aprire e farcire la base cotta",
-        description: "Tagliare la base cotta orizzontalmente con un coltello a sega. Distribuire mortadella e granella di pistacchio nella metà inferiore; aggiungere la stracciatella solo se scelta. Richiudere e servire senza rimettere in forno.",
+        title: "Apri e farcisci la base cotta",
+        description: "Taglia la base cotta orizzontalmente con un coltello a sega. Distribuisci mortadella e granella di pistacchio nella metà inferiore; aggiungi la stracciatella solo se scelta. Richiudi e servi senza rimettere in forno.",
         insert_at: "after_bake",
         duration_minutes: 7,
       },
       {
         id: "spread_baciata_surface",
         for_styles: ["pizza_baciata"],
-        title: "Condire la superficie",
-        description: "Dopo aver sovrapposto i dischi, spennellare la superficie esterna con olio EVO e fior di sale. Il ripieno si aggiungerà dopo la cottura.",
+        title: "Condisci la superficie",
+        description: "Dopo aver sovrapposto i dischi, spennella la superficie esterna con olio EVO e fior di sale. Il ripieno si aggiungerà dopo la cottura.",
         insert_at: "after_stack",
         duration_minutes: 2,
       },
       {
         id: "mortazza_split_fill",
         for_styles: ["pizza_baciata"],
-        title: "Aprire e farcire la Baciata",
-        description: "Separare i due strati cotti, aiutandosi con un coltello a sega lungo il bordo. Distribuire mortadella e granella di pistacchio nello strato inferiore; aggiungere la stracciatella solo se scelta. Richiudere e servire senza rimettere in forno.",
+        title: "Apri e farcisci la Baciata",
+        description: "Separa i due strati cotti, aiutandoti con un coltello a sega lungo il bordo. Distribuisci mortadella e granella di pistacchio nello strato inferiore; aggiungi la stracciatella solo se scelta. Richiudi e servi senza rimettere in forno.",
         insert_at: "after_split_fill",
         duration_minutes: 7,
         replaces_generic: true,
@@ -1330,15 +1337,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "crudo_bianca",
         title: "Cottura in bianco",
-        description: "Spennellare con olio EVO e fior di sale. Cuocere la base finché dorata e alveolata. Niente altro prima del forno.",
+        description: "Spennella con olio EVO e fior di sale. Cuoci la base finché dorata e alveolata. Niente altro prima del forno.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
       },
       {
         id: "crudo_spacca_farci",
-        title: "Spaccare e farcire col crudo",
-        description: "Estrarre dal forno, spaccare a metà col coltello e farcire con le fette di prosciutto crudo. Il calore residuo ammorbidisce appena il grasso del crudo.",
+        title: "Spacca e farcisci col crudo",
+        description: "Estrai dal forno, spacca a metà col coltello e farcisci con le fette di prosciutto crudo. Il calore residuo ammorbidisce appena il grasso del crudo.",
         insert_at: "after_bake",
         duration_minutes: 2,
       },
@@ -1363,8 +1370,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "patate_sancho_prep",
-      title: "Affettare e ammollare le patate",
-      description: "Affettare le patate a 1-2 mm con la mandolina, ammollarle 20 min in acqua fredda per togliere l'amido, scolare e asciugare.",
+      title: "Affetta e ammolla le patate",
+      description: "Affetta le patate a 1-2 mm con la mandolina, mettile a bagno 20 min in acqua fredda per togliere l'amido, scolale e asciugale.",
       duration_minutes: 25,
       timing: "just_before_assembly",
     }],
@@ -1372,15 +1379,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "patate_sancho_top",
         title: "Patate a scaglie in superficie",
-        description: "Disporre le patate a scaglie sovrapposte sulla base (la 'crosta di patate'). Olio EVO e rosmarino. Niente sale ora. Cuocere finché le patate si arricciano e dorano.",
+        description: "Disponi le patate a scaglie sovrapposte sulla base (la 'crosta di patate'). Olio EVO e rosmarino. Niente sale ora. Cuoci finché le patate si arricciano e dorano.",
         insert_at: "after_shape",
         duration_minutes: 6,
         replaces_generic: true,
       },
       {
         id: "patate_sancho_split",
-        title: "Spaccare e farcire di porchetta",
-        description: "Fuori dal forno, salare le patate. Spaccare la teglia a metà (le patate restano fuori) e farcire l'interno con la porchetta di Ariccia a fette e una macinata di pepe. Richiudere. Alla Sancho.",
+        title: "Spacca e farcisci di porchetta",
+        description: "Fuori dal forno, sala le patate. Spacca la teglia a metà (le patate restano fuori) e farcisci l'interno con la porchetta di Ariccia a fette e una macinata di pepe. Richiudi. Alla Sancho.",
         insert_at: "after_bake",
         duration_minutes: 4,
       },
@@ -1406,7 +1413,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "crescenza_internal",
       title: "Crescenza tra le sfoglie",
-      description: "Tra la sfoglia inferiore e quella superiore, distribuire pezzetti di crescenza a distanza regolare. Sigillare i bordi schiacciando. Olio + sale grosso in superficie.",
+      description: "Tra la sfoglia inferiore e quella superiore, distribuisci pezzetti di crescenza a distanza regolare. Sigilla i bordi schiacciando. Olio + sale grosso in superficie.",
       insert_at: "after_fill_internal",
       duration_minutes: 4,
     }],
@@ -1429,14 +1436,14 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     pre_prep_steps: [{
       id: "sfincione_sauce",
       title: "Salsa di cipolla e pangrattato tostato",
-      description: "Stufare la cipolla a fette in poco olio, unire la passata e cuocere 15 min. A parte, tostare il pangrattato in padella con un filo d'olio fino a doratura.",
+      description: "Stufa la cipolla a fette in poco olio, unisci la passata e cuoci 15 min. A parte, tosta il pangrattato in padella con un filo d'olio fino a doratura.",
       duration_minutes: 25,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "sfincione_top",
-      title: "Condire lo sfincione",
-      description: "Stendere la salsa di pomodoro e cipolla sull'impasto. Distribuire il caciocavallo a dadini e i filetti di acciuga affondandoli leggermente. Spolverare con pangrattato tostato, pecorino e origano, infine un filo d'olio EVO.",
+      title: "Condisci lo sfincione",
+      description: "Stendi la salsa di pomodoro e cipolla sull'impasto. Distribuisci il caciocavallo a dadini e i filetti di acciuga affondandoli leggermente. Spolvera con pangrattato tostato, pecorino e origano, infine un filo d'olio EVO.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -1456,7 +1463,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "barese_top",
       title: "Pomodorini, olive e origano",
-      description: "Affondare i pomodorini schiacciati nell'impasto lievitato. Distribuire le olive baresane premendole leggermente. Spolverare l'origano, irrorare con olio EVO abbondante e finire con sale grosso.",
+      description: "Affonda i pomodorini schiacciati nell'impasto lievitato. Distribuisci le olive baresane premendole leggermente. Spolvera l'origano, irrora con olio EVO abbondante e finisci con sale grosso.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1478,7 +1485,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "barese_patate",
       title: "Coperta di patate",
-      description: "Coprire interamente la focaccia con le fette di patata sovrapposte (~5 mm). Rosmarino, abbondante olio EVO e sale grosso. Le patate si arricciano e dorano in cottura.",
+      description: "Copri interamente la focaccia con le fette di patata sovrapposte (~5 mm). Rosmarino, abbondante olio EVO e sale grosso. Le patate si arricciano e dorano in cottura.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1499,15 +1506,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "barese_cipolla_prep",
-      title: "Stufare la cipolla",
-      description: "Affettare la cipolla rossa dolce e stufarla dolcemente in olio finché morbida e appena dorata.",
+      title: "Stufa la cipolla",
+      description: "Affetta la cipolla rossa dolce e stufala dolcemente in olio finché morbida e appena dorata.",
       duration_minutes: 20,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "barese_cipolla",
       title: "Cipolla stufata sulla focaccia",
-      description: "Distribuire la cipolla stufata sull'impasto lievitato. Origano, olio EVO e sale grosso. La dolcezza della cipolla di Acquaviva è la firma di questa variante.",
+      description: "Distribuisci la cipolla stufata sull'impasto lievitato. Origano, olio EVO e sale grosso. La dolcezza della cipolla di Acquaviva è la firma di questa variante.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -1530,15 +1537,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "fugazzeta_onion",
-      title: "Ammorbidire la cipolla",
-      description: "Affettare la cipolla a velo e lasciarla in acqua fredda salata 15 min per smorzarne il pungente, poi scolarla e asciugarla bene.",
+      title: "Ammorbidisci la cipolla",
+      description: "Affetta la cipolla a velo e lasciala in acqua fredda salata 15 min per smorzarne il pungente, poi scolala e asciugala bene.",
       duration_minutes: 15,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "fugazzeta_fill_top",
       title: "Mozzarella interna + cipolla in superficie",
-      description: "Distribuire la mozzarella sullo strato inferiore, coprire con il secondo disco e sigillare i bordi. In superficie disporre la cipolla a velo, l'origano e (a piacere) il formaggio grattugiato; rifinire con olio EVO e sale. Niente pomodoro.",
+      description: "Distribuisci la mozzarella sullo strato inferiore, copri con il secondo disco e sigilla i bordi. In superficie disponi la cipolla a velo, l'origano e (a piacere) il formaggio grattugiato; rifinisci con olio EVO e sale. Niente pomodoro.",
       insert_at: "after_fill_internal",
       duration_minutes: 6,
       replaces_generic: true,
@@ -1561,8 +1568,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "fugazza_onion",
-      title: "Ammorbidire la cipolla",
-      description: "Affettare la cipolla a velo, ammollarla 15 min in acqua fredda salata per smorzarne il pungente, scolare e asciugare.",
+      title: "Ammorbidisci la cipolla",
+      description: "Affetta la cipolla a velo, mettila a bagno 15 min in acqua fredda salata per smorzarne il pungente, scolala e asciugala.",
       duration_minutes: 15,
       timing: "just_before_assembly",
     }],
@@ -1591,7 +1598,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "detroit_cheese_crown",
         title: "Cheese crown fino ai bordi",
-        description: "Distribuire il brick cheese su tutta la superficie spingendolo contro i bordi della teglia: in cottura caramella formando la crosta di formaggio (frico). Adagiare sopra il pepperoni.",
+        description: "Distribuisci il brick cheese su tutta la superficie spingendolo contro i bordi della teglia: in cottura caramella formando la crosta di formaggio (frico). Adagia sopra il pepperoni.",
         insert_at: "after_shape",
         duration_minutes: 4,
         replaces_generic: true,
@@ -1599,7 +1606,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "detroit_sauce_stripes",
         title: "Strisce di salsa in superficie",
-        description: "Sopra il formaggio, stendere 2-3 strisce di salsa di pomodoro (racing stripes) nel senso della lunghezza. La salsa va SOPRA, non sotto. Spolverare parmigiano e origano.",
+        description: "Sopra il formaggio, stendi 2-3 strisce di salsa di pomodoro (racing stripes) nel senso della lunghezza. La salsa va SOPRA, non sotto. Spolvera parmigiano e origano.",
         insert_at: "after_shape",
         duration_minutes: 2,
       },
@@ -1620,7 +1627,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "chicago_cheese_base",
         title: "Mozzarella e ripieno sul fondo",
-        description: "Foderare lo stampo profondo con l'impasto facendolo risalire sui bordi. Coprire il fondo con le fette di mozzarella (proteggono l'impasto dalla salsa), poi distribuire la salsiccia.",
+        description: "Fodera lo stampo profondo con l'impasto facendolo risalire sui bordi. Copri il fondo con le fette di mozzarella (proteggono l'impasto dalla salsa), poi distribuire la salsiccia.",
         insert_at: "after_shape",
         duration_minutes: 5,
         replaces_generic: true,
@@ -1628,7 +1635,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "chicago_sauce_top",
         title: "Salsa a pezzi e parmigiano in superficie",
-        description: "Versare la polpa di pomodoro a pezzi SOPRA il formaggio e il ripieno. Spolverare parmigiano, origano e basilico. Cuocere a lungo (25-35 min): è la salsa sopra a proteggere il formaggio.",
+        description: "Versa la polpa di pomodoro a pezzi SOPRA il formaggio e il ripieno. Spolvera parmigiano, origano e basilico. Cuoci a lungo (25-35 min): è la salsa sopra a proteggere il formaggio.",
         insert_at: "after_shape",
         duration_minutes: 3,
       },
@@ -1653,7 +1660,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "calzone_assembly",
       title: "Chiusura calzone",
-      description: "Stendere il disco, spalmare la ricotta mescolata al pepe su una metà. Distribuire fior di latte e salame. Ripiegare a mezzaluna e sigillare premendo forte sui bordi. Cospargere la superficie esterna con un velo di passata, parmigiano, basilico e un filo d'olio.",
+      description: "Stendi il disco, spalma la ricotta mescolata al pepe su una metà. Distribuisci fior di latte e salame. Ripiega a mezzaluna e sigilla premendo forte sui bordi. Cospargi la superficie esterna con un velo di passata, parmigiano, basilico e un filo d'olio.",
       insert_at: "after_fill_internal",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1677,15 +1684,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "scarola_stufata",
-      title: "Stufare la scarola",
-      description: "Ripassare la scarola in padella con aglio, olive e capperi finché morbida e asciutta. Strizzare bene l'acqua in eccesso.",
+      title: "Stufa la scarola",
+      description: "Ripassa la scarola in padella con aglio, olive e capperi finché morbida e asciutta. Strizza bene l'acqua in eccesso.",
       duration_minutes: 12,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "calzone_scarola_fill",
       title: "Chiusura calzone di scarola",
-      description: "Distribuire la scarola stufata con olive e capperi su metà disco, aggiungere la provola (e acciughe a piacere). Ripiegare a mezzaluna e sigillare. È il calzone invernale napoletano per eccellenza.",
+      description: "Distribuisci la scarola stufata con olive e capperi su metà disco, aggiungi la provola (e acciughe a piacere). Ripiega a mezzaluna e sigilla. È il calzone invernale napoletano per eccellenza.",
       insert_at: "after_fill_internal",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1708,7 +1715,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "calzone_cicoli_fill",
       title: "Chiusura calzone ricotta e cicoli",
-      description: "Spalmare la ricotta al pepe su metà disco, unire fior di latte e cicoli. Ripiegare e sigillare. Velo di passata in superficie. Il ripieno rustico tradizionale.",
+      description: "Spalma la ricotta al pepe su metà disco, unisci fior di latte e cicoli. Ripiega e sigilla. Velo di passata in superficie. Il ripieno rustico tradizionale.",
       insert_at: "after_fill_internal",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1729,7 +1736,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_margherita_ny",
       title: "Condimento New York",
-      description: "Stendere la salsa (con un pizzico di zucchero per bilanciare l'acidità) lasciando il bordo libero. Coprire con la mozzarella low-moisture. Finire con pecorino romano grattugiato e un filo d'olio. La fetta resta grande e pieghevole.",
+      description: "Stendi la salsa (con un pizzico di zucchero per bilanciare l'acidità) lasciando il bordo libero. Copri con la mozzarella low-moisture. Finisci con pecorino romano grattugiato e un filo d'olio. La fetta resta grande e pieghevole.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -1748,8 +1755,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     assembly_steps: [{
       id: "montanara_a_crudo",
-      title: "Condire a crudo dopo la frittura",
-      description: "Friggere il dischetto in olio fino a doratura, scolarlo bene. Sul dischetto ancora caldo distribuire il pomodoro, i fiocchi di ricotta, il pecorino e il basilico; rifinire con un filo d'olio EVO. Niente cottura in forno: il condimento resta a crudo.",
+      title: "Condisci a crudo dopo la frittura",
+      description: "Friggi il dischetto in olio fino a doratura, scolalo bene. Sul dischetto ancora caldo distribuisci il pomodoro, i fiocchi di ricotta, il pecorino e il basilico; rifinisci con un filo d'olio EVO. Niente cottura in forno: il condimento resta a crudo.",
       insert_at: "after_bake",
       duration_minutes: 3,
       replaces_generic: true,
@@ -1774,14 +1781,14 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     assembly_steps: [{
       id: "pizza_fritta_fill_seal",
-      title: "Farcire e sigillare prima di friggere",
-      description: "Stendere il dischetto e distribuire ricotta, provola, cicoli e pepe su metà, con il pomodoro se scelto. Ripiegare a mezzaluna e sigillare bene i bordi. Il ripieno resta all’interno; la frittura è nella fase successiva.",
+      title: "Farcisci e sigilla prima di friggere",
+      description: "Stendi il dischetto e distribuisci ricotta, provola, cicoli e pepe su metà, con il pomodoro se scelto. Ripiega a mezzaluna e sigilla bene i bordi. Il ripieno resta all’interno; la frittura è nella fase successiva.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
       tip: {
         beginner: "È diversa dalla montanara: la montanara è aperta e condita sopra dopo la frittura; la pizza fritta è chiusa e ripiena prima di friggere.",
-        nerd: "Sigillare bene i bordi è critico: una tasca aperta fa entrare olio e fa fuoriuscire il ripieno. Il vapore interno cuoce a vapore ricotta e provola mentre l'esterno frigge.",
+        nerd: "Sigilla bene i bordi è critico: una tasca aperta fa entrare olio e fa fuoriuscire il ripieno. Il vapore interno cuoce a vapore ricotta e provola mentre l'esterno frigge.",
       },
     }],
   },
@@ -1801,8 +1808,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     assembly_steps: [{
       id: "pizza_fritta_tonda_fill",
-      title: "Farcire e chiudere i due dischi",
-      description: "Stendere a mano, senza farina, le due porzioni in dischi sottili 2–3 mm. Sul disco più grande distribuire ricotta, provola, cicoli e pepe lasciando libero il bordo; coprire con il disco piccolo e sigillare premendo bene. La frittura è nella fase successiva.",
+      title: "Farcisci e chiudi i due dischi",
+      description: "Stendi a mano, senza farina, le due porzioni in dischi sottili 2–3 mm. Sul disco più grande distribuisci ricotta, provola, cicoli e pepe lasciando libero il bordo; copri con il disco piccolo e sigilla premendo bene. La frittura è nella fase successiva.",
       insert_at: "after_fill_internal",
       duration_minutes: 6,
       replaces_generic: true,
@@ -1826,8 +1833,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     assembly_steps: [{
       id: "ciaccino_farcitura",
-      title: "Farcire la schiacciata sigillata",
-      description: "Stendere due dischi sottili. Su quello inferiore distribuire prosciutto e pecorino lasciando un bordo libero, coprire col secondo disco e sigillare premendo bene. Cuocere fino a doratura: la farcitura si scalda e il pecorino fonde appena. Niente pomodoro.",
+      title: "Farcisci la schiacciata sigillata",
+      description: "Stendi due dischi sottili. Su quello inferiore distribuisci prosciutto e pecorino lasciando un bordo libero, copri col secondo disco e sigilla premendo bene. Cuoci fino a doratura: la farcitura si scalda e il pecorino fonde appena. Niente pomodoro.",
       insert_at: "after_fill_internal",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1852,7 +1859,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "white_clam_top",
       title: "Vongole, aglio e pecorino (white pie)",
-      description: "Sulla base stesa distribuire le vongole sgusciate con un po' del loro liquido e l'aglio tritato. Irrorare con olio EVO, spolverare pecorino romano e origano. Niente pomodoro né mozzarella. Cuocere su pietra molto calda finché i bordi sono ben anneriti (coal-fired).",
+      description: "Sulla base stesa distribuisci le vongole sgusciate con un po' del loro liquido e l'aglio tritato. Irrora con olio EVO, spolvera pecorino romano e origano. Niente pomodoro né mozzarella. Cuoci su pietra molto calda finché i bordi sono ben anneriti (coal-fired).",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -1870,15 +1877,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "friarielli_saltati",
-      title: "Saltare i friarielli",
-      description: "Ripassare i friarielli in padella con aglio, olio e un pizzico di peperoncino fino a quando sono morbidi e asciutti. Strizzare bene l'acqua in eccesso prima di usarli.",
+      title: "Salta i friarielli",
+      description: "Ripassa i friarielli in padella con aglio, olio e un pizzico di peperoncino fino a quando sono morbidi e asciutti. Strizza bene l'acqua in eccesso prima di usarli.",
       duration_minutes: 12,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "salsiccia_friarielli_top",
       title: "Provola, salsiccia e friarielli",
-      description: "Distribuire la provola a cubetti sulla base (bianca, senza pomodoro). Aggiungere la salsiccia cruda a tocchetti e i friarielli saltati. Filo d'olio EVO. La salsiccia cuoce nella cottura flash; per i forni casa, pre-rosolarla.",
+      description: "Distribuisci la provola a cubetti sulla base (bianca, senza pomodoro). Aggiungi la salsiccia cruda a tocchetti e i friarielli saltati. Filo d'olio EVO. La salsiccia cuoce nella cottura flash; per i forni casa, pre-rosolarla.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -1896,15 +1903,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "cacio_pepe_cream",
-      title: "Montare la crema di pecorino",
-      description: "Mescolare il pecorino con acqua tiepida (o poca panna) e pepe fino a ottenere una crema liscia senza grumi. Tenere da parte a temperatura ambiente.",
+      title: "Monta la crema di pecorino",
+      description: "Mescola il pecorino con acqua tiepida (o poca panna) e pepe fino a ottenere una crema liscia senza grumi. Tieni da parte a temperatura ambiente.",
       duration_minutes: 5,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "cacio_pepe_postbake",
       title: "Crema a crudo sul calore residuo",
-      description: "Cuocere la base bianca. Appena sfornata, stendere la crema di pecorino e pepe sul disco caldo: il calore residuo la rende setosa senza stracciarla. Macinare altro pepe sopra.",
+      description: "Cuoci la base bianca. Appena sfornata, stendi la crema di pecorino e pepe sul disco caldo: il calore residuo la rende setosa senza stracciarla. Macina altro pepe sopra.",
       insert_at: "after_bake",
       duration_minutes: 2,
       replaces_generic: true,
@@ -1924,7 +1931,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "hawaiiana_top",
       title: "Prosciutto cotto e ananas",
-      description: "Stendere la salsa e la mozzarella. Distribuire prosciutto cotto e ananas ben asciugato (per non rilasciare acqua). Cuocere finché il formaggio è fuso e l'ananas leggermente caramellato.",
+      description: "Stendi la salsa e la mozzarella. Distribuisci prosciutto cotto e ananas ben asciugato (per non rilasciare acqua). Cuoci finché il formaggio è fuso e l'ananas leggermente caramellato.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -1955,15 +1962,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "champignon_nap_capricciosa",
-      title: "Saltare champignon",
-      description: "Affettare gli champignon e saltarli 5 min in padella con un filo d'olio finché perdono acqua. Salare a fine.",
+      title: "Salta gli champignon",
+      description: "Affetta gli champignon e saltali 5 min in padella con un filo d'olio finché perdono acqua. Sala a fine.",
       duration_minutes: 8,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "spread_capricciosa_nap",
       title: "Condimento Capricciosa napoletana",
-      description: "Pelati schiacciati + fior di latte alla base. Distribuire prosciutto cotto, champignon saltati, carciofini di Paestum scolati e olive caiazzane. Alici di Cetara per la versione del Sud. Filo d'olio EVO.",
+      description: "Pelati schiacciati + fior di latte alla base. Distribuisci prosciutto cotto, champignon saltati, carciofini di Paestum scolati e olive caiazzane. Alici di Cetara per la versione del Sud. Filo d'olio EVO.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -1985,7 +1992,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_4stagioni_nap",
       title: "Condimento 4 Stagioni napoletana",
-      description: "Pelati + fior di latte alla base. DIVIDERE in 4 quadranti: prosciutto cotto, champignon saltati, carciofini di Paestum, alici di Cetara con olive. Ogni quadrante isolato.",
+      description: "Pelati + fior di latte alla base. DIVIDI in 4 quadranti: prosciutto cotto, champignon saltati, carciofini di Paestum, alici di Cetara con olive. Ogni quadrante isolato.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -2005,7 +2012,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_4formaggi_nap",
       title: "Condimento 4 Formaggi napoletana",
-      description: "Base bianca. Distribuire il fior di latte; aggiungere provolone del Monaco e gorgonzola a tocchetti. Parmigiano in superficie. Cottura flash che fonde senza bruciare.",
+      description: "Base bianca. Distribuisci il fior di latte; aggiungi provolone del Monaco e gorgonzola a tocchetti. Parmigiano in superficie. Cottura flash che fonde senza bruciare.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -2031,15 +2038,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "verdure_fritte_nap",
-      title: "Friggere melanzane e zucchine",
-      description: "Tagliare melanzane a cubetti e zucchine a fette, friggerle in olio caldo finché dorate, scolare su carta. Grigliare i peperoni e spellarli.",
+      title: "Friggi melanzane e zucchine",
+      description: "Taglia melanzane a cubetti e zucchine a fette, friggile in olio caldo finché dorate, scola su carta. Griglia i peperoni e spellali.",
       duration_minutes: 20,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "spread_ortolana_nap",
       title: "Condimento Ortolana napoletana",
-      description: "Pomodoro schiacciato + fior di latte. Distribuire melanzane e zucchine fritte e i peperoni grigliati. Basilico e olio EVO. (Versione vegetariana napoletana, con verdure fritte non grigliate).",
+      description: "Pomodoro schiacciato + fior di latte. Distribuisci melanzane e zucchine fritte e i peperoni grigliati. Basilico e olio EVO. (Versione vegetariana napoletana, con verdure fritte non grigliate).",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -2061,7 +2068,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_cosacca",
       title: "Condimento Cosacca",
-      description: "Stendere il pomodoro schiacciato salato. Spolverare abbondante parmigiano (o pecorino). Basilico e olio EVO. NIENTE mozzarella: è la pizza pre-Margherita.",
+      description: "Stendi il pomodoro schiacciato salato. Spolvera abbondante parmigiano (o pecorino). Basilico e olio EVO. NIENTE mozzarella: è la pizza pre-Margherita.",
       insert_at: "after_shape",
       duration_minutes: 2,
       replaces_generic: true,
@@ -2086,7 +2093,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_provola_pepe",
       title: "Condimento Provola e Pepe",
-      description: "Velo di pomodoro schiacciato (l'ombra). Distribuire la provola affumicata a cubetti. Dopo cottura, generosa macinata di pepe nero, basilico e filo d'olio.",
+      description: "Velo di pomodoro schiacciato (l'ombra). Distribuisci la provola affumicata a cubetti. Dopo cottura, generosa macinata di pepe nero, basilico e filo d'olio.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -2107,7 +2114,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_nduja_nap",
       title: "Condimento 'Nduja di Spilinga",
-      description: "Pomodoro schiacciato + fior di latte. Distribuire la 'nduja a piccoli fiocchi (non spalmata): in cottura si scioglie rilasciando grasso rosso piccante. Basilico e olio a fine.",
+      description: "Pomodoro schiacciato + fior di latte. Distribuisci la 'nduja a piccoli fiocchi (non spalmata): in cottura si scioglie rilasciando grasso rosso piccante. Basilico e olio a fine.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -2134,14 +2141,14 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     pre_prep_steps: [{
       id: "nerano_prep",
       title: "Crema e zucchine fritte",
-      description: "Friggere metà delle zucchine a julienne finché dorate. Frullare l'altra metà (saltata) con olio EVO, poca menta e sale per la crema. Tenere da parte.",
+      description: "Friggi metà delle zucchine a julienne finché dorate. Frulla l'altra metà (saltata) con olio EVO, poca menta e sale per la crema. Tieni da parte.",
       duration_minutes: 20,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "spread_nerano",
       title: "Condimento Nerano",
-      description: "Base bianca con crema di zucchine. Distribuire il fior di latte e le zucchine fritte. Dopo cottura: scaglie di provolone del Monaco e mentuccia fresca. Filo d'olio.",
+      description: "Base bianca con crema di zucchine. Distribuisci il fior di latte e le zucchine fritte. Dopo cottura: scaglie di provolone del Monaco e mentuccia fresca. Filo d'olio.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -2163,7 +2170,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "sbagliata_bake",
         title: "Solo bufala in cottura",
-        description: "Sul disco condire SOLO con la mozzarella di bufala a fette. Infornare e cuocere finché il cornicione gonfia e la bufala fonde. Niente pomodoro nel forno.",
+        description: "Sul disco condisci SOLO con la mozzarella di bufala a fette. Inforna e cuoci finché il cornicione gonfia e la bufala fonde. Niente pomodoro nel forno.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
@@ -2171,7 +2178,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "sbagliata_post",
         title: "Pomodoro a crudo dopo il forno",
-        description: "Appena sfornata, distribuire a cucchiaiate la passata di pomodoro a crudo fredda, il basilico e un filo d'olio. Il contrasto caldo/freddo e il pomodoro fresco sono la firma della 'sbagliata'.",
+        description: "Appena sfornata, distribuisci a cucchiaiate la passata di pomodoro a crudo fredda, il basilico e un filo d'olio. Il contrasto caldo/freddo e il pomodoro fresco sono la firma della 'sbagliata'.",
         insert_at: "after_bake",
         duration_minutes: 2,
       },
@@ -2197,7 +2204,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     pre_prep_steps: [{
       id: "scarpetta_fonduta",
       title: "Fonduta di grana",
-      description: "Scaldare dolcemente il Grana Padano 12 mesi con poca panna/latte fino a crema liscia. Tenere in caldo.",
+      description: "Scalda dolcemente il Grana Padano 12 mesi con poca panna/latte fino a crema liscia. Tieni in caldo.",
       duration_minutes: 10,
       timing: "just_before_assembly",
     }],
@@ -2205,7 +2212,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "scarpetta_bake",
         title: "Bufala e fonduta in cottura",
-        description: "Condire con la bufala e ciuffi di fonduta di grana. Infornare fino a cornicione gonfio e formaggi fusi.",
+        description: "Condisci con la bufala e ciuffi di fonduta di grana. Inforna fino a cornicione gonfio e formaggi fusi.",
         insert_at: "after_shape",
         duration_minutes: 3,
         replaces_generic: true,
@@ -2213,7 +2220,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "scarpetta_post",
         title: "Composta, pesto e grana a fine",
-        description: "Fuori dal forno, distribuire la composta di pomodoro a crudo fredda, puntini di pesto di basilico e scaglie di Grana 24 mesi. Firma 'Scarpetta' di Lioniello.",
+        description: "Fuori dal forno, distribuisci la composta di pomodoro a crudo fredda, puntini di pesto di basilico e scaglie di Grana 24 mesi. Firma 'Scarpetta' di Lioniello.",
         insert_at: "after_bake",
         duration_minutes: 3,
       },
@@ -2246,7 +2253,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_capricciosa_rom",
       title: "Condimento Capricciosa romana",
-      description: "Passata + fior di latte. Distribuire prosciutto cotto, champignon affettati, carciofini romani e olive nere. Spicchi di uovo sodo per la versione romana classica. Olio a filo.",
+      description: "Passata + fior di latte. Distribuisci prosciutto cotto, champignon affettati, carciofini romani e olive nere. Spicchi di uovo sodo per la versione romana classica. Olio a filo.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -2268,7 +2275,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_4stagioni_rom",
       title: "Condimento 4 Stagioni romana",
-      description: "Passata + fior di latte. DIVIDERE in 4 quadranti: prosciutto cotto, champignon, carciofini, olive nere. Quadranti netti.",
+      description: "Passata + fior di latte. DIVIDI in 4 quadranti: prosciutto cotto, champignon, carciofini, olive nere. Quadranti netti.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -2309,15 +2316,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "grigliare_verdure_rom",
-      title: "Grigliare le verdure",
-      description: "Grigliare melanzane e zucchine a fette; cuocere al forno le fette di patate. Salare a fine.",
+      title: "Griglia le verdure",
+      description: "Griglia melanzane e zucchine a fette; cuoci al forno le fette di patate. Sala a fine.",
       duration_minutes: 22,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "spread_ortolana_rom",
       title: "Condimento Ortolana romana",
-      description: "Base bianca con fior di latte. Distribuire patate al forno, melanzane e zucchine grigliate, pomodorini datterini. Olio a filo. (Versione romana con patate e verdure grigliate).",
+      description: "Base bianca con fior di latte. Distribuisci patate al forno, melanzane e zucchine grigliate, pomodorini datterini. Olio a filo. (Versione romana con patate e verdure grigliate).",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -2383,7 +2390,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_hot_honey",
       title: "Condimento Hot Honey",
-      description: "Passata speziata + provola + pepperoni. Cuocere. Fuori dal forno, filo di miele alla 'nduja e pecorino romano: dolce-piccante sul croccante della tonda.",
+      description: "Passata speziata + provola + pepperoni. Cuoci. Fuori dal forno, filo di miele alla 'nduja e pecorino romano: dolce-piccante sul croccante della tonda.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -2411,7 +2418,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "bresaola_bake",
         title: "Cottura in bianco con mozzarella",
-        description: "Condire solo con fior di latte e cuocere la tonda finché croccante e il formaggio è fuso.",
+        description: "Condisci solo con fior di latte e cuoci la tonda finché croccante e il formaggio è fuso.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
@@ -2419,7 +2426,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "bresaola_post",
         title: "Bresaola, rucola e grana a crudo",
-        description: "Fuori dal forno, adagiare la bresaola a fette, la rucola, le scaglie di grana, una grattata di zest di limone e un filo d'olio. Tutto a crudo per restare fresco.",
+        description: "Fuori dal forno, adagia la bresaola a fette, la rucola, le scaglie di grana, una grattata di zest di limone e un filo d'olio. Tutto a crudo per restare fresco.",
         insert_at: "after_bake",
         duration_minutes: 3,
       },
@@ -2442,7 +2449,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "nduja_pinsa_bake",
         title: "'Nduja in cottura",
-        description: "Sulla pinsa stesa distribuire la 'nduja a fiocchi e infornare: si scioglie e insaporisce la base croccante.",
+        description: "Sulla pinsa stesa distribuisci la 'nduja a fiocchi e inforna: si scioglie e insaporisce la base croccante.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
@@ -2470,15 +2477,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "patate_mandolina_rom",
-      title: "Affettare e ammollare le patate",
-      description: "Affettare le patate a 1-2 mm con la mandolina, ammollarle 20 min in acqua fredda per togliere l'amido, scolare e asciugare bene.",
+      title: "Affetta e ammolla le patate",
+      description: "Affetta le patate a 1-2 mm con la mandolina, mettile a bagno 20 min in acqua fredda per togliere l'amido, scolale e asciugale bene.",
       duration_minutes: 25,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "spread_patate_rosmarino",
       title: "Condimento Patate e Rosmarino",
-      description: "Su base (bianca o con velo di fior di latte) disporre le patate a scaglie sovrapposte. Olio EVO e rosmarino. Salare SOLO a fine cottura per non bagnare la base.",
+      description: "Su base (bianca o con velo di fior di latte) disponi le patate a scaglie sovrapposte. Olio EVO e rosmarino. Sala SOLO a fine cottura per non bagnare la base.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -2505,7 +2512,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "stracciata_bake",
         title: "Pala bianca in cottura",
-        description: "Cuocere la pala in bianco (solo olio e sale) fino a doratura e alveolatura aperta.",
+        description: "Cuoci la pala in bianco (solo olio e sale) fino a doratura e alveolatura aperta.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
@@ -2541,7 +2548,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_cheese_ny",
       title: "Salsa e mozzarella fino al bordo",
-      description: "Stendere la salsa lasciando 1 cm di bordo. Coprire con abbondante mozzarella low-moisture quasi fino al cornicione. Pecorino e filo d'olio. La slice deve restare grande e pieghevole.",
+      description: "Stendi la salsa lasciando 1 cm di bordo. Copri con abbondante mozzarella low-moisture quasi fino al cornicione. Pecorino e filo d'olio. La slice deve restare grande e pieghevole.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -2563,7 +2570,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_white_ny",
       title: "White pie senza pomodoro",
-      description: "Niente salsa. Distribuire mozzarella, ciuffi di ricotta montata, spinaci saltati e aglio. Pecorino e olio. Cottura su pietra/acciaio.",
+      description: "Niente salsa. Distribuisci mozzarella, ciuffi di ricotta montata, spinaci saltati e aglio. Pecorino e olio. Cottura su pietra/acciaio.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -2586,7 +2593,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_supreme_ny",
       title: "Condimento Supreme",
-      description: "Salsa + mozzarella. Distribuire pepperoni, salsiccia cruda sbriciolata, peperoni verdi, cipolla e funghi. Il classico carico americano completo.",
+      description: "Salsa + mozzarella. Distribuisci pepperoni, salsiccia cruda sbriciolata, peperoni verdi, cipolla e funghi. Il classico carico americano completo.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -2629,7 +2636,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_italian_beef",
       title: "Strati invertiti con Italian beef",
-      description: "Foderare lo stampo profondo. Mozzarella a fette sul fondo, poi l'Italian beef e la giardiniera. Coprire con la polpa di pomodoro a pezzi e parmigiano. Cottura lunga.",
+      description: "Fodera lo stampo profondo. Mozzarella a fette sul fondo, poi l'Italian beef e la giardiniera. Copri con la polpa di pomodoro a pezzi e parmigiano. Cottura lunga.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -2651,7 +2658,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_supreme_tavern",
       title: "Carico leggero su base cracker",
-      description: "Sulla base sottilissima, salsa e mozzarella fino al bordo. Distribuire salsiccia, pepperoni e peperoni in modo uniforme (si taglia a quadrotti). Pochi strati per restare croccante.",
+      description: "Sulla base sottilissima, salsa e mozzarella fino al bordo. Distribuisci salsiccia, pepperoni e peperoni in modo uniforme (si taglia a quadrotti). Pochi strati per restare croccante.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -2673,7 +2680,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_margherita_grandma",
       title: "Formaggio sotto, salsa a cucchiaiate sopra",
-      description: "Sulla teglia oliata distribuire la mozzarella a contatto con la base (frico sul fondo). Sopra, cucchiaiate asimmetriche di marinara densa. Pecorino, basilico e olio. Stile Grandma di Long Island.",
+      description: "Sulla teglia oliata distribuisci la mozzarella a contatto con la base (frico sul fondo). Sopra, cucchiaiate asimmetriche di marinara densa. Pecorino, basilico e olio. Stile Grandma di Long Island.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -2764,7 +2771,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "salmon_bake",
         title: "Base bianca con crème fraîche",
-        description: "Cuocere la base sottile con crème fraîche e mozzarella, senza salmone.",
+        description: "Cuoci la base sottile con crème fraîche e mozzarella, senza salmone.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
@@ -2772,7 +2779,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "salmon_post",
         title: "Salmone a crudo dopo il forno",
-        description: "Fuori dal forno, adagiare il salmone affumicato, aneto, cipolla rossa a velo e capperi. Il salmone resta crudo: la firma di Spago.",
+        description: "Fuori dal forno, adagia il salmone affumicato, aneto, cipolla rossa a velo e capperi. Il salmone resta crudo: la firma di Spago.",
         insert_at: "after_bake",
         duration_minutes: 3,
       },
@@ -2794,7 +2801,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_greek",
       title: "Feta, kalamata e cipolla",
-      description: "Nel padellino unto, salsa e mix mozzarella-cheddar. Distribuire feta, olive kalamata e cipolla rossa. Origano. Fondo fritto e croccante dall'abbondante olio.",
+      description: "Nel padellino unto, salsa e mix mozzarella-cheddar. Distribuisci feta, olive kalamata e cipolla rossa. Origano. Fondo fritto e croccante dall'abbondante olio.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -2845,7 +2852,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "zucca_speck_bake",
         title: "Crema di zucca in cottura",
-        description: "Stendere la crema di zucca sulla teglia ad alta idratazione e cuocere fino a base dorata e mollica spumosa.",
+        description: "Stendi la crema di zucca sulla teglia ad alta idratazione e cuoci fino a base dorata e mollica spumosa.",
         insert_at: "after_shape",
         duration_minutes: 3,
         replaces_generic: true,
@@ -2853,7 +2860,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "zucca_speck_post",
         title: "Speck e caciocavallo a freddo",
-        description: "Fuori dal forno, adagiare lo speck a fette e le scaglie di caciocavallo sul caldo. Filo d'olio. Lo speck resta morbido, non cotto.",
+        description: "Fuori dal forno, adagia lo speck a fette e le scaglie di caciocavallo sul caldo. Filo d'olio. Lo speck resta morbido, non cotto.",
         insert_at: "after_bake",
         duration_minutes: 2,
       },
@@ -2876,7 +2883,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "burrata_salmone_bake",
         title: "Teglia in bianco",
-        description: "Cuocere la teglia in bianco (olio e sale) fino a doratura e alveolatura aperta.",
+        description: "Cuoci la teglia in bianco (olio e sale) fino a doratura e alveolatura aperta.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
@@ -2907,7 +2914,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_salamoia_genovese",
       title: "Salamoia nelle fossette",
-      description: "Prima della lievitazione finale, fare le fossette con i polpastrelli. Sciogliere il sale fino nell’acqua della salamoia, nelle dosi indicate. Versare nelle fossette; distribuire separatamente l’olio EVO e il sale grosso di finitura.",
+      description: "Prima della lievitazione finale, fai le fossette con i polpastrelli. Sciogli il sale fino nell’acqua della salamoia, nelle dosi indicate. Versa nelle fossette; distribuisci separatamente l’olio EVO e il sale grosso di finitura.",
       insert_at: "before_proof",
       duration_minutes: 3,
       replaces_generic: true,
@@ -2928,7 +2935,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_cipolle_genovese",
       title: "Cipolle e salamoia nelle fossette",
-      description: "Distribuire le cipolle prima della lievitazione finale. Sciogliere il sale fino nell’acqua della salamoia, nelle dosi indicate, e versare nelle fossette. Distribuire separatamente l’olio EVO e il sale grosso di finitura.",
+      description: "Distribuisci le cipolle prima della lievitazione finale. Sciogli il sale fino nell’acqua della salamoia, nelle dosi indicate, e versare nelle fossette. Distribuisci separatamente l’olio EVO e il sale grosso di finitura.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -2954,8 +2961,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     assembly_steps: [{
       id: "spread_sardenaira",
-      title: "Condire la Sardenaira",
-      description: "Stendere la salsa densa di pomodoro e cipolla sull'impasto alto e soffice. Affondare le acciughe e gli spicchi d'aglio in camicia. Distribuire olive taggiasche, capperi e origano; abbondante olio EVO. Cottura lenta in teglia. Non è una pizza: è una focaccia condita.",
+      title: "Condisci la Sardenaira",
+      description: "Stendi la salsa densa di pomodoro e cipolla sull'impasto alto e soffice. Affonda le acciughe e gli spicchi d'aglio in camicia. Distribuisci olive taggiasche, capperi e origano; abbondante olio EVO. Cottura lenta in teglia. Non è una pizza: è una focaccia condita.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -2978,14 +2985,14 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     pre_prep_steps: [{
       id: "bagherese_prep",
       title: "Cipolle stufate e mollica tostata",
-      description: "Stufare le cipolle bianche dolcemente in olio. A parte, tostare la mollica di pane in padella con origano e un filo d'olio.",
+      description: "Stufa le cipolle bianche dolcemente in olio. A parte, tosta la mollica di pane in padella con origano e un filo d'olio.",
       duration_minutes: 25,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "spread_sfincione_bianco",
       title: "Sfincione bianco senza pomodoro",
-      description: "Niente pomodoro. Affondare nell'impasto le fette di tuma e le acciughe sciolte. Coprire con le cipolle stufate, il caciocavallo grattugiato e la mollica tostata. Pepe e olio. La variante di Bagheria.",
+      description: "Niente pomodoro. Affonda nell'impasto le fette di tuma e le acciughe sciolte. Copri con le cipolle stufate, il caciocavallo grattugiato e la mollica tostata. Pepe e olio. La variante di Bagheria.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -3008,7 +3015,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "recco_nduja_fill",
       title: "Crescenza e 'nduja tra le sfoglie",
-      description: "Tra la sfoglia inferiore e superiore distribuire la crescenza a pezzetti e, qua e là, la 'nduja. Sigillare i bordi, bucherellare. Olio e sale in superficie. La 'nduja si scioglie nel ripieno fondente.",
+      description: "Tra la sfoglia inferiore e superiore distribuisci la crescenza a pezzetti e, qua e là, la 'nduja. Sigilla i bordi, bucherella. Olio e sale in superficie. La 'nduja si scioglie nel ripieno fondente.",
       insert_at: "after_fill_internal",
       duration_minutes: 4,
       replaces_generic: true,
@@ -3031,7 +3038,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "recco_culatello_fill",
         title: "Crescenza tra le sfoglie",
-        description: "Distribuire la crescenza tra le due sfoglie sottilissime, sigillare i bordi, bucherellare, olio e sale. Cuocere a 300-320°C.",
+        description: "Distribuisci la crescenza tra le due sfoglie sottilissime, sigilla i bordi, bucherella, olio e sale. Cuoci a 300-320°C.",
         insert_at: "after_fill_internal",
         duration_minutes: 4,
         replaces_generic: true,
@@ -3039,7 +3046,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "recco_culatello_post",
         title: "Culatello a crudo dopo il forno",
-        description: "Appena sfornata, adagiare le fette di Culatello di Zibello DOP sulla focaccia caldissima: si scalda appena e resta morbido.",
+        description: "Appena sfornata, adagia le fette di Culatello di Zibello DOP sulla focaccia caldissima: si scalda appena e resta morbido.",
         insert_at: "after_bake",
         duration_minutes: 2,
       },
@@ -3061,7 +3068,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "recco_cotto_fill",
         title: "Crescenza tra le sfoglie",
-        description: "Crescenza tra le due sfoglie, sigillare, bucherellare, olio e sale. Cuocere fino a bolle dorate.",
+        description: "Crescenza tra le due sfoglie, sigilla, bucherella, olio e sale. Cuoci fino a bolle dorate.",
         insert_at: "after_fill_internal",
         duration_minutes: 4,
         replaces_generic: true,
@@ -3069,7 +3076,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "recco_cotto_post",
         title: "Cotto Millefiori in uscita dal forno",
-        description: "Adagiare le fette di prosciutto cotto Millefiori sulla focaccia appena sfornata.",
+        description: "Adagia le fette di prosciutto cotto Millefiori sulla focaccia appena sfornata.",
         insert_at: "after_bake",
         duration_minutes: 2,
       },
@@ -3093,7 +3100,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "recco_pizzata_fill",
       title: "Crescenza dentro, pomodoro e acciughe sopra",
-      description: "Crescenza tra le due sfoglie sottili, sigillare e bucherellare. In superficie qualche cucchiaio di passata, acciughe, olive taggiasche e capperi. Olio EVO. La versione 'pizzata' della Recco.",
+      description: "Crescenza tra le due sfoglie sottili, sigilla e bucherella. In superficie qualche cucchiaio di passata, acciughe, olive taggiasche e capperi. Olio EVO. La versione 'pizzata' della Recco.",
       insert_at: "after_fill_internal",
       duration_minutes: 5,
       replaces_generic: true,
@@ -3114,7 +3121,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_margherita_padellino",
       title: "Condimento Margherita al padellino",
-      description: "Sull'impasto lievitato nel padellino oliato, stendere la passata e il fior di latte. Basilico e olio. Il fondo frigge nell'olio del tegamino restando croccante, l'interno soffice.",
+      description: "Sull'impasto lievitato nel padellino oliato, stendi la passata e il fior di latte. Basilico e olio. Il fondo frigge nell'olio del tegamino restando croccante, l'interno soffice.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -3135,7 +3142,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_diavola_padellino",
       title: "Condimento Diavola al padellino",
-      description: "Passata e fior di latte nel padellino. Distribuire il salame piccante a fette. Basilico e olio. Il salame si fa croccante in cottura.",
+      description: "Passata e fior di latte nel padellino. Distribuisci il salame piccante a fette. Basilico e olio. Il salame si fa croccante in cottura.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -3158,7 +3165,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_capricciosa_padellino",
       title: "Condimento Capricciosa al padellino",
-      description: "Passata + fior di latte. Distribuire prosciutto cotto, champignon, carciofini, olive nere e capperi. Olio a filo. Versione torinese ricca.",
+      description: "Passata + fior di latte. Distribuisci prosciutto cotto, champignon, carciofini, olive nere e capperi. Olio a filo. Versione torinese ricca.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -3179,7 +3186,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_tonno_padellino",
       title: "Condimento Tonno e Cipolla",
-      description: "Passata + fior di latte. Distribuire il tonno sgocciolato e la cipolla rossa a velo. Origano e olio. Semplice e saporito.",
+      description: "Passata + fior di latte. Distribuisci il tonno sgocciolato e la cipolla rossa a velo. Origano e olio. Semplice e saporito.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -3313,7 +3320,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "meatsiah_assembly",
       title: "Quattro carni e cheese crown",
-      description: "Brick cheese ai bordi. Distribuire pepperoni, salsiccia, bacon e straccetti di manzo. Dopo cottura, strisce di salsa rossa. La 'Meatsiah'.",
+      description: "Brick cheese ai bordi. Distribuisci pepperoni, salsiccia, bacon e straccetti di manzo. Dopo cottura, strisce di salsa rossa. La 'Meatsiah'.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -3337,7 +3344,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "special_assembly",
       title: "Strati invertiti: The Special",
-      description: "Foderare lo stampo profondo. Mozzarella sul fondo, poi salsiccia, funghi, peperoni e cipolla. Coprire con la polpa di pomodoro a pezzi. Cottura lunga.",
+      description: "Fodera lo stampo profondo. Mozzarella sul fondo, poi salsiccia, funghi, peperoni e cipolla. Copri con la polpa di pomodoro a pezzi. Cottura lunga.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -3358,7 +3365,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spinach_assembly",
       title: "Spinaci e quattro formaggi nel guscio",
-      description: "Mozzarella sul fondo, poi spinaci al vapore e il mix di formaggi. Coprire con la polpa di pomodoro. Versione vegetariana del deep dish.",
+      description: "Mozzarella sul fondo, poi spinaci al vapore e il mix di formaggi. Copri con la polpa di pomodoro. Versione vegetariana del deep dish.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -3381,7 +3388,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "meat_chicago_assembly",
       title: "Quattro carni nel guscio profondo",
-      description: "Mozzarella sul fondo, poi pepperoni, milanese, salsiccia e bacon. Coprire con la polpa di pomodoro. Cottura lunga.",
+      description: "Mozzarella sul fondo, poi pepperoni, milanese, salsiccia e bacon. Copri con la polpa di pomodoro. Cottura lunga.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -3425,7 +3432,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "capricciosa_trancio_assembly",
       title: "Capricciosa al trancio",
-      description: "Passata e abbondante mozzarella sull'impasto alto. Distribuire cotto, funghi, carciofini e olive. Fondo croccante dall'olio in teglia.",
+      description: "Passata e abbondante mozzarella sull'impasto alto. Distribuisci cotto, funghi, carciofini e olive. Fondo croccante dall'olio in teglia.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -3445,7 +3452,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "prosciutto_funghi_assembly",
       title: "Prosciutto e funghi al trancio",
-      description: "Passata e mozzarella. Distribuire prosciutto cotto e champignon. Il grande classico al trancio milanese.",
+      description: "Passata e mozzarella. Distribuisci prosciutto cotto e champignon. Il grande classico al trancio milanese.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,

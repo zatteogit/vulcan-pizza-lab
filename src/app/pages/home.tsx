@@ -56,7 +56,7 @@ import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 import { useCms } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { t as tpl } from "../features/cms/i18n";
-import { findSavedRecipe, loadSavedRecipes, removeRecipe, renameSavedRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
+import { findSavedRecipe, loadSavedRecipes, removeRecipe, renameSavedRecipe, restoreRecipe, saveRecipe, type SavedRecipe } from "../adapters/browser/saved-recipes-storage";
 import {
   getInterpretationById,
   getInterpretationsForStyle,
@@ -780,11 +780,14 @@ export function HomePage() {
     setSavedTick(tick => tick + 1);
     return true;
   }, [savedEntry]);
+  /* S07-B-09: la voce tolta col segnalibro resta qui per «Annulla». */
+  const [lastRemoved, setLastRemoved] = useState<SavedRecipe | null>(null);
   const handleCommitRecipe = useCallback((nextName?: string): boolean => {
     if (!selectedStyle || !recipe) return false;
     let ok = true;
     if (savedEntry) {
       removeRecipe(savedEntry.id);
+      setLastRemoved(savedEntry);
     } else {
       saveRecipe({
         styleId: selectedStyle.id,
@@ -804,6 +807,18 @@ export function HomePage() {
     setSavedTick((v) => v + 1);
     return ok;
   }, [selectedStyle, recipe, savedEntry, activeVersionId, currentSaveParams, engineConstraints.oven_type, resolvedRecipeName]);
+
+  const handleUndoRemove = useCallback((): boolean => {
+    if (!lastRemoved) return false;
+    const { ok } = restoreRecipe(lastRemoved);
+    setSaveFailed(!ok);
+    if (ok && selectedStyle && findSavedRecipe(selectedStyle.id, currentSaveParams)?.id === lastRemoved.id) {
+      setRecipeName(normalizeRecipeName(lastRemoved.name) ?? "");
+    }
+    setLastRemoved(null);
+    setSavedTick((v) => v + 1);
+    return ok;
+  }, [lastRemoved, selectedStyle, currentSaveParams]);
 
   /* ═══ Modello "dirty" (redesign lug 2026) ═══
      L'originale del Crea è il centro-range dello stile (lo stesso che
@@ -1308,6 +1323,7 @@ export function HomePage() {
               onTabChange={setCreateRecipeTab}
               favorite={Boolean(savedEntry)}
               onToggleFavorite={handleToggleSaveRecipe}
+              onUndoRemove={handleUndoRemove}
               back={{ label: cms.ui.changeStyle, onClick: handleBackToStyles, positionClassName: "top-4 left-4" }}
               recipeTabLabel={
                 createRecipeMode === "canonical"

@@ -3,7 +3,7 @@
  * "pronto per il pasto" e Timeline comoda. Stato e handler restano in
  * RecipeOutput (gli orari guidano anche la timeline): qui arrivano via props. */
 
-import { CalendarClock, CalendarRange, Minus, Pencil, Plus } from "lucide-react";
+import { ArrowRight, CalendarClock, CalendarRange, Minus, Pencil, Plus } from "lucide-react";
 import type {
   ChangeEvent,
   Dispatch,
@@ -11,11 +11,13 @@ import type {
   MutableRefObject,
   SetStateAction,
 } from "react";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { timeSlotText } from "./time-slot-text";
-import { Disclosure, IconButton, Surface, Switch } from "../../components/ds/index";
+import { CtaButton, Disclosure, EmptyState, FilterChip, IconButton, Surface, Switch } from "../../components/ds/index";
+import { selectedMealId } from "./meal-selection";
+import { formatRelative } from "../../i18n/format";
 import type { TimeSlot } from "../../domain/pizza-engine";
 import {
   daySuffix,
@@ -25,6 +27,24 @@ import {
 import { COMFORT_TOLERANCES, type NightAction, type optimizeComfort } from "../../use-cases/cook-plan";
 import { t } from "../cms/i18n";
 import { uiMessage } from "../../i18n/ui-messages";
+
+/* G3-WP-01 (S09-B-14): sotto i 640 px la pianificazione si chiude in una
+   riga riassuntiva, così il primo passo resta nel primo schermo. */
+const COMPACT_QUERY = "(max-width: 639px)";
+
+function useCompactHero(): boolean {
+  const [compact, setCompact] = useState(
+    () => typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia(COMPACT_QUERY).matches,
+  );
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const mql = window.matchMedia(COMPACT_QUERY);
+    const onChange = () => setCompact(mql.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+  return compact;
+}
 
 function localDateTimeValue(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -37,6 +57,8 @@ interface ProcedureHeroControlsProps {
   setStartTime: Dispatch<SetStateAction<Date>>;
   endTime: Date;
   endDisplayTime: Date;
+  /** Fine scelta come obiettivo (un pasto): niente «circa» sulla Fine. */
+  preciseEndTime: boolean;
   setPreciseEndTime: Dispatch<SetStateAction<boolean>>;
   totalDurationMin: number;
   hasFlexiblePhases: boolean;
@@ -46,7 +68,7 @@ interface ProcedureHeroControlsProps {
   setEditingEndTime: Dispatch<SetStateAction<boolean>>;
   handleTimeInput: (e: ChangeEvent<HTMLInputElement> | FocusEvent<HTMLInputElement>) => void;
   handleEndTimeInput: (e: ChangeEvent<HTMLInputElement> | FocusEvent<HTMLInputElement>) => void;
-  mealSlots: (TimeSlot & { idealStart: Date; isFeasible: boolean })[];
+  mealSlots: (TimeSlot & { idealStart: Date; mealAt: Date; isFeasible: boolean })[];
   comfortToggled: boolean;
   /** Audit totale n. 2, FW-19: azioni attive che restano di notte col piano corrente. */
   nightActionsLeft?: NightAction[];
@@ -62,6 +84,7 @@ export function ProcedureHeroControls({
   setStartTime,
   endTime,
   endDisplayTime,
+  preciseEndTime,
   setPreciseEndTime,
   totalDurationMin,
   hasFlexiblePhases,
@@ -90,6 +113,13 @@ export function ProcedureHeroControls({
   const [plannedFromNow, setPlannedFromNow] = useState<number | null>(null);
   const fromNowHelp = uiMessage("recipe.schedule.fromNowHelp");
   const feasibleMeals = mealSlots.filter(slot => slot.isFeasible);
+  const mealsLabelId = useId();
+  // S09-A-16: il pasto attivo si deriva dal piano (si spegne con −/+).
+  const selectedMeal = selectedMealId(feasibleMeals, startTime);
+  // S09-B-15: con un pasto scelto (o un piano che coincide con un pasto) la
+  // Fine è l'obiettivo, non una stima.
+  const approxEnd = hasFlexiblePhases && !preciseEndTime && selectedMeal === null;
+  const compact = useCompactHero();
 
   const startDayLabel = daySuffix(calendarReference, startTime, cms.cooking).trim() || cms.cooking.dayToday;
   const endDayLabel = daySuffix(calendarReference, endDisplayTime, cms.cooking).trim() || cms.cooking.dayToday;
@@ -111,6 +141,13 @@ export function ProcedureHeroControls({
     : currentComfortPlan || nightWithoutPlan
       ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--warning type-data-sm"
       : "procedure-hero__comfort-desc procedure-hero__comfort-desc--idle type-data-sm";
+  // S09-B-14: la pianificazione compatta si apre da sola se il piano non
+  // coincide con un pasto o se restano fasi attive di notte da vedere.
+  const nightIssue = Boolean(currentComfortPlan) || nightActivesLeft > 0;
+  const [planOpen, setPlanOpen] = useState(() => selectedMeal === null || nightIssue);
+  useEffect(() => {
+    if (nightIssue) setPlanOpen(true);
+  }, [nightIssue]);
   const tol = COMFORT_TOLERANCES;
   const comfortWhy = t(engineMessage(cms, "timelineComfort.whyBody", ""), {
     coldPlus: fmt.durationMinutes(tol.cold.plusMaxMin),
@@ -123,23 +160,28 @@ export function ProcedureHeroControls({
     roomMinusPct: fmt.percent(tol.room.minusFraction * 100),
   });
 
-  return (
+  const comfortDesc = comfortToggled
+    ? nightActivesLeft > 0
+      ? feasibleMeals.length > 0
+        ? engineMessage(cms, "timelineComfort.activePartial", "")
+        // G3-WP-01: senza chip dei pasti non si rimanda a controlli che non ci sono.
+        : t(engineMessage(cms, "timelineComfort.nightNoPlanNoMeal", ""), { n: nightActivesLeft, time: firstNightLabel })
+      : engineMessage(cms, "timelineComfort.active", "")
+    : currentComfortPlan
+      ? engineMessage(cms, "timelineComfort.nightDetected", "")
+      : nightWithoutPlan
+        ? t(engineMessage(cms, feasibleMeals.length > 0 ? "timelineComfort.nightNoPlan" : "timelineComfort.nightNoPlanNoMeal", ""), {
+            n: nightActivesLeft,
+            time: firstNightLabel,
+          })
+        : engineMessage(cms, "timelineComfort.idle", "");
 
-    <Surface className="procedure-hero">
-      <div className="procedure-hero__header">
-        <div className="procedure-hero__title-group">
-          <CalendarRange size={16} className="procedure-hero__title-icon" />
-          <h2 className="procedure-hero__title">{ui.timeline}</h2>
-        </div>
-        <span className="procedure-hero__total">
-          {uiMessage("features.recipe.procedure-hero.tempo-totale-3c1f6a6f")}{fmt.durationMinutes(totalDurationMin)}
-        </span>
-      </div>
-
+  const body = (
+    <>
       {/* FW-12 (S09-B-10): la scorciatoia delle frecce, detta allo screen reader. */}
       <p id={shiftHintId} className="sr-only">{uiMessage("features.recipe.procedure-hero.shift-hint")}</p>
       <div className="procedure-hero__times">
-        <div className="procedure-hero__time">
+        <div className="procedure-hero__time" data-editing={editingTime || undefined}>
           <div className="procedure-hero__time-label type-data">
             {ui.startTime}
           </div>
@@ -218,7 +260,7 @@ export function ProcedureHeroControls({
           </IconButton>
         </div>
 
-        <div className="procedure-hero__time">
+        <div className="procedure-hero__time" data-editing={editingEndTime || undefined}>
           <div className="procedure-hero__time-label type-data">
             {ui.endTime}
           </div>
@@ -258,14 +300,14 @@ export function ProcedureHeroControls({
                     setStartTime((s) => shiftQuarter(s, -1));
                   }
                 }}
-                aria-label={`${ui.endTime} ${hasFlexiblePhases ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}${fmt.clockTime(endDisplayTime)} ${endDayLabel}`}
+                aria-label={`${ui.endTime} ${approxEnd ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}${fmt.clockTime(endDisplayTime)} ${endDayLabel}`}
                 aria-keyshortcuts="ArrowUp ArrowDown"
                 aria-describedby={shiftHintId}
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
                   {/* FW-19 (S09-A-10): una sola notazione per «circa». */}
-                  {hasFlexiblePhases ? cms.cooking.approxPrefix : ""}
+                  {approxEnd ? cms.cooking.approxPrefix : ""}
                   {fmt.clockTime(endDisplayTime)}
                 </span>
               </button>
@@ -282,6 +324,8 @@ export function ProcedureHeroControls({
           <time className="procedure-hero__time-suffix type-data-sm" dateTime={endDisplayTime.toISOString()} title={endDayLabel}>
             {endDisplayTime.toLocaleDateString(bcp47,{weekday:"short",day:"numeric",month:"short"})}
           </time>
+          {/* S09-B-15: il «circa» detto a chi guarda, non solo allo screen reader. */}
+          {approxEnd && <p className="procedure-hero__approx-help type-data-sm">{uiMessage("recipe.schedule.approxHelp")}</p>}
           <IconButton
             type="button"
             size="sm"
@@ -303,8 +347,12 @@ export function ProcedureHeroControls({
       {/* Smart Eating Planner Shortcuts */}
       <div className="procedure-hero__meals">
         <div className="procedure-hero__now">
-          <button
+          {/* S09-B-05: «Inizia ora» è un'azione, non una scelta fra i pasti. */}
+          <CtaButton
             type="button"
+            variant="secondary"
+            radius="pill"
+            elevated={false}
             onClick={() => {
               const now = new Date();
               // Explicit scheduling from now replaces the comfort adjustments;
@@ -317,36 +365,51 @@ export function ProcedureHeroControls({
               setPlannedFromNow(now.getTime());
             }}
             aria-describedby={nowHelpId}
-            title={fromNowHelp}
-            className="procedure-hero__meal-chip"
+            className="procedure-hero__now-btn"
           >
             <CalendarClock size={15} aria-hidden="true" />
-            {uiMessage("features.recipe.procedure-hero.inizia-ora-895d8504")}</button>
+            {uiMessage("features.recipe.procedure-hero.inizia-ora-895d8504")}</CtaButton>
           <p id={nowHelpId} className="procedure-hero__now-help">{fromNowHelp}</p>
         </div>
         {plannedFromNow === startTime.getTime() && <p role="status" className="procedure-hero__now-status">
           {uiMessage("recipe.schedule.updated")}
         </p>}
 
-        {feasibleMeals.length > 0 && <div className="procedure-hero__meal-picker">
-          <div className="procedure-hero__meals-label">
-            {uiMessage("features.recipe.procedure-hero.pronto-per-il-pasto-503f1512")}</div>
-          <div className="procedure-hero__meals-row">
-            {feasibleMeals.map((slot) => {
-              const text = timeSlotText(slot, cms, bcp47);
-              return (
-                <button
+        <div className="procedure-hero__meal-picker">
+          <p id={mealsLabelId} className="procedure-hero__meals-label">
+            {uiMessage("features.recipe.procedure-hero.pronto-per-il-pasto-503f1512")}</p>
+          {feasibleMeals.length > 0 ? (
+            <div role="group" aria-labelledby={mealsLabelId} className="procedure-hero__meals-row">
+              {feasibleMeals.map((slot) => (
+                <FilterChip
                   key={slot.id}
-                  type="button"
+                  active={slot.id === selectedMeal}
+                  size="sm"
+                  radius="xl"
                   onClick={() => { setPreciseEndTime(true); setStartTime(slot.idealStart); }}
                   className="procedure-hero__meal-chip"
                 >
-                  {text.label} ({text.sublabel})
-                </button>
-              );
-            })}
-          </div>
-        </div>}
+                  {/* S09-A-16: l'ora del pasto, e «fra…» per le ore che mancano. */}
+                  <strong className="procedure-hero__meal-name">
+                    {timeSlotText(slot, cms, bcp47).label}{" "}
+                    <time className="type-numeric" dateTime={slot.mealAt.toISOString()}>{fmt.clockTime(slot.mealAt)}</time>
+                  </strong>
+                  <small className="procedure-hero__meal-in type-data-sm">{formatRelative(slot.mealAt.getTime(), Date.now(), bcp47)}</small>
+                </FilterChip>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title={uiMessage("recipe.schedule.noMealFits")}
+              headingLevel={3}
+              actions={[{
+                label: uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.endTime]),
+                onClick: () => setEditingEndTime(true),
+              }]}
+              className="procedure-hero__no-meal"
+            />
+          )}
+        </div>
       </div>
 
       <div
@@ -358,21 +421,10 @@ export function ProcedureHeroControls({
       >
         <div className="procedure-hero__comfort-text">
           <div id={comfortTitleId} className="procedure-hero__comfort-title type-data">
-            {engineMessage(cms, "timelineComfort.title", "Timeline comoda")}
+            {engineMessage(cms, "timelineComfort.title", "")}
           </div>
           <div id={comfortDescId} className={comfortDescClass}>
-            {comfortToggled
-              ? nightActivesLeft > 0
-                ? engineMessage(cms, "timelineComfort.activePartial", "")
-                : engineMessage(cms, "timelineComfort.active", "")
-              : currentComfortPlan
-                ? engineMessage(cms, "timelineComfort.nightDetected", "")
-                : nightWithoutPlan
-                  ? t(engineMessage(cms, feasibleMeals.length > 0 ? "timelineComfort.nightNoPlan" : "timelineComfort.nightNoPlanNoMeal", ""), {
-                      n: nightActivesLeft,
-                      time: firstNightLabel,
-                    })
-                  : engineMessage(cms, "timelineComfort.idle", "Ottimizza gli orari se serve.")}
+            {comfortDesc}
           </div>
         </div>
         <Switch
@@ -412,6 +464,43 @@ export function ProcedureHeroControls({
           </Disclosure>
         </div>
       )}
+    </>
+  );
+
+  return (
+    <Surface className="procedure-hero">
+      <div className="procedure-hero__header">
+        <div className="procedure-hero__title-group">
+          <CalendarRange size={16} className="procedure-hero__title-icon" />
+          <h2 className="procedure-hero__title">{ui.timeline}</h2>
+        </div>
+        <span className="procedure-hero__total">
+          {uiMessage("features.recipe.procedure-hero.tempo-totale-3c1f6a6f")}{fmt.durationMinutes(totalDurationMin)}
+        </span>
+      </div>
+
+      {compact ? (
+        <>
+          <p className="procedure-hero__summary type-data">
+            <time className="procedure-hero__summary-part" dateTime={startTime.toISOString()}>
+              {ui.startTime} <strong className="type-numeric">{fmt.clockTime(startTime)}</strong> {startDayLabel}
+            </time>
+            <ArrowRight size={14} aria-hidden="true" className="procedure-hero__summary-arrow" />
+            <time className="procedure-hero__summary-part" dateTime={endDisplayTime.toISOString()}>
+              {ui.endTime} <strong className="type-numeric">{approxEnd ? cms.cooking.approxPrefix : ""}{fmt.clockTime(endDisplayTime)}</strong> {endDayLabel}
+            </time>
+          </p>
+          <Disclosure
+            variant="inline"
+            summary={uiMessage("recipe.schedule.editPlan")}
+            open={planOpen}
+            onOpenChange={setPlanOpen}
+            className="procedure-hero__plan"
+          >
+            {body}
+          </Disclosure>
+        </>
+      ) : body}
     </Surface>
   );
 }

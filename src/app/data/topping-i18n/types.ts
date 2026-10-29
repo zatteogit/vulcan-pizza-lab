@@ -7,6 +7,8 @@
 export interface ToppingStepTranslation {
   title?: string;
   description?: string;
+  /** G3-WP-03: testo per le cotture brevi (vedi ToppingAssemblyStep). */
+  description_short_bake?: string;
   tip_beginner?: string;
   tip_nerd?: string;
 }

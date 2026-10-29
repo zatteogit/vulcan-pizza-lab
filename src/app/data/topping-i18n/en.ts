@@ -1393,12 +1393,10 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Margherita Verace topping",
-      description:
-        "Spread the hand-crushed peeled tomatoes evenly. Arrange the fior di latte in strips or cubes. A drizzle of extra-virgin olive oil before the oven. Fresh basil before the oven if the bake takes a couple of minutes; with a home oven, add it straight after baking.",
-      tip_beginner:
-        "AVPN rules: DOP peeled tomatoes, Campanian mozzarella, fresh basil. Extra-virgin olive oil yes, but only a little.",
-      tip_nerd:
-        "The 90s flash bake at 450°C preserves fresh basil (the pizza is in the oven too briefly to degrade it). Unlike slow home ovens, where it should be added afterwards.",
+      description: "Spread the hand-crushed peeled tomatoes evenly, arrange the fior di latte in strips or cubes and add a drizzle of extra-virgin olive oil. Add the fresh basil straight after baking.",
+      description_short_bake: "Spread the hand-crushed peeled tomatoes evenly, arrange the fior di latte in strips or cubes and add a drizzle of extra-virgin olive oil. Finish with fresh basil before it goes into the oven.",
+      tip_beginner: "AVPN rules: DOP peeled tomatoes, Campanian mozzarella, fresh basil. Extra-virgin olive oil yes, but only a little.",
+      tip_nerd: "With the flash bake of a Neapolitan pizza the basil spends too little time in the oven to blacken; with a long bake it dries out and darkens, so it goes on afterwards.",
     },
     spread_margherita_romana: {
       title: "Roman Margherita topping",

@@ -11,6 +11,7 @@ import {
   findSavedRecipeIn,
   removeSavedRecipeFrom,
   renameSavedRecipeIn,
+  restoreSavedRecipeIn,
   sortSavedRecipes,
   toggleFavoriteStyleIn,
   upsertSavedRecipe,
@@ -130,10 +131,11 @@ export function renameSavedRecipe(id: string, name: string): boolean {
   return recipes.some(recipe => recipe.id === id) && writeRecipes(renameSavedRecipeIn(recipes, id, name));
 }
 
-/** Rimette una ricetta appena tolta (azione «Annulla»). */
-export function restoreRecipe(recipe: SavedRecipe): SavedRecipe[] {
-  const { recipes } = mergeRecipeBooks(readRecipes(), [recipe]);
-  return writeRecipes(recipes) ? recipes : readRecipes();
+/** Rimette una ricetta appena tolta (azione «Annulla»), identica, nome
+ *  compreso. `ok` è false solo se la scrittura non è riuscita. */
+export function restoreRecipe(recipe: SavedRecipe): { ok: boolean; recipes: SavedRecipe[] } {
+  const recipes = restoreSavedRecipeIn(readRecipes(), recipe);
+  return writeRecipes(recipes) ? { ok: true, recipes } : { ok: false, recipes: readRecipes() };
 }
 
 export function loadFavoriteStyles(): string[] {
