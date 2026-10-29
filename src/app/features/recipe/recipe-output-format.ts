@@ -399,23 +399,10 @@ export function toppingSectionLabel(style: PizzaStyle, cms: CmsContent): string 
 /** Audit n. 11 (B-24): una sola scala della forza (W) per tutta l'app; prima
  *  il selettore semplice chiamava «Media» la W 300 che gli ingredienti
  *  chiamavano «forte». */
-export type FlourStrength = "weak" | "medium" | "strong" | "veryStrong";
+/* FW-05: la scala vive nel motore (engine-facts), condivisa con il glossario
+ * e il selettore della farina. */
+export { flourStrength, type FlourStrength } from "../../domain/flour-strength";
 
-export function flourStrength(w: number): FlourStrength {
-  if (w < 220) return "weak";
-  if (w < 280) return "medium";
-  if (w < 330) return "strong";
-  return "veryStrong";
-}
-
-export function flourStrengthLabel(w: number, cms: CmsContent | undefined): string {
-  switch (flourStrength(w)) {
-    case "weak": return engineMessage(cms, "hint.flourWeak", "farina debole (00 classica)");
-    case "medium": return engineMessage(cms, "hint.flourMedium", "farina di media forza");
-    case "strong": return engineMessage(cms, "hint.flourStrong", "farina forte (per pizza)");
-    default: return engineMessage(cms, "hint.flourVeryStrong", "farina molto forte (manitoba)");
-  }
-}
 
 /** Delta in grammi di una compensazione forno espressa in % sulla farina
  * (idratazione/olio/zucchero) — rende dinamico il "+X%" mostrando anche la

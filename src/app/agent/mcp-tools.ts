@@ -575,7 +575,8 @@ export const MCP_TOOLS: McpTool[] = [
     },
     run: (args) => {
       const lang = (LANGS as readonly string[]).includes(String(args.lang)) ? (args.lang as Lang) : "it";
-      const source = { glossaryTerms: GLOSSARY_BY_LANG[lang] as GlossaryMessages };
+      // FW-05 (S12-V-01): stessi fatti del motore della UI, numeri nella lingua chiesta.
+      const source = { glossaryTerms: GLOSSARY_BY_LANG[lang] as GlossaryMessages, locale: { id: lang } };
       const terms = GLOSSARY_TERMS.map((term) => getLocalizedTerm(term, source));
       const query = args.term ? String(args.term).toLowerCase() : "";
       if (!query) {

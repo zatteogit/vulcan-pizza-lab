@@ -13,15 +13,18 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
   paramHydration: "Hydratation",
   paramDuration: "Dauer",
   paramTemperature: "Temperatur",
-  paramYeast: "Hefe",
+  paramYeast: "Frischhefe",
   detailFermentation: "G\u00E4rung",
   detailFlavor: "Geschmack",
   detailCrust: "Kruste",
   detailExtensibility: "Dehnbarkeit",
   detailIdealStyles: "Ideale Stile",
+  /* FW-05 */
+  techniqueLabel: "Technik",
+  recipeContextLine: "In diesem Rezept: {yeast} Hefe auf {flour} Vorteigmehl ({pct}). Die gesamte Hefe des Teigs kommt in den Vorteig und ist auf die Gesamtstunden des Rezepts berechnet, nicht nur auf die des Vorteigs.",
   compLabels: [
     "Hydratation",
-    "Hefe",
+    "Frischhefe (bezogen auf das Vorteigmehl)",
     "Dauer",
     "Temperatur",
     "Geschmack",
@@ -34,38 +37,31 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
         "Flüssiger Vorteig: Mehl und Wasser zu gleichen Teilen mit wenig Hefe, 12–16 h bei 20–22 °C.",
       hydration: "100 % (Mehl und Wasser zu gleichen Teilen)",
       consistency: "Fl\u00FCssig, schaumig",
-      fermentationType:
-        "Schnell: mit viel Wasser reift er in wenigen Stunden",
+      fermentationType: "Schneller als eine Biga bei gleicher Hefe: mit der angegebenen Menge reift er in 12–16 h",
       flavor: "Leicht säuerlich, nussige Noten",
       crustResult:
         "Dünn und goldbraun; Farbe und Flecken hängen von Ofen und Temperatur ab",
       extensibility: "Hoch (Schätzung): leicht zu dehnen",
-      idealStyles:
-        "Teglia Romana, NY Style, Zeitgen\u00F6ssische Neapolitanische, Focaccia",
       tips: [
         "Fertig, wenn die Oberfläche voller Bläschen ist und die Mitte einzusinken beginnt",
         "Mehr Hefe, weniger Stunden: bei 20–22 °C 0,1 % für 15–16 h, 0,3 % für 10–12 h",
-        "Mehl im Poolish: 30–50 % des Gesamtmehls",
+        "Mehl im Poolish: 30–50 % des gesamten Mehls; {brand} beginnt bei {poolishFlourPct}",
       ],
     },
     biga: {
       origin: "Italien",
-      description:
-        "Fester Vorteig: Mehl, 44 % Wasser und 1 % Hefe, etwa 16 h bei 18–20 °C.",
-      hydration: "44 % (bis 50 % mit Vollkornmehl)",
+      description: "Fester Vorteig: Mehl, {bigaHydration} Wasser und etwa 1 % Frischhefe bezogen auf das Mehl der Biga, etwa 16 h bei 18–20 °C.",
+      hydration: "{bigaHydration} (bis 50 % mit Vollkornmehl)",
       consistency: "Trocken, kompakt",
-      fermentationType:
-        "Langsam: mit wenig Wasser reift sie in 16–48 h",
+      fermentationType: "Langsam: mit wenig Wasser reift sie in etwa 16 h (bis 48 h mit Kühlschrank)",
       flavor: "Aromatisch, blumig",
       crustResult: "Knusprig; die Struktur hängt von Hydration und Formen ab",
       extensibility:
         "Hängt von Mehl und Hydration ab (noch zu prüfen)",
-      idealStyles:
-        "Pinsa, Pizza al taglio, Pala romana, Brot",
       tips: [
         "Fertig, wenn sie stellenweise aufgegangen ist, nach Joghurt riecht und leicht prickelt; schmeckt sie sauer, ist sie zu weit",
         "Lange Biga: 24 h bei 4–5 °C, dann 24 h bei 18–20 °C",
-        "Mehl in der Biga: 20–50 % des Gesamtmehls, meist ein Drittel",
+        "Mehl in der Biga: meist 30–40 % des gesamten Mehls; {brand} beginnt bei {bigaFlourPct}, und du kannst es zwischen {flourPctMin} und {flourPctMax} ändern",
         "Nicht für die Pizza Napoletana g.t.S.: die Spezifikation erlaubt nur die direkte Führung",
       ],
     },
@@ -91,22 +87,22 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
   },
   compValues: {
     hydration: {
-      biga: "44 %",
-      poolish: "100%",
+      biga: "{bigaHydration}",
+      poolish: "{poolishHydration}",
       autolisi: "= Rezept",
     },
     yeast: {
       biga: "1 %",
-      poolish: "0,1–0,3 %",
+      poolish: "0,1–0,2 %",
       autolisi: "0%",
     },
     duration: {
-      biga: "16–48 h",
+      biga: "16 h (bis 48 h mit 24 h im Kühlschrank)",
       poolish: "12–16 h",
       autolisi: "20–60 min",
     },
     temperature: {
-      biga: "18–20 °C",
+      biga: "18–20 °C (lange Biga: zuerst 24 h bei 4–5 °C)",
       poolish: "20–22 °C",
       autolisi: "Raumtemp.",
     },
@@ -161,44 +157,31 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
 
       P01: {
         symptom: "Anhaltend klebriger Teig",
-        cause:
-          "Hydratation \u00FCbersteigt Absorptionsf\u00E4higkeit des Mehls",
-        testRapido:
-          "Vergleiche H% Rezept vs Mehlabsorption (+5% max)",
-        fixImmediate:
-          "2-3% Mehl hinzuf\u00FCgen, mit sanften Falten einarbeiten",
-        prevention: "H% \u2264 Mehlabsorption + 5% verwenden",
+        cause: "Mehr Wasser, als das Mehl aufnehmen kann",
+        testRapido: "Liegt die Hydratation des Rezepts über der Wasseraufnahme im Datenblatt des Mehls?",
+        fixImmediate: "Gib nach und nach etwas Mehl dazu (2–3 %) und arbeite es mit sanftem Falten ein",
+        prevention: "Bleib nahe an der Wasseraufnahme, die die Mühle angibt; kennst du sie nicht, beginne am unteren Ende der Hydratation des Stils",
       },
       P02: {
         symptom: "Teig rei\u00DFt beim Dehnen",
-        cause:
-          "P/L zu hoch (>0.8) oder unzureichende G\u00E4rung (<6h)",
-        testRapido: "Teigling 10cm dehnen: rei\u00DFt er?",
-        fixImmediate:
-          "60min abgedeckt bei Raumtemperatur ruhen lassen",
-        prevention:
-          "Mehle mit P/L 0.5-0.6, mindestens 8h G\u00E4rung",
+        cause: "Gluten zu wenig entwickelt oder noch nicht entspannt, Teig noch kalt aus dem Kühlschrank; manchmal ein wenig dehnbares Mehl (hoher P/L) oder ein übergärter Teig",
+        testRapido: "Zieh vorsichtig an einem Rand: reißt er sofort, statt sich zu dehnen?",
+        fixImmediate: "Deck den Teigling ab und lass ihn 30–60 Min. bei Raumtemperatur ruhen, dann versuch es noch einmal",
+        prevention: "Halte die Zeiten des Rezepts ein, nimm die Teiglinge rechtzeitig aus dem Kühlschrank und verwende ein Mehl mit dem P/L, den der Stil angibt",
       },
       P03: {
         symptom: "Teig kollabiert bei Ber\u00FChrung",
-        cause:
-          "\u00DCberg\u00E4rt (Volumen >150%, Fingertest kehrt nicht zur\u00FCck)",
-        testRapido:
-          "1cm mit Finger dr\u00FCcken: kehrt in 3-5s zur\u00FCck?",
-        fixImmediate:
-          "Irreversibel. Vorsichtig dehnen und sofort backen",
-        prevention:
-          "Volumen alle 6h kontrollieren, max +150% Zunahme",
+        cause: "Übergärt: zu lange, zu warm oder zu viel Hefe",
+        testRapido: "Drück mit dem Finger hinein: kommt die Delle sofort zurück, ist er noch nicht so weit; kommt sie langsam zurück, ist er bereit; bleibt sie und fällt der Teig zusammen, ist er übergärt",
+        fixImmediate: "Forme ihn neu und lass ihn 1–2 h nachgehen (er wird weniger Poren haben), oder zieh ihn vorsichtig aus und back ihn sofort",
+        prevention: "Prüfe den Teig ab dem letzten Drittel der geplanten Zeit, nicht nur nach der Uhr",
       },
       P04: {
-        symptom: "Kein Aufgehen nach 6+ Stunden",
-        cause:
-          "Tote Hefe, Temperatur zu niedrig, oder Salz in direktem Kontakt",
-        testRapido:
-          "Vitalit\u00E4tstest: 5g Hefe + 5g Zucker in 100ml Wasser 35\u00B0C \u2014 Schaum nach 15min?",
-        fixImmediate:
-          "0.3% Frischhefe in lauwarmem Wasser aufl\u00F6sen, mit Falten einarbeiten",
-        prevention: "Hefe vor jedem Gebrauch testen",
+        symptom: "Der Teig geht in der geplanten Zeit nicht auf",
+        cause: "Schwache oder abgelaufene Hefe oder ein kälterer Teig als geplant. Im Kühlschrank geht er nur wenig auf, das ist normal",
+        testRapido: "War er im Kühlschrank? Dann ist das normal. Sonst löse eine Prise der Hefe mit etwas Zucker in lauwarmem Wasser: schäumt es nach 10–15 Min.?",
+        fixImmediate: "Stell ihn zuerst 1–2 h an einen warmen Ort (24–28 °C). Kommt er nicht in Gang, ist die Hefe inaktiv: setz den Teig mit frischer Hefe neu an",
+        prevention: "Prüfe das Haltbarkeitsdatum der Hefe und die Raumtemperatur",
       },
       P05: {
         symptom: "G\u00E4rung zu schnell (verdoppelt in <3h)",
@@ -213,12 +196,9 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
       },
       P06: {
         symptom: "Zu saurer/essigartiger Geschmack",
-        cause:
-          "Heterofermentative LAB aktiv >48h bei >18\u00B0C (besonders mit Sauerteig)",
-        testRapido:
-          "Teig-pH \u2014 sollte 4.5-5.5 sein, problematisch wenn <4.2",
-        fixImmediate:
-          "Zucker überdeckt den Geschmack, korrigiert aber keine Übergare. Teig vor Gebrauch prüfen.",
+        cause: "Reifung zu lang oder zu warm: Milchsäurebakterien bilden Säuren (häufiger mit Sauerteig)",
+        testRapido: "Riech und probier ein kleines rohes Stück: ist die Säure stechend, wie Essig?",
+        fixImmediate: "Man kann sie essen; verkürze beim nächsten Mal die Reifung bei Raumtemperatur",
         prevention: "Zeit, Temperatur und Hefe nach Methode wählen; Reife ohne universelle Stundengrenze prüfen.",
       },
       P07: {
@@ -235,12 +215,11 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
       P08: {
         symptom:
           "Riesige unregelm\u00E4\u00DFige L\u00F6cher in der Pizza",
-        cause: "Unzureichende Entgasung + zu sanftes Dehnen",
-        testRapido:
-          "Poren >3cm und ungleichm\u00E4\u00DFige Verteilung?",
+        cause: "Große Blasen im Teigling geblieben und sehr sanftes Ausziehen",
+        testRapido: "Sind die großen Blasen auch in der Mitte verteilt, nicht nur im Rand?",
         fixImmediate:
           "Teigling vor dem Dehnen leicht dr\u00FCcken um Gas umzuverteilen",
-        prevention: "G\u00E4rzeit um 20% reduzieren",
+        prevention: "Drück vor dem Ausziehen die größten Blasen vorsichtig aus; bei Neapolitanischer und Canotto-Pizza sind einige große Poren im Rand gewollt",
       },
       P09: {
         symptom: "Roher Boden aber verbrannter Rand",
@@ -248,30 +227,22 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
           "Thermisches Ungleichgewicht: zu viel Oberhitze, zu wenig Unterhitze",
         testRapido:
           "Extremer Farbkontrast zwischen oben und unten?",
-        fixImmediate: "Boden 3min ohne Belag vorbacken",
-        prevention:
-          "Dickeres Blech/Stein verwenden, Ober-/Unterhitze ausgleichen",
+        fixImmediate: "Back näher an der heißen Backfläche und weiter weg von der Oberhitze; wird der Ofen nicht heißer als 300 °C, kannst du den Boden 2–3 Min. ohne Belag vorbacken",
+        prevention: "Gleiche die Hitze aus: gut vorgeheizter Stein oder Stahl unten, weniger Hitze von oben",
       },
       P10: {
         symptom: "Blasse Kruste, keine Br\u00E4unung",
-        cause:
-          "Temperatur <250\u00B0C, Zucker ersch\u00F6pft, oder \u00FCberm\u00E4\u00DFige Oberfl\u00E4chenfeuchtigkeit",
-        testRapido:
-          "Erreicht der Ofen mindestens 250\u00B0C? G\u00E4rung >48h?",
-        fixImmediate:
-          "\u00D6l+Honig vor dem Backen aufpinseln oder Grill 2min zum Schluss",
-        prevention:
-          "0,5–1 % Zucker oder Malz zugeben und den Ofen auf Höchststufe stellen, mit gut vorgeheiztem Stein oder Stahl",
+        cause: "Ofen oder Backfläche für den Stil nicht heiß genug, oder nach einer sehr langen Reifung wenig Zucker übrig",
+        testRapido: "Erreicht der Ofen die Temperatur des Stils? War die Reifung sehr lang?",
+        fixImmediate: "Nutze in den letzten 1–2 Minuten den Grill, falls der Ofen einen hat",
+        prevention: "Heiz den Ofen mit gut vorgeheiztem Stein oder Stahl auf die Höchststufe; außerhalb von STG-Rezepten, die weder Zucker noch Malz erlauben, kannst du 0,5–1 % Zucker oder Malz zugeben",
       },
       P11: {
         symptom: "Gummiartige, nicht knusprige Pizza",
-        cause:
-          "Kerntemperatur <85\u00B0C, Hydratation >70%, oder zu langsames Backen",
-        testRapido: "Kernthermometer: erreicht 90\u00B0C+?",
-        fixImmediate:
-          "Backzeit +2min verl\u00E4ngern oder Temperatur +20\u00B0C erh\u00F6hen",
-        prevention:
-          "H \u2264 65%, Kerntemperatur-Ziel 95\u00B0C",
+        cause: "Backzeit zu kurz oder Temperatur zu niedrig für die Dicke, oder mehr Wasser, als der Stil vorsieht",
+        testRapido: "Ist die Mitte beim Anschneiden noch feucht und klebrig?",
+        fixImmediate: "Back ein paar Minuten länger; hat der Ofen noch Reserve, erhöhe die Temperatur",
+        prevention: "Bleib bei der Hydratation des Stils und back so lange, wie das Rezept angibt",
       },
       P14: {
         symptom:
@@ -286,62 +257,49 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
       },
       P15: {
         symptom: "Dunkler/schwarzer Pizzaboden",
-        cause: "Stein oder Blech zu hei\u00DF (>450\u00B0C)",
+        cause: "Backfläche heißer, als der Stil braucht, oder verbranntes Mehl bzw. Grieß auf dem Stein",
         testRapido: "Probieren: bitterer Geschmack?",
         fixImmediate:
           "Wenn bitter = Problem (Temp senken). Wenn w\u00FCrzig = NORMAL",
-        prevention:
-          "Kontrolliertes Vorheizen des Steins, nicht \u00FCber 400\u00B0C",
+        prevention: "Halte die Backfläche auf der Temperatur des Stils und bürste den Stein zwischen zwei Pizzen ab",
       },
       P16: {
         symptom: "Niedriger, flacher Rand",
-        cause:
-          "\u00DCberm\u00E4\u00DFige Entgasung, Mehl-W zu niedrig, oder Nudelholz verwendet",
+        cause: "Zu stark entgast, Mehl für den Stil zu schwach oder Nudelholz benutzt",
         testRapido: "Randh\u00F6he <1cm?",
         fixImmediate:
           "Sanfteres Dehnen, R\u00E4nder nicht dr\u00FCcken",
-        prevention:
-          "W \u2265 240 f\u00FCr Neapolitanische, nie Nudelholz bei Stilen mit Rand",
+        prevention: "Verwende ein Mehl in der Stärke, die der Stil angibt, und kein Nudelholz bei Stilen mit Rand",
       },
       P17: {
         symptom: "Pizza zu trocken",
-        cause:
-          "Hydratation <55% oder zu lange gebacken (>10min)",
-        testRapido:
-          "H% des Rezepts? Tats\u00E4chliche Backzeit?",
-        fixImmediate: "Reichlich \u00D6l auf den Belag geben",
-        prevention:
-          "H \u2265 58%, empfohlene Backzeit nicht \u00FCberschreiten",
+        cause: "Weniger Wasser, als der Stil vorsieht, oder länger gebacken als im Rezept",
+        testRapido: "Entsprechen Hydratation und Backzeit dem Rezept?",
+        fixImmediate: "Servier sie direkt aus dem Ofen; verkürze beim nächsten Mal die Backzeit",
+        prevention: "Bleib bei der Hydratation des Stils und überschreite die angegebene Backzeit nicht",
       },
       P18: {
         symptom: "W\u00E4ssrige Mitte der Pizza",
         cause: "Zu fl\u00FCssiger Belag oder zu kurze Backzeit",
         testRapido:
           "So\u00DFenmenge pro Pizza? Sehr feuchter Mozzarella?",
-        fixImmediate:
-          "Boden 2min vorbacken, dann Belag hinzuf\u00FCgen",
+        fixImmediate: "Back den Boden 2–3 Min. vor und gib dann den Belag darauf",
         prevention:
           "Max 80ml So\u00DFe pro 30cm Pizza, Mozzarella gut abtropfen lassen",
       },
       P19: {
         symptom: "Teigling l\u00E4sst sich nicht dehnen",
-        cause:
-          "Reines Manitoba-Mehl (W >380), Teig zu z\u00E4h",
-        testRapido: "Welches Mehl hast du verwendet? W >350?",
-        fixImmediate:
-          "50:50 mit Mehl W 200 im n\u00E4chsten Teig mischen",
-        prevention:
-          "Max W 320 f\u00FCr Pizza, Mehle mit P/L 0.5-0.6",
+        cause: "Mehl viel stärker, als der Stil vorsieht: der Teig ist zu zäh",
+        testRapido: "Liegt der W-Wert deines Mehls deutlich über dem des Stils?",
+        fixImmediate: "Lass den Teigling 20–30 Min. abgedeckt ruhen und versuch es noch einmal; mische beim nächsten Teig ein schwächeres Mehl unter",
+        prevention: "Verwende ein Mehl mit der Stärke und dem P/L, die der Stil angibt",
       },
       P20: {
-        symptom: "'Chemischer' Geruch im Teig",
-        cause: "Leitungswasser mit hohem Chlorgehalt",
-        testRapido:
-          "Starker Geruch beim \u00D6ffnen des Wasserhahns?",
-        fixImmediate:
-          "Flaschenwasser f\u00FCr den n\u00E4chsten Teig verwenden",
-        prevention:
-          "Wasser filtern oder 12h offen stehen lassen (Chlor verdampft)",
+        symptom: "„Chemischer“ Geruch (Alkohol, Lösungsmittel) im Teig",
+        cause: "Übergärung (Alkohol und Ester) oder zu viel Hefe; seltener Chlor im Wasser",
+        testRapido: "Riecht er nach Alkohol oder Aceton, und ist der Teig schlaff und geht nicht mehr auf?",
+        fixImmediate: "Ist er schlaff und geht nicht mehr auf, behandle ihn als übergärt: forme ihn neu oder back ihn sofort",
+        prevention: "Nimm beim nächsten Mal weniger Hefe oder einen kühleren Ort. Schmeckt dein Leitungswasser nach Chlor, nimm ein anderes Wasser: Stehenlassen entfernt Chloramine nicht",
       },
       P21: {
         symptom: "Die Gärung schwankt von Teig zu Teig (Kühlschrank zu Hause)",
@@ -355,7 +313,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
       sticky_dough: {
         message:
           "Hydratation {h}% bei W {w}: Risiko klebriger Teig",
-        tip: "Mehl mit W \u2265 280 verwenden oder Hydratation auf 68-70% senken",
+        tip: "Dieser Stil sieht W {wMin}–{wMax} vor: nimm ein Mehl in diesem Bereich oder senke die Hydratation etwas",
       },
       high_pl: {
         message:
@@ -364,7 +322,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
       },
       sour_risk: {
         message: "{h}h bei {t}\u00B0C: Risiko saurer Geschmack",
-        tip: "F\u00FCr G\u00E4rungen >24h Temperatur 4-8\u00B0C verwenden",
+        tip: "Ist deine Küche warm, verlege einen Teil der Reifung in den Kühlschrank und achte mehr auf den Teig als auf die Uhr",
       },
       pale_crust: {
         message:
@@ -372,18 +330,17 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         tip: "Volumen, Elastizität und Druckreaktion prüfen: Die Stunden allein belegen keine Verdaulichkeit.",
       },
       cold_oven: {
-        message:
-          "Ofen bei {t}\u00B0C: Risiko roher Boden mit verbranntem Rand",
-        tip: "Boden 3min ohne Belag vorbacken, dann Zutaten hinzuf\u00FCgen",
+        message: "Ofen bei {t}°C, unter der Temperatur des Stils: Gefahr einer blassen Kruste und einer trockenen Pizza",
+        tip: "Heiz Stein oder Stahl lange vor und nutze in den letzten Minuten den Grill, falls der Ofen einen hat",
       },
       beginner_hydration: {
         message:
           "Hydratation {h}% ist anspruchsvoll f\u00FCr Anf\u00E4nger",
-        tip: "Mit 60-65% beginnen und mit Erfahrung schrittweise erh\u00F6hen",
+        tip: "Dieser Stil sieht {hMin}–{hMax} % vor: als Einsteiger bleib nahe bei {hMin} %",
       },
       high_w: {
-        message: "W {w} sehr hoch: Teig schwer zu dehnen",
-        tip: "50:50 mit Mehl W 200 mischen oder lange Autolyse planen",
+        message: "W {w} deutlich über dem des Stils: Teig schwer auszuziehen",
+        tip: "Dieser Stil sieht W {wMin}–{wMax} vor: misch ein schwächeres Mehl unter oder plane eine lange Autolyse ein",
       },
       flat_long_ferment: {
         message:
@@ -398,13 +355,12 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     w_alveograph: {
       name: "W (Chopin-Alveograph)",
       definition: "Gesamtenergie, die n\u00F6tig ist, um eine Teigblase bis zum Platzen aufzubl\u00E4hen. Misst die Mehlst\u00E4rke insgesamt.",
-      whyImportant: "W beschreibt die Gesamtstärke des Mehls. Zähigkeit und Dehnbarkeit werden mit P, L und P/L beurteilt: Ein hoher W-Wert allein bedeutet keinen zäheren Teig.",
+      whyImportant: "W beschreibt die Gesamtstärke des Mehls. Dehnwiderstand und Dehnbarkeit werden mit P, L und P/L beurteilt: ein hoher W-Wert allein bedeutet keinen zäheren Teig. Diese Stufen verwendet {brand} in der ganzen App; jeder Stil nennt seinen eigenen W-Bereich.",
       ranges: [
-        { label: "Schwach", value: "90\u2013160", note: "Kekse, Waffeln" },
-        { label: "Mittel", value: "160\u2013200", note: "Kastenwei\u00DFbrot, Focaccia" },
-        { label: "Mittelstark", value: "200\u2013280", note: "Neapolitanische Pizza" },
-        { label: "Stark", value: "280\u2013350", note: "Brot mit langer G\u00E4rung" },
-        { label: "Sehr stark", value: "350\u2013450", note: "Panettone, Croissant" },
+        { label: "Schwach", value: "{wBandWeak}", note: "Allzweck- oder Gebäckmehl" },
+        { label: "Mittel", value: "{wBandMedium}", note: "Oft als „Pizzamehl“ verkauft" },
+        { label: "Stark", value: "{wBandStrong}", note: "Lange Reifung und sehr weiche Teige" },
+        { label: "Sehr stark", value: "{wBandVeryStrong}", note: "Manitoba und Mehle für großes Hefegebäck" },
       ],
     },
     p_tenacity: {
@@ -429,14 +385,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     pl_ratio: {
       name: "P/L (Verh\u00E4ltnis Z\u00E4higkeit/Dehnbarkeit)",
       definition: "Verhältnis zwischen dem Verformungswiderstand des Teigs und seiner Dehnbarkeit.",
-      whyImportant: "Beschreibt das rheologische Gleichgewicht. Der passende Wert hängt von Mehl, Hydration und Methode ab; keine Garantie für Höhe oder Textur.",
-      ranges: [
-        { label: "<0.4 Sehr dehnbar", value: "F\u00E4llt leicht zusammen", note: "Pinsa" },
-        { label: "0.4\u20130.5 Dehnbar", value: "Leicht zu verarbeiten", note: "Klassische Neapolitanische" },
-        { label: "0.5\u20130.7 Ausgewogen", value: "Gute Balance", note: "Moderne Neapolitanische, Brot" },
-        { label: "0.7\u20131.0 Z\u00E4h", value: "Widerstandsf\u00E4hig", note: "Brot mit langer G\u00E4rung" },
-        { label: ">1.0 Sehr z\u00E4h", value: "Elastisch, zieht sich zur\u00FCck", note: "Croissant" },
-      ],
+      whyImportant: "Beschreibt ein rheologisches Gleichgewicht: der passende Wert hängt von Mehl, Hydratation und Methode ab und garantiert weder Höhe noch Konsistenz der Pizza. Die Beispiele sind die Bereiche der Stile von {brand}; den P/L deines Mehls findest du im Datenblatt der Mühle.",
     },
     falling_number: {
       name: "Falling Number (Hagberg-Perten)",
@@ -453,14 +402,8 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     hydration: {
       name: "Hydratation (H%)",
       definition: "Gewichtsanteil des Wassers bezogen auf das Mehl im Teig.",
-      whyImportant: "Niedrige H (<55%): knusprig, einfach. Mittlere H (60-65%): ausgewogen. Hohe H (>70%): braucht starkes Mehl (W>280) und K\u00F6nnen.",
-      ranges: [
-        { label: "Klassische Neapolitanische", value: "55\u201360%", note: "Weich, gut zu verarbeiten" },
-        { label: "Zeitgen\u00F6ssische Neapolitanische", value: "60\u201365%", note: "Leichter Rand" },
-        { label: "Canotto", value: "65\u201370%", note: "Gro\u00DFe Poren" },
-        { label: "Pinsa Romana", value: "75\u201385%", note: "Im Blech ausgebreitet" },
-        { label: "Focaccia/Bonci", value: "85\u2013100%+", note: "Fast fl\u00FCssig" },
-      ],
+      formula: "H% = (Wassergewicht / Mehlgewicht) × 100",
+      whyImportant: "Mehr Wasser macht den Teig weicher und schwieriger zu handhaben und verlangt ein stärkeres Mehl. Die Knusprigkeit hängt vor allem vom Backen und von der Dicke ab: auch eine sehr weiche Blechpizza kann knusprig werden. Die Beispiele sind die Bereiche der Stile von {brand}.",
     },
     absorption: {
       name: "Wasseraufnahme",
@@ -487,11 +430,13 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "Hefe (Saccharomyces cerevisiae)",
       definition: "Ein einzelliger Pilz, der Zucker vergärt und dabei Kohlendioxid, Alkohol und Aromastoffe bildet.",
-      whyImportant: "Aktivität hängt von Stamm, Menge, Temperatur und Teig ab. Kälte verlangsamt die Fermentation; keine universelle sofortige Stoppgrenze.",
+      whyImportant: "Die Aktivität hängt von Stamm, Menge, Temperatur und Teig ab. Kälte verlangsamt die Gärung; eine allgemeine Schwelle für einen sofortigen Stillstand gibt es nicht. Die richtige Menge hängt von Stunden und Temperatur ab: das Rezept berechnet sie für dich.",
       ranges: [
-        { label: "Frischhefe", value: "0.5\u20132.0%", note: "Feuchtigkeit 70%, K\u00FChlschrank 4\u00B0C" },
-        { label: "Aktive Trockenhefe", value: "0.3\u20131.0%", note: "Vorher in Wasser aufl\u00F6sen" },
-        { label: "Instant-Trockenhefe", value: "0.2\u20130.8%", note: "Direkt ins Mehl" },
+        { label: "Frisch, {yeastS1Hours} bei {yeastS1Temp}", value: "{yeastS1Pct}", note: "Modellschätzung" },
+        { label: "Frisch, {yeastS2Hours} bei {yeastS2Temp}", value: "{yeastS2Pct}", note: "Modellschätzung" },
+        { label: "Frisch, {yeastS3Hours} bei {yeastS3Temp}", value: "{yeastS3Pct}", note: "Modellschätzung" },
+        { label: "Frisch, {yeastS4Hours} bei {yeastS4Temp}", value: "{yeastS4Pct}", note: "Modellschätzung" },
+        { label: "Trocken (aktiv oder Instant)", value: "≈ frisch × {yeastDryRatio}", note: "Gleiche Schätzung wie frisch" },
       ],
     },
     lab: {
@@ -502,28 +447,29 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     q10: {
       name: "Q\u2081\u2080 (Temperaturkoeffizient)",
       definition: "Faktor, um den sich die Geschwindigkeit einer biochemischen Reaktion pro 10\u00B0C Temperaturanstieg vervielfacht.",
-      whyImportant: "Bei Q\u2081\u2080 = 2 verdoppelt sich die G\u00E4rung alle +10\u00B0C: 24h bei 18\u00B0C \u2248 12h bei 28\u00B0C. Die Werte unten sind Sch\u00E4tzungen des {brand}-Modells.",
+      whyImportant: "Mit Q₁₀ = {q10ComAbove} vervielfacht sich die Geschwindigkeit alle {tenDegrees} um {q10ComAbove}: {q10ExampleRefHours} bei {q10RefTemp} ≈ {q10ExampleWarmHours} bei {q10ExampleWarmTemp}. Die Werte dieses Eintrags sind Schätzungen des Modells von {brand}.",
       ranges: [
-        { label: "B\u00E4ckerhefe \u226510\u00B0C", value: "2.0", note: "Modellsch\u00E4tzung, stimmig mit Wachstumsdaten zwischen 18 und 25 \u00B0C" },
-        { label: "B\u00E4ckerhefe <10\u00B0C", value: "1.6", note: "Modellsch\u00E4tzung, ohne Quelle" },
-        { label: "Sauerteig >15\u00B0C", value: "2.2", note: "Modellsch\u00E4tzung" },
-        { label: "Sauerteig \u226415\u00B0C", value: "1.9", note: "Modellsch\u00E4tzung" },
+        { label: "Backhefe ≥ {q10ComBreak}", value: "{q10ComAbove}", note: "Modellschätzung, passend zu Wachstumsdaten bei Raumtemperatur" },
+        { label: "Backhefe < {q10ComBreak}", value: "{q10ComBelow}", note: "Modellschätzung, ohne Quelle" },
+        { label: "Sauerteig > {q10SdBreak}", value: "{q10SdAbove}", note: "Modellschätzung" },
+        { label: "Sauerteig ≤ {q10SdBreak}", value: "{q10SdBelow}", note: "Modellschätzung" },
       ],
     },
     arrhenius: {
       name: "Arrhenius-Gleichung",
-      definition: "Beschreibt, wie die Reaktionsgeschwindigkeit von der absoluten Temperatur abh\u00E4ngt.",
-      whyImportant: "Mit \u03B2=0.075 und T_ref=18\u00B0C \u2192 Q\u2081\u2080 \u2248 2.12. Wird in der {brand}-Engine verwendet, um Hefemenge und Zeiten zu berechnen.",
+      definition: "Verknüpft die Geschwindigkeit einer Reaktion über eine Aktivierungsenergie mit der absoluten Temperatur (in Kelvin).",
+      formula: "k = A · e^(−Eₐ / (R · T)), mit T in Kelvin",
+      whyImportant: "{brand} verwendet diese Gleichung nicht. Das Modell nutzt einen abschnittsweisen Q₁₀ bezogen auf {q10RefTemp}: {q10ComAbove} oberhalb und {q10ComBelow} unterhalb von {q10ComBreak} für Backhefe, {q10SdAbove} oberhalb und {q10SdBelow} bis {q10SdBreak} für Sauerteig. Das sind Modellschätzungen, keine Messwerte.",
     },
     biga: {
       name: "Biga",
-      definition: "Fester Vorteig aus Mehl, 44 % Wasser (bis 50 % mit Vollkornmehl) und 1 % Hefe, etwa 16 h bei 18–20 °C gereift; die lange Biga braucht 24 h bei 4–5 °C plus 24 h bei 18–20 °C.",
-      whyImportant: "Gibt dem Hauptteig Aroma und Struktur. Meist ein Drittel des Gesamtmehls (20–50 %). In der Pizza Napoletana g.t.S. nicht erlaubt, sie wird direkt geführt.",
+      definition: "Fester Vorteig aus Mehl, {bigaHydration} Wasser (bis 50 % bei Vollkornmehl) und etwa 1 % Frischhefe bezogen auf das Mehl der Biga, etwa 16 h bei 18–20 °C gereift; die lange Biga reift 24 h bei 4–5 °C und danach 24 h bei 18–20 °C.",
+      whyImportant: "Bringt Aroma und Struktur in den Hauptteig. Meist 30–40 % des gesamten Mehls: {brand} beginnt bei {bigaFlourPct}. In der Neapolitanischen STG nicht erlaubt, die eine direkte Führung vorschreibt.",
     },
     poolish: {
       name: "Poolish",
       definition: "Flüssiger Vorteig: Mehl und Wasser zu gleichen Teilen mit wenig Hefe, 12–16 h bei 20–22 °C gereift (0,1 % Hefe für 15–16 h, 0,3 % für 10–12 h).",
-      whyImportant: "Reift schnell und macht den Teig dehnbar. Meist 30–50 % des Gesamtmehls. Fertig, wenn die Oberfläche voller Bläschen ist und die Mitte einzusinken beginnt.",
+      whyImportant: "Reift schneller als eine Biga und macht den Teig dehnbar. Meist 30–50 % des gesamten Mehls: {brand} beginnt bei {poolishFlourPct}. Fertig, wenn die Oberfläche voller Bläschen ist und die Mitte nachzugeben beginnt.",
     },
     autolysis: {
       name: "Autolyse",
@@ -563,7 +509,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     thermal_conductivity: {
       name: "W\u00E4rmeleitf\u00E4higkeit",
       definition: "F\u00E4higkeit eines Materials, W\u00E4rme zu leiten.",
-      whyImportant: "Stahl (k=50): ideal f\u00FCr Haushalts\u00F6fen mit 280\u00B0C, Backzeit 6-8 min. Stein (k=2): ideal f\u00FCr Holz\u00F6fen mit 450\u00B0C+, Backzeit 60-90s.",
+      whyImportant: "Je höher k, desto schneller gibt die Fläche Wärme an den Boden ab: deshalb hilft Stahl im Haushaltsofen, der weniger heiß wird. Auf der Backfläche zählt auch, wie viel Wärme das Material speichert: Holzöfen haben Schamotte oder Biscotto.",
       ranges: [
         { label: "Kupfer", value: "400" },
         { label: "Aluminium", value: "205" },
@@ -597,13 +543,8 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     thickness_factor: {
       name: "Thickness Factor (TF)",
       definition: "Teigmenge pro Fläche: Gramm Teig je cm² Pizza.",
-      whyImportant: "Eine in nordamerikanischen Teigrechnern verbreitete Kennzahl (in oz/in²; 1 oz/in² ≈ 4,39 g/cm²). {brand} gibt sie in g/cm² an, um die Teiglinge zu bemessen; zusammen mit dem Ofen bestimmt sie Backzeit und Knusprigkeit mit.",
-      ranges: [
-        { label: "Neapolitanische", value: "0.30\u20130.36", note: "6-7 mm" },
-        { label: "Tonda Romana", value: "0.20\u20130.25", note: "4-5 mm" },
-        { label: "New York", value: "0.40\u20130.50", note: "8-10 mm" },
-        { label: "Chicago Deep Dish", value: "1.00\u20131.30", note: "20-26 mm" },
-      ],
+      formula: "TF = Teiglinggewicht (g) / Pizzafläche (cm²)",
+      whyImportant: "Eine in nordamerikanischen Teigrechnern verbreitete Kennzahl (in oz/in²; 1 oz/in² ≈ 4,39 g/cm²). {brand} gibt sie in g/cm² an, um die Teiglinge zu bemessen; zusammen mit dem Ofen bestimmt sie Backzeit und Knusprigkeit. Die Beispiele sind aus Teiglinggewicht und Form jedes Stils berechnet.",
     },
     friction_factor: {
       name: "Reibungsw\u00E4rme der Knetmaschine",
@@ -620,32 +561,37 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     rule_of_55: {
       name: "Wassertemperatur (drei Temperaturen)",
       definition: "Berechnet, wie warm das Wasser sein muss, damit der Teig die gew\u00FCnschte Temperatur erreicht.",
+      formula: "T_Wasser = 3 × T_Teig − T_Raum − T_Mehl − Reibung",
       whyImportant: "Summe der drei Temperaturen = 3 \u00D7 gew\u00FCnschter Teig \u2212 Reibung. In Pizzerien hei\u00DFt das auch \u00AB55er-Regel\u00BB: Mit der Summe fest auf 55 liegt der Teig bei etwa 18 \u00B0C (55 \u00F7 3); hier gilt die Zieltemperatur des Stils, 22\u201324 \u00B0C.",
     },
     a_score: {
       name: "A-Score (Authentizit\u00E4t)",
       definition: "Punktzahl von 0 bis 100 für die Nähe zur Stilreferenz. Sie bestätigt keine Konformität mit einem Regelwerk.",
+      formula: "A = Zutaten × {authWIngredients} + Verfahren × {authWProcess} + Ausstattung × {authWEquipment}",
       ranges: [
-        { label: "90-100", value: "Streng authentisch" },
-        { label: "75-89", value: "Weitgehend authentisch" },
-        { label: "60-74", value: "Vom Stil inspiriert" },
-        { label: "<60", value: "Deutliche Abweichung" },
+        { label: "{aBand0}", value: "Streng authentisch" },
+        { label: "{aBand1}", value: "Treu mit Anpassungen" },
+        { label: "{aBand2}", value: "Inspiriert, aber verändert" },
+        { label: "{aBand3}", value: "Frei interpretiert" },
       ],
+      whyImportant: "Die Gewichte sind eine Entscheidung von {brand}, keine Messung. Produktregeln: ohne den Brennstoff, den der Stil vorsieht, liegt der Wert höchstens bei {authFuelCap}; unter der Mindesttemperatur des Stils sinkt er anteilig.",
     },
     f_score: {
       name: "F-Score (Schwierigkeitsgrad)",
       definition: "Punktzahl von 0 bis 100 für die einfache Zubereitung mit vorhandenem Ofen, Mehl und Erfahrung. Ausschlusskriterien werden gesondert geprüft.",
+      formula: "F = Ofen × {feasWOven} + Mehl × {feasWFlour} + Erfahrung × {feasWSkill}",
       ranges: [
-        { label: "90-100", value: "Gut machbar" },
-        { label: "75-89", value: "Mit Sorgfalt machbar" },
-        { label: "60-74", value: "Schwierig" },
-        { label: "<60", value: "Nicht empfohlen" },
+        { label: "{fBand0}", value: "Sehr gut machbar" },
+        { label: "{fBand1}", value: "Machbar mit Sorgfalt" },
+        { label: "{fBand2}", value: "Schwierig" },
+        { label: "{fBand3}", value: "Hohes Risiko" },
       ],
+      whyImportant: "Die Gewichte sind eine Entscheidung von {brand}, keine Messung. Lässt sich das Rezept mit deiner Küche nicht umsetzen, liegt die Kompatibilität höchstens bei {nonFeasibleCeiling}, unabhängig von den anderen Werten.",
     },
     d_score: {
       name: "D-Score (Geschätzte Reife)",
       definition: "Modellschätzung anhand von Zeit, Temperatur, Hefe und Vorteigen. Sie misst weder die persönliche Verdaulichkeit noch den FODMAP-Gehalt.",
-      ranges: [{"label":"85-100","value":"Hoher Index"},{"label":"70-84","value":"Mittelhoher Index"},{"label":"50-69","value":"Mittlerer Index"},{"label":"<50","value":"Niedriger Index"}],
+      ranges: [{"label":"{dBand0}","value":"Hoher Index"},{"label":"{dBand1}","value":"Mittelhoher Index"},{"label":"{dBand2}","value":"Mittlerer Index"},{"label":"{dBand3}","value":"Niedriger Index"}],
     },
   },
 };

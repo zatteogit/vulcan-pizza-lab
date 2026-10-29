@@ -303,7 +303,12 @@ export function RecipeView({
     : recipe.style.dough.unleavened
       ? cms.ui.procedureUnleavened
       : cms.ui.procedureDirect;
-  const procedureSubtitle = `${preFermentText} • ${fmt.durationShort(recipe.fermentation_hours)}`;
+  /* FW-05 (S09-A-17): il sottotitolo dice che cosa misura il tempo (lievitazione o
+     riposo), per non confonderlo con il tempo totale dell'hero. */
+  const procedureSubtitle = uiMessage(
+    recipe.style.dough.unleavened ? "recipe.procedure.subtitleRest" : "recipe.procedure.subtitleFerment",
+    [preFermentText, fmt.durationShort(recipe.fermentation_hours)],
+  );
 
   /* Niente sottotitolo sul tab Ricetta: ripeteva il nome dello stile che
      campeggia già nell'hero (sempre visibile, anche a hero ridotto). */

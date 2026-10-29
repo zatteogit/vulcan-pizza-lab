@@ -6741,6 +6741,11 @@
     color: var(--status-positive-fg);
   }
 
+  /* FW-05 (S06-A-04): farina sotto la W minima dello stile, un avviso. */
+  .config-flour-picker__fit--weak {
+    color: var(--status-caution-fg);
+  }
+
   /* ── GradientSlider ── */
   .config-slider {
     display: flex;
@@ -14819,6 +14824,20 @@
 
   .preferment-guide-detail__value {
     color: var(--text-default);
+  }
+
+  /* ═══ FW-05 — prefermenti: dose della ricetta e stili dal motore ═══ */
+  .preferment-guide-card__context {
+    margin: 0;
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+    line-height: var(--leading-relaxed);
+  }
+
+  .preferment-style-link {
+    color: var(--text-accent);
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-5);
   }
 
   /* ═══ COMPONENT: condiment-choice-strip (ondata 4) ═══ */

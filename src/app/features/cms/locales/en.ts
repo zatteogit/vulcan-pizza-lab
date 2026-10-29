@@ -30,7 +30,7 @@ export const EN_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "fine sea salt", "fine": "fine salt", "kosher": "kosher salt", "kosher_or_fine": "kosher or fine salt", "coarse_and_fine": "coarse and fine salt" },
-    saltTiming: { "with_flour": "with the flour", "after_flour_water": "after flour and water", "after_flour_water_5min": "after flour and water (5 min of mixing)", "after_hydration": "after hydration", "fine_in_dough_coarse_on_top": "fine in the dough, coarse on top" },
+    saltTiming: { "with_flour": "with the flour", "after_flour_water": "after flour and water", "dissolved_in_water": "dissolved in the water, before the flour (specification)", "after_hydration": "after hydration", "fine_in_dough_coarse_on_top": "fine in the dough, coarse on top" },
     fold: { "stretch_fold": "stretch & fold", "coil_fold": "coil fold", "french_fold": "French fold", "slap_fold": "slap & fold" },
     stretch: {
       napoletana_stg: "Stretched by hand (Neapolitan slap)",
@@ -282,10 +282,10 @@ export const EN_LOCALE: CmsContent = {
     procedureDirect: "Direct",
     procedurePreferment: "Pre-ferment",
     procedureUnleavened: "No yeast",
-    flourUseVeryStrong: "Manitoba or very strong type 0",
-    flourUseStrong: "Strong type 0/00 pizza flour",
-    flourUseMedium: "Medium-strength type 0",
-    flourUseWeak: "Weak/medium type 00",
+    flourUseVeryStrong: "Very strong flour, Manitoba type",
+    flourUseStrong: "Strong flour, for long maturations",
+    flourUseMedium: "Medium-strength flour, often sold as pizza flour",
+    flourUseWeak: "Weak flour, general-purpose or pastry",
     verdictTitle: "This won't work as set up",
     verdictOvenTooCold: "Baking is set to {oven}; this method needs at least {min}.",
     verdictTimeWindow: "It takes about {needed} and you have {available}: it would be ready after the time you chose.",
@@ -1120,10 +1120,6 @@ export const EN_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "Turn the oven on now to {temp}{equipmentNote}. The dough finishes its final rise in the pan while it heats.",
     "timeline.preheat.descPanWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough does its final rise in the pan while it heats.",
     "timeline.preheat.descDuringRest": "Turn the oven on now to {temp}{equipmentNote}. The dough pieces rest while it heats.",
-    "hint.flourWeak": "weak flour (classic 00)",
-    "hint.flourMedium": "medium-strength flour",
-    "hint.flourStrong": "strong pizza flour",
-    "hint.flourVeryStrong": "very strong flour (Manitoba)",
     "hint.yeastDryPinch": "≈ a tiny pinch",
     "hint.yeastDryQuarterTsp": "≈ ¼ teaspoon",
     "hint.yeastDryHalfTsp": "≈ ½ teaspoon",
@@ -1429,6 +1425,7 @@ export const EN_LOCALE: CmsContent = {
     pillFlour: "Flour",
     pillPL: "P/L",
     pillFermentation: "Fermentation",
+    pillRest: "Rest",
     pillThickness: "Thickness",
     pillLevel: "Level",
     pillExperimentation: "Experimentation",
@@ -1524,7 +1521,7 @@ export const EN_LOCALE: CmsContent = {
     teglia_romana:
       "Height 2-3cm|Hydration varies by version|No-knead + folds|Cloud crumb",
     tonda_romana:
-      "Thickness 1-2mm|Rolling pin or by hand|Extremely crispy|Weak flour W<210",
+      "Thickness 1-2mm|Rolling pin or by hand|Extremely crispy|Flour W 200-240",
     pinsa_romana:
       "Multi-grain mix|Oval shape|Glassy crust|24-72h maturation",
     pala_romana:
@@ -1534,13 +1531,13 @@ export const EN_LOCALE: CmsContent = {
     detroit:
       "Cheese crown|Deep pan|Cheese to edges|Caramelised crust",
     chicago_deep:
-      "5cm depth|18% butter|Inverted layers|Bake 35min",
+      "5cm depth|18% butter|Inverted layers|Bake 25-35 min",
     focaccia_genovese:
-      "Generous EVO oil|Surface dimples|Oil-water brine|Bake 15-20min",
+      "Generous EVO oil|Surface dimples|Oil-water brine|Bake 19-24 min",
     sfincione:
       "Thick and fluffy|Toasted breadcrumbs|Onion + anchovies|Caciocavallo",
     grandma_style:
-      "Thin and crispy|Mozzarella under sauce|Well-oiled pan|Bake 12-16min",
+      "Thin and crispy|Mozzarella under sauce|Well-oiled pan|Bake 14-17 min",
     focaccia_recco:
       "Almost transparent sheet|Stracchino filling|Golden bubbles|No leavening",
     padellino_torino:
@@ -1904,14 +1901,12 @@ export const EN_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_EN["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_EN["pages.learn.path4.copy"],
     preFermentsSubtitle: "How to use them and when to plan them in.",
-    preFermentsDescription: "Biga and poolish are prepared before the final dough. <strong>Biga</strong> is a stiff dough with 44% water; <strong>poolish</strong> uses equal weights of flour and water. <strong>Autolyse</strong> is a rest for flour and water without yeast or salt: it is not a preferment.",
+    preFermentsDescription: "Biga and poolish are prepared before the final dough. <strong>Biga</strong> is a stiff dough with {bigaHydration} water; <strong>poolish</strong> uses equal weights of flour and water. <strong>Autolyse</strong> is a rest for flour and water without yeast or salt: it is not a preferment.",
     preFermentsChoiceTitle: "Which one to choose?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "When you want an aromatic dough and have about 16 h at 18–20 °C",
-    preFermentsBigaBest: "Pinsa, Pizza by the slice, Pala romana",
     preFermentsPoolishTitle: "Poolish",
     preFermentsPoolishWhen: "When you want an extensible dough and have 12–16 h at 20–22 °C",
-    preFermentsPoolishBest: "Roman tray pizza, NY Style, Focaccia",
     preFermentsAutolisiTitle: "Autolyse",
     preFermentsAutolisiWhen: "When you want a dough that is easier to stretch",
     preFermentsAutolisiBest: "All styles; combines with biga and poolish",

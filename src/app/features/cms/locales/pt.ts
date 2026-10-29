@@ -20,7 +20,7 @@ export const PT_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "sal marinho fino", "fine": "sal fino", "kosher": "sal kosher", "kosher_or_fine": "sal kosher ou fino", "coarse_and_fine": "sal grosso e fino" },
-    saltTiming: { "with_flour": "com a farinha", "after_flour_water": "depois da farinha e da água", "after_flour_water_5min": "depois da farinha e da água (5 min de amassadura)", "after_hydration": "após a hidratação", "fine_in_dough_coarse_on_top": "fino na massa, grosso por cima" },
+    saltTiming: { "with_flour": "com a farinha", "after_flour_water": "depois da farinha e da água", "dissolved_in_water": "dissolvido na água, antes da farinha (caderno de especificações)", "after_hydration": "após a hidratação", "fine_in_dough_coarse_on_top": "fino na massa, grosso por cima" },
     fold: { "stretch_fold": "dobras esticar e dobrar", "coil_fold": "dobras em espiral", "french_fold": "dobra francesa", "slap_fold": "slap & fold" },
     stretch: {
       napoletana_stg: "Esticada à mão (golpe napolitano)",
@@ -263,10 +263,10 @@ export const PT_LOCALE: CmsContent = {
     procedureDirect: "Direto",
     procedurePreferment: "Pré-fermento",
     procedureUnleavened: "Sem fermento",
-    flourUseVeryStrong: "Manitoba ou tipo 0 muito forte",
-    flourUseStrong: "Tipo 0/00 forte para pizza",
-    flourUseMedium: "Tipo 0 de força média",
-    flourUseWeak: "Tipo 00 fraca/média",
+    flourUseVeryStrong: "Farinha muito forte, tipo manitoba",
+    flourUseStrong: "Farinha forte, para maturações longas",
+    flourUseMedium: "Farinha de força média, muitas vezes «para pizza»",
+    flourUseWeak: "Farinha fraca, de uso geral ou confeitaria",
     verdictTitle: "Assim não dá certo",
     verdictOvenTooCold: "A cozedura está definida para {oven}; este método precisa de pelo menos {min}.",
     verdictTimeWindow: "São necessárias cerca de {needed} e você tem {available}: ficaria pronta depois do horário escolhido.",
@@ -950,10 +950,6 @@ export const PT_LOCALE: CmsContent = {
     "timeline.preheat.descPanWholeProof": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, a massa faz a fermenta\u00E7\u00E3o final na assadeira.",
     "timeline.preheat.descDuringRest": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, as bolas de massa descansam.",
     "tip.waterTemp": "",
-    "hint.flourWeak": "farinha fraca (00 clássica)",
-    "hint.flourMedium": "farinha de força média",
-    "hint.flourStrong": "farinha forte (para pizza)",
-    "hint.flourVeryStrong": "farinha muito forte (manitoba)",
     "hint.yeastDryPinch": "≈ uma pitada",
     "hint.yeastDryQuarterTsp": "≈ ¼ de colher de chá",
     "hint.yeastDryHalfTsp": "≈ ½ colher de chá",
@@ -1255,6 +1251,7 @@ export const PT_LOCALE: CmsContent = {
     pillFlour: "Farinha",
     pillPL: "P/L",
     pillFermentation: "Fermenta\u00E7\u00E3o",
+    pillRest: "Descanso",
     pillThickness: "Espessura",
     pillLevel: "N\u00EDvel",
     pillExperimentation: "Experimenteção",
@@ -1351,7 +1348,7 @@ export const PT_LOCALE: CmsContent = {
     teglia_romana:
       "Altura 2-3cm|Hidratação conforme a versão|Sem sovar + dobras|Miolo nuvem",
     tonda_romana:
-      "Espessura 1-2mm|Rolo ou à mão|Crocante extrema|Farinha fraca W<210",
+      "Espessura 1-2mm|Rolo ou à mão|Crocante extrema|Farinha W 200-240",
     pinsa_romana:
       "Mix multi-cereais|Forma oval|Crosta v\u00EDtrea|Matura\u00E7\u00E3o 24-72h",
     pala_romana:
@@ -1361,13 +1358,13 @@ export const PT_LOCALE: CmsContent = {
     detroit:
       "Coroa de queijo|Assadeira profunda|Queijo nas bordas|Crosta caramelizada",
     chicago_deep:
-      "Profundidade 5cm|Manteiga 18%|Camadas invertidas|Cozimento 35min",
+      "Profundidade 5cm|Manteiga 18%|Camadas invertidas|Cozimento 25-35 min",
     focaccia_genovese:
-      "\u00D3leo EVO generoso|Crateras superficiais|Salmoura \u00F3leo-\u00E1gua|Cozimento 15-20min",
+      "\u00D3leo EVO generoso|Crateras superficiais|Salmoura \u00F3leo-\u00E1gua|Cozimento 19-24 min",
     sfincione:
       "Grosso e macio|Farinha de rosca tostada|Cebola + anchovas|Caciocavallo",
     grandma_style:
-      "Fina e crocante|Mussarela sob molho|Assadeira bem untada|Cozimento 12-16min",
+      "Fina e crocante|Mussarela sob molho|Assadeira bem untada|Cozimento 14-17 min",
     focaccia_recco:
       "Folha quase transparente|Recheada de stracchino|Bolhas douradas|Sem fermenta\u00E7\u00E3o",
     padellino_torino:
@@ -1735,14 +1732,12 @@ export const PT_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_PT["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_PT["pages.learn.path4.copy"],
     preFermentsSubtitle: "Como os usar e quando os integrar na preparação.",
-    preFermentsDescription: "A biga e o poolish preparam-se antes da massa final. A <strong>biga</strong> é uma massa firme com 44% de água; o <strong>poolish</strong> leva farinha e água em partes iguais. A <strong>autólise</strong> é um repouso de farinha e água sem levedura nem sal: não é um pré-fermento.",
+    preFermentsDescription: "A biga e o poolish preparam-se antes da massa final. A <strong>biga</strong> é uma massa firme com {bigaHydration} de água; o <strong>poolish</strong> leva farinha e água em partes iguais. A <strong>autólise</strong> é um repouso de farinha e água sem levedura nem sal: não é um pré-fermento.",
     preFermentsChoiceTitle: "Qual escolher?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "Quando quer uma massa aromática e tenha cerca de 16 h a 18–20 °C",
-    preFermentsBigaBest: "Pinsa, Pizza de fatia, Pala romana",
     preFermentsPoolishTitle: "Poolish",
     preFermentsPoolishWhen: "Quando quer uma massa extensível e tenha 12–16 h a 20–22 °C",
-    preFermentsPoolishBest: "Teglia Romana, NY Style, Focaccias",
     preFermentsAutolisiTitle: "Autólise",
     preFermentsAutolisiWhen: "Quando quer uma massa mais fácil de abrir",
     preFermentsAutolisiBest: "Todos os estilos; combina com biga e poolish",

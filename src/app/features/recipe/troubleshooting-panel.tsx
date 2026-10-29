@@ -37,6 +37,7 @@ getLocalizedIssue,
 ISSUES_DB
 } from "../../data/troubleshooting-data";
 import { uiMessage } from "../../i18n/ui-messages";
+import type { StyleThresholds } from "../../domain/science/engine-facts";
 
 /* === FW-13 (S13-B-12): icone delle categorie, sul modello del glossario === */
 const TROUBLESHOOTING_CATEGORY_ICONS: Record<string, LucideIcon> = {
@@ -84,6 +85,8 @@ interface ContextualWarningsProps {
   flourG?: number;
   skillLevel: number;
   usePreFerment: boolean;
+  /** FW-05: soglie dello stile scelto (thresholdFor), per consigli relativi. */
+  style?: StyleThresholds;
 }
 
 export function ContextualWarnings(props: ContextualWarningsProps) {

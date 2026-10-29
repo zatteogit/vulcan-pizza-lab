@@ -14,16 +14,19 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
   paramHydration: "\u52A0\u6C34\u7387",
   paramDuration: "\u6642\u9593",
   paramTemperature: "\u6E29\u5EA6",
-  paramYeast: "イースト",
+  paramYeast: "生イースト",
   detailFermentation: "\u767A\u9175",
   detailFlavor: "\u98A8\u5473",
   detailCrust: "\u30AF\u30E9\u30B9\u30C8",
   detailExtensibility: "\u4F38\u5C55\u6027",
   detailIdealStyles:
     "\u7406\u60F3\u7684\u306A\u30B9\u30BF\u30A4\u30EB",
+  /* FW-05 */
+  techniqueLabel: "技法",
+  recipeContextLine: "このレシピでは、前発酵種の粉{flour}に対してイースト{yeast}（{pct}）。生地のイーストはすべて前発酵種に入れ、前発酵種の時間だけでなくレシピ全体の時間で量を決めています。",
   compLabels: [
     "加水率",
-    "イースト",
+    "生イースト（前発酵種の粉に対して）",
     "時間",
     "温度",
     "風味",
@@ -36,43 +39,36 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
         "液種：粉と水を同量、少量のイースト、20〜22 °Cで12〜16時間。",
       hydration: "100%（粉と水が同量）",
       consistency: "\u6DB2\u4F53\u3001\u6CE1\u7ACB\u3061",
-      fermentationType:
-        "速い：水分が多く数時間で熟成",
+      fermentationType: "同じイースト量ならビガより早い：示した量なら12〜16時間で熟成",
       flavor:
         "ほのかな酸味、ナッツの風味",
       crustResult:
         "薄く黄金色。色や焼き斑は窯と温度で決まります",
       extensibility:
         "高い（推定）：伸ばしやすい",
-      idealStyles:
-        "\u30C6\u30EA\u30A2\u30ED\u30DE\u30FC\u30CA\u3001NY\u30B9\u30BF\u30A4\u30EB\u3001\u73FE\u4EE3\u30CA\u30DD\u30EA\u3001\u30D5\u30A9\u30AB\u30C3\u30C1\u30E3",
       tips: [
         "表面が泡でいっぱいになり、中心がへこみ始めたら完成",
         "イーストが多いほど短時間：20〜22 °Cで0.1%なら15〜16時間、0.3%なら10〜12時間",
-        "ポーリッシュの粉：全粉量の30〜50%",
+        "ポーリッシュに使う粉：全粉量の30〜50%。{brand}は{poolishFlourPct}から始めます",
       ],
     },
     biga: {
       origin: "イタリア",
-      description:
-        "硬い元種：粉、水44%、イースト1%、18〜20 °Cで約16時間。",
-      hydration: "44%（全粒粉なら50%まで）",
+      description: "硬い前発酵種：粉、水{bigaHydration}、ビガの粉に対して約1%の生イースト。18〜20 °Cで約16時間。",
+      hydration: "{bigaHydration}（全粒粉なら50%まで）",
       consistency:
         "\u4E7E\u71E5\u3001\u30B3\u30F3\u30D1\u30AF\u30C8",
-      fermentationType:
-        "ゆっくり：水分が少なく16〜48時間で熟成",
+      fermentationType: "ゆっくり：水が少ないため約16時間で熟成（冷蔵を使えば48時間まで）",
       flavor:
         "芳醇、花のような香り",
       crustResult:
         "パリッとした食感。構造は加水と成形で決まります",
       extensibility:
         "粉と加水によります（要確認）",
-      idealStyles:
-        "ピンサ、ピッツァ・アル・タリオ、パーラ・ロマーナ、パン",
       tips: [
         "ところどころ膨らみ、ヨーグルトの香りがして軽く泡立てば完成。酸っぱければ発酵しすぎ",
         "ロングビガ：4〜5 °Cで24時間、その後18〜20 °Cで24時間",
-        "ビガの粉：全粉量の20〜50%、通常は3分の1",
+        "ビガに使う粉：通常は全粉量の30〜40%。{brand}は{bigaFlourPct}から始め、{flourPctMin}〜{flourPctMax}の範囲で変更できます",
         "STGナポリピッツァには使わない：規定はストレート法のみ",
       ],
     },
@@ -101,22 +97,22 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
   },
   compValues: {
     hydration: {
-      biga: "44%",
-      poolish: "100%",
+      biga: "{bigaHydration}",
+      poolish: "{poolishHydration}",
       autolisi: "= レシピ",
     },
     yeast: {
       biga: "1%",
-      poolish: "0.1〜0.3%",
+      poolish: "0.1〜0.2%",
       autolisi: "0%",
     },
     duration: {
-      biga: "16〜48時間",
+      biga: "16時間（冷蔵24時間を含めて最大48時間）",
       poolish: "12〜16時間",
       autolisi: "20〜60分",
     },
     temperature: {
-      biga: "18〜20 °C",
+      biga: "18〜20 °C（ロングビガは最初に4〜5 °Cで24時間）",
       poolish: "20〜22 °C",
       autolisi: "\u5BA4\u6E29",
     },
@@ -172,50 +168,33 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
       P01: {
         symptom:
           "\u6301\u7D9A\u7684\u306B\u3079\u305F\u3064\u304F\u751F\u5730",
-        cause:
-          "\u52A0\u6C34\u7387\u304C\u5C0F\u9EA6\u7C89\u306E\u5438\u6C34\u80FD\u529B\u3092\u8D85\u3048\u3066\u3044\u308B",
-        testRapido:
-          "\u30EC\u30B7\u30D4\u306EH%\u3068\u5C0F\u9EA6\u7C89\u5438\u6C34\u7387\uFF08+5%\u6700\u5927\uFF09\u3092\u6BD4\u8F03",
-        fixImmediate:
-          "2-3%\u306E\u5C0F\u9EA6\u7C89\u3092\u52A0\u3048\u3001\u512A\u3057\u3044\u6298\u308A\u305F\u305F\u307F\u3067\u7D44\u307F\u8FBC\u3080",
-        prevention:
-          "H% \u2264 \u5C0F\u9EA6\u7C89\u5438\u6C34\u7387 + 5%\u3092\u4F7F\u7528",
+        cause: "粉が吸収できる以上の水",
+        testRapido: "レシピの加水率が、粉の規格書にある吸水率を超えていませんか？",
+        fixImmediate: "粉を少しずつ（2〜3%）加え、やさしく折りたたんでなじませる",
+        prevention: "製粉会社が示す吸水率に近づける。わからなければ、スタイルの加水率の下限から始める",
       },
       P02: {
         symptom:
           "\u4F38\u3070\u3059\u3068\u751F\u5730\u304C\u7834\u308C\u308B",
-        cause:
-          "P/L\u304C\u9AD8\u3059\u304E\u308B\uFF08>0.8\uFF09\u307E\u305F\u306F\u767A\u9175\u4E0D\u8DB3\uFF08<6h\uFF09",
-        testRapido:
-          "\u751F\u5730\u738910cm\u4F38\u3070\u3059\uFF1A\u7834\u308C\u308B\uFF1F",
-        fixImmediate:
-          "\u5BA4\u6E29\u3067\u30AB\u30D0\u30FC\u3057\u306660\u5206\u4F11\u61A9",
-        prevention:
-          "P/L 0.5-0.6\u306E\u5C0F\u9EA6\u7C89\u3001\u6700\u4F4E8h\u767A\u9175",
+        cause: "グルテンの形成不足や緩み不足、冷蔵庫から出したばかりで冷たい生地。伸展性の低い粉（P/Lが高い）や過発酵のこともある",
+        testRapido: "端をゆっくり伸ばしてみて、伸びずにすぐ切れますか？",
+        fixImmediate: "生地玉に覆いをして室温で30〜60分休ませ、もう一度試す",
+        prevention: "レシピの時間を守り、生地玉は早めに冷蔵庫から出し、スタイルが示すP/Lの粉を使う",
       },
       P03: {
         symptom:
           "\u89E6\u308B\u3068\u751F\u5730\u304C\u5D29\u308C\u308B",
-        cause:
-          "\u904E\u767A\u9175\uFF08\u4F53\u7A4D>150%\u3001\u6307\u306E\u8DE1\u304C\u623B\u3089\u306A\u3044\uFF09",
-        testRapido:
-          "1cm\u6307\u3067\u62BC\u3059\uFF1A3-5\u79D2\u3067\u623B\u308B\uFF1F",
-        fixImmediate:
-          "\u4E0D\u53EF\u9006\u3002\u512A\u3057\u304F\u4F38\u3070\u3057\u3066\u3059\u3050\u713C\u304F",
-        prevention:
-          "6h\u3054\u3068\u306B\u4F53\u7A4D\u78BA\u8A8D\u3001\u6700\u5927+150%\u5897\u52A0",
+        cause: "過発酵：時間が長すぎる、温度が高すぎる、またはイーストが多すぎる",
+        testRapido: "指で押してみる。くぼみがすぐ戻ればまだ早い、ゆっくり戻れば適正、戻らずに生地がしぼめば過発酵",
+        fixImmediate: "丸め直して1〜2時間休ませる（気泡は少なくなる）か、そっと伸ばしてすぐに焼く",
+        prevention: "時計だけに頼らず、予定時間の最後の3分の1から生地を確認する",
       },
       P04: {
-        symptom:
-          "6\u6642\u9593\u4EE5\u4E0A\u7D4C\u3063\u3066\u3082\u81A8\u3089\u307E\u306A\u3044",
-        cause:
-          "\u30A4\u30FC\u30B9\u30C8\u304C\u6B7B\u3093\u3067\u3044\u308B\u3001\u6E29\u5EA6\u304C\u4F4E\u3059\u304E\u308B\u3001\u307E\u305F\u306F\u5869\u304C\u76F4\u63A5\u63A5\u89E6",
-        testRapido:
-          "\u6D3B\u6027\u30C6\u30B9\u30C8\uFF1A5g\u30A4\u30FC\u30B9\u30C8+5g\u7802\u7CD6\u309235\u00B0C\u306E100ml\u6C34\u306B \u2014 15\u5206\u5F8C\u306B\u6CE1\u7ACB\u3064\uFF1F",
-        fixImmediate:
-          "\u306C\u308B\u307E\u6E6F\u306B\u6EB6\u304B\u3057\u305F0.3%\u751F\u30A4\u30FC\u30B9\u30C8\u3092\u52A0\u3048\u3001\u6298\u308A\u305F\u305F\u307F\u3067\u7D44\u307F\u8FBC\u3080",
-        prevention:
-          "\u6BCE\u56DE\u4F7F\u7528\u524D\u306B\u30A4\u30FC\u30B9\u30C8\u3092\u30C6\u30B9\u30C8",
+        symptom: "予定の時間がたっても生地が膨らまない",
+        cause: "イーストの活性が低いか期限切れ、または生地が予定より冷たい。冷蔵中にあまり膨らまないのは正常",
+        testRapido: "冷蔵庫に入れていましたか？それなら正常です。そうでなければ、イーストをひとつまみ、少量の砂糖とぬるま湯に溶かし、10〜15分後に泡立つか確認",
+        fixImmediate: "まず暖かい場所（24〜28 °C）に1〜2時間置く。それでも動かなければイーストが不活性なので、新しいイーストで生地を作り直す",
+        prevention: "イーストの期限と室温を確認する",
       },
       P05: {
         symptom:
@@ -232,12 +211,9 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
       P06: {
         symptom:
           "\u9178\u3063\u3071\u3044/\u9175\u9178\u81ED\u304C\u5F37\u3044",
-        cause:
-          "\u30D8\u30C6\u30ED\u4E73\u9178\u83CCLAB\u304C>48h\u3001>18\u00B0C\u3067\u6D3B\u6027\uFF08\u7279\u306B\u5929\u7136\u9175\u6BCD\uFF09",
-        testRapido:
-          "\u751F\u5730pH \u2014 4.5-5.5\u304C\u6B63\u5E38\u3001<4.2\u306F\u554F\u984C",
-        fixImmediate:
-          "砂糖は味を隠しても過発酵を修正しません。使う前に生地を見直してください。",
+        cause: "熟成が長すぎるか温度が高すぎる：乳酸菌が酸をつくる（サワードウで起こりやすい）",
+        testRapido: "生地を少し取ってにおいと味を確かめる。酢のようなツンとした酸味がありますか？",
+        fixImmediate: "食べても問題ありません。次回は室温での熟成を短くする",
         prevention:
           "製法に合わせて時間・温度・酵母を選び、生地を確認します。一律の時間基準はありません。",
       },
@@ -256,14 +232,11 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
       P08: {
         symptom:
           "\u30D4\u30C3\u30C4\u30A1\u306B\u5DE8\u5927\u306A\u4E0D\u898F\u5247\u306A\u7A74",
-        cause:
-          "\u30AC\u30B9\u629C\u304D\u4E0D\u8DB3 + \u4F38\u3070\u3057\u304C\u512A\u3057\u3059\u304E\u308B",
-        testRapido:
-          "\u6C17\u6CE1>3cm\u3067\u5206\u5E03\u304C\u4E0D\u5747\u4E00\uFF1F",
+        cause: "生地玉に大きな気泡が残ったまま、とてもやさしく伸ばした",
+        testRapido: "大きな気泡が縁だけでなく中央にも散らばっていますか？",
         fixImmediate:
           "\u4F38\u3070\u3059\u524D\u306B\u751F\u5730\u7389\u3092\u8EFD\u304F\u62BC\u3057\u3066\u30AC\u30B9\u3092\u518D\u5206\u914D",
-        prevention:
-          "\u767A\u9175\u6642\u9593\u309220%\u6E1B\u3089\u3059",
+        prevention: "伸ばす前に大きな気泡をそっとつぶす。ナポリピッツァやカノットでは、縁の大きな気泡は狙いどおり",
       },
       P09: {
         symptom:
@@ -272,34 +245,24 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
           "\u71B1\u7684\u4E0D\u5747\u8861\uFF1A\u4E0A\u304B\u3089\u306E\u71B1\u304C\u591A\u304F\u3001\u4E0B\u304B\u3089\u306E\u71B1\u304C\u5C11\u306A\u3044",
         testRapido:
           "\u4E0A\u3068\u4E0B\u306E\u8272\u306E\u30B3\u30F3\u30C8\u30E9\u30B9\u30C8\u304C\u6975\u7AEF\uFF1F",
-        fixImmediate:
-          "\u30C8\u30C3\u30D4\u30F3\u30B0\u306A\u3057\u3067\u751F\u5730\u30923\u5206\u30D7\u30EC\u713C\u304D",
-        prevention:
-          "\u539A\u3044\u30C8\u30EC\u30A4/\u77F3\u3092\u4F7F\u7528\u3001\u4E0A\u4E0B\u306E\u71B1\u3092\u30D0\u30E9\u30F3\u30B9",
+        fixImmediate: "熱い炉床に近づけ、上火から遠ざけて焼く。オーブンが300 °Cを超えない場合は、具をのせずに台を2〜3分下焼きしてもよい",
+        prevention: "熱のバランスをとる：下はよく予熱した石や鋼板、上からの熱は控えめに",
       },
       P10: {
         symptom:
           "\u30AF\u30E9\u30B9\u30C8\u304C\u9752\u767D\u3044\u3001\u8272\u304C\u3064\u304B\u306A\u3044",
-        cause:
-          "\u6E29\u5EA6<250\u00B0C\u3001\u7CD6\u304C\u6D88\u8017\u3001\u307E\u305F\u306F\u8868\u9762\u6C34\u5206\u904E\u591A",
-        testRapido:
-          "\u30AA\u30FC\u30D6\u30F3\u306F\u5C11\u306A\u304F\u3068\u3082250\u00B0C\u306B\u9054\u3059\u308B\uFF1F\u767A\u9175>48h\uFF1F",
-        fixImmediate:
-          "\u713C\u304F\u524D\u306B\u30AA\u30A4\u30EB+\u30CF\u30C1\u30DF\u30C4\u3092\u5857\u308B\u304B\u3001\u6700\u5F8C\u306B\u30B0\u30EA\u30EB2\u5206",
-        prevention:
-          "砂糖かモルトを0.5〜1%加え、よく予熱した石か鋼板を入れてオーブンを最高温度にする",
+        cause: "オーブンや炉床がスタイルに対して低温、または非常に長い熟成で糖が少なくなっている",
+        testRapido: "オーブンはスタイルの温度に達していますか？熟成がとても長くありませんでしたか？",
+        fixImmediate: "オーブンにグリルがあれば、最後の1〜2分に使う",
+        prevention: "よく予熱した石や鋼板でオーブンを最高温度にする。砂糖もモルトも認めないSTGのレシピ以外なら、砂糖かモルトを0.5〜1%加えてもよい",
       },
       P11: {
         symptom:
           "\u30B4\u30E0\u306E\u3088\u3046\u306A\u30D4\u30C3\u30C4\u30A1\u3001\u30AB\u30EA\u30AB\u30EA\u3067\u306A\u3044",
-        cause:
-          "\u82AF\u6E29<85\u00B0C\u3001\u52A0\u6C34\u7387>70%\u3001\u307E\u305F\u306F\u713C\u304D\u304C\u9045\u3059\u304E\u308B",
-        testRapido:
-          "\u82AF\u6E29\u8A08\uFF1A90\u00B0C\u4EE5\u4E0A\u306B\u9054\u3059\u308B\uFF1F",
-        fixImmediate:
-          "\u713C\u304D\u6642\u9593+2\u5206\u307E\u305F\u306F\u6E29\u5EA6+20\u00B0C",
-        prevention:
-          "H \u2264 65%\u3001\u82AF\u6E29\u76EE\u6A1995\u00B0C",
+        cause: "厚みに対して焼き時間が短いか温度が低い、またはスタイルの想定より水が多い",
+        testRapido: "切ると中心がまだ湿ってべたついていますか？",
+        fixImmediate: "数分長く焼く。オーブンに余裕があれば温度を上げる",
+        prevention: "スタイルの加水率を守り、レシピの焼き時間どおりに焼く",
       },
       P14: {
         symptom:
@@ -316,35 +279,27 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
       P15: {
         symptom:
           "\u30D4\u30C3\u30C4\u30A1\u306E\u88CF\u304C\u9ED2\u3044",
-        cause:
-          "\u77F3\u307E\u305F\u306F\u30C8\u30EC\u30A4\u304C\u71B1\u3059\u304E\u308B\uFF08>450\u00B0C\uFF09",
+        cause: "炉床がスタイルに必要な温度より高い、または石の上で粉やセモリナが焦げている",
         testRapido: "\u5473\u898B\uFF1A\u82E6\u3044\uFF1F",
         fixImmediate:
           "\u82E6\u3044 = \u554F\u984C\uFF08\u6E29\u5EA6\u3092\u4E0B\u3052\u308B\uFF09\u3002\u7F8E\u5473\u3057\u3044 = \u6B63\u5E38",
-        prevention:
-          "\u77F3\u306E\u4E88\u71B1\u3092\u7BA1\u7406\u3001400\u00B0C\u3092\u8D85\u3048\u306A\u3044",
+        prevention: "炉床をスタイルの温度に保ち、ピッツァを焼くたびに石をブラシで払う",
       },
       P16: {
         symptom: "\u7E01\u304C\u4F4E\u304F\u5E73\u3089",
-        cause:
-          "\u904E\u5EA6\u306E\u30AC\u30B9\u629C\u304D\u3001\u5C0F\u9EA6\u7C89W\u304C\u4F4E\u3059\u304E\u308B\u3001\u307E\u305F\u306F\u9EBA\u68D2\u4F7F\u7528",
+        cause: "ガス抜きのしすぎ、スタイルに対して弱すぎる粉、またはめん棒の使用",
         testRapido: "\u7E01\u306E\u9AD8\u3055<1cm\uFF1F",
         fixImmediate:
           "\u3088\u308A\u7E4A\u7D30\u306A\u4F38\u3070\u3057\u3001\u7E01\u3092\u62BC\u3055\u306A\u3044",
-        prevention:
-          "\u30CA\u30DD\u30EA\u306B\u306FW \u2265 240\u3001\u7E01\u306E\u3042\u308B\u30B9\u30BF\u30A4\u30EB\u306B\u306F\u7D76\u5BFE\u306B\u9EBA\u68D2\u3092\u4F7F\u308F\u306A\u3044",
+        prevention: "スタイルが示す強さの粉を使い、縁のあるスタイルではめん棒を使わない",
       },
       P17: {
         symptom:
           "\u30D4\u30C3\u30C4\u30A1\u304C\u4E7E\u71E5\u3057\u3059\u304E\u308B",
-        cause:
-          "\u52A0\u6C34\u7387<55%\u307E\u305F\u306F\u713C\u304D\u6642\u9593\u304C\u9577\u3059\u304E\u308B\uFF08>10\u5206\uFF09",
-        testRapido:
-          "\u30EC\u30B7\u30D4\u306EH%\uFF1F\u5B9F\u969B\u306E\u713C\u304D\u6642\u9593\uFF1F",
-        fixImmediate:
-          "\u30C8\u30C3\u30D4\u30F3\u30B0\u306B\u305F\u3063\u3077\u308A\u30AA\u30A4\u30EB\u3092\u304B\u3051\u308B",
-        prevention:
-          "H \u2265 58%\u3001\u63A8\u5968\u713C\u304D\u6642\u9593\u3092\u8D85\u3048\u306A\u3044",
+        cause: "スタイルの想定より水が少ない、またはレシピより長く焼いた",
+        testRapido: "加水率と焼き時間はレシピどおりですか？",
+        fixImmediate: "焼きたてをすぐに出す。次回は焼き時間を短くする",
+        prevention: "スタイルの加水率を守り、示された焼き時間を超えない",
       },
       P18: {
         symptom:
@@ -353,34 +308,24 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
           "\u30C8\u30C3\u30D4\u30F3\u30B0\u306E\u6C34\u5206\u304C\u591A\u3059\u304E\u308B\u307E\u305F\u306F\u713C\u304D\u304C\u77ED\u3059\u304E\u308B",
         testRapido:
           "\u30D4\u30C3\u30C4\u30A1\u3042\u305F\u308A\u306E\u30BD\u30FC\u30B9\u91CF\uFF1F\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9\u304C\u975E\u5E38\u306B\u6E7F\u3063\u3066\u3044\u308B\uFF1F",
-        fixImmediate:
-          "\u751F\u5730\u30922\u5206\u30D7\u30EC\u713C\u304D\u3001\u305D\u306E\u5F8C\u30C8\u30C3\u30D4\u30F3\u30B0\u3092\u8F09\u305B\u308B",
+        fixImmediate: "台を2〜3分下焼きしてから具をのせる",
         prevention:
           "30cm\u30D4\u30C3\u30C4\u30A1\u306B\u30BD\u30FC\u30B9\u6700\u594780ml\u3001\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9\u3092\u3088\u304F\u6C34\u5207\u308A",
       },
       P19: {
         symptom:
           "\u751F\u5730\u7389\u304C\u4F38\u3070\u305B\u306A\u3044",
-        cause:
-          "\u7D14\u30DE\u30CB\u30C8\u30D0\u7C89\uFF08W >380\uFF09\u3001\u751F\u5730\u304C\u5F37\u3059\u304E\u308B",
-        testRapido:
-          "\u3069\u306E\u5C0F\u9EA6\u7C89\u3092\u4F7F\u3063\u305F\uFF1FW >350\uFF1F",
-        fixImmediate:
-          "\u6B21\u56DE\u306FW 200\u306E\u5C0F\u9EA6\u7C89\u309250:50\u3067\u30D6\u30EC\u30F3\u30C9",
-        prevention:
-          "\u30D4\u30C3\u30C4\u30A1\u306B\u306F\u6700\u5927W 320\u3001P/L 0.5-0.6\u306E\u5C0F\u9EA6\u7C89",
+        cause: "スタイルの想定よりかなり強い粉：生地が締まりすぎている",
+        testRapido: "お使いの粉のWは、スタイルの値を大きく上回っていませんか？",
+        fixImmediate: "生地玉に覆いをして20〜30分休ませ、もう一度試す。次回はより弱い粉を混ぜる",
+        prevention: "スタイルが示す強さとP/Lの粉を使う",
       },
       P20: {
-        symptom:
-          "\u751F\u5730\u304B\u3089'\u5316\u5B66\u7684'\u306A\u81ED\u3044",
-        cause:
-          "\u6C34\u9053\u6C34\u306E\u5869\u7D20\u304C\u9AD8\u3044",
-        testRapido:
-          "\u86C7\u53E3\u3092\u958B\u3051\u308B\u3068\u5F37\u3044\u81ED\u3044\u304C\u3059\u308B\uFF1F",
-        fixImmediate:
-          "\u6B21\u56DE\u306F\u30DC\u30C8\u30EB\u30A6\u30A9\u30FC\u30BF\u30FC\u3092\u4F7F\u7528",
-        prevention:
-          "\u6C34\u3092\u6FFE\u904E\u3059\u308B\u304B12\u6642\u9593\u958B\u3051\u305F\u307E\u307E\u7F6E\u304F\uFF08\u5869\u7D20\u304C\u84B8\u767A\uFF09",
+        symptom: "生地から「化学的な」におい（アルコール、溶剤）がする",
+        cause: "過発酵（アルコールとエステル）またはイーストの入れすぎ。まれに水の塩素",
+        testRapido: "アルコールやアセトンのにおいがして、生地がだれて戻りませんか？",
+        fixImmediate: "だれて戻らないなら過発酵として扱い、丸め直すかすぐに焼く",
+        prevention: "次回はイーストを減らすか涼しい場所で。水道水に塩素の味がするなら別の水を使う。くみ置きではクロラミンは抜けない",
       },
       P21: {
         symptom: "生地ごとに発酵がばらつく（家庭用冷蔵庫）",
@@ -394,7 +339,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
       sticky_dough: {
         message:
           "\u52A0\u6C34\u7387{h}%\u3067W{w}\uFF1A\u3079\u305F\u3064\u304F\u751F\u5730\u306E\u30EA\u30B9\u30AF",
-        tip: "W \u2265 280\u306E\u5C0F\u9EA6\u7C89\u3092\u4F7F\u3046\u304B\u3001\u52A0\u6C34\u7387\u309268-70%\u306B\u4E0B\u3052\u308B",
+        tip: "このスタイルの想定はW{wMin}〜{wMax}です。この範囲の粉を使うか、加水率を少し下げてください",
       },
       high_pl: {
         message:
@@ -404,7 +349,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
       sour_risk: {
         message:
           "{h}h\u3001{t}\u00B0C\uFF1A\u9178\u5473\u306E\u30EA\u30B9\u30AF",
-        tip: ">24h\u306E\u767A\u9175\u306B\u306F4-8\u00B0C\u306E\u6E29\u5EA6\u3092\u4F7F\u7528",
+        tip: "キッチンが暖かいなら熟成の一部を冷蔵庫に移し、時計より生地の様子を見てください",
       },
       pale_crust: {
         message:
@@ -412,19 +357,17 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         tip: "体積・弾力・押した時の戻りを確認してください。時間だけでは消化性を判断できません。",
       },
       cold_oven: {
-        message:
-          "\u30AA\u30FC\u30D6\u30F3{t}\u00B0C\uFF1A\u751F\u5730\u304C\u751F\u3067\u7E01\u304C\u7126\u3052\u308B\u30EA\u30B9\u30AF",
-        tip: "\u30C8\u30C3\u30D4\u30F3\u30B0\u306A\u3057\u3067\u751F\u5730\u30923\u5206\u30D7\u30EC\u713C\u304D\u3001\u305D\u306E\u5F8C\u6750\u6599\u3092\u8F09\u305B\u308B",
+        message: "オーブン{t}°Cはスタイルの温度より低め：焼き色が薄く乾いたピッツァになるおそれ",
+        tip: "石や鋼板をしっかり予熱し、グリルがあれば最後の数分に使ってください",
       },
       beginner_hydration: {
         message:
           "\u52A0\u6C34\u7387{h}%\u306F\u521D\u5FC3\u8005\u306B\u306F\u96E3\u3057\u3044",
-        tip: "60-65%\u304B\u3089\u59CB\u3081\u3001\u7D4C\u9A13\u3068\u3068\u3082\u306B\u5F90\u3005\u306B\u4E0A\u3052\u308B",
+        tip: "このスタイルの想定は{hMin}〜{hMax}%です。初心者なら{hMin}%に近づけてください",
       },
       high_w: {
-        message:
-          "W{w}\u304C\u975E\u5E38\u306B\u9AD8\u3044\uFF1A\u751F\u5730\u304C\u4F38\u3070\u3057\u306B\u304F\u3044",
-        tip: "W 200\u306E\u5C0F\u9EA6\u7C89\u309250:50\u3067\u6DF7\u305C\u308B\u304B\u3001\u9577\u3044\u30AA\u30FC\u30C8\u30EA\u30FC\u30BA\u3092\u8A08\u753B",
+        message: "W{w}はスタイルの想定をかなり超えています：生地が伸ばしにくい",
+        tip: "このスタイルの想定はW{wMin}〜{wMax}です。弱い粉を混ぜるか、長めのオートリーズを取ってください",
       },
       flat_long_ferment: {
         message:
@@ -439,13 +382,12 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     w_alveograph: {
       name: "W\uFF08\u30B7\u30E7\u30D1\u30F3\u30FB\u30A2\u30EB\u30D9\u30AA\u30B0\u30E9\u30D5\uFF09",
       definition: "\u751F\u5730\u306E\u6C17\u6CE1\u3092\u7834\u88C2\u3059\u308B\u307E\u3067\u81A8\u3089\u307E\u305B\u308B\u306E\u306B\u5FC5\u8981\u306A\u7DCF\u30A8\u30CD\u30EB\u30AE\u30FC\u3002\u5C0F\u9EA6\u7C89\u306E\u7DCF\u5408\u7684\u306A\u5F37\u3055\u3092\u793A\u3057\u307E\u3059\u3002",
-      whyImportant: "Wは小麦粉の総合的な強さを示します。粘り強さと伸びやすさはP・L・P/Lで評価します。Wが高いだけで生地が硬いとは限りません。",
+      whyImportant: "Wは小麦粉の総合的な強さを表します。弾力と伸展性はP、L、P/Lで評価し、Wが高いだけで生地が締まるわけではありません。この区分は{brand}がアプリ全体で使うもので、各スタイルには固有のWの範囲があります。",
       ranges: [
-        { label: "\u5F31\u3044", value: "90\u2013160", note: "\u30D3\u30B9\u30B1\u30C3\u30C8\u3001\u30A6\u30A8\u30CF\u30FC\u30B9" },
-        { label: "\u4E2D", value: "160\u2013200", note: "\u98DF\u30D1\u30F3\u3001\u30D5\u30A9\u30AB\u30C3\u30C1\u30E3" },
-        { label: "\u4E2D\u301C\u5F37", value: "200\u2013280", note: "\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1" },
-        { label: "\u5F37\u3044", value: "280\u2013350", note: "\u9577\u6642\u9593\u767A\u9175\u306E\u30D1\u30F3" },
-        { label: "\u975E\u5E38\u306B\u5F37\u3044", value: "350\u2013450", note: "\u30D1\u30CD\u30C3\u30C8\u30FC\u30CD\u3001\u30AF\u30ED\u30EF\u30C3\u30B5\u30F3" },
+        { label: "弱い", value: "{wBandWeak}", note: "汎用粉・菓子用粉" },
+        { label: "中", value: "{wBandMedium}", note: "「ピッツァ用」として売られることが多い" },
+        { label: "強い", value: "{wBandStrong}", note: "長時間熟成や高加水の生地" },
+        { label: "非常に強い", value: "{wBandVeryStrong}", note: "マニトバや大型の発酵菓子用の粉" },
       ],
     },
     p_tenacity: {
@@ -470,14 +412,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     pl_ratio: {
       name: "P/L\uFF08\u7C98\u308A\u5F37\u3055/\u4F38\u5C55\u6027\u306E\u6BD4\uFF09",
       definition: "生地が変形に抵抗する力と、伸びる性質の比率です。",
-      whyImportant: "生地の粘弾性のバランスを表します。適切な値は粉・加水率・製法で変わり、ピザの高さや食感を保証しません。",
-      ranges: [
-        { label: "<0.4 \u975E\u5E38\u306B\u4F38\u3073\u3084\u3059\u3044", value: "\u3064\u3076\u308C\u3084\u3059\u3044", note: "\u30D4\u30F3\u30B5" },
-        { label: "0.4\u20130.5 \u4F38\u3073\u3084\u3059\u3044", value: "\u6271\u3044\u3084\u3059\u3044", note: "\u30AF\u30E9\u30B7\u30C3\u30AF\u306A\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1" },
-        { label: "0.5\u20130.7 \u30D0\u30E9\u30F3\u30B9\u578B", value: "\u30D0\u30E9\u30F3\u30B9\u304C\u826F\u3044", note: "\u73FE\u4EE3\u306E\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1\u3001\u30D1\u30F3" },
-        { label: "0.7\u20131.0 \u7C98\u308A\u304C\u5F37\u3044", value: "\u30B3\u30B7\u304C\u5F37\u3044", note: "\u9577\u6642\u9593\u767A\u9175\u306E\u30D1\u30F3" },
-        { label: ">1.0 \u975E\u5E38\u306B\u7C98\u308A\u304C\u5F37\u3044", value: "\u5F3E\u529B\u304C\u3042\u308A\u3001\u7E2E\u3080", note: "\u30AF\u30ED\u30EF\u30C3\u30B5\u30F3" },
-      ],
+      whyImportant: "レオロジー上のバランスを表します。適した値は粉、加水率、製法によって変わり、ピッツァの高さや食感を保証するものではありません。例は{brand}の各スタイルの範囲です。お使いの粉のP/Lは製粉会社の規格書に記載されています。",
     },
     falling_number: {
       name: "\u30D5\u30A9\u30FC\u30EA\u30F3\u30B0\u30CA\u30F3\u30D0\u30FC\uFF08Hagberg-Perten\uFF09",
@@ -494,14 +429,8 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     hydration: {
       name: "\u52A0\u6C34\u7387\uFF08H%\uFF09",
       definition: "\u751F\u5730\u4E2D\u306E\u5C0F\u9EA6\u7C89\u306B\u5BFE\u3059\u308B\u6C34\u306E\u91CD\u91CF\u306E\u5272\u5408\uFF08%\uFF09\u3002",
-      whyImportant: "H\u304C\u4F4E\u3044\uFF08<55%\uFF09\uFF1A\u30AB\u30EA\u30C3\u3068\u3057\u3066\u6271\u3044\u3084\u3059\u3044\u3002H\u304C\u4E2D\u7A0B\u5EA6\uFF0860-65%\uFF09\uFF1A\u30D0\u30E9\u30F3\u30B9\u578B\u3002H\u304C\u9AD8\u3044\uFF08>70%\uFF09\uFF1A\u5F37\u3044\u5C0F\u9EA6\u7C89\uFF08W>280\uFF09\u3068\u6280\u8853\u304C\u5FC5\u8981\u3067\u3059\u3002",
-      ranges: [
-        { label: "\u30AF\u30E9\u30B7\u30C3\u30AF\u306A\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1", value: "55\u201360%", note: "\u67D4\u3089\u304B\u304F\u6271\u3044\u3084\u3059\u3044" },
-        { label: "\u73FE\u4EE3\u306E\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1", value: "60\u201365%", note: "\u8EFD\u3044\u30B3\u30EB\u30CB\u30C1\u30E7\u30FC\u30CD" },
-        { label: "\u30AB\u30CC\u30C3\u30C8", value: "65\u201370%", note: "\u5927\u304D\u306A\u6C17\u6CE1" },
-        { label: "\u30D4\u30F3\u30B5\u30FB\u30ED\u30DE\u30FC\u30CA", value: "75\u201385%", note: "\u5929\u677F\u306B\u5E83\u3052\u308B" },
-        { label: "\u30D5\u30A9\u30AB\u30C3\u30C1\u30E3/\u30DC\u30F3\u30C1", value: "85\u2013100%+", note: "\u30D0\u30C3\u30BF\u30FC\u72B6" },
-      ],
+      formula: "H% = (水の重量 / 粉の重量) × 100",
+      whyImportant: "水が多いほど生地は柔らかく扱いにくくなり、より強い粉が必要になります。カリッとした食感は主に焼き方と厚みで決まり、加水の多い天板ピッツァでもカリッと焼けます。例は{brand}の各スタイルの範囲です。",
     },
     absorption: {
       name: "\u5438\u6C34\u7387",
@@ -528,11 +457,13 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "\u30A4\u30FC\u30B9\u30C8\uFF08Saccharomyces cerevisiae\uFF09",
       definition: "糖を発酵させ、二酸化炭素、アルコール、香りの成分を作る単細胞の菌類です。",
-      whyImportant: "活性は菌株・量・温度・生地によって変わります。低温で発酵は遅くなりますが、一律に直ちに止まる温度はありません。",
+      whyImportant: "活性は菌株、量、温度、生地によって変わります。低温は発酵を遅くしますが、すぐに止まる普遍的な境界はありません。適量は時間と温度で決まり、レシピが計算します。",
       ranges: [
-        { label: "\u751F\u30A4\u30FC\u30B9\u30C8", value: "0.5\u20132.0%", note: "\u6C34\u520670%\u3001\u51B7\u85354\u00B0C" },
-        { label: "\u30A2\u30AF\u30C6\u30A3\u30D6\u30C9\u30E9\u30A4\u30A4\u30FC\u30B9\u30C8", value: "0.3\u20131.0%", note: "\u5148\u306B\u6C34\u3067\u623B\u3059" },
-        { label: "\u30A4\u30F3\u30B9\u30BF\u30F3\u30C8\u30C9\u30E9\u30A4\u30A4\u30FC\u30B9\u30C8", value: "0.2\u20130.8%", note: "\u305D\u306E\u307E\u307E\u6DF7\u305C\u308B" },
+        { label: "生イースト、{yeastS1Temp}で{yeastS1Hours}", value: "{yeastS1Pct}", note: "モデルの推定値" },
+        { label: "生イースト、{yeastS2Temp}で{yeastS2Hours}", value: "{yeastS2Pct}", note: "モデルの推定値" },
+        { label: "生イースト、{yeastS3Temp}で{yeastS3Hours}", value: "{yeastS3Pct}", note: "モデルの推定値" },
+        { label: "生イースト、{yeastS4Temp}で{yeastS4Hours}", value: "{yeastS4Pct}", note: "モデルの推定値" },
+        { label: "ドライ（アクティブまたはインスタント）", value: "≈ 生 × {yeastDryRatio}", note: "生イーストと同じ推定" },
       ],
     },
     lab: {
@@ -543,28 +474,29 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     q10: {
       name: "Q\u2081\u2080\uFF08\u6E29\u5EA6\u4FC2\u6570\uFF09",
       definition: "\u6E29\u5EA6\u304C10\u00B0C\u4E0A\u304C\u308B\u3054\u3068\u306B\u3001\u751F\u5316\u5B66\u53CD\u5FDC\u306E\u901F\u5EA6\u304C\u4F55\u500D\u306B\u306A\u308B\u304B\u3092\u793A\u3059\u4FC2\u6570\u3002",
-      whyImportant: "Q\u2081\u2080 = 2\u306A\u3089\u3001\u767A\u9175\u306E\u901F\u3055\u306F+10\u00B0C\u3054\u3068\u306B2\u500D\u306B\u306A\u308A\u307E\u3059\uFF1A18\u00B0C\u306724h \u2248 28\u00B0C\u306712h\u3002\u4EE5\u4E0B\u306E\u5024\u306F{brand}\u306E\u30E2\u30C7\u30EB\u306B\u3088\u308B\u63A8\u5B9A\u5024\u3067\u3059\u3002",
+      whyImportant: "Q₁₀ = {q10ComAbove}なら、{tenDegrees}上がるごとに速度は{q10ComAbove}倍になります。{q10RefTemp}で{q10ExampleRefHours} ≈ {q10ExampleWarmTemp}で{q10ExampleWarmHours}。この項目の値は{brand}のモデルによる推定値です。",
       ranges: [
-        { label: "\u5E02\u8CA9\u30A4\u30FC\u30B9\u30C8 \u226510\u00B0C", value: "2.0", note: "\u30E2\u30C7\u30EB\u306B\u3088\u308B\u63A8\u5B9A\u300218\u301C25 \u00B0C\u306E\u5897\u6B96\u30C7\u30FC\u30BF\u3068\u6574\u5408" },
-        { label: "\u5E02\u8CA9\u30A4\u30FC\u30B9\u30C8 <10\u00B0C", value: "1.6", note: "\u30E2\u30C7\u30EB\u306B\u3088\u308B\u63A8\u5B9A\uFF08\u51FA\u5178\u306A\u3057\uFF09" },
-        { label: "\u5929\u7136\u9175\u6BCD >15\u00B0C", value: "2.2", note: "\u30E2\u30C7\u30EB\u306B\u3088\u308B\u63A8\u5B9A" },
-        { label: "\u5929\u7136\u9175\u6BCD \u226415\u00B0C", value: "1.9", note: "\u30E2\u30C7\u30EB\u306B\u3088\u308B\u63A8\u5B9A" },
+        { label: "市販イースト {q10ComBreak}以上", value: "{q10ComAbove}", note: "モデルの推定値。室温での増殖データと整合" },
+        { label: "市販イースト {q10ComBreak}未満", value: "{q10ComBelow}", note: "モデルの推定値（出典なし）" },
+        { label: "サワードウ {q10SdBreak}超", value: "{q10SdAbove}", note: "モデルの推定値" },
+        { label: "サワードウ {q10SdBreak}以下", value: "{q10SdBelow}", note: "モデルの推定値" },
       ],
     },
     arrhenius: {
       name: "\u30A2\u30EC\u30CB\u30A6\u30B9\u306E\u5F0F",
-      definition: "\u53CD\u5FDC\u901F\u5EA6\u304C\u7D76\u5BFE\u6E29\u5EA6\u306B\u3069\u3046\u4F9D\u5B58\u3059\u308B\u304B\u3092\u8868\u3059\u5F0F\u3002",
-      whyImportant: "\u03B2=0.075\u3001T_ref=18\u00B0C\u306E\u3068\u304D \u2192 Q\u2081\u2080 \u2248 2.12\u3002{brand}\u306E\u30A8\u30F3\u30B8\u30F3\u3067\u3001\u30A4\u30FC\u30B9\u30C8\u91CF\u3068\u6642\u9593\u306E\u8A08\u7B97\u306B\u4F7F\u308F\u308C\u3066\u3044\u307E\u3059\u3002",
+      definition: "反応速度と絶対温度（ケルビン）の関係を、活性化エネルギーを介して表す式。",
+      formula: "k = A · e^(−Eₐ / (R · T))（Tはケルビン）",
+      whyImportant: "{brand}はこの式を使っていません。エンジンは{q10RefTemp}を基準とした区分的なQ₁₀を使います。市販イーストは{q10ComBreak}以上で{q10ComAbove}、未満で{q10ComBelow}、サワードウは{q10SdBreak}超で{q10SdAbove}、以下で{q10SdBelow}です。いずれもモデルの推定値で、測定値ではありません。",
     },
     biga: {
       name: "\u30D3\u30AC",
-      definition: "粉、水44%（全粒粉なら50%まで）、イースト1%で作る硬い元種。18〜20 °Cで約16時間熟成。ロングビガは4〜5 °Cで24時間、さらに18〜20 °Cで24時間。",
-      whyImportant: "本生地に香りと骨格を与える。通常は全粉量の3分の1（20〜50%）。STGナポリピッツァはストレート法のため使えない。",
+      definition: "粉、水{bigaHydration}（全粒粉なら50%まで）、ビガの粉に対して約1%の生イーストで作る硬い元種。18〜20 °Cで約16時間熟成。ロングビガは4〜5 °Cで24時間、さらに18〜20 °Cで24時間。",
+      whyImportant: "本生地に香りと骨格を与えます。通常は全粉量の30〜40%で、{brand}は{bigaFlourPct}から始めます。STGナポリピッツァはストレート法のため使えません。",
     },
     poolish: {
       name: "\u30DD\u30FC\u30EA\u30C3\u30B7\u30E5",
       definition: "粉と水を同量、少量のイーストで作る液種。20〜22 °Cで12〜16時間熟成（イースト0.1%で15〜16時間、0.3%で10〜12時間）。",
-      whyImportant: "早く熟成し、生地を伸ばしやすくする。通常は全粉量の30〜50%。表面が泡でいっぱいになり中心がへこみ始めたら完成。",
+      whyImportant: "ビガより早く熟成し、生地に伸びを与えます。通常は全粉量の30〜50%で、{brand}は{poolishFlourPct}から始めます。表面が泡でいっぱいになり、中央がへこみ始めたら使いどきです。",
     },
     autolysis: {
       name: "\u30AA\u30FC\u30C8\u30EA\u30FC\u30BA",
@@ -604,7 +536,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     thermal_conductivity: {
       name: "\u71B1\u4F1D\u5C0E\u7387",
       definition: "\u6750\u6599\u304C\u71B1\u3092\u4F1D\u3048\u308B\u80FD\u529B\u3002",
-      whyImportant: "\u30B9\u30C1\u30FC\u30EB\uFF08k=50\uFF09\uFF1A\u5BB6\u5EAD\u7528\u30AA\u30FC\u30D6\u30F3280\u00B0C\u306B\u6700\u9069\u3001\u713C\u62106-8 min\u3002\u30B9\u30C8\u30FC\u30F3\uFF08k=2\uFF09\uFF1A\u85AA\u7AAF450\u00B0C+\u306B\u6700\u9069\u3001\u713C\u621060-90s\u3002",
+      whyImportant: "kが大きいほど、表面から生地の底へ早く熱が伝わります。そのため温度の低い家庭用オーブンでは鋼板が役立ちます。炉床では素材がどれだけ熱を蓄えるかも重要で、薪窯には耐火れんがやビスコットが使われます。",
       ranges: [
         { label: "\u9285", value: "400" },
         { label: "\u30A2\u30EB\u30DF\u30CB\u30A6\u30E0", value: "205" },
@@ -638,13 +570,8 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     thickness_factor: {
       name: "Thickness Factor\uFF08TF\u30FB\u539A\u3055\u4FC2\u6570\uFF09",
       definition: "ピザの面積あたりの生地量です。1cm²あたりに使う生地のグラム数を表します。",
-      whyImportant: "北米の生地計算ツールで広く使われる指標です（単位はoz/in²、1 oz/in² ≈ 4.39 g/cm²）。{brand}は生地玉の大きさを決めるためにg/cm²で表します。窯とあわせて焼成時間と食感の目安になります。",
-      ranges: [
-        { label: "\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1", value: "0.30\u20130.36", note: "6-7 mm" },
-        { label: "\u30ED\u30FC\u30DE\u98A8\uFF08\u4E38\u578B\uFF09", value: "0.20\u20130.25", note: "4-5 mm" },
-        { label: "\u30CB\u30E5\u30FC\u30E8\u30FC\u30AF", value: "0.40\u20130.50", note: "8-10 mm" },
-        { label: "\u30B7\u30AB\u30B4\u30FB\u30C7\u30A3\u30FC\u30D7\u30C7\u30A3\u30C3\u30B7\u30E5", value: "1.00\u20131.30", note: "20-26 mm" },
-      ],
+      formula: "TF = 生地玉の重さ (g) / ピッツァの面積 (cm²)",
+      whyImportant: "北米の生地計算ツールで広く使われる指標です（oz/in²、1 oz/in² ≈ 4.39 g/cm²）。{brand}は生地玉の大きさを決めるためにg/cm²で表し、オーブンとあわせて焼成時間と食感の目安にします。例は各スタイルの生地玉の重さと形から計算しています。",
     },
     friction_factor: {
       name: "\u30DF\u30AD\u30B5\u30FC\u306E\u6469\u64E6\u71B1",
@@ -661,32 +588,37 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     rule_of_55: {
       name: "\u6C34\u306E\u6E29\u5EA6\uFF083\u3064\u306E\u6E29\u5EA6\uFF09",
       definition: "\u751F\u5730\u304C\u76EE\u6A19\u306E\u6E29\u5EA6\u306B\u306A\u308B\u3088\u3046\u3001\u6C34\u3092\u4F55\u5EA6\u306B\u3059\u308C\u3070\u3088\u3044\u304B\u3092\u8A08\u7B97\u3057\u307E\u3059\u3002",
+      formula: "T_水 = 3 × T_生地 − T_室温 − T_粉 − 摩擦",
       whyImportant: "3\u3064\u306E\u6E29\u5EA6\u306E\u5408\u8A08 = 3 \u00D7 \u76EE\u6A19\u751F\u5730\u6E29\u5EA6 \u2212 \u6469\u64E6\u71B1\u3002\u30D4\u30C3\u30C4\u30A7\u30EA\u30A2\u3067\u306F\u300C55\u306E\u6CD5\u5247\u300D\u3068\u3082\u547C\u3073\u307E\u3059\u3002\u5408\u8A08\u309255\u306B\u56FA\u5B9A\u3059\u308B\u3068\u751F\u5730\u306F\u7D0418 \u00B0C\uFF0855 \u00F7 3\uFF09\u3002\u3053\u3053\u3067\u306F\u30B9\u30BF\u30A4\u30EB\u306E\u76EE\u6A19\u6E29\u5EA622\u301C24 \u00B0C\u3092\u4F7F\u3044\u307E\u3059\u3002",
     },
     a_score: {
       name: "A-Score\uFF08\u6B63\u7D71\u6027\uFF09",
       definition: "元のスタイルへの近さを0〜100点で示します。規定への適合を認証するものではありません。",
+      formula: "A = 材料 × {authWIngredients} + 工程 × {authWProcess} + 設備 × {authWEquipment}",
       ranges: [
-        { label: "90-100", value: "\u53B3\u5BC6\u306B\u672C\u683C\u7684" },
-        { label: "75-89", value: "\u307B\u307C\u672C\u683C\u7684" },
-        { label: "60-74", value: "\u30B9\u30BF\u30A4\u30EB\u306B\u7740\u60F3\u3092\u5F97\u305F" },
-        { label: "<60", value: "\u5927\u304D\u304F\u9038\u8131" },
+        { label: "{aBand0}", value: "厳密に本格的" },
+        { label: "{aBand1}", value: "調整ありで忠実" },
+        { label: "{aBand2}", value: "着想を得て変更" },
+        { label: "{aBand3}", value: "自由な解釈" },
       ],
+      whyImportant: "重みは{brand}が決めたもので、測定値ではありません。製品上のルール：スタイルが求める燃料がない場合、スコアは{authFuelCap}を超えません。スタイルの最低温度を下回ると、比例して下がります。",
     },
     f_score: {
       name: "Fスコア（作りやすさ）",
       definition: "オーブン、粉、経験に応じた作りやすさを0〜100点で示します。レシピを作れない条件は別に判定します。",
+      formula: "F = オーブン × {feasWOven} + 粉 × {feasWFlour} + 経験 × {feasWSkill}",
       ranges: [
-        { label: "90-100", value: "\u5341\u5206\u306B\u4F5C\u308C\u308B" },
-        { label: "75-89", value: "\u6CE8\u610F\u3059\u308C\u3070\u4F5C\u308C\u308B" },
-        { label: "60-74", value: "\u96E3\u3057\u3044" },
-        { label: "<60", value: "\u304A\u3059\u3059\u3081\u3057\u306A\u3044" },
+        { label: "{fBand0}", value: "十分に実現可能" },
+        { label: "{fBand1}", value: "注意すれば実現可能" },
+        { label: "{fBand2}", value: "難しい" },
+        { label: "{fBand3}", value: "高リスク" },
       ],
+      whyImportant: "重みは{brand}が決めたもので、測定値ではありません。お使いのキッチンでレシピが作れない場合、相性は他のスコアに関係なく{nonFeasibleCeiling}を超えません。",
     },
     d_score: {
       name: "Dスコア（熟成の推定）",
       definition: "時間、温度、イースト、前発酵の生地に基づくモデルの推定です。個人の消化やFODMAP量を測るものではありません。",
-      ranges: [{"label":"85-100","value":"高い指数"},{"label":"70-84","value":"やや高い指数"},{"label":"50-69","value":"中程度の指数"},{"label":"<50","value":"低い指数"}],
+      ranges: [{"label":"{dBand0}","value":"高い指数"},{"label":"{dBand1}","value":"やや高い指数"},{"label":"{dBand2}","value":"中程度の指数"},{"label":"{dBand3}","value":"低い指数"}],
     },
   },
 };

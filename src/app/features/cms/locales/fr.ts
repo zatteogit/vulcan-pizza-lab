@@ -20,7 +20,7 @@ export const FR_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "sel de mer fin", "fine": "sel fin", "kosher": "sel casher", "kosher_or_fine": "sel casher ou fin", "coarse_and_fine": "gros sel et sel fin" },
-    saltTiming: { "with_flour": "avec la farine", "after_flour_water": "après la farine et l'eau", "after_flour_water_5min": "après la farine et l'eau (5 min de pétrissage)", "after_hydration": "après l'hydratation", "fine_in_dough_coarse_on_top": "fin dans la pâte, gros en surface" },
+    saltTiming: { "with_flour": "avec la farine", "after_flour_water": "après la farine et l'eau", "dissolved_in_water": "dissous dans l'eau, avant la farine (cahier des charges)", "after_hydration": "après l'hydratation", "fine_in_dough_coarse_on_top": "fin dans la pâte, gros en surface" },
     fold: { "stretch_fold": "rabats (stretch & fold)", "coil_fold": "rabats en spirale (coil fold)", "french_fold": "pliage à la française", "slap_fold": "slap & fold" },
     stretch: {
       napoletana_stg: "Étalée à la main (claque napolitaine)",
@@ -265,10 +265,10 @@ export const FR_LOCALE: CmsContent = {
     procedureDirect: "Direct",
     procedurePreferment: "Préferment",
     procedureUnleavened: "Sans levure",
-    flourUseVeryStrong: "Manitoba ou type 0 très forte",
-    flourUseStrong: "Type 0/00 de force pour pizza",
-    flourUseMedium: "Type 0 de force moyenne",
-    flourUseWeak: "Type 00 faible à moyenne",
+    flourUseVeryStrong: "Farine très forte, type manitoba",
+    flourUseStrong: "Farine de force, pour longues maturations",
+    flourUseMedium: "Farine de force moyenne, souvent « pour pizza »",
+    flourUseWeak: "Farine faible, tout usage ou pâtissière",
     verdictTitle: "Ce n'est pas faisable ainsi",
     verdictOvenTooCold: "La cuisson est réglée à {oven} ; cette méthode nécessite au moins {min}.",
     verdictTimeWindow: "Il faut environ {needed} et vous avez {available} : elle serait prête après l'heure choisie.",
@@ -950,10 +950,6 @@ export const FR_LOCALE: CmsContent = {
     "timeline.preheat.descPanWholeProof": "Allumez le four maintenant \u00E0 {temp}{equipmentNote}. Pendant ce temps, la p\u00E2te fait son appr\u00EAt en plaque.",
     "timeline.preheat.descDuringRest": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons reposent.",
     "tip.waterTemp": "",
-    "hint.flourWeak": "farine faible (00 classique)",
-    "hint.flourMedium": "farine de force moyenne",
-    "hint.flourStrong": "farine forte (pour pizza)",
-    "hint.flourVeryStrong": "farine très forte (manitoba)",
     "hint.yeastDryPinch": "≈ une pincée",
     "hint.yeastDryQuarterTsp": "≈ ¼ de cuillère à café",
     "hint.yeastDryHalfTsp": "≈ ½ cuillère à café",
@@ -1259,6 +1255,7 @@ export const FR_LOCALE: CmsContent = {
     pillFlour: "Farine",
     pillPL: "P/L",
     pillFermentation: "Fermentation",
+    pillRest: "Repos",
     pillThickness: "\u00C9paisseur",
     pillLevel: "Niveau",
     pillExperimentation: "Exp\u00E9rimentation",
@@ -1358,7 +1355,7 @@ export const FR_LOCALE: CmsContent = {
     teglia_romana:
       "Hauteur 2-3cm|Hydratation selon la version|Sans p\u00E9trissage + pliages|Mie nuage",
     tonda_romana:
-      "\u00C9paisseur 1-2mm|Rouleau ou à la main|Croustillance extr\u00EAme|Farine faible W<210",
+      "\u00C9paisseur 1-2mm|Rouleau ou à la main|Croustillance extr\u00EAme|Farine W 200-240",
     pinsa_romana:
       "Mix multi-c\u00E9r\u00E9ales|Forme ovale|Cro\u00FBte vitr\u00E9e|Maturation 24-72h",
     pala_romana:
@@ -1368,13 +1365,13 @@ export const FR_LOCALE: CmsContent = {
     detroit:
       "Couronne de fromage|Moule profond|Fromage aux bords|Cro\u00FBte caram\u00E9lis\u00E9e",
     chicago_deep:
-      "Profondeur 5cm|Beurre 18%|Couches invers\u00E9es|Cuisson 35min",
+      "Profondeur 5cm|Beurre 18%|Couches invers\u00E9es|Cuisson 25-35 min",
     focaccia_genovese:
-      "Huile d\u2019olive g\u00E9n\u00E9reuse|Crat\u00E8res de surface|Saumure huile-eau|Cuisson 15-20min",
+      "Huile d\u2019olive g\u00E9n\u00E9reuse|Crat\u00E8res de surface|Saumure huile-eau|Cuisson 19-24 min",
     sfincione:
       "\u00C9pais et moelleux|Chapelure grill\u00E9e|Oignon + anchois|Caciocavallo",
     grandma_style:
-      "Fine et croustillante|Mozzarella sous sauce|Plaque bien huil\u00E9e|Cuisson 12-16min",
+      "Fine et croustillante|Mozzarella sous sauce|Plaque bien huil\u00E9e|Cuisson 14-17 min",
     focaccia_recco:
       "Feuille quasi transparente|Fourr\u00E9e au stracchino|Bulles dor\u00E9es|Aucune levure",
     padellino_torino:
@@ -1743,14 +1740,12 @@ export const FR_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_FR["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_FR["pages.learn.path4.copy"],
     preFermentsSubtitle: "Comment les utiliser et les intégrer à la préparation.",
-    preFermentsDescription: "Biga et poolish se préparent avant la pâte finale. La <strong>biga</strong> est une pâte ferme à 44% d’eau ; le <strong>poolish</strong> contient autant de farine que d’eau. L’<strong>autolyse</strong> est un repos de farine et d’eau, sans levure ni sel : ce n’est pas un préferment.",
+    preFermentsDescription: "Biga et poolish se préparent avant la pâte finale. La <strong>biga</strong> est une pâte ferme à {bigaHydration} d’eau ; le <strong>poolish</strong> contient autant de farine que d’eau. L’<strong>autolyse</strong> est un repos de farine et d’eau, sans levure ni sel : ce n’est pas un préferment.",
     preFermentsChoiceTitle: "Lequel choisir ?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "Quand vous voulez une pâte aromatique et disposez d'environ 16 h à 18–20 °C",
-    preFermentsBigaBest: "Pinsa, Pizza à la coupe, Pala romana",
     preFermentsPoolishTitle: "Poolish",
     preFermentsPoolishWhen: "Quand vous voulez une pâte extensible et disposez de 12–16 h à 20–22 °C",
-    preFermentsPoolishBest: "Teglia Romana, NY Style, Focaccias",
     preFermentsAutolisiTitle: "Autolyse",
     preFermentsAutolisiWhen: "Quand vous voulez une pâte plus facile à étaler",
     preFermentsAutolisiBest: "Tous les styles ; se combine avec la biga et le poolish",

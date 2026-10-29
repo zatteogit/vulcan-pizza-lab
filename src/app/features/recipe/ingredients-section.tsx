@@ -27,7 +27,6 @@ import { PreFermentCard } from "./pre-ferment-guide";
 import { GlossaryWLink, IngRow, NerdAuraBlock } from "./recipe-output-bits";
 import {
   flourStrength,
-  flourStrengthLabel,
   getServingUnitLabel,
   normalizeMeasureUnitSuffixes,
   yeastPracticalHint,
@@ -186,8 +185,8 @@ export function IngredientsSection({
                 : simple
                   ? (
                       <>
-                        {flourUseLabel} · {flourStrengthLabel(recipe.flour_w, cms)} ·{" "}
-                        <GlossaryWLink w={recipe.flour_w} />
+                        {/* FW-05 (S08-B-05): un'etichetta sola sulla scala unica. */}
+                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} />
                       </>
                     )
                   : (
@@ -437,7 +436,16 @@ export function IngredientsSection({
 
         {isNerd && recipe.has_pre_ferment && (
           <NerdAuraBlock className="ingredients-aura-compact" compact>
-            <PreFermentCard preFermentType={recipe.pre_ferment_type} />
+            <PreFermentCard
+              preFermentType={recipe.pre_ferment_type}
+              /* FW-05 (S14-A-02): la dose vera della ricetta accanto alla guida. */
+              recipeContext={recipe.yeast_type !== "sourdough" && recipe.yeast_g > 0
+                ? {
+                    flourG: computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type, flourPct: recipe.pre_ferment_flour_pct }).prefermentFlourG,
+                    yeastG: recipe.yeast_g,
+                  }
+                : undefined}
+            />
           </NerdAuraBlock>
         )}
       </div>

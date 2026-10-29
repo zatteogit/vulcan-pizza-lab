@@ -26,6 +26,8 @@ import { useDetailLevel } from "../../hooks/use-detail-level";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { kitchenConstraints, resolveEffectiveKitchen } from "../../use-cases/effective-kitchen";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
+import { FLOUR_STRENGTH_SCALE, flourFitForStyle } from "../../domain/flour-strength";
+import { formatNumber, formatRange } from "../../i18n/format";
 
 interface RecipeConfiguratorProps {
   style: PizzaStyle;
@@ -1118,10 +1120,13 @@ function Label({ children }: { children: React.ReactNode }) {
    farina; con i parametri avanzati aperti lo sostituiscono W e P/L precisi. */
 /* Tre scelte sulla scala unica (flourStrength): la «Forte» copre farina per
    pizza e Manitoba; il valore è quello tipico della classe. */
-const BEGINNER_FLOURS: { label: string; sub: string; w: number; classes: FlourStrength[] }[] = [
-  { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubWeak"); }, w: 185, classes: ["weak"] },
-  { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubMedium"); }, w: 250, classes: ["medium"] },
-  { get label() { return uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubStrong"); }, w: 300, classes: ["strong", "veryStrong"] },
+/* FW-05 (S06-A-05): i sottotitoli dicono la W della fascia (la stessa scala del
+   glossario), non il tipo 00/0, che indica la raffinazione e non la forza. */
+const scaleBand = (id: FlourStrength) => FLOUR_STRENGTH_SCALE.find((band) => band.id === id)!;
+const BEGINNER_FLOURS: { label: string; sub: (locale: string) => string; w: number; classes: FlourStrength[] }[] = [
+  { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubWeak", [formatNumber(scaleBand("weak").max, locale)]), w: 185, classes: ["weak"] },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubMedium", [formatRange(scaleBand("medium").min, scaleBand("medium").max - 1, locale)]), w: 250, classes: ["medium"] },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubStrong", [formatNumber(scaleBand("strong").min, locale)]), w: 300, classes: ["strong", "veryStrong"] },
 ];
 
 function BeginnerFlourPicker({
@@ -1137,8 +1142,11 @@ function BeginnerFlourPicker({
 }) {
   const strength = flourStrength(value);
   const selected = BEGINNER_FLOURS.find((f) => f.classes.includes(strength)) ?? BEGINNER_FLOURS[0];
+  const { bcp47 } = useCms();
   const [wMin, wMax] = styleRange;
-  const fit = value >= wMin - 25 && value <= wMax + 25 ? "ideal" : value < wMin ? "weak" : "strong";
+  /* FW-05 (S06-A-04): stessa regola della fattibilità del motore. Prima la
+     tolleranza di ±25 W chiamava «un po' debole» W 185 su 300–380. */
+  const fit = flourFitForStyle(value, styleRange);
   const isIdealFit = fit === "ideal";
   return (
     <div className="config-flour-picker">
@@ -1158,18 +1166,18 @@ function BeginnerFlourPicker({
                 {f.label}
               </span>
               <span className="config-flour-picker__option-sub">
-                {f.sub}
+                {f.sub(bcp47)}
               </span>
             </button>
           );
         })}
       </div>
-      <p className={isIdealFit ? "config-flour-picker__fit config-flour-picker__fit--ideal" : "config-flour-picker__fit"}>
+      <p className={isIdealFit ? "config-flour-picker__fit config-flour-picker__fit--ideal" : fit === "weak" ? "config-flour-picker__fit config-flour-picker__fit--weak" : "config-flour-picker__fit"}>
         {fit === "ideal"
           ? uiMessage("features.recipe.recipe-configurator.perfetta-per-questo-stile-4307e09e")
           : fit === "weak"
-            ? uiMessage("features.recipe.recipe-configurator.un-po-debole-per-questo-stile-l-impasto-re-dc7843a7")
-            : uiMessage("features.recipe.recipe-configurator.piu-forte-del-necessario-nessun-problema-3a78c2c2")}
+            ? uiMessage("features.recipe.recipe-configurator.flourFitWeak", [formatNumber(wMin, bcp47)])
+            : uiMessage("features.recipe.recipe-configurator.flourFitStrong", [formatRange(wMin, wMax, bcp47)])}
       </p>
     </div>
   );

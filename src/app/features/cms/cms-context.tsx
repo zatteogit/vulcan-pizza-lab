@@ -467,6 +467,10 @@ export interface CmsPreFerment {
   detailCrust: string;
   detailExtensibility: string;
   detailIdealStyles: string;
+  /** FW-05 (S14-A-05): occhiello dell'autolisi, che non è un prefermento. */
+  techniqueLabel: string;
+  /** FW-05 (S14-A-02): dose della ricetta accanto ai valori della guida. */
+  recipeContextLine: string;
   compLabels: string[];
   items: Record<string, {
     origin: string;
@@ -477,7 +481,9 @@ export interface CmsPreFerment {
     flavor: string;
     crustResult: string;
     extensibility: string;
-    idealStyles: string;
+    /** FW-05 (S14-A-01): solo per l'autolisi; per biga e poolish gli stili
+     *  vengono dal motore (process_type). */
+    idealStyles?: string;
     tips: string[];
   }>;
   compValues: Record<string, { biga: string; poolish: string; autolisi: string }>;
@@ -800,10 +806,8 @@ interface CmsPages {
   preFermentsChoiceTitle: string;
   preFermentsBigaTitle: string;
   preFermentsBigaWhen: string;
-  preFermentsBigaBest: string;
   preFermentsPoolishTitle: string;
   preFermentsPoolishWhen: string;
-  preFermentsPoolishBest: string;
   preFermentsAutolisiTitle: string;
   preFermentsAutolisiWhen: string;
   preFermentsAutolisiBest: string;
@@ -1298,6 +1302,7 @@ export interface CmsContent {
     pillFlour: string;
     pillPL: string;
     pillFermentation: string;
+    pillRest: string;
     pillThickness: string;
     pillLevel: string;
     pillExperimentation: string;
@@ -1374,7 +1379,7 @@ export const CMS_DEFAULTS: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "marino fino", "fine": "fino", "kosher": "kosher", "kosher_or_fine": "kosher o fino", "coarse_and_fine": "grosso e fino" },
-    saltTiming: { "with_flour": "con la farina", "after_flour_water": "dopo farina e acqua", "after_flour_water_5min": "dopo farina e acqua (5 min di impasto)", "after_hydration": "dopo l'idratazione", "fine_in_dough_coarse_on_top": "fino nell'impasto, grosso in superficie" },
+    saltTiming: { "with_flour": "con la farina", "after_flour_water": "dopo farina e acqua", "dissolved_in_water": "sciolto nell'acqua, prima della farina (disciplinare)", "after_hydration": "dopo l'idratazione", "fine_in_dough_coarse_on_top": "fino nell'impasto, grosso in superficie" },
     fold: { "stretch_fold": "pieghe stretch & fold", "coil_fold": "pieghe a spirale (coil fold)", "french_fold": "piega alla francese", "slap_fold": "slap & fold" },
   },
   locale: {
@@ -1584,10 +1589,10 @@ export const CMS_DEFAULTS: CmsContent = {
     procedureDirect: "Diretto",
     procedurePreferment: "Prefermento",
     procedureUnleavened: "Senza lievito",
-    flourUseVeryStrong: "Manitoba o tipo 0 molto forte",
-    flourUseStrong: "Tipo 0/00 forte per pizza",
-    flourUseMedium: "Tipo 0 media forza",
-    flourUseWeak: "Tipo 00 debole/media",
+    flourUseVeryStrong: "Farina molto forte, tipo Manitoba",
+    flourUseStrong: "Farina forte, per lunghe maturazioni",
+    flourUseMedium: "Farina di media forza, spesso «per pizza»",
+    flourUseWeak: "Farina debole, generica o per dolci",
     verdictTitle: "Così non è fattibile",
     verdictOvenTooCold: "La cottura è impostata a {oven}; per questo metodo servono almeno {min}.",
     verdictTimeWindow: "Servono circa {needed}, ne hai {available}: sarebbe pronta dopo l'orario scelto.",
@@ -2248,10 +2253,6 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.preheat.descPan": "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto finisce l'appretto in teglia.",
     "timeline.preheat.descPanWholeProof": "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto fa l'appretto in teglia.",
     "timeline.preheat.descDuringRest": "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti riposano.",
-    "hint.flourWeak": "farina debole (00 classica)",
-    "hint.flourMedium": "farina di media forza",
-    "hint.flourStrong": "farina forte (per pizza)",
-    "hint.flourVeryStrong": "farina molto forte (manitoba)",
     "hint.yeastDryPinch": "≈ una punta di cucchiaino",
     "hint.yeastDryQuarterTsp": "≈ ¼ di cucchiaino",
     "hint.yeastDryHalfTsp": "≈ ½ cucchiaino",
@@ -2448,7 +2449,9 @@ export const CMS_DEFAULTS: CmsContent = {
     pillHydration: "Idratazione",
     pillFlour: "Farina",
     pillPL: "P/L",
-    pillFermentation: "Fermentazione",
+    pillFermentation: "Lievitazione",
+    /* FW-05 (S03-B-21): per gli impasti senza lievito il tempo è un riposo. */
+    pillRest: "Riposo",
     pillThickness: "Spessore",
     pillLevel: "Livello",
     pillExperimentation: "Sperimentazione",
@@ -2819,14 +2822,12 @@ export const CMS_DEFAULTS: CmsContent = {
     learnPath4Title: UI_MESSAGES_IT["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_IT["pages.learn.path4.copy"],
     preFermentsSubtitle: "Come usarli e quando inserirli nella preparazione.",
-    preFermentsDescription: "Biga e poolish si preparano prima dell’impasto finale. La <strong>biga</strong> è un impasto asciutto, con il 44% d’acqua; il <strong>poolish</strong> ha farina e acqua in parti uguali. L’<strong>autolisi</strong> è invece un riposo di farina e acqua, senza lievito né sale: non è un prefermento.",
+    preFermentsDescription: "Biga e poolish si preparano prima dell’impasto finale. La <strong>biga</strong> è un impasto asciutto, con il {bigaHydration} d’acqua; il <strong>poolish</strong> ha farina e acqua in parti uguali. L’<strong>autolisi</strong> è invece un riposo di farina e acqua, senza lievito né sale: non è un prefermento.",
     preFermentsChoiceTitle: "Quale scegliere?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "Quando vuoi un impasto aromatico e hai circa 16 h a 18–20 °C",
-    preFermentsBigaBest: "Pinsa, Pizza al taglio, Pala romana",
     preFermentsPoolishTitle: "Poolish",
     preFermentsPoolishWhen: "Quando vuoi un impasto estensibile e hai 12–16 h a 20–22 °C",
-    preFermentsPoolishBest: "Teglia Romana, NY Style, Focacce",
     preFermentsAutolisiTitle: "Autolisi",
     preFermentsAutolisiWhen: "Quando vuoi un impasto più facile da stendere",
     preFermentsAutolisiBest: "Tutti gli stili; si combina con biga e poolish",

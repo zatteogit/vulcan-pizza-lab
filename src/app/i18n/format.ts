@@ -263,3 +263,13 @@ export function formatMass(
     maximumFractionDigits: ounces < 1 ? 2 : 1,
   });
 }
+
+/* FW-05 — elenchi nella lingua attiva («A, B e C»), per i nomi di stile che
+ * arrivano dai dati del motore (guida ai prefermenti). */
+type ListFormatCtor = new (locale: string, options: { style: "long"; type: "conjunction" }) => { format(items: readonly string[]): string };
+
+export function formatList(items: readonly string[], locale: string): string {
+  // Intl.ListFormat è nei browser supportati ma non nella lib ES2020 di TypeScript.
+  const ListFormat = (Intl as unknown as { ListFormat?: ListFormatCtor }).ListFormat;
+  return ListFormat ? new ListFormat(locale, { style: "long", type: "conjunction" }).format(items) : items.join(", ");
+}

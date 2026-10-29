@@ -124,7 +124,20 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", hidePant
         </Badge>;
       })}
       {signals.length < 2 && recipe?.verdict.outcome !== "not_feasible" && (
-        <Badge tone="muted" className="style-signal"><Clock size={13} aria-hidden="true" /><span data-slot="label">≈ {duration}</span></Badge>
+        /* FW-05 (S03-B-21, S03-A-21): il badge dice che cosa misura (il tempo
+           totale) e, a voce, su quale ricetta: riferimento in Scopri, su misura in Crea. */
+        <Badge
+          tone="muted"
+          className="style-signal"
+          aria-label={recipe
+            ? uiMessage(context === "explore" ? "style.meta.durationAriaReference" : "style.meta.durationAriaTailored", [duration])
+            : undefined}
+        >
+          <Clock size={13} aria-hidden="true" />
+          <span data-slot="label">
+            {recipe ? uiMessage("style.meta.durationTotal", [duration]) : uiMessage("style.meta.durationFermentation", [duration])}
+          </span>
+        </Badge>
       )}
     </div>
   );

@@ -30,7 +30,7 @@ export const JA_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "細粒の海塩", "fine": "細粒塩", "kosher": "コーシャーソルト", "kosher_or_fine": "コーシャーソルトまたは細粒塩", "coarse_and_fine": "粗塩と細粒塩" },
-    saltTiming: { "with_flour": "粉と一緒に", "after_flour_water": "粉と水を混ぜた後", "after_flour_water_5min": "粉と水を混ぜた後（5分こねてから）", "after_hydration": "加水後", "fine_in_dough_coarse_on_top": "生地に細粒塩、表面に粗塩" },
+    saltTiming: { "with_flour": "粉と一緒に", "after_flour_water": "粉と水を混ぜた後", "dissolved_in_water": "粉より先に水に溶かす（規格書）", "after_hydration": "加水後", "fine_in_dough_coarse_on_top": "生地に細粒塩、表面に粗塩" },
     fold: { "stretch_fold": "ストレッチ&フォールド", "coil_fold": "コイルフォールド", "french_fold": "フレンチフォールド", "slap_fold": "スラップ&フォールド" },
     stretch: {
       napoletana_stg: "手で伸ばす（ナポリ式のたたき伸ばし）",
@@ -308,10 +308,10 @@ export const JA_LOCALE: CmsContent = {
     procedureDirect: "ストレート法",
     procedurePreferment: "中種",
     procedureUnleavened: "イーストなし",
-    flourUseVeryStrong: "マニトバ、またはかなり強いタイプ0",
-    flourUseStrong: "ピザ用の強いタイプ0/00",
-    flourUseMedium: "中程度の強さのタイプ0",
-    flourUseWeak: "弱め〜中程度のタイプ00",
+    flourUseVeryStrong: "非常に強い粉（マニトバなど）",
+    flourUseStrong: "強い粉（長時間熟成向け）",
+    flourUseMedium: "中程度の粉（「ピッツァ用」が多い）",
+    flourUseWeak: "弱い粉（汎用・菓子用）",
     verdictTitle: "このままでは作れません",
     verdictOvenTooCold: "焼成温度は{oven}に設定されています。この製法には少なくとも{min}が必要です。",
     verdictTimeWindow: "約{needed}かかりますが、使えるのは{available}です。選んだ時刻より後に仕上がります。",
@@ -1003,10 +1003,6 @@ export const JA_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に型の中で生地の最終発酵を仕上げます。",
     "timeline.preheat.descPanWholeProof": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に型の中で生地を最終発酵させます。",
     "timeline.preheat.descDuringRest": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に生地を休ませます。",
-    "hint.flourWeak": "\u5F31\u529B\u306A\u5C0F\u9EA6\u7C89\uFF08\u30AF\u30E9\u30B7\u30C3\u30AF\u306A00\uFF09",
-    "hint.flourMedium": "\u4E2D\u7A0B\u5EA6\u306E\u5F37\u3055\u306E\u5C0F\u9EA6\u7C89",
-    "hint.flourStrong": "\u5F37\u529B\u306A\u30D4\u30B6\u7528\u5C0F\u9EA6\u7C89",
-    "hint.flourVeryStrong": "\u3068\u3066\u3082\u5F37\u529B\u306A\u5C0F\u9EA6\u7C89\uFF08\u30DE\u30CB\u30C8\u30D0\uFF09",
     "hint.yeastDryPinch": "\u2248 \u3054\u304F\u5C11\u91CF",
     "hint.yeastDryQuarterTsp": "\u2248 \u5C0F\u3055\u3058\u00BC",
     "hint.yeastDryHalfTsp": "\u2248 \u5C0F\u3055\u3058\u00BD",
@@ -1314,6 +1310,7 @@ export const JA_LOCALE: CmsContent = {
     pillFlour: "\u5C0F\u9EA6\u7C89",
     pillPL: "P/L",
     pillFermentation: "\u767A\u9175",
+    pillRest: "休ませ時間",
     pillThickness: "\u539A\u3055",
     pillLevel: "\u30EC\u30D9\u30EB",
     pillExperimentation: "\u5B9F\u9A13\u6027",
@@ -1416,7 +1413,7 @@ export const JA_LOCALE: CmsContent = {
     teglia_romana:
       "\u9AD8\u30552-3cm|製法により加水率が異なります|\u6298\u308A\u305F\u305F\u307F\u306E\u307F|\u96F2\u30AF\u30E9\u30E0",
     tonda_romana:
-      "\u539A\u30551-2mm|麺棒または手|\u6975\u9650\u30AB\u30EA\u30AB\u30EA|\u5F31\u3044\u5C0F\u9EA6\u7C89W<210",
+      "\u539A\u30551-2mm|麺棒または手|\u6975\u9650\u30AB\u30EA\u30AB\u30EA|\u5C0F\u9EA6\u7C89W200-240",
     pinsa_romana:
       "\u30DE\u30EB\u30C1\u7A40\u7269\u30DF\u30C3\u30AF\u30B9|\u6955\u5186\u5F62|\u30AC\u30E9\u30B9\u8CEA\u30AF\u30E9\u30B9\u30C8|\u719F\u621024-72h",
     pala_romana:
@@ -1426,13 +1423,13 @@ export const JA_LOCALE: CmsContent = {
     detroit:
       "\u30C1\u30FC\u30BA\u30AF\u30E9\u30A6\u30F3|\u6DF1\u3044\u30D1\u30F3|\u7AEF\u306E\u30C1\u30FC\u30BA|\u30AB\u30E9\u30E1\u30EB\u30AF\u30E9\u30B9\u30C8",
     chicago_deep:
-      "\u6DF1\u30555cm|\u30D0\u30BF\u30FC18%|\u9006\u5C64|\u713C\u304D35\u5206",
+      "\u6DF1\u30555cm|\u30D0\u30BF\u30FC18%|\u9006\u5C64|\u713C\u304D25-35\u5206",
     focaccia_genovese:
-      "\u305F\u3063\u3077\u308A\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB|\u8868\u9762\u304F\u307C\u307F|\u30AA\u30A4\u30EB\u6C34\u5869\u6C34|\u713C\u304D15-20\u5206",
+      "\u305F\u3063\u3077\u308A\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB|\u8868\u9762\u304F\u307C\u307F|\u30AA\u30A4\u30EB\u6C34\u5869\u6C34|\u713C\u304D19-24\u5206",
     sfincione:
       "\u539A\u304F\u3075\u308F\u3075\u308F|\u30C8\u30FC\u30B9\u30C8\u30D1\u30F3\u7C89|\u7389\u306D\u304E+\u30A2\u30F3\u30C1\u30E7\u30D3|\u30AB\u30C1\u30E7\u30AB\u30F4\u30A1\u30C3\u30ED",
     grandma_style:
-      "\u8584\u304F\u30AB\u30EA\u30AB\u30EA|\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9\u306E\u4E0B\u306B\u30BD\u30FC\u30B9|\u305F\u3063\u3077\u308A\u6CB9\u306E\u5929\u677F|\u713C\u304D12-16\u5206",
+      "\u8584\u304F\u30AB\u30EA\u30AB\u30EA|\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9\u306E\u4E0B\u306B\u30BD\u30FC\u30B9|\u305F\u3063\u3077\u308A\u6CB9\u306E\u5929\u677F|\u713C\u304D14-17\u5206",
     focaccia_recco:
       "\u307B\u307C\u900F\u660E\u306A\u30B7\u30FC\u30C8|\u30B9\u30C8\u30E9\u30C3\u30AD\u30FC\u30CE\u5165\u308A|\u91D1\u8272\u306E\u6CE1|\u767A\u9175\u306A\u3057",
     padellino_torino:
@@ -1867,14 +1864,12 @@ export const JA_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_JA["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_JA["pages.learn.path4.copy"],
     preFermentsSubtitle: "使い方と、仕込みへの取り入れ方。",
-    preFermentsDescription: "ビガとポーリッシュは本生地の前に仕込みます。<strong>ビガ</strong>は加水44%の固めの生地、<strong>ポーリッシュ</strong>は粉と水が同量の生地です。<strong>オートリーズ</strong>はイーストも塩も加えずに粉と水を休ませる工程で、前発酵ではありません。",
+    preFermentsDescription: "ビガとポーリッシュは本生地の前に仕込みます。<strong>ビガ</strong>は加水{bigaHydration}の固めの生地、<strong>ポーリッシュ</strong>は粉と水が同量の生地です。<strong>オートリーズ</strong>はイーストも塩も加えずに粉と水を休ませる工程で、前発酵ではありません。",
     preFermentsChoiceTitle: "どれを選ぶべき？",
     preFermentsBigaTitle: "ビガ",
     preFermentsBigaWhen: "香り高い生地にしたく、18〜20 °Cで約16時間とれるとき",
-    preFermentsBigaBest: "ピンサ、ピッツァ・アル・タリオ、パーラ・ロマーナ",
     preFermentsPoolishTitle: "ポーリッシュ",
     preFermentsPoolishWhen: "伸びの良い生地にしたく、20〜22 °Cで12〜16時間とれるとき",
-    preFermentsPoolishBest: "テグリア・ロマーナ、NYスタイル、フォカッチャ",
     preFermentsAutolisiTitle: "オートリーズ",
     preFermentsAutolisiWhen: "生地を伸ばしやすくしたいとき",
     preFermentsAutolisiBest: "すべてのスタイル。ビガやポーリッシュと併用可能",

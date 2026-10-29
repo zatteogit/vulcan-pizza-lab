@@ -18,7 +18,9 @@ export interface GlossaryMessages {
     name: string;
     definition: string;
     whyImportant?: string;
-    ranges?: { label: string; value: string; note?: string }[];
+    /** FW-05: solo per le formule con parole da tradurre. */
+    formula?: string;
+    ranges?: { label: string; value: string; note?: string; key?: string }[];
   }>;
 }
 
@@ -30,4 +32,6 @@ export interface TroubleshootingMessageSource {
 
 export interface GlossaryMessageSource {
   glossaryTerms?: GlossaryMessages;
+  /** FW-05: lingua dei numeri interpolati dai fatti del motore. */
+  locale?: { id: string };
 }

@@ -1,5 +1,22 @@
 import type { RecipeOutcome, ScoreDimensionKey } from "./pizza-engine";
 
+/* ═══ FW-05 — Pesi e fasce dei punteggi come dati ═══
+ * Una sola fonte per il calcolo e per i testi (glossario, MCP): prima il
+ * glossario dichiarava pesi e fasce diversi da quelli calcolati (S12-A-03).
+ * Sono scelte di Vulcan, non misure (nota score-weights). */
+export const AUTH_AXIS_WEIGHTS = { ingredients: 0.35, process: 0.30, equipment: 0.35 } as const;
+export const FEAS_AXIS_WEIGHTS = { oven: 0.4, flour: 0.3, skill: 0.3 } as const;
+/** Tetto editoriale dell'autenticità senza il combustibile identitario. */
+export const AUTHENTICITY_FUEL_CAP = 75;
+/** Soglie inferiori delle fasce (dalla più alta) per A, F e D. */
+export const SCORE_BANDS = { A: [90, 75, 60], F: [85, 70, 50], D: [85, 70, 50] } as const;
+
+/** Indice della fascia (0 = la più alta) di un punteggio. */
+export function scoreBandIndex(type: "A" | "F" | "D", score: number): 0 | 1 | 2 | 3 {
+  const [hi, mid, lo] = SCORE_BANDS[type];
+  return score >= hi ? 0 : score >= mid ? 1 : score >= lo ? 2 : 3;
+}
+
 /** Product defaults shared by the browser and browser-equivalent MCP modes. */
 export const DEFAULT_UI_SCORE_WEIGHTS = {
   authenticity: 0.30, feasibility: 0.25, digestibility: 0.20,

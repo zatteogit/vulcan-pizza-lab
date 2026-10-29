@@ -1,5 +1,7 @@
 /** Identical Italian copy shared by the glossary fallback and CMS.
  * Review policy and sources: docs/ricerca/dietary-audit-2026-10-26.md. */
+import { BRAND } from "../config/brand";
+
 export const GLOSSARY_COPY_IT = {
   "maillard": {
     "definition": "Insieme di reazioni non enzimatiche tra composti amminici e zuccheri riducenti, favorite dal riscaldamento.",
@@ -23,12 +25,12 @@ export const GLOSSARY_COPY_IT = {
   },
   "pl_ratio": {
     "definition": "Rapporto tra la resistenza dell’impasto alla deformazione e la sua capacità di allungarsi.",
-    "whyImportant": "Descrive un equilibrio reologico: il valore adatto dipende da farina, idratazione e metodo, non garantisce altezza o consistenza della pizza.",
+    "whyImportant": `Descrive un equilibrio reologico: il valore adatto dipende da farina, idratazione e metodo, non garantisce altezza o consistenza della pizza. Gli esempi sono gli intervalli degli stili di ${BRAND.name}; il P/L della tua farina è sulla scheda tecnica del mulino.`,
     "name": "P/L (Rapporto Tenacità/Estensibilità)"
   },
   "yeast": {
     "definition": "Un fungo unicellulare che fermenta gli zuccheri, producendo anidride carbonica, alcol e composti aromatici.",
-    "whyImportant": "L’attività dipende da ceppo, dose, temperatura e impasto. Il freddo rallenta la fermentazione; non esiste una soglia universale di arresto immediato.",
+    "whyImportant": "L’attività dipende da ceppo, dose, temperatura e impasto. Il freddo rallenta la fermentazione; non esiste una soglia universale di arresto immediato. La dose giusta dipende da ore e temperatura: la ricetta la calcola per te.",
     "name": "Lievito (Saccharomyces cerevisiae)"
   },
   "lab": {
@@ -39,7 +41,7 @@ export const GLOSSARY_COPY_IT = {
   "w_alveograph": {
     "name": "W (Alveografo di Chopin)",
     "definition": "Energia totale necessaria per espandere un alveolo di impasto fino a rottura. Misura la forza complessiva della farina.",
-    "whyImportant": "W descrive la forza complessiva della farina. Tenacità ed estensibilità si valutano con P, L e P/L: una W alta non implica da sola un impasto più tenace."
+    "whyImportant": `W descrive la forza complessiva della farina. Tenacità ed estensibilità si valutano con P, L e P/L: una W alta non implica da sola un impasto più tenace. Le fasce sono quelle che ${BRAND.name} usa in tutta l'app; ogni stile indica la sua forbice di W.`
   },
   "p_tenacity": {
     "name": "P (Tenacità)",
@@ -59,7 +61,7 @@ export const GLOSSARY_COPY_IT = {
   "hydration": {
     "name": "Idratazione (H%)",
     "definition": "Percentuale in peso di acqua rispetto alla farina nell'impasto.",
-    "whyImportant": "H bassa (<55%): croccante, facile. H media (60-65%): bilanciamento. H alta (>70%): serve farina forte (W>280) e abilità."
+    "whyImportant": `Più acqua rende l'impasto più morbido e più difficile da gestire, e chiede una farina più forte. La croccantezza dipende soprattutto da cottura e spessore: anche una teglia molto idratata può essere croccante. Gli esempi sono gli intervalli degli stili di ${BRAND.name}.`
   },
   "absorption": {
     "name": "Assorbimento Acqua",
@@ -76,17 +78,17 @@ export const GLOSSARY_COPY_IT = {
   },
   "arrhenius": {
     "name": "Equazione di Arrhenius",
-    "definition": "Descrive la dipendenza della velocità di reazione dalla temperatura assoluta."
+    "definition": "Lega la velocità di una reazione alla temperatura assoluta (in kelvin) attraverso un'energia di attivazione."
   },
   "biga": {
     "name": "Biga",
-    "definition": "Pre-impasto asciutto di farina, 44% d'acqua (fino al 50% con farine integrali) e 1% di lievito, maturato circa 16 h a 18–20 °C; la biga lunga fa 24 h a 4–5 °C più 24 h a 18–20 °C.",
-    "whyImportant": "Porta aroma e struttura all'impasto finale. Di solito un terzo della farina totale (20–50%). Non è ammessa nella Napoletana STG, che è a impasto diretto."
+    "definition": "Pre-impasto asciutto di farina, {bigaHydration} d'acqua (fino al 50% con farine integrali) e circa l'1% di lievito fresco sulla farina della biga, maturato circa 16 h a 18–20 °C; la biga lunga fa 24 h a 4–5 °C più 24 h a 18–20 °C.",
+    "whyImportant": `Porta aroma e struttura all'impasto finale. Di solito il 30–40% della farina totale: ${BRAND.name} parte dal {bigaFlourPct}. Non è ammessa nella Napoletana STG, che è a impasto diretto.`
   },
   "poolish": {
     "name": "Poolish",
     "definition": "Pre-impasto liquido: farina e acqua in parti uguali con poco lievito, maturato 12–16 h a 20–22 °C (0,1% di lievito per 15–16 h, 0,3% per 10–12 h).",
-    "whyImportant": "Matura in fretta e rende l'impasto estensibile. Di solito il 30–50% della farina totale. È pronto quando la superficie è piena di bollicine e il centro comincia a cedere."
+    "whyImportant": `Matura più in fretta della biga e rende l'impasto estensibile. Di solito il 30–50% della farina totale: ${BRAND.name} parte dal {poolishFlourPct}. È pronto quando la superficie è piena di bollicine e il centro comincia a cedere.`
   },
   "autolysis": {
     "name": "Autolisi",
@@ -111,7 +113,7 @@ export const GLOSSARY_COPY_IT = {
   "thermal_conductivity": {
     "name": "Conducibilità Termica",
     "definition": "Capacità di un materiale di condurre calore.",
-    "whyImportant": "Acciaio (k=50): ideale forni casa 280°C, cottura 6-8 min. Pietra (k=2): ideale forni legna 450°C+, cottura 60-90s."
+    "whyImportant": "Più alta è k, più in fretta la superficie passa calore alla base: per questo l'acciaio aiuta i forni di casa, che scaldano meno. Sulla platea conta anche quanto calore il materiale accumula: i forni a legna usano mattone refrattario o biscotto."
   },
   "fodmap": {
     "name": "FODMAP",

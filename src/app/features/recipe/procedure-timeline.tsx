@@ -7,7 +7,7 @@ import { motion } from "motion/react";
 import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
-import { getStepTroubleshooting } from "../../data/troubleshooting-data";
+import { COLD_RETARD_MAX_C, getStepTroubleshooting } from "../../data/troubleshooting-data";
 import { resolveStepVisual } from "../cooking/step-visual";
 import { StepIllustration } from "../cooking/step-illustrations";
 import { procedureTimelineRows } from "./procedure-step-identity";
@@ -158,7 +158,14 @@ export function ProcedureTimeline({
                   : localizedStep.tip.beginner
                 : null;
               const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext(step), cms.parametricText);
-              const trouble = getStepTroubleshooting(step, { unleavened: !!recipe.style.dough.unleavened, filled });
+              /* FW-05: puntata in frigo (S13-B-02) e farina senza glutine, che a
+                 catalogo ha W 0 (S13-B-14), restringono le diagnosi della fase. */
+              const trouble = getStepTroubleshooting(step, {
+                unleavened: !!recipe.style.dough.unleavened,
+                filled,
+                coldRetard: recipe.fermentation_temp_c <= COLD_RETARD_MAX_C,
+                glutenFree: recipe.flour_w <= 0,
+              });
               const stepFooter = <>
                 {step.duration_minutes > 0 && (
                   <span className="type-numeric procedure-timeline-step__duration">

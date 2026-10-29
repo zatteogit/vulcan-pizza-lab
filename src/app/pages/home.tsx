@@ -49,6 +49,7 @@ import { RecommendedStyles,STYLE_PHOTOS } from "../features/recipe/recommended-s
 import { OvenFirstNotice } from "../features/recipe/oven-first-notice";
 import { focusOvenChoice } from "../features/recipe/kitchen-drawer-focus";
 import { createEntryTime } from "../domain/create-entry";
+import { thresholdFor } from "../domain/science/engine-facts";
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
@@ -1536,6 +1537,7 @@ export function HomePage() {
                       skillLevel={constraints.skill_level}
                       usePreFerment={usePreFerment}
                       flourG={recipe.flour_g}
+                      style={thresholdFor(selectedStyle ?? undefined)}
                     />
 
                   </div>

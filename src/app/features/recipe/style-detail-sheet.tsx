@@ -185,7 +185,8 @@ export function StyleDetailSheet({
     { icon: Droplets, label: pt.pillHydration, value: hRange },
     { icon: Wheat, label: pt.pillFlour, value: wRange }, /* FW-13: Flame è il forno */
     { icon: Ratio, label: pt.pillPL, value: plRange },
-    { icon: Clock, label: pt.pillFermentation, value: fRange },
+    /* FW-05 (S03-B-21): «Lievitazione» come in Cosa cambia; un riposo per gli impasti senza lievito. */
+    { icon: Clock, label: style.dough.unleavened ? pt.pillRest : pt.pillFermentation, value: fRange },
     { icon: Layers, label: pt.pillThickness, value: thickness },
     { icon: ChefHat, label: pt.pillLevel, value: styleDifficultyLabel(style, cms) },
     { icon: FlaskConical, label: pt.pillExperimentation, value: `${devEmoji} ${devCmsLabel}` },

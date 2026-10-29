@@ -13,15 +13,18 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
   paramHydration: "Hydration",
   paramDuration: "Duration",
   paramTemperature: "Temperature",
-  paramYeast: "Yeast",
+  paramYeast: "Fresh yeast",
   detailFermentation: "Fermentation",
   detailFlavor: "Flavour",
   detailCrust: "Crust",
   detailExtensibility: "Extensibility",
   detailIdealStyles: "Ideal styles",
+  /* FW-05 */
+  techniqueLabel: "Technique",
+  recipeContextLine: "In this recipe: {yeast} of yeast on {flour} of pre-ferment flour ({pct}). All the dough's yeast goes into the pre-ferment and is dosed on the recipe's total hours, not on the pre-ferment's hours alone.",
   compLabels: [
     "Hydration",
-    "Yeast",
+    "Fresh yeast (on the pre-ferment flour)",
     "Duration",
     "Temperature",
     "Flavour",
@@ -34,36 +37,30 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
         "Liquid pre-ferment: equal parts flour and water with a little yeast, 12–16 h at 20–22 °C.",
       hydration: "100% (equal parts flour and water)",
       consistency: "Liquid, foamy",
-      fermentationType:
-        "Fast: with so much water it matures in a few hours",
+      fermentationType: "Faster than a biga with the same yeast: at the stated dose it matures in 12–16 h",
       flavor: "Slightly tangy, nutty notes",
       crustResult:
         "Thin and golden; colour and spotting depend on oven and temperature",
       extensibility: "High (estimate): easy to stretch",
-      idealStyles:
-        "Roman teglia, NY Style, Contemporary Neapolitan, Focaccia",
       tips: [
         "Ready when the surface is full of bubbles and the centre starts to sink",
         "More yeast, fewer hours: at 20–22 °C, 0.1% for 15–16 h, 0.3% for 10–12 h",
-        "Flour in the poolish: 30–50% of the total flour",
+        "Flour in the poolish: 30–50% of the total flour; {brand} starts from {poolishFlourPct}",
       ],
     },
     biga: {
       origin: "Italy",
-      description:
-        "Stiff pre-ferment: flour, 44% water and 1% yeast, about 16 h at 18–20 °C.",
-      hydration: "44% (up to 50% with wholegrain flours)",
+      description: "Stiff pre-ferment: flour, {bigaHydration} water and about 1% fresh yeast on the biga flour, about 16 h at 18–20 °C.",
+      hydration: "{bigaHydration} (up to 50% with wholegrain flours)",
       consistency: "Dry, compact",
-      fermentationType: "Slow: with little water it matures in 16–48 h",
+      fermentationType: "Slow: with little water it matures in about 16 h (up to 48 h with the fridge)",
       flavor: "Aromatic, floral",
       crustResult: "Crisp; the structure depends on hydration and shaping",
       extensibility: "Depends on flour and hydration (to be verified)",
-      idealStyles:
-        "Pinsa, Pizza al taglio, Pala romana, Bread",
       tips: [
         "Ready when it is puffy in places, smells of yoghurt and fizzes slightly; if it tastes sour it has gone too far",
         "Long biga: 24 h at 4–5 °C, then 24 h at 18–20 °C",
-        "Flour in the biga: 20–50% of the total flour, usually a third",
+        "Flour in the biga: usually 30–40% of the total flour; {brand} starts from {bigaFlourPct} and you can change it between {flourPctMin} and {flourPctMax}",
         "Not used in STG Neapolitan pizza: the specification allows only the direct method",
       ],
     },
@@ -87,22 +84,22 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
   },
   compValues: {
     hydration: {
-      biga: "44%",
-      poolish: "100%",
+      biga: "{bigaHydration}",
+      poolish: "{poolishHydration}",
       autolisi: "= recipe",
     },
     yeast: {
       biga: "1%",
-      poolish: "0.1–0.3%",
+      poolish: "0.1–0.2%",
       autolisi: "0%",
     },
     duration: {
-      biga: "16–48 h",
+      biga: "16 h (up to 48 h with 24 h in the fridge)",
       poolish: "12–16 h",
       autolisi: "20–60 min",
     },
     temperature: {
-      biga: "18–20 °C",
+      biga: "18–20 °C (long biga: first 24 h at 4–5 °C)",
       poolish: "20–22 °C",
       autolisi: "Room temp",
     },
@@ -157,42 +154,31 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
 
       P01: {
         symptom: "Persistently sticky dough",
-        cause: "Hydration exceeds flour absorption capacity",
-        testRapido:
-          "Compare recipe H% vs flour absorption (+5% max)",
-        fixImmediate:
-          "Add 2-3% flour and incorporate with gentle folds",
-        prevention: "Use H% \u2264 flour absorption + 5%",
+        cause: "More water than the flour can absorb",
+        testRapido: "Is the recipe's hydration above the absorption stated on the flour's spec sheet?",
+        fixImmediate: "Add a little flour at a time (2–3%) and work it in with gentle folds",
+        prevention: "Stay close to the absorption stated by the mill; if you don't know it, start from the low end of the style's hydration",
       },
       P02: {
         symptom: "Dough tears during stretching",
-        cause:
-          "P/L too high (>0.8) or insufficient fermentation (<6h)",
-        testRapido:
-          "Stretch the dough ball 10cm: does it tear?",
-        fixImmediate: "Rest 60min covered at room temperature",
-        prevention:
-          "Choose flours with P/L 0.5-0.6, minimum 8h fermentation",
+        cause: "Gluten not developed enough or not yet relaxed, dough still cold from the fridge; sometimes a flour with little extensibility (high P/L) or an over-fermented dough",
+        testRapido: "Gently stretch an edge: does it tear straight away instead of stretching?",
+        fixImmediate: "Cover the dough ball and let it rest at room temperature for 30–60 min, then try again",
+        prevention: "Follow the recipe's timings, take the dough balls out of the fridge in time and use a flour with the P/L the style states",
       },
       P03: {
         symptom: "Dough collapses when touched",
-        cause:
-          "Over-fermented (volume >150%, finger dent doesn\u2019t spring back)",
-        testRapido:
-          "Press 1cm with finger: does it return in 3-5s?",
-        fixImmediate:
-          "Irreversible. Gently stretch and bake immediately",
-        prevention: "Check volume every 6h, max +150% rise",
+        cause: "Over-fermented: too long, too warm or too much yeast",
+        testRapido: "Press with a finger: if the dent springs back at once it is not ready yet, if it comes back slowly it is ready, if it stays and the dough deflates it has gone too far",
+        fixImmediate: "Re-ball it and let it recover for 1–2 h (it will have fewer air pockets), or stretch it gently and bake it straight away",
+        prevention: "Check the dough from the last third of the planned time, not just the clock",
       },
       P04: {
-        symptom: "No rise after 6+ hours",
-        cause:
-          "Dead yeast, temperature too low, or salt in direct contact",
-        testRapido:
-          "Vitality test: 5g yeast + 5g sugar in 100ml water 35\u00B0C \u2014 foam after 15min?",
-        fixImmediate:
-          "Add 0.3% fresh yeast dissolved in warm water, incorporate with folds",
-        prevention: "Test yeast before every use",
+        symptom: "The dough doesn't rise in the planned time",
+        cause: "Weak or expired yeast, or dough colder than planned. Rising little in the fridge is normal",
+        testRapido: "Was it in the fridge? That's normal. Otherwise dissolve a pinch of the yeast in warm water with a little sugar: does it foam after 10–15 min?",
+        fixImmediate: "First put it somewhere warm (24–28 °C) for 1–2 h. If it doesn't start again, the yeast is inactive: make the dough again with fresh yeast",
+        prevention: "Check the yeast's expiry date and the room temperature",
       },
       P05: {
         symptom: "Fermentation too fast (doubled in <3h)",
@@ -207,11 +193,9 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       },
       P06: {
         symptom: "Too sour/acetic flavour",
-        cause:
-          "Heterofermentative LAB active >48h at >18\u00B0C (especially with sourdough)",
-        testRapido:
-          "Dough pH \u2014 should be 4.5-5.5, problematic if <4.2",
-        fixImmediate: "Sugar masks flavour but does not correct overfermentation. Reassess the dough before use.",
+        cause: "Maturation too long or too warm: lactic acid bacteria produce acids (more often with sourdough)",
+        testRapido: "Smell and taste a small raw piece: is the sourness sharp, like vinegar?",
+        fixImmediate: "It's safe to eat; next time shorten the maturation at room temperature",
         prevention: "Choose time, temperature and yeast for the method; check development without a universal hourly threshold.",
       },
       P07: {
@@ -227,11 +211,11 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       },
       P08: {
         symptom: "Giant irregular holes in pizza",
-        cause: "Insufficient degassing + too gentle stretching",
-        testRapido: "Air pockets >3cm and uneven distribution?",
+        cause: "Large bubbles left in the dough ball and very gentle stretching",
+        testRapido: "Are the large bubbles spread across the centre too, not just in the rim?",
         fixImmediate:
           "Gently press dough ball before stretching to redistribute gas",
-        prevention: "Reduce fermentation time by 20%",
+        prevention: "Before stretching, gently pop the largest bubbles; in Neapolitan and canotto pizza some large air pockets in the rim are wanted",
       },
       P09: {
         symptom: "Raw base but burnt crust",
@@ -239,31 +223,22 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
           "Thermal imbalance: too much heat from top, too little from bottom",
         testRapido:
           "Extreme colour contrast between top and bottom?",
-        fixImmediate: "Pre-bake the base 3min without toppings",
-        prevention:
-          "Use thicker tray/stone, balance top/bottom heat",
+        fixImmediate: "Bake closer to the hot floor and further from the top heat; if the oven doesn't go above 300 °C you can pre-bake the base for 2–3 min without toppings",
+        prevention: "Balance the heat: a well-preheated stone or steel underneath, less heat from above",
       },
       P10: {
         symptom: "Pale crust, no browning",
-        cause:
-          "Temperature <250\u00B0C, sugars depleted, or excessive surface moisture",
-        testRapido:
-          "Does oven reach at least 250\u00B0C? Fermentation >48h?",
-        fixImmediate:
-          "Brush with oil+honey before baking or use grill for final 2min",
-        prevention:
-          "Add 0.5–1% sugar or malt and run the oven at its maximum, with a well-preheated stone or steel",
+        cause: "Oven or floor not hot enough for the style, or few sugars left after a very long maturation",
+        testRapido: "Does the oven reach the style's temperature? Was the maturation very long?",
+        fixImmediate: "Use the grill for the last 1–2 minutes, if the oven has one",
+        prevention: "Run the oven at its maximum with a well-preheated stone or steel; outside STG recipes, which allow neither sugar nor malt, you can add 0.5–1% sugar or malt",
       },
       P11: {
         symptom: "Chewy, not crispy pizza",
-        cause:
-          "Core temperature <85\u00B0C, hydration >70%, or too slow baking",
-        testRapido:
-          "Core thermometer: does it reach 90\u00B0C+?",
-        fixImmediate:
-          "Extend baking +2min or increase temperature +20\u00B0C",
-        prevention:
-          "H \u2264 65%, core temperature target 95\u00B0C",
+        cause: "Bake too short or too cool for the thickness, or more water than the style calls for",
+        testRapido: "When you cut it, is the centre still damp and sticky?",
+        fixImmediate: "Bake a few minutes longer; if the oven still has headroom, raise the temperature",
+        prevention: "Stay within the style's hydration and bake for the time the recipe states",
       },
       P14: {
         symptom:
@@ -278,57 +253,49 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       },
       P15: {
         symptom: "Dark/black pizza bottom",
-        cause: "Stone or tray too hot (>450\u00B0C)",
+        cause: "Floor hotter than the style needs, or flour or semolina burnt on the stone",
         testRapido: "Taste it: bitter flavour?",
         fixImmediate:
           "If bitter = problem (lower temp). If flavourful = NORMAL",
-        prevention:
-          "Controlled stone preheat, not exceeding 400\u00B0C",
+        prevention: "Keep the floor at the style's temperature and brush the stone between pizzas",
       },
       P16: {
         symptom: "Low and flat crust",
-        cause:
-          "Excessive degassing, flour W too low, or rolling pin used",
+        cause: "Too much degassing, flour too weak for the style, or use of a rolling pin",
         testRapido: "Crust height <1cm?",
         fixImmediate:
           "More delicate stretching, do not press the edges",
-        prevention:
-          "W \u2265 240 for Neapolitan, never rolling pin on crusted styles",
+        prevention: "Use a flour of the strength the style states and no rolling pin on styles with a raised rim",
       },
       P17: {
         symptom: "Pizza too dry",
-        cause: "Hydration <55% or baking too long (>10min)",
-        testRapido: "Recipe H%? Actual baking time?",
-        fixImmediate: "Add generous oil on topping",
-        prevention:
-          "H \u2265 58%, do not exceed recommended baking time",
+        cause: "Less water than the style calls for, or a bake longer than the recipe's time",
+        testRapido: "Are the hydration and baking time the recipe's?",
+        fixImmediate: "Serve it straight from the oven; next time shorten the bake",
+        prevention: "Stay within the style's hydration and don't go over the stated baking time",
       },
       P18: {
         symptom: "Soggy centre",
         cause: "Too much liquid topping or baking too short",
         testRapido:
           "Sauce amount per pizza? Very wet mozzarella?",
-        fixImmediate: "Pre-bake base 2min, then add toppings",
+        fixImmediate: "Pre-bake the base for 2–3 min, then add the toppings",
         prevention:
           "Max 80ml sauce per 30cm pizza, drain mozzarella well",
       },
       P19: {
         symptom: "Unable to stretch the dough ball",
-        cause:
-          "Pure Manitoba flour (W >380), dough too tenacious",
-        testRapido: "Which flour did you use? W >350?",
-        fixImmediate:
-          "Blend 50:50 with W 200 flour in the next batch",
-        prevention:
-          "Max W 320 for pizza, flours with P/L 0.5-0.6",
+        cause: "Flour much stronger than the style calls for: the dough is too tenacious",
+        testRapido: "Is your flour's W well above the style's?",
+        fixImmediate: "Let the dough ball rest covered for 20–30 min and try again; in the next dough cut the flour with a weaker one",
+        prevention: "Use a flour with the strength and P/L the style states",
       },
       P20: {
-        symptom: "\u2018Chemical\u2019 smell in the dough",
-        cause: "High-chlorine tap water",
-        testRapido: "Strong smell when you open the tap?",
-        fixImmediate: "Use bottled water for the next batch",
-        prevention:
-          "Filter water or let it sit 12h uncovered (chlorine evaporates)",
+        symptom: "'Chemical' smell (alcohol, solvent) in the dough",
+        cause: "Over-fermentation (alcohol and esters) or too much yeast; more rarely chlorine in the water",
+        testRapido: "Smell of alcohol or acetone, and a slack dough that doesn't rise again?",
+        fixImmediate: "If it is slack and doesn't rise again, treat it as over-fermented: re-ball it or bake it straight away",
+        prevention: "Next time use less yeast or a cooler place. If your tap water tastes of chlorine, use another water: leaving it to stand does not remove chloramines",
       },
       P21: {
         symptom: "Fermentation varies from one batch to the next (home fridge)",
@@ -342,7 +309,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       sticky_dough: {
         message:
           "Hydration {h}% with W {w}: risk of sticky dough",
-        tip: "Use flour with W \u2265 280 or reduce hydration to 68-70%",
+        tip: "This style calls for W {wMin}–{wMax}: use a flour in that range or lower the hydration a little",
       },
       high_pl: {
         message:
@@ -351,7 +318,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       },
       sour_risk: {
         message: "{h}h at {t}\u00B0C: risk of sour flavour",
-        tip: "For fermentations >24h, use temperature 4-8\u00B0C",
+        tip: "If your kitchen is warm, move part of the maturation to the fridge and watch the dough more than the clock",
       },
       pale_crust: {
         message:
@@ -359,17 +326,16 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         tip: "Check volume, elasticity and response to pressure: hours alone do not establish digestibility.",
       },
       cold_oven: {
-        message:
-          "Oven at {t}\u00B0C: risk of raw base with burnt edge",
-        tip: "Pre-bake the base 3min without toppings, then add ingredients",
+        message: "Oven at {t}°C, below the style's temperature: risk of a pale crust and a dry pizza",
+        tip: "Preheat the stone or steel for a long time and, if the oven has a grill, use it for the last few minutes",
       },
       beginner_hydration: {
         message: "Hydration {h}% is challenging for beginners",
-        tip: "Start with 60-65% and increase gradually with experience",
+        tip: "This style calls for {hMin}–{hMax}%: if you are starting out, stay close to {hMin}%",
       },
       high_w: {
-        message: "W {w} very high: dough difficult to stretch",
-        tip: "Mix 50:50 with W 200 flour or plan a long autolyse",
+        message: "W {w} well above the style's: dough hard to stretch",
+        tip: "This style calls for W {wMin}–{wMax}: cut it with a weaker flour or plan a long autolyse",
       },
       flat_long_ferment: {
         message:
@@ -383,36 +349,13 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
       name: "W (Chopin Alveograph)",
-      definition:
-        "Total energy required to expand a dough bubble until rupture. Measures the overall flour strength.",
-      whyImportant:
-        "W describes overall flour strength. Tenacity and extensibility are assessed with P, L and P/L: a high W alone does not mean a more tenacious dough.",
+      definition: "Total energy required to expand a dough bubble until rupture. Measures the overall flour strength.",
+      whyImportant: "W describes overall flour strength. Tenacity and extensibility are assessed with P, L and P/L: a high W alone does not mean a more tenacious dough. These bands are the ones {brand} uses throughout the app; each style states its own W range.",
       ranges: [
-        {
-          label: "Weak",
-          value: "90\u2013160",
-          note: "Biscuits, wafers",
-        },
-        {
-          label: "Medium",
-          value: "160\u2013200",
-          note: "Sandwich bread, focaccia",
-        },
-        {
-          label: "Medium-strong",
-          value: "200\u2013280",
-          note: "Neapolitan pizza",
-        },
-        {
-          label: "Strong",
-          value: "280\u2013350",
-          note: "Long-fermented bread",
-        },
-        {
-          label: "Very strong",
-          value: "350\u2013450",
-          note: "Panettone, croissant",
-        },
+        { label: "Weak", value: "{wBandWeak}", note: "General-purpose or pastry flour" },
+        { label: "Medium", value: "{wBandMedium}", note: "Often sold as “pizza flour”" },
+        { label: "Strong", value: "{wBandStrong}", note: "Long maturations and very hydrated doughs" },
+        { label: "Very strong", value: "{wBandVeryStrong}", note: "Manitoba and flours for large enriched breads" },
       ],
     },
     p_tenacity: {
@@ -440,37 +383,8 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     },
     pl_ratio: {
       name: "P/L (Tenacity/Extensibility Ratio)",
-      definition:
-        "The ratio between dough’s resistance to deformation and its ability to stretch.",
-      whyImportant:
-        "It describes rheological balance. The suitable value depends on flour, hydration and method; it does not guarantee pizza height or texture.",
-      ranges: [
-        {
-          label: "<0.4 Very extensible",
-          value: "Collapses easily",
-          note: "Pinsa",
-        },
-        {
-          label: "0.4\u20130.5 Extensible",
-          value: "Easy to work",
-          note: "Classic Neapolitan",
-        },
-        {
-          label: "0.5\u20130.7 Balanced",
-          value: "Good balance",
-          note: "Modern Neapolitan, bread",
-        },
-        {
-          label: "0.7\u20131.0 Tenacious",
-          value: "Resistant",
-          note: "Long-fermented bread",
-        },
-        {
-          label: ">1.0 Very tenacious",
-          value: "Elastic, springs back",
-          note: "Croissant",
-        },
-      ],
+      definition: "The ratio between dough’s resistance to deformation and its ability to stretch.",
+      whyImportant: "It describes rheological balance. The suitable value depends on flour, hydration and method; it does not guarantee pizza height or texture. The examples are the ranges of {brand}'s styles; your flour's P/L is on the mill's technical sheet.",
     },
     falling_number: {
       name: "Falling Number (Hagberg-Perten)",
@@ -508,37 +422,9 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     },
     hydration: {
       name: "Hydration (H%)",
-      definition:
-        "Weight percentage of water relative to flour in the dough.",
-      whyImportant:
-        "Low H (<55%): crispy, easy. Medium H (60-65%): balance. High H (>70%): needs strong flour (W>280) and skill.",
-      ranges: [
-        {
-          label: "Classic Neapolitan",
-          value: "55\u201360%",
-          note: "Soft, workable",
-        },
-        {
-          label: "Contemporary Neapolitan",
-          value: "60\u201365%",
-          note: "Light crust",
-        },
-        {
-          label: "Canotto",
-          value: "65\u201370%",
-          note: "Large air pockets",
-        },
-        {
-          label: "Roman Pinsa",
-          value: "75\u201385%",
-          note: "Spread in tray",
-        },
-        {
-          label: "Focaccia/Bonci",
-          value: "85\u2013100%+",
-          note: "Batter-like",
-        },
-      ],
+      definition: "Weight percentage of water relative to flour in the dough.",
+      formula: "H% = (water weight / flour weight) × 100",
+      whyImportant: "More water makes the dough softer and harder to handle, and calls for a stronger flour. Crispness depends mostly on baking and thickness: even a very hydrated pan pizza can be crisp. The examples are the ranges of {brand}'s styles.",
     },
     absorption: {
       name: "Water Absorption",
@@ -567,14 +453,14 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     },
     yeast: {
       name: "Yeast (Saccharomyces cerevisiae)",
-      definition:
-        "A single-celled fungus that ferments sugars, producing carbon dioxide, alcohol and aroma compounds.",
-      whyImportant:
-        "Activity depends on strain, dose, temperature and dough. Cold slows fermentation; there is no universal immediate stopping threshold.",
+      definition: "A single-celled fungus that ferments sugars, producing carbon dioxide, alcohol and aroma compounds.",
+      whyImportant: "Activity depends on strain, dose, temperature and dough. Cold slows fermentation; there is no universal immediate stopping threshold. The right dose depends on hours and temperature: the recipe works it out for you.",
       ranges: [
-        { label: "Fresh", value: "0.5\u20132.0%", note: "70% moisture, fridge 4\u00B0C" },
-        { label: "Active dry", value: "0.3\u20131.0%", note: "Rehydrate first" },
-        { label: "Instant dry", value: "0.2\u20130.8%", note: "Add directly" },
+        { label: "Fresh, {yeastS1Hours} at {yeastS1Temp}", value: "{yeastS1Pct}", note: "Model estimate" },
+        { label: "Fresh, {yeastS2Hours} at {yeastS2Temp}", value: "{yeastS2Pct}", note: "Model estimate" },
+        { label: "Fresh, {yeastS3Hours} at {yeastS3Temp}", value: "{yeastS3Pct}", note: "Model estimate" },
+        { label: "Fresh, {yeastS4Hours} at {yeastS4Temp}", value: "{yeastS4Pct}", note: "Model estimate" },
+        { label: "Dry (active or instant)", value: "≈ fresh × {yeastDryRatio}", note: "Same estimate as fresh" },
       ],
     },
     lab: {
@@ -586,37 +472,30 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     },
     q10: {
       name: "Q\u2081\u2080 (Temperature Coefficient)",
-      definition:
-        "Multiplicative factor of biochemical reaction rate for every 10\u00B0C increase.",
-      whyImportant:
-        "With Q\u2081\u2080 = 2, fermentation doubles every +10\u00B0C: 24h at 18\u00B0C \u2248 12h at 28\u00B0C. The values below are estimates from the {brand} model.",
+      definition: "Multiplicative factor of biochemical reaction rate for every 10\u00B0C increase.",
+      whyImportant: "With Q₁₀ = {q10ComAbove} the rate is multiplied by {q10ComAbove} every {tenDegrees}: {q10ExampleRefHours} at {q10RefTemp} ≈ {q10ExampleWarmHours} at {q10ExampleWarmTemp}. The values in this entry are estimates from the {brand} model.",
       ranges: [
-        { label: "Commercial yeast \u226510\u00B0C", value: "2.0", note: "Model estimate, consistent with growth data between 18 and 25 \u00B0C" },
-        { label: "Commercial yeast <10\u00B0C", value: "1.6", note: "Model estimate, unsourced" },
-        { label: "Sourdough >15\u00B0C", value: "2.2", note: "Model estimate" },
-        { label: "Sourdough \u226415\u00B0C", value: "1.9", note: "Model estimate" },
+        { label: "Commercial yeast ≥ {q10ComBreak}", value: "{q10ComAbove}", note: "Model estimate, consistent with growth data at room temperature" },
+        { label: "Commercial yeast < {q10ComBreak}", value: "{q10ComBelow}", note: "Model estimate, unsourced" },
+        { label: "Sourdough > {q10SdBreak}", value: "{q10SdAbove}", note: "Model estimate" },
+        { label: "Sourdough ≤ {q10SdBreak}", value: "{q10SdBelow}", note: "Model estimate" },
       ],
     },
     arrhenius: {
       name: "Arrhenius Equation",
-      definition:
-        "Describes the dependence of reaction rate on absolute temperature.",
-      whyImportant:
-        "With \u03B2=0.075 and T_ref=18\u00B0C \u2192 Q\u2081\u2080 \u2248 2.12. Used in the {brand} engine to calculate yeast dosage and timing.",
+      definition: "Links the rate of a reaction to absolute temperature (in kelvin) through an activation energy.",
+      formula: "k = A · e^(−Eₐ / (R · T)), with T in kelvin",
+      whyImportant: "{brand} does not use this equation. The engine applies a piecewise Q₁₀ referenced to {q10RefTemp}: {q10ComAbove} above and {q10ComBelow} below {q10ComBreak} for commercial yeast, {q10SdAbove} above and {q10SdBelow} up to {q10SdBreak} for sourdough. These are model estimates, not measured values.",
     },
     biga: {
       name: "Biga",
-      definition:
-        "Stiff pre-dough of flour, 44% water (up to 50% with wholegrain flours) and 1% yeast, matured about 16 h at 18–20 °C; a long biga takes 24 h at 4–5 °C plus 24 h at 18–20 °C.",
-      whyImportant:
-        "Brings aroma and structure to the final dough. Usually a third of the total flour (20–50%). Not allowed in STG Neapolitan pizza, which uses the direct method.",
+      definition: "Stiff pre-dough of flour, {bigaHydration} water (up to 50% with wholegrain flours) and about 1% fresh yeast on the biga flour, matured about 16 h at 18–20 °C; a long biga takes 24 h at 4–5 °C plus 24 h at 18–20 °C.",
+      whyImportant: "Brings aroma and structure to the final dough. Usually 30–40% of the total flour: {brand} starts from {bigaFlourPct}. Not allowed in STG Neapolitan pizza, which uses the direct method.",
     },
     poolish: {
       name: "Poolish",
-      definition:
-        "Liquid pre-dough: equal parts flour and water with a little yeast, matured 12–16 h at 20–22 °C (0.1% yeast for 15–16 h, 0.3% for 10–12 h).",
-      whyImportant:
-        "Matures quickly and makes the dough extensible. Usually 30–50% of the total flour. Ready when the surface is full of bubbles and the centre starts to sink.",
+      definition: "Liquid pre-dough: equal parts flour and water with a little yeast, matured 12–16 h at 20–22 °C (0.1% yeast for 15–16 h, 0.3% for 10–12 h).",
+      whyImportant: "Matures faster than a biga and makes the dough extensible. Usually 30–50% of the total flour: {brand} starts from {poolishFlourPct}. Ready when the surface is full of bubbles and the centre starts to sink.",
     },
     autolysis: {
       name: "Autolyse",
@@ -670,8 +549,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     thermal_conductivity: {
       name: "Thermal Conductivity",
       definition: "Ability of a material to conduct heat.",
-      whyImportant:
-        "Steel (k=50): ideal for home ovens 280\u00B0C, 6-8 min baking. Stone (k=2): ideal for wood ovens 450\u00B0C+, 60-90s baking.",
+      whyImportant: "The higher k, the faster the surface passes heat to the base: that is why steel helps home ovens, which run cooler. On the oven floor, how much heat the material stores also matters: wood-fired ovens use refractory brick or biscotto.",
       ranges: [
         { label: "Copper", value: "400" },
         { label: "Aluminium", value: "205" },
@@ -712,16 +590,9 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",
-      definition:
-        "Dough quantity per unit of surface area: the grams of dough for each cm² of pizza.",
-      whyImportant:
-        "A metric common in North American dough calculators (in oz/in²; 1 oz/in² ≈ 4.39 g/cm²). {brand} expresses it in g/cm² to size the dough balls; together with the oven it guides baking time and crispness.",
-      ranges: [
-        { label: "Neapolitan", value: "0.30\u20130.36", note: "6-7 mm" },
-        { label: "Roman tonda", value: "0.20\u20130.25", note: "4-5 mm" },
-        { label: "New York", value: "0.40\u20130.50", note: "8-10 mm" },
-        { label: "Chicago deep dish", value: "1.00\u20131.30", note: "20-26 mm" },
-      ],
+      definition: "Dough quantity per unit of surface area: the grams of dough for each cm² of pizza.",
+      formula: "TF = dough ball weight (g) / pizza area (cm²)",
+      whyImportant: "A metric common in North American dough calculators (in oz/in²; 1 oz/in² ≈ 4.39 g/cm²). {brand} expresses it in g/cm² to size the dough balls; together with the oven it guides baking time and crispness. The examples are calculated from each style's dough-ball weight and shape.",
     },
     friction_factor: {
       name: "Mixer friction",
@@ -739,38 +610,38 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     },
     rule_of_55: {
       name: "Water temperature (three temperatures)",
-      definition:
-        "Works out how warm the water should be so the dough reaches the temperature you want.",
-      whyImportant:
-        "Sum of the three temperatures = 3 \u00D7 desired dough \u2212 friction. Pizzerias also call it the \u00ABrule of 55\u00BB: with the sum fixed at 55 the dough lands around 18 \u00B0C (55 \u00F7 3); here the style's target is used, 22\u201324 \u00B0C.",
+      definition: "Works out how warm the water should be so the dough reaches the temperature you want.",
+      formula: "T_water = 3 × T_dough − T_room − T_flour − friction",
+      whyImportant: "Sum of the three temperatures = 3 \u00D7 desired dough \u2212 friction. Pizzerias also call it the \u00ABrule of 55\u00BB: with the sum fixed at 55 the dough lands around 18 \u00B0C (55 \u00F7 3); here the style's target is used, 22\u201324 \u00B0C.",
     },
     a_score: {
       name: "A-Score (Authenticity)",
-      definition:
-        "A score from 0 to 100 for closeness to the style reference. It does not certify compliance with a specification.",
+      definition: "A score from 0 to 100 for closeness to the style reference. It does not certify compliance with a specification.",
+      formula: "A = Ingredients × {authWIngredients} + Process × {authWProcess} + Equipment × {authWEquipment}",
       ranges: [
-        { label: "90-100", value: "Rigorously authentic" },
-        { label: "75-89", value: "Substantially authentic" },
-        { label: "60-74", value: "Inspired by the style" },
-        { label: "<60", value: "Significant deviation" },
+        { label: "{aBand0}", value: "Rigorously authentic" },
+        { label: "{aBand1}", value: "Faithful with adaptations" },
+        { label: "{aBand2}", value: "Inspired but modified" },
+        { label: "{aBand3}", value: "Freely interpreted" },
       ],
+      whyImportant: "The weights are a {brand} choice, not a measurement. Product rules: without the fuel the style calls for, the score does not exceed {authFuelCap}; below the style's minimum temperature it is reduced proportionally.",
     },
     f_score: {
       name: "F-Score (Ease)",
-      definition:
-        "A score from 0 to 100 for ease of preparation with the available oven, flour and experience. Requirements that block a recipe are assessed separately.",
+      definition: "A score from 0 to 100 for ease of preparation with the available oven, flour and experience. Requirements that block a recipe are assessed separately.",
+      formula: "F = Oven × {feasWOven} + Flour × {feasWFlour} + Experience × {feasWSkill}",
       ranges: [
-        { label: "90-100", value: "Highly feasible" },
-        { label: "75-89", value: "Feasible with care" },
-        { label: "60-74", value: "Difficult" },
-        { label: "<60", value: "Not recommended" },
+        { label: "{fBand0}", value: "Highly feasible" },
+        { label: "{fBand1}", value: "Feasible with care" },
+        { label: "{fBand2}", value: "Difficult" },
+        { label: "{fBand3}", value: "High risk" },
       ],
+      whyImportant: "The weights are a {brand} choice, not a measurement. If the recipe cannot be made with your kitchen, compatibility does not exceed {nonFeasibleCeiling}, whatever the other scores.",
     },
     d_score: {
       name: "D-Score (Estimated maturation)",
-      definition:
-        "A model estimate based on time, temperature, yeast and preferments. It does not measure personal digestibility or calculate FODMAP content.",
-      ranges: [{"label":"85-100","value":"High index"},{"label":"70-84","value":"Medium-high index"},{"label":"50-69","value":"Medium index"},{"label":"<50","value":"Low index"}],
+      definition: "A model estimate based on time, temperature, yeast and preferments. It does not measure personal digestibility or calculate FODMAP content.",
+      ranges: [{"label":"{dBand0}","value":"High index"},{"label":"{dBand1}","value":"Medium-high index"},{"label":"{dBand2}","value":"Medium index"},{"label":"{dBand3}","value":"Low index"}],
     },
   },
 };

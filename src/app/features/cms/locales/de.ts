@@ -20,7 +20,7 @@ export const DE_LOCALE: CmsContent = {
   /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
   parametricText: {
     saltType: { "fine_sea": "feines Meersalz", "fine": "feines Salz", "kosher": "Koschersalz", "kosher_or_fine": "Koscher- oder feines Salz", "coarse_and_fine": "grobes und feines Salz" },
-    saltTiming: { "with_flour": "mit dem Mehl", "after_flour_water": "nach Mehl und Wasser", "after_flour_water_5min": "nach Mehl und Wasser (5 Min. Kneten)", "after_hydration": "nach der Hydratation", "fine_in_dough_coarse_on_top": "fein im Teig, grob obenauf" },
+    saltTiming: { "with_flour": "mit dem Mehl", "after_flour_water": "nach Mehl und Wasser", "dissolved_in_water": "im Wasser gelöst, vor dem Mehl (Produktspezifikation)", "after_hydration": "nach der Hydratation", "fine_in_dough_coarse_on_top": "fein im Teig, grob obenauf" },
     fold: { "stretch_fold": "Dehnen und Falten", "coil_fold": "Coil Fold", "french_fold": "französisches Falten", "slap_fold": "Slap & Fold" },
     stretch: {
       napoletana_stg: "Von Hand ausgezogen (neapolitanischer Schlag)",
@@ -266,10 +266,10 @@ export const DE_LOCALE: CmsContent = {
     procedureDirect: "Direkt",
     procedurePreferment: "Vorteig",
     procedureUnleavened: "Ohne Hefe",
-    flourUseVeryStrong: "Manitoba oder sehr starkes Tipo 0",
-    flourUseStrong: "Starkes Tipo 0/00 für Pizza",
-    flourUseMedium: "Tipo 0, mittlere Stärke",
-    flourUseWeak: "Tipo 00, schwach bis mittel",
+    flourUseVeryStrong: "Sehr starkes Mehl, Typ Manitoba",
+    flourUseStrong: "Starkes Mehl, für lange Reifung",
+    flourUseMedium: "Mittelstarkes Mehl, oft als Pizzamehl verkauft",
+    flourUseWeak: "Schwaches Mehl, Allzweck- oder Gebäckmehl",
     verdictTitle: "So klappt es nicht",
     verdictOvenTooCold: "Die Backtemperatur ist auf {oven} eingestellt; diese Methode benötigt mindestens {min}.",
     verdictTimeWindow: "Es dauert etwa {needed}, du hast {available}: Sie wäre erst nach der gewählten Uhrzeit fertig.",
@@ -935,10 +935,6 @@ export const DE_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen beendet der Teig die Gare im Blech.",
     "timeline.preheat.descPanWholeProof": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen macht der Teig die Gare im Blech.",
     "timeline.preheat.descDuringRest": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen ruhen die Teiglinge.",
-    "hint.flourWeak": "schwaches Mehl (klassisches 00)",
-    "hint.flourMedium": "mittelstarkes Mehl",
-    "hint.flourStrong": "starkes Pizzamehl",
-    "hint.flourVeryStrong": "sehr starkes Mehl (Manitoba)",
     "hint.yeastDryPinch": "≈ eine Messerspitze",
     "hint.yeastDryQuarterTsp": "≈ ¼ Teelöffel",
     "hint.yeastDryHalfTsp": "≈ ½ Teelöffel",
@@ -1244,6 +1240,7 @@ export const DE_LOCALE: CmsContent = {
     pillFlour: "Mehl",
     pillPL: "P/L",
     pillFermentation: "G\u00E4rung",
+    pillRest: "Ruhezeit",
     pillThickness: "Dicke",
     pillLevel: "Niveau",
     pillExperimentation: "Experimentell",
@@ -1339,7 +1336,7 @@ export const DE_LOCALE: CmsContent = {
     teglia_romana:
       "H\u00F6he 2-3cm|Hydration je nach Variante|Ohne Kneten + Falten|Wolkenkrume",
     tonda_romana:
-      "Dicke 1-2mm|Nudelholz oder von Hand|Extrem knusprig|Schwaches Mehl W<210",
+      "Dicke 1-2mm|Nudelholz oder von Hand|Extrem knusprig|Mehl W 200-240",
     pinsa_romana:
       "Multi-Getreide-Mix|Ovale Form|Glasige Kruste|Reifung 24-72h",
     pala_romana:
@@ -1349,13 +1346,13 @@ export const DE_LOCALE: CmsContent = {
     detroit:
       "K\u00E4sekrone|Tiefe Pfanne|K\u00E4se am Rand|Karamellisierte Kruste",
     chicago_deep:
-      "Tiefe 5cm|Butter 18%|Umgekehrte Schichten|Backzeit 35min",
+      "Tiefe 5cm|Butter 18%|Umgekehrte Schichten|Backzeit 25-35 min",
     focaccia_genovese:
-      "Gro\u00DFz\u00FCgig Oliven\u00F6l|Oberfl\u00E4chenkrater|\u00D6l-Wasser-Sole|Backzeit 15-20min",
+      "Gro\u00DFz\u00FCgig Oliven\u00F6l|Oberfl\u00E4chenkrater|\u00D6l-Wasser-Sole|Backzeit 19-24 min",
     sfincione:
       "Dick und fluffig|Ger\u00F6stete Semmelbr\u00F6sel|Zwiebel + Sardellen|Caciocavallo",
     grandma_style:
-      "D\u00FCnn und knusprig|Mozzarella unter So\u00DFe|Gut ge\u00F6ltes Blech|Backzeit 12-16min",
+      "D\u00FCnn und knusprig|Mozzarella unter So\u00DFe|Gut ge\u00F6ltes Blech|Backzeit 14-17 min",
     focaccia_recco:
       "Fast transparentes Blatt|Stracchino-F\u00FCllung|Goldene Blasen|Keine G\u00E4rung",
     padellino_torino:
@@ -1720,14 +1717,12 @@ export const DE_LOCALE: CmsContent = {
     learnPath4Title: UI_MESSAGES_DE["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_DE["pages.learn.path4.copy"],
     preFermentsSubtitle: "Wie du sie verwendest und einplanst.",
-    preFermentsDescription: "Biga und Poolish werden vor dem Hauptteig angesetzt. <strong>Biga</strong> ist ein fester Teig mit 44% Wasser; <strong>Poolish</strong> enthält gleich viel Mehl und Wasser. <strong>Autolyse</strong> ist dagegen eine Ruhephase von Mehl und Wasser ohne Hefe und Salz, kein Vorteig.",
+    preFermentsDescription: "Biga und Poolish werden vor dem Hauptteig angesetzt. <strong>Biga</strong> ist ein fester Teig mit {bigaHydration} Wasser; <strong>Poolish</strong> enthält gleich viel Mehl und Wasser. <strong>Autolyse</strong> ist dagegen eine Ruhephase von Mehl und Wasser ohne Hefe und Salz, kein Vorteig.",
     preFermentsChoiceTitle: "Welchen soll ich wählen?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "Wenn Sie einen aromatischen Teig möchten und etwa 16 h bei 18–20 °C haben",
-    preFermentsBigaBest: "Pinsa, Pizza al taglio, Pala romana",
     preFermentsPoolishTitle: "Poolish",
     preFermentsPoolishWhen: "Wenn Sie einen dehnbaren Teig möchten und 12–16 h bei 20–22 °C haben",
-    preFermentsPoolishBest: "Römische Blechpizza, NY-Style, Focaccia",
     preFermentsAutolisiTitle: "Autolyse",
     preFermentsAutolisiWhen: "Wenn sich der Teig leichter ausziehen lassen soll",
     preFermentsAutolisiBest: "Alle Stile; kombinierbar mit Biga und Poolish",

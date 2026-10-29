@@ -8,7 +8,9 @@ import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
 import {
   localizedComparisonRows,
-  PreFermentCard
+  fillPreFermentText,
+  PreFermentCard,
+  PreFermentStyleList
 } from "../features/recipe/pre-ferment-guide";
 import { Flask } from "../features/cooking/step-illustrations";
 import { motionDelay,motionSpring } from "../components/ds/motion";
@@ -27,7 +29,7 @@ const PRE_FERMENT_ORDER = [
 ] as const;
 
 export function PreFermentsPage() {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const pg = cms.pages;
   const { hash } = useLocation();
 
@@ -67,7 +69,8 @@ export function PreFermentsPage() {
         {/* Intro paragraph */}
         <div className="preferment-intro">
           <p className="preferment-intro__text">
-            <span dangerouslySetInnerHTML={{ __html: pg.preFermentsDescription }} />
+            {/* FW-05: l'idratazione della biga arriva dal motore (segnaposto). */}
+            <span dangerouslySetInnerHTML={{ __html: fillPreFermentText(pg.preFermentsDescription, bcp47) }} />
           </p>
         </div>
 
@@ -111,7 +114,7 @@ export function PreFermentsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {localizedComparisonRows(cms.preFerment).map((row) => (
+                  {localizedComparisonRows(cms.preFerment, bcp47).map((row) => (
                     <tr key={row.label}>
                       <td className="preferment-table__td preferment-table__rowlabel">
                         {row.label}
@@ -148,7 +151,7 @@ export function PreFermentsPage() {
               icon={Wheat}
               title={pg.preFermentsBigaTitle}
               when={pg.preFermentsBigaWhen}
-              best={pg.preFermentsBigaBest}
+              best={<PreFermentStyleList kind="biga" locale={bcp47} />}
               tone="biga"
               tryHref={tryLink("biga")}
               tryLabel={uiMessage("pages.preFerments.tryBiga")}
@@ -157,7 +160,7 @@ export function PreFermentsPage() {
               icon={Droplet}
               title={pg.preFermentsPoolishTitle}
               when={pg.preFermentsPoolishWhen}
-              best={pg.preFermentsPoolishBest}
+              best={<PreFermentStyleList kind="poolish" locale={bcp47} />}
               tone="poolish"
               tryHref={tryLink("poolish")}
               tryLabel={uiMessage("pages.preFerments.tryPoolish")}
@@ -189,7 +192,8 @@ function DecisionCard({
   icon: LucideIcon;
   title: string;
   when: string;
-  best: string;
+  /** FW-05 (S14-A-01): per biga e poolish, gli stili del motore con il link. */
+  best: React.ReactNode;
   tone: "biga" | "poolish" | "autolisi";
   tryHref?: string;
   tryLabel?: string;
