@@ -6,7 +6,7 @@ import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 
 import { TOOLS_ENABLED } from "../config/tools";
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
-import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Download, Globe, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, RotateCcw, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
+import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Download, Globe, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pencil, RotateCcw, Search, Share2, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
 import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { Suspense, lazy, useCallback,useEffect,useId,useMemo,useRef,useState } from "react";
@@ -59,7 +59,8 @@ OVEN_PRESETS,
 SKILL_LEVELS,
 STYLES_DB,
 } from "../domain/pizza-engine";
-import { normalizeRecipeName } from "../data/saved-recipes";
+import { MAX_RECIPE_NAME_LENGTH, normalizeRecipeName } from "../data/saved-recipes";
+import { noticeDurationMs } from "../features/profile/notice-duration";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../components/media/responsive-images";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
@@ -70,6 +71,7 @@ import {
   importRecipeBook,
   loadSavedRecipes,
   removeRecipe,
+  renameSavedRecipe,
   restoreRecipe,
   toggleFavoriteStyle,
   type SavedRecipe,
@@ -319,6 +321,46 @@ function ProfileSection({
   );
 }
 
+/* ═══ G5-WP-05: avviso a tempo del ricettario e dei preferiti ═══
+ * Stesso schema per le due sezioni (U-10, F12/F26): portal, il tempo si ferma
+ * con focus o puntatore sopra, durata da noticeDurationMs, e se l'avviso
+ * aveva il focus quando si chiude, il focus torna nella sezione. */
+function useTimedNotice<T>(durationOf: (notice: T) => number) {
+  const [notice, setNotice] = useState<T | null>(null);
+  const [paused, setPaused] = useState(false);
+  const toastRef = useRef<HTMLDivElement>(null);
+  const returnRef = useRef<HTMLElement | null>(null);
+  const durationRef = useRef(durationOf);
+  durationRef.current = durationOf;
+
+  const closeNotice = useCallback(() => {
+    const hadFocus = toastRef.current?.contains(document.activeElement) ?? false;
+    setNotice(null);
+    setPaused(false);
+    if (hadFocus) requestAnimationFrame(() => returnRef.current?.focus({ preventScroll: true }));
+  }, []);
+
+  useEffect(() => {
+    if (notice === null || paused) return;
+    const timer = setTimeout(closeNotice, durationRef.current(notice));
+    return () => clearTimeout(timer);
+  }, [notice, paused, closeNotice]);
+
+  /** La riga sparisce col focus dentro: lo si porta su «Annulla». */
+  const focusAction = useCallback(() => {
+    requestAnimationFrame(() => toastRef.current?.querySelector<HTMLElement>(".ds-snackbar__action")?.focus());
+  }, []);
+
+  const toastProps = {
+    ref: toastRef,
+    onFocus: () => setPaused(true),
+    onBlur: () => setPaused(false),
+    onMouseEnter: () => setPaused(true),
+    onMouseLeave: () => setPaused(false),
+  };
+  return { notice, setNotice, closeNotice, returnRef, focusAction, toastProps };
+}
+
 /* ═══ STILI PREFERITI — chiude il loop del cuore (R31) ═══
  * Il cuore (toggleFavoriteStyle) è da sempre persistito in localStorage ma
  * non era mostrato da nessuna parte: qui i preferiti diventano finalmente
@@ -327,6 +369,21 @@ function FavoriteStylesSection() {
   const { cms } = useCms();
   const p = cms.profile;
   const [favs, setFavs] = useState<string[]>(() => loadFavoriteStyles());
+  /* G5-WP-05 (S17-B-07): togliere un preferito si annulla, come una ricetta. */
+  const { notice: removedId, setNotice: setRemovedId, closeNotice, returnRef, focusAction, toastProps } =
+    useTimedNotice<string>(() => noticeDurationMs("", "removed"));
+
+  const handleRemoveFavorite = (id: string) => {
+    setFavs(toggleFavoriteStyle(id));
+    setRemovedId(id);
+    focusAction();
+  };
+
+  const handleUndoFavorite = () => {
+    if (removedId === null) return;
+    if (!loadFavoriteStyles().includes(removedId)) setFavs(toggleFavoriteStyle(removedId));
+    closeNotice();
+  };
 
   /* Risincronizza quando si torna sulla pagina (i preferiti cambiano altrove). */
   useEffect(() => {
@@ -343,7 +400,29 @@ function FavoriteStylesSection() {
     .map((id) => STYLES_DB[id])
     .filter((s): s is NonNullable<typeof s> => Boolean(s));
 
-  if (styles.length === 0) return null;
+  const toast =
+    typeof document !== "undefined" &&
+    createPortal(
+      <AnimatePresence>
+        {removedId !== null && (
+          <motion.div
+            key={removedId}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={motionSpring.standard}
+            className="profile-saved-recipes__toast"
+            {...toastProps}
+          >
+            <Snackbar message={p.favoriteRemoved} action={p.savedRecipeUndo} onAction={handleUndoFavorite} />
+          </motion.div>
+        )}
+      </AnimatePresence>,
+      document.body,
+    );
+
+  /* Tolto l'ultimo preferito la sezione sparisce, ma «Annulla» resta. */
+  if (styles.length === 0) return <>{toast}</>;
 
   return (
     <ProfileSection
@@ -351,7 +430,7 @@ function FavoriteStylesSection() {
       subtitle={p.favoritesSubtitle}
       delay={motionDelay.profileIntro}
     >
-      <div data-region="collection" className="profile-favorites">
+      <div ref={(el) => { returnRef.current = el; }} tabIndex={-1} data-region="collection" className="profile-favorites">
         {styles.map((style) => (
           <div key={style.id} className="profile-favorites__item">
             <Link
@@ -373,7 +452,8 @@ function FavoriteStylesSection() {
               </div>
             </Link>
             <button
-              onClick={() => setFavs(toggleFavoriteStyle(style.id))}
+              type="button"
+              onClick={() => handleRemoveFavorite(style.id)}
               className="profile-favorites__remove"
               aria-label={t(p.favoriteRemoveAria, { name: style.name })}
               title={p.favoriteRemove}
@@ -383,6 +463,7 @@ function FavoriteStylesSection() {
           </div>
         ))}
       </div>
+      {toast}
     </ProfileSection>
   );
 }
@@ -438,13 +519,17 @@ function SavedRecipesSection() {
   const p = cms.profile;
   const savedFmt = createFormatter(cms.ui, bcp47);
   const [recipes, setRecipes] = useState<SavedRecipe[]>(() => loadSavedRecipes());
-  const [notice, setNotice] = useState<SavedRecipesNotice | null>(null);
   /* U-10 (F26): il tempo per «Annulla» si ferma finché l'avviso ha il focus o
-     il puntatore sopra. */
-  const [noticePaused, setNoticePaused] = useState(false);
-  const toastRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLElement | null>(null);
+     il puntatore sopra (useTimedNotice); G5-WP-05: dura quanto serve a leggerlo. */
+  const { notice, setNotice, closeNotice, returnRef: sectionRef, focusAction, toastProps } =
+    useTimedNotice<SavedRecipesNotice>((n) => noticeDurationMs(n.kind === "message" ? n.text : "", n.kind));
   const fileInputRef = useRef<HTMLInputElement>(null);
+  /* G5-WP-05 (S17-A-09): rinomina dalla lista. Il ref rende idempotente la
+     conferma (Invio smonta il campo, poi arriverebbe anche il blur). */
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameDraft, setRenameDraft] = useState("");
+  const renamingRef = useRef<string | null>(null);
+  const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
 
   useEffect(() => {
     const sync = () => setRecipes(loadSavedRecipes());
@@ -456,27 +541,10 @@ function SavedRecipesSection() {
     };
   }, []);
 
-  /** Chiude l'avviso; se aveva il focus, lo riporta nella sezione (U-10, F12). */
-  const closeNotice = useCallback(() => {
-    const hadFocus = toastRef.current?.contains(document.activeElement) ?? false;
-    setNotice(null);
-    setNoticePaused(false);
-    if (hadFocus) requestAnimationFrame(() => sectionRef.current?.focus({ preventScroll: true }));
-  }, []);
-
-  useEffect(() => {
-    if (!notice || noticePaused) return;
-    const timer = setTimeout(closeNotice, notice.kind === "removed" ? 6000 : 4000);
-    return () => clearTimeout(timer);
-  }, [notice, noticePaused, closeNotice]);
-
   const handleRemove = (recipe: SavedRecipe) => {
     setRecipes(removeRecipe(recipe.id));
     setNotice({ kind: "removed", recipe });
-    // U-10 (F12): la riga sparisce col focus dentro; lo si porta su «Annulla».
-    requestAnimationFrame(() =>
-      toastRef.current?.querySelector<HTMLElement>(".ds-snackbar__action")?.focus(),
-    );
+    focusAction();
   };
 
   const handleUndo = () => {
@@ -485,20 +553,52 @@ function SavedRecipesSection() {
     closeNotice();
   };
 
-  const handleCopyLink = (recipe: SavedRecipe) => {
+  /* G5-WP-05 (S17-B-15): condividi dove c'è il foglio di sistema, altrimenti
+     copia; se nemmeno la copia riesce (contesto non sicuro, permesso negato)
+     l'errore mostra il link, così si copia a mano. */
+  const handleCopyLink = async (recipe: SavedRecipe, title: string) => {
     const url = new URL(buildSavedRecipeUrl(recipe), window.location.origin).toString();
-    navigator.clipboard?.writeText(url).then(
-      () => setNotice({ kind: "message", text: p.savedRecipeLinkCopied, tone: "default" }),
-      () => undefined,
+    if (canShare) {
+      try {
+        await navigator.share({ title, url });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+    try {
+      if (!navigator.clipboard) throw new Error("clipboard");
+      await navigator.clipboard.writeText(url);
+      setNotice({ kind: "message", text: p.savedRecipeLinkCopied, tone: "default" });
+    } catch {
+      setNotice({ kind: "message", text: t(p.savedRecipeLinkCopyFailed, { url }), tone: "error" });
+    }
+  };
+
+  const startRename = (recipe: SavedRecipe) => {
+    renamingRef.current = recipe.id;
+    setRenameDraft(normalizeRecipeName(recipe.name) ?? "");
+    setRenamingId(recipe.id);
+  };
+
+  const endRename = (id: string, save: boolean) => {
+    if (renamingRef.current !== id) return;
+    renamingRef.current = null;
+    setRenamingId(null);
+    if (save) {
+      if (renameSavedRecipe(id, renameDraft)) setRecipes(loadSavedRecipes());
+      else setNotice({ kind: "message", text: p.savedRecipeRenameFailed, tone: "error" });
+    }
+    requestAnimationFrame(() =>
+      sectionRef.current?.querySelector<HTMLElement>(`[data-rename="${CSS.escape(id)}"]`)?.focus(),
     );
   };
 
   const handleExport = () => {
     const day = new Date().toISOString().slice(0, 10);
-    downloadTextFile(
-      `${BRAND.name.toLowerCase()}-${p.savedRecipesExportFileName}-${day}.json`,
-      exportRecipeBook(),
-    );
+    const filename = `${BRAND.name.toLowerCase()}-${p.savedRecipesExportFileName}-${day}.json`;
+    downloadTextFile(filename, exportRecipeBook());
+    setNotice({ kind: "message", text: t(p.savedRecipesExported, { filename }), tone: "default" });
   };
 
   const handleImport = async (file: File | undefined) => {
@@ -573,6 +673,32 @@ function SavedRecipesSection() {
             const snapshot = r.score != null ? t(se.snapshot, { score: savedFmt.number(r.score) }) : null;
             return (
               <li key={r.id} className="profile-saved-recipes__item">
+                {renamingId === r.id ? (
+                  <form
+                    className="profile-saved-recipes__rename"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      endRename(r.id, true);
+                    }}
+                  >
+                    <input
+                      autoFocus
+                      className="profile-saved-recipes__rename-input"
+                      aria-label={t(p.savedRecipeRenameAria, { name: displayName })}
+                      value={renameDraft}
+                      maxLength={MAX_RECIPE_NAME_LENGTH}
+                      placeholder={styleName}
+                      onChange={(event) => setRenameDraft(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                          event.preventDefault();
+                          endRename(r.id, false);
+                        }
+                      }}
+                      onBlur={() => endRename(r.id, true)}
+                    />
+                  </form>
+                ) : (
                 <Link
                   to={buildSavedRecipeUrl(r)}
                   className="profile-saved-recipes__link"
@@ -597,14 +723,25 @@ function SavedRecipesSection() {
                     )}
                   </span>
                 </Link>
+                )}
                 <button
                   type="button"
-                  onClick={() => handleCopyLink(r)}
+                  data-rename={r.id}
+                  onClick={() => startRename(r)}
                   className="profile-saved-recipes__action"
-                  aria-label={t(p.savedRecipeCopyLinkAria, { name: displayName })}
-                  title={p.savedRecipeCopyLink}
+                  aria-label={t(p.savedRecipeRenameAria, { name: displayName })}
+                  title={p.savedRecipeRename}
                 >
-                  <LinkIcon size={16} aria-hidden="true" />
+                  <Pencil size={16} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleCopyLink(r, displayName)}
+                  className="profile-saved-recipes__action"
+                  aria-label={t(canShare ? p.savedRecipeShareAria : p.savedRecipeCopyLinkAria, { name: displayName })}
+                  title={canShare ? p.savedRecipeShare : p.savedRecipeCopyLink}
+                >
+                  {canShare ? <Share2 size={16} aria-hidden="true" /> : <LinkIcon size={16} aria-hidden="true" />}
                 </button>
                 <button
                   type="button"
@@ -671,11 +808,7 @@ function SavedRecipesSection() {
                 exit={{ opacity: 0, y: 12 }}
                 transition={motionSpring.standard}
                 className="profile-saved-recipes__toast"
-                ref={toastRef}
-                onFocus={() => setNoticePaused(true)}
-                onBlur={() => setNoticePaused(false)}
-                onMouseEnter={() => setNoticePaused(true)}
-                onMouseLeave={() => setNoticePaused(false)}
+                {...toastProps}
               >
                 {notice.kind === "removed" ? (
                   <Snackbar

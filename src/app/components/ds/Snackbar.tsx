@@ -2,9 +2,12 @@
  * ds/Snackbar — T4 notifica transitoria token-driven, context-free.
  *
  * Barra scura con messaggio + azione opzionale. Variante colora l'azione.
+ * G5-WP-05 (S17-B-15): la variante error non si confonde con un successo:
+ * fondo di stato bloccante, icona e role="alert" (lo legge subito).
  * Estratto da SnackbarToastSpec.
  */
 import type { CSSProperties, ReactNode } from "react";
+import { AlertCircle } from "lucide-react";
 
 export interface SnackbarProps {
   message: ReactNode;
@@ -29,12 +32,14 @@ export function Snackbar({
   className,
   style,
 }: SnackbarProps) {
+  const error = variant === "error";
   return (
     <div
-      className={["ds-snackbar", className].filter(Boolean).join(" ")}
-      role="status"
+      className={["ds-snackbar", error ? "ds-snackbar--error" : null, className].filter(Boolean).join(" ")}
+      role={error ? "alert" : "status"}
       style={style}
     >
+      {error && <AlertCircle size={18} aria-hidden="true" className="ds-snackbar__icon" />}
       <span className="ds-snackbar__message">{message}</span>
       {action && (
         <button

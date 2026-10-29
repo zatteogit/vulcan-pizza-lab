@@ -476,7 +476,7 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "pages.profile.settingsSaved": "Guardado · vale para as próximas receitas",
   "pages.profile.ftu-skip-rest": "Pular o resto",
   "pages.profile.ftu-close-later": "Fechar: voltaremos a perguntar mais tarde",
-  "pages.profile.ftu-search-model": "Procure o seu modelo",
+  "pages.profile.ftu-search-model": "Procure seu modelo",
   "pages.profile.utensili-7d6ac61b": "utensílios ",
   "pages.profile.ventilato-c306cb96": "Ventilado",
   "pages.recipe.applyCorrections": "Aplicar as correções",

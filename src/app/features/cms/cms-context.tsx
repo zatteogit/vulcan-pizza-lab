@@ -480,6 +480,14 @@ interface CmsProfile {
   savedRecipeCopyLink: string;
   savedRecipeCopyLinkAria: string;
   savedRecipeLinkCopied: string;
+  savedRecipeLinkCopyFailed: string;
+  savedRecipeShare: string;
+  savedRecipeShareAria: string;
+  savedRecipeRename: string;
+  savedRecipeRenameAria: string;
+  savedRecipeRenameFailed: string;
+  savedRecipesExported: string;
+  favoriteRemoved: string;
   savedRecipeRemoved: string;
   savedRecipeUndo: string;
   savedRecipesImported: string;
@@ -2331,6 +2339,14 @@ export const CMS_DEFAULTS: CmsContent = {
     savedRecipeCopyLink: "Copia link",
     savedRecipeCopyLinkAria: "Copia il link di {name}",
     savedRecipeLinkCopied: "Link copiato",
+    savedRecipeLinkCopyFailed: "Non riesco a copiare il link. Copialo da qui: {url}",
+    savedRecipeShare: "Condividi",
+    savedRecipeShareAria: "Condividi {name}",
+    savedRecipeRename: "Rinomina",
+    savedRecipeRenameAria: "Rinomina {name}",
+    savedRecipeRenameFailed: "Non riesco a salvare il nuovo nome. Riprova.",
+    savedRecipesExported: "File salvato: {filename}",
+    favoriteRemoved: "Stile tolto dai preferiti",
     savedRecipeRemoved: "Ricetta rimossa",
     savedRecipeUndo: "Annulla",
     savedRecipesImported: "Ricette importate: {n}",
