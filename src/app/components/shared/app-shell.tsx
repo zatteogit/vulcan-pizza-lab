@@ -349,6 +349,7 @@ function SidebarRail({
   onAboutOpen: () => void;
 }) {
   const { cms } = useCms();
+  const railPartner = EDITION.partner ? uiMessage("edition.partner", [EDITION.partner.name]) : null;
   return (
     <div className="app-shell-rail">
       {/* Navigation Capsule (Logo + Tabs) */}
@@ -371,12 +372,14 @@ function SidebarRail({
           type="button"
           onClick={onAboutOpen}
           className="app-shell-rail__logo"
-          aria-label={cms.ui.aboutLabel}
+          aria-label={railPartner ? `${cms.ui.aboutLabel} · ${railPartner}` : cms.ui.aboutLabel}
           aria-haspopup="dialog"
         >
           {/* FW-12 (S01-B-05): un solo ciclo, poi fermo (WCAG 2.2.2). */}
           <VulcanHero size={48} energy={35} markRatio={0.46} loops={0} />
         </IconButton>
+        {/* FW-15 (S01-A-02, S18-A-04/B-02): il co-branding resta visibile anche da 768 px. */}
+        {railPartner && <small className="app-shell-rail__partner type-data-sm" aria-hidden="true">{railPartner}</small>}
 
         {/* Tabs */}
         <div className="app-shell-rail__tabs">
@@ -427,8 +430,11 @@ function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
       aria-label={partner ? `${cms.ui.aboutLabel} · ${partner}` : cms.ui.aboutLabel} aria-haspopup="dialog">
       {/* FW-12 (S01-B-05): un solo ciclo, poi fermo (WCAG 2.2.2). */}
       <VulcanHero size={42} energy={45} markRatio={0.5} loops={0} />
-      <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
-      {partner && <span className="app-shell-brand__partner type-data-sm" aria-hidden="true">{partner}</span>}
+      {/* FW-15 (S05-B-21, S18-A-10/B-08): nome e partner in colonna, allineati all'inizio del nome. */}
+      <span className="app-shell-brand__lockup" data-region="brand-lockup">
+        <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
+        {partner && <span className="app-shell-brand__partner type-data-sm" aria-hidden="true">{partner}</span>}
+      </span>
     </IconButton>
   );
 }

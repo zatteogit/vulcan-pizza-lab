@@ -3,7 +3,22 @@ import { Search, X } from "lucide-react";
 import { IconButton } from "../../components/ds/index";
 import { useEscapeLayer } from "../../components/ds/escape-stack";
 import { uiMessage } from "../../i18n/ui-messages";
-import { getOvenModel, searchOvenModels, type OvenFuel, type OvenModel } from "../../data/oven-models";
+import { formatShortList } from "../../i18n/format";
+import {
+  OVEN_CATALOG_FILTERED,
+  OVEN_MODELS,
+  getOvenModel,
+  ovenCatalogBrands,
+  ovenSearchExamples,
+  searchOvenModels,
+  type OvenFuel,
+  type OvenModel,
+} from "../../data/oven-models";
+
+/* FW-15 (S18-A-03/B-04, S16-A-11): segnaposto e stato vuoto dal catalogo
+   attivo. Con pochi modelli (edizione filtrata) la lista si apre al focus,
+   senza dover indovinare cosa scrivere. */
+const SMALL_CATALOG = OVEN_MODELS.length <= 6;
 
 /* ═══ D-048 — «Qual è il tuo forno?» per marca e modello ═══
  * Si scrive marca o modello (es. «Koda 16»), si sceglie dalla lista e il
@@ -51,14 +66,17 @@ export function OvenModelSearch({
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const [announcement, setAnnouncement] = useState("");
-  const results = useMemo(() => searchOvenModels(query), [query]);
+  const [focused, setFocused] = useState(false);
+  const browsing = SMALL_CATALOG && focused && query.trim() === "";
+  const results = useMemo(() => (browsing ? OVEN_MODELS : searchOvenModels(query)), [browsing, query]);
   const selected = getOvenModel(selectedId);
-  const expanded = query.trim() !== "";
+  const expanded = query.trim() !== "" || browsing;
   const optionId = (index: number) => `${listId}-option-${index}`;
 
   const close = () => {
     setQuery("");
     setActiveIndex(-1);
+    setFocused(false);
   };
   useEscapeLayer(expanded, close);
 
@@ -83,9 +101,12 @@ export function OvenModelSearch({
     }
   };
 
+  const noneText = OVEN_CATALOG_FILTERED
+    ? uiMessage("features.profile.oven-model-search.noneEdition", [formatShortList(ovenCatalogBrands())])
+    : uiMessage("features.profile.oven-model-search.none");
   const status = expanded
     ? results.length === 0
-      ? uiMessage("features.profile.oven-model-search.none")
+      ? noneText
       : uiMessage("features.profile.oven-model-search.count", [results.length])
     : announcement;
 
@@ -140,7 +161,9 @@ export function OvenModelSearch({
             setAnnouncement("");
           }}
           onKeyDown={handleKeyDown}
-          placeholder={uiMessage("features.profile.oven-model-search.placeholder")}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          placeholder={uiMessage("features.profile.oven-model-search.placeholderFrom", [formatShortList(ovenSearchExamples())])}
           autoComplete="off"
           className="oven-model-search__input"
         />
@@ -148,7 +171,7 @@ export function OvenModelSearch({
       <p className="sr-only" role="status">{status}</p>
       {expanded && results.length === 0 && (
         <p className="oven-model-search__empty" aria-hidden="true">
-          {uiMessage("features.profile.oven-model-search.none")}
+          {noneText}
         </p>
       )}
       {expanded && results.length > 0 && (

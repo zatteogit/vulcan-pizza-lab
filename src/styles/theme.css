@@ -15534,6 +15534,366 @@
     color: var(--text-muted);
   }
 
+  /* ═══ FW-15 — Informazioni, edizione, «Metodo e fonti» ═══
+     Righe-link del dialog Informazioni e del tab App (about-links.tsx), blocco
+     dell'edizione, pagina /learn/metodo, co-branding nella barra laterale e
+     nell'onboarding. Solo token del DS. */
+  .about-edition,
+  .about-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+    text-align: start;
+  }
+
+  .about-edition {
+    padding: var(--space-4);
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-lg);
+    background: var(--container-bg-low);
+  }
+
+  .about-edition__title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-semibold);
+    color: var(--text-default);
+  }
+
+  .about-edition__text,
+  .about-links__note {
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .about-edition__text {
+    font-size: var(--font-size-xl);
+  }
+
+  .about-links__list {
+    display: flex;
+    flex-direction: column;
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .about-links__list > li + li {
+    border-top: var(--border-width-thin) solid var(--container-border);
+  }
+
+  .about-links__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    width: 100%;
+    min-height: var(--dimension-fixed-046);
+    padding: var(--space-3) var(--space-4);
+    border: 0;
+    background: transparent;
+    color: var(--text-default);
+    font: inherit;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .about-links__row:hover {
+    background: var(--container-bg-low);
+  }
+
+  .about-links__row:focus-visible,
+  .about-links__inline:focus-visible,
+  .method-page__link:focus-visible {
+    outline: var(--border-width-strong) solid var(--ring);
+    outline-offset: var(--space-0);
+  }
+
+  .about-links__row [data-region="row-text"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-0);
+  }
+
+  .about-links__label {
+    font-weight: var(--weight-semibold);
+  }
+
+  .about-links__hint {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .about-links__chevron {
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+
+  .about-links__inline {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--dimension-fixed-046);
+    color: var(--text-accent);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .app-shell-rail__partner {
+    max-width: 100%;
+    margin-top: calc(-1 * var(--space-3));
+    margin-bottom: var(--space-4);
+    padding-inline: var(--space-1);
+    color: var(--text-muted);
+    text-align: center;
+    line-height: var(--leading-tight);
+    overflow-wrap: anywhere;
+  }
+
+  .app-shell-brand__lockup {
+    display: grid;
+    justify-items: start;
+    line-height: var(--leading-tight);
+  }
+
+  .app-shell-brand__lockup .app-shell-brand__partner {
+    align-self: auto;
+  }
+
+  .profile-ftu__edition-oven {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--container-bg-low);
+    color: var(--text-default);
+    line-height: var(--leading-normal);
+  }
+
+  .profile-ftu__edition-oven [data-region="neutrality"] {
+    color: var(--text-muted);
+  }
+
+  .profile-ftu__option-model {
+    color: var(--text-default);
+    font-weight: var(--weight-medium);
+  }
+
+  .method-page {
+    min-height: var(--dimension-viewport-height-full);
+    background: var(--container-page);
+    color: var(--text-default);
+  }
+
+  .method-page__shell {
+    max-width: var(--measure-lg);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+    padding-block: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .method-page__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .method-page__toc {
+    padding: var(--space-4);
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-lg);
+    background: var(--container-bg-low);
+  }
+
+  .method-page__toc-title {
+    margin-bottom: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+  }
+
+  .method-page__toc-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+  }
+
+  .method-page__link {
+    color: var(--text-accent);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .method-page__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    scroll-margin-top: var(--space-20);
+  }
+
+  .method-page__lead,
+  .method-page__item-meta {
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .method-page__how {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-inline-start: var(--space-5);
+    list-style: decimal;
+    line-height: var(--leading-cozy);
+  }
+
+  ul.method-page__how {
+    list-style: disc;
+  }
+
+  .method-page__legend {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .method-page__legend-item {
+    display: grid;
+    grid-template-columns: minmax(var(--space-24), auto) 1fr;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .method-page__legend-item dd {
+    color: var(--text-muted);
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-normal);
+  }
+
+  .method-page__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .method-page__group-title {
+    margin-top: var(--space-2);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-semibold);
+  }
+
+  .method-note,
+  .method-source {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-lg);
+    background: var(--container-bg);
+    scroll-margin-top: var(--space-20);
+  }
+
+  .method-note__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .method-note__title {
+    font-size: var(--font-size-2-5xl);
+    font-weight: var(--weight-semibold);
+  }
+
+  .method-note__l1 {
+    line-height: var(--leading-cozy);
+  }
+
+  .method-note__facts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-top: var(--space-2);
+  }
+
+  .method-note__facts dt {
+    margin-top: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+  }
+
+  .method-note__facts dd {
+    line-height: var(--leading-normal);
+  }
+
+  .method-note__formula {
+    font-family: var(--font-mono);
+    overflow-wrap: anywhere;
+    hyphens: manual;
+    font-size: var(--font-size-xl);
+  }
+
+  .method-page__cites {
+    color: var(--text-muted);
+    line-height: var(--leading-cozy);
+  }
+
+  .method-note__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-inline-start: var(--space-5);
+    list-style: disc;
+  }
+
+  .method-note__source {
+    overflow-wrap: anywhere;
+  }
+
+  .method-note__source .badge-base {
+    margin-inline-start: var(--space-2);
+  }
+
+  .method-page__items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .method-page__items > li:not(.method-source) {
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border-width-thin) solid var(--container-border);
+  }
+
+  .method-page__item-text {
+    line-height: var(--leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  .method-page__item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  @media (min-width: 640px) {
+    .method-page__shell {
+      padding-inline: var(--space-8);
+      padding-block: var(--space-12);
+    }
+  }
+  /* ═══ /FW-15 ═══ */
+
   /* ═══ COMPONENT: style-detail-sheet (ondata 4) ═══ */
   /* ═══ COMPONENT: style-detail-sheet ═══ */
 

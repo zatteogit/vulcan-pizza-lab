@@ -28,6 +28,7 @@ export const PRODUCT_ENTRY_FILES = [
   "src/app/pages/glossary.tsx",
   "src/app/pages/troubleshooting.tsx",
   "src/app/pages/pre-ferments.tsx",
+  "src/app/pages/method.tsx",
   "src/app/pages/profile.tsx",
   "src/app/pages/recipe.tsx",
   "src/app/pages/not-found.tsx",

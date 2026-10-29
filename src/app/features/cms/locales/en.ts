@@ -771,7 +771,7 @@ export const EN_LOCALE: CmsContent = {
     versionsHint: "Each version has its own reference ranges. The control markers show the selected version’s ranges.",
     learnHeroTitle1: "Understand your dough,",
     learnHeroTitle2: "make better pizza.",
-    learnHeroSubtitle: "Techniques, ingredients and baking: learn what to look for and what to change.",
+    learnHeroSubtitle: "Terms, problems, preferments and how we calculate: learn what to look for and what to change.",
     learnResources: "Resources",
     kitchenTempLabel: "Kitchen temperature",
     kitchenTempDown: "Lower kitchen temperature",
@@ -1834,7 +1834,7 @@ export const EN_LOCALE: CmsContent = {
     learnSubtitle:
       "Understand the dough, choose your techniques and learn what to look for.",
     learnGlossary: "Glossary",
-    learnGlossaryDesc: "Dough terminology, explained with examples and references.",
+    learnGlossaryDesc: "Dough terminology, with formulas and typical values.",
     learnTroubleshooting: "Problems & Solutions",
     learnTroubleshootingDesc:
       "Identify the problem and find what to change.",

@@ -574,7 +574,7 @@ export const DE_LOCALE: CmsContent = {
     versionsHint: "Jede Variante hat eigene Richtbereiche. Die Markierungen zeigen die Bereiche der gewählten Variante.",
     learnHeroTitle1: "Verstehe deinen Teig,",
     learnHeroTitle2: "backe bessere Pizza.",
-    learnHeroSubtitle: "Techniken, Zutaten und Backen: lerne, worauf du achten und was du ändern kannst.",
+    learnHeroSubtitle: "Begriffe, Probleme, Vorteige und wie wir rechnen: lerne, worauf du achten und was du ändern kannst.",
     learnResources: "Ressourcen",
     kitchenTempLabel: "Küchentemperatur",
     kitchenTempDown: "Küchentemperatur senken",
@@ -1649,7 +1649,7 @@ export const DE_LOCALE: CmsContent = {
     learnSubtitle:
       "Verstehe den Teig, wähle Techniken und lerne, Veränderungen zu erkennen.",
     learnGlossary: "Glossar",
-    learnGlossaryDesc: "Teigbegriffe mit Beispielen und Erläuterungen.",
+    learnGlossaryDesc: "Teigbegriffe mit Formeln und typischen Werten.",
     learnTroubleshooting: "Probleme & L\u00F6sungen",
     learnTroubleshootingDesc:
       "Erkenne das Problem und finde die passende Korrektur.",
