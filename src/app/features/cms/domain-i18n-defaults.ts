@@ -545,7 +545,7 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "equivalent-hours": {
       title: "Ore equivalenti",
       l1: "Le tue ore tradotte nelle ore che servirebbero alla temperatura di riferimento.",
-      l2: "Moltiplichiamo le ore per la velocità alla tua temperatura. Se fermenti più al fresco del riferimento (frigo, cantina), l'appretto finale si fa alla temperatura di riferimento: quelle ore contano così come sono e solo le altre si moltiplicano. Per questo il conto «ore × velocità» da solo non torna.",
+      l2: "Moltiplichiamo le ore per la velocità alla tua temperatura. Se fermenti più al fresco del riferimento (frigo, cantina), l'appretto finale e le pieghe prima del frigo si fanno alla temperatura di riferimento: quelle ore contano così come sono e solo le altre si moltiplicano. Per questo il conto «ore × velocità» da solo non torna.",
     },
     "kitchen-temp-default": {
       title: "Temperatura della cucina",
@@ -677,6 +677,17 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
       l1: "Le soglie numeriche dei problemi sono indicative.",
       l2: "Sono regole pratiche senza una fonte pubblicata e non tengono conto dello stile: un impasto in teglia, per esempio, è molto più idratato di una napoletana. Usale come spunto, non come diagnosi.",
     },
+    /* FW-19: piano temporale. */
+    "comfort-tolerances": {
+      title: "Margini della Timeline comoda",
+      l1: "I margini con cui la Timeline comoda sposta le attese sono una nostra scelta, non una misura.",
+      l2: "Allunghiamo o accorciamo le attese dentro margini fissi, più larghi in frigo che a temperatura ambiente, senza spostare ore dal frigo all'ambiente e senza ricalcolare il lievito. Più ti allontani dal piano di partenza, più conta guardare il volume dell'impasto.",
+    },
+    "bake-round-recovery": {
+      title: "Recupero del forno fra le cotture",
+      l1: "Il tempo fra una cottura e l'altra è un'ipotesi del modello.",
+      l2: "Fra una pizza e l'altra si sforna, si inforna e la platea torna in temperatura: nel forno di casa con la pietra servono minuti, nei forni da pizza meno, in quelli a legna quasi niente. Usiamo un valore fisso per tipo di forno, non misurato sul tuo.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "La temperatura resta costante per tutta la fase.",
@@ -697,5 +708,9 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "oven-power-steps": "Una potenza tipica per fascia di temperatura, uguale per ogni combustibile.",
     "no-health-claim": "Nessuna affermazione sulla salute: l'indice non misura la digestione di una persona.",
     "thresholds-rules-of-thumb": "Le soglie sono regole pratiche generali, non tarate sullo stile.",
+    /* FW-19: piano temporale. */
+    "comfort-margins-rule-of-thumb": "I margini, più larghi in frigo che a temperatura ambiente, sono regole pratiche senza fonte.",
+    "comfort-yeast-unchanged": "La dose di lievito resta quella calcolata per il piano di partenza.",
+    "recovery-by-oven-type": "Il recupero dipende solo dal tipo di forno, non dal modello né dalla superficie.",
   },
 };

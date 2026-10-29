@@ -674,7 +674,7 @@ export const SCIENCE_FR: CmsScience = {
     "equivalent-hours": {
       title: "Heures équivalentes",
       l1: "Vos heures traduites en heures nécessaires à la température de référence.",
-      l2: "Nous multiplions les heures par la vitesse à votre température. Si vous fermentez plus au frais que la référence (réfrigérateur, cave), l'apprêt final se fait à la température de référence : ces heures comptent telles quelles et seules les autres sont multipliées. C'est pourquoi « heures × vitesse » seul ne tombe pas juste.",
+      l2: "Nous multiplions les heures par la vitesse à votre température. Si vous fermentez plus au frais que la référence (réfrigérateur, cave), l'apprêt final et les plis avant le frigo se font à la température de référence : ces heures comptent telles quelles et seules les autres sont multipliées. C'est pourquoi « heures × vitesse » seul ne tombe pas juste.",
     },
     "kitchen-temp-default": {
       title: "Température de la cuisine",
@@ -806,6 +806,17 @@ export const SCIENCE_FR: CmsScience = {
       l1: "Les seuils chiffrés des problèmes sont indicatifs.",
       l2: "Ce sont des règles empiriques sans source publiée, qui ne tiennent pas compte du style : une pâte en plaque, par exemple, est bien plus hydratée qu'une napolitaine. Utilisez-les comme piste, pas comme diagnostic.",
     },
+    /* FW-19: piano temporale. */
+    "comfort-tolerances": {
+      title: "Marges de la timeline confortable",
+      l1: "Les marges avec lesquelles la timeline confortable déplace les attentes sont notre choix, pas une mesure.",
+      l2: "Nous allongeons ou raccourcissons les attentes dans des marges fixes, plus larges au frigo qu'à température ambiante, sans déplacer d'heures du frigo vers la température ambiante et sans recalculer la levure. Plus vous vous éloignez du planning de départ, plus il faut vous fier au volume de la pâte.",
+    },
+    "bake-round-recovery": {
+      title: "Remontée du four entre les cuissons",
+      l1: "Le temps entre deux cuissons est une hypothèse du modèle.",
+      l2: "Entre deux pizzas, on défourne, on enfourne et la sole remonte en température : un four domestique avec pierre a besoin de quelques minutes, un four à pizza de moins, un four à bois presque de rien. Nous utilisons une valeur fixe par type de four, non mesurée sur le vôtre.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "La température reste constante pendant toute la phase.",
@@ -826,5 +837,9 @@ export const SCIENCE_FR: CmsScience = {
     "oven-power-steps": "Une puissance type par tranche de température, la même pour chaque combustible.",
     "no-health-claim": "Aucune allégation de santé : l'indice ne mesure pas la digestion d'une personne.",
     "thresholds-rules-of-thumb": "Les seuils sont des règles empiriques générales, non ajustées au style.",
+    /* FW-19: piano temporale. */
+    "comfort-margins-rule-of-thumb": "Les marges, plus larges au frigo qu'à température ambiante, sont des règles pratiques sans source.",
+    "comfort-yeast-unchanged": "La dose de levure reste celle calculée pour le planning de départ.",
+    "recovery-by-oven-type": "La remontée dépend seulement du type de four, ni du modèle ni de la surface.",
   },
 };

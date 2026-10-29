@@ -8,8 +8,9 @@ import { ToppingSection } from "./topping-section";
 import { ProcedureHeroControls } from "./procedure-hero";
 import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
-import { addMinutes, countNightActives, localizeStep, stepQuantities, optimizeComfort,
-  defaultMealStart, startForDeadline, readyTimeForDisplay, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
+import { addMinutes, localizeStep, stepQuantities,
+  startForDeadline, readyTimeForDisplay, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
+import { defaultMealStart, nightActions, optimizeComfort, recipeFingerprint } from "../../use-cases/cook-plan";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { PrintSheet, type PrintSections } from "./print-sheet";
@@ -216,7 +217,8 @@ export function RecipeOutput({
       const eatingTime = new Date(mealTargetAt ?? Date.now() + constraints.available_hours * 3600_000);
       return startForDeadline(eatingTime, totalDurationMinStatic);
     }
-    return defaultMealStart(totalDurationMinStatic);
+    // FW-19 (S09-A-04): il primo pasto il cui piano non chiede azioni di notte.
+    return defaultMealStart(recipe.timeline);
   });
 
   const [editingTime, setEditingTime] = useState(false);
@@ -384,14 +386,26 @@ export function RecipeOutput({
           longDesc: loc.longDesc,
           quantities: stepQuantities(step.id, recipe, cms, fmt),
           tip: loc.tip ? (isNerd ? loc.tip.nerd : loc.tip.beginner) : undefined,
-          duration_minutes: step.duration_minutes,
+          /* FW-19 (S10-A-03): la durata pianificata, con le estensioni della
+             Timeline comoda: il primo «Fatto» non deve cancellarle. */
+          duration_minutes: effDuration(i),
           startMs: (stepTimes[i]?.start ?? startTime).getTime(),
           endMs: (stepTimes[i]?.end ?? startTime).getTime(),
           flexible: FLEXIBLE_STEP_IDS.has(step.id),
+          ...(step.rounds && step.round_seconds
+            ? { rounds: step.rounds, roundSec: step.round_seconds, ...(step.recovery_seconds ? { recoverySec: step.recovery_seconds } : {}) }
+            : {}),
         };
       }),
-    [recipe, cms, isNerd, stepTimes, startTime],
+    [recipe, cms, isNerd, stepTimes, startTime, effDuration],
   );
+  /* FW-19 (S10-B-21): impronta di ciò che si cucina (passi, testi, dosi e
+     durate, non gli orari): se cambia, «Inizia» lo dice. */
+  const recipeKey = React.useMemo(
+    () => recipeFingerprint(cookingSteps.flatMap((s) => [s.id, s.duration_minutes, s.description, ...(s.quantities ?? []).map((q) => `${q.label}=${q.value}`)])),
+    [cookingSteps],
+  );
+  const [confirmChanged, setConfirmChanged] = useState(false);
 
   /* Un solo punto di verità per "inizia/riprendi pizzata":
      - stessa ricetta già in corso → riapri la modalità cucina
@@ -400,15 +414,16 @@ export function RecipeOutput({
   const handleStartCooking = React.useCallback(() => {
     if (recipe.verdict.outcome === "not_feasible" && !isThisSession) return;
     if (isThisSession) {
-      openOverlay();
+      if (session?.recipeKey && session.recipeKey !== recipeKey) setConfirmChanged(true);
+      else openOverlay();
     } else if (!isPersonalized) {
       setConfirmPersonalize(true);
     } else if (conflictingSession) {
       setConfirmReplace(true);
     } else {
-      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level));
+      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level), recipeKey);
     }
-  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps]);
+  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps, session?.recipeKey, recipeKey]);
 
   React.useEffect(() => {
     const handler = () => handleStartCooking();
@@ -429,8 +444,9 @@ export function RecipeOutput({
     if (recipe.verdict.outcome === "not_feasible") return;
     setConfirmReplace(false);
     setConfirmPersonalize(false);
-    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level));
-  }, [startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps]);
+    setConfirmChanged(false);
+    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level), recipeKey);
+  }, [startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps, recipeKey]);
 
   const handlePersonalizeBeforeCooking = React.useCallback(() => {
     setConfirmPersonalize(false);
@@ -636,6 +652,32 @@ export function RecipeOutput({
         ]}
       />
 
+      {/* FW-19 (S10-B-21): la pizzata in corso è di questo stile, ma la
+          ricetta nel frattempo è cambiata (panetti, dosi, tempi). */}
+      <ConfirmDialog
+        open={confirmChanged}
+        onDismiss={() => setConfirmChanged(false)}
+        ariaLabel={uiMessage("cooking.changed.title")}
+        icon={<Flame size={26} />}
+        title={uiMessage("cooking.changed.title")}
+        body={uiMessage("cooking.changed.body", [session?.styleName ?? ""])}
+        actions={[
+          {
+            label: uiMessage("cooking.changed.restart"),
+            onClick: confirmStartCooking,
+            variant: "cta",
+          },
+          {
+            label: uiMessage("cooking.changed.resume"),
+            onClick: () => {
+              setConfirmChanged(false);
+              openOverlay();
+            },
+            variant: "secondary",
+          },
+        ]}
+      />
+
       {/* ── Promemoria: la ricetta canonica non è ancora adattata ── */}
       <ConfirmDialog
         open={confirmPersonalize}
@@ -819,7 +861,7 @@ export function RecipeOutput({
           handleEndTimeInput={handleEndTimeInput}
           mealSlots={mealSlots}
           comfortToggled={comfortToggled}
-          nightActivesLeft={countNightActives(recipe.timeline, startTime.getTime(), stretch)}
+          nightActionsLeft={nightActions(recipe.timeline, startTime.getTime(), stretch)}
           setComfortToggled={setComfortToggled}
           currentComfortPlan={currentComfortPlan}
           preComfortStart={preComfortStart}

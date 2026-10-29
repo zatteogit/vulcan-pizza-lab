@@ -758,8 +758,8 @@ export const DE_LOCALE: CmsContent = {
     "learn.compatiblePath": "Ein praktischer Lernpfad passend zu deiner Küche: die Rezeptbedingungen prüfen.",
     "learn.theoryOnly": "Keine geprüfte Rezeptur passt zu diesen Vorgaben. Entdecke die Theorie.",
     "learn.openTheory": "Theorie entdecken",
-    "timeline.preheat.includesProof": "Dieser Block enthält {minutes} Minuten Stückgare, die bereits in der Gesamtzeit enthalten sind: nicht erneut addieren.",
-    "timeline.preheat.includesRest": "Dieser Block enthält {minutes} Minuten Ruhezeit, die bereits in der Gesamtzeit enthalten sind: nicht erneut addieren.",
+    "timeline.preheat.includesProof": "Wenn der Ofen bereit ist, prüfe den Teig: Drückst du mit dem Finger hinein, kommt die Delle langsam zurück.",
+    "timeline.preheat.includesProofOil": "Wenn das Öl auf Temperatur ist, prüfe den Teig: Drückst du mit dem Finger hinein, kommt die Delle langsam zurück.",
     "auth.hydrationOff":
       "Hydration außerhalb der Mitte (-{penalty}%)",
     "auth.wOutOfRange":
@@ -1083,7 +1083,7 @@ export const DE_LOCALE: CmsContent = {
     "timeline.bake.title": "Backen",
     "timeline.bake.desc": "Backe bei {temp}.",
     "timeline.bake.rounds": "{n} Backvorgänge zu je {sec}, einer nach dem anderen.",
-    "timeline.bake.tipBeginner": "Der Ofen muss sehr heiß sein. Heize mindestens 30 Minuten vorher vor.",
+    "timeline.bake.tipBeginner": "Sie ist fertig, wenn der Rand goldbraun ist und der Boden beim Anheben mit dem Schieber trocken ist und ein paar dunkle Punkte hat.",
     "timeline.bake.tipNerd": "Die Maillard-Reaktion beginnt bei ~140°C und beschleunigt sich exponentiell. Bei {temp} entstehen durch die Karamellisierung ~600 Aromastoffe.",
     "timeline.topPost.title": "Belag nach dem Backen",
     "timeline.topPost.desc": "Gib die kalten Zutaten direkt auf die gebackene Oberfläche.",
@@ -1103,7 +1103,19 @@ export const DE_LOCALE: CmsContent = {
     "dig.fodmapReduced": "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
     "dig.fodmapHighReduction": "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
     "hint.yeastPrecisionScale": "Eine Waage mit 0,01 g Auflösung verwenden",
-    "timeline.batchModel": "Geschätzte Zeiten für eine Person: alle Stücke formen und belegen, danach einzeln backen. Zeitversetztes Servieren; keine parallelen Arbeiten angenommen.",
+    "timeline.batchModel": "Geschätzte Zeiten für eine Person: alle Stücke formen und belegen, danach einzeln backen, mit der Erholzeit des Ofens dazwischen (Schätzung). Zeitversetztes Servieren; keine parallelen Arbeiten angenommen.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Falten",
+    "timeline.folds.desc": "Mache {count} Falt-Runden im Abstand von {interval}; den Teig dazwischen abdecken.",
+    "timeline.folds.descCold": "Mache {count} Falt-Runden im Abstand von {interval}, den Teig abgedeckt bei Raumtemperatur. Nach der letzten Runde den Behälter in den Kühlschrank stellen.",
+    "timeline.folds.tipBeginner": "Hände anfeuchten, einen Teiglappen greifen, nach oben ziehen und zur Mitte falten; den Behälter drehen und auf allen vier Seiten wiederholen. Zwischen den Runden abdecken.",
+    "timeline.folds.tipNerd": "Falten richten die Glutenstränge aus, dehnen sie und verteilen die Gase neu: Sie geben Kraft ohne mechanische Arbeit.",
+    "timeline.bake.recovery": "Rechne zwischen zwei Backvorgängen mit etwa {sec} zum Herausholen und Einschießen, damit der Ofen wieder auf Temperatur kommt.",
+    "timelineComfort.nightNoPlan": "Schritte in der Nacht: {n}, der erste um {time}. Wähle oben eine Mahlzeit.",
+    "timelineComfort.nightNoPlanNoMeal": "Schritte in der Nacht: {n}, der erste um {time}. Verschiebe den Start mit den Tasten oben.",
+    "timelineComfort.doseNote": "Die Zeiten ändern sich, die Hefe nicht: Richte dich nach dem Teigvolumen, nicht nach der Uhr.",
+    "timelineComfort.whyTitle": "Warum geht das?",
+    "timelineComfort.whyBody": "Wir verlängern oder verkürzen nur die Wartezeiten, jede innerhalb eines Spielraums: im Kühlschrank bis +{coldPlusPct} (höchstens {coldPlus}) oder −{coldMinusPct} (höchstens {coldMinus}); bei Raumtemperatur, Stückgare inklusive, bis +{roomPlusPct} (höchstens {roomPlus}) oder −{roomMinusPct} (höchstens {roomMinus}). Wir verschieben keine Stunden vom Kühlschrank zur Raumtemperatur und berechnen die Hefe nicht neu. Diese Spielräume sind von uns gewählte Faustregeln, keine Messungen: Deshalb zählt das Volumen.",
   },
   scienceLabels: {
     yeastBaker: "B\u00E4ckerhefe",
@@ -1149,7 +1161,7 @@ export const DE_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "Mischen",
-      desc: "Ohne Kneten mischen, bis keine trockenen Klümpchen bleiben. Dann 3 Runden Dehnen & Falten im Abstand von ~30 Min.",
+      desc: "Ohne Kneten mischen, bis keine trockenen Klümpchen bleiben. Den Rest erledigen die Falt-Runden und die Zeit.",
       tipBeginner:
         "Kein Kneten n\u00F6tig! Mit einem Spatel mischen, bis keine trockenen Mehlklumpen mehr vorhanden sind.",
       tipNerd:
@@ -1163,7 +1175,7 @@ export const DE_LOCALE: CmsContent = {
         "Der Teig sollte sein Volumen verdoppeln. Bei W\u00E4rme h\u00E4ufiger kontrollieren!",
       tipNerd:
         "Bei {temp} schätzt das Modell eine Gärgeschwindigkeit von {factor}× gegenüber {refTemp}. Das misst weder FODMAP-Reduktion noch Verträglichkeit.",
-      longDesc: "Der Teig ruht als ein St\u00FCck in einem ge\u00F6lten Beh\u00E4lter, direkt mit Folie abgedeckt. In dieser Phase arbeitet die Hefe und entwickelt Aroma, Struktur und Bek\u00F6mmlichkeit. Bei hoher Hydratation machst du in den ersten 2 Stunden 2-3 St\u00E4rkungsfalten (Stretch & Fold): einen Teiglappen anheben, nach oben ziehen und zur Mitte falten, den Beh\u00E4lter drehen und f\u00FCr alle 4 Seiten wiederholen. Die G\u00E4rung ist abgeschlossen, wenn sich das Volumen verdoppelt hat und die Oberfl\u00E4che gew\u00F6lbt und glatt ist.",
+      longDesc: "Der Teig ruht als ein Stück in einem geölten Behälter, direkt mit Folie abgedeckt. In dieser Phase arbeitet die Hefe und entwickelt Aroma, Struktur und Bekömmlichkeit. Wenn der Stil Falt-Runden vorsieht, stehen Anzahl und Abstand in einem eigenen Schritt oder Tipp. Die Gärung ist abgeschlossen, wenn sich das Volumen verdoppelt hat und die Oberfläche gewölbt und glatt ist.",
     },
     bulk_cold: {
       title: "Stockgare",
@@ -1172,7 +1184,7 @@ export const DE_LOCALE: CmsContent = {
         "Im K\u00FChlschrank w\u00E4chst der Teig langsam, gewinnt aber an Geschmack. Gut mit Kontaktfolie abdecken.",
       tipNerd:
         "Bei {temp} schätzt das Modell eine Gärgeschwindigkeit von {factor}× gegenüber {refTemp}. Das misst weder FODMAP-Reduktion noch Verträglichkeit.",
-      longDesc: "Stell den Beh\u00E4lter mit dem Teig in den K\u00FChlschrank ({fridgeTemp}). Im K\u00FChlschrank arbeitet die Hefe viel langsamer: Es dauert deutlich l\u00E4nger, daf\u00FCr gewinnst du Aromakomplexit\u00E4t, Bek\u00F6mmlichkeit und ein besser entwickeltes Glutennetz. Immer direkt mit Folie abdecken, damit die Oberfl\u00E4che nicht austrocknet. Wenn du ihn herausnimmst, lass ihn vor dem Teilen 1-2 Stunden bei Raumtemperatur akklimatisieren.",
+      longDesc: "Stell den Behälter mit dem Teig in den Kühlschrank ({fridgeTemp}). Im Kühlschrank arbeitet die Hefe viel langsamer: Es dauert deutlich länger, dafür gewinnst du Aromakomplexität, Bekömmlichkeit und ein besser entwickeltes Glutennetz. Immer direkt mit Folie abdecken, damit die Oberfläche nicht austrocknet. Du kannst ihn gleich nach dem Herausnehmen teilen: Er akklimatisiert sich während der Stückgare.",
     },
     rest: {
       title: "Ruhezeit",
@@ -1873,7 +1885,6 @@ export const DE_LOCALE: CmsContent = {
       "Die Mengen gelten für eine Pizza oder Einheit. Die Zutaten stehen in der Reihenfolge der Zugabe.",
     toppingPerUnit: "{amount} pro {unit}",
     durationLabel: "Dauer: {duration}",
-    comfortLabel: "{duration} komfortabel",
     totalDuration: "{duration} gesamt",
     finalDoughStageTitle: "Hauptteig",
     rule55Title: "Wassertemperatur",

@@ -790,7 +790,7 @@ export const SCIENCE_EN: CmsScience = {
     "equivalent-hours": {
       title: "Equivalent hours",
       l1: "Your hours translated into the hours needed at the reference temperature.",
-      l2: "We multiply the hours by the speed at your temperature. If you ferment cooler than the reference (fridge, cellar), the final proof happens at the reference temperature: those hours count as they are and only the others are multiplied. That is why «hours × speed» alone does not add up.",
+      l2: "We multiply the hours by the speed at your temperature. If you ferment cooler than the reference (fridge, cellar), the final proof and the folds before the fridge happen at the reference temperature: those hours count as they are and only the others are multiplied. That is why «hours × speed» alone does not add up.",
     },
     "kitchen-temp-default": {
       title: "Kitchen temperature",
@@ -922,6 +922,17 @@ export const SCIENCE_EN: CmsScience = {
       l1: "The numeric thresholds in troubleshooting are indicative.",
       l2: "They are rules of thumb without a published source and they ignore the style: a pan dough, for example, is much wetter than a Neapolitan. Use them as a hint, not a diagnosis.",
     },
+    /* FW-19: piano temporale. */
+    "comfort-tolerances": {
+      title: "Comfort timeline margins",
+      l1: "The margins the comfort timeline uses to move the waits are our choice, not a measurement.",
+      l2: "We lengthen or shorten the waits within fixed margins, wider in the fridge than at room temperature, without moving hours from the fridge to room temperature and without recalculating the yeast. The further you move from the starting plan, the more you should go by the dough's volume.",
+    },
+    "bake-round-recovery": {
+      title: "Oven recovery between bakes",
+      l1: "The time between one bake and the next is a model assumption.",
+      l2: "Between pizzas you unload, load and the floor comes back to temperature: a home oven with a stone needs minutes, pizza ovens less, wood-fired ovens almost none. We use a fixed value per oven type, not measured on yours.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "The temperature stays constant for the whole phase.",
@@ -942,5 +953,9 @@ export const SCIENCE_EN: CmsScience = {
     "oven-power-steps": "A typical power for each temperature band, the same for every fuel.",
     "no-health-claim": "No health claim: the index does not measure how a person digests.",
     "thresholds-rules-of-thumb": "The thresholds are general rules of thumb, not tuned to the style.",
+    /* FW-19: piano temporale. */
+    "comfort-margins-rule-of-thumb": "The margins, wider in the fridge than at room temperature, are rules of thumb without a source.",
+    "comfort-yeast-unchanged": "The yeast dose stays the one calculated for the starting plan.",
+    "recovery-by-oven-type": "Recovery depends only on the oven type, not on the model or the surface.",
   },
 };

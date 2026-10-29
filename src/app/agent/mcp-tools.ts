@@ -329,6 +329,9 @@ function recipeData(recipe: GeneratedRecipe) {
       duration_minutes: step.duration_minutes,
       // D-050: cotture ripetute una alla volta; la durata è già il totale.
       ...(step.rounds ? { rounds: step.rounds } : {}),
+      // FW-19: secondi di un giro e recupero del forno fra due giri (ipotesi), già nel totale.
+      ...(step.round_seconds ? { round_seconds: step.round_seconds } : {}),
+      ...(step.recovery_seconds ? { recovery_seconds: step.recovery_seconds } : {}),
       ...(step.parallel_activity ? { parallel_activity: step.parallel_activity } : {}),
       ...(step.work_units ? { work_units: step.work_units, minutes_per_unit: step.minutes_per_unit } : {}),
     })),

@@ -768,8 +768,8 @@ export const PT_LOCALE: CmsContent = {
     "learn.compatiblePath": "Um percurso prático compatível com a sua cozinha: verifique as condições da receita.",
     "learn.theoryOnly": "Não há receita verificada para estas condições; explore a teoria.",
     "learn.openTheory": "Explore a teoria",
-    "timeline.preheat.includesProof": "Este bloco inclui {minutes} minutos de fermentação final, já contabilizados no tempo total: não os some novamente.",
-    "timeline.preheat.includesRest": "Este bloco inclui {minutes} minutos de repouso, já contabilizados no tempo total: não os some novamente.",
+    "timeline.preheat.includesProof": "Quando o forno estiver pronto, verifique a massa: ao pressionar com um dedo, a marca volta devagar.",
+    "timeline.preheat.includesProofOil": "Quando o óleo estiver na temperatura, verifique a massa: ao pressionar com um dedo, a marca volta devagar.",
     "auth.hydrationOff":
       "Hidratação fora do centro (-{penalty}%)",
     "auth.wOutOfRange":
@@ -1102,7 +1102,7 @@ export const PT_LOCALE: CmsContent = {
     "timeline.bake.title": "Cocção",
     "timeline.bake.desc": "Asse a {temp}.",
     "timeline.bake.rounds": "{n} assamentos de {sec}, um de cada vez.",
-    "timeline.bake.tipBeginner": "O forno precisa estar bem quente. Pré-aqueça pelo menos 30 minutos antes.",
+    "timeline.bake.tipBeginner": "Está pronta quando a borda está dourada e, ao levantá-la com a pá, a base está seca e com alguns pontinhos escuros.",
     "timeline.bake.tipNerd": "A reação de Maillard começa a ~140°C e acelera exponencialmente. A {temp}, a caramelização cria ~600 compostos aromáticos.",
     "timeline.topPost.title": "Cobertura pós-forno",
     "timeline.topPost.desc": "Coloque as coberturas frias direto sobre a superfície assada.",
@@ -1117,7 +1117,19 @@ export const PT_LOCALE: CmsContent = {
     "dig.fodmapReduced": "A redução de FODMAP não pode ser determinada apenas pelas horas",
     "dig.fodmapHighReduction": "A redução de FODMAP não pode ser determinada apenas pelas horas",
     "hint.yeastPrecisionScale": "Use uma balança de 0,01 g",
-    "timeline.batchModel": "Tempos estimados para uma pessoa: abrir e cobrir todas as unidades e depois cozer uma de cada vez. Serviço faseado; sem tarefas sobrepostas.",
+    "timeline.batchModel": "Tempos estimados para uma pessoa: abrir e cobrir todas as unidades e depois cozer uma de cada vez, com a recuperação do forno entre uma e outra (estimativa). Serviço faseado; sem tarefas sobrepostas.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Dobras",
+    "timeline.folds.desc": "Faça {count} voltas de dobras, uma a cada {interval}, com a massa coberta.",
+    "timeline.folds.descCold": "Faça {count} voltas de dobras, uma a cada {interval}, com a massa coberta em temperatura ambiente. Depois da última volta, leve o recipiente à geladeira.",
+    "timeline.folds.tipBeginner": "Molhe as mãos, pegue uma ponta, puxe para cima e dobre até o centro; gire o recipiente e repita nos quatro lados. Cubra entre uma volta e outra.",
+    "timeline.folds.tipNerd": "As dobras alinham e esticam as fibras de glúten e redistribuem os gases: dão força sem trabalho mecânico.",
+    "timeline.bake.recovery": "Entre um assamento e outro, conte cerca de {sec} para tirar, colocar e deixar o forno voltar à temperatura.",
+    "timelineComfort.nightNoPlan": "Etapas a fazer de madrugada: {n}, a primeira às {time}. Escolha uma refeição acima.",
+    "timelineComfort.nightNoPlanNoMeal": "Etapas a fazer de madrugada: {n}, a primeira às {time}. Mude o início com os botões acima.",
+    "timelineComfort.doseNote": "Os tempos mudam, o fermento não: guie-se pelo volume da massa, não pelo relógio.",
+    "timelineComfort.whyTitle": "Por que dá para fazer?",
+    "timelineComfort.whyBody": "Só alongamos ou encurtamos as esperas, cada uma dentro de uma margem: na geladeira até +{coldPlusPct} (no máximo {coldPlus}) ou −{coldMinusPct} (no máximo {coldMinus}); em temperatura ambiente, fermentação final incluída, até +{roomPlusPct} (no máximo {roomPlus}) ou −{roomMinusPct} (no máximo {roomMinus}). Não passamos horas da geladeira para o ambiente nem recalculamos o fermento. Essas margens são regras práticas escolhidas por nós, não medições: por isso o que conta é o volume.",
   },
   scienceLabels: {
     yeastBaker: "Fermento de padeiro",
@@ -1163,7 +1175,7 @@ export const PT_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "Mistura",
-      desc: "Misturar sem amassar at\u00E9 desfazer os grumos. Depois 3 voltas de dobras (stretch & fold) a cada ~30 min.",
+      desc: "Misture sem amassar até desfazer os grumos. As dobras e o tempo fazem o resto.",
       tipBeginner:
         "N\u00E3o precisa amassar! Misture com uma esp\u00E1tula at\u00E9 n\u00E3o sobrar farinha seca.",
       tipNerd:
@@ -1177,7 +1189,7 @@ export const PT_LOCALE: CmsContent = {
         "A massa deve duplicar de volume. Se estiver quente, verifique mais vezes!",
       tipNerd:
         "A {temp}, o modelo estima uma velocidade de fermentação de {factor}× em relação a {refTemp}. Não mede a redução de FODMAP nem a digestibilidade.",
-      longDesc: "A massa descansa em um \u00FAnico bloco, dentro de um recipiente untado com azeite e coberto com filme pl\u00E1stico em contato. \u00C9 nesta fase que o fermento trabalha e desenvolve aroma, estrutura e digestibilidade. Se a hidrata\u00E7\u00E3o for alta, fa\u00E7a 2-3 \"dobras de refor\u00E7o\" (stretch & fold) nas primeiras 2 horas: levante uma ponta da massa, puxe para cima e dobre em dire\u00E7\u00E3o ao centro, gire e repita nos 4 lados. A fermenta\u00E7\u00E3o est\u00E1 completa quando o volume dobrou e a superf\u00EDcie est\u00E1 abaulada e lisa.",
+      longDesc: "A massa descansa em um único bloco, dentro de um recipiente untado com azeite e coberto com filme plástico em contato. É nesta fase que o fermento trabalha e desenvolve aroma, estrutura e digestibilidade. Se o estilo prevê dobras, o número e o intervalo estão em um passo ou em uma dica à parte. A fermentação está completa quando o volume dobrou e a superfície está abaulada e lisa.",
     },
     bulk_cold: {
       title: "Fermenta\u00E7\u00E3o em massa",
@@ -1186,7 +1198,7 @@ export const PT_LOCALE: CmsContent = {
         "Na geladeira a massa cresce devagar mas ganha sabor. Cubra bem com filme em contato.",
       tipNerd:
         "A {temp}, o modelo estima uma velocidade de fermentação de {factor}× em relação a {refTemp}. Não mede a redução de FODMAP nem a digestibilidade.",
-      longDesc: "Leve o recipiente com a massa \u00E0 geladeira ({fridgeTemp}). Na geladeira o fermento trabalha bem mais devagar: leva muito mais tempo, mas em troca voc\u00EA ganha complexidade de aroma, digestibilidade e uma rede de gl\u00FAten mais desenvolvida. Cubra sempre com filme pl\u00E1stico em contato para a superf\u00EDcie n\u00E3o ressecar. Ao tirar da geladeira, deixe a massa aclimatar 1-2 horas em temperatura ambiente antes da divis\u00E3o.",
+      longDesc: "Leve o recipiente com a massa à geladeira ({fridgeTemp}). Na geladeira o fermento trabalha bem mais devagar: leva muito mais tempo, mas em troca você ganha complexidade de aroma, digestibilidade e uma rede de glúten mais desenvolvida. Cubra sempre com filme plástico em contato para a superfície não ressecar. Você pode dividi-la assim que sair da geladeira: ela se aclimata durante a fermentação final.",
     },
     rest: {
       title: "Descanso",
@@ -1938,7 +1950,6 @@ export const PT_LOCALE: CmsContent = {
     toppingAmountsNote: "As quantidades são para uma pizza ou unidade. Os ingredientes seguem a ordem em que se adicionam.",
     toppingPerUnit: "{amount} por {unit}",
     durationLabel: "Dura\u00E7\u00E3o: {duration}",
-    comfortLabel: "{duration} no modo conforto",
     totalDuration: "{duration} no total",
     finalDoughStageTitle: "Massa final",
     rule55Title: "Temperatura da \u00E1gua",

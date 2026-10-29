@@ -1,6 +1,7 @@
 import { resolveEngineMsgs, type EngineMsg } from "../../domain/pizza-engine";
 import type { CmsContent } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
+import { formatSeconds } from "../../i18n/format";
 import { uiMessage } from "../../i18n/ui-messages";
 import { inlineAllergenName } from "./allergen-names";
 import type { AllergenId } from "../../data/allergen-data";
@@ -41,6 +42,13 @@ const HOUR_PARAMS: Record<string, readonly string[]> = {
 /** Parametri in secondi di cottura, per messaggio (D-050). */
 const COOK_SECONDS_PARAMS: Record<string, readonly string[]> = {
   "timeline.bake.rounds": ["sec"],
+  /* FW-19 (S09-A-14): recupero del forno fra due cotture. */
+  "timeline.bake.recovery": ["sec"],
+};
+/** FW-19: parametri in minuti (intervallo delle pieghe). */
+const MINUTE_PARAMS: Record<string, readonly string[]> = {
+  "timeline.folds.desc": ["interval"],
+  "timeline.folds.descCold": ["interval"],
 };
 /** Parametri che sono id di farine della dispensa (C-3). */
 const FLOUR_PARAMS: Record<string, readonly string[]> = {
@@ -70,7 +78,10 @@ export function engineMsgTexts(
       TEMPERATURE_PARAMS.has(key) || (key === "min" && TEMPERATURE_MIN_KEYS.has(msg.key));
     if (isTemperature) return fmt.celsius(number);
     if (HOUR_PARAMS[msg.key]?.includes(key)) return fmt.durationShort(number);
-    if (COOK_SECONDS_PARAMS[msg.key]?.includes(key)) return fmt.cookTime(number);
+    /* FW-19 (S09-A-14): «5 min 45 s», non «6 minuti»: con 4 cotture e 23
+       minuti in tutto il conto deve tornare. */
+    if (COOK_SECONDS_PARAMS[msg.key]?.includes(key)) return formatSeconds(number, bcp47);
+    if (MINUTE_PARAMS[msg.key]?.includes(key)) return fmt.durationMinutes(number);
     return fmt.number(number, { maximumFractionDigits: 2 });
   });
 }

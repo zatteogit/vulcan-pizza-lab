@@ -81,6 +81,9 @@ lo aggiunge qui e, se è tecnico, al glossario.
 | **Stili di pizza** | La sezione e il filtro degli stili in Scopri; un solo verbo per «vedi tutto» («Vedi tutti/tutte») | Scopri | «Stili tradizionali», «Esplora tutti» |
 | **Tradizioni regionali** | Famiglia degli stili storici non napoletani né romani (D-G, da confermare stile per stile) | Scopri, Crea, MCP | «Contemporanea» per focacce e pizze storiche |
 | **Genera ricetta** | La CTA del pannello stile, su ogni breakpoint | pannello stile | «Crea» (è il nome della tab) |
+| **Pieghe** | Il passo con i giri di pieghe (stretch & fold) prima della puntata: numero e intervallo da `FOLDING_DB`, mai scritti a mano in un altro testo (FW-19) | Procedimento, modalità cottura | «~30 min» o «ogni 45 minuti» in testi diversi dal passo |
+| **Recupero del forno** | Il tempo fra due cotture in serie per sfornare, infornare e far tornare in temperatura la platea; ipotesi del modello (nota `bake-round-recovery`, FW-19) | passo Cottura, banner del modello, modalità cottura | «tempi morti» |
+| **«ca.»** | L'orario incerto: l'inizio del passo che segue un'attesa biologica e la fine della pizzata. Una sola notazione, anche nella tabella di marcia (FW-19) | Procedimento, modalità cottura | «≈», «~» davanti agli orari |
 - FW-11. In inglese si scrive **autolyse** (non «autolysis») e **preferment**
   senza trattino, come nella fonte King Arthur. I nomi propri dei luoghi
   d'origine usano l'esonimo della lingua (Napoli → Naples, Neapel, Nápoles):

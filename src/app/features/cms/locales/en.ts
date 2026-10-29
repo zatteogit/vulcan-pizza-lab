@@ -697,7 +697,6 @@ export const EN_LOCALE: CmsContent = {
     toppingAmountsNote: "Amounts are for one pizza or unit. Ingredients follow the order in which to add them.",
     toppingPerUnit: "{amount} per {unit}",
     durationLabel: "Duration: {duration}",
-    comfortLabel: "{duration} comfort",
     totalDuration: "{duration} total",
     finalDoughStageTitle: "Final dough",
     rule55Title: "Water temperature",
@@ -952,8 +951,8 @@ export const EN_LOCALE: CmsContent = {
     "learn.compatiblePath": "A practical path compatible with your kitchen: check the recipe conditions.",
     "learn.theoryOnly": "No validated recipe matches these constraints; explore the theory.",
     "learn.openTheory": "Explore the theory",
-    "timeline.preheat.includesProof": "This block includes {minutes} minutes of proofing, already counted in the total time: do not add them again.",
-    "timeline.preheat.includesRest": "This block includes {minutes} minutes of rest, already counted in the total time: do not add them again.",
+    "timeline.preheat.includesProof": "When the oven is ready, check the dough: pressed with a finger, the dent springs back slowly.",
+    "timeline.preheat.includesProofOil": "When the oil is up to temperature, check the dough: pressed with a finger, the dent springs back slowly.",
     "auth.hydrationOff": "Hydration off-centre (-{penalty}%)",
     "auth.wOutOfRange": "Flour W out of range (-{penalty}%)",
     "auth.plOutOfRange":
@@ -1268,7 +1267,7 @@ export const EN_LOCALE: CmsContent = {
     "timeline.bake.title": "Baking",
     "timeline.bake.desc": "Bake at {temp}.",
     "timeline.bake.rounds": "{n} bakes of {sec}, one at a time.",
-    "timeline.bake.tipBeginner": "The oven must be very hot. Preheat for at least 30 minutes beforehand.",
+    "timeline.bake.tipBeginner": "It's done when the rim is golden and, lifting it with the peel, the base is dry with a few dark spots.",
     "timeline.bake.tipNerd": "The Maillard reaction starts at ~140°C and accelerates exponentially. At {temp} caramelisation creates ~600 aroma compounds.",
     "timeline.topPost.title": "Post-bake topping",
     "timeline.topPost.desc": "Add the cold toppings directly onto the baked surface.",
@@ -1288,7 +1287,19 @@ export const EN_LOCALE: CmsContent = {
     "dig.fodmapReduced": "FODMAP reduction cannot be determined from hours alone",
     "dig.fodmapHighReduction": "FODMAP reduction cannot be determined from hours alone",
     "hint.yeastPrecisionScale": "Use a 0.01 g scale",
-    "timeline.batchModel": "Estimated times for one person: shape and top all units, then bake one at a time. Staggered service; no overlapping tasks assumed.",
+    "timeline.batchModel": "Estimated times for one person: shape and top all units, then bake one at a time, with the oven's recovery between bakes (an estimate). Staggered service; no overlapping tasks assumed.",
+    /* FW-19: piano temporale unico (pieghe, recupero del forno, Timeline comoda). */
+    "timeline.folds.title": "Folds",
+    "timeline.folds.desc": "Do {count} rounds of folds, one every {interval}, keeping the dough covered.",
+    "timeline.folds.descCold": "Do {count} rounds of folds, one every {interval}, keeping the dough covered at room temperature. After the last round, put the container in the fridge.",
+    "timeline.folds.tipBeginner": "Wet your hands, grab a flap, pull it up and fold it to the centre; turn the container and repeat on all four sides. Cover between rounds.",
+    "timeline.folds.tipNerd": "Folds align and stretch the gluten strands and redistribute the gas: they build strength without mechanical work.",
+    "timeline.bake.recovery": "Between bakes, allow about {sec} to unload, load and let the oven come back to temperature.",
+    "timelineComfort.nightNoPlan": "Steps to do at night: {n}, the first at {time}. Choose a meal above.",
+    "timelineComfort.nightNoPlanNoMeal": "Steps to do at night: {n}, the first at {time}. Move the start with the buttons above.",
+    "timelineComfort.doseNote": "The times change, the yeast doesn't: go by the dough's volume, not the clock.",
+    "timelineComfort.whyTitle": "Why is this OK?",
+    "timelineComfort.whyBody": "We only lengthen or shorten the waits, each within a margin: in the fridge up to +{coldPlusPct} (at most {coldPlus}) or −{coldMinusPct} (at most {coldMinus}); at room temperature, final proof included, up to +{roomPlusPct} (at most {roomPlus}) or −{roomMinusPct} (at most {roomMinus}). We never move hours from the fridge to room temperature and we don't recalculate the yeast. These margins are rules of thumb we chose, not measurements: that's why the volume is what counts.",
   },
   scienceLabels: {
     yeastBaker: "Baker's yeast",
@@ -1334,7 +1345,7 @@ export const EN_LOCALE: CmsContent = {
     },
     mix_noknead: {
       title: "Mixing",
-      desc: "Mix without kneading until no dry lumps remain. Then 3 rounds of stretch & folds at ~30-min intervals.",
+      desc: "Mix without kneading until no dry lumps remain. The folds and time do the rest.",
       tipBeginner:
         "No kneading needed! Mix with a spatula until there are no more dry flour lumps.",
       tipNerd:
@@ -1348,7 +1359,7 @@ export const EN_LOCALE: CmsContent = {
         "The dough should double in volume. If it's warm, check more often!",
       tipNerd:
         "At {temp}, the model estimates a fermentation rate of {factor}× relative to {refTemp}. This does not measure FODMAP reduction or digestibility.",
-      longDesc: "The dough rests as a single mass in an oiled container, with cling film pressed onto the surface. This is when the yeast gets to work, developing flavour, structure and digestibility. If the hydration is high, do 2-3 \"strengthening folds\" (stretch & fold) in the first 2 hours: lift a flap, pull it up and fold it towards the centre, rotate and repeat on all 4 sides. Fermentation is complete when the volume has doubled and the surface is domed and smooth.",
+      longDesc: "The dough rests as a single mass in an oiled container, with cling film pressed onto the surface. This is when the yeast gets to work, developing flavour, structure and digestibility. If the style calls for folds, their number and interval are in a separate step or tip. Fermentation is complete when the volume has doubled and the surface is domed and smooth.",
     },
     bulk_cold: {
       title: "Bulk Fermentation",
@@ -1357,7 +1368,7 @@ export const EN_LOCALE: CmsContent = {
         "In the fridge the dough rises slowly but gains flavour. Cover well with contact wrap.",
       tipNerd:
         "At {temp}, the model estimates a fermentation rate of {factor}× relative to {refTemp}. This does not measure FODMAP reduction or digestibility.",
-      longDesc: "Move the container with the dough into the fridge ({fridgeTemp}). In the fridge the yeast works much more slowly: it takes far longer, but in return you gain more complex flavour, better digestibility and a more developed gluten network. Always cover with cling film pressed onto the surface so the dough doesn't form a dry skin. When you take it out, let it come up to room temperature for 1-2 hours before dividing.",
+      longDesc: "Move the container with the dough into the fridge ({fridgeTemp}). In the fridge the yeast works much more slowly: it takes far longer, but in return you gain more complex flavour, better digestibility and a more developed gluten network. Always cover with cling film pressed onto the surface so the dough doesn't form a dry skin. You can divide it as soon as it comes out of the fridge: it warms up during the final proof.",
     },
     rest: {
       title: "Rest",

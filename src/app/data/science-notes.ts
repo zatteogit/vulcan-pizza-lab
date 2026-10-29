@@ -25,7 +25,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     // FW-01: è il conto di calculateYeastPercentage + generateRecipe, passo per
     // passo (test in science-registry.test.ts che ricalcola yeast_baker_pct).
     formula:
-      "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fresco), t₀ = 24 h, s = 1 fresco / 0,33 secco, k = correzione personale (0,5–2) · tₑ = h se T ≥ 18 °C; sotto: tₑ = (h − hₐ) + hₐ ÷ v(T), con l'appretto hₐ a 18 °C · v(T) dalla nota q10-fermentation",
+      "Y = max(0,01 %; min(3 %; Y₀ × (t₀ / tₑ)^0,7 ÷ v(T) × s) ÷ k) · Y₀ = 0,1 % (fresco), t₀ = 24 h, s = 1 fresco / 0,33 secco, k = correzione personale (0,5–2) · tₑ = h se T ≥ 18 °C; sotto: tₑ = (h − hₐ) + hₐ ÷ v(T), con hₐ = appretto + pieghe a 18 °C · v(T) dalla nota q10-fermentation",
     variables: [
       { symbol: "Y", unitKey: "percent" },
       { symbol: "tₑ", unitKey: "hours" },
@@ -62,7 +62,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     kind: "estimate",
     // FW-01: equivalentFermentationHours × fermentationSpeedRatio. Sotto i
     // 18 °C l'appretto si fa a 18 °C (PROOF_MIN_TEMP_C) e conta per le sue ore.
-    formula: "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, con l'appretto hₐ a 18 °C (fermentationPhases)",
+    formula: "T ≥ 18 °C: h₁₈ = h × v(T) · T < 18 °C: h₁₈ = (h − hₐ) × v(T) + hₐ, con hₐ = appretto + pieghe a 18 °C (fermentationPhases, foldWindowMinutes)",
     variables: [
       { symbol: "h₁₈", unitKey: "hours" },
       { symbol: "h", unitKey: "hours" },
@@ -306,6 +306,25 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     sourceIds: [],
     engineRef: "calculateDigestibilityScore",
     glossaryTermId: "d_score",
+  },
+
+  /* ── FW-19: piano temporale ── */
+  {
+    // Margini con cui la Timeline comoda allunga o accorcia le attese (D-Q):
+    // scelta di Vulcan, senza fonte; il lievito non si ricalcola.
+    id: "comfort-tolerances",
+    kind: "editorial",
+    assumptionIds: ["comfort-margins-rule-of-thumb", "comfort-yeast-unchanged"],
+    sourceIds: [],
+    engineRef: "COMFORT_TOLERANCES, optimizeComfort, movesHoursBetweenColdAndRoom (use-cases/cook-plan.ts)",
+  },
+  {
+    // Recupero del forno fra due cotture in serie (S09-A-14, S09-B-13).
+    id: "bake-round-recovery",
+    kind: "assumption",
+    assumptionIds: ["recovery-by-oven-type"],
+    sourceIds: [],
+    engineRef: "BAKE_ROUND_RECOVERY_SEC, generateTimeline (cotture una alla volta)",
   },
 
   /* ── Problemi e soluzioni ── */

@@ -33,7 +33,10 @@ describe('secondo collaudo: expected behavior independent of parity',()=>{
   const top=r.steps.find((s:any)=>s.work_units===12&&s.minutes_per_unit===3);
   expect(shape.duration_minutes).toBe(60);expect(shape.work_units).toBe(12);
   expect(top.duration_minutes).toBe(36);
-  expect(r.steps.find((s:any)=>s.id==='bake').duration_minutes).toBe(Math.ceil(12*r.cook_time_sec/60));
+  const bake=r.steps.find((s:any)=>s.id==='bake');
+  // FW-19 (S09-A-14): secondi reali delle 12 cotture più 11 recuperi del forno (ipotesi per tipo di forno).
+  expect(bake.duration_minutes).toBe(Math.ceil((12*r.cook_time_sec+11*bake.recovery_seconds)/60));
+  expect(bake.recovery_seconds).toBeGreaterThan(0);
   expect(r.schedule.model).toBe('sequential_single_operator');
   expect(r.schedule.total_minutes).toBeLessThanOrEqual(480);
  });

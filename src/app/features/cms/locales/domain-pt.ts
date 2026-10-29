@@ -668,7 +668,7 @@ export const SCIENCE_PT: CmsScience = {
     "equivalent-hours": {
       title: "Horas equivalentes",
       l1: "Suas horas traduzidas nas horas necessárias à temperatura de referência.",
-      l2: "Multiplicamos as horas pela velocidade na sua temperatura. Se você fermenta mais frio do que a referência (geladeira, adega), a fermentação final acontece na temperatura de referência: essas horas contam como são e só as outras são multiplicadas. Por isso a conta «horas × velocidade» sozinha não fecha.",
+      l2: "Multiplicamos as horas pela velocidade na sua temperatura. Se você fermenta mais frio do que a referência (geladeira, adega), a fermentação final e as dobras antes da geladeira acontecem na temperatura de referência: essas horas contam como são e só as outras são multiplicadas. Por isso a conta «horas × velocidade» sozinha não fecha.",
     },
     "kitchen-temp-default": {
       title: "Temperatura da cozinha",
@@ -800,6 +800,17 @@ export const SCIENCE_PT: CmsScience = {
       l1: "Os limites numéricos dos problemas são indicativos.",
       l2: "São regras práticas sem fonte publicada e não consideram o estilo: uma massa de assadeira, por exemplo, é muito mais hidratada que uma napolitana. Use-os como pista, não como diagnóstico.",
     },
+    /* FW-19: piano temporale. */
+    "comfort-tolerances": {
+      title: "Margens da linha de tempo confortável",
+      l1: "As margens com que a linha de tempo confortável move as esperas são uma escolha nossa, não uma medição.",
+      l2: "Alongamos ou encurtamos as esperas dentro de margens fixas, mais largas na geladeira do que em temperatura ambiente, sem passar horas da geladeira para o ambiente e sem recalcular o fermento. Quanto mais você se afasta do plano inicial, mais conta observar o volume da massa.",
+    },
+    "bake-round-recovery": {
+      title: "Recuperação do forno entre os assamentos",
+      l1: "O tempo entre um assamento e outro é uma hipótese do modelo.",
+      l2: "Entre uma pizza e outra você tira, coloca e o lastro volta à temperatura: o forno doméstico com pedra precisa de minutos, os fornos de pizza de menos, os de lenha quase nada. Usamos um valor fixo por tipo de forno, não medido no seu.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "A temperatura fica constante durante toda a fase.",
@@ -820,5 +831,9 @@ export const SCIENCE_PT: CmsScience = {
     "oven-power-steps": "Uma potência típica por faixa de temperatura, igual para todo combustível.",
     "no-health-claim": "Nenhuma alegação de saúde: o índice não mede a digestão de uma pessoa.",
     "thresholds-rules-of-thumb": "Os limites são regras práticas gerais, não ajustadas ao estilo.",
+    /* FW-19: piano temporale. */
+    "comfort-margins-rule-of-thumb": "As margens, mais largas na geladeira do que em temperatura ambiente, são regras práticas sem fonte.",
+    "comfort-yeast-unchanged": "A dose de fermento continua a calculada para o plano inicial.",
+    "recovery-by-oven-type": "A recuperação depende só do tipo de forno, não do modelo nem da superfície.",
   },
 };

@@ -13,7 +13,9 @@ getImpasto,
 mergeImpastoIntoDough,
 type ImpastoRecipe,
 } from "../data/impasto-library";
-import { getToppingByStyle } from "../data/parametric-databases";
+import { getFoldingByStyle, getToppingByStyle } from "../data/parametric-databases";
+import { PROOF_MIN_TEMP_C } from "./fermentation-constants";
+export { PROOF_MIN_TEMP_C };
 import { isHeatProfileCompatible } from "../data/equipment-data";
 import {
 getToppingForStyle,
@@ -662,6 +664,10 @@ export interface TimelineStep {
   /** D-050: quante volte si ripete la cottura (una pizza o teglia alla volta);
    *  duration_minutes è già il totale. */
   rounds?: number;
+  /** FW-19: secondi di una cottura del giro e recupero del forno fra due giri
+   *  (già compresi in duration_minutes). Servono al timer per giro. */
+  round_seconds?: number;
+  recovery_seconds?: number;
   /** Passive activity already contained in this timeline block. Never subtract it again. */
   parallel_activity?: { kind: "proof" | "rest"; duration_minutes: number; included_in_fermentation: true };
   /** Lavoro per unità: duration_minutes include già tutte le unità. */
@@ -669,20 +675,26 @@ export interface TimelineStep {
   minutes_per_unit?: number;
 }
 
+/** FW-19 (S09-A-11, S09-B-06): niente «contabilità del tempo» nel passo
+ *  («già inclusi nel tempo totale: non aggiungerli di nuovo»). Il passo dice
+ *  già che i panetti lievitano mentre il forno scalda; qui si ripete il segno
+ *  di prontezza, che va controllato alla fine del preriscaldo. Per il riposo
+ *  di un impasto non lievitato non serve altro. */
 export function passiveActivityMessage(step: TimelineStep): EngineMsg | null {
-  if (!step.parallel_activity) return null;
-  const rest = step.parallel_activity.kind === "rest";
-  return em(rest ? "timeline.preheat.includesRest" : "timeline.preheat.includesProof",
-    rest ? "Questo blocco comprende {minutes} minuti di riposo, già inclusi nel tempo totale: non aggiungerli di nuovo."
-      : "Questo blocco comprende {minutes} minuti di appretto, già inclusi nella fermentazione totale: non aggiungerli di nuovo.",
-    { minutes: step.parallel_activity.duration_minutes });
+  if (!step.parallel_activity || step.parallel_activity.kind === "rest") return null;
+  // Per le fritte si scalda l'olio, non il forno (M-6).
+  return step.variant === "oil"
+    ? em("timeline.preheat.includesProofOil",
+      "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.")
+    : em("timeline.preheat.includesProof",
+      "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.");
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
  *  alle ore di fermentazione. Il preriscaldo è ricavato dentro appretto o
  *  puntata (avviene in parallelo), quindi conta qui. Tutto il resto è overhead
  *  fisso: impasto, staglio, stesura, farcitura, cottura (ENG-4). */
-const FERMENTATION_STEP_IDS = new Set(["preferment", "bulk", "proof", "preheat"]);
+const FERMENTATION_STEP_IDS = new Set(["preferment", "folds", "bulk", "proof", "preheat"]);
 
 /** Minuti della timeline che NON sono fermentazione (overhead fisso). */
 export function timelineOverheadMinutes(timeline: TimelineStep[]): number {
@@ -1679,9 +1691,8 @@ export function fermentationPhases(
   return { preferment, bulk: rest - proof, proof };
 }
 
-/** Temperatura dell'appretto: sotto i 18 °C (frigo, cantina) l'appretto si fa
- *  comunque a temperatura ambiente, come dice il passo della timeline. */
-export const PROOF_MIN_TEMP_C = 18;
+/* Temperatura dell'appretto (PROOF_MIN_TEMP_C): FW-19 l'ha spostata in
+ * fermentation-constants.ts, importata e riesportata qui sopra. */
 
 /** Audit totale n. 5 (24/10/2026): ore equivalenti alla temperatura di
  *  fermentazione. Con il frigo la timeline fa l'appretto a 18 °C, che è più
@@ -1695,12 +1706,51 @@ export function equivalentFermentationHours(
   hasPreFerment: boolean,
   preFermentType: PreFermentType = "poolish",
   profile?: MethodProcessProfile,
+  /** FW-19: pieghe dello stile, fatte a temperatura ambiente prima della puntata. */
+  fold?: FoldPlan,
 ): number {
   if (fermentationTempC >= PROOF_MIN_TEMP_C || fermentationHours <= 0) return fermentationHours;
-  const p = fermentationPhases(fermentationHours, hasPreFerment, preFermentType, profile).proof / fermentationHours;
+  const phases = fermentationPhases(fermentationHours, hasPreFerment, preFermentType, profile);
+  // FW-19 (S10-B-10, S09-A-07): con la puntata in frigo le pieghe si fanno
+  // prima, fuori dal frigo: anche quelle ore sono a temperatura ambiente.
+  const roomHours = phases.proof + foldWindowMinutes(phases.bulk * 60, fold) / 60;
+  const p = roomHours / fermentationHours;
   const slow = fermentationSpeedRatio(yeastType, fermentationTempC);
   const proof = fermentationSpeedRatio(yeastType, PROOF_MIN_TEMP_C);
   return fermentationHours * (1 - p) + (fermentationHours * p * proof) / slow;
+}
+
+/* ═══ FW-19 — Pieghe come passo del piano (S10-B-10, S09-A-07) ═══
+ * Il testo dell'impasto chiedeva «3 giri di pieghe a intervalli di ~30 min»,
+ * il consiglio della puntata «ogni 45 minuti», e la puntata andava subito in
+ * frigo: nessun passo, nessun promemoria. Ora le pieghe sono un passo con la
+ * durata che dice FOLDING_DB (numero × intervallo, una sola fonte), ricavato
+ * dall'inizio della puntata: il totale della fermentazione non cambia. Con la
+ * puntata in frigo il passo è a temperatura ambiente e il lievito lo conta
+ * come l'appretto (equivalentFermentationHours). */
+export interface FoldPlan {
+  count: number;
+  intervalMin: number;
+}
+
+/** Margine che la puntata deve tenere oltre alle pieghe (anche dopo aver
+ *  prestato fino a 60 min al preriscaldo). Scelta del modello. */
+const FOLD_MIN_BULK_LEFT_MIN = 120;
+
+/** Pieghe dello stile, se sono una serie a intervalli (una piega sola o
+ *  intervallo 0 restano un gesto dentro la stesura, non un passo). */
+export function stylePlanFolds(styleId: string): FoldPlan | undefined {
+  const fold = getFoldingByStyle(styleId);
+  if (!fold || fold.foldType === "none" || fold.foldCount < 2 || fold.foldInterval_min <= 0) return undefined;
+  return { count: fold.foldCount, intervalMin: fold.foldInterval_min };
+}
+
+/** Minuti del passo «Pieghe» ricavati da una puntata di `bulkMinutes`:
+ *  0 se la puntata è troppo corta per contenerle con margine. */
+export function foldWindowMinutes(bulkMinutes: number, fold: FoldPlan | undefined): number {
+  if (!fold) return 0;
+  const minutes = fold.count * fold.intervalMin;
+  return bulkMinutes >= minutes + FOLD_MIN_BULK_LEFT_MIN ? minutes : 0;
 }
 
 function calculateYeastPercentage(
@@ -2203,7 +2253,7 @@ export function generateRecipe(
     yeastPct = Math.max(
       0.01,
       calculateYeastPercentage(
-        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment, preFermentType, style.method_profile),
+        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment, preFermentType, style.method_profile, stylePlanFolds(style.id)),
         fermentationTempC,
         yeastType as "fresh" | "dry",
       ) /
@@ -2438,7 +2488,7 @@ export function generateRecipe(
   const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
   const sciSpeedRatio = fermentationSpeedRatio(yeastType, fermentationTempC);
   const effectiveHours18c =
-    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType, style.method_profile) * sciSpeedRatio;
+    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType, style.method_profile, stylePlanFolds(style.id)) * sciSpeedRatio;
 
   // Gluten network score: flour W strength + hydration sweet spot + kneading method
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
@@ -3489,13 +3539,15 @@ function generateTimeline(
       id: "mix",
       title: "Impasto",
       description:
-        "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min nelle prime 1,5–2 ore.",
+        // FW-19 (S09-A-07): numero e intervallo delle pieghe stanno nel passo
+        // «Pieghe» (FOLDING_DB), non più scritti qui con valori diversi.
+        "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. La forza la danno poi le pieghe e il tempo.",
       duration_minutes: 10,
       icon: "hand",
       timing_label: "Inizio",
       tip: {
         beginner:
-          "Non serve impastare! Mescola finché non ci sono grumi asciutti. Poi, ogni ~30 min, bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro ruotando la ciotola: bastano 3 giri da 4 pieghe.",
+          "Non serve impastare! Mescola finché non ci sono grumi asciutti: alla forza pensano le pieghe e il tempo.",
         nerd: "L'autolisi sviluppa il glutine senza lavoro meccanico; le pieghe a intervalli (stretch & fold) allineano e tendono le fibrille di glutine e redistribuiscono i gas, dando forza senza degassare.",
       },
     });
@@ -3532,7 +3584,11 @@ function generateTimeline(
   const borrowedFromBulk = preheatDuringProof
     ? 0
     : Math.min(bulkMinutesFull, Math.max(0, idealPreheat - proofMinutes));
-  const bulkMinutes = bulkMinutesFull - borrowedFromBulk;
+  // FW-19: le pieghe sono un passo ricavato dall'inizio della puntata (stessa
+  // soglia del calcolo del lievito, equivalentFermentationHours).
+  const foldPlan = isUnleavened ? undefined : stylePlanFolds(style.id);
+  const foldMinutes = foldWindowMinutes(phases.bulk * 60, foldPlan);
+  const bulkMinutes = bulkMinutesFull - borrowedFromBulk - foldMinutes;
   const preheatMinutes = preheatDuringProof ? idealPreheat : proofMinutes + borrowedFromBulk;
   const proofStepMinutes = preheatDuringProof ? proofMinutes - idealPreheat : 0;
   const speedFactorLabel = fermentationSpeedRatio(yeastType, fermentTemp).toFixed(1);
@@ -3543,6 +3599,29 @@ function generateTimeline(
       "Senza lievito l'impasto non cresce: il riposo rilassa il glutine, così la sfoglia si stende sottile senza ritirarsi.",
     nerd: "Il riposo completa l'idratazione della farina e rilassa la maglia glutinica: meno ritorno elastico, sfoglia quasi trasparente.",
   };
+
+  // FW-19 (S10-B-10, S09-A-07): le pieghe che il testo chiede sono un passo,
+  // a temperatura ambiente; con la puntata in frigo, dopo l'ultimo giro.
+  if (foldPlan && foldMinutes > 0) {
+    const coldBulk = fermentTemp < PROOF_MIN_TEMP_C;
+    steps.push(
+      keyedStep(
+        { id: "folds", duration_minutes: foldMinutes, icon: "hand", timing_label: `${foldPlan.count} × ${foldPlan.intervalMin} min` },
+        em("timeline.folds.title", "Pieghe"),
+        [em(
+          coldBulk ? "timeline.folds.descCold" : "timeline.folds.desc",
+          coldBulk
+            ? "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto a temperatura ambiente. Dopo l'ultimo giro metti il contenitore in frigo."
+            : "Fai {count} giri di pieghe, uno ogni {interval} min, con l'impasto coperto.",
+          { count: foldPlan.count, interval: foldPlan.intervalMin },
+        )],
+        {
+          beginner: em("timeline.folds.tipBeginner", METHOD_MESSAGES_IT["timeline.folds.tipBeginner"]),
+          nerd: em("timeline.folds.tipNerd", METHOD_MESSAGES_IT["timeline.folds.tipNerd"]),
+        },
+      ),
+    );
+  }
 
   if (bulkMinutes > 0) {
     steps.push({
@@ -3940,7 +4019,8 @@ function generateTimeline(
   const heatStep = steps.find(step => step.id === "preheat");
   if (heatStep && heatStep.duration_minutes > 0) {
     heatStep.parallel_activity = { kind: isUnleavened ? "rest" : "proof", duration_minutes: heatStep.duration_minutes, included_in_fermentation: true };
-    heatStep.description += " " + renderStepIt([passiveActivityMessage(heatStep)!]);
+    const cue = passiveActivityMessage(heatStep);
+    if (cue) heatStep.description += " " + renderStepIt([cue]);
   }
 
   // D-050: pizze e teglie si cuociono una alla volta, quindi la cottura si
@@ -3950,17 +4030,28 @@ function generateTimeline(
     // Secondi di una cottura: quelli veri per la cottura singola (75 s, non
     // «1 min» arrotondato: verifica di GPT), i minuti del passo per la baciata.
     const hasSecondBake = steps.some((step) => step.id === "bake2");
+    // FW-19 (S09-A-14, S09-B-13): fra un giro e l'altro si sforna, si inforna
+    // e la platea torna in temperatura. Ipotesi del modello per tipo di forno
+    // (nota bake-round-recovery), sommata ai secondi reali delle cotture.
+    const recoverySec = bakeRoundRecoverySec(equipment?.ovenType);
     for (const step of steps) {
       if (step.id !== "bake" && step.id !== "bake2") continue;
       const perRoundSec = step.id === "bake" && !hasSecondBake ? effectiveCookSec : step.duration_minutes * 60;
+      const frying = step.variant === "fry";
+      const stepRecoverySec = frying ? 0 : recoverySec;
       // La pianificazione in minuti non deve finire prima dei secondi reali.
-      step.duration_minutes = Math.max(1, Math.ceil((perRoundSec * bakeRounds) / 60));
+      step.duration_minutes = Math.max(1, Math.ceil((perRoundSec * bakeRounds + stepRecoverySec * (bakeRounds - 1)) / 60));
       step.rounds = bakeRounds;
+      step.round_seconds = perRoundSec;
+      if (stepRecoverySec > 0) step.recovery_seconds = stepRecoverySec;
       step.timing_label = `${bakeRounds} × ${formatCookTime(perRoundSec)}`;
       if (step.msg?.description) {
         step.msg.description = [
           ...step.msg.description,
           em("timeline.bake.rounds", "{n} cotture da {sec} s, una alla volta.", { n: bakeRounds, sec: perRoundSec }),
+          ...(stepRecoverySec > 0
+            ? [em("timeline.bake.recovery", "Fra una cottura e l'altra conta circa {sec} s per sfornare, infornare e lasciare che il forno torni in temperatura.", { sec: stepRecoverySec })]
+            : []),
         ];
         step.description = renderStepIt(step.msg.description);
       }
@@ -3988,9 +4079,32 @@ function formatDuration(hours: number): string {
   return `${Math.floor(hours)}h ${Math.round((hours % 1) * 60)}min`;
 }
 
+/** FW-19 (S09-A-14): «5 min 45 s», non «6 min»: con «4 × 6 min» e 23 minuti
+ *  totali il conto non tornava. */
 function formatCookTime(seconds: number): string {
   if (seconds < 120) return `${seconds}s`;
-  return `${Math.round(seconds / 60)} min`;
+  const min = Math.floor(seconds / 60);
+  const sec = Math.round(seconds % 60);
+  return sec === 0 ? `${min} min` : `${min} min ${sec} s`;
+}
+
+/** FW-19 (S09-A-14, S09-B-13): secondi fra una cottura e la successiva per
+ *  sfornare, infornare e lasciar tornare in temperatura la platea. Ipotesi
+ *  del modello, senza fonte (nota bake-round-recovery, docs/fonti-dati.md
+ *  §6): il forno di casa con pietra recupera in minuti, i forni da pizza in
+ *  meno, quelli a legna o a carbone quasi subito. */
+export const BAKE_ROUND_RECOVERY_SEC: Readonly<Record<OvenType, number>> = {
+  home: 300,
+  electric_standard: 300,
+  gas: 300,
+  electric_high: 120,
+  gas_pizza: 120,
+  wood: 30,
+  coal: 30,
+};
+
+export function bakeRoundRecoverySec(ovenType: OvenType | undefined): number {
+  return BAKE_ROUND_RECOVERY_SEC[ovenType ?? "home"] ?? BAKE_ROUND_RECOVERY_SEC.home;
 }
 
 function generateTips(

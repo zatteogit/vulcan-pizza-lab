@@ -117,11 +117,13 @@ describe("persona audit: mode, quantity, schedule and learning",()=>{
     for(const id of ["napoletana_stg","pizza_fritta","focaccia_recco"]){
       const r=generateRecipe(STYLES_DB[id],kitchen);const heat=r.timeline.find(s=>s.id==="preheat")!;
       expect(heat.parallel_activity?.duration_minutes,id).toBe(heat.duration_minutes);
-      const fermentation=r.timeline.filter(s=>["preferment","bulk","proof","preheat"].includes(s.id)).reduce((n,s)=>n+s.duration_minutes,0);
+      const fermentation=r.timeline.filter(s=>["preferment","folds","bulk","proof","preheat"].includes(s.id)).reduce((n,s)=>n+s.duration_minutes,0);
       expect(Math.abs(fermentation-r.fermentation_hours*60),id).toBeLessThanOrEqual(1);
       const localized=localizeStep(heat,r,CMS_DEFAULTS,createFormatter(CMS_DEFAULTS.ui,"it-IT"));
-      expect(localized.description).toContain("già inclusi");
-      expect(localized.description.match(/già inclusi/g)).toHaveLength(1);
+      // FW-19 (S09-A-11): niente «contabilità del tempo» nel passo; per gli
+      // impasti lievitati, una volta sola il segno di prontezza dei panetti.
+      expect(localized.description).not.toMatch(/già inclusi|non aggiungerli/);
+      expect(localized.description.match(/premuto con un dito/g)?.length ?? 0).toBe(id==="focaccia_recco"?0:1);
       const m=call("generate_recipe",{...kitchen,style_id:id});
       expect(m.schedule.overlap_policy).toBe("only_declared_passive_activity");
       expect(m.schedule.total_minutes).toBe(m.steps.reduce((n:number,s:any)=>n+s.duration_minutes,0));

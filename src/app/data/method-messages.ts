@@ -94,7 +94,12 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   "timeline.bakeWhite.tipBeginner": "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti.",
   "timeline.splitFill.tipBeginner": "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle.",
   "timeline.bake2.desc": "Riportare in forno a {temp} solo per asciugare e amalgamare. Pochi minuti.",
-  "timeline.bake.tipBeginner": "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
+  /* FW-19 (S10-A-16): a questo punto il forno è già caldo; il consiglio dice
+     come riconoscere la pizza cotta. */
+  "timeline.bake.tipBeginner": "È cotta quando il bordo è dorato e, sollevandola con la pala, il fondo è asciutto e ha qualche puntino scuro.",
+  /* FW-19 (S10-B-10, S09-A-07): il passo «Pieghe». */
+  "timeline.folds.tipBeginner": "Bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro; gira il contenitore e ripeti sui quattro lati. Copri fra un giro e l'altro.",
+  "timeline.folds.tipNerd": "Le pieghe allineano e tendono le fibre di glutine e ridistribuiscono i gas: danno forza all'impasto senza lavoro meccanico.",
   "timeline.topPost.desc": "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.",
   "rec.fried": "Si frigge in pentola: il forno non serve",
   "rec.ovenIdeal": "Il tuo forno raggiunge la temperatura ideale ({ideal})",

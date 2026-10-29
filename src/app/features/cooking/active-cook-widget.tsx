@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   currentStepIndex,
   nextActionTime,
+  stepIsWaiting,
   useCookSession,
 } from "./cook-session";
 import { useCms } from "../cms/cms-context";
@@ -185,7 +186,8 @@ function getSessionMetrics(session: NonNullable<ReturnType<typeof useCookSession
     finished,
     isDue: step ? Date.now() >= actionAt : false,
     progress,
-    flexible: Boolean(step?.flexible),
+    // FW-19 (S10-A-04, S10-A-02): anche il forno acceso è un'attesa: «pronto», non «fra».
+    flexible: step ? stepIsWaiting(step) : false,
     stepTitle: step?.title ?? "",
   };
 }
