@@ -437,6 +437,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
 export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
+      plainDefinition: "粉の強さです。高いほど、生地が発酵に長く耐えます。袋に書かれていることがよくあります（例：W 280）。",
       name: "W\uFF08\u30B7\u30E7\u30D1\u30F3\u30FB\u30A2\u30EB\u30D9\u30AA\u30B0\u30E9\u30D5\uFF09",
       definition: "\u751F\u5730\u306E\u6C17\u6CE1\u3092\u7834\u88C2\u3059\u308B\u307E\u3067\u81A8\u3089\u307E\u305B\u308B\u306E\u306B\u5FC5\u8981\u306A\u7DCF\u30A8\u30CD\u30EB\u30AE\u30FC\u3002\u5C0F\u9EA6\u7C89\u306E\u7DCF\u5408\u7684\u306A\u5F37\u3055\u3092\u793A\u3057\u307E\u3059\u3002",
       whyImportant: "Wは小麦粉の総合的な強さを示します。粘り強さと伸びやすさはP・L・P/Lで評価します。Wが高いだけで生地が硬いとは限りません。",
@@ -449,6 +450,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       ],
     },
     p_tenacity: {
+      plainDefinition: "生地を引っぱったときの抵抗の強さです。",
       name: "P\uFF08\u7C98\u308A\u5F37\u3055\uFF09",
       definition: "\u5909\u5F62\u306B\u5BFE\u3059\u308B\u6700\u5927\u306E\u62B5\u6297\u3002\u30A2\u30EB\u30D9\u30AA\u30B0\u30E9\u30D5\u66F2\u7DDA\u306E\u30D4\u30FC\u30AF\u3067\u3001\u751F\u5730\u304C\u5F15\u304D\u4F38\u3070\u3057\u306B\u3069\u308C\u3060\u3051\u62B5\u6297\u3059\u308B\u304B\u3092\u793A\u3057\u307E\u3059\u3002",
       whyImportant: "P\u304C\u9AD8\u3044\uFF1A\u300C\u786C\u3044\u300D\u751F\u5730\u3067\u3001\u713C\u6210\u4E2D\u3082\u5F62\u3092\u4FDD\u3061\u307E\u3059\u3002P\u304C\u4F4E\u3044\uFF1A\u300C\u67D4\u3089\u304B\u3044\u300D\u751F\u5730\u3067\u3001\u4F38\u3070\u3057\u3084\u3059\u3044\u53CD\u9762\u3001\u3078\u305F\u308B\u3053\u3068\u304C\u3042\u308A\u307E\u3059\u3002",
@@ -459,6 +461,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       ],
     },
     l_extensibility: {
+      plainDefinition: "生地が切れるまでにどれだけ伸びるかです。",
       name: "L\uFF08\u4F38\u5C55\u6027\uFF09",
       definition: "\u7834\u88C2\u3059\u308B\u307E\u3067\u306B\u6C17\u6CE1\u304C\u9054\u3059\u308B\u6700\u5927\u306E\u9577\u3055\u3002\u751F\u5730\u304C\u3069\u308C\u3060\u3051\u4F38\u3073\u308B\u304B\u3092\u793A\u3057\u307E\u3059\u3002",
       whyImportant: "L\u304C\u9AD8\u3044\uFF1A\u4F38\u3073\u3084\u3059\u3044\u751F\u5730\u3067\u3001\u7834\u308C\u305A\u306B\u697D\u306B\u4F38\u3070\u305B\u307E\u3059\u3002L\u304C\u4F4E\u3044\uFF1A\u4F38\u3073\u306B\u304F\u3044\u751F\u5730\u3067\u3001\u7834\u308C\u3084\u3059\u304F\u306A\u308A\u307E\u3059\u3002",
@@ -468,30 +471,34 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       ],
     },
     pl_ratio: {
+      plainDefinition: "生地が縮みやすい（値が高い）か、伸ばしやすい（値が低い）かを示します。",
       name: "P/L\uFF08\u7C98\u308A\u5F37\u3055/\u4F38\u5C55\u6027\u306E\u6BD4\uFF09",
       definition: "生地が変形に抵抗する力と、伸びる性質の比率です。",
       whyImportant: "生地の粘弾性のバランスを表します。適切な値は粉・加水率・製法で変わり、ピザの高さや食感を保証しません。",
       ranges: [
-        { label: "<0.4 \u975E\u5E38\u306B\u4F38\u3073\u3084\u3059\u3044", value: "\u3064\u3076\u308C\u3084\u3059\u3044", note: "\u30D4\u30F3\u30B5" },
-        { label: "0.4\u20130.5 \u4F38\u3073\u3084\u3059\u3044", value: "\u6271\u3044\u3084\u3059\u3044", note: "\u30AF\u30E9\u30B7\u30C3\u30AF\u306A\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1" },
-        { label: "0.5\u20130.7 \u30D0\u30E9\u30F3\u30B9\u578B", value: "\u30D0\u30E9\u30F3\u30B9\u304C\u826F\u3044", note: "\u73FE\u4EE3\u306E\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1\u3001\u30D1\u30F3" },
-        { label: "0.7\u20131.0 \u7C98\u308A\u304C\u5F37\u3044", value: "\u30B3\u30B7\u304C\u5F37\u3044", note: "\u9577\u6642\u9593\u767A\u9175\u306E\u30D1\u30F3" },
-        { label: ">1.0 \u975E\u5E38\u306B\u7C98\u308A\u304C\u5F37\u3044", value: "\u5F3E\u529B\u304C\u3042\u308A\u3001\u7E2E\u3080", note: "\u30AF\u30ED\u30EF\u30C3\u30B5\u30F3" },
+        { label: "\u975E\u5E38\u306B\u4F38\u3073\u3084\u3059\u3044 · \u3064\u3076\u308C\u3084\u3059\u3044", value: "<0.4", note: "\u30D4\u30F3\u30B5" },
+        { label: "\u4F38\u3073\u3084\u3059\u3044 · \u6271\u3044\u3084\u3059\u3044", value: "0.4\u20130.5", note: "\u30AF\u30E9\u30B7\u30C3\u30AF\u306A\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1" },
+        { label: "\u30D0\u30E9\u30F3\u30B9\u578B · \u30D0\u30E9\u30F3\u30B9\u304C\u826F\u3044", value: "0.5\u20130.7", note: "\u73FE\u4EE3\u306E\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1\u3001\u30D1\u30F3" },
+        { label: "\u7C98\u308A\u304C\u5F37\u3044 · \u30B3\u30B7\u304C\u5F37\u3044", value: "0.7\u20131.0", note: "\u9577\u6642\u9593\u767A\u9175\u306E\u30D1\u30F3" },
+        { label: "\u975E\u5E38\u306B\u7C98\u308A\u304C\u5F37\u3044 · \u5F3E\u529B\u304C\u3042\u308A\u3001\u7E2E\u3080", value: ">1.0", note: "\u30AF\u30ED\u30EF\u30C3\u30B5\u30F3" },
       ],
     },
     falling_number: {
+      plainDefinition: "でんぷんを糖に変える粉の酵素がどれだけ活発かを示します。",
       name: "\u30D5\u30A9\u30FC\u30EA\u30F3\u30B0\u30CA\u30F3\u30D0\u30FC\uFF08Hagberg-Perten\uFF09",
       definition: "\u52A0\u71B1\u3057\u305F\u5C0F\u9EA6\u7C89\u306E\u61F8\u6FC1\u6DB2\u306E\u4E2D\u3092\u64B9\u62CC\u68D2\u304C\u843D\u4E0B\u3059\u308B\u306E\u306B\u304B\u304B\u308B\u6642\u9593\u3002\u30A2\u30DF\u30E9\u30FC\u30BC\u6D3B\u6027\u3092\u793A\u3057\u307E\u3059\u3002",
       whyImportant: "FN\u304C\u4F4E\u3044\uFF08<250\uFF09\uFF1A\u767A\u9175\u306F\u901F\u3044\u304C\u751F\u5730\u304C\u4E0D\u5B89\u5B9A\u3002FN\u304C\u9AD8\u3044\uFF08>300\uFF09\uFF1A\u9577\u6642\u9593\u719F\u6210\u3067\u3082\u5B89\u5B9A\u3057\u307E\u3059\u3002",
       ranges: [
-        { label: "<200 \u30A2\u30DF\u30E9\u30FC\u30BC\u304C\u975E\u5E38\u306B\u591A\u3044", value: "\u751F\u5730\u304C\u3079\u305F\u3064\u304F", note: "\u30D4\u30B6\u306B\u306F\u4E0D\u5411\u304D" },
-        { label: "200\u2013250 \u591A\u3044", value: "\u3057\u3063\u3068\u308A\u3057\u305F\u30AF\u30E9\u30E0", note: "\u77ED\u6642\u9593\u767A\u9175\u306E\u30D1\u30F3" },
-        { label: "250\u2013300 \u4E2D\u7A0B\u5EA6", value: "\u30D0\u30E9\u30F3\u30B9\u304C\u826F\u3044", note: "\u30D4\u30B6 8-12h" },
-        { label: "300\u2013400 \u5C11\u306A\u3044", value: "\u4E7E\u304D\u6C17\u5473\u3001\u767A\u9175\u304C\u9045\u3044", note: "\u30D4\u30B6 24-48h" },
-        { label: ">400 \u975E\u5E38\u306B\u5C11\u306A\u3044", value: "\u4E7E\u71E5", note: "\u4E7E\u71E5\u30D1\u30B9\u30BF" },
+        { label: "\u30A2\u30DF\u30E9\u30FC\u30BC\u304C\u975E\u5E38\u306B\u591A\u3044 · \u751F\u5730\u304C\u3079\u305F\u3064\u304F", value: "<200", note: "\u30D4\u30B6\u306B\u306F\u4E0D\u5411\u304D" },
+        { label: "\u591A\u3044 · \u3057\u3063\u3068\u308A\u3057\u305F\u30AF\u30E9\u30E0", value: "200\u2013250", note: "\u77ED\u6642\u9593\u767A\u9175\u306E\u30D1\u30F3" },
+        { label: "\u4E2D\u7A0B\u5EA6 · \u30D0\u30E9\u30F3\u30B9\u304C\u826F\u3044", value: "250\u2013300", note: "\u30D4\u30B6 8-12h" },
+        { label: "\u5C11\u306A\u3044 · \u4E7E\u304D\u6C17\u5473\u3001\u767A\u9175\u304C\u9045\u3044", value: "300\u2013400", note: "\u30D4\u30B6 24-48h" },
+        { label: "\u975E\u5E38\u306B\u5C11\u306A\u3044 · \u4E7E\u71E5", value: ">400", note: "\u4E7E\u71E5\u30D1\u30B9\u30BF" },
       ],
     },
     hydration: {
+      formula: "H% = (水の重さ / 粉の重さ) × 100",
+      plainDefinition: "粉に対する水の量です。65%なら、粉100 gにつき水65 gを入れます。",
       name: "\u52A0\u6C34\u7387\uFF08H%\uFF09",
       definition: "\u751F\u5730\u4E2D\u306E\u5C0F\u9EA6\u7C89\u306B\u5BFE\u3059\u308B\u6C34\u306E\u91CD\u91CF\u306E\u5272\u5408\uFF08%\uFF09\u3002",
       whyImportant: "H\u304C\u4F4E\u3044\uFF08<55%\uFF09\uFF1A\u30AB\u30EA\u30C3\u3068\u3057\u3066\u6271\u3044\u3084\u3059\u3044\u3002H\u304C\u4E2D\u7A0B\u5EA6\uFF0860-65%\uFF09\uFF1A\u30D0\u30E9\u30F3\u30B9\u578B\u3002H\u304C\u9AD8\u3044\uFF08>70%\uFF09\uFF1A\u5F37\u3044\u5C0F\u9EA6\u7C89\uFF08W>280\uFF09\u3068\u6280\u8853\u304C\u5FC5\u8981\u3067\u3059\u3002",
@@ -536,11 +543,13 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       ],
     },
     lab: {
+      plainDefinition: "サワードウ（天然酵母）の中にいて、生地にほのかな酸味を与える細菌です。",
       name: "LAB\uFF08\u4E73\u9178\u83CC\uFF09",
       definition: "\u7CD6\u3092\u767A\u9175\u3055\u305B\u3066\u4E73\u9178\uFF08\u304A\u3088\u3073\u9162\u9178\uFF09\u3092\u751F\u6210\u3059\u308B\u7D30\u83CC\u3002\u5929\u7136\u9175\u6BCD\u306B\u542B\u307E\u308C\u307E\u3059\u3002",
       whyImportant: "菌株・粉・製法により酸度やフルクタンが変わります。乳酸菌がいても低FODMAP対応の証明にはなりません。",
     },
     q10: {
+      plainDefinition: "温度が10 °C上がると、発酵が何倍速くなるかです。",
       name: "Q\u2081\u2080\uFF08\u6E29\u5EA6\u4FC2\u6570\uFF09",
       definition: "\u6E29\u5EA6\u304C10\u00B0C\u4E0A\u304C\u308B\u3054\u3068\u306B\u3001\u751F\u5316\u5B66\u53CD\u5FDC\u306E\u901F\u5EA6\u304C\u4F55\u500D\u306B\u306A\u308B\u304B\u3092\u793A\u3059\u4FC2\u6570\u3002",
       whyImportant: "Q\u2081\u2080 = 2\u306A\u3089\u3001\u767A\u9175\u306E\u901F\u3055\u306F+10\u00B0C\u3054\u3068\u306B2\u500D\u306B\u306A\u308A\u307E\u3059\uFF1A18\u00B0C\u306724h \u2248 28\u00B0C\u306712h\u3002\u4EE5\u4E0B\u306E\u5024\u306F{brand}\u306E\u30E2\u30C7\u30EB\u306B\u3088\u308B\u63A8\u5B9A\u5024\u3067\u3059\u3002",
@@ -628,7 +637,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     gluten: {
       name: "\u30B0\u30EB\u30C6\u30F3",
       definition: "グリアジンとグルテニンが、水と捏ねる操作によって、生地に弾力と伸びのある網目を作ります。",
-      whyImportant: "\u5F3E\u6027\u306F\u30B0\u30EB\u30C6\u30CB\u30F3\uFF08S-S\u7D50\u5408\uFF09\u3001\u7C98\u6027\u306F\u30B0\u30EA\u30A2\u30B8\u30F3\uFF08H\u7D50\u5408\uFF09\u306B\u3088\u308B\u3082\u306E\u3067\u3059\u3002\u9577\u6642\u9593\u306E\u30BF\u30F3\u30D1\u30AF\u8CEA\u5206\u89E3\u3067\u7D50\u5408\u304C\u5207\u308C \u2192 \u751F\u5730\u304C\u3088\u308A\u4F38\u3073\u3084\u3059\u304F\u306A\u308A\u307E\u3059\u3002",
+      whyImportant: "弾性はグルテニン（S-S結合）、粘性はグリアジン（H結合）によるものです。長時間のタンパク質分解で生地は伸びやすくなりますが、グルテンはなくなりません。長時間発酵やサワードウでも、セリアック病の人に適したピザにはなりません。アレルギーや不耐症はプロフィールで設定します。",
     },
     proteolysis: {
       name: "\u30BF\u30F3\u30D1\u30AF\u8CEA\u5206\u89E3",
@@ -636,6 +645,8 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       whyImportant: "生地の伸びや強度が変化します。粉・微生物・温度・製法によって異なり、すべてに共通する最適時間はありません。個人の消化性を測るものではありません。",
     },
     thickness_factor: {
+      formula: "TF = 生地玉の重さ (g) / ピザの面積 (cm²)",
+      plainDefinition: "ピザ1 cm²あたりに必要な生地の量です。高いほどピザは厚くなります。",
       name: "Thickness Factor\uFF08TF\u30FB\u539A\u3055\u4FC2\u6570\uFF09",
       definition: "ピザの面積あたりの生地量です。1cm²あたりに使う生地のグラム数を表します。",
       whyImportant: "北米の生地計算ツールで広く使われる指標です（単位はoz/in²、1 oz/in² ≈ 4.39 g/cm²）。{brand}は生地玉の大きさを決めるためにg/cm²で表します。窯とあわせて焼成時間と食感の目安になります。",
@@ -659,34 +670,98 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
+      formula: "T_水 = 3 × T_生地 − T_室温 − T_粉 − 摩擦",
       name: "\u6C34\u306E\u6E29\u5EA6\uFF083\u3064\u306E\u6E29\u5EA6\uFF09",
       definition: "\u751F\u5730\u304C\u76EE\u6A19\u306E\u6E29\u5EA6\u306B\u306A\u308B\u3088\u3046\u3001\u6C34\u3092\u4F55\u5EA6\u306B\u3059\u308C\u3070\u3088\u3044\u304B\u3092\u8A08\u7B97\u3057\u307E\u3059\u3002",
       whyImportant: "3\u3064\u306E\u6E29\u5EA6\u306E\u5408\u8A08 = 3 \u00D7 \u76EE\u6A19\u751F\u5730\u6E29\u5EA6 \u2212 \u6469\u64E6\u71B1\u3002\u30D4\u30C3\u30C4\u30A7\u30EA\u30A2\u3067\u306F\u300C55\u306E\u6CD5\u5247\u300D\u3068\u3082\u547C\u3073\u307E\u3059\u3002\u5408\u8A08\u309255\u306B\u56FA\u5B9A\u3059\u308B\u3068\u751F\u5730\u306F\u7D0418 \u00B0C\uFF0855 \u00F7 3\uFF09\u3002\u3053\u3053\u3067\u306F\u30B9\u30BF\u30A4\u30EB\u306E\u76EE\u6A19\u6E29\u5EA622\u301C24 \u00B0C\u3092\u4F7F\u3044\u307E\u3059\u3002",
     },
     a_score: {
+      formula: "A = 0.35 × 材料 + 0.30 × 工程 + 0.35 × 設備",
       name: "A-Score\uFF08\u6B63\u7D71\u6027\uFF09",
       definition: "元のスタイルへの近さを0〜100点で示します。規定への適合を認証するものではありません。",
       ranges: [
-        { label: "90-100", value: "\u53B3\u5BC6\u306B\u672C\u683C\u7684" },
-        { label: "75-89", value: "\u307B\u307C\u672C\u683C\u7684" },
-        { label: "60-74", value: "\u30B9\u30BF\u30A4\u30EB\u306B\u7740\u60F3\u3092\u5F97\u305F" },
-        { label: "<60", value: "\u5927\u304D\u304F\u9038\u8131" },
+        { label: "\u53B3\u5BC6\u306B\u672C\u683C\u7684", value: "90-100" },
+        { label: "\u307B\u307C\u672C\u683C\u7684", value: "75-89" },
+        { label: "\u30B9\u30BF\u30A4\u30EB\u306B\u7740\u60F3\u3092\u5F97\u305F", value: "60-74" },
+        { label: "\u5927\u304D\u304F\u9038\u8131", value: "<60" },
       ],
     },
     f_score: {
+      formula: "F = 0.4 × オーブン + 0.3 × 粉 + 0.3 × 経験",
       name: "Fスコア（作りやすさ）",
       definition: "オーブン、粉、経験に応じた作りやすさを0〜100点で示します。レシピを作れない条件は別に判定します。",
       ranges: [
-        { label: "90-100", value: "\u5341\u5206\u306B\u4F5C\u308C\u308B" },
-        { label: "75-89", value: "\u6CE8\u610F\u3059\u308C\u3070\u4F5C\u308C\u308B" },
-        { label: "60-74", value: "\u96E3\u3057\u3044" },
-        { label: "<60", value: "\u304A\u3059\u3059\u3081\u3057\u306A\u3044" },
+        { label: "\u5341\u5206\u306B\u4F5C\u308C\u308B", value: "90-100" },
+        { label: "\u6CE8\u610F\u3059\u308C\u3070\u4F5C\u308C\u308B", value: "75-89" },
+        { label: "\u96E3\u3057\u3044", value: "60-74" },
+        { label: "\u304A\u3059\u3059\u3081\u3057\u306A\u3044", value: "<60" },
       ],
     },
     d_score: {
       name: "Dスコア（熟成の推定）",
       definition: "時間、温度、イースト、前発酵の生地に基づくモデルの推定です。個人の消化やFODMAP量を測るものではありません。",
-      ranges: [{"label":"85-100","value":"高い指数"},{"label":"70-84","value":"やや高い指数"},{"label":"50-69","value":"中程度の指数"},{"label":"<50","value":"低い指数"}],
+      ranges: [{ label: "高い指数", value: "85-100" },{ label: "やや高い指数", value: "70-84" },{ label: "中程度の指数", value: "50-69" },{ label: "低い指数", value: "<50" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: "分割（スタッリオ）",
+      definition: "生地を同じ重さに切り分け（ピザ1枚に1つ）、丸めて閉じることです。",
+      whyImportant: "同じ重さの生地玉は同じように発酵し、同じように焼けます。生地玉1つの重さはレシピに書かれています。",
+    },
+    ball_shaping: {
+      name: "丸め（ピルラトゥーラ）",
+      definition: "生地を表面の張ったなめらかな玉に閉じる動作です。台の上や手の中で回し、表面がピンと張るまで続けます。",
+      whyImportant: "張った表面は最終発酵中にガスを保ち、丸く伸ばせる生地玉になります。生地が裂けたら引っぱりすぎです。数分休ませてください。",
+    },
+    gluten_development: {
+      name: "グルテンの形成（インコルダトゥーラ）",
+      definition: "生地がなめらかで弾力を持ち、手やボウルにくっつかなくなった状態です。グルテンの網目ができています。",
+      whyImportant: "グルテンがよく形成された生地は発酵のガスを保ちます。確かめ方：小さくちぎって指で広げ、すぐに破れず薄い膜になれば完成です。逆に機械でこねすぎると、生地が温まって弱くなります。",
+    },
+    folds: {
+      name: "パンチ（折りたたみ）",
+      definition: "生地の端を引き伸ばして残りの上に折り重ね、向きを変えて各辺で繰り返します。長くこねる代わりに、休ませる間に間隔をあけて行います。",
+      whyImportant: "生地を温めずにグルテンの網目を強くします。特に加水の多い生地で役立ちます。「スラップ＆フォールド」はその一種で、生地を持ち上げて台に打ちつけ、折り重ねます。",
+    },
+    poke_test: {
+      name: "指押しテスト（ポークテスト）",
+      definition: "粉をつけた指で生地玉を1 cmほど押し、くぼみの戻り方を見ます。",
+      whyImportant: "ゆっくり戻って少し跡が残れば、生地玉は完成です。すぐに戻るなら、まだ時間が必要です。へこんだまま戻らず生地玉がしぼむなら、発酵しすぎです。目安であって、測定ではありません。",
+    },
+    cornicione: {
+      name: "コルニチョーネ（縁）",
+      definition: "中央より高くふくらんだピザの縁です。焼くと生地の中のガスが膨らんで持ち上がります。",
+      whyImportant: "伸ばすときに空気を中央から縁へ押し出し、縁をつぶさないようにします。高さや気泡は、スタイル、加水率、発酵、オーブンの熱で変わります。",
+    },
+    oven_floor_dome: {
+      name: "炉床と天井",
+      definition: "炉床はピザを置くオーブンの床面、天井はその上のドームです。炉床は接触で底を焼き、天井は放射熱で具と縁を焼きます。",
+      whyImportant: "底が焦げて具が生焼けなら、天井に比べて炉床が熱すぎます。逆なら冷たすぎます。家庭用オーブンでは、ピザストーンやスチールが炉床、グリルが天井の役をします。",
+    },
+    pre_ferment: {
+      name: "プレファーメント（前発酵生地）",
+      definition: "本ごねの数時間前に粉と水の一部をイーストと混ぜ、熟成させた生地です。よく使われるのはビガ（固め）とポーリッシュ（液状）です。",
+      whyImportant: "香りを加え、本ごね生地の扱いやすさを変えます。レシピでは別の工程になり、その分量は合計に含まれます。上乗せはしません。オートリーズはイーストを含まないので、プレファーメントではありません。",
+    },
+    sourdough: {
+      name: "サワードウ（天然酵母）",
+      definition: "野生酵母と乳酸菌が生きている粉と水の生地で、粉と水の継ぎ足しで維持します。一部をパン用イーストの代わりに使います。",
+      whyImportant: "パン用イーストより発酵がゆっくりで、ほのかな酸味が出ます。活性は継ぎ足しのしかたで変わるため、サワードウの量はモデルの仮定です。ご自分の種に合わせて調整してください。",
+    },
+    flour_type: {
+      name: "粉のタイプ（00、0、1、2、全粒粉）",
+      definition: "イタリアでは、タイプは軟質小麦粉の精製度を表します。00がいちばん白く、次に0、1、2、そして粒全体を含む全粒粉です。灰分（粉を燃やした後に残るミネラル）で決まります。",
+      whyImportant: "タイプは粉の強さを表しません。00でも弱い粉もあれば、とても強い粉もあります。強さはW（袋に書かれていれば）です。入力しない場合、モデルはそのタイプの代表的な範囲を仮定します。",
+    },
+    manitoba: {
+      name: "マニトバ",
+      definition: "たんぱく質の多い軟質小麦粉で、もとは北米産の小麦です（名前はカナダのマニトバ州に由来）。今では市販品で非常に強い粉を指します。",
+      whyImportant: "長時間発酵に使ったり、00に混ぜて強さを上げたりします。単独では生地が強く締まり、伸ばしにくくなります。",
+    },
+    semola_rimacinata: {
+      name: "セモラ・リマチナータ（再製粉デュラムセモリナ）",
+      definition: "デュラム小麦のセモリナをもう一度挽いたもので、普通のセモリナより細かく、黄色で少しざらつきます。",
+      whyImportant: "台やピールの打ち粉に使います。ピザが滑りやすく、小麦粉より焦げにくいためです。いくつかのスタイルでは生地にも少量入れます。デュラム小麦のグルテンは軟質小麦より伸びにくい性質です。",
     },
   },
 };

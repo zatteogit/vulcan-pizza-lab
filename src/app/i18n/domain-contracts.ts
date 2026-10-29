@@ -16,7 +16,11 @@ export interface TroubleshootingMessages {
 export interface GlossaryMessages {
   terms: Record<string, {
     name: string;
+    /** FW-04: livello 1 in parole semplici (S12-B-08). */
+    plainDefinition?: string;
     definition: string;
+    /** FW-04: formula con parole tradotte (S12-A-13); i simboli restano. */
+    formula?: string;
     whyImportant?: string;
     ranges?: { label: string; value: string; note?: string }[];
   }>;

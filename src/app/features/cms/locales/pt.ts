@@ -325,6 +325,9 @@ export const PT_LOCALE: CmsContent = {
     personalize: "Personalizar",
     adjustByHandQuestion: "Prefere decidir voc\u00EA mesmo?",
     statIdeal: "ideal",
+    // FW-04
+    cardTotalTime: "≈ {duration} no total",
+    cardFermentRange: "Fermentação {range}",
   },
   tips: {
     kitchenTemp:
@@ -469,15 +472,15 @@ export const PT_LOCALE: CmsContent = {
     },
     "2": {
       name: "Intermedi\u00E1rio",
-      description: "Já fiz algumas pizzas",
+      description: "Já fiz pizza algumas vezes seguindo uma receita",
     },
     "3": {
       name: "Avan\u00E7ado",
-      description: "Domino dobras e fermentações",
+      description: "Faço pizza com frequência e sei lidar com uma massa mole",
     },
     "4": {
       name: "Especialista",
-      description: "Adapto massas, tempos e técnicas",
+      description: "Ajusto sozinho quantidades e tempos",
     },
   },
   families: {
@@ -700,7 +703,7 @@ export const PT_LOCALE: CmsContent = {
     noResults: "Nenhum termo para «{query}»",
     allCategories: "Todos",
     formulaLabel: "F\u00F3rmula",
-    rangesLabel: "Faixas t\u00EDpicas",
+    rangesLabel: "Valores típicos",
     whyImportantLabel: "Por que importa",
     relatedLabel: "Relacionados",
     backToHome: "Voltar ao in\u00EDcio",
@@ -728,6 +731,17 @@ export const PT_LOCALE: CmsContent = {
     catMechanicsDesc: "Processamento, equipamentos e medidas",
     catScoring: "Pontua\u00E7\u00F5es",
     catScoringDesc: "Como ler as pontuações do {brand}",
+    // FW-04
+    catTechnique: "Gestos e fases",
+    catTechniqueDesc: "As palavras do processo, da sova ao forno",
+    catFlour: "Farinhas",
+    catFlourDesc: "Tipos de farinha e como lê-los",
+    rangesValueHeader: "Valor",
+    rangesMeaningHeader: "O que indica",
+    technicalLabel: "Definição técnica",
+    modelNoteLabel: "No modelo do {brand}",
+    seeAlsoLabel: "Veja também",
+    inGlossaryLabel: "No glossário:",
   },
   engineMessages: {
     "allergen.conflict": "Contém {allergen}: {ingredients}.",
@@ -833,8 +847,8 @@ export const PT_LOCALE: CmsContent = {
     "need.excludedFlour": "A receita exige uma farinha que excluiu: {flour}",
     "need.purchaseRefused": "Falta um requisito e decidiu não o obter",
     "aid.semolina": "Opcional: um pouco de sêmola remolida para polvilhar; a farinha da receita também serve",
-    "need.checkFlour": "Se tiver farinha W{w}",
-    "need.flour": "É necessária farinha W{w}",
+    "need.checkFlour": "Se tiver farinha com força W{w}",
+    "need.flour": "Precisa de farinha com força W{w}",
     "need.checkBlend": "Se tiver todas as farinhas da mistura",
     "need.checkYeast": "Fermento para ter em casa: {yeast}",
     "need.yeast": "É necessário fermento: {yeast}",
@@ -1297,6 +1311,8 @@ export const PT_LOCALE: CmsContent = {
     sheetOilLabel: "Temperatura do óleo",
     sheetOilHeat: "Leve o óleo à temperatura antes de fritar: o forno não é preciso.",
     sheetFryTurn: "Vire-a a meio da fritura",
+    // FW-04
+    pillDoughLoad: "Carga de massa",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1636,6 +1652,8 @@ export const PT_LOCALE: CmsContent = {
     pantryProfileEmpty: "Nenhuma farinha ou fermento indicado: partimos do que é típico do estilo.",
     pantryProfileEdit: "Editar em Criar",
     ftuSourdoughNote: "Com fermento natural, nas fermentações longas poderemos propô-lo no lugar do fermento biológico.",
+    // FW-04
+    ftuFlourTypeNote: "O tipo (00, 0, integral) diz o quanto a farinha é refinada, não o quanto é forte. Se o pacote mostrar o W, você poderá informá-lo depois na sua despensa.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1722,7 +1740,6 @@ export const PT_LOCALE: CmsContent = {
     exploreFilterRecipes: "Receitas icônicas",
     learnFilterSubtitle: "Os guias abaixo são gerais e valem também para este estilo.",
     learnRemoveFilter: "Remover filtro de estilo",
-    learnOpenGlossary: "Abrir o glossário",
     learnPathLabel: "Trilha de aprendizado",
     learnStartPath: "Iniciar percurso",
     learnTermOfTheDay: "Termo do dia — {category}",
@@ -1753,6 +1770,8 @@ export const PT_LOCALE: CmsContent = {
     deactivate: "Desativar",
     passToEasy: "Mudar para Easy",
     activateNerd: "Ativar modo Nerd",
+    // FW-04
+    learnOpenTerm: "Abrir o verbete no glossário",
   },
   configurator: {
     hydrationLabel: "Hidrata\u00E7\u00E3o",
@@ -1971,7 +1990,6 @@ export const PT_LOCALE: CmsContent = {
     prefermentSaltNote: "O sal entra na massa final, não no pré-fermento, onde travaria o fermento.",
     learnedFromAttempts: "Aprendi com as suas {n} tentativas",
     applyCorrections: "Aplicar as corre\u00E7\u00F5es",
-    learnInlineTitle: "Saiba mais: {label}",
     tipsCountOne: "{n} dica",
     tipsCountMany: "{n} dicas",
     servingUnits: {

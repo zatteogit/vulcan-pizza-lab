@@ -382,6 +382,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
 export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
+      plainDefinition: "How strong the flour is: the higher it is, the longer the dough holds up while rising. It is often printed on the bag (for example W 280).",
       name: "W (Chopin Alveograph)",
       definition:
         "Total energy required to expand a dough bubble until rupture. Measures the overall flour strength.",
@@ -416,6 +417,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     p_tenacity: {
+      plainDefinition: "How much the dough resists when you pull it.",
       name: "P (Tenacity)",
       definition:
         "Maximum resistance to deformation. Peak of the alveograph curve \u2014 how much the dough resists stretching.",
@@ -428,6 +430,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     l_extensibility: {
+      plainDefinition: "How far the dough stretches before it tears.",
       name: "L (Extensibility)",
       definition:
         "Maximum length the bubble reaches before rupture. Measures how far the dough can stretch.",
@@ -439,74 +442,38 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     pl_ratio: {
+      plainDefinition: "Tells you whether the dough tends to spring back (high value) or stretch easily (low value).",
       name: "P/L (Tenacity/Extensibility Ratio)",
       definition:
         "The ratio between dough’s resistance to deformation and its ability to stretch.",
       whyImportant:
         "It describes rheological balance. The suitable value depends on flour, hydration and method; it does not guarantee pizza height or texture.",
       ranges: [
-        {
-          label: "<0.4 Very extensible",
-          value: "Collapses easily",
-          note: "Pinsa",
-        },
-        {
-          label: "0.4\u20130.5 Extensible",
-          value: "Easy to work",
-          note: "Classic Neapolitan",
-        },
-        {
-          label: "0.5\u20130.7 Balanced",
-          value: "Good balance",
-          note: "Modern Neapolitan, bread",
-        },
-        {
-          label: "0.7\u20131.0 Tenacious",
-          value: "Resistant",
-          note: "Long-fermented bread",
-        },
-        {
-          label: ">1.0 Very tenacious",
-          value: "Elastic, springs back",
-          note: "Croissant",
-        },
+        { label: "Very extensible · Collapses easily", value: "<0.4", note: "Pinsa" },
+        { label: "Extensible · Easy to work", value: "0.4\u20130.5", note: "Classic Neapolitan" },
+        { label: "Balanced · Good balance", value: "0.5\u20130.7", note: "Modern Neapolitan, bread" },
+        { label: "Tenacious · Resistant", value: "0.7\u20131.0", note: "Long-fermented bread" },
+        { label: "Very tenacious · Elastic, springs back", value: ">1.0", note: "Croissant" },
       ],
     },
     falling_number: {
+      plainDefinition: "Tells you how active the flour enzymes that turn starch into sugars are.",
       name: "Falling Number (Hagberg-Perten)",
       definition:
         "Time taken for a plunger to fall through a heated flour suspension. Measures amylase activity.",
       whyImportant:
         "Low FN (<250): rapid fermentation but unstable dough. High FN (>300): stable for long maturations.",
       ranges: [
-        {
-          label: "<200 Very high amylase",
-          value: "Sticky dough",
-          note: "Not recommended for pizza",
-        },
-        {
-          label: "200\u2013250 High",
-          value: "Moist crumb",
-          note: "Quick bread",
-        },
-        {
-          label: "250\u2013300 Medium",
-          value: "Good balance",
-          note: "Pizza 8-12h",
-        },
-        {
-          label: "300\u2013400 Low",
-          value: "Dry, slow",
-          note: "Pizza 24-48h",
-        },
-        {
-          label: ">400 Very low",
-          value: "Dry",
-          note: "Dry pasta",
-        },
+        { label: "Very high amylase · Sticky dough", value: "<200", note: "Not recommended for pizza" },
+        { label: "High · Moist crumb", value: "200\u2013250", note: "Quick bread" },
+        { label: "Medium · Good balance", value: "250\u2013300", note: "Pizza 8-12h" },
+        { label: "Low · Dry, slow", value: "300\u2013400", note: "Pizza 24-48h" },
+        { label: "Very low · Dry", value: ">400", note: "Dry pasta" },
       ],
     },
     hydration: {
+      formula: "H% = (water weight / flour weight) × 100",
+      plainDefinition: "How much water the dough has compared with the flour: at 65% you add 65 g of water for every 100 g of flour.",
       name: "Hydration (H%)",
       definition:
         "Weight percentage of water relative to flour in the dough.",
@@ -578,6 +545,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     lab: {
+      plainDefinition: "The bacteria in sourdough that give the dough its tangy taste.",
       name: "LAB (Lactic Acid Bacteria)",
       definition:
         "Bacteria that ferment sugars producing lactic acid (and acetic acid). Present in sourdough starter.",
@@ -585,6 +553,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "They can change acidity and fructans depending on strains, flour and process. Their presence does not certify low FODMAP dough.",
     },
     q10: {
+      plainDefinition: "How many times faster the dough rises when it is 10 °C warmer.",
       name: "Q\u2081\u2080 (Temperature Coefficient)",
       definition:
         "Multiplicative factor of biochemical reaction rate for every 10\u00B0C increase.",
@@ -701,7 +670,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Gliadin and glutenin combine with water and mixing to form an elastic, extensible network in dough.",
       whyImportant:
-        "Elasticity from glutenins (S-S bonds), viscosity from gliadins (H bonds). Long proteolysis cuts bonds \u2192 more extensible dough.",
+        "Elasticity from glutenins (S-S bonds), viscosity from gliadins (H bonds). A long proteolysis makes the dough more extensible, but the gluten remains: long or sourdough fermentations do not make pizza suitable for people with coeliac disease. Allergies and intolerances are set in your Profile.",
     },
     proteolysis: {
       name: "Proteolysis",
@@ -711,6 +680,8 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "It can change dough extensibility and strength. It depends on flour, microorganisms, temperature and process: there is no universal optimal duration, and it does not measure individual digestibility.",
     },
     thickness_factor: {
+      formula: "TF = dough ball weight (g) / pizza area (cm²)",
+      plainDefinition: "How much dough you need for each square centimetre of pizza: the higher it is, the thicker the pizza.",
       name: "Thickness Factor (TF)",
       definition:
         "Dough quantity per unit of surface area: the grams of dough for each cm² of pizza.",
@@ -738,6 +709,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
+      formula: "T_water = 3 × T_dough − T_room − T_flour − friction",
       name: "Water temperature (three temperatures)",
       definition:
         "Works out how warm the water should be so the dough reaches the temperature you want.",
@@ -745,32 +717,95 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "Sum of the three temperatures = 3 \u00D7 desired dough \u2212 friction. Pizzerias also call it the \u00ABrule of 55\u00BB: with the sum fixed at 55 the dough lands around 18 \u00B0C (55 \u00F7 3); here the style's target is used, 22\u201324 \u00B0C.",
     },
     a_score: {
+      formula: "A = 0.35 × ingredients + 0.30 × process + 0.35 × equipment",
       name: "A-Score (Authenticity)",
       definition:
         "A score from 0 to 100 for closeness to the style reference. It does not certify compliance with a specification.",
       ranges: [
-        { label: "90-100", value: "Rigorously authentic" },
-        { label: "75-89", value: "Substantially authentic" },
-        { label: "60-74", value: "Inspired by the style" },
-        { label: "<60", value: "Significant deviation" },
+        { label: "Rigorously authentic", value: "90-100" },
+        { label: "Substantially authentic", value: "75-89" },
+        { label: "Inspired by the style", value: "60-74" },
+        { label: "Significant deviation", value: "<60" },
       ],
     },
     f_score: {
+      formula: "F = 0.4 × oven + 0.3 × flour + 0.3 × experience",
       name: "F-Score (Ease)",
       definition:
         "A score from 0 to 100 for ease of preparation with the available oven, flour and experience. Requirements that block a recipe are assessed separately.",
       ranges: [
-        { label: "90-100", value: "Highly feasible" },
-        { label: "75-89", value: "Feasible with care" },
-        { label: "60-74", value: "Difficult" },
-        { label: "<60", value: "Not recommended" },
+        { label: "Highly feasible", value: "90-100" },
+        { label: "Feasible with care", value: "75-89" },
+        { label: "Difficult", value: "60-74" },
+        { label: "Not recommended", value: "<60" },
       ],
     },
     d_score: {
       name: "D-Score (Estimated maturation)",
       definition:
         "A model estimate based on time, temperature, yeast and preferments. It does not measure personal digestibility or calculate FODMAP content.",
-      ranges: [{"label":"85-100","value":"High index"},{"label":"70-84","value":"Medium-high index"},{"label":"50-69","value":"Medium index"},{"label":"<50","value":"Low index"}],
+      ranges: [{ label: "High index", value: "85-100" },{ label: "Medium-high index", value: "70-84" },{ label: "Medium index", value: "50-69" },{ label: "Low index", value: "<50" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: "Dividing (staglio)",
+      definition: "Cutting the dough mass into pieces of the same weight, one per pizza, and closing them into balls.",
+      whyImportant: "Balls of the same weight rise and bake the same way. The recipe gives the weight of each ball.",
+    },
+    ball_shaping: {
+      name: "Balling (pirlatura)",
+      definition: "The move that closes a piece of dough into a smooth, tight ball: you turn it on itself, on the counter or between your hands, until the surface is taut.",
+      whyImportant: "A taut surface holds the gas during the final proof and gives a ball that stretches into a round. If the dough tears, you pulled too hard: let it rest for a few minutes.",
+    },
+    gluten_development: {
+      name: "Gluten development (incordatura)",
+      definition: "The point where the dough becomes smooth and elastic and stops sticking to your hands or the bowl: the gluten network has formed.",
+      whyImportant: "A well-developed dough holds the gas from rising. A practical check: stretch a small piece between your fingers; if it becomes a thin film without tearing right away, it is ready. Kneading too long with a machine, on the other hand, warms and weakens the dough.",
+    },
+    folds: {
+      name: "Folds",
+      definition: "You stretch a flap of dough and fold it over the rest, turn the mass and repeat on every side. They are done at intervals during the rest, instead of kneading for longer.",
+      whyImportant: "They strengthen the gluten network without warming the dough, which matters most in very wet doughs. “Slap & fold” is a variant: you lift the dough, slap it on the counter and fold it over itself.",
+    },
+    poke_test: {
+      name: "Poke test (finger dent)",
+      definition: "Press the dough ball with a floured finger about one centimetre deep and watch how it springs back.",
+      whyImportant: "If the dent springs back slowly and leaves a small mark, the ball is ready. If it springs back at once, it needs more time. If it stays caved in and the ball deflates, it has over-proofed. It is a practical sign, not a measurement.",
+    },
+    cornicione: {
+      name: "Cornicione (rim)",
+      definition: "The edge of the pizza, higher and puffier than the centre: in the oven the gas in the dough expands and lifts it.",
+      whyImportant: "To get it, push the air from the centre towards the edge as you stretch, without flattening the rim. Height and holes depend on style, hydration, fermentation and oven heat.",
+    },
+    oven_floor_dome: {
+      name: "Oven floor and dome",
+      definition: "The floor is the oven surface the pizza sits on; the dome is the vault above it. The floor bakes the base by contact; the dome bakes the toppings and rim with the heat it radiates.",
+      whyImportant: "If the base burns while the toppings stay raw, the floor is too hot compared with the dome; if the opposite happens, it is too cold. In a home oven the stone or steel acts as the floor and the grill as the dome.",
+    },
+    pre_ferment: {
+      name: "Preferment",
+      definition: "Part of the flour and water mixed with yeast hours before the final dough and left to mature. The most common are biga (stiff) and poolish (liquid).",
+      whyImportant: "It adds aroma and changes how the final dough handles. In the recipe it is a separate phase, and its amounts are part of the totals: they are not added on top. Autolyse is not a preferment, because it contains no yeast.",
+    },
+    sourdough: {
+      name: "Sourdough starter (lievito madre)",
+      definition: "A dough of flour and water where wild yeasts and lactic acid bacteria live, kept going with feedings of fresh flour and water. Part of it is used instead of baker’s yeast.",
+      whyImportant: "It rises more slowly than baker’s yeast and gives a slightly tangy taste. How active it is depends on how you feed it: that is why the sourdough amount is a model assumption, to adapt to your own starter.",
+    },
+    flour_type: {
+      name: "Flour type (00, 0, 1, 2, wholemeal)",
+      definition: "In Italy the type tells you how refined soft-wheat flour is: 00 is the whitest, then 0, 1, 2 and wholemeal, which contains the whole grain. It is set by the ash content, the minerals left after burning the flour.",
+      whyImportant: "The type does not tell you how strong the flour is: a 00 can be weak or very strong. Strength is the W, if it is printed on the bag. When you do not enter it, the model assumes a typical range for that type.",
+    },
+    manitoba: {
+      name: "Manitoba",
+      definition: "A high-protein soft-wheat flour, originally from North American wheat (the name comes from the Canadian province of Manitoba). In shops today it means a very strong flour.",
+      whyImportant: "It is used for long fermentations or blended with a 00 to raise strength. On its own it gives a tough dough that is harder to stretch.",
+    },
+    semola_rimacinata: {
+      name: "Semola rimacinata (re-milled durum semolina)",
+      definition: "Durum wheat semolina milled a second time, finer than regular semolina: yellow and slightly gritty to the touch.",
+      whyImportant: "It is used to dust the counter and the peel, because it helps the pizza slide and burns less than flour, and in small amounts in the dough of some styles. Durum wheat gluten is less extensible than soft-wheat gluten.",
     },
   },
 };

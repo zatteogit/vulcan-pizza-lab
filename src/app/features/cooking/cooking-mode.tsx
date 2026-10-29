@@ -44,6 +44,8 @@ import { StepIllustration } from "./step-illustrations";
 import { resolveStepVisual } from "./step-visual";
 import { STYLES_DB } from "../../domain/styles-db";
 import { isFriedStyle } from "../../domain/pizza-engine";
+import { GlossaryTermLinks } from "../glossary/term-link";
+import { stepGlossaryTerms } from "../glossary/step-terms";
 
 
 /* ── Countdown automatico della fase, ancorato a endMs ── */
@@ -454,6 +456,10 @@ export function CookingMode() {
                     {step.longDesc}
                   </p>
                 )}
+
+                {/* FW-04 (S10-A-14): le parole del passo aprono il glossario. */}
+                <GlossaryTermLinks termIds={stepGlossaryTerms(step.id, { unleavened: !!STYLES_DB[session.styleId]?.dough.unleavened })} />
+
 
                 {/* Countdown di fase ancorato agli orari reali */}
                 {step.duration_minutes > 0 && !viewingDone && (

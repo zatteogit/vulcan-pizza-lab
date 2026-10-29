@@ -258,6 +258,28 @@ export function getStepTroubleshooting(
 /* === CATEGORY LABELS === */
 /* FW-13 (S13-B-12): niente emoji (letti dallo screen reader, resi diversi fra
  * piattaforme); le icone Lucide delle categorie vivono nella UI. */
+/* FW-04 (S13-A-07, S13-B-05): le sigle e i termini che la scheda usa
+ * (H%, P/L, LAB, finger dent, platea/cielo, W…) portano alla voce del
+ * glossario. Il test term-link.test.ts verifica che ogni id esista. */
+export const ISSUE_GLOSSARY_TERMS: Record<string, readonly string[]> = {
+  P01: ["hydration", "absorption"],
+  P02: ["pl_ratio", "l_extensibility"],
+  P03: ["poke_test", "ball_fermentation"],
+  P05: ["q10"],
+  P06: ["lab", "sourdough"],
+  P07: ["gluten", "ball_fermentation"],
+  P08: ["cornicione"],
+  P09: ["oven_floor_dome", "thermal_conductivity"],
+  P10: ["maillard"],
+  P11: ["hydration"],
+  P14: ["cornicione", "maillard"],
+  P15: ["oven_floor_dome"],
+  P16: ["cornicione", "w_alveograph"],
+  P17: ["hydration"],
+  P19: ["w_alveograph", "manitoba", "pl_ratio"],
+  P21: ["q10"],
+};
+
 export const CATEGORY_LABELS: Record<string, { label: string }> = {
   dough: { label: 'Impasto' },
   fermentation: { label: 'Fermentazione' },

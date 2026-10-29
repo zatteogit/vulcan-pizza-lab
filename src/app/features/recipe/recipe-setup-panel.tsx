@@ -455,6 +455,7 @@ export function RecipeSetupPanel({
                     small
                     science
                     label={cms.ui.nerdPL}
+                    termId="pl_ratio"
                     value={fmt.number(recipe.flour_pl, { maximumFractionDigits: 2 })}
                     index={1}
                   />
@@ -477,6 +478,7 @@ export function RecipeSetupPanel({
                       formatTemperatureCopy(cms.ui.nerdQ10, fmt),
                       { refTemp: fmt.celsius(18) },
                     )}
+                    termId="q10"
                     value={uiMessage("format.timesFactor", [fmt.number(roundForEvidence(recipe.science.q10_factor, Q10_NOTE))])}
                     index={3}
                   />

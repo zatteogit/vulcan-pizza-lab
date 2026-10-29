@@ -59,8 +59,8 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
     if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Se hai una teglia"));
     if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Se hai pietra o acciaio"));
     if (c.kind === "flour") add("flour", c.status === "missing"
-      ? msg("need.flour", "Serve farina W{w}", c.message.params)
-      : msg("need.checkFlour", "Se hai farina W{w}", c.message.params));
+      ? msg("need.flour", "Serve farina con forza W{w}", c.message.params)
+      : msg("need.checkFlour", "Se hai farina con forza W{w}", c.message.params));
     if (c.kind === "flour_blend") add("flour", msg("card.blendCheck", "Se hai le farine del mix"));
     if (c.kind === "ingredient" && c.status === "missing" && !result.some(signal=>signal.message.key==="card.ingredientsMissing")) add("check",msg("card.ingredientsMissing","Ingredienti da procurare"));
     if (c.kind === "yeast" && c.status === "missing") add("flour", msg("card.yeastMissing", "Serve il lievito"));

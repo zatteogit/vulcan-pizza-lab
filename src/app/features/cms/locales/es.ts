@@ -328,6 +328,9 @@ export const ES_LOCALE: CmsContent = {
     personalize: "Personalizar",
     adjustByHandQuestion: "\u00BFPrefieres decidir t\u00FA?",
     statIdeal: "ideal",
+    // FW-04
+    cardTotalTime: "≈ {duration} en total",
+    cardFermentRange: "Levado {range}",
   },
   tips: {
     kitchenTemp:
@@ -472,15 +475,15 @@ export const ES_LOCALE: CmsContent = {
     },
     "2": {
       name: "Intermedio",
-      description: "Ya he hecho algunas pizzas",
+      description: "He hecho pizza algunas veces siguiendo una receta",
     },
     "3": {
       name: "Avanzado",
-      description: "Manejo pliegues y fermentaciones",
+      description: "Hago pizza a menudo y sé manejar una masa blanda",
     },
     "4": {
       name: "Experto",
-      description: "Adapto masas, tiempos y técnicas",
+      description: "Ajusto yo mismo cantidades y tiempos",
     },
   },
   families: {
@@ -703,8 +706,8 @@ export const ES_LOCALE: CmsContent = {
     noResults: "Ningún término para «{query}»",
     allCategories: "Todos",
     formulaLabel: "F\u00F3rmula",
-    rangesLabel: "Rangos t\u00EDpicos",
-    whyImportantLabel: "Por qu\u00E9 importa",
+    rangesLabel: "Valores típicos",
+    whyImportantLabel: "Por qué importa",
     relatedLabel: "Relacionados",
     backToHome: "Volver al inicio",
     termCount: "{count} t\u00E9rminos",
@@ -731,6 +734,17 @@ export const ES_LOCALE: CmsContent = {
     catMechanicsDesc: "Procesamiento, equipos y medidas",
     catScoring: "Puntajes",
     catScoringDesc: "Cómo leer las puntuaciones de {brand}",
+    // FW-04
+    catTechnique: "Gestos y fases",
+    catTechniqueDesc: "Las palabras del proceso, del amasado al horno",
+    catFlour: "Harinas",
+    catFlourDesc: "Tipos de harina y cómo leerlos",
+    rangesValueHeader: "Valor",
+    rangesMeaningHeader: "Qué indica",
+    technicalLabel: "Definición técnica",
+    modelNoteLabel: "En el modelo de {brand}",
+    seeAlsoLabel: "Ver también",
+    inGlossaryLabel: "En el glosario:",
   },
   engineMessages: {
     "allergen.conflict": "Contiene {allergen}: {ingredients}.",
@@ -835,8 +849,8 @@ export const ES_LOCALE: CmsContent = {
     "need.excludedFlour": "La receta requiere una harina que excluiste: {flour}",
     "need.purchaseRefused": "Falta un requisito y has decidido no conseguirlo",
     "aid.semolina": "Opcional: un poco de sémola remolida para espolvorear; también sirve la harina de la receta",
-    "need.checkFlour": "Si tienes harina W{w}",
-    "need.flour": "Hace falta harina W{w}",
+    "need.checkFlour": "Si tienes harina de fuerza W{w}",
+    "need.flour": "Hace falta harina de fuerza W{w}",
     "need.checkBlend": "Si tienes todas las harinas de la mezcla",
     "need.checkYeast": "Levadura que debes tener en casa: {yeast}",
     "need.yeast": "Hace falta levadura: {yeast}",
@@ -1300,6 +1314,8 @@ export const ES_LOCALE: CmsContent = {
     sheetOilLabel: "Temperatura del aceite",
     sheetOilHeat: "Lleva el aceite a temperatura antes de freír: no hace falta horno.",
     sheetFryTurn: "Dale la vuelta a mitad de fritura",
+    // FW-04
+    pillDoughLoad: "Carga de masa",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1638,6 +1654,8 @@ export const ES_LOCALE: CmsContent = {
     pantryProfileEmpty: "Ninguna harina ni levadura indicada: partimos de lo típico del estilo.",
     pantryProfileEdit: "Editar en Crear",
     ftuSourdoughNote: "Con masa madre, en las fermentaciones largas podremos proponerla en lugar de la levadura de panadería.",
+    // FW-04
+    ftuFlourTypeNote: "El tipo (00, 0, integral) dice lo refinada que es la harina, no lo fuerte que es. Si el paquete indica la W, podrás añadirla después en tu despensa.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1724,7 +1742,6 @@ export const ES_LOCALE: CmsContent = {
     exploreFilterRecipes: "Recetas icónicas",
     learnFilterSubtitle: "Las guías de abajo son generales y valen también para este estilo.",
     learnRemoveFilter: "Eliminar filtro de estilo",
-    learnOpenGlossary: "Abrir el glosario",
     learnPathLabel: "Ruta de aprendizaje",
     learnStartPath: "Iniciar ruta",
     learnTermOfTheDay: "Término del día — {category}",
@@ -1755,6 +1772,8 @@ export const ES_LOCALE: CmsContent = {
     deactivate: "Desactivar",
     passToEasy: "Pasar a Easy",
     activateNerd: "Activar modo Nerd",
+    // FW-04
+    learnOpenTerm: "Abrir la entrada del glosario",
   },
   configurator: {
     hydrationLabel: "Hidrataci\u00F3n",
@@ -1973,7 +1992,6 @@ export const ES_LOCALE: CmsContent = {
     prefermentSaltNote: "La sal va en la masa final, no en el prefermento, donde frenaría la levadura.",
     learnedFromAttempts: "He aprendido de tus {n} intentos",
     applyCorrections: "Aplicar las correcciones",
-    learnInlineTitle: "Saber m\u00E1s: {label}",
     tipsCountOne: "{n} consejo",
     tipsCountMany: "{n} consejos",
     servingUnits: {

@@ -82,6 +82,7 @@ import { SettingEffectNote } from "../features/profile/setting-effect-note";
 import { SkillEffectDetails } from "../features/profile/skill-effect-details";
 import { DietPreferences } from "../features/profile/diet-preferences";
 import { PantrySummary } from "../features/profile/pantry-summary";
+import { GlossaryTermLinks } from "../features/glossary/term-link";
 import { encodePan } from "../features/recipe/pan-url";
 import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { BRAND } from "../config/brand";
@@ -972,6 +973,9 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                       />
                     ))}
                   </div>
+                  {/* FW-04 (S15-A-09): il tipo non è la forza; i nomi si aprono nel glossario. */}
+                  <p className="type-data-sm profile-ftu__pantry-note">{p.ftuFlourTypeNote}</p>
+                  <GlossaryTermLinks termIds={["flour_type", "w_alveograph", "manitoba", "semola_rimacinata"]} />
                   {/* Accordion farine speciali */}
                   <button
                     onClick={() => setShowSpecialFlours((v) => !v)}
@@ -1012,6 +1016,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                       />
                     ))}
                   </div>
+                  <GlossaryTermLinks termIds={["sourdough"]} />
                 </div>
                 {ftuYeasts.includes("sourdough") && (
                   <p className="type-data-sm profile-ftu__pantry-note" role="status">

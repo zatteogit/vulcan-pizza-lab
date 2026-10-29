@@ -399,6 +399,7 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
 export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
+      plainDefinition: "A força da farinha: quanto mais alta, mais tempo a massa aguenta a fermentação. Muitas vezes vem escrita no pacote (por exemplo W 280).",
       name: "W (Alve\u00F3grafo de Chopin)",
       definition: "Energia total necess\u00E1ria para expandir uma bolha de massa at\u00E9 ela se romper. Mede a for\u00E7a geral da farinha.",
       whyImportant: "W descreve a força global da farinha. Tenacidade e extensibilidade são avaliadas com P, L e P/L: um W alto, por si só, não implica uma massa mais tenaz.",
@@ -411,6 +412,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     p_tenacity: {
+      plainDefinition: "Quanto a massa resiste quando você a puxa.",
       name: "P (Tenacidade)",
       definition: "Resist\u00EAncia m\u00E1xima \u00E0 deforma\u00E7\u00E3o. Pico da curva alveogr\u00E1fica \u2014 o quanto a massa resiste ao estiramento.",
       whyImportant: "P alto: massa 'dura', mant\u00E9m a forma no forno. P baixo: massa 'mole', f\u00E1cil de abrir, pode desabar.",
@@ -421,6 +423,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     l_extensibility: {
+      plainDefinition: "Quanto a massa se estica antes de rasgar.",
       name: "L (Extensibilidade)",
       definition: "Comprimento m\u00E1ximo que a bolha atinge antes de se romper. Mede o quanto a massa pode se alongar.",
       whyImportant: "L alto: massa extens\u00EDvel, f\u00E1cil de abrir sem rasgar. L baixo: massa curta, que rasga.",
@@ -430,30 +433,34 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     pl_ratio: {
+      plainDefinition: "Indica se a massa tende a voltar (valor alto) ou a esticar com facilidade (valor baixo).",
       name: "P/L (Rela\u00E7\u00E3o Tenacidade/Extensibilidade)",
       definition: "A relação entre a resistência da massa à deformação e a capacidade de se esticar.",
       whyImportant: "Descreve o equilíbrio reológico. O valor adequado depende da farinha, hidratação e método; não garante altura ou textura.",
       ranges: [
-        { label: "<0.4 Muito extens\u00EDvel", value: "Desaba facilmente", note: "Pinsa" },
-        { label: "0.4\u20130.5 Extens\u00EDvel", value: "F\u00E1cil de trabalhar", note: "Napolitana cl\u00E1ssica" },
-        { label: "0.5\u20130.7 Equilibrada", value: "Bom equil\u00EDbrio", note: "Napolitana moderna, p\u00E3o" },
-        { label: "0.7\u20131.0 Tenaz", value: "Resistente", note: "P\u00E3o de longa fermenta\u00E7\u00E3o" },
-        { label: ">1.0 Muito tenaz", value: "El\u00E1stica, encolhe", note: "Croissant" },
+        { label: "Muito extens\u00EDvel · Desaba facilmente", value: "<0.4", note: "Pinsa" },
+        { label: "Extens\u00EDvel · F\u00E1cil de trabalhar", value: "0.4\u20130.5", note: "Napolitana cl\u00E1ssica" },
+        { label: "Equilibrada · Bom equil\u00EDbrio", value: "0.5\u20130.7", note: "Napolitana moderna, p\u00E3o" },
+        { label: "Tenaz · Resistente", value: "0.7\u20131.0", note: "P\u00E3o de longa fermenta\u00E7\u00E3o" },
+        { label: "Muito tenaz · El\u00E1stica, encolhe", value: ">1.0", note: "Croissant" },
       ],
     },
     falling_number: {
+      plainDefinition: "Indica o quanto estão ativas as enzimas da farinha que transformam o amido em açúcares.",
       name: "Falling Number (Hagberg-Perten)",
       definition: "Tempo que uma haste leva para cair atrav\u00E9s de uma suspens\u00E3o de farinha aquecida. Mede a atividade amil\u00E1sica.",
       whyImportant: "FN baixo (<250): fermenta\u00E7\u00E3o r\u00E1pida, mas massa inst\u00E1vel. FN alto (>300): est\u00E1vel para matura\u00E7\u00F5es longas.",
       ranges: [
-        { label: "<200 Amilase alt\u00EDssima", value: "Massa grudenta", note: "N\u00E3o recomendada para pizza" },
-        { label: "200\u2013250 Alta", value: "Miolo \u00FAmido", note: "P\u00E3o r\u00E1pido" },
-        { label: "250\u2013300 M\u00E9dia", value: "Bom equil\u00EDbrio", note: "Pizza 8-12h" },
-        { label: "300\u2013400 Baixa", value: "Seca, lenta", note: "Pizza 24-48h" },
-        { label: ">400 Muito baixa", value: "Seca", note: "Macarr\u00E3o seco" },
+        { label: "Amilase alt\u00EDssima · Massa grudenta", value: "<200", note: "N\u00E3o recomendada para pizza" },
+        { label: "Alta · Miolo \u00FAmido", value: "200\u2013250", note: "P\u00E3o r\u00E1pido" },
+        { label: "M\u00E9dia · Bom equil\u00EDbrio", value: "250\u2013300", note: "Pizza 8-12h" },
+        { label: "Baixa · Seca, lenta", value: "300\u2013400", note: "Pizza 24-48h" },
+        { label: "Muito baixa · Seca", value: ">400", note: "Macarr\u00E3o seco" },
       ],
     },
     hydration: {
+      formula: "H% = (peso da água / peso da farinha) × 100",
+      plainDefinition: "Quanta água a massa tem em relação à farinha: com 65 % você coloca 65 g de água para cada 100 g de farinha.",
       name: "Hidrata\u00E7\u00E3o (H%)",
       definition: "Porcentagem em peso de \u00E1gua em rela\u00E7\u00E3o \u00E0 farinha na massa.",
       whyImportant: "H baixa (<55%): crocante, f\u00E1cil. H m\u00E9dia (60-65%): equil\u00EDbrio. H alta (>70%): exige farinha forte (W>280) e habilidade.",
@@ -498,11 +505,13 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     lab: {
+      plainDefinition: "As bactérias do fermento natural que dão à massa o sabor levemente ácido.",
       name: "LAB (Bact\u00E9rias L\u00E1ticas)",
       definition: "Bact\u00E9rias que fermentam a\u00E7\u00FAcares produzindo \u00E1cido l\u00E1tico (e ac\u00E9tico). Presentes no fermento natural.",
       whyImportant: "Podem alterar acidez e frutanos conforme estirpes, farinha e processo. A sua presença não certifica massa low FODMAP.",
     },
     q10: {
+      plainDefinition: "Quantas vezes a fermentação acelera quando está 10 °C mais quente.",
       name: "Q\u2081\u2080 (Coeficiente de Temperatura)",
       definition: "Fator multiplicativo da velocidade de uma rea\u00E7\u00E3o bioqu\u00EDmica a cada aumento de 10\u00B0C.",
       whyImportant: "Com Q\u2081\u2080 = 2, a fermenta\u00E7\u00E3o dobra a cada +10\u00B0C: 24h a 18\u00B0C \u2248 12h a 28\u00B0C. Os valores abaixo s\u00E3o estimativas do modelo do {brand}.",
@@ -590,7 +599,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     gluten: {
       name: "Gl\u00FAten",
       definition: "A gliadina e a glutenina formam, com água e trabalho da massa, uma rede elástica e extensível.",
-      whyImportant: "Elasticidade vinda das gluteninas (liga\u00E7\u00F5es S-S), viscosidade das gliadinas (liga\u00E7\u00F5es H). Prote\u00F3lise longa quebra as liga\u00E7\u00F5es \u2192 massa mais extens\u00EDvel.",
+      whyImportant: "Elasticidade vinda das gluteninas (ligações S-S), viscosidade das gliadinas (ligações H). Uma proteólise longa deixa a massa mais extensível, mas o glúten continua lá: fermentações longas ou com fermento natural não tornam a pizza adequada para celíacos. Alergias e intolerâncias são definidas no Perfil.",
     },
     proteolysis: {
       name: "Prote\u00F3lise",
@@ -598,6 +607,8 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       whyImportant: "Pode alterar a extensibilidade e a resistência da massa. Depende da farinha, dos microrganismos, da temperatura e do processo: não há uma duração ideal universal e não mede a digestibilidade individual.",
     },
     thickness_factor: {
+      formula: "TF = peso da bola (g) / área da pizza (cm²)",
+      plainDefinition: "Quanta massa é preciso para cada centímetro quadrado de pizza: quanto mais alto, mais grossa a pizza.",
       name: "Thickness Factor (TF)",
       definition: "Quantidade de massa por unidade de superfície: os gramas de massa por cada cm² de pizza.",
       whyImportant: "Uma métrica comum nas calculadoras de massa norte-americanas (em oz/in²; 1 oz/in² ≈ 4,39 g/cm²). A {brand} a expressa em g/cm² para dimensionar as bolas de massa; junto com o forno, orienta o tempo de forno e a crocância.",
@@ -621,34 +632,98 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
+      formula: "T_água = 3 × T_massa − T_ambiente − T_farinha − atrito",
       name: "Temperatura da \u00E1gua (tr\u00EAs temperaturas)",
       definition: "Calcula a que temperatura p\u00F4r a \u00E1gua para a massa chegar \u00E0 temperatura desejada.",
       whyImportant: "Soma das tr\u00EAs temperaturas = 3 \u00D7 massa desejada \u2212 atrito. Na pizzaria tamb\u00E9m se diz \u00ABregra dos 55\u00BB: com a soma fixa em 55 a massa fica perto de 18 \u00B0C (55 \u00F7 3); aqui se usa a meta do estilo, 22\u201324 \u00B0C.",
     },
     a_score: {
+      formula: "A = 0,35 × ingredientes + 0,30 × processo + 0,35 × equipamento",
       name: "A-Score (Autenticidade)",
       definition: "Pontuação de 0 a 100 sobre a proximidade à referência do estilo. Não certifica o cumprimento de um caderno de especificações.",
       ranges: [
-        { label: "90-100", value: "Rigorosamente aut\u00EAntica" },
-        { label: "75-89", value: "Substancialmente aut\u00EAntica" },
-        { label: "60-74", value: "Inspirada no estilo" },
-        { label: "<60", value: "Desvio significativo" },
+        { label: "Rigorosamente aut\u00EAntica", value: "90-100" },
+        { label: "Substancialmente aut\u00EAntica", value: "75-89" },
+        { label: "Inspirada no estilo", value: "60-74" },
+        { label: "Desvio significativo", value: "<60" },
       ],
     },
     f_score: {
+      formula: "F = 0,4 × forno + 0,3 × farinha + 0,3 × experiência",
       name: "F-Score (Facilidade)",
       definition: "Pontuação de 0 a 100 sobre a facilidade de preparação com o forno, farinha e experiência disponíveis. Os requisitos que bloqueiam a receita são avaliados à parte.",
       ranges: [
-        { label: "90-100", value: "Muito vi\u00E1vel" },
-        { label: "75-89", value: "Vi\u00E1vel com aten\u00E7\u00E3o" },
-        { label: "60-74", value: "Dif\u00EDcil" },
-        { label: "<60", value: "N\u00E3o recomendado" },
+        { label: "Muito vi\u00E1vel", value: "90-100" },
+        { label: "Vi\u00E1vel com aten\u00E7\u00E3o", value: "75-89" },
+        { label: "Dif\u00EDcil", value: "60-74" },
+        { label: "N\u00E3o recomendado", value: "<60" },
       ],
     },
     d_score: {
       name: "D-Score (Maturação estimada)",
       definition: "Estimativa do modelo baseada em tempo, temperatura, levedura e pré-fermentos. Não mede a digestibilidade individual nem calcula os FODMAP.",
-      ranges: [{"label":"85-100","value":"Índice alto"},{"label":"70-84","value":"Índice médio-alto"},{"label":"50-69","value":"Índice médio"},{"label":"<50","value":"Índice baixo"}],
+      ranges: [{ label: "Índice alto", value: "85-100" },{ label: "Índice médio-alto", value: "70-84" },{ label: "Índice médio", value: "50-69" },{ label: "Índice baixo", value: "<50" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: "Divisão (staglio)",
+      definition: "Dividir a massa em pedaços do mesmo peso, um por pizza, e fechá-los em bolas.",
+      whyImportant: "Bolas do mesmo peso fermentam e assam do mesmo jeito. A receita indica o peso de cada bola.",
+    },
+    ball_shaping: {
+      name: "Boleamento (pirlatura)",
+      definition: "O gesto que fecha o pedaço de massa numa bola lisa e tensa: você a gira sobre si mesma, na bancada ou entre as mãos, até a superfície ficar esticada.",
+      whyImportant: "Uma superfície tensa segura o gás durante a segunda fermentação e dá uma bola que se abre redonda. Se a massa rasgar, você puxou demais: deixe descansar alguns minutos.",
+    },
+    gluten_development: {
+      name: "Ponto de véu (incordatura)",
+      definition: "O momento em que a massa fica lisa e elástica e para de grudar nas mãos ou na tigela: a rede de glúten se formou.",
+      whyImportant: "Uma massa no ponto segura o gás da fermentação. Teste prático: estique um pedacinho entre os dedos; se virar uma película fina sem rasgar logo, está pronta. Sovar demais na máquina, por outro lado, aquece e enfraquece a massa.",
+    },
+    folds: {
+      name: "Dobras",
+      definition: "Você estica uma parte da massa e a dobra sobre o resto, gira a massa e repete em cada lado. Fazem-se em intervalos durante o descanso, em vez de sovar por mais tempo.",
+      whyImportant: "Reforçam a rede de glúten sem aquecer a massa, sobretudo em massas muito hidratadas. O «slap & fold» é uma variante: você levanta a massa, bate na bancada e a dobra sobre si mesma.",
+    },
+    poke_test: {
+      name: "Teste do dedo (poke test)",
+      definition: "Aperte a bola com um dedo enfarinhado, cerca de um centímetro, e veja como a marca volta.",
+      whyImportant: "Se a marca volta devagar e fica um pouco, a bola está pronta. Se volta na hora, precisa de mais tempo. Se fica afundada e a bola murcha, fermentou demais. É uma indicação prática, não uma medida.",
+    },
+    cornicione: {
+      name: "Cornicione (borda)",
+      definition: "A borda da pizza, mais alta e inflada que o centro: no forno o gás da massa se expande e a levanta.",
+      whyImportant: "Para obtê-la, ao abrir a massa empurre o ar do centro para a borda sem amassá-la. Altura e alvéolos dependem do estilo, da hidratação, da fermentação e do calor do forno.",
+    },
+    oven_floor_dome: {
+      name: "Lastro e cúpula",
+      definition: "O lastro é a base do forno onde a pizza fica apoiada; a cúpula é a parte de cima. O lastro assa o fundo por contato; a cúpula assa a cobertura e a borda com o calor que irradia.",
+      whyImportant: "Se o fundo queima e a cobertura fica crua, o lastro está quente demais em relação à cúpula; se acontece o contrário, está frio demais. No forno doméstico a pedra ou o aço fazem o papel de lastro e o grill o de cúpula.",
+    },
+    pre_ferment: {
+      name: "Pré-fermento",
+      definition: "Uma parte da farinha e da água misturada com fermento horas antes da massa final e deixada para maturar. Os mais usados são a biga (firme) e o poolish (líquido).",
+      whyImportant: "Traz aroma e muda como a massa final se trabalha. Na receita é uma fase à parte, e as quantidades dele fazem parte do total: não se somam. A autólise não é um pré-fermento, porque não leva fermento.",
+    },
+    sourdough: {
+      name: "Fermento natural (lievito madre)",
+      definition: "Uma massa de farinha e água onde vivem leveduras selvagens e bactérias láticas, mantida com alimentações de farinha e água. Uma parte é usada no lugar do fermento biológico.",
+      whyImportant: "Fermenta mais devagar que o fermento biológico e dá um sabor levemente ácido. A atividade depende de como você o alimenta: por isso a dose com fermento natural é uma hipótese do modelo, a ajustar ao seu.",
+    },
+    flour_type: {
+      name: "Tipo de farinha (00, 0, 1, 2, integral)",
+      definition: "Na Itália o tipo indica o quanto a farinha de trigo mole é refinada: a 00 é a mais branca, depois 0, 1, 2 e integral, que contém o grão inteiro. É definido pelas cinzas, isto é, os minerais que sobram ao queimar a farinha.",
+      whyImportant: "O tipo não diz o quanto a farinha é forte: uma 00 pode ser fraca ou muito forte. A força é o W, se estiver no pacote. Quando você não o informa, o modelo assume um intervalo típico para esse tipo.",
+    },
+    manitoba: {
+      name: "Manitoba",
+      definition: "Farinha de trigo mole rica em proteínas, originalmente de trigos norte-americanos (o nome vem da província canadense de Manitoba). Hoje, no comércio, indica uma farinha muito forte.",
+      whyImportant: "É usada em fermentações longas ou misturada com uma 00 para aumentar a força. Sozinha dá uma massa tenaz, mais difícil de abrir.",
+    },
+    semola_rimacinata: {
+      name: "Sêmola remoída (semola rimacinata)",
+      definition: "Sêmola de trigo duro moída uma segunda vez, mais fina que a sêmola comum: amarela e um pouco granulosa ao toque.",
+      whyImportant: "É usada para polvilhar a bancada e a pá, porque faz a pizza deslizar e queima menos que a farinha, e em pequena quantidade na massa de alguns estilos. O glúten do trigo duro é menos extensível que o do trigo mole.",
     },
   },
 };

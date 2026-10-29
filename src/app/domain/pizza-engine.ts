@@ -887,8 +887,8 @@ function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints, f
   const mix = !coversW ? pantryFlourMix(constraints.pantry_flours, [flourW, flourW], true, constraints.pantry_flour_details) : null;
   if (unknownFlour || (!coversW && !mix)) {
     add("flour", unknownFlour ? "unverified" : "missing", unknownFlour
-      ? em("need.checkFlour", "Se hai farina W{w}", { w: flourW })
-      : em("need.flour", "Serve farina W{w}", { w: flourW }));
+      ? em("need.checkFlour", "Se hai farina con forza W{w}", { w: flourW })
+      : em("need.flour", "Serve farina con forza W{w}", { w: flourW }));
   }
   if ((style.dough.flour_blend?.length ?? 0) > 1) {
     // La dispensa censisce prodotti/farine, non tutti i componenti di ogni blend.
@@ -4138,17 +4138,17 @@ export const SKILL_LEVELS: {
   {
     level: 2,
     name: "Intermedio",
-    description: "Ho già fatto qualche pizza",
+    description: "Ho fatto la pizza qualche volta seguendo una ricetta",
   },
   {
     level: 3,
     name: "Avanzato",
-    description: "Gestisco pieghe e lievitazioni",
+    description: "Faccio la pizza spesso e so gestire un impasto morbido",
   },
   {
     level: 4,
     name: "Esperto",
-    description: "Adatto impasti, tempi e tecniche",
+    description: "Cambio dosi e tempi da solo",
   },
 ];
 

@@ -341,6 +341,9 @@ export const EN_LOCALE: CmsContent = {
     dietLowFodmap: "Low FODMAP",
     dietHistamine: "Low histamine",
     dietNickel: "Low nickel",
+    // FW-04
+    cardTotalTime: "≈ {duration} in all",
+    cardFermentRange: "Rising {range}",
   },
   tips: {
     kitchenTemp:
@@ -480,15 +483,15 @@ export const EN_LOCALE: CmsContent = {
     },
     "2": {
       name: "Intermediate",
-      description: "I have made pizza a few times",
+      description: "I have made pizza a few times following a recipe",
     },
     "3": {
       name: "Advanced",
-      description: "I manage folds and fermentation",
+      description: "I make pizza often and can handle a soft dough",
     },
     "4": {
       name: "Expert",
-      description: "I adapt doughs, timing and techniques",
+      description: "I adjust amounts and timings myself",
     },
   },
   families: {
@@ -732,7 +735,6 @@ export const EN_LOCALE: CmsContent = {
       "Salt goes into the final dough, not the preferment, where it would slow the yeast.",
     learnedFromAttempts: "I learned from your {n} attempts",
     applyCorrections: "Apply the corrections",
-    learnInlineTitle: "Learn more: {label}",
     tipsCountOne: "{n} tip",
     tipsCountMany: "{n} tips",
     servingUnits: {
@@ -886,7 +888,7 @@ export const EN_LOCALE: CmsContent = {
     noResults: "No terms for “{query}”",
     allCategories: "All",
     formulaLabel: "Formula",
-    rangesLabel: "Typical ranges",
+    rangesLabel: "Typical values",
     whyImportantLabel: "Why it matters",
     relatedLabel: "Related",
     backToHome: "Back to home",
@@ -912,6 +914,17 @@ export const EN_LOCALE: CmsContent = {
     catMechanicsDesc: "Processing, equipment and measurements",
     catScoring: "Scores",
     catScoringDesc: "How to read {brand} scores",
+    // FW-04
+    catTechnique: "Techniques and stages",
+    catTechniqueDesc: "The words of the method, from mixing to the oven",
+    catFlour: "Flours",
+    catFlourDesc: "Flour types and how to read them",
+    rangesValueHeader: "Value",
+    rangesMeaningHeader: "What it means",
+    technicalLabel: "Technical definition",
+    modelNoteLabel: "In the {brand} model",
+    seeAlsoLabel: "See also",
+    inGlossaryLabel: "In the glossary:",
   },
   engineMessages: {
     "allergen.conflict": "Contains {allergen}: {ingredients}.",
@@ -1014,8 +1027,8 @@ export const EN_LOCALE: CmsContent = {
     "need.excludedFlour": "The recipe requires a flour you excluded: {flour}",
     "need.purchaseRefused": "A requirement is missing and you chose not to obtain it",
     "aid.semolina": "Optional: a little re-milled semolina for dusting; the recipe flour also works",
-    "need.checkFlour": "If you have W{w} flour",
-    "need.flour": "W{w} flour needed",
+    "need.checkFlour": "If you have flour with strength W{w}",
+    "need.flour": "Needs flour with strength W{w}",
     "need.checkBlend": "If you have all flours in the blend",
     "need.checkYeast": "Yeast to have at home: {yeast}",
     "need.yeast": "Yeast needed: {yeast}",
@@ -1470,6 +1483,8 @@ export const EN_LOCALE: CmsContent = {
     sheetOilLabel: "Oil temperature",
     sheetOilHeat: "Bring the oil to temperature before frying: no oven needed.",
     sheetFryTurn: "Turn it halfway through frying",
+    // FW-04
+    pillDoughLoad: "Dough load",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1807,6 +1822,8 @@ export const EN_LOCALE: CmsContent = {
     pantryProfileEmpty: "No flour or yeast listed: we start from what’s typical for the style.",
     pantryProfileEdit: "Edit in Create",
     ftuSourdoughNote: "With a sourdough starter, for long fermentations we may suggest it instead of baker’s yeast.",
+    // FW-04
+    ftuFlourTypeNote: "The type (00, 0, wholemeal) tells you how refined the flour is, not how strong. If the bag shows the W, you can enter it later in your pantry.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1891,7 +1908,6 @@ export const EN_LOCALE: CmsContent = {
     exploreFilterRecipes: "Iconic recipes",
     learnFilterSubtitle: "The guides below are general and apply to this style too.",
     learnRemoveFilter: "Remove style filter",
-    learnOpenGlossary: "Open glossary",
     learnPathLabel: "Learning Path",
     learnStartPath: "Start path",
     learnTermOfTheDay: "Term of the Day — {category}",
@@ -1922,6 +1938,8 @@ export const EN_LOCALE: CmsContent = {
     deactivate: "Deactivate",
     passToEasy: "Switch to Easy",
     activateNerd: "Activate Nerd Mode",
+    // FW-04
+    learnOpenTerm: "Open the full entry",
   },
   configurator: {
     hydrationLabel: "Hydration",

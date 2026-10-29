@@ -405,6 +405,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
 export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
+      plainDefinition: "La force de la farine : plus elle est élevée, plus la pâte tient longtemps pendant la levée. Elle est souvent indiquée sur le paquet (par exemple W 280).",
       name: "W (Alv\u00E9ographe de Chopin)",
       definition: "\u00C9nergie totale n\u00E9cessaire pour gonfler une bulle de p\u00E2te jusqu'\u00E0 la rupture. Mesure la force globale de la farine.",
       whyImportant: "W décrit la force globale de la farine. Ténacité et extensibilité se jugent avec P, L et P/L : un W élevé ne signifie pas à lui seul une pâte plus tenace.",
@@ -417,6 +418,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     p_tenacity: {
+      plainDefinition: "La résistance de la pâte quand vous l’étirez.",
       name: "P (T\u00E9nacit\u00E9)",
       definition: "R\u00E9sistance maximale \u00E0 la d\u00E9formation. Pic de la courbe alv\u00E9ographique \u2014 \u00E0 quel point la p\u00E2te r\u00E9siste \u00E0 l'\u00E9tirement.",
       whyImportant: "P \u00E9lev\u00E9 : p\u00E2te \u00AB dure \u00BB, garde sa forme \u00E0 la cuisson. P bas : p\u00E2te \u00AB molle \u00BB, facile \u00E0 \u00E9taler, peut s'affaisser.",
@@ -427,6 +429,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     l_extensibility: {
+      plainDefinition: "Jusqu’où la pâte s’allonge avant de se déchirer.",
       name: "L (Extensibilit\u00E9)",
       definition: "Longueur maximale atteinte par la bulle avant la rupture. Mesure jusqu'o\u00F9 la p\u00E2te peut s'allonger.",
       whyImportant: "L \u00E9lev\u00E9 : p\u00E2te extensible, facile \u00E0 \u00E9taler sans d\u00E9chirures. L bas : p\u00E2te courte, se d\u00E9chire.",
@@ -436,30 +439,34 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     pl_ratio: {
+      plainDefinition: "Indique si la pâte a tendance à se rétracter (valeur élevée) ou à s’étirer facilement (valeur basse).",
       name: "P/L (Rapport T\u00E9nacit\u00E9/Extensibilit\u00E9)",
       definition: "Le rapport entre la résistance de la pâte à la déformation et sa capacité à s’étirer.",
       whyImportant: "Décrit l’équilibre rhéologique. La valeur adaptée dépend de la farine, de l’hydratation et de la méthode ; sans garantie de hauteur ou texture.",
       ranges: [
-        { label: "<0.4 Tr\u00E8s extensible", value: "S'affaisse facilement", note: "Pinsa" },
-        { label: "0.4\u20130.5 Extensible", value: "Facile \u00E0 travailler", note: "Napolitaine classique" },
-        { label: "0.5\u20130.7 \u00C9quilibr\u00E9", value: "Bon \u00E9quilibre", note: "Napolitaine moderne, pain" },
-        { label: "0.7\u20131.0 Tenace", value: "R\u00E9sistante", note: "Pains \u00E0 longue fermentation" },
-        { label: ">1.0 Tr\u00E8s tenace", value: "\u00C9lastique, se r\u00E9tracte", note: "Croissant" },
+        { label: "Tr\u00E8s extensible · S'affaisse facilement", value: "<0.4", note: "Pinsa" },
+        { label: "Extensible · Facile \u00E0 travailler", value: "0.4\u20130.5", note: "Napolitaine classique" },
+        { label: "\u00C9quilibr\u00E9 · Bon \u00E9quilibre", value: "0.5\u20130.7", note: "Napolitaine moderne, pain" },
+        { label: "Tenace · R\u00E9sistante", value: "0.7\u20131.0", note: "Pains \u00E0 longue fermentation" },
+        { label: "Tr\u00E8s tenace · \u00C9lastique, se r\u00E9tracte", value: ">1.0", note: "Croissant" },
       ],
     },
     falling_number: {
+      plainDefinition: "Indique l’activité des enzymes de la farine qui transforment l’amidon en sucres.",
       name: "Falling Number (Hagberg-Perten)",
       definition: "Temps mis par une tige pour descendre \u00E0 travers une suspension de farine chauff\u00E9e. Mesure l'activit\u00E9 amylasique.",
       whyImportant: "FN bas (<250) : fermentation rapide mais p\u00E2te instable. FN \u00E9lev\u00E9 (>300) : stable pour les longues maturations.",
       ranges: [
-        { label: "<200 Amylase tr\u00E8s \u00E9lev\u00E9e", value: "P\u00E2te collante", note: "D\u00E9conseill\u00E9 pour la pizza" },
-        { label: "200\u2013250 \u00C9lev\u00E9e", value: "Mie humide", note: "Pain rapide" },
-        { label: "250\u2013300 Moyenne", value: "Bon \u00E9quilibre", note: "Pizza 8-12h" },
-        { label: "300\u2013400 Faible", value: "S\u00E8che, lente", note: "Pizza 24-48h" },
-        { label: ">400 Tr\u00E8s faible", value: "S\u00E8che", note: "P\u00E2tes s\u00E8ches" },
+        { label: "Amylase tr\u00E8s \u00E9lev\u00E9e · P\u00E2te collante", value: "<200", note: "D\u00E9conseill\u00E9 pour la pizza" },
+        { label: "\u00C9lev\u00E9e · Mie humide", value: "200\u2013250", note: "Pain rapide" },
+        { label: "Moyenne · Bon \u00E9quilibre", value: "250\u2013300", note: "Pizza 8-12h" },
+        { label: "Faible · S\u00E8che, lente", value: "300\u2013400", note: "Pizza 24-48h" },
+        { label: "Tr\u00E8s faible · S\u00E8che", value: ">400", note: "P\u00E2tes s\u00E8ches" },
       ],
     },
     hydration: {
+      formula: "H% = (poids de l’eau / poids de la farine) × 100",
+      plainDefinition: "La quantité d’eau dans la pâte par rapport à la farine : à 65 %, vous mettez 65 g d’eau pour 100 g de farine.",
       name: "Hydratation (H%)",
       definition: "Pourcentage en poids d'eau par rapport \u00E0 la farine dans la p\u00E2te.",
       whyImportant: "H basse (<55%) : croustillante, facile. H moyenne (60-65%) : \u00E9quilibre. H \u00E9lev\u00E9e (>70%) : demande une farine forte (W>280) et du savoir-faire.",
@@ -504,11 +511,13 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     lab: {
+      plainDefinition: "Les bactéries du levain qui donnent à la pâte son goût légèrement acidulé.",
       name: "LAB (Bact\u00E9ries lactiques)",
       definition: "Bact\u00E9ries qui fermentent les sucres en produisant de l'acide lactique (et ac\u00E9tique). Pr\u00E9sentes dans le levain.",
       whyImportant: "Ils peuvent modifier acidité et fructanes selon souches, farine et procédé. Leur présence ne certifie pas une pâte low FODMAP.",
     },
     q10: {
+      plainDefinition: "Combien de fois la levée accélère quand il fait 10 °C de plus.",
       name: "Q\u2081\u2080 (Coefficient de temp\u00E9rature)",
       definition: "Facteur multiplicatif de la vitesse de r\u00E9action biochimique pour chaque hausse de 10\u00B0C.",
       whyImportant: "Avec Q\u2081\u2080 = 2, la fermentation double tous les +10\u00B0C : 24h \u00E0 18\u00B0C \u2248 12h \u00E0 28\u00B0C. Les valeurs ci-dessous sont des estimations du mod\u00E8le {brand}.",
@@ -596,7 +605,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     gluten: {
       name: "Gluten",
       definition: "La gliadine et la gluténine forment, avec l’eau et le travail de la pâte, un réseau élastique et extensible.",
-      whyImportant: "\u00C9lasticit\u00E9 due aux glut\u00E9nines (liaisons S-S), viscosit\u00E9 due aux gliadines (liaisons H). Une prot\u00E9olyse longue coupe les liaisons \u2192 p\u00E2te plus extensible.",
+      whyImportant: "Élasticité due aux gluténines (liaisons S-S), viscosité due aux gliadines (liaisons H). Une protéolyse longue rend la pâte plus extensible, mais le gluten reste : une fermentation longue ou au levain ne rend pas la pizza adaptée aux personnes cœliaques. Vous indiquez allergies et intolérances dans votre Profil.",
     },
     proteolysis: {
       name: "Prot\u00E9olyse",
@@ -604,6 +613,8 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       whyImportant: "Elle peut modifier l’extensibilité et la tenue de la pâte. Elle dépend de la farine, des micro-organismes, de la température et du procédé : aucune durée optimale universelle et aucune mesure de la digestibilité individuelle.",
     },
     thickness_factor: {
+      formula: "TF = poids du pâton (g) / surface de la pizza (cm²)",
+      plainDefinition: "La quantité de pâte nécessaire par centimètre carré de pizza : plus elle est élevée, plus la pizza est épaisse.",
       name: "Thickness Factor (TF)",
       definition: "Quantité de pâte par unité de surface : les grammes de pâte pour chaque cm² de pizza.",
       whyImportant: "Une mesure répandue dans les calculateurs de pâte nord-américains (en oz/in² ; 1 oz/in² ≈ 4,39 g/cm²). {brand} l'exprime en g/cm² pour dimensionner les pâtons ; avec le four, elle oriente le temps de cuisson et le croustillant.",
@@ -627,34 +638,98 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
+      formula: "T_eau = 3 × T_pâte − T_ambiante − T_farine − friction",
       name: "Temp\u00E9rature de l'eau (trois temp\u00E9ratures)",
       definition: "Calcule \u00E0 quelle temp\u00E9rature mettre l'eau pour que la p\u00E2te atteigne la temp\u00E9rature voulue.",
       whyImportant: "Somme des trois temp\u00E9ratures = 3 \u00D7 p\u00E2te voulue \u2212 \u00E9chauffement. En pizzeria on parle aussi de \u00AB r\u00E8gle du 55 \u00BB : avec une somme fixe de 55 la p\u00E2te arrive vers 18 \u00B0C (55 \u00F7 3) ; ici on utilise la cible du style, 22\u201324 \u00B0C.",
     },
     a_score: {
+      formula: "A = 0,35 × ingrédients + 0,30 × procédé + 0,35 × équipement",
       name: "A-Score (Authenticit\u00E9)",
       definition: "Score de 0 à 100 sur la proximité avec le style de référence. Il ne certifie pas le respect d’un cahier des charges.",
       ranges: [
-        { label: "90-100", value: "Rigoureusement authentique" },
-        { label: "75-89", value: "Globalement authentique" },
-        { label: "60-74", value: "Inspir\u00E9e du style" },
-        { label: "<60", value: "\u00C9cart important" },
+        { label: "Rigoureusement authentique", value: "90-100" },
+        { label: "Globalement authentique", value: "75-89" },
+        { label: "Inspir\u00E9e du style", value: "60-74" },
+        { label: "\u00C9cart important", value: "<60" },
       ],
     },
     f_score: {
+      formula: "F = 0,4 × four + 0,3 × farine + 0,3 × expérience",
       name: "F-Score (Facilité)",
       definition: "Score de 0 à 100 sur la facilité de préparation avec le four, la farine et l’expérience disponibles. Les conditions qui bloquent une recette sont évaluées à part.",
       ranges: [
-        { label: "90-100", value: "Tr\u00E8s faisable" },
-        { label: "75-89", value: "Faisable avec attention" },
-        { label: "60-74", value: "Difficile" },
-        { label: "<60", value: "D\u00E9conseill\u00E9" },
+        { label: "Tr\u00E8s faisable", value: "90-100" },
+        { label: "Faisable avec attention", value: "75-89" },
+        { label: "Difficile", value: "60-74" },
+        { label: "D\u00E9conseill\u00E9", value: "<60" },
       ],
     },
     d_score: {
       name: "D-Score (Maturation estimée)",
       definition: "Estimation du modèle selon le temps, la température, la levure et les préferments. Elle ne mesure pas la digestibilité individuelle et ne calcule pas les FODMAP.",
-      ranges: [{"label":"85-100","value":"Indice élevé"},{"label":"70-84","value":"Indice moyen-élevé"},{"label":"50-69","value":"Indice moyen"},{"label":"<50","value":"Indice faible"}],
+      ranges: [{ label: "Indice élevé", value: "85-100" },{ label: "Indice moyen-élevé", value: "70-84" },{ label: "Indice moyen", value: "50-69" },{ label: "Indice faible", value: "<50" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: "Division (staglio)",
+      definition: "Diviser la masse de pâte en morceaux de même poids, un par pizza, et les fermer en boule.",
+      whyImportant: "Des pâtons de même poids lèvent et cuisent de la même façon. Le poids de chaque pâton est indiqué dans la recette.",
+    },
+    ball_shaping: {
+      name: "Boulage (pirlatura)",
+      definition: "Le geste qui referme le morceau de pâte en une boule lisse et tendue : vous le faites tourner sur lui-même, sur le plan de travail ou entre vos mains, jusqu’à ce que la surface soit tendue.",
+      whyImportant: "Une surface tendue retient le gaz pendant l’apprêt et donne un pâton qui s’étale en rond. Si la pâte se déchire, vous avez trop tiré : laissez-la reposer quelques minutes.",
+    },
+    gluten_development: {
+      name: "Développement du gluten (incordatura)",
+      definition: "Le moment où la pâte devient lisse et élastique et ne colle plus aux mains ni au bol : le réseau de gluten s’est formé.",
+      whyImportant: "Une pâte bien développée retient le gaz de la levée. Test pratique : étirez un petit morceau entre vos doigts ; s’il forme une fine pellicule sans se déchirer tout de suite, elle est prête. Pétrir trop longtemps à la machine, en revanche, chauffe et affaiblit la pâte.",
+    },
+    folds: {
+      name: "Rabats",
+      definition: "Vous étirez un pan de pâte et le rabattez sur le reste, tournez la masse et recommencez de chaque côté. On les fait à intervalles pendant le repos, au lieu de pétrir plus longtemps.",
+      whyImportant: "Ils renforcent le réseau de gluten sans chauffer la pâte, surtout dans les pâtes très hydratées. Le « slap & fold » est une variante : vous soulevez la pâte, la frappez sur le plan de travail et la repliez sur elle-même.",
+    },
+    poke_test: {
+      name: "Test du doigt (poke test)",
+      definition: "Enfoncez un doigt fariné d’environ un centimètre dans le pâton et observez comment la marque remonte.",
+      whyImportant: "Si la marque remonte lentement et qu’il en reste un peu, le pâton est prêt. Si elle remonte tout de suite, il lui faut encore du temps. Si elle reste enfoncée et que le pâton s’affaisse, il a trop levé. C’est une indication pratique, pas une mesure.",
+    },
+    cornicione: {
+      name: "Cornicione (bord)",
+      definition: "Le bord de la pizza, plus haut et plus gonflé que le centre : à la cuisson, le gaz de la pâte se dilate et le soulève.",
+      whyImportant: "Pour l’obtenir, en étalant, poussez l’air du centre vers le bord sans l’écraser. Hauteur et alvéoles dépendent du style, de l’hydratation, de la fermentation et de la chaleur du four.",
+    },
+    oven_floor_dome: {
+      name: "Sole et voûte",
+      definition: "La sole est la surface du four sur laquelle repose la pizza ; la voûte est la partie au-dessus. La sole cuit le dessous par contact, la voûte cuit la garniture et le bord par la chaleur qu’elle rayonne.",
+      whyImportant: "Si le dessous brûle alors que la garniture reste crue, la sole est trop chaude par rapport à la voûte ; dans le cas contraire, elle est trop froide. Dans un four domestique, la pierre ou l’acier jouent le rôle de sole et le gril celui de voûte.",
+    },
+    pre_ferment: {
+      name: "Préferment",
+      definition: "Une partie de la farine et de l’eau mélangée à la levure des heures avant la pâte finale et laissée à maturer. Les plus courants sont la biga (ferme) et le poolish (liquide).",
+      whyImportant: "Il apporte des arômes et change la façon dont la pâte finale se travaille. Dans la recette, c’est une phase à part, et ses quantités font partie du total : elles ne s’y ajoutent pas. L’autolyse n’est pas un préferment, car elle ne contient pas de levure.",
+    },
+    sourdough: {
+      name: "Levain (lievito madre)",
+      definition: "Une pâte de farine et d’eau où vivent des levures sauvages et des bactéries lactiques, entretenue par des rafraîchis de farine et d’eau. Une partie remplace la levure de boulanger.",
+      whyImportant: "Il lève plus lentement que la levure de boulanger et donne un goût légèrement acidulé. Son activité dépend de la façon dont vous le rafraîchissez : c’est pourquoi la dose de levain est une hypothèse du modèle, à adapter au vôtre.",
+    },
+    flour_type: {
+      name: "Type de farine (00, 0, 1, 2, complète)",
+      definition: "En Italie, le type indique à quel point la farine de blé tendre est raffinée : la 00 est la plus blanche, puis 0, 1, 2 et complète, qui contient tout le grain. Il est fixé par le taux de cendres, c’est-à-dire les minéraux qui restent après avoir brûlé la farine.",
+      whyImportant: "Le type ne dit pas si la farine est forte : une 00 peut être faible ou très forte. La force, c’est le W, s’il figure sur le paquet. Si vous ne l’indiquez pas, le modèle suppose une plage typique pour ce type.",
+    },
+    manitoba: {
+      name: "Manitoba",
+      definition: "Farine de blé tendre riche en protéines, à l’origine issue de blés nord-américains (le nom vient de la province canadienne du Manitoba). Aujourd’hui, dans le commerce, elle désigne une farine très forte.",
+      whyImportant: "On l’utilise pour les fermentations longues ou en mélange avec une 00 pour augmenter la force. Seule, elle donne une pâte tenace, plus difficile à étaler.",
+    },
+    semola_rimacinata: {
+      name: "Semoule remoulue (semola rimacinata)",
+      definition: "Semoule de blé dur moulue une seconde fois, plus fine que la semoule ordinaire : jaune et légèrement granuleuse au toucher.",
+      whyImportant: "On l’utilise pour fleurer le plan de travail et la pelle, car elle fait glisser la pizza et brûle moins que la farine, et en petite quantité dans la pâte de certains styles. Le gluten du blé dur est moins extensible que celui du blé tendre.",
     },
   },
 };

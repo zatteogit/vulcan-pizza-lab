@@ -271,6 +271,7 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
 export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
   terms: {
     w_alveograph: {
+      plainDefinition: GLOSSARY_COPY_IT.w_alveograph.plainDefinition,
       name: GLOSSARY_COPY_IT.w_alveograph.name,
       definition: GLOSSARY_COPY_IT.w_alveograph.definition,
       whyImportant: GLOSSARY_COPY_IT.w_alveograph.whyImportant,
@@ -283,6 +284,7 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     p_tenacity: {
+      plainDefinition: GLOSSARY_COPY_IT.p_tenacity.plainDefinition,
       name: GLOSSARY_COPY_IT.p_tenacity.name,
       definition: GLOSSARY_COPY_IT.p_tenacity.definition,
       whyImportant: GLOSSARY_COPY_IT.p_tenacity.whyImportant,
@@ -293,6 +295,7 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     l_extensibility: {
+      plainDefinition: GLOSSARY_COPY_IT.l_extensibility.plainDefinition,
       name: GLOSSARY_COPY_IT.l_extensibility.name,
       definition: GLOSSARY_COPY_IT.l_extensibility.definition,
       whyImportant: GLOSSARY_COPY_IT.l_extensibility.whyImportant,
@@ -302,30 +305,34 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     pl_ratio: {
+      plainDefinition: GLOSSARY_COPY_IT.pl_ratio.plainDefinition,
       name: GLOSSARY_COPY_IT.pl_ratio.name,
       definition: GLOSSARY_COPY_IT.pl_ratio.definition,
       whyImportant: GLOSSARY_COPY_IT.pl_ratio.whyImportant,
       ranges: [
-        { label: "<0.4 Molto estensibile", value: "Collassa facilmente", note: "Pinsa" },
-        { label: "0.4–0.5 Estensibile", value: "Facile lavorare", note: "Napoletana classica" },
-        { label: "0.5–0.7 Bilanciato", value: "Buon equilibrio", note: "Napoletana moderna, pane" },
-        { label: "0.7–1.0 Tenace", value: "Resistente", note: "Pane grande lievitazione" },
-        { label: ">1.0 Molto tenace", value: "Elastico, ritorna", note: "Croissant" },
+        { label: "Molto estensibile · Collassa facilmente", value: "<0.4", note: "Pinsa" },
+        { label: "Estensibile · Facile lavorare", value: "0.4–0.5", note: "Napoletana classica" },
+        { label: "Bilanciato · Buon equilibrio", value: "0.5–0.7", note: "Napoletana moderna, pane" },
+        { label: "Tenace · Resistente", value: "0.7–1.0", note: "Pane grande lievitazione" },
+        { label: "Molto tenace · Elastico, ritorna", value: ">1.0", note: "Croissant" },
       ],
     },
     falling_number: {
+      plainDefinition: GLOSSARY_COPY_IT.falling_number.plainDefinition,
       name: GLOSSARY_COPY_IT.falling_number.name,
       definition: GLOSSARY_COPY_IT.falling_number.definition,
       whyImportant: GLOSSARY_COPY_IT.falling_number.whyImportant,
       ranges: [
-        { label: "<200 Altissima amilasi", value: "Impasto appiccicoso", note: "Sconsigliato pizza" },
-        { label: "200–250 Alta", value: "Mollica umida", note: "Pane rapido" },
-        { label: "250–300 Media", value: "Buon equilibrio", note: "Pizza 8-12h" },
-        { label: "300–400 Bassa", value: "Asciutto, lento", note: "Pizza 24-48h" },
-        { label: ">400 Molto bassa", value: "Secco", note: "Pasta secca" },
+        { label: "Altissima amilasi · Impasto appiccicoso", value: "<200", note: "Sconsigliato pizza" },
+        { label: "Alta · Mollica umida", value: "200–250", note: "Pane rapido" },
+        { label: "Media · Buon equilibrio", value: "250–300", note: "Pizza 8-12h" },
+        { label: "Bassa · Asciutto, lento", value: "300–400", note: "Pizza 24-48h" },
+        { label: "Molto bassa · Secco", value: ">400", note: "Pasta secca" },
       ],
     },
     hydration: {
+      formula: "H% = (peso acqua / peso farina) × 100",
+      plainDefinition: GLOSSARY_COPY_IT.hydration.plainDefinition,
       name: GLOSSARY_COPY_IT.hydration.name,
       definition: GLOSSARY_COPY_IT.hydration.definition,
       whyImportant: GLOSSARY_COPY_IT.hydration.whyImportant,
@@ -370,11 +377,13 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     lab: {
+      plainDefinition: GLOSSARY_COPY_IT.lab.plainDefinition,
       name: GLOSSARY_COPY_IT.lab.name,
       definition: GLOSSARY_COPY_IT.lab.definition,
       whyImportant: GLOSSARY_COPY_IT.lab.whyImportant,
     },
     q10: {
+      plainDefinition: GLOSSARY_COPY_IT.q10.plainDefinition,
       name: GLOSSARY_COPY_IT.q10.name,
       definition: GLOSSARY_COPY_IT.q10.definition,
       whyImportant: "Con Q₁₀ = 2 la fermentazione raddoppia ogni +10°C: 24h a 18°C ≈ 12h a 28°C. I valori qui sotto sono stime del modello di {brand}.",
@@ -470,6 +479,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       whyImportant: GLOSSARY_COPY_IT.proteolysis.whyImportant,
     },
     thickness_factor: {
+      formula: "TF = peso panetto (g) / area pizza (cm²)",
+      plainDefinition: GLOSSARY_COPY_IT.thickness_factor.plainDefinition,
       name: GLOSSARY_COPY_IT.thickness_factor.name,
       definition: GLOSSARY_COPY_IT.thickness_factor.definition,
       whyImportant: "Metrica diffusa nei calcolatori d'impasto nordamericani (in oz/in²; 1 oz/in² ≈ 4,39 g/cm²). {brand} la esprime in g/cm² per dimensionare i panetti; insieme al forno orienta tempo di cottura e croccantezza.",
@@ -493,34 +504,98 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     rule_of_55: {
+      formula: "T_acqua = 3 × T_impasto − T_ambiente − T_farina − attrito",
       name: GLOSSARY_COPY_IT.rule_of_55.name,
       definition: GLOSSARY_COPY_IT.rule_of_55.definition,
       whyImportant: GLOSSARY_COPY_IT.rule_of_55.whyImportant,
     },
     a_score: {
+      formula: "A = 0,35 × ingredienti + 0,30 × processo + 0,35 × attrezzatura",
       name: GLOSSARY_COPY_IT.a_score.name,
       definition: GLOSSARY_COPY_IT.a_score.definition,
       ranges: [
-        { label: "90-100", value: "Rigorosamente autentica" },
-        { label: "75-89", value: "Sostanzialmente autentica" },
-        { label: "60-74", value: "Ispirata allo stile" },
-        { label: "<60", value: "Deviazione significativa" },
+        { label: "Rigorosamente autentica", value: "90-100" },
+        { label: "Sostanzialmente autentica", value: "75-89" },
+        { label: "Ispirata allo stile", value: "60-74" },
+        { label: "Deviazione significativa", value: "<60" },
       ],
     },
     f_score: {
+      formula: "F = 0,4 × forno + 0,3 × farina + 0,3 × esperienza",
       name: GLOSSARY_COPY_IT.f_score.name,
       definition: GLOSSARY_COPY_IT.f_score.definition,
       ranges: [
-        { label: "90-100", value: "Altamente fattibile" },
-        { label: "75-89", value: "Fattibile con attenzione" },
-        { label: "60-74", value: "Difficile" },
-        { label: "<60", value: "Sconsigliato" },
+        { label: "Altamente fattibile", value: "90-100" },
+        { label: "Fattibile con attenzione", value: "75-89" },
+        { label: "Difficile", value: "60-74" },
+        { label: "Sconsigliato", value: "<60" },
       ],
     },
     d_score: {
       name: GLOSSARY_COPY_IT.d_score.name,
       definition: GLOSSARY_COPY_IT.d_score.definition,
-      ranges: [{"label":"85-100","value":"Indice alto"},{"label":"70-84","value":"Indice medio-alto"},{"label":"50-69","value":"Indice medio"},{"label":"<50","value":"Indice basso"}],
+      ranges: [{ label: "Indice alto", value: "85-100" },{ label: "Indice medio-alto", value: "70-84" },{ label: "Indice medio", value: "50-69" },{ label: "Indice basso", value: "<50" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: GLOSSARY_COPY_IT.dough_division.name,
+      definition: GLOSSARY_COPY_IT.dough_division.definition,
+      whyImportant: GLOSSARY_COPY_IT.dough_division.whyImportant,
+    },
+    ball_shaping: {
+      name: GLOSSARY_COPY_IT.ball_shaping.name,
+      definition: GLOSSARY_COPY_IT.ball_shaping.definition,
+      whyImportant: GLOSSARY_COPY_IT.ball_shaping.whyImportant,
+    },
+    gluten_development: {
+      name: GLOSSARY_COPY_IT.gluten_development.name,
+      definition: GLOSSARY_COPY_IT.gluten_development.definition,
+      whyImportant: GLOSSARY_COPY_IT.gluten_development.whyImportant,
+    },
+    folds: {
+      name: GLOSSARY_COPY_IT.folds.name,
+      definition: GLOSSARY_COPY_IT.folds.definition,
+      whyImportant: GLOSSARY_COPY_IT.folds.whyImportant,
+    },
+    poke_test: {
+      name: GLOSSARY_COPY_IT.poke_test.name,
+      definition: GLOSSARY_COPY_IT.poke_test.definition,
+      whyImportant: GLOSSARY_COPY_IT.poke_test.whyImportant,
+    },
+    cornicione: {
+      name: GLOSSARY_COPY_IT.cornicione.name,
+      definition: GLOSSARY_COPY_IT.cornicione.definition,
+      whyImportant: GLOSSARY_COPY_IT.cornicione.whyImportant,
+    },
+    oven_floor_dome: {
+      name: GLOSSARY_COPY_IT.oven_floor_dome.name,
+      definition: GLOSSARY_COPY_IT.oven_floor_dome.definition,
+      whyImportant: GLOSSARY_COPY_IT.oven_floor_dome.whyImportant,
+    },
+    pre_ferment: {
+      name: GLOSSARY_COPY_IT.pre_ferment.name,
+      definition: GLOSSARY_COPY_IT.pre_ferment.definition,
+      whyImportant: GLOSSARY_COPY_IT.pre_ferment.whyImportant,
+    },
+    sourdough: {
+      name: GLOSSARY_COPY_IT.sourdough.name,
+      definition: GLOSSARY_COPY_IT.sourdough.definition,
+      whyImportant: GLOSSARY_COPY_IT.sourdough.whyImportant,
+    },
+    flour_type: {
+      name: GLOSSARY_COPY_IT.flour_type.name,
+      definition: GLOSSARY_COPY_IT.flour_type.definition,
+      whyImportant: GLOSSARY_COPY_IT.flour_type.whyImportant,
+    },
+    manitoba: {
+      name: GLOSSARY_COPY_IT.manitoba.name,
+      definition: GLOSSARY_COPY_IT.manitoba.definition,
+      whyImportant: GLOSSARY_COPY_IT.manitoba.whyImportant,
+    },
+    semola_rimacinata: {
+      name: GLOSSARY_COPY_IT.semola_rimacinata.name,
+      definition: GLOSSARY_COPY_IT.semola_rimacinata.definition,
+      whyImportant: GLOSSARY_COPY_IT.semola_rimacinata.whyImportant,
     },
   },
 };

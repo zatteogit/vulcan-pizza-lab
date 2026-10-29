@@ -200,10 +200,12 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
         id: `glossary-${term.id}`,
         type: "glossary",
         title: term.symbol && !term.name.includes(term.symbol) ? `${term.name} (${term.symbol})` : term.name,
-        subtitle: clip(term.definition, 100),
+        /* FW-04: prima la definizione in parole semplici; il nome italiano
+           resta cercabile in ogni lingua («staglio», «appretto»). */
+        subtitle: clip(term.plainDefinition ?? term.definition, 100),
         link: `/learn/glossary#${term.id}`,
       },
-      `${term.definition} ${term.id.replace(/_/g, " ")}`,
+      `${term.definition} ${raw.name} ${term.id.replace(/_/g, " ")}`,
     );
     if (term.symbol) {
       const symbol = fold(term.symbol);

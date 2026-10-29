@@ -34,9 +34,12 @@ CATEGORY_LABELS,
 getContextualWarnings,
 getLocalizedCategoryLabel,
 getLocalizedIssue,
+ISSUE_GLOSSARY_TERMS,
 ISSUES_DB
 } from "../../data/troubleshooting-data";
 import { uiMessage } from "../../i18n/ui-messages";
+import { browserRevealEnv, revealWhenStable } from "../../hooks/use-hash-target";
+import { GlossaryTermLinks } from "../glossary/term-link";
 
 /* === FW-13 (S13-B-12): icone delle categorie, sul modello del glossario === */
 const TROUBLESHOOTING_CATEGORY_ICONS: Record<string, LucideIcon> = {
@@ -190,18 +193,13 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
 
   useEffect(() => {
     if (!initialIssueId || contextIssueIds) return;
-    // Dopo lo stagger di entrata delle card, porta l'issue aperta in vista.
-    // FW-03 (S13-B-11): rispetta «riduci movimento» e sposta il focus sul
-    // pulsante della card aperta, così lo screen reader la annuncia.
-    const timer = window.setTimeout(() => {
-      document
-        .getElementById(`trouble-${initialIssueId}`)
-        ?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-      document
-        .getElementById(`trouble-${initialIssueId}-toggle`)
-        ?.focus({ preventScroll: true });
-    }, 400);
-    return () => window.clearTimeout(timer);
+    // FW-03 (S13-B-11) + FW-04: stesso atterraggio del glossario — aspetta che
+    // lo stagger delle card finisca (posizione ferma), porta la card in cima,
+    // rispetta «riduci movimento» e mette a fuoco il pulsante della card.
+    return revealWhenStable(`trouble-${initialIssueId}`, `trouble-${initialIssueId}-toggle`, {
+      ...browserRevealEnv(),
+      reducedMotion: !!reduceMotion,
+    });
   }, [initialIssueId, contextIssueIds, reduceMotion]);
 
 
@@ -436,6 +434,7 @@ function IssueCard({
               />
               {/* Prevenzione */}
               <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
+              <GlossaryTermLinks termIds={ISSUE_GLOSSARY_TERMS[issue.id] ?? []} />
             </div>
       </Disclosure>
     </Surface>

@@ -81,6 +81,9 @@ lo aggiunge qui e, se è tecnico, al glossario.
 | **Stili di pizza** | La sezione e il filtro degli stili in Scopri; un solo verbo per «vedi tutto» («Vedi tutti/tutte») | Scopri | «Stili tradizionali», «Esplora tutti» |
 | **Tradizioni regionali** | Famiglia degli stili storici non napoletani né romani (D-G, da confermare stile per stile) | Scopri, Crea, MCP | «Contemporanea» per focacce e pizze storiche |
 | **Genera ricetta** | La CTA del pannello stile, su ogni breakpoint | pannello stile | «Crea» (è il nome della tab) |
+| **Carico d'impasto** (FW-04) | Grammi di impasto per cm² di pizza (peso del panetto ÷ area, voce di glossario «Thickness Factor»); lo **spessore** è solo quello in mm | scheda stile | «Spessore» per un valore in g/cm² |
+| **farina con forza W{n}** (FW-04) | La W scritta con la parola che la spiega, e sempre davanti al numero («W 280») | card, ricetta, scheda stile | «farina W285» senza spiegazione, «280 W» (si legge watt) |
+| **TermLink** (FW-04) | Ogni sigla o termine tecnico visibile (W, P/L, staglio, appretto…) si apre in un tocco sulla definizione e porta alla voce del glossario; il termine deve esistere in `glossary-data.ts` (test `term-link.test.ts`) | ovunque fuori dagli elementi già interattivi | sigle nude, `title=` come unica spiegazione |
 - FW-11. In inglese si scrive **autolyse** (non «autolysis») e **preferment**
   senza trattino, come nella fonte King Arthur. I nomi propri dei luoghi
   d'origine usano l'esonimo della lingua (Napoli → Naples, Neapel, Nápoles):

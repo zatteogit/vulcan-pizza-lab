@@ -1,8 +1,9 @@
 import type { LucideIcon } from "lucide-react";
 import { Droplet, Droplets, Wheat } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect } from "react";
-import { Link, useLocation } from "react-router";
+import { useState } from "react";
+import { Link } from "react-router";
+import { useHashTarget } from "../hooks/use-hash-target";
 import { CtaButton, Heading } from "../components/ds/index";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
@@ -29,16 +30,27 @@ const PRE_FERMENT_ORDER = [
 export function PreFermentsPage() {
   const { cms } = useCms();
   const pg = cms.pages;
-  const { hash } = useLocation();
+  const [openIds, setOpenIds] = useState<ReadonlySet<string>>(() => new Set());
+  const setOpen = (id: string, open: boolean) =>
+    setOpenIds((prev) => {
+      const next = new Set(prev);
+      if (open) next.add(id);
+      else next.delete(id);
+      return next;
+    });
 
-  /* U-5: dalla ricerca si arriva alla scheda (#pf-biga, #pf-poolish…). */
-  useEffect(() => {
-    if (!hash.startsWith("#pf-")) return;
-    const frame = requestAnimationFrame(() =>
-      document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" }),
-    );
-    return () => cancelAnimationFrame(frame);
-  }, [hash]);
+  /* U-5 + FW-04 (S14-B-16): dalla ricerca si arriva alla scheda già aperta
+     (#pf-biga, #pf-poolish…), con focus sul titolo. */
+  useHashTarget({
+    prefix: "pf-",
+    onMatch: (id) => {
+      if (!(PRE_FERMENT_ORDER as readonly string[]).includes(id)) return false;
+      setOpen(id, true);
+      return true;
+    },
+    targetId: (id) => `pf-${id}`,
+    focusId: (id) => `pf-card-${id}`,
+  });
   return (
     <div className="preferment-page">
       {/* Header — pattern condiviso (il titolo vive nell'hero sotto) */}
@@ -81,7 +93,13 @@ export function PreFermentsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ ...motionSpring.standard,delay: i * motionDelay.recipeReveal }}
             >
-              <PreFermentCard preFermentType={id} showComparison={false} headingLevel={2} />
+              <PreFermentCard
+                preFermentType={id}
+                showComparison={false}
+                headingLevel={2}
+                open={openIds.has(id)}
+                onOpenChange={(open) => setOpen(id, open)}
+              />
             </motion.div>
           ))}
         </div>

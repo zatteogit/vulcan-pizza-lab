@@ -286,8 +286,9 @@ export function LearnPage() {
             {t(pg.learnTermOfTheDay, { category: glossaryCategoryLabel(term.category, cms.glossary) })}
           </h2>
 
+          {/* FW-04 (S11-A-06, S11-B-05): la card apre la voce, non la cima del glossario. */}
           <Link
-            to="/learn/glossary"
+            to={`/learn/glossary#${term.id}`}
             className="learn-term__card"
             aria-labelledby={`${cardIds}-term-name`}
             aria-describedby={`${cardIds}-term-def`}
@@ -309,20 +310,21 @@ export function LearnPage() {
                   }
                 >
                   {term.name}
-                  {term.symbol && (
+                  {/* FW-04 (S11-A-12): il simbolo non si ripete se è già nel nome. */}
+                  {term.symbol && !term.name.includes(term.symbol) && (
                     /*  : il simbolo resta agganciato all'ultima parola del
                        termine — mai da solo su una riga (vedova). */
-                    <span className="learn-term__symbol">
+                    <span className="learn-term__symbol" aria-hidden="true">
                       {"\u00A0"}
                       {term.symbol}
                     </span>
                   )}
                 </h3>
-                <p id={`${cardIds}-term-def`} className="learn-term__definition">{term.definition}</p>
+                <p id={`${cardIds}-term-def`} className="learn-term__definition">{term.plainDefinition ?? term.definition}</p>
               </div>
             </div>
             <footer className="learn-term__footer">
-              <span className="learn-term__footer-label">{pg.learnOpenGlossary}</span>
+              <span className="learn-term__footer-label">{pg.learnOpenTerm}</span>
               <ChevronRight size={14} className="learn-term__footer-icon" />
             </footer>
           </Link>

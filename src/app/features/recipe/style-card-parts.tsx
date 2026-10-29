@@ -1,6 +1,6 @@
 import { useCms } from "../cms/cms-context";
 import { formatRange } from "../../i18n/format";
-import { createFormatter } from "../cms/i18n";
+import { createFormatter, t } from "../cms/i18n";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { Clock, CookingPot, Droplets, Flame, ScanLine, Wheat } from "lucide-react";
@@ -124,7 +124,11 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", hidePant
         </Badge>;
       })}
       {signals.length < 2 && recipe?.verdict.outcome !== "not_feasible" && (
-        <Badge tone="muted" className="style-signal"><Clock size={13} aria-hidden="true" /><span data-slot="label">≈ {duration}</span></Badge>
+        /* FW-04 (S02-A-06, S02-B-08): la durata dice che cosa misura — il
+           procedimento intero (attese comprese) o, senza ricetta, la lievitazione. */
+        <Badge tone="muted" className="style-signal"><Clock size={13} aria-hidden="true" /><span data-slot="label">{recipe
+          ? t(cms.ui.cardTotalTime, { duration })
+          : t(cms.ui.cardFermentRange, { range: duration })}</span></Badge>
       )}
     </div>
   );
