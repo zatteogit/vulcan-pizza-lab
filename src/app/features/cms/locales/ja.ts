@@ -887,7 +887,7 @@ export const JA_LOCALE: CmsContent = {
     "rec.needsWoodOven": "基準レシピは薪窯を使います。別のオーブンでは焼き方が変わります。",
     "rec.ovenAdapted": "オーブンの最高温度は{temp}、理想温度は{ideal}です。焼成を調整します",
     "gen.homeBakingMethod": "予熱した裏返しの天板で{temp}で焼きます。標準の{ideal}での焼成とは仕上がりが異なります",
-    "gen.ovenTooNarrow": "お使いのオーブンに入るピザは最大{max} cm（メーカー公表値）ですが、このレシピは{diameter} cmです。生地は{max} cm以内に伸ばしてください。",
+    "gen.ovenTooNarrow": "お使いのオーブンに入るピザは最大{max} cmですが、このレシピは{diameter} cmです。生地は{max} cm以内に伸ばしてください。",
     "rec.needsDeck": "この焼成には予熱したピザストーンまたはスチールが必要ですが、キッチンに登録されていません",
     "timeline.homeTray.preheat": "裏返しの天板を入れてオーブンを最高温度（{temp}）に予熱し、天板も十分熱くします。その間に生地を休ませます。",
     "timeline.homeTray.bake": "予熱した裏返しの天板で焼きます。取り出す前に底の焼き色と火の通りを確認してください。",

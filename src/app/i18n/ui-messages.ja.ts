@@ -393,6 +393,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.explore.allRecipes": "すべて見る（{0}）",
   "pages.explore.allStyles": "すべて見る（{0}）",
   "pages.explore.compatibility": "あなたのキッチンとの相性: {0}/100",
+  "pages.explore.compatibilityBlocked": "このままではあなたのキッチンでは作れません",
   "pages.explore.recipeBy": "{0}による",
   "pages.home.applyCorrections": "補正を適用",
   "pages.home.motto": "Make pizza, not war",

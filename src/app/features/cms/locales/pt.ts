@@ -818,7 +818,7 @@ export const PT_LOCALE: CmsContent = {
     "rec.needsWoodOven": "A referência usa forno a lenha; com o seu forno, a cozedura muda.",
     "rec.ovenAdapted": "O seu forno atinge {temp}: temperatura ideal {ideal}, cozedura adaptada",
     "gen.homeBakingMethod": "Cozedura doméstica a {temp} sobre um tabuleiro invertido pré-aquecido; resultado diferente da cozedura original a {ideal}",
-    "gen.ovenTooNarrow": "O seu forno aceita pizzas até {max} cm (dado do fabricante) e esta receita prevê {diameter} cm: estenda o disco a {max} cm no máximo.",
+    "gen.ovenTooNarrow": "O seu forno aceita pizzas até {max} cm e esta receita prevê {diameter} cm: estenda o disco a {max} cm no máximo.",
     "rec.needsDeck": "Esta cozedura precisa de pedra ou aço pré-aquecido, não indicado na sua cozinha",
     "timeline.homeTray.preheat": "Pré-aquece o forno ao máximo ({temp}) com um tabuleiro invertido dentro, até também estar quente. Entretanto, termina o repouso da massa.",
     "timeline.homeTray.bake": "Coze sobre o tabuleiro invertido pré-aquecido. Verifique o dourado da base e a cozedura antes de retirar.",

@@ -660,6 +660,10 @@ function SignatureRecipeCard({
   /* FW-12 (S02-A-14): vedi FeaturedRecipeCard. */
   const nameId = useId();
   const labelledBy = cardLabelIds(nameId, cardText, !!recipe.authenticity_badge);
+  /* I segnali di blocco (forno, allergeni, dieta, tempi) stanno nel link ma
+     fuori da aria-labelledby: entrano nella descrizione accessibile. */
+  const showSignals = !!(baseStyle && match);
+  const signalsId = showSignals ? `${nameId}-signals` : "";
 
   const linkTo = signatureRecipeLink(recipe);
 
@@ -680,7 +684,7 @@ function SignatureRecipeCard({
           to={linkTo}
           state={{ exploreBackTo }}
           aria-labelledby={labelledBy}
-          aria-describedby={acronymHelp ? acronymHelpId : undefined}
+          aria-describedby={[signalsId, acronymHelp ? acronymHelpId : ""].filter(Boolean).join(" ") || undefined}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
           <figure className="explore-card__media">
@@ -714,7 +718,7 @@ function SignatureRecipeCard({
                 {uiMessage("pages.explore.recipeBy", [cardText.author])}
               </div>
             )}
-            {baseStyle && match && <StyleMetaChip style={baseStyle} cms={cms} recipe={match.recipe} context="explore" />}
+            {baseStyle && match && <StyleMetaChip id={signalsId} style={baseStyle} cms={cms} recipe={match.recipe} context="explore" />}
           </figcaption>
         </figure>
       </Surface>

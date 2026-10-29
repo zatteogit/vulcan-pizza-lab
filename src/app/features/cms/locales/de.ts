@@ -806,7 +806,7 @@ export const DE_LOCALE: CmsContent = {
     "rec.needsWoodOven": "Die Referenz nutzt einen Holzofen; mit deinem Ofen ändert sich die Backweise.",
     "rec.ovenAdapted": "Dein Ofen erreicht {temp}: ideale Temperatur {ideal}, angepasste Backzeit",
     "gen.homeBakingMethod": "Backen zu Hause bei {temp} auf einem vorgeheizten umgedrehten Blech; anderes Ergebnis als beim Original bei {ideal}",
-    "gen.ovenTooNarrow": "Dein Ofen fasst Pizzen bis {max} cm (Herstellerangabe), dieses Rezept sieht {diameter} cm vor: zieh den Teig auf höchstens {max} cm aus.",
+    "gen.ovenTooNarrow": "Dein Ofen fasst Pizzen bis {max} cm, dieses Rezept sieht {diameter} cm vor: zieh den Teig auf höchstens {max} cm aus.",
     "rec.needsDeck": "Diese Methode braucht einen vorgeheizten Stein oder Backstahl, der in deiner Küche nicht angegeben ist",
     "timeline.homeTray.preheat": "Heize den Ofen auf Maximum ({temp}) mit einem umgedrehten Blech vor, bis auch das Blech heiß ist. Lasse den Teig währenddessen fertig ruhen.",
     "timeline.homeTray.bake": "Backe auf dem vorgeheizten umgedrehten Blech. Prüfe Bodenbräunung und Garzustand vor dem Herausnehmen.",

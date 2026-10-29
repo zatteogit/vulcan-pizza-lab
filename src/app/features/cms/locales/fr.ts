@@ -820,7 +820,7 @@ export const FR_LOCALE: CmsContent = {
     "rec.needsWoodOven": "La référence utilise un four à bois ; avec votre four, la cuisson change.",
     "rec.ovenAdapted": "Votre four atteint {temp} : température idéale {ideal}, cuisson adaptée",
     "gen.homeBakingMethod": "Cuisson domestique à {temp} sur plaque retournée préchauffée ; résultat différent de la cuisson originale à {ideal}",
-    "gen.ovenTooNarrow": "Votre four accepte des pizzas jusqu'à {max} cm (donnée du fabricant) et cette recette prévoit {diameter} cm : étalez le disque à {max} cm au maximum.",
+    "gen.ovenTooNarrow": "Votre four accepte des pizzas jusqu'à {max} cm et cette recette prévoit {diameter} cm : étalez le disque à {max} cm au maximum.",
     "rec.needsDeck": "Cette cuisson nécessite une pierre ou un acier préchauffé, non renseigné dans votre cuisine",
     "timeline.homeTray.preheat": "Préchauffez le four au maximum ({temp}) avec une plaque retournée à l’intérieur, jusqu’à ce qu’elle soit bien chaude. Terminez le repos de la pâte.",
     "timeline.homeTray.bake": "Enfournez sur la plaque retournée préchauffée. Vérifiez la coloration de la base et la cuisson avant de sortir.",

@@ -820,7 +820,7 @@ export const ES_LOCALE: CmsContent = {
     "rec.needsWoodOven": "La referencia usa horno de leña; con tu horno cambia la cocción.",
     "rec.ovenAdapted": "Tu horno alcanza {temp}: temperatura ideal {ideal}, cocción adaptada",
     "gen.homeBakingMethod": "Cocción doméstica a {temp} sobre una bandeja invertida precalentada; resultado distinto de la cocción original a {ideal}",
-    "gen.ovenTooNarrow": "Tu horno admite pizzas de hasta {max} cm (dato del fabricante) y esta receta prevé {diameter} cm: estira el disco a {max} cm como máximo.",
+    "gen.ovenTooNarrow": "Tu horno admite pizzas de hasta {max} cm y esta receta prevé {diameter} cm: estira el disco a {max} cm como máximo.",
     "rec.needsDeck": "Esta cocción necesita piedra o acero precalentado, no indicado en tu cocina",
     "timeline.homeTray.preheat": "Precalienta el horno al máximo ({temp}) con una bandeja invertida dentro hasta que también esté caliente. Mientras, termina el reposo de la masa.",
     "timeline.homeTray.bake": "Hornea sobre la bandeja invertida precalentada. Comprueba el dorado de la base y la cocción antes de sacar.",

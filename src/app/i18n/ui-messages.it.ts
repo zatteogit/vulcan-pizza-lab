@@ -395,6 +395,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "pages.explore.allRecipes": "Vedi tutte ({0})",
   "pages.explore.allStyles": "Vedi tutti ({0})",
   "pages.explore.compatibility": "Compatibilità con la tua cucina: {0}/100",
+  "pages.explore.compatibilityBlocked": "Non fattibile così con la tua cucina",
   "pages.explore.recipeBy": "Secondo {0}",
   "pages.home.applyCorrections": "Applica le correzioni",
   "pages.home.motto": "Make pizza, not war",

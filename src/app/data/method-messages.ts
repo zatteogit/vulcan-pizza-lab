@@ -20,7 +20,7 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   "auth.notCoalOven": "Il forno a carbone definisce il metodo originale: con un altro combustibile la ricetta è adattata",
   "gen.notCoalOven": "Lo stile originale usa il carbone: il forno selezionato comporta una diversa cottura e impronta aromatica",
   "gen.homeBakingMethod": "Cottura domestica a {temp} su teglia capovolta preriscaldata; risultato diverso dalla cottura originale a {ideal}",
-  "gen.ovenTooNarrow": "Il tuo forno accetta pizze fino a {max} cm (dato del produttore) e questa ricetta prevede {diameter} cm: stendi il disco a {max} cm al massimo.",
+  "gen.ovenTooNarrow": "Il tuo forno accetta pizze fino a {max} cm e questa ricetta prevede {diameter} cm: stendi il disco a {max} cm al massimo.",
   "gen.notWoodOven": "Lo stile prevede il forno a legna: con il tuo forno il risultato si avvicina, ma non è quello canonico.",
   "timeline.mix.spiral.desc": "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura.",
   "timeline.mix.spiral.tipNerd": "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare.",

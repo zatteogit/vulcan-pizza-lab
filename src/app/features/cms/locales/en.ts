@@ -999,7 +999,7 @@ export const EN_LOCALE: CmsContent = {
     "rec.needsWoodOven": "The reference uses a wood-fired oven; baking changes with your oven.",
     "rec.ovenAdapted": "Your oven reaches {temp}: ideal temperature {ideal}, adapted baking",
     "gen.homeBakingMethod": "Home baking at {temp} on a preheated inverted tray; the result differs from the original baking at {ideal}",
-    "gen.ovenTooNarrow": "Your oven takes pizzas up to {max} cm (manufacturer's figure) and this recipe calls for {diameter} cm: stretch the disc to {max} cm at most.",
+    "gen.ovenTooNarrow": "Your oven takes pizzas up to {max} cm and this recipe calls for {diameter} cm: stretch the disc to {max} cm at most.",
     "rec.needsDeck": "This method needs a preheated stone or steel, not listed in your kitchen",
     "timeline.homeTray.preheat": "Preheat the oven to its maximum ({temp}) with an inverted tray inside until the tray is hot too. Meanwhile, finish resting the dough.",
     "timeline.homeTray.bake": "Bake on the preheated inverted tray. Check the base colour and doneness before removing.",

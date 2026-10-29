@@ -75,8 +75,10 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
       window.removeEventListener("resize", close);
     };
   }, [open, place]);
-  const label = original === undefined ? `${cms.ui.scoreBasisOriginal} · ${uiMessage("pages.explore.compatibility", [now])}`
+  const score = original === undefined ? `${cms.ui.scoreBasisOriginal} · ${uiMessage("pages.explore.compatibility", [now])}`
     : `${cms.ui.scoreBasisOriginal} ${original} → ${cms.ui.scoreBasisTailored} ${now}`;
+  /* Lo stato bloccato non si affida al solo colore: lo dice anche il nome. */
+  const label = blocked ? `${uiMessage("pages.explore.compatibilityBlocked")} · ${score}` : score;
   return (
     <>
     <button ref={trigger} type="button" className={`compat-pill${blocked ? " compat-pill--blocked" : ""}${className ? ` ${className}` : ""}`} aria-label={label} aria-expanded={open} aria-describedby={open ? id : undefined}
@@ -104,7 +106,7 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
 
 /** A maximum of two useful signals, inside the photo. The duration describes
  * the complete generated timeline, not fermentation alone. */
-export function StyleMetaChip({ style, cms, recipe, context = "create", hidePantryChecks = false }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe; context?: "create" | "explore"; /** FW-09: dispensa sconosciuta, verifiche dette una volta sola. */ hidePantryChecks?: boolean }) {
+export function StyleMetaChip({ style, cms, recipe, context = "create", hidePantryChecks = false, id }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe; context?: "create" | "explore"; /** FW-09: dispensa sconosciuta, verifiche dette una volta sola. */ hidePantryChecks?: boolean; /** Per aria-describedby del link che contiene i segnali. */ id?: string }) {
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
   const signals = recipe ? recipeCardSignals(recipe, context, { hidePantryChecks }) : [];
@@ -113,7 +115,7 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", hidePant
     ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
     : formatRange(style.dough.fermentation_hours_range[0], style.dough.fermentation_hours_range[1], bcp47, { unit: "hour" });
   return (
-    <div className="style-signals" data-region="meta">
+    <div id={id} className="style-signals" data-region="meta">
       {signals.map(signal => {
         const Icon = icons[signal.icon];
         const text = engineMsgTexts([signal.message], cms, bcp47)[0];

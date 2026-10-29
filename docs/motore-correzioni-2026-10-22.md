@@ -562,7 +562,8 @@ passi e server MCP. Misure sul codice, prima (`dedb1fe`) e dopo.
 - **Bocca del forno.** *Prima:* `pizzaCm` dei modelli non arrivava al
   motore. *Dopo:* `oven_max_pizza_cm` (dal modello salvato) e, se il
   diametro della pizza tonda è maggiore, un avviso esatto (confronto
-  geometrico col dato del produttore): «Il tuo forno accetta pizze fino a
+  geometrico con `pizzaCm` del modello; il testo non attribuisce la
+  misura al produttore perché `source` può essere "P" o "demo"): «Il tuo forno accetta pizze fino a
   {max} cm … stendi il disco a {max} cm al massimo». Nessuna dose cambia.
 - **Distribuzione del calore.** *Prima:* `ovenBakeSetup` guardava il profilo
   di calore prima del tipo di forno: forno a legna + «grill superiore» dava

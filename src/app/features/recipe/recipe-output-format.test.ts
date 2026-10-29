@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip, bakeSecondsPerRound } from "./recipe-output-format";
+import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip, bakeSecondsPerRound, yeastBakerPctText } from "./recipe-output-format";
 import { generateRecipe, STYLES_DB, type UserConstraints } from "../../domain/pizza-engine";
 import { CMS_DEFAULTS } from "../cms/cms-context";
 
@@ -129,4 +129,24 @@ describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09
       if (id === "teglia_romana") expect(tip).not.toContain("8–15 min");
     });
   }
+});
+
+describe("lievito in baker's % con la precisione del registro (yeast-dose)", () => {
+  const kitchen: UserConstraints = {
+    oven_type: "home", oven_max_temp_c: 250, oven_capacity_temp_c: 250, skill_level: 2,
+    available_hours: 0, dough_balls: 4, has_mixer: false, has_pizza_stone: false, has_pizza_steel: false,
+    has_baking_pan: false, pantry_flours: [], pantry_yeasts: ["dry"], dietary_filters: [],
+  };
+  it("lievito secco 24 h: mai «0 %» nella griglia scientifica", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, kitchen, { customFermentationHours: 24 });
+    expect(recipe.yeast_type).toBe("dry");
+    expect(recipe.science.yeast_baker_pct).toBeGreaterThan(0);
+    for (const locale of ["it-IT", "en-US", "fr-FR", "de-DE", "es-ES", "pt-PT", "ja-JP"]) {
+      const text = yeastBakerPctText(recipe.science.yeast_baker_pct, locale);
+      expect(text.replace(/[\u00a0\u202f ]/g, "")).not.toMatch(/^0%$/);
+      expect(text).toMatch(/[1-9]/);
+    }
+    expect(yeastBakerPctText(0.033, "it-IT").replace(/[\u00a0\u202f ]/g, "")).toBe("0,03%");
+    expect(yeastBakerPctText(0.04, "en-US")).toBe("0.04%");
+  });
 });

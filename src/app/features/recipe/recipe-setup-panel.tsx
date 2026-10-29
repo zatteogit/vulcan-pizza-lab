@@ -17,6 +17,7 @@ import {
 import { CtaButton, ModalSheet } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
+import { yeastBakerPctText } from "./recipe-output-format";
 import { SpecCell } from "./recipe-stat-strip";
 import { NerdAuraBlock } from "./recipe-output-bits";
 import {
@@ -447,7 +448,7 @@ export function RecipeSetupPanel({
                     small
                     science
                     label={cms.ui.nerdYeast}
-                    value={fmt.percent(recipe.science.yeast_baker_pct)}
+                    value={yeastBakerPctText(recipe.science.yeast_baker_pct, bcp47)}
                     index={0}
                   />
                   <SpecCell

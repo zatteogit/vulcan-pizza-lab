@@ -6,7 +6,9 @@ import { passiveActivityMessage } from "../../domain/pizza-engine";
 import type { CmsContent, CmsTimelineStep } from "../cms/cms-context";
 import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
 import { engineMsgTexts } from "./engine-msg-text";
-import { formatDuration, formatMass, formatTemp as formatTempLocale } from "../../i18n/format";
+import { formatDuration, formatMass, formatPercent, formatTemp as formatTempLocale } from "../../i18n/format";
+import { getScienceNote } from "../../data/science-notes";
+import { roundForEvidence } from "../../domain/science/evidence";
 import { getActiveUiLocale } from "../../i18n/ui-messages";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
@@ -427,6 +429,16 @@ export function compGramsSuffix(
   const g = Math.round((flourG * (c.compensated - c.original)) / 100);
   /* FW-11: grammi con lo spazio e i decimali della lingua. */
   return g > 0 ? ` · ≈ +${formatMass(g, getActiveUiLocale())}` : "";
+}
+
+const YEAST_NOTE = getScienceNote("yeast-dose");
+
+/** Dose di lievito in baker's % con la precisione dichiarata dal registro
+ *  (yeast-dose, displayDecimals 2): 0,03 % di secco non diventa «0 %». */
+export function yeastBakerPctText(pct: number, locale: string): string {
+  return formatPercent(roundForEvidence(pct, YEAST_NOTE), locale, {
+    maximumFractionDigits: YEAST_NOTE?.uncertainty?.displayDecimals ?? 2,
+  });
 }
 
 /** Le microdosi richiedono una bilancia di precisione, senza sostituire il peso. */

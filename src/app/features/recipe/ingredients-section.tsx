@@ -31,6 +31,7 @@ import {
   getServingUnitLabel,
   normalizeMeasureUnitSuffixes,
   yeastPracticalHint,
+  yeastBakerPctText,
 } from "./recipe-output-format";
 import { uiMessage } from "../../i18n/ui-messages";
 import { getScienceNote } from "../../data/science-notes";
@@ -410,7 +411,7 @@ export function IngredientsSection({
               </h4>
               <div className="ingredients-science__grid">
                 {[
-                  { l: `${cms.scienceLabels.yeastBaker} (baker's %)`, v: fmt.percent(recipe.science.yeast_baker_pct) },
+                  { l: `${cms.scienceLabels.yeastBaker} (baker's %)`, v: yeastBakerPctText(recipe.science.yeast_baker_pct, bcp47) },
                   { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: fmt.durationShort(recipe.science.effective_hours_18c) },
                   { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: uiMessage("format.timesFactor", [fmt.number(roundForEvidence(recipe.science.q10_factor, Q10_NOTE))]) },
                   { l: cms.scienceLabels.waterActivity, v: fmt.number(roundForEvidence(recipe.science.water_activity, AW_NOTE), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
