@@ -562,10 +562,10 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
-      name: "Temperatura del agua (tres temperaturas)",
+      name: "Temperatura del agua (regla del 55)",
       definition: "Calcula a qu\u00E9 temperatura poner el agua para que la masa llegue a la temperatura deseada.",
       formula: "T_agua = 3 × T_masa − T_ambiente − T_harina − fricción",
-      whyImportant: "Suma de las tres temperaturas = 3 \u00D7 masa deseada \u2212 fricci\u00F3n. En pizzer\u00EDa tambi\u00E9n se llama \u00ABregla del 55\u00BB: con la suma fija en 55 la masa queda en torno a 18 \u00B0C (55 \u00F7 3); aquí se usa la temperatura objetivo del estilo, 22\u201324 \u00B0C.",
+      whyImportant: "Suma de las tres temperaturas (cocina, harina, agua) = 3 × masa deseada − fricción; con un prefermento entra también su temperatura y la suma de los cuatro términos pasa a 4 × masa deseada − fricción. En pizzería también se llama «regla del 55»: con la suma fija en 55 la masa queda en torno a 18 °C (55 ÷ 3); aquí la masa deseada es 22 °C si la masa madura en la nevera, 24 °C en los demás casos.",
     },
     a_score: {
       name: "A-Score (Autenticidad)",
@@ -577,7 +577,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
         { label: "Inspirada pero modificada", value: "{aBand2}" },
         { label: "Libremente interpretada", value: "{aBand3}" },
       ],
-      whyImportant: "Los pesos son una elección de {brand}, no una medida. Reglas del producto: sin el combustible que pide el estilo, la puntuación no supera {authFuelCap}; por debajo de la temperatura mínima del estilo se reduce en proporción.",
+      whyImportant: "Los pesos son una elección de {brand}, no una medida. Reglas del producto: si el horno no es el que pide el estilo (leña o carbón) y no llega a su temperatura mínima, la puntuación no supera {authFuelCap}; por debajo de la temperatura mínima del estilo se reduce en proporción.",
     },
     f_score: {
       name: "F-Score (Facilidad)",
@@ -705,7 +705,7 @@ export const SCIENCE_ES: CmsScience = {
     "water-temp-rule": {
       title: "Temperatura del agua",
       l1: "Una cuenta exacta que parte de algunas hipótesis sobre tu cocina.",
-      l2: "Cocina, harina, agua y calor de la amasadora suman tres veces la temperatura de masa que quieres. La aritmética es exacta; cocina y harina son estimaciones si no las mides, y el calor de la amasadora es un valor típico.",
+      l2: "Cocina, harina, agua y calor de la amasadora suman tres veces la temperatura de masa que quieres; con un prefermento entra también él y la suma pasa a cuatro veces. La aritmética es exacta; cocina y harina son estimaciones si no las mides, y el calor de la amasadora es un valor típico.",
     },
     "water-activity": {
       title: "Actividad de agua (aw)",

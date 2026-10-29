@@ -34,6 +34,7 @@ export function StepDetails({
   stepId,
   unleavened = false,
   preFermentType,
+  variant,
   cms,
   troubleshooting,
 }: {
@@ -44,6 +45,8 @@ export function StepDetails({
   /** Impasto non lievitato: niente rimandi alla lievitazione nei riposi. */
   unleavened?: boolean;
   preFermentType?: string;
+  /** Variante del passo dal motore: "oil"/"fry" per le fritte (niente forno). */
+  variant?: string;
   cms: CmsContent;
   troubleshooting?: StepTroubleshooting & { title: string };
 }) {
@@ -53,7 +56,7 @@ export function StepDetails({
   const reducedMotion = useReducedMotion();
   const transition = reducedMotion ? { duration: motionDuration.reduced } : motionSpring.denseDisclosure;
   const detailsId = useId();
-  const glossaryTerms = stepGlossaryTerms(stepId, { unleavened, preFermentType });
+  const glossaryTerms = stepGlossaryTerms(stepId, { unleavened, preFermentType, variant });
   const scienceNoteId = stepId && !(unleavened && (stepId === "bulk" || stepId === "proof")) ? STEP_SCIENCE_NOTE[stepId] : undefined;
 
   const hasDetails = Boolean(longDesc || tips.length);

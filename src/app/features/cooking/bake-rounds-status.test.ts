@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { STYLES_DB, generateRecipe, type UserConstraints } from "../../domain/pizza-engine";
 import { UI_MESSAGES_IT } from "../../i18n/ui-messages.it";
-import { roundStatus, turnPointsSec, type RoundStatusInput } from "./bake-rounds-status";
+import { roundStatus, roundsCtaState, turnPointsSec, type RoundStatusInput } from "./bake-rounds-status";
 
 /* FW-19 (revisione): il timer per giro segue la variante del passo (forno o
  * olio) e le rotazioni dello stile, non un «mezzo giro» per tutti. */
@@ -78,5 +78,14 @@ describe("il motore passa al timer variante e rotazioni dello stile", () => {
     expect(generateRecipe(STYLES_DB.napoletana_stg, { ...P1, oven_type: "electric_high", oven_max_temp_c: 509 })
       .timeline.find((s) => s.id === "bake")!.turns).toBe(3);
     expect(bakeStep("teglia_romana").turns).toBe(1);
+  });
+});
+
+describe("pulsante del giro e focus (WCAG 2.4.3)", () => {
+  it("resta montato e inattivo mentre cuoce, sparisce solo a fine giri", () => {
+    expect(roundsCtaState("idle", false)).toBe("enabled");
+    expect(roundsCtaState("baking", false)).toBe("waiting");
+    expect(roundsCtaState("out", false)).toBe("enabled");
+    expect(roundsCtaState("out", true)).toBe("hidden");
   });
 });

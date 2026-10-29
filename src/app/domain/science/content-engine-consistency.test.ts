@@ -17,8 +17,8 @@ import { formatNumber, formatPercent, formatRange } from "../../i18n/format";
 import { interpolate } from "../../i18n/interpolate";
 import { MCP_TOOLS } from "../../agent/mcp-tools";
 import { STYLES_DB } from "../styles-db";
-import { getQ10 } from "../pizza-engine";
-import { AUTH_AXIS_WEIGHTS, FEAS_AXIS_WEIGHTS } from "../recipe-score";
+import { generateRecipe, getQ10, type UserConstraints } from "../pizza-engine";
+import { AUTH_AXIS_WEIGHTS, AUTHENTICITY_FUEL_CAP, FEAS_AXIS_WEIGHTS } from "../recipe-score";
 import {
   fermentationModelFacts,
   flourFitForStyle,
@@ -166,6 +166,50 @@ describe.each(Object.entries(BUNDLES))("glossario e motore, %s", (locale, bundle
     ];
     expect(covered.filter(([, text]) => literalDigits(text).length > 0).map(([path]) => path)).toEqual([]);
     for (const id of ["hydration", "pl_ratio", "thickness_factor"]) expect(raw[id]?.ranges, id).toBeUndefined();
+  });
+});
+
+/* D-063: il tetto dell'autenticità per il combustibile vale solo se il forno
+ * NON arriva anche alla temperatura minima dello stile. Il glossario «A-Score»
+ * deve dire la stessa condizione, prima del tetto, in tutte le lingue. */
+const MIN_TEMP_WORD: Record<string, RegExp> = {
+  it: /temperatura minima/, en: /minimum temperature/, de: /Mindesttemperatur/, es: /temperatura mínima/,
+  fr: /température minimale/, pt: /temperatura mínima/, ja: /最低温度/,
+};
+describe("A-Score e tetto del combustibile (D-063)", () => {
+  const kitchen = (temp: number): UserConstraints => ({
+    oven_type: "electric_high", oven_max_temp_c: temp, available_hours: 48, meal_deadline: false, dough_balls: 2, skill_level: 4,
+    has_mixer: false, has_baking_pan: true, has_pizza_stone: true, has_pizza_steel: false,
+    pantry_flours: [], pantry_yeasts: [], dietary_filters: [],
+  });
+  it("forno non a legna sopra il minimo: niente tetto; sotto il minimo: tetto", () => {
+    const style = STYLES_DB.napoletana_stg;
+    const above = generateRecipe(style, kitchen(style.baking.temp_c_range[0] + 20));
+    expect(above.scores.penalties.map((p) => p.key)).not.toContain("auth.fuelCap");
+    expect(above.scores.authenticity).toBeGreaterThan(AUTHENTICITY_FUEL_CAP);
+    const below = generateRecipe(STYLES_DB.pizza_al_metro, kitchen(STYLES_DB.pizza_al_metro.baking.temp_c_range[0] - 10));
+    expect(below.scores.authenticity).toBeLessThanOrEqual(AUTHENTICITY_FUEL_CAP);
+  });
+  it.each(Object.entries(BUNDLES))("il glossario lega il tetto alla temperatura minima, %s", (locale, bundle) => {
+    const why = getTermById("a_score", source(locale, bundle))!.whyImportant ?? "";
+    const cap = formatNumber(AUTHENTICITY_FUEL_CAP, locale);
+    const capAt = why.indexOf(cap);
+    expect(capAt, why).toBeGreaterThan(0);
+    // La condizione sulla temperatura minima sta prima del tetto, nella stessa frase.
+    const clause = why.slice(0, capAt).split(/[.。:：]/).pop() ?? "";
+    expect(clause, why).toMatch(MIN_TEMP_WORD[locale]);
+  });
+});
+
+/* FW-17: con un prefermento la Regola 55 ha quattro termini (rule55Sum) e la
+ * temperatura d'impasto voluta dipende dalla fermentazione (≤ 4 °C → 22, sennò 24). */
+describe.each(Object.entries(BUNDLES))("Regola 55 e motore, %s", (locale, bundle) => {
+  it("il glossario dice la variante a quattro termini e 22/24 °C del motore", () => {
+    const t = getTermById("rule_of_55", source(locale, bundle))!;
+    expect(t.whyImportant).toMatch(/4 × /);
+    expect(t.whyImportant).toContain("22 °C");
+    expect(t.whyImportant).toContain("24 °C");
+    expect(t.name).toMatch(/55/);
   });
 });
 

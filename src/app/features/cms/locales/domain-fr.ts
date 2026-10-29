@@ -571,10 +571,10 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
-      name: "Temp\u00E9rature de l'eau (trois temp\u00E9ratures)",
+      name: "Température de l'eau (règle du 55)",
       definition: "Calcule \u00E0 quelle temp\u00E9rature mettre l'eau pour que la p\u00E2te atteigne la temp\u00E9rature voulue.",
       formula: "T_eau = 3 × T_pâte − T_ambiante − T_farine − friction",
-      whyImportant: "Somme des trois temp\u00E9ratures = 3 \u00D7 p\u00E2te voulue \u2212 \u00E9chauffement. En pizzeria on parle aussi de \u00AB r\u00E8gle du 55 \u00BB : avec une somme fixe de 55 la p\u00E2te arrive vers 18 \u00B0C (55 \u00F7 3) ; ici on utilise la cible du style, 22\u201324 \u00B0C.",
+      whyImportant: "Somme des trois températures (cuisine, farine, eau) = 3 × pâte voulue − échauffement ; avec un préferment, sa température entre aussi et la somme des quatre termes devient 4 × pâte voulue − échauffement. En pizzeria on parle aussi de « règle du 55 » : avec une somme fixe de 55 la pâte arrive vers 18 °C (55 ÷ 3) ; ici la pâte voulue est de 22 °C si la pâte mature au réfrigérateur, 24 °C sinon.",
     },
     a_score: {
       name: "A-Score (Authenticit\u00E9)",
@@ -586,7 +586,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
         { label: "Inspirée mais modifiée", value: "{aBand2}" },
         { label: "Librement interprétée", value: "{aBand3}" },
       ],
-      whyImportant: "Les poids sont un choix de {brand}, pas une mesure. Règles du produit : sans le combustible prévu par le style, le score ne dépasse pas {authFuelCap} ; sous la température minimale du style, il diminue en proportion.",
+      whyImportant: "Les poids sont un choix de {brand}, pas une mesure. Règles du produit : si le four n'est pas celui prévu par le style (bois ou charbon) et n'atteint pas sa température minimale, le score ne dépasse pas {authFuelCap} ; sous la température minimale du style, il diminue en proportion.",
     },
     f_score: {
       name: "F-Score (Facilité)",
@@ -714,7 +714,7 @@ export const SCIENCE_FR: CmsScience = {
     "water-temp-rule": {
       title: "Température de l'eau",
       l1: "Un calcul exact, qui part de quelques hypothèses sur votre cuisine.",
-      l2: "Cuisine, farine, eau et chauffe du pétrin font trois fois la température de pâte voulue. L'arithmétique est exacte ; cuisine et farine sont des estimations si vous ne les mesurez pas, et la chauffe du pétrin est une valeur type.",
+      l2: "Cuisine, farine, eau et chauffe du pétrin font trois fois la température de pâte voulue ; avec un préferment, il entre aussi dans le calcul et la somme devient quatre fois. L'arithmétique est exacte ; cuisine et farine sont des estimations si vous ne les mesurez pas, et la chauffe du pétrin est une valeur type.",
     },
     "water-activity": {
       title: "Activité de l'eau (aw)",

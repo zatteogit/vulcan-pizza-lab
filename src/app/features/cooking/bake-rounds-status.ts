@@ -58,3 +58,13 @@ export function roundStatus(input: RoundStatusInput): RoundStatus {
   if (round >= rounds) return { key: "allDone" };
   return { key: phase === "out" ? "out" : "ready" };
 }
+
+/* Revisione FW-19 (WCAG 2.4.3): il pulsante del giro resta montato mentre la
+ * pizza cuoce, solo inattivo (aria-disabled): se sparisse, il focus della
+ * tastiera cadrebbe fuori dalla vista di cottura a ogni giro. Si toglie solo
+ * a fine giri, quando il focus passa allo stato «tutte sfornate». */
+export type RoundsCtaState = "enabled" | "waiting" | "hidden";
+export function roundsCtaState(phase: RoundPhase, allDone: boolean): RoundsCtaState {
+  if (allDone) return "hidden";
+  return phase === "baking" ? "waiting" : "enabled";
+}

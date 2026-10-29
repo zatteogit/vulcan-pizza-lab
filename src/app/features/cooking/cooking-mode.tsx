@@ -57,6 +57,7 @@ import { isFriedStyle } from "../../domain/pizza-engine";
 import { GlossaryTermLinks } from "../glossary/term-link";
 import { GlossaryNavigationContext } from "../../components/shared/info-tip";
 import { stepGlossaryTerms } from "../glossary/step-terms";
+import { isOilPreheat, preheatText } from "./preheat-copy";
 
 
 /* ── Countdown della fase ──
@@ -76,6 +77,8 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
   const now = Date.now();
   const waits = stepIsWaiting(step);
   const timedWait = TIMED_WAIT_STEP_IDS.has(step.id);
+  /* Le fritte scaldano l'olio, non il forno (step.variant "oil" dal motore). */
+  const oil = isOilPreheat(step);
   const explicitlyStarted = step.actualStartMs !== undefined;
   const notStarted = now < step.startMs && !explicitlyStarted;
   /* Un passo attivo arrivato alla sua ora ma non ancora cominciato: niente
@@ -111,11 +114,11 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
               : dueNotStarted
                 ? uiMessage("cooking.phase.about", [phaseDuration])
                 : waitDone
-                  ? timedWait ? uiMessage("cooking.preheat.ready") : cms.cooking.phaseDone
+                  ? timedWait ? preheatText(oil, "ready") : cms.cooking.phaseDone
                   : activeLate
                     ? uiMessage("cooking.phase.late")
                     : timedWait
-                      ? uiMessage("cooking.preheat.remaining", [remainingLabel])
+                      ? preheatText(oil, "remaining", [remainingLabel])
                       : t(cms.cooking.phaseRemaining, { time: remainingLabel })}
           </div>
           <div className="cooking-mode-phase__meta">
@@ -141,7 +144,7 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
       </div>
       {/* FW-13 (S10-B-13): il cambio di stato si annuncia una volta, non a ogni tick. */}
       <p role="status" className="sr-only">
-        {waitDone && isCurrent ? (timedWait ? uiMessage("cooking.preheat.ready") : cms.cooking.phaseDone) : ""}
+        {waitDone && isCurrent ? (timedWait ? preheatText(oil, "ready") : cms.cooking.phaseDone) : ""}
       </p>
       {!notStarted && !dueNotStarted && !phaseOver && (
         <div className="cooking-mode-phase__track">
@@ -212,6 +215,7 @@ export function CookingMode() {
      - attesa: lievitazioni e forno acceso, «Fatto» solo alla fine. */
   const now = Date.now();
   const timedWait = !!step && TIMED_WAIT_STEP_IDS.has(step.id);
+  const oil = isOilPreheat(step);
   const explicitlyStarted = step?.actualStartMs !== undefined;
   const early = isCurrent && !viewingDone && !!step && !explicitlyStarted && now < step.startMs;
   const ovenToStart = isCurrent && timedWait && !explicitlyStarted && !early;
@@ -462,20 +466,20 @@ export function CookingMode() {
       <ConfirmDialog
         open={confirmHot}
         onDismiss={() => setConfirmHot(false)}
-        ariaLabel={uiMessage("cooking.preheat.hotTitle")}
+        ariaLabel={preheatText(oil, "hotTitle")}
         icon={<AlertTriangle size={26} />}
         position="absolute"
         zIndex={10}
-        title={uiMessage("cooking.preheat.hotTitle")}
-        body={uiMessage("cooking.preheat.hotBody")}
+        title={preheatText(oil, "hotTitle")}
+        body={preheatText(oil, "hotBody")}
         actions={[
           {
-            label: uiMessage("cooking.preheat.hotKeep"),
+            label: preheatText(oil, "hotKeep"),
             onClick: () => setConfirmHot(false),
             variant: "cta",
           },
           {
-            label: uiMessage("cooking.preheat.hotConfirm"),
+            label: preheatText(oil, "hotConfirm"),
             onClick: () => {
               setConfirmHot(false);
               completeStep(viewIndex);
@@ -605,7 +609,7 @@ export function CookingMode() {
                     {step.flexible
                       ? uiMessage("cooking.chip.readyAt", [formatStepClock(step.endMs, true, bcp47)])
                       : timedWait && explicitlyStarted
-                        ? uiMessage("cooking.preheat.waiting", [formatStepClock(step.endMs, false, bcp47)])
+                        ? preheatText(oil, "waiting", [formatStepClock(step.endMs, false, bcp47)])
                       : isCurrent && !viewingDone && (now >= step.startMs || explicitlyStarted)
                         ? uiMessage("cooking.chip.now")
                         : uiMessage("cooking.chip.startsAt", [formatStepClock(step.startMs, false, bcp47)])}
@@ -647,7 +651,7 @@ export function CookingMode() {
                 )}
 
                 {/* FW-04 (S10-A-14): le parole del passo aprono il glossario. */}
-                <GlossaryTermLinks termIds={stepGlossaryTerms(step.id, { unleavened: !!STYLES_DB[session.styleId]?.dough.unleavened })} />
+                <GlossaryTermLinks termIds={stepGlossaryTerms(step.id, { unleavened: !!STYLES_DB[session.styleId]?.dough.unleavened, variant: step.variant })} />
 
 
                 {/* Countdown di fase ancorato agli orari reali */}
@@ -692,7 +696,7 @@ export function CookingMode() {
                 onClick={skipWait}
                 className="cooking-mode-nav__skip"
               >
-                {timedWait ? uiMessage("cooking.preheat.alreadyHot") : cms.cooking.finishedEarly}
+                {timedWait ? preheatText(oil, "alreadyHot") : cms.cooking.finishedEarly}
               </button>
             )}
             <div className="cooking-mode-nav__row">
@@ -720,14 +724,14 @@ export function CookingMode() {
                   </>
                 ) : ovenToStart ? (
                   <>
-                    {uiMessage("cooking.preheat.start")}
+                    {preheatText(oil, "start")}
                     <ChevronRight size={20} />
                   </>
                 ) : waiting ? (
                   <>
                     <Clock size={18} />
                     {timedWait
-                      ? uiMessage("cooking.preheat.waiting", [formatEta(step.endMs, Date.now(), bcp47)])
+                      ? preheatText(oil, "waiting", [formatEta(step.endMs, Date.now(), bcp47)])
                       : t(cms.cooking.waitingReadyAt, {
                           eta: formatEta(step.endMs, Date.now(), bcp47),
                         })}

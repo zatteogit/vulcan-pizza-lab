@@ -149,9 +149,9 @@ export const GLOSSARY_COPY_IT = {
     "whyImportant": "Impastare scalda l'impasto e fa partire prima la lievitazione: per questo l'acqua va più fredda quando usi una macchina."
   },
   "rule_of_55": {
-    "name": "Temperatura dell'acqua (tre temperature)",
+    "name": "Temperatura dell'acqua (Regola 55)",
     "definition": "Calcola a che temperatura mettere l'acqua perché l'impasto arrivi alla temperatura voluta.",
-    "whyImportant": "Somma delle tre temperature = 3 × impasto voluto − attrito. In pizzeria si dice anche «regola del 55»: con la somma fissa a 55 l'impasto viene intorno ai 18 °C (55 ÷ 3); qui si usa la temperatura voluta dallo stile, 22–24 °C."
+    "whyImportant": "Somma delle tre temperature (cucina, farina, acqua) = 3 × impasto voluto − attrito; con un prefermento entra anche la sua temperatura e la somma dei quattro termini diventa 4 × impasto voluto − attrito. In pizzeria si dice anche «regola del 55»: con la somma fissa a 55 l'impasto viene intorno ai 18 °C (55 ÷ 3); qui l'impasto voluto è 22 °C se l'impasto matura in frigo, 24 °C altrimenti."
   },
   "a_score": {
     "name": "A-Score (Autenticità)",

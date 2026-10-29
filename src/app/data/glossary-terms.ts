@@ -437,7 +437,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
       { label: "Ispirata ma modificata", value: "{aBand2}" },
       { label: "Liberamente interpretata", value: "{aBand3}" },
     ],
-    whyImportant: `I pesi sono una scelta di ${BRAND.name}, non una misura. Regole di prodotto: senza il combustibile previsto dallo stile il punteggio non supera {authFuelCap}; sotto la temperatura minima dello stile si riduce in proporzione.`,
+    whyImportant: `I pesi sono una scelta di ${BRAND.name}, non una misura. Regole di prodotto: se il forno non è quello previsto dallo stile (legna o carbone) e non arriva alla sua temperatura minima, il punteggio non supera {authFuelCap}; sotto la temperatura minima dello stile si riduce in proporzione.`,
   },
   {
     id: "f_score",

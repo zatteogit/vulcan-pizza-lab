@@ -8,12 +8,12 @@
  * stile decidono i testi: vedi bake-rounds-status.ts. */
 
 import { Flame, RotateCw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CtaButton } from "../../components/ds/index";
 import { formatSeconds } from "../../i18n/format";
 import { uiMessage } from "../../i18n/ui-messages";
 import { useCms } from "../cms/cms-context";
-import { roundStatus, type RoundPhase } from "./bake-rounds-status";
+import { roundStatus, roundsCtaState, type RoundPhase } from "./bake-rounds-status";
 
 interface BakeRoundsTimerProps {
   rounds: number;
@@ -49,6 +49,15 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
   }, [startedAt, elapsedSec, roundSec]);
 
   const allDone = round >= rounds && phase !== "baking";
+  const cta = roundsCtaState(phase, allDone);
+  const statusRef = useRef<HTMLParagraphElement>(null);
+  /* A fine giri il pulsante sparisce: se aveva il focus (ora sul body), lo
+     riceve lo stato «tutte sfornate», dentro la vista di cottura. */
+  useEffect(() => {
+    if (!allDone || round === 0) return;
+    const active = typeof document !== "undefined" ? document.activeElement : null;
+    if (!active || active === document.body) statusRef.current?.focus();
+  }, [allDone, round]);
   const remainingSec = Math.max(0, Math.ceil(roundSec - elapsedSec));
   const nextRound = round + 1;
   const st = roundStatus({ phase, elapsedSec, roundSec, round, rounds, turns, variant });
@@ -89,7 +98,7 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
       <p className="cook-rounds__count type-numeric">
         {uiMessage(fry ? "cooking.rounds.fry.progress" : "cooking.rounds.progress", [Math.min(Math.max(round, 1), rounds), rounds])}
       </p>
-      <p className="cook-rounds__status type-numeric">
+      <p ref={statusRef} tabIndex={-1} className="cook-rounds__status type-numeric">
         {turning && <RotateCw size={18} aria-hidden="true" className="cook-rounds__icon" />}
         {status}
       </p>
@@ -100,10 +109,12 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
           {uiMessage("cooking.rounds.recovery", [formatSeconds(recoverySec, bcp47)])}
         </p>
       ) : null}
-      {!allDone && phase !== "baking" && (
+      {cta !== "hidden" && (
         <CtaButton
           variant="secondary"
+          aria-disabled={cta === "waiting" ? true : undefined}
           onClick={() => {
+            if (cta !== "enabled") return;
             setRound(nextRound);
             setStartedAt(Date.now());
           }}

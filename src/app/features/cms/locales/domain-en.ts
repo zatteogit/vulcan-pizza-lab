@@ -598,10 +598,10 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
-      name: "Water temperature (three temperatures)",
+      name: "Water temperature (rule of 55)",
       definition: "Works out how warm the water should be so the dough reaches the temperature you want.",
       formula: "T_water = 3 × T_dough − T_room − T_flour − friction",
-      whyImportant: "Sum of the three temperatures = 3 \u00D7 desired dough \u2212 friction. Pizzerias also call it the \u00ABrule of 55\u00BB: with the sum fixed at 55 the dough lands around 18 \u00B0C (55 \u00F7 3); here the style's target is used, 22\u201324 \u00B0C.",
+      whyImportant: "Sum of the three temperatures (kitchen, flour, water) = 3 × desired dough − friction; with a pre-ferment its temperature comes in too and the sum of the four terms becomes 4 × desired dough − friction. Pizzerias also call it the «rule of 55»: with the sum fixed at 55 the dough lands around 18 °C (55 ÷ 3); here the desired dough is 22 °C if the dough matures in the fridge, 24 °C otherwise.",
     },
     a_score: {
       name: "A-Score (Authenticity)",
@@ -613,7 +613,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         { label: "Inspired but modified", value: "{aBand2}" },
         { label: "Freely interpreted", value: "{aBand3}" },
       ],
-      whyImportant: "The weights are a {brand} choice, not a measurement. Product rules: without the fuel the style calls for, the score does not exceed {authFuelCap}; below the style's minimum temperature it is reduced proportionally.",
+      whyImportant: "The weights are a {brand} choice, not a measurement. Product rules: if the oven is not the one the style calls for (wood or coal) and does not reach its minimum temperature, the score does not exceed {authFuelCap}; below the style's minimum temperature it is reduced proportionally.",
     },
     f_score: {
       name: "F-Score (Ease)",
@@ -741,7 +741,7 @@ export const SCIENCE_EN: CmsScience = {
     "water-temp-rule": {
       title: "Water temperature",
       l1: "An exact calculation that starts from a few assumptions about your kitchen.",
-      l2: "Kitchen, flour, water and mixer heat add up to three times the dough temperature you want. The arithmetic is exact; kitchen and flour are estimates unless you measure them, and mixer heat is a typical value.",
+      l2: "Kitchen, flour, water and mixer heat add up to three times the dough temperature you want; with a pre-ferment it comes in too and the sum becomes four times. The arithmetic is exact; kitchen and flour are estimates unless you measure them, and mixer heat is a typical value.",
     },
     "water-activity": {
       title: "Water activity (Aw)",

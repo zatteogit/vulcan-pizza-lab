@@ -210,6 +210,7 @@ export function ProcedureTimeline({
                   tips={[tipText, parametricTip].filter(Boolean) as string[]}
                   isNerd={isNerd}
                   stepId={step.id}
+                  variant={step.variant}
                   unleavened={!!recipe.style.dough.unleavened}
                   preFermentType={recipe.pre_ferment_type}
                   cms={cms}

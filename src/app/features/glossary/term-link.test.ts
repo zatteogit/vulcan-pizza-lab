@@ -59,6 +59,11 @@ describe("FW-04 TermLink e rimandi al glossario", () => {
     expect(stepGlossaryTerms("divide")).toContain("dough_division");
     expect(stepGlossaryTerms("proof", { unleavened: true })).toEqual([]);
     expect(stepGlossaryTerms("preferment", { preFermentType: "biga" })).toEqual(["pre_ferment", "biga"]);
+    // Fritte: niente platea e cielo del forno su olio e frittura, la Maillard resta.
+    expect(stepGlossaryTerms("preheat", { variant: "oil" })).toEqual([]);
+    expect(stepGlossaryTerms("bake", { variant: "fry" })).toEqual(["maillard"]);
+    expect(stepGlossaryTerms("bake")).toEqual(["oven_floor_dome", "maillard"]);
+    expect(stepGlossaryTerms("preheat")).toEqual(["oven_floor_dome"]);
   });
 
   it("correlati e note del modello puntano a voci e note esistenti", () => {

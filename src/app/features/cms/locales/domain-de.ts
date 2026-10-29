@@ -568,10 +568,10 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
-      name: "Wassertemperatur (drei Temperaturen)",
+      name: "Wassertemperatur (55er-Regel)",
       definition: "Berechnet, wie warm das Wasser sein muss, damit der Teig die gew\u00FCnschte Temperatur erreicht.",
       formula: "T_Wasser = 3 × T_Teig − T_Raum − T_Mehl − Reibung",
-      whyImportant: "Summe der drei Temperaturen = 3 \u00D7 gew\u00FCnschter Teig \u2212 Reibung. In Pizzerien hei\u00DFt das auch \u00AB55er-Regel\u00BB: Mit der Summe fest auf 55 liegt der Teig bei etwa 18 \u00B0C (55 \u00F7 3); hier gilt die Zieltemperatur des Stils, 22\u201324 \u00B0C.",
+      whyImportant: "Summe der drei Temperaturen (Küche, Mehl, Wasser) = 3 × gewünschter Teig − Reibung; mit einem Vorteig kommt auch dessen Temperatur hinzu, und die Summe der vier Glieder wird 4 × gewünschter Teig − Reibung. In Pizzerien heißt das auch «55er-Regel»: Mit der Summe fest auf 55 liegt der Teig bei etwa 18 °C (55 ÷ 3); hier ist der gewünschte Teig 22 °C, wenn er im Kühlschrank reift, sonst 24 °C.",
     },
     a_score: {
       name: "A-Score (Authentizit\u00E4t)",
@@ -583,7 +583,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
         { label: "Inspiriert, aber verändert", value: "{aBand2}" },
         { label: "Frei interpretiert", value: "{aBand3}" },
       ],
-      whyImportant: "Die Gewichte sind eine Entscheidung von {brand}, keine Messung. Produktregeln: ohne den Brennstoff, den der Stil vorsieht, liegt der Wert höchstens bei {authFuelCap}; unter der Mindesttemperatur des Stils sinkt er anteilig.",
+      whyImportant: "Die Gewichte sind eine Entscheidung von {brand}, keine Messung. Produktregeln: ist der Ofen nicht der vom Stil verlangte (Holz oder Kohle) und erreicht er dessen Mindesttemperatur nicht, liegt der Wert höchstens bei {authFuelCap}; unter der Mindesttemperatur des Stils sinkt er anteilig.",
     },
     f_score: {
       name: "F-Score (Schwierigkeitsgrad)",
@@ -711,7 +711,7 @@ export const SCIENCE_DE: CmsScience = {
     "water-temp-rule": {
       title: "Wassertemperatur",
       l1: "Eine exakte Rechnung, die von einigen Annahmen über deine Küche ausgeht.",
-      l2: "Küche, Mehl, Wasser und Knetwärme ergeben zusammen das Dreifache der gewünschten Teigtemperatur. Die Rechnung ist exakt; Küche und Mehl sind Schätzungen, wenn du sie nicht misst, und die Knetwärme ist ein typischer Wert.",
+      l2: "Küche, Mehl, Wasser und Knetwärme ergeben zusammen das Dreifache der gewünschten Teigtemperatur; mit einem Vorteig kommt auch er hinzu, und die Summe wird das Vierfache. Die Rechnung ist exakt; Küche und Mehl sind Schätzungen, wenn du sie nicht misst, und die Knetwärme ist ein typischer Wert.",
     },
     "water-activity": {
       title: "Wasseraktivität (aw)",

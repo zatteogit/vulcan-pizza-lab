@@ -211,7 +211,7 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "water-temp-rule": {
       title: "Temperatura dell'acqua",
       l1: "Un conto esatto, che parte da alcune ipotesi sulla tua cucina.",
-      l2: "Cucina, farina, acqua e calore dell'impastatrice sommano tre volte la temperatura d'impasto che vuoi. L'aritmetica è esatta; cucina e farina sono stime se non le misuri, e il calore dell'impastatrice è un valore tipico.",
+      l2: "Cucina, farina, acqua e calore dell'impastatrice sommano tre volte la temperatura d'impasto che vuoi; con un prefermento entra anche lui e la somma diventa quattro volte. L'aritmetica è esatta; cucina e farina sono stime se non le misuri, e il calore dell'impastatrice è un valore tipico.",
     },
     "water-activity": {
       title: "Attività dell'acqua (Aw)",

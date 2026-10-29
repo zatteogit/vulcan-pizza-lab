@@ -17661,6 +17661,19 @@
     align-self: flex-start;
   }
 
+  /* Mentre cuoce il pulsante resta (il focus non si perde) ma è inattivo. */
+  .cook-rounds__cta[aria-disabled="true"] {
+    cursor: default;
+    background: var(--container-bg);
+    border: var(--border-width-thin) solid var(--container-border);
+    box-shadow: none;
+    color: var(--text-muted);
+  }
+
+  .cook-rounds__status:focus {
+    outline: none;
+  }
+
   .cooking-mode-phase__meta {
     font-size: var(--font-size-sm);
     color: var(--text-muted);

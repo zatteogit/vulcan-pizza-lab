@@ -21,14 +21,18 @@ const STEP_TERMS: Record<string, readonly string[]> = {
 };
 
 const REST_STEP_IDS = new Set(["bulk", "proof"]);
+/* Le fritte (variant "oil" sul preriscaldo, "fry" sulla cottura): niente
+ * platea né cielo, che sono del forno. Sulla frittura resta la Maillard. */
+const OIL_VARIANTS = new Set(["oil", "fry"]);
 
 export function stepGlossaryTerms(
   stepId: string | undefined,
-  options: { unleavened?: boolean; preFermentType?: string } = {},
+  options: { unleavened?: boolean; preFermentType?: string; variant?: string } = {},
 ): string[] {
   if (!stepId) return [];
   if (options.unleavened && REST_STEP_IDS.has(stepId)) return [];
-  const terms = [...(STEP_TERMS[stepId] ?? [])];
+  let terms = [...(STEP_TERMS[stepId] ?? [])];
+  if (options.variant && OIL_VARIANTS.has(options.variant)) terms = terms.filter((id) => id !== "oven_floor_dome");
   if (stepId === "preferment" && (options.preFermentType === "biga" || options.preFermentType === "poolish")) {
     terms.push(options.preFermentType);
   }

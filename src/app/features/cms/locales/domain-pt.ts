@@ -568,10 +568,10 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     rule_of_55: {
-      name: "Temperatura da \u00E1gua (tr\u00EAs temperaturas)",
+      name: "Temperatura da água (regra dos 55)",
       definition: "Calcula a que temperatura p\u00F4r a \u00E1gua para a massa chegar \u00E0 temperatura desejada.",
       formula: "T_água = 3 × T_massa − T_ambiente − T_farinha − atrito",
-      whyImportant: "Soma das tr\u00EAs temperaturas = 3 \u00D7 massa desejada \u2212 atrito. Na pizzaria tamb\u00E9m se diz \u00ABregra dos 55\u00BB: com a soma fixa em 55 a massa fica perto de 18 \u00B0C (55 \u00F7 3); aqui se usa a meta do estilo, 22\u201324 \u00B0C.",
+      whyImportant: "Soma das três temperaturas (cozinha, farinha, água) = 3 × massa desejada − atrito; com um pré-fermento entra também a temperatura dele e a soma dos quatro termos passa a 4 × massa desejada − atrito. Na pizzaria também se diz «regra dos 55»: com a soma fixa em 55 a massa fica perto de 18 °C (55 ÷ 3); aqui a massa desejada é 22 °C se a massa matura na geladeira, 24 °C nos outros casos.",
     },
     a_score: {
       name: "A-Score (Autenticidade)",
@@ -583,7 +583,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
         { label: "Inspirada, mas modificada", value: "{aBand2}" },
         { label: "Livremente interpretada", value: "{aBand3}" },
       ],
-      whyImportant: "Os pesos são uma escolha da {brand}, não uma medida. Regras do produto: sem o combustível previsto pelo estilo, a pontuação não passa de {authFuelCap}; abaixo da temperatura mínima do estilo, ela diminui na mesma proporção.",
+      whyImportant: "Os pesos são uma escolha da {brand}, não uma medida. Regras do produto: se o forno não é o que o estilo pede (lenha ou carvão) e não chega à sua temperatura mínima, a pontuação não passa de {authFuelCap}; abaixo da temperatura mínima do estilo, ela diminui na mesma proporção.",
     },
     f_score: {
       name: "F-Score (Facilidade)",
@@ -711,7 +711,7 @@ export const SCIENCE_PT: CmsScience = {
     "water-temp-rule": {
       title: "Temperatura da água",
       l1: "Uma conta exata, que parte de algumas hipóteses sobre a sua cozinha.",
-      l2: "Cozinha, farinha, água e calor da masseira somam três vezes a temperatura de massa desejada. A aritmética é exata; cozinha e farinha são estimativas se você não as mede, e o calor da masseira é um valor típico.",
+      l2: "Cozinha, farinha, água e calor da masseira somam três vezes a temperatura de massa desejada; com um pré-fermento ele também entra e a soma passa a quatro vezes. A aritmética é exata; cozinha e farinha são estimativas se você não as mede, e o calor da masseira é um valor típico.",
     },
     "water-activity": {
       title: "Atividade de água (aw)",
