@@ -705,14 +705,16 @@ function SignatureRecipeCard({
             {acronymHelp && <span hidden id={acronymHelpId}>{acronymHelp}</span>}
             {/* Badge autenticità: nella didascalia, l'angolo in alto è della
                 compatibilità con la tua cucina (FW-10). */}
-            {recipe.authenticity_badge && (
-              <div id={`${nameId}-badge`} className="explore-card__badge explore-card__badge--auth">
+            {/* Nota di Matteo (29/10/2026, «troppa roba sulle card»): l'ispirazione
+                («Stile Bonci») non è più una pill sopra il titolo ma sta
+                nell'occhiello, dopo lo stile: un livello in meno. */}
+            {(cardText.context || recipe.authenticity_badge) && <p className="explore-card__eyebrow">
+              {cardText.context && <span id={`${nameId}-context`} data-region="style">{cardText.context}</span>}
+              {cardText.context && recipe.authenticity_badge && <span aria-hidden="true" data-region="separator"> · </span>}
+              {recipe.authenticity_badge && <span id={`${nameId}-badge`} data-region="inspiration">
                 {signatureBadgeText(recipe.authenticity_badge, cms)}
-              </div>
-            )}
-            {cardText.context && <div id={`${nameId}-context`} className="explore-card__eyebrow">
-              {cardText.context}
-            </div>}
+              </span>}
+            </p>}
             <h3 id={`${nameId}-title`} className="explore-card__title explore-card__title--recipe">
               {cardText.title}
             </h3>
