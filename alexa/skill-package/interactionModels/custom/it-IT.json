@@ -1,0 +1,1029 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "vulcano pizza",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "ConsigliaIntent",
+          "slots": [
+            {
+              "name": "ore",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "forno",
+              "type": "FORNO"
+            }
+          ],
+          "samples": [
+            "che pizza posso fare",
+            "che pizza posso fare stasera",
+            "che pizza posso fare con {ore} ore",
+            "che pizza posso fare in {ore} ore",
+            "che pizza posso fare con il forno {forno}",
+            "che pizza posso fare con un forno {forno} in {ore} ore",
+            "che pizza faccio",
+            "che pizza faccio con {ore} ore",
+            "cosa mi consigli",
+            "cosa mi consigli con il forno {forno}",
+            "consigliami una pizza",
+            "consigliami una pizza per il forno {forno}",
+            "quale pizza mi consigli",
+            "quale stile mi consigli",
+            "suggeriscimi una pizza",
+            "ho {ore} ore che pizza faccio",
+            "ho {ore} ore di tempo",
+            "ho il forno {forno}",
+            "ho il forno {forno} cosa mi consigli",
+            "che impasto posso fare in {ore} ore",
+            "cosa posso preparare in {ore} ore",
+            "che pizza viene bene nel forno {forno}",
+            "cosa cucino stasera",
+            "che pizza fare"
+          ]
+        },
+        {
+          "name": "RicettaIntent",
+          "slots": [
+            {
+              "name": "stile",
+              "type": "STILE"
+            },
+            {
+              "name": "panetti",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "ore",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "forno",
+              "type": "FORNO"
+            }
+          ],
+          "samples": [
+            "ricetta {stile}",
+            "la ricetta della {stile}",
+            "la ricetta della pizza {stile}",
+            "dammi la ricetta della {stile}",
+            "fammi la ricetta della {stile}",
+            "ricetta {stile} per {panetti} panetti",
+            "ricetta della {stile} per {panetti} pizze",
+            "ricetta {stile} per {panetti} teglie",
+            "ricetta {stile} per {panetti} panetti in {ore} ore",
+            "ricetta {stile} con {ore} ore",
+            "ricetta {stile} con il forno {forno}",
+            "impasto per {panetti} pizze {stile}",
+            "impasto {stile}",
+            "come si fa la {stile}",
+            "come faccio la {stile}",
+            "dosi per la {stile}",
+            "le dosi della {stile} per {panetti} panetti",
+            "quanta farina per {panetti} pizze {stile}",
+            "voglio fare la {stile}",
+            "voglio fare la {stile} in {ore} ore",
+            "preparo la {stile}",
+            "{stile} per {panetti} panetti",
+            "{stile}",
+            "la {stile}",
+            "una ricetta",
+            "dammi una ricetta",
+            "ricetta per {panetti} panetti"
+          ]
+        },
+        {
+          "name": "GlossarioIntent",
+          "slots": [
+            {
+              "name": "termine",
+              "type": "TERMINE"
+            }
+          ],
+          "samples": [
+            "cos'è {termine}",
+            "cos'è la {termine}",
+            "cos'è il {termine}",
+            "che cos'è la {termine}",
+            "che cos'è il {termine}",
+            "cosa significa {termine}",
+            "che cosa significa {termine}",
+            "cosa vuol dire {termine}",
+            "che vuol dire {termine}",
+            "spiegami {termine}",
+            "spiegami la {termine}",
+            "spiegami il {termine}",
+            "definizione di {termine}",
+            "significato di {termine}",
+            "cosa si intende per {termine}",
+            "dimmi cos'è la {termine}",
+            "dimmi cos'è il {termine}",
+            "parlami della {termine}",
+            "parlami del {termine}",
+            "cos'è la {termine} nella pizza"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "STILE",
+          "values": [
+            {
+              "id": "napoletana_stg",
+              "name": {
+                "value": "napoletana",
+                "synonyms": [
+                  "pizza napoletana",
+                  "la napoletana",
+                  "margherita napoletana",
+                  "la margherita napoletana",
+                  "napoletana stg",
+                  "napoletana verace",
+                  "verace",
+                  "napoletana classica",
+                  "napolitana",
+                  "pizza napoletana classica",
+                  "napoletana stg",
+                  "napoletana stg"
+                ]
+              }
+            },
+            {
+              "id": "napoletana_canotto",
+              "name": {
+                "value": "napoletana canotto",
+                "synonyms": [
+                  "napoletana a canotto",
+                  "canotto",
+                  "a canotto",
+                  "pizza a canotto",
+                  "napoletana contemporanea",
+                  "contemporanea",
+                  "canotto contemporanea",
+                  "canotto contemporanea",
+                  "canotto contemporanea"
+                ]
+              }
+            },
+            {
+              "id": "teglia_romana",
+              "name": {
+                "value": "teglia romana",
+                "synonyms": [
+                  "pizza in teglia",
+                  "teglia alla romana",
+                  "pizza al taglio",
+                  "romana in teglia",
+                  "teglia romana",
+                  "teglia romana"
+                ]
+              }
+            },
+            {
+              "id": "tonda_romana",
+              "name": {
+                "value": "tonda romana",
+                "synonyms": [
+                  "romana",
+                  "pizza romana",
+                  "scrocchiarella",
+                  "romana sottile",
+                  "pizza romana tonda",
+                  "romana scrocchiarella",
+                  "tonda romana scrocchiarella",
+                  "tonda romana scrocchiarella"
+                ]
+              }
+            },
+            {
+              "id": "pinsa_romana",
+              "name": {
+                "value": "pinsa",
+                "synonyms": [
+                  "pinsa romana",
+                  "pinza",
+                  "pinza romana",
+                  "pinsa romana",
+                  "pinsa romana"
+                ]
+              }
+            },
+            {
+              "id": "new_york",
+              "name": {
+                "value": "new york",
+                "synonyms": [
+                  "newyorkese",
+                  "pizza newyorkese",
+                  "new york style",
+                  "niu iork",
+                  "new york style",
+                  "new york style"
+                ]
+              }
+            },
+            {
+              "id": "detroit",
+              "name": {
+                "value": "detroit",
+                "synonyms": [
+                  "detroit style",
+                  "pizza di detroit",
+                  "detroit style",
+                  "detroit style"
+                ]
+              }
+            },
+            {
+              "id": "chicago_deep",
+              "name": {
+                "value": "chicago",
+                "synonyms": [
+                  "deep dish",
+                  "chicago deep dish",
+                  "pizza di chicago",
+                  "chicago deep dish",
+                  "chicago deep dish"
+                ]
+              }
+            },
+            {
+              "id": "focaccia_genovese",
+              "name": {
+                "value": "focaccia",
+                "synonyms": [
+                  "focaccia genovese",
+                  "fugassa",
+                  "focaccia ligure",
+                  "focaccia genovese",
+                  "focaccia genovese"
+                ]
+              }
+            },
+            {
+              "id": "sfincione",
+              "name": {
+                "value": "sfincione",
+                "synonyms": [
+                  "sfinciuni",
+                  "sfincione palermitano",
+                  "sfincione",
+                  "sfincione"
+                ]
+              }
+            },
+            {
+              "id": "pala_romana",
+              "name": {
+                "value": "pala romana",
+                "synonyms": [
+                  "pizza alla pala",
+                  "pala romana",
+                  "pala romana"
+                ]
+              }
+            },
+            {
+              "id": "grandma_style",
+              "name": {
+                "value": "grandma",
+                "synonyms": [
+                  "grandma style",
+                  "pizza della nonna",
+                  "grandma style",
+                  "grandma style"
+                ]
+              }
+            },
+            {
+              "id": "focaccia_recco",
+              "name": {
+                "value": "focaccia di recco",
+                "synonyms": [
+                  "focaccia recco",
+                  "recco",
+                  "focaccia al formaggio",
+                  "focaccia di recco",
+                  "focaccia di recco"
+                ]
+              }
+            },
+            {
+              "id": "padellino_torino",
+              "name": {
+                "value": "padellino",
+                "synonyms": [
+                  "pizza al padellino",
+                  "tegamino",
+                  "pizza al tegamino",
+                  "padellino torinese",
+                  "pizza al padellino",
+                  "al padellino"
+                ]
+              }
+            },
+            {
+              "id": "pizza_baciata",
+              "name": {
+                "value": "baciata",
+                "synonyms": [
+                  "pizza baciata",
+                  "pizza baciata",
+                  "baciata"
+                ]
+              }
+            },
+            {
+              "id": "ciaccino_senese",
+              "name": {
+                "value": "ciaccino",
+                "synonyms": [
+                  "ciaccino senese",
+                  "ciaccino senese",
+                  "ciaccino senese"
+                ]
+              }
+            },
+            {
+              "id": "pizza_spaccata",
+              "name": {
+                "value": "spaccata",
+                "synonyms": [
+                  "pizza spaccata",
+                  "pizza spaccata",
+                  "spaccata"
+                ]
+              }
+            },
+            {
+              "id": "trancio_milanese",
+              "name": {
+                "value": "trancio",
+                "synonyms": [
+                  "trancio milanese",
+                  "pizza al trancio",
+                  "trancio milanese",
+                  "trancio milanese"
+                ]
+              }
+            },
+            {
+              "id": "chicago_tavern",
+              "name": {
+                "value": "tavern",
+                "synonyms": [
+                  "chicago tavern",
+                  "tavern style",
+                  "tavern cut",
+                  "chicago tavern cut",
+                  "chicago tavern cut"
+                ]
+              }
+            },
+            {
+              "id": "focaccia_barese",
+              "name": {
+                "value": "focaccia barese",
+                "synonyms": [
+                  "barese",
+                  "focaccia barese",
+                  "focaccia barese"
+                ]
+              }
+            },
+            {
+              "id": "pizza_fritta",
+              "name": {
+                "value": "pizza fritta",
+                "synonyms": [
+                  "fritta",
+                  "calzone fritto",
+                  "pizza fritta",
+                  "fritta"
+                ]
+              }
+            },
+            {
+              "id": "pizza_montanara",
+              "name": {
+                "value": "montanara",
+                "synonyms": [
+                  "pizza montanara",
+                  "pizza montanara",
+                  "montanara"
+                ]
+              }
+            },
+            {
+              "id": "pizza_fritta_tonda",
+              "name": {
+                "value": "fritta tonda",
+                "synonyms": [
+                  "pizza fritta tonda",
+                  "pizza fritta tonda",
+                  "fritta tonda"
+                ]
+              }
+            },
+            {
+              "id": "calzone_napoletano",
+              "name": {
+                "value": "calzone",
+                "synonyms": [
+                  "calzone napoletano",
+                  "calzone al forno",
+                  "calzone napoletano",
+                  "calzone napoletano"
+                ]
+              }
+            },
+            {
+              "id": "pizza_al_metro",
+              "name": {
+                "value": "pizza al metro",
+                "synonyms": [
+                  "al metro",
+                  "pizza al metro",
+                  "al metro"
+                ]
+              }
+            },
+            {
+              "id": "new_haven_apizza",
+              "name": {
+                "value": "new haven",
+                "synonyms": [
+                  "apizza",
+                  "new haven apizza",
+                  "new haven apizza",
+                  "new haven apizza"
+                ]
+              }
+            },
+            {
+              "id": "fugazzeta",
+              "name": {
+                "value": "fugazzeta",
+                "synonyms": [
+                  "fugazza",
+                  "fugazzetta",
+                  "pizza argentina",
+                  "fugazzeta argentina",
+                  "fugazzeta argentina"
+                ]
+              }
+            },
+            {
+              "id": "california_style",
+              "name": {
+                "value": "california",
+                "synonyms": [
+                  "californiana",
+                  "pizza californiana",
+                  "california style",
+                  "california style",
+                  "california style"
+                ]
+              }
+            },
+            {
+              "id": "greek_pan",
+              "name": {
+                "value": "greek pan",
+                "synonyms": [
+                  "greca",
+                  "pizza greca",
+                  "greek",
+                  "greek pan pizza",
+                  "greek pan pizza"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TERMINE",
+          "values": [
+            {
+              "id": "w_alveograph",
+              "name": {
+                "value": "w",
+                "synonyms": [
+                  "vu doppia",
+                  "doppia vu",
+                  "forza della farina",
+                  "forza",
+                  "w della farina",
+                  "alveografo",
+                  "w"
+                ]
+              }
+            },
+            {
+              "id": "p_tenacity",
+              "name": {
+                "value": "tenacità",
+                "synonyms": [
+                  "p della farina",
+                  "p"
+                ]
+              }
+            },
+            {
+              "id": "l_extensibility",
+              "name": {
+                "value": "estensibilità",
+                "synonyms": [
+                  "l della farina",
+                  "l"
+                ]
+              }
+            },
+            {
+              "id": "pl_ratio",
+              "name": {
+                "value": "p su l",
+                "synonyms": [
+                  "pl",
+                  "rapporto p su l",
+                  "rapporto tra tenacità ed estensibilità",
+                  "p/l"
+                ]
+              }
+            },
+            {
+              "id": "falling_number",
+              "name": {
+                "value": "falling number",
+                "synonyms": [
+                  "indice di caduta",
+                  "falling number"
+                ]
+              }
+            },
+            {
+              "id": "hydration",
+              "name": {
+                "value": "idratazione",
+                "synonyms": [
+                  "idratazione dell'impasto",
+                  "idratazione"
+                ]
+              }
+            },
+            {
+              "id": "absorption",
+              "name": {
+                "value": "assorbimento",
+                "synonyms": [
+                  "assorbimento acqua",
+                  "assorbimento dell'acqua",
+                  "assorbimento acqua"
+                ]
+              }
+            },
+            {
+              "id": "stability",
+              "name": {
+                "value": "stabilità",
+                "synonyms": [
+                  "stabilità dell'impasto",
+                  "stabilità impasto"
+                ]
+              }
+            },
+            {
+              "id": "yeast",
+              "name": {
+                "value": "lievito",
+                "synonyms": [
+                  "lievito di birra",
+                  "lievito"
+                ]
+              }
+            },
+            {
+              "id": "lab",
+              "name": {
+                "value": "batteri lattici",
+                "synonyms": [
+                  "lab",
+                  "lab"
+                ]
+              }
+            },
+            {
+              "id": "q10",
+              "name": {
+                "value": "q dieci",
+                "synonyms": [
+                  "coefficiente di temperatura",
+                  "q₁₀"
+                ]
+              }
+            },
+            {
+              "id": "arrhenius",
+              "name": {
+                "value": "arrhenius",
+                "synonyms": [
+                  "equazione di arrhenius",
+                  "equazione di arrhenius"
+                ]
+              }
+            },
+            {
+              "id": "biga",
+              "name": {
+                "value": "biga",
+                "synonyms": [
+                  "biga"
+                ]
+              }
+            },
+            {
+              "id": "poolish",
+              "name": {
+                "value": "poolish",
+                "synonyms": [
+                  "pulish",
+                  "polish",
+                  "poolish"
+                ]
+              }
+            },
+            {
+              "id": "autolysis",
+              "name": {
+                "value": "autolisi",
+                "synonyms": [
+                  "autolisi"
+                ]
+              }
+            },
+            {
+              "id": "bulk_fermentation",
+              "name": {
+                "value": "puntata",
+                "synonyms": [
+                  "prima lievitazione",
+                  "lievitazione in massa",
+                  "puntata"
+                ]
+              }
+            },
+            {
+              "id": "ball_fermentation",
+              "name": {
+                "value": "appretto",
+                "synonyms": [
+                  "seconda lievitazione",
+                  "lievitazione in panetti",
+                  "appretto"
+                ]
+              }
+            },
+            {
+              "id": "maillard",
+              "name": {
+                "value": "maillard",
+                "synonyms": [
+                  "reazione di maillard",
+                  "reazione di maillard"
+                ]
+              }
+            },
+            {
+              "id": "caramelization",
+              "name": {
+                "value": "caramellizzazione",
+                "synonyms": [
+                  "caramelizzazione",
+                  "caramellizzazione"
+                ]
+              }
+            },
+            {
+              "id": "starch_gelatinization",
+              "name": {
+                "value": "gelatinizzazione",
+                "synonyms": [
+                  "gelatinizzazione dell'amido",
+                  "gelatinizzazione amido"
+                ]
+              }
+            },
+            {
+              "id": "retrogradation",
+              "name": {
+                "value": "retrogradazione",
+                "synonyms": [
+                  "retrogradazione"
+                ]
+              }
+            },
+            {
+              "id": "thermal_conductivity",
+              "name": {
+                "value": "conducibilità termica",
+                "synonyms": [
+                  "conduttività termica",
+                  "conducibilità termica"
+                ]
+              }
+            },
+            {
+              "id": "fodmap",
+              "name": {
+                "value": "fodmap",
+                "synonyms": [
+                  "fod map",
+                  "fodmap"
+                ]
+              }
+            },
+            {
+              "id": "histamine",
+              "name": {
+                "value": "istamina",
+                "synonyms": [
+                  "istamina"
+                ]
+              }
+            },
+            {
+              "id": "gluten",
+              "name": {
+                "value": "glutine",
+                "synonyms": [
+                  "glutine"
+                ]
+              }
+            },
+            {
+              "id": "proteolysis",
+              "name": {
+                "value": "proteolisi",
+                "synonyms": [
+                  "proteolisi"
+                ]
+              }
+            },
+            {
+              "id": "thickness_factor",
+              "name": {
+                "value": "thickness factor",
+                "synonyms": [
+                  "fattore di spessore",
+                  "thickness factor"
+                ]
+              }
+            },
+            {
+              "id": "friction_factor",
+              "name": {
+                "value": "attrito dell'impastatrice",
+                "synonyms": [
+                  "fattore di attrito",
+                  "attrito dell'impastatrice"
+                ]
+              }
+            },
+            {
+              "id": "rule_of_55",
+              "name": {
+                "value": "temperatura dell'acqua",
+                "synonyms": [
+                  "regola del cinquantacinque",
+                  "tre temperature",
+                  "temperatura dell'acqua"
+                ]
+              }
+            },
+            {
+              "id": "a_score",
+              "name": {
+                "value": "a score",
+                "synonyms": [
+                  "autenticità",
+                  "a-score"
+                ]
+              }
+            },
+            {
+              "id": "f_score",
+              "name": {
+                "value": "f score",
+                "synonyms": [
+                  "facilità",
+                  "f-score"
+                ]
+              }
+            },
+            {
+              "id": "d_score",
+              "name": {
+                "value": "d score",
+                "synonyms": [
+                  "maturazione stimata",
+                  "d-score"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FORNO",
+          "values": [
+            {
+              "id": "wood",
+              "name": {
+                "value": "a legna",
+                "synonyms": [
+                  "legna",
+                  "pellet",
+                  "forno a legna"
+                ]
+              }
+            },
+            {
+              "id": "coal",
+              "name": {
+                "value": "carbone",
+                "synonyms": [
+                  "a carbone"
+                ]
+              }
+            },
+            {
+              "id": "gas_pizza",
+              "name": {
+                "value": "forno a gas da pizza",
+                "synonyms": [
+                  "forno portatile",
+                  "fornetto a gas",
+                  "forno da pizza a gas"
+                ]
+              }
+            },
+            {
+              "id": "gas",
+              "name": {
+                "value": "a gas",
+                "synonyms": [
+                  "forno a gas"
+                ]
+              }
+            },
+            {
+              "id": "electric_high",
+              "name": {
+                "value": "forno elettrico per pizza",
+                "synonyms": [
+                  "fornetto per pizza",
+                  "fornetto pizza",
+                  "alta temperatura",
+                  "forno per pizza elettrico"
+                ]
+              }
+            },
+            {
+              "id": "home",
+              "name": {
+                "value": "forno di casa",
+                "synonyms": [
+                  "forno domestico",
+                  "forno normale",
+                  "forno elettrico",
+                  "forno ventilato",
+                  "forno di cucina",
+                  "di casa",
+                  "domestico",
+                  "elettrico",
+                  "ventilato"
+                ]
+              }
+            },
+            {
+              "id": "brand_ooni",
+              "name": {
+                "value": "ooni",
+                "synonyms": [
+                  "uni"
+                ]
+              }
+            },
+            {
+              "id": "brand_gozney",
+              "name": {
+                "value": "gozney"
+              }
+            },
+            {
+              "id": "brand_roccbox",
+              "name": {
+                "value": "roccbox",
+                "synonyms": [
+                  "rockbox"
+                ]
+              }
+            },
+            {
+              "id": "brand_effeuno",
+              "name": {
+                "value": "effeuno"
+              }
+            },
+            {
+              "id": "brand_ferrari",
+              "name": {
+                "value": "ferrari"
+              }
+            },
+            {
+              "id": "brand_alfa",
+              "name": {
+                "value": "alfa"
+              }
+            },
+            {
+              "id": "brand_bertello",
+              "name": {
+                "value": "bertello"
+              }
+            },
+            {
+              "id": "brand_clementi",
+              "name": {
+                "value": "clementi"
+              }
+            },
+            {
+              "id": "brand_ninja",
+              "name": {
+                "value": "ninja"
+              }
+            },
+            {
+              "id": "brand_witt",
+              "name": {
+                "value": "witt"
+              }
+            },
+            {
+              "id": "brand_breville",
+              "name": {
+                "value": "breville"
+              }
+            },
+            {
+              "id": "brand_sage",
+              "name": {
+                "value": "sage"
+              }
+            },
+            {
+              "id": "brand_solo",
+              "name": {
+                "value": "solo stove"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "modelConfiguration": {
+      "fallbackIntentSensitivity": {
+        "level": "LOW"
+      }
+    }
+  }
+}

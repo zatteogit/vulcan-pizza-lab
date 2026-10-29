@@ -112,3 +112,5 @@ curl -s https://vulcan-pizza-lab.zatteo.workers.dev/mcp \
 - `worker/index.ts`: la rotta `/mcp` (POST e OPTIONS; GET → 405).
 - `scripts/build-worker.mjs`: il build del Worker, che esclude le immagini
   dei condimenti dal bundle; `wrangler.toml` lo esegue prima di dev e deploy.
+- `src/app/agent/voice/`: la voce per Siri e Alexa, costruita su questi
+  strumenti (D-061): `docs/voce-siri-alexa.md`.
