@@ -38,7 +38,7 @@ type CookSessionStep
 import { ConfirmDialog, CtaButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import type { EscapeLayerHandle } from "../../components/ds/escape-stack";
-import { cookingKeyAction } from "./cooking-keys";
+import { cookingKeyAction, nextViewIndex } from "./cooking-keys";
 import { DoughBlob } from "./dough-mascot";
 import { StepIllustration } from "./step-illustrations";
 import { resolveStepVisual } from "./step-visual";
@@ -224,11 +224,11 @@ export function CookingMode() {
       if (!action) return;
       e.preventDefault();
       if (action === "prev") goPrev();
-      else if (!finished && viewIndex < total - 1) setViewIndex(viewIndex + 1);
+      else if (!finished) setViewIndex(nextViewIndex(viewIndex, { activeIdx, total, allDone }));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goPrev, finished, viewIndex, total]);
+  }, [goPrev, finished, viewIndex, activeIdx, total, allDone]);
 
   const doneCount = useMemo(() => steps.filter((s) => s.done).length, [steps]);
   const progressPct = total > 0 ? Math.round((doneCount / total) * 100) : 0;

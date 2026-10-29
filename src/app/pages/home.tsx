@@ -47,6 +47,7 @@ import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { RecommendedStyles,STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { OvenFirstNotice } from "../features/recipe/oven-first-notice";
+import { focusOvenChoice } from "../features/recipe/kitchen-drawer-focus";
 import { createEntryTime } from "../domain/create-entry";
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
@@ -1230,7 +1231,12 @@ export function HomePage() {
                 {!sourceStyle && (
                   <OvenFirstNotice
                     constraints={constraints}
-                    onChooseOven={() => setStyleSettingsPanel("cucina")}
+                    onChooseOven={() => {
+                      setStyleSettingsPanel("cucina");
+                      /* FW-20 (WCAG 2.4.3): la scheda col focus sparisce, il focus va nel cassetto. */
+                      const scope = document.querySelector<HTMLElement>(".home-step--styles") ?? document;
+                      focusOvenChoice({ querySelector: (selector) => scope.querySelector<HTMLElement>(selector) });
+                    }}
                     onClosed={() => requestAnimationFrame(() => focusStep("styles"))}
                   />
                 )}
