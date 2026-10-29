@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_DE } from "../../../i18n/ui-messages.de";
 import { TOPPING_I18N_DE } from "../../../data/topping-i18n/de";
 import { INSPIRATION_I18N_DE } from "../../../data/inspiration-i18n/de";
@@ -76,7 +78,7 @@ export const DE_LOCALE: CmsContent = {
     scoreTipTitle: "So liest du die Bewertung",
     scoreTipOriginal: "Stilreferenz, für deine Küche.",
     scoreTipTailored: "Version mit den vorgeschlagenen Anpassungen.",
-    scoreTipGlobal: "Die Bewertung berücksichtigt Machbarkeit und Authentizität. Sie bestätigt keine Konformität mit einer Spezifikation.",
+    scoreTipGlobal: "Die Wertung zählt nur Einfachheit und Authentizität und liegt nie über der Authentizität. Reifung, Nachhaltigkeit und Experimentierfreude sind zusätzliche Informationen. Sie bestätigt keine Konformität mit einer Spezifikation.",
     scoreTipBlocked: "Einige Voraussetzungen fehlen: öffne die Details.",
     pantrySelectionSummary: "Ausgewählt: {n} · Ausgeschlossen: {excluded}",
     pantryWValue: "W{w}",
@@ -497,37 +499,37 @@ export const DE_LOCALE: CmsContent = {
     authenticity: {
       label: "Authentizität",
       short: "Auth",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Vergleicht Teig, Ablauf und Ofen mit der Stilreferenz. Ein niedriger Wert begrenzt die Gesamtpunktzahl; er bestätigt keine Konformität mit einem Regelwerk.",
     },
     feasibility: {
       label: "Einfachheit",
       short: "Mach",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Schätzt den Aufwand mit deinem Ofen, Mehl und deiner Erfahrung. Unverzichtbare Voraussetzungen werden gesondert genannt.",
     },
     digestibility: {
       label: "Geschätzte Reifung",
       short: "Reif",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Schätzt die Reife anhand von Zeit, Temperatur, Hefe und Vorteig. Sie misst nicht deine persönliche Verdauung.",
     },
     sustainability: {
       label: "Geschätzte Nachhaltigkeit",
       short: "Nachh",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Vergleicht Backen, Gärung und Zutaten. Es ist eine relative Schätzung, kein gemessener Verbrauch oder CO₂-Fußabdruck.",
     },
     experimentation: {
       label: "Experimentieren",
       short: "Exp",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "Abweichung von Teig, Verfahren und Backweise von der Referenz. Ein hoher Wert bedeutet mehr Experimente, nicht besseres Gelingen. Einige Stilprofile sind noch ungeprüft. In die Gesamtwertung geht 100 minus dieser Wert ein.",
+        "Abweichung von Teig, Verfahren und Backweise von der Referenz. Ein hoher Wert bedeutet mehr Experimente, nicht besseres Gelingen. Einige Stilprofile sind noch ungeprüft. Sie geht nicht in die Passung ein.",
     },
   },
   recommendationWeights: {
@@ -765,7 +767,7 @@ export const DE_LOCALE: CmsContent = {
       "Mehl-W außerhalb des Bereichs (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} außerhalb {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Kein Holzofen (-15%)",
+    "auth.notWoodOven": "Kein Holzofen: −15 Punkte auf der Achse Ausstattung (35 % der Authentizität)",
     "auth.tempVsIdeal":
       "Temperatur {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -857,6 +859,8 @@ export const DE_LOCALE: CmsContent = {
     "change.prefermentDetails": "Vorteig: {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Backen: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "Kohlefeuer gehört zur Originalmethode: Ein anderer Brennstoff bedeutet eine Anpassung",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "Ohne den Ofen, den der Stil vorsieht, endet die Authentizität bei {cap}/100: eine Regel der App, keine Messung",
     "gen.notCoalOven": "Der Originalstil wird mit Kohle gebacken: Der gewählte Ofen verändert Backweise und Aroma",
     "timeline.oven.coal": "Kohleofen mit vorgeheiztem Backboden: Boden und Rand beobachten und für gleichmäßiges Backen drehen.",
     "rec.ovenIdeal":
@@ -1986,4 +1990,30 @@ export const DE_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_DE as any,
   glossaryTerms: GLOSSARY_TERMS_DE as any,
   science: SCIENCE_DE,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label}: {score} von 100",
+    meaning: "Wie gut sich das Rezept mit deiner Küche umsetzen lässt und wie treu es dem Stil bleibt.",
+    limitedAuthenticity: "Begrenzt durch die Authentizität ({score}/100).",
+    limitedFuel: "Begrenzt durch die Authentizität: Ohne den Ofen, den der Stil vorsieht, endet sie bei {cap}/100.",
+    limitedFeasibility: "Begrenzt durch eine nicht erfüllte Voraussetzung: Nach App-Regel bleibt der Wert unter {limit}.",
+    countedTitle: "Was in die Zahl eingeht",
+    weight: "Gewicht {pct}",
+    ruleTitle: "So entsteht die Zahl",
+    ruleAverage: "Gewichteter Mittelwert der beiden Kriterien",
+    ruleAuthenticity: "Obergrenze: Authentizität",
+    ruleFeasibility: "Obergrenze für nicht machbare Rezepte (App-Regel)",
+    ruleResult: "Wertung: der niedrigste der Werte oben",
+    ceilingEditorial: "Produktentscheidung: Ein Rezept, das du nicht umsetzen kannst, bleibt unter {limit}, auch wenn die anderen Werte hoch sind.",
+    infoTitle: "Zusätzliche Informationen",
+    infoNote: "Sie gehen nicht in die Zahl ein: Sie sagen etwas anderes über das Rezept, nicht wie gut es zu deiner Küche passt.",
+    referencePending: "Das Experimentierprofil dieses Stils ist noch nicht geprüft.",
+    whyLabel: "So wird gerechnet",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Hier liegt die angepasste Version etwas unter der Referenz: Die Suche probiert nur eine begrenzte Zahl von Kombinationen aus Stunden, Hydration und Mehl, und die beste gefundene übertrifft sie nicht.",
+    snapshot: "Passung beim Speichern: {score}/100",
+    savedParams: "Hydration {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} Teigling",
+    savedBallsOther: "{n} Teiglinge",
+  },
 };

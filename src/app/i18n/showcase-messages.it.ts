@@ -310,7 +310,7 @@ export const SHOWCASE_MESSAGES_IT: Record<string, string> = {
   "components.design-system.components-b.large-738fd1d2": "Large",
   "components.design-system.components-b.le-toast-si-impilano-dal-basso-nuove-toast-6b82844d": "Le toast si impilano dal basso. Nuove toast push-up le esistenti. Exit con swipe a destra.",
   "components.design-system.components-b.linee-guida-b43417d1": "Linee guida",
-  "components.design-system.components-b.lo-scorering-e-un-anello-svg-animato-che-v-86e75159": "Lo ScoreRing è un anello SVG animato che visualizza un punteggio 0–100. L'animazione strokeDashoffset parte con whileInView. Usato nei 5 assi del composite score e nelle card stile.",
+  "components.design-system.components-b.lo-scorering-e-un-anello-svg-animato-che-v-86e75159": "Lo ScoreRing è un anello SVG animato che visualizza un punteggio 0–100. L'animazione strokeDashoffset parte con whileInView. Resta in vetrina: oggi le schermate del prodotto mostrano il punteggio con la pill e con le barre di ScoreExplainer.",
   "components.design-system.components-b.mai-animare-il-ring-senza-once-true-evitar-f9a396da": "Mai animare il ring senza once: true — evitare ri-animazioni",
   "components.design-system.components-b.mai-cambiare-l-ordine-dei-4-stat-l-utente--164bba83": "Mai cambiare l'ordine dei 4 stat — l'utente si aspetta la sequenza fissa",
   "components.design-system.components-b.mai-numeri-senza-tabular-nums-il-layout-sa-34d7e257": "Mai numeri senza tabular-nums — il layout salta durante l'aggiornamento",

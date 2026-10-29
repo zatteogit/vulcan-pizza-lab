@@ -730,7 +730,7 @@ export const SCIENCE_FR: CmsScience = {
     "score-weights": {
       title: "Poids du score",
       l1: "Les poids des dimensions sont un choix de {brand}.",
-      l2: "Ils disent combien compte chaque dimension dans le chiffre final. Ils ne viennent pas d'une mesure : c'est une règle de l'app, la même pour tous.",
+      l2: "Dans le nombre « Compatibilité avec votre cuisine », seules l’authenticité et la facilité comptent : maturation, durabilité et expérimentation sont présentées à part et ne le modifient pas. Les poids ne viennent pas d’une mesure : c’est une règle de l’app, la même pour tous. Le score est ensuite la plus basse valeur entre la moyenne pondérée et l’authenticité.",
     },
     "non-feasible-ceiling": {
       title: "Plafond des recettes non faisables",
@@ -802,6 +802,7 @@ export const SCIENCE_FR: CmsScience = {
     "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, limité à la plage du style",
     "baking-energy": "E = P × t · P = 2, 3 ou 8 kW selon la température du four",
     "thickness-factor": "TF = poids du pâton (g) / surface de la pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+    "score-weights": "C = min(moyenne pondérée de A et F ; A) · poids par défaut : Authenticité (A) 55 %, Facilité (F) 45 % · non réalisable : C ≤ 39",
   },
   sourceNotes: {
     "internal-db": "base de travail interne du projet, non publique",

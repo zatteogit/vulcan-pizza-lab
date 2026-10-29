@@ -1,0 +1,77 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`explainScore > golden focaccia_genovese: ricostruisce il numero del motore 1`] = `
+{
+  "ceilings": {
+    "authenticity": 100,
+    "feasibility": null,
+  },
+  "counted": [
+    [
+      "authenticity",
+      100,
+    ],
+    [
+      "feasibility",
+      94,
+    ],
+  ],
+  "limitedBy": null,
+  "score": 97,
+  "topDrivers": [
+    "feasibility",
+  ],
+  "weightedAverage": 97,
+}
+`;
+
+exports[`explainScore > golden napoletana_stg: ricostruisce il numero del motore 1`] = `
+{
+  "ceilings": {
+    "authenticity": 25,
+    "feasibility": 39,
+  },
+  "counted": [
+    [
+      "authenticity",
+      25,
+    ],
+    [
+      "feasibility",
+      40,
+    ],
+  ],
+  "limitedBy": "authenticity",
+  "score": 25,
+  "topDrivers": [
+    "authenticity",
+    "feasibility",
+  ],
+  "weightedAverage": 32,
+}
+`;
+
+exports[`explainScore > golden teglia_romana: ricostruisce il numero del motore 1`] = `
+{
+  "ceilings": {
+    "authenticity": 100,
+    "feasibility": null,
+  },
+  "counted": [
+    [
+      "authenticity",
+      100,
+    ],
+    [
+      "feasibility",
+      81,
+    ],
+  ],
+  "limitedBy": null,
+  "score": 91,
+  "topDrivers": [
+    "feasibility",
+  ],
+  "weightedAverage": 91,
+}
+`;

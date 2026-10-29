@@ -1482,7 +1482,7 @@ export function HomePage() {
                   softNeeds={ceilingInfo?.softNeeds}
                   onSave={handleToggleSaveRecipe}
                   saved={Boolean(savedEntry)}
-                  nerdMode={effectiveNerdMode}
+                  resetKey={`${selectedStyle.id}:${activeInterpretationId ?? activeVersion?.id ?? "base"}`}
                   verdictRecipe={recipe}
                   verdictConstraints={constraints}
                   mealDeadline={!!selectedTimeSlot && selectedTimeSlot !== "no_preference"}

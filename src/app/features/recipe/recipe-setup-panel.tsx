@@ -34,6 +34,8 @@ import {
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
 import { RecipeMatchIcon } from "./recipe-match-icon";
 import { matchTone } from "./recipe-match-card";
+import { scoreLimitLine } from "./score-explainer";
+import { blockerText, primaryBlocker } from "./blocker-text";
 import type { StyleVersion } from "../../data/style-versions";
 import { uiMessage } from "../../i18n/ui-messages";
 import { getScienceNote } from "../../data/science-notes";
@@ -324,12 +326,12 @@ export function RecipeSetupPanel({
               </h2>
               {scores && (
                 <div className="setup-header__match-mobile">
-                  <MatchSummary scores={scores} />
+                  <MatchSummary scores={scores} verdictRecipe={recipe} />
                 </div>
               )}
             </div>
 
-            {scores && <MatchSummary scores={scores} variant="desktop" />}
+            {scores && <MatchSummary scores={scores} verdictRecipe={recipe} variant="desktop" />}
 
             <button
               ref={closeButtonRef}
@@ -513,15 +515,24 @@ export function RecipeSetupPanel({
 
 function MatchSummary({
   scores,
+  verdictRecipe,
   variant,
 }: {
   scores: RecipeScores;
+  /** FW-06 (S06-A-18): per dire qui dentro che cosa blocca la ricetta. */
+  verdictRecipe?: GeneratedRecipe | null;
   variant?: "mobile" | "desktop";
 }) {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const roundedScore = Math.round(scores.composite);
   const tone = matchTone(roundedScore, "adapted", cms.cooking.matchTones);
-  const axes = SCORE_DIMENSIONS.map((dimension) => ({
+  /* FW-06 (D-E, S06-A-18): accanto al numero solo i criteri che lo formano,
+     e il motivo quando è limitato (con il requisito che blocca). */
+  const fmt = createFormatter(cms.ui, bcp47);
+  const limitLine = scoreLimitLine(scores, cms, fmt);
+  const blocker = verdictRecipe && verdictRecipe.verdict.outcome === "not_feasible" ? primaryBlocker(verdictRecipe.verdict) : null;
+  const counted = scores.global_calculation?.weights;
+  const axes = SCORE_DIMENSIONS.filter((dimension) => !counted || counted[dimension.key] > 0).map((dimension) => ({
     key: dimension.key,
     color: SCORE_DIMENSION_COLORS[dimension.key],
     label: cms.scoreDimensions[dimension.key]?.label ?? dimension.label,
@@ -551,6 +562,8 @@ function MatchSummary({
         <span className="setup-match__value">{roundedScore}/100</span>
       </span>
 
+      {limitLine && <p className="setup-match__limit">{limitLine}</p>}
+      {blocker && <p className="setup-match__limit" data-slot="blocker">{blockerText(blocker, cms, bcp47)}</p>}
       <div className="setup-match__axes">
         {axes.map((axis) => {
           const val = Math.round(axis.value);

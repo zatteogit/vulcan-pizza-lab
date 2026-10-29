@@ -727,7 +727,7 @@ export const SCIENCE_PT: CmsScience = {
     "score-weights": {
       title: "Pesos da pontuação",
       l1: "Os pesos das dimensões são uma escolha da {brand}.",
-      l2: "Dizem quanto cada dimensão conta no número final. Não vêm de uma medida: são uma regra do app, igual para todos.",
+      l2: "No número «Compatibilidade com a sua cozinha» contam só a autenticidade e a facilidade: maturação, sustentabilidade e experimentação aparecem à parte e não o alteram. Os pesos não vêm de uma medida: são uma regra do app, igual para todos. A pontuação é então o menor valor entre a média ponderada e a autenticidade.",
     },
     "non-feasible-ceiling": {
       title: "Teto para receitas inviáveis",
@@ -799,6 +799,7 @@ export const SCIENCE_PT: CmsScience = {
     "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, limitado ao intervalo do estilo",
     "baking-energy": "E = P × t · P = 2, 3 ou 8 kW conforme a temperatura do forno",
     "thickness-factor": "TF = peso da bola de massa (g) / área da pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+    "score-weights": "C = min(média ponderada de A e F; A) · pesos padrão: Autenticidade (A) 55 %, Facilidade (F) 45 % · não viável: C ≤ 39",
   },
   sourceNotes: {
     "internal-db": "base de dados de trabalho interna do projeto, não pública",

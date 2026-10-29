@@ -1377,6 +1377,43 @@ export interface CmsContent {
   glossaryTerms: CmsGlossaryTerms;
   /** FW-01 — testi del registro della scienza (note e ipotesi). */
   science: CmsScience;
+  /** FW-06 — il punteggio spiegato (ScoreExplainer) e il ricettario. */
+  scoreExplainer: CmsScoreExplainer;
+}
+
+/* ═══ FW-06 — Punteggio spiegabile ═══
+ * Un solo racconto del numero «Compatibilità con la tua cucina» (D-041, D-E):
+ * livello 1 una riga con il limite, livello 2 i criteri che contano con il
+ * peso e la regola del minimo, poi le informazioni che non entrano nel numero.
+ * Numeri e pesi arrivano dal motore (explainScore), mai scritti nel testo. */
+export interface CmsScoreExplainer {
+  /** «{score}/100»: il numero con il suo nome accessibile. */
+  scoreAria: string;
+  /** Una riga sotto il titolo: che cosa misura il numero. */
+  meaning: string;
+  limitedAuthenticity: string;
+  limitedFuel: string;
+  limitedFeasibility: string;
+  countedTitle: string;
+  weight: string;
+  ruleTitle: string;
+  ruleAverage: string;
+  ruleAuthenticity: string;
+  ruleFeasibility: string;
+  ruleResult: string;
+  ceilingEditorial: string;
+  infoTitle: string;
+  infoNote: string;
+  referencePending: string;
+  whyLabel: string;
+  /** Coppia Riferimento · Su misura, e su misura più basso. */
+  pairAria: string;
+  tailoredLower: string;
+  /** Ricettario: il numero è una fotografia del salvataggio. */
+  snapshot: string;
+  savedParams: string;
+  savedBallsOne: string;
+  savedBallsOther: string;
 }
 
 // ═══ DEFAULTS ═══
@@ -1397,7 +1434,7 @@ export const CMS_DEFAULTS: CmsContent = {
     scoreTipTitle: "Come leggere il punteggio",
     scoreTipOriginal: "Riferimento dello stile, sulla tua cucina.",
     scoreTipTailored: "Versione con gli adattamenti proposti.",
-    scoreTipGlobal: "Il voto tiene conto di fattibilità e autenticità. Non attesta la conformità a un disciplinare.",
+    scoreTipGlobal: "Il voto conta solo facilità e autenticità, e non supera l’autenticità. Maturazione, sostenibilità e sperimentazione sono informazioni a parte. Non attesta la conformità a un disciplinare.",
     scoreTipBlocked: "Ci sono requisiti non rispettati: apri il dettaglio.",
     pantrySelectionSummary: "Selezionati: {n} · Esclusi: {excluded}",
     pantryWValue: "W{w}",
@@ -1758,7 +1795,7 @@ export const CMS_DEFAULTS: CmsContent = {
     experimentation: {
       label: "Sperimentazione", short: "Spe", weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "Quanto cambiano impasto, procedimento e cottura rispetto al riferimento. Un valore alto indica più sperimentazione, non una riuscita migliore. Il profilo di alcuni stili è ancora da verificare. Il contributo al globale è 100 meno questo valore.",
+        "Quanto cambiano impasto, procedimento e cottura rispetto al riferimento. Un valore alto indica più sperimentazione, non una riuscita migliore. Il profilo di alcuni stili è ancora da verificare. Non entra nella compatibilità.",
     },
   },
   recommendationWeights: {
@@ -2144,7 +2181,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "auth.hydrationOff": "Idratazione fuori centro (-{penalty}%)",
     "auth.wOutOfRange": "W farina fuori range (-{penalty}%)",
     "auth.plOutOfRange": "P/L {pl} fuori range {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Forno non a legna (-15%)",
+    "auth.notWoodOven": "Forno non a legna: −15 punti sull’asse attrezzatura (35% dell’autenticità)",
     "auth.tempVsIdeal": "Temperatura {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin": "Temperatura sotto minimo (-{penalty}%)",
     "auth.fermentTooShort": "Fermentazione troppo breve (-{penalty}%)",
@@ -2905,6 +2942,32 @@ export const CMS_DEFAULTS: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_I18N_DEFAULTS,
   glossaryTerms: GLOSSARY_TERMS_DEFAULTS,
   science: SCIENCE_I18N_DEFAULTS,
+  /* FW-06 — punteggio spiegabile (D-E: contano solo autenticità e facilità). */
+  scoreExplainer: {
+    scoreAria: "{label}: {score} su 100",
+    meaning: "Quanto la ricetta si può fare con la tua cucina e quanto resta fedele allo stile.",
+    limitedAuthenticity: "Limitata dall’autenticità ({score}/100).",
+    limitedFuel: "Limitata dall’autenticità: senza il forno previsto dallo stile si ferma a {cap}/100.",
+    limitedFeasibility: "Limitata da un requisito non rispettato: per regola dell’app resta sotto {limit}.",
+    countedTitle: "Cosa entra nel numero",
+    weight: "peso {pct}",
+    ruleTitle: "Come si arriva al numero",
+    ruleAverage: "Media pesata dei due criteri",
+    ruleAuthenticity: "Tetto: autenticità",
+    ruleFeasibility: "Tetto per le ricette non fattibili (regola dell’app)",
+    ruleResult: "Punteggio: il più basso dei valori sopra",
+    ceilingEditorial: "Scelta di prodotto: una ricetta che non puoi fare resta sotto {limit}, anche se gli altri valori sono alti.",
+    infoTitle: "Informazioni a parte",
+    infoNote: "Non entrano nel numero: raccontano altro della ricetta, non quanto è adatta alla tua cucina.",
+    referencePending: "Il profilo di sperimentazione di questo stile è ancora da verificare.",
+    whyLabel: "Come si calcola",
+    pairAria: "{original} {originalScore}, {tailored} {tailoredScore}",
+    tailoredLower: "Qui la versione su misura vale un po’ meno del riferimento: la ricerca prova un numero limitato di combinazioni di ore, idratazione e farina, e la migliore trovata non lo supera.",
+    snapshot: "Compatibilità al salvataggio: {score}/100",
+    savedParams: "Idratazione {hydration} · {hours} · {balls}",
+    savedBallsOne: "{n} panetto",
+    savedBallsOther: "{n} panetti",
+  },
 };
 
 // ═══ DEEP MERGE / GET / SET UTILITIES ═══

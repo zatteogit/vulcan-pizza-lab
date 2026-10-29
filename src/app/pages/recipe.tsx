@@ -1073,7 +1073,7 @@ function RecipeContent({
               softNeeds={ceilingInfo.softNeeds}
               onSave={handleToggleSaveRecipe}
               saved={Boolean(savedEntry)}
-              nerdMode={effectiveNerdMode}
+              resetKey={`${style.id}:${activeInterpretationId ?? activeVersionId ?? "base"}`}
               verdictRecipe={recipe ?? undefined}
               verdictConstraints={effectiveConstraints}
             />

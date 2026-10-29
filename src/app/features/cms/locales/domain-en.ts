@@ -777,7 +777,7 @@ export const SCIENCE_EN: CmsScience = {
     "score-weights": {
       title: "Score weights",
       l1: "The weights of the dimensions are a {brand} choice.",
-      l2: "They say how much each dimension counts in the final number. They do not come from a measurement: they are an app rule, the same for everyone.",
+      l2: "Only authenticity and ease count in the «Fit with your kitchen» number: maturation, sustainability and experimentation are shown separately and do not move it. The weights do not come from a measurement: they are an app rule, the same for everyone. The score is then the lowest of the weighted average and authenticity.",
     },
     "non-feasible-ceiling": {
       title: "Ceiling for unfeasible recipes",
@@ -849,6 +849,7 @@ export const SCIENCE_EN: CmsScience = {
     "flour-pl-estimate": "P/L ≈ 0.30 + (W − 150) × 0.0015, limited to the style's range",
     "baking-energy": "E = P × t · P = 2, 3 or 8 kW depending on oven temperature",
     "thickness-factor": "TF = dough ball weight (g) / pizza area (cm²) · 1 oz/in² ≈ 4.39 g/cm²",
+    "score-weights": "C = min(weighted mean of A and F; A) · default weights: Authenticity (A) 55%, Ease (F) 45% · not feasible: C ≤ 39",
   },
   sourceNotes: {
     "internal-db": "the project's internal working database, not public",

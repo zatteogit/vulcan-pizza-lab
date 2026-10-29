@@ -754,7 +754,7 @@ export const SCIENCE_JA: CmsScience = {
     "score-weights": {
       title: "スコアの重み",
       l1: "各項目の重みは{brand}の選択です。",
-      l2: "最終的な数値で各項目がどれだけ効くかを示します。測定から来たものではなく、全員に同じアプリのルールです。",
+      l2: "「あなたのキッチンとの相性」の数値に入るのは忠実度と作りやすさだけです。熟成・環境負荷・アレンジ度は別に表示され、数値は変わりません。重みは測定から来たものではなく、全員に共通のアプリのルールです。スコアは加重平均と忠実度のうち低い方になります。",
     },
     "non-feasible-ceiling": {
       title: "実現できないレシピの上限",
@@ -826,6 +826,7 @@ export const SCIENCE_JA: CmsScience = {
     "flour-pl-estimate": "P/L ≈ 0.30 + (W − 150) × 0.0015（スタイルの範囲内に制限）",
     "baking-energy": "E = P × t · P はオーブン温度に応じて 2、3、8 kW",
     "thickness-factor": "TF = 生地玉の重さ (g) / ピッツァの面積 (cm²) · 1 oz/in² ≈ 4.39 g/cm²",
+    "score-weights": "C = min(A と F の加重平均; A) · 既定の重み: スタイルへの忠実度 (A) 55%、作りやすさ (F) 45% · 実現不可: C ≤ 39",
   },
   sourceNotes: {
     "internal-db": "プロジェクト内部の作業用データベース（非公開）",

@@ -294,7 +294,13 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
   {
     id: "score-weights",
     kind: "editorial",
-    engineRef: "DEFAULT_UI_SCORE_WEIGHTS",
+    /* FW-06 · D-E: contano solo autenticità (A) e facilità (F). */
+    formula: "C = min(w_A × A + w_F × F; A) · w_A + w_F = 1 · C_nf = min(C; 39)",
+    variables: [
+      { symbol: "A", unitKey: "index-100" },
+      { symbol: "F", unitKey: "index-100" },
+    ],
+    engineRef: "DEFAULT_UI_SCORE_WEIGHTS, globalRecipeScore, explainScore",
     sourceIds: [],
   },
   {

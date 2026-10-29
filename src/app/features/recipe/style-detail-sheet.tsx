@@ -4,6 +4,7 @@ import { recipeAllergenScope } from "../../domain/allergen-scope";
 import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName, stgDepartures } from "../../domain/recipe-reference";
 import { CompatibilityPill } from "./style-card-parts";
+import { ScoreExplainer } from "./score-explainer";
 import { RecipeChanges } from "./recipe-changes";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { RecipeDietaryAlternatives } from "./recipe-dietary-notice";
@@ -35,7 +36,7 @@ import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, placeNameLocalizer, t } from "../cms/i18n";
-import { CtaButton, IconButton } from "../../components/ds/index";
+import { CtaButton, Disclosure, IconButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -189,7 +190,11 @@ export function StyleDetailSheet({
     { icon: Clock, label: style.dough.unleavened ? pt.pillRest : pt.pillFermentation, value: fRange },
     { icon: Layers, label: pt.pillThickness, value: thickness },
     { icon: ChefHat, label: pt.pillLevel, value: styleDifficultyLabel(style, cms) },
-    { icon: FlaskConical, label: pt.pillExperimentation, value: `${devEmoji} ${devCmsLabel}` },
+    /* FW-06 (S03-A-13, S03-B-20): un profilo «da verificare» non è un dato da
+       mostrare, e «Canonico» non sta accanto a «fuori disciplinare». La
+       sperimentazione resta fra le informazioni a parte del punteggio. */
+    ...(dev.category === "unclassified" || (outsideStg && dev.category === "canonical") ? []
+      : [{ icon: FlaskConical, label: pt.pillExperimentation, value: `${devEmoji} ${devCmsLabel}` }]),
   ];
 
   const generateAction = (placement: "toolbar" | "footer") => (
@@ -304,7 +309,7 @@ export function StyleDetailSheet({
                     ·
                   </span>
                   <CompatibilityPill context="detail" now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
-                    blocked={rec.recipe.verdict.outcome === "not_feasible"} className="style-detail-title__match" />
+                    blocked={rec.recipe.verdict.outcome === "not_feasible"} recipe={rec.recipe} className="style-detail-title__match" />
                 </>
               )}
 
@@ -512,6 +517,12 @@ export function StyleDetailSheet({
                   );
                 })}
               </div>
+              {/* FW-06 (S02-B-09, S07-B-03): il numero spiegato, a richiesta. */}
+              <Disclosure variant="inline" className="style-detail-match__score"
+                summary={cms.ui.recipeScore}
+                meta={<strong className="type-numeric">{fmt.number(rec.recipe.scores.composite)}/100</strong>}>
+                <ScoreExplainer scores={rec.recipe.scores} recipe={rec.recipe} />
+              </Disclosure>
             </div>
           )}
 

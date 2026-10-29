@@ -235,6 +235,10 @@ const STAGED_TOKENS = new Set([
   /* Terzo step della scala densità: lo consumavano i temi rimossi
      (Minimal, Copertina). Resta in staging come parte della scala T2. */
   "--density-spacious",
+  /* FW-06: le barre del punteggio (ScoreExplainer) non hanno più una larghezza
+     minima; i due step restano parte della scala t-shirt delle misure. */
+  "--measure-5xs",
+  "--measure-4xs",
   /* FW-13 (audit UX e scienza, 28/10/2026): contratto dei ruoli di stato,
      usato dai pacchetti che lo seguono (EvidenceBadge, avvisi, chip). Togliere
      ciascuno appena ha un consumo. */

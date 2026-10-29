@@ -727,7 +727,7 @@ export const SCIENCE_DE: CmsScience = {
     "score-weights": {
       title: "Gewichte der Bewertung",
       l1: "Die Gewichte der Dimensionen sind eine Wahl von {brand}.",
-      l2: "Sie sagen, wie viel jede Dimension in der Endzahl zählt. Sie stammen aus keiner Messung: Es ist eine Regel der App, für alle gleich.",
+      l2: "In die Zahl «Passt zu deiner Küche» gehen nur Authentizität und Einfachheit ein: Reifung, Nachhaltigkeit und Experimentierfreude werden separat gezeigt und verändern sie nicht. Die Gewichte stammen nicht aus einer Messung: Sie sind eine Regel der App, für alle gleich. Die Wertung ist dann der niedrigere Wert aus gewichtetem Mittel und Authentizität.",
     },
     "non-feasible-ceiling": {
       title: "Obergrenze für nicht machbare Rezepte",
@@ -799,6 +799,7 @@ export const SCIENCE_DE: CmsScience = {
     "flour-pl-estimate": "P/L ≈ 0,30 + (W − 150) × 0,0015, begrenzt auf den Bereich des Stils",
     "baking-energy": "E = P × t · P = 2, 3 oder 8 kW je nach Ofentemperatur",
     "thickness-factor": "TF = Teiglinggewicht (g) / Pizzafläche (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
+    "score-weights": "C = min(gewichtetes Mittel aus A und F; A) · Standardgewichte: Authentizität (A) 55 %, Einfachheit (F) 45 % · nicht machbar: C ≤ 39",
   },
   sourceNotes: {
     "internal-db": "interne Arbeitsdatenbank des Projekts, nicht öffentlich",

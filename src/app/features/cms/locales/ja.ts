@@ -1,4 +1,6 @@
 import type { CmsContent } from "../cms-context";
+/* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { UI_MESSAGES_JA } from "../../../i18n/ui-messages.ja";
 import { TOPPING_I18N_JA } from "../../../data/topping-i18n/ja";
 import { INSPIRATION_I18N_JA } from "../../../data/inspiration-i18n/ja";
@@ -103,7 +105,7 @@ export const JA_LOCALE: CmsContent = {
     scoreTipTitle: "スコアの見方",
     scoreTipOriginal: "あなたのキッチンでのスタイル基準。",
     scoreTipTailored: "提案された調整を反映したバージョン。",
-    scoreTipGlobal: "スコアは実現性と本来のスタイルへの忠実さを示します。規定への適合を認証するものではありません。",
+    scoreTipGlobal: "スコアは作りやすさと忠実度だけで決まり、忠実度を超えることはありません。熟成・環境負荷・アレンジ度は参考情報です。規定への適合を認証するものではありません。",
     scoreTipBlocked: "満たされていない条件があります。詳細を開いてください。",
     pantrySelectionSummary: "選択：{n}・除外：{excluded}",
     pantryWValue: "W{w}",
@@ -573,37 +575,37 @@ export const JA_LOCALE: CmsContent = {
     authenticity: {
       label: "スタイルへの忠実度",
       short: "忠実度",
-      weight: 0.3,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "生地、工程、オーブンを元のスタイルと比較します。低い場合は総合点の上限になりますが、規定への適合を認証するものではありません。",
     },
     feasibility: {
       label: "作りやすさ",
       short: "\u5B9F\u73FE",
-      weight: 0.25,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "オーブン、粉、経験に応じた作りやすさの目安です。必須の条件は別に示します。",
     },
     digestibility: {
       label: "熟成の推定",
       short: "熟成",
-      weight: 0.2,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "時間、温度、イースト、前発酵の生地から熟成を推定します。食べた人の消化を測るものではありません。",
     },
     sustainability: {
       label: "持続可能性の推定",
       short: "持続性",
-      weight: 0.15,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "焼成、発酵、材料を比較した相対的な目安です。実測した消費エネルギーやカーボンフットプリントではありません。",
     },
     experimentation: {
       label: "アレンジ度",
       short: "変更度",
-      weight: 0.1,
+      weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
-        "基準に対する生地、工程、焼成の変更度です。値が高いほど変更が多く、成功度が高いわけではありません。一部のスタイルは基準が未確認です。 総合点への寄与は100からこの値を引いたものです。",
+        "基準に対する生地、工程、焼成の変更度です。値が高いほど変更が多く、成功度が高いわけではありません。一部のスタイルは基準が未確認です。相性スコアには含まれません。",
     },
   },
   recommendationWeights: {
@@ -852,7 +854,7 @@ export const JA_LOCALE: CmsContent = {
     "auth.wOutOfRange": "小麦粉Wが範囲外 (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl}が範囲{plMin}-{plMax}外 (-{penalty}%)",
-    "auth.notWoodOven": "薪窯ではありません (-15%)",
+    "auth.notWoodOven": "薪窯ではありません：設備の軸で−15点（忠実度の35%）",
     "auth.tempVsIdeal":
       "\u6E29\u5EA6{temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin": "温度が最低値以下 (-{penalty}%)",
@@ -938,6 +940,8 @@ export const JA_LOCALE: CmsContent = {
     "change.prefermentDetails": "前発酵種：{fromType} {from}% → {toType} {to}%",
     "change.cooking": "焼成：{fromTemp}・{fromSeconds} s → {toTemp}・{toSeconds} s",
     "auth.notCoalOven": "元の製法は石炭窯による焼成です。別の燃料を使う場合はアレンジになります",
+    /* FW-06 (S07-B-02) */
+    "auth.fuelCap": "スタイルが想定する窯がない場合、忠実度は{cap}/100で止まります。これは測定値ではなく、アプリのルールです",
     "gen.notCoalOven": "本来のスタイルは石炭窯を使います。選んだ窯では焼き方と香りが変わります",
     "timeline.oven.coal": "炉床を予熱した石炭窯：底と縁の焼き色を確認し、均一に焼けるよう回転させます。",
     "rec.ovenIdeal":
@@ -2136,4 +2140,30 @@ export const JA_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_JA as any,
   glossaryTerms: GLOSSARY_TERMS_JA as any,
   science: SCIENCE_JA,
+  /* FW-06 — punteggio spiegabile (D-E). */
+  scoreExplainer: {
+    scoreAria: "{label}：100点中{score}点",
+    meaning: "あなたのキッチンでどれだけ作りやすいか、そしてスタイルにどれだけ忠実かを示します。",
+    limitedAuthenticity: "忠実度（{score}/100）が上限になっています。",
+    limitedFuel: "忠実度が上限です：スタイルが想定する窯がない場合、{cap}/100で止まります。",
+    limitedFeasibility: "満たしていない条件があります：アプリのルールにより{limit}未満にとどまります。",
+    countedTitle: "数値に含まれるもの",
+    weight: "重み {pct}",
+    ruleTitle: "数値の決まり方",
+    ruleAverage: "2つの基準の加重平均",
+    ruleAuthenticity: "上限：忠実度",
+    ruleFeasibility: "作れないレシピの上限（アプリのルール）",
+    ruleResult: "スコア：上の値のうち最も低いもの",
+    ceilingEditorial: "製品上の判断です：作れないレシピは、ほかの値が高くても{limit}未満にとどまります。",
+    infoTitle: "参考情報",
+    infoNote: "数値には含まれません。レシピについての別の情報で、キッチンとの相性ではありません。",
+    referencePending: "このスタイルのアレンジ度のプロファイルはまだ確認中です。",
+    whyLabel: "計算方法",
+    pairAria: "{original} {originalScore}、{tailored} {tailoredScore}",
+    tailoredLower: "ここでは調整版が基準より少し低くなっています。探索は時間・加水率・粉の組み合わせを限られた数だけ試すため、見つかった最良の組み合わせでも基準を上回りません。",
+    snapshot: "保存時の相性：{score}/100",
+    savedParams: "加水率 {hydration}・{hours}・{balls}",
+    savedBallsOne: "生地玉{n}個",
+    savedBallsOther: "生地玉{n}個",
+  },
 };
