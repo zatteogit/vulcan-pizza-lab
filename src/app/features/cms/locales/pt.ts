@@ -1394,7 +1394,7 @@ export const PT_LOCALE: CmsContent = {
     mixerHandsDesc: "Amassamento manual, sem equipamento",
     mixerStandDomestic: "Batedeira planetária (doméstica)",
     mixerStandDomesticDesc:
-      "KitchenAid, Kenwood, Smeg — 4-7 L, gancho",
+      "KitchenAid, Kenwood, Smeg — 4-7 L, gancho de amassar",
     mixerPlanetary: "Amassadeira planetária (semi-pro)",
     mixerPlanetaryDesc: "10-20 L, gancho espiral, motor 500W+",
     mixerSpiral: "Amassadeira espiral",
@@ -1460,7 +1460,6 @@ export const PT_LOCALE: CmsContent = {
     flourSegale: "Centeio",
     flourTipo1: "Tipo 1",
     flourTipo2: "Tipo 2",
-    flourMacinataPietra: "Moída na pedra",
     ftuDoneTitle: "Crie, explore, aprenda.",
     ftuDoneCreateTitle: "Criar uma receita",
     ftuDoneCreateDesc: "Escolha um estilo e adapte-o à sua cozinha.",
@@ -1469,7 +1468,7 @@ export const PT_LOCALE: CmsContent = {
     ftuDoneLearnTitle: "Aprender a teoria",
     ftuDoneLearnDesc: "Compreende as técnicas e esclarece as suas dúvidas.",
     ftuDoneProfileNote: "Você pode completar ou alterar as preferências no Perfil quando quiseres.",
-    specialFloursOnboarding: "Farinhas especiais (espelta, centeio, integrais...)",
+    specialFloursOnboarding: "Outras farinhas (espelta, kamut, centeio, tipo 1 e 2…)",
     locationRemove: "Remover localização",
     ftuSkipMessage: "Nada para escolher? Tudo bem: toque em Próximo.",
     // FW-16 — effetto delle impostazioni

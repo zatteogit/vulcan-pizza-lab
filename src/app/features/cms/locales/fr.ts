@@ -1404,7 +1404,7 @@ export const FR_LOCALE: CmsContent = {
     mixerHandsDesc: "Pétrissage manuel, sans équipement",
     mixerStandDomestic: "Robot pâtissier (domestique)",
     mixerStandDomesticDesc:
-      "KitchenAid, Kenwood, Smeg — 4-7 L, crochet",
+      "KitchenAid, Kenwood, Smeg — 4-7 L, crochet pétrisseur",
     mixerPlanetary: "Pétrin planétaire (semi-pro)",
     mixerPlanetaryDesc:
       "10-20 L, crochet spirale, moteur 500W+",
@@ -1471,7 +1471,6 @@ export const FR_LOCALE: CmsContent = {
     flourSegale: "Seigle",
     flourTipo1: "Type 1",
     flourTipo2: "Type 2",
-    flourMacinataPietra: "Moulue sur pierre",
     ftuDoneTitle: "Créez, découvrez, apprenez.",
     ftuDoneCreateTitle: "Créer une recette",
     ftuDoneCreateDesc: "Choisissez un style et adaptez-le à votre cuisine.",
@@ -1480,7 +1479,7 @@ export const FR_LOCALE: CmsContent = {
     ftuDoneLearnTitle: "Apprendre la théorie",
     ftuDoneLearnDesc: "Comprenez les techniques et trouve des réponses à vos questions.",
     ftuDoneProfileNote: "Vous pouvez compléter ou modifier vos préférences dans le Profil à tout moment.",
-    specialFloursOnboarding: "Farines spéciales (épeautre, seigle, intégrales...)",
+    specialFloursOnboarding: "Autres farines (épeautre, kamut, seigle, type 1 et 2…)",
     locationRemove: "Supprimer la position",
     ftuSkipMessage: "Rien à choisir ? Pas de souci : appuyez sur Suivant.",
     // FW-16 — effetto delle impostazioni

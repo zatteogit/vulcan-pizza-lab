@@ -1451,7 +1451,6 @@ export const DE_LOCALE: CmsContent = {
     flourSegale: "Roggen",
     flourTipo1: "Typ 1",
     flourTipo2: "Typ 2",
-    flourMacinataPietra: "Steingemahlen",
     ftuDoneTitle: "Erstellen, entdecken, lernen.",
     ftuDoneCreateTitle: "Rezept erstellen",
     ftuDoneCreateDesc: "Wähle einen Stil und passe ihn an deine Küche an.",
@@ -1460,7 +1459,7 @@ export const DE_LOCALE: CmsContent = {
     ftuDoneLearnTitle: "Theorie lernen",
     ftuDoneLearnDesc: "Verstehe die Techniken und finde Antworten auf deine Fragen.",
     ftuDoneProfileNote: "Du kannst deine Angaben jederzeit im Profil ergänzen oder ändern.",
-    specialFloursOnboarding: "Spezialmehle (Dinkel, Roggen, Vollkorn...)",
+    specialFloursOnboarding: "Weitere Mehle (Dinkel, Kamut, Roggen, Type 1 und 2…)",
     locationRemove: "Standort entfernen",
     ftuSkipMessage: "Nichts auszuwählen? Kein Problem: Tippe auf Weiter.",
     // FW-16 — effetto delle impostazioni

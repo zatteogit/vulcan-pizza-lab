@@ -1620,7 +1620,6 @@ export const EN_LOCALE: CmsContent = {
     flourSegale: "Rye",
     flourTipo1: "Type 1",
     flourTipo2: "Type 2",
-    flourMacinataPietra: "Stone-ground",
     ftuDoneTitle: "Create, explore, learn.",
     ftuDoneCreateTitle: "Create a recipe",
     ftuDoneCreateDesc: "Choose a style and adapt it to your kitchen.",
@@ -1629,7 +1628,7 @@ export const EN_LOCALE: CmsContent = {
     ftuDoneLearnTitle: "Learn the theory",
     ftuDoneLearnDesc: "Understand the techniques and find answers to your questions.",
     ftuDoneProfileNote: "You can add or change your preferences in Profile at any time.",
-    specialFloursOnboarding: "Special flours (spelt, rye, whole wheat...)",
+    specialFloursOnboarding: "Other flours (spelt, kamut, rye, type 1 and 2…)",
     locationRemove: "Remove location",
     ftuSkipMessage: "Nothing to pick? That’s fine: press Next.",
     // FW-16 — effetto delle impostazioni

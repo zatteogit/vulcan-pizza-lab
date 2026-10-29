@@ -631,7 +631,6 @@ interface CmsProfile {
   flourSegale: string;
   flourTipo1: string;
   flourTipo2: string;
-  flourMacinataPietra: string;
   // Onboarding Done screen
   ftuDoneTitle: string;
   ftuDoneCreateTitle: string;
@@ -2420,7 +2419,7 @@ export const CMS_DEFAULTS: CmsContent = {
     mixerHands: "A mano",
     mixerHandsDesc: "Impasto manuale, nessuna attrezzatura",
     mixerStandDomestic: "Planetaria domestica",
-    mixerStandDomesticDesc: "KitchenAid, Kenwood, Smeg — 4-7 L, gancio K",
+    mixerStandDomesticDesc: "KitchenAid, Kenwood, Smeg — 4-7 L, gancio impastatore",
     mixerPlanetary: "Planetaria semi-pro",
     mixerPlanetaryDesc: "10-20 L, gancio a spirale, potenza 500W+",
     mixerSpiral: "Impastatrice a spirale",
@@ -2472,7 +2471,6 @@ export const CMS_DEFAULTS: CmsContent = {
     flourSegale: "Segale",
     flourTipo1: "Tipo 1",
     flourTipo2: "Tipo 2",
-    flourMacinataPietra: "Macinata a pietra",
     ftuDoneTitle: "Crea, scopri, impara.",
     ftuDoneCreateTitle: "Crea una ricetta",
     ftuDoneCreateDesc: "Scegli uno stile e adattalo alla tua cucina.",
@@ -2481,7 +2479,7 @@ export const CMS_DEFAULTS: CmsContent = {
     ftuDoneLearnTitle: "Impara la teoria",
     ftuDoneLearnDesc: "Capisci le tecniche e trova risposte ai dubbi.",
     ftuDoneProfileNote: "Puoi completare o cambiare le tue preferenze dal Profilo, quando vuoi.",
-    specialFloursOnboarding: "Farine speciali (farro, segale, integrali...)",
+    specialFloursOnboarding: "Altre farine (farro, kamut, segale, tipo 1 e 2…)",
     locationRemove: "Rimuovi posizione",
     ftuSkipMessage: "Nessuna scelta? Va bene: premi Avanti.",
     // FW-16 — effetto delle impostazioni

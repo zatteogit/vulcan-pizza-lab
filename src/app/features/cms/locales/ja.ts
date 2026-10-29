@@ -1495,7 +1495,7 @@ export const JA_LOCALE: CmsContent = {
       "\u624B\u4F5C\u696D\u3001\u8A2D\u5099\u306A\u3057",
     mixerStandDomestic:
       "\u5353\u4E0A\u30DF\u30AD\u30B5\u30FC\uFF08\u5BB6\u5EAD\u7528\uFF09",
-    mixerStandDomesticDesc: "KitchenAid, Kenwood, Smeg — 4-7 L",
+    mixerStandDomesticDesc: "KitchenAid, Kenwood, Smeg — 4-7 L、ドゥフック",
     mixerPlanetary:
       "\u30D7\u30E9\u30CD\u30BF\u30EA\u30FC\u30DF\u30AD\u30B5\u30FC\uFF08\u30BB\u30DF\u30D7\u30ED\uFF09",
     mixerPlanetaryDesc:
@@ -1579,7 +1579,6 @@ export const JA_LOCALE: CmsContent = {
     flourSegale: "ライ麦",
     flourTipo1: "タイプ1",
     flourTipo2: "タイプ2",
-    flourMacinataPietra: "石臼挽き",
     ftuDoneTitle: "作る、見つける、学ぶ。",
     ftuDoneCreateTitle: "レシピを作成する",
     ftuDoneCreateDesc: "スタイルを選び、自分のキッチンに合わせて調整します。",
@@ -1588,7 +1587,7 @@ export const JA_LOCALE: CmsContent = {
     ftuDoneLearnTitle: "理論を学ぶ",
     ftuDoneLearnDesc: "技法を学び、気になる疑問を解決しましょう。",
     ftuDoneProfileNote: "設定はいつでもプロフィールで追加・変更できます。",
-    specialFloursOnboarding: "特殊粉（スペルト、ライ麦、全粒粉など）",
+    specialFloursOnboarding: "その他の粉（スペルト、カムット、ライ麦、タイプ1・2など）",
     locationRemove: "位置情報を削除",
     ftuSkipMessage: "選ぶものがなくても大丈夫です。「次へ」を押してください。",
     // FW-16 — effetto delle impostazioni

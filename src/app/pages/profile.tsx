@@ -118,7 +118,6 @@ const FTU_FLOURS_SPECIAL = [
   { id: "segale", labelKey: "flourSegale" as const },
   { id: "tipo_1", labelKey: "flourTipo1" as const },
   { id: "tipo_2", labelKey: "flourTipo2" as const },
-  { id: "macinata_pietra", labelKey: "flourMacinataPietra" as const },
 ];
 const FTU_YEASTS = [
   { id: "fresh", labelKey: "yeastFresh" as const },
