@@ -85,6 +85,7 @@ import {
 } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../config/tools";
+import { flourWText } from "../domain/flour-w-display";
 
 /* D-036 (Matteo, 24/10/2026): niente passo iniziale «Quando la vuoi».
    Si entra sugli stili col momento consigliato, che resta un chip modificabile. */
@@ -861,7 +862,7 @@ export function HomePage() {
         }) ||
         // C-3: due farine della dispensa mescolate arrivano alla W richiesta.
         pantryFlourMix(constraints.pantry_flours, [opt.flour_w - 15, opt.flour_w + 15], false, constraints.pantry_flour_details) !== null;
-      if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: opt.flour_w }));
+      if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: flourWText(opt.flour_w, opt.style.dough.flour_w_range) }));
     }
     if (
       constraints.pantry_inventory_complete === true && constraints.pantry_yeasts.length > 0 &&

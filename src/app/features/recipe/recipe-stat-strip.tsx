@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { uiMessage } from "../../i18n/ui-messages";
+import { flourWText } from "../../domain/flour-w-display";
 
 interface RecipeStatStripProps {
   recipe: GeneratedRecipe;
@@ -55,7 +56,7 @@ export function RecipeStatStrip({
   const f = deltaOf("fermentation");
   const hChanged = h ? { canonical: fmt.percent(h.reference.value) } : undefined;
   // Stesso formato del valore attuale nella cella (prima «W285» contro «280 W»).
-  const flourWValue = (v: number) => `${v} W`;
+  const flourWValue = (v: number) => `W ${v}`;
   const wChanged = w ? { canonical: flourWValue(w.reference.value) } : undefined;
   const fermentCell = fermentationCellText(
     { hours: recipe.fermentation_hours, tempC: recipe.fermentation_temp_c },
@@ -83,7 +84,9 @@ export function RecipeStatStrip({
     model?: string;
   }[] = [
     { label: ui.statHydration, value: fmt.percent(recipe.hydration_pct), changed: hChanged },
-    { label: ui.statFlourStrength ?? "Forza farina", value: flourWValue(recipe.flour_w), changed: wChanged },
+    // D-060: l'intervallo dello stile; il valore puntuale solo quando si
+    // confronta col riferimento (due intervalli uguali non direbbero nulla).
+    { label: ui.statFlourStrength ?? "Forza farina", value: wChanged ? flourWValue(recipe.flour_w) : `W ${flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)}`, changed: wChanged },
     {
       label: recipe.style.dough.unleavened ? ui.statRest : ui.statFermentation,
       value: fermentCell.value,

@@ -87,6 +87,7 @@ import {
 } from "../adapters/browser/saved-recipes-storage";
 import { normalizeRecipeName, recipeSourceUrl } from "../data/saved-recipes";
 import { uiMessage } from "../i18n/ui-messages";
+import { flourWText } from "../domain/flour-w-display";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
@@ -610,7 +611,7 @@ function RecipeContent({
         const rng = pantryFlourRange(matchConstraints, id);
         return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
       });
-      if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: opt.flour_w }));
+      if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: flourWText(opt.flour_w, opt.style.dough.flour_w_range) }));
     }
     if (
       matchConstraints.pantry_inventory_complete === true && matchConstraints.pantry_yeasts.length > 0 &&

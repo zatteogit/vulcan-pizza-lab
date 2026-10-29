@@ -62,6 +62,9 @@ describe("condizioni specifiche, senza inventare acquisti", () => {
   const r=canonicalRecipe(STYLES_DB.new_haven_apizza,{...base,pantry_inventory_complete:true,pantry_flours:["caputo_cuoco"]},weights);
   expect(r.verdict.conditions?.find(c=>c.kind==="flour")).toMatchObject({status:"missing",message:{key:"need.flour",params:{w:r.flour_w}}});
   expect(r.verdict.outcome).toBe("not_feasible"); // la farina non risolve il forno
+  // D-060: chi legge vede la fascia dello stile, non la W puntuale del calcolo.
+  const [lo,hi]=STYLES_DB.new_haven_apizza.dough.flour_w_range;
+  expect(r.verdict.conditions?.find(c=>c.kind==="flour")?.message.params?.range).toBe(r.flour_w>=lo&&r.flour_w<=hi?`${lo}–${hi}`:String(Math.round(r.flour_w/10)*10));
  });
  it("il frumento compatibile non dimostra di avere tutti gli ingredienti della Pinsa", () => {
   const r=canonicalRecipe(STYLES_DB.pinsa_romana,{...base,pantry_flours:["caputo_nuvola"]},weights);

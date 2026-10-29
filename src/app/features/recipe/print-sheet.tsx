@@ -16,6 +16,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import type { CmsContent } from "../cms/cms-context";
 import type { createFormatter } from "../cms/i18n";
 import type { CookSessionStep } from "../cooking/cook-session";
+import { flourWText } from "../../domain/flour-w-display";
 
 /* ═══ D-043 — Scheda di produzione stampabile ═══
  * Stampare l'interfaccia dava una pagina con pulsanti, cursori e foto vuote
@@ -95,7 +96,7 @@ export function PrintSheet({
         <p className="print-sheet__meta">
           {recipe.dough_balls} {unitLabel} · {fmt.grams(recipe.ball_weight_g)} ·{" "}
           {ui.statHydration} {fmt.percent(recipe.hydration_pct)} ·{" "}
-          {uiMessage("features.recipe.recipe-stat-strip.w-value-f64b6332", [recipe.flour_w])} ·{" "}
+          {uiMessage("features.recipe.recipe-stat-strip.w-value-f64b6332", [flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)])} ·{" "}
           {ui.statOven} {fmt.celsius(recipe.oven_temp_c)}
         </p>
         <p className="print-sheet__meta">
