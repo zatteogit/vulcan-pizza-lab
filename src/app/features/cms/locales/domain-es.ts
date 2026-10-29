@@ -347,6 +347,7 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
 export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
+      plainDefinition: "La fuerza de la harina: cuanto más alta, más tiempo aguanta la masa durante el levado. Suele aparecer en el paquete (por ejemplo W 280).",
       name: "W (Alve\u00F3grafo de Chopin)",
       definition: "Energ\u00EDa total necesaria para expandir un alveolo de masa hasta su rotura. Mide la fuerza global de la harina.",
       whyImportant: "W describe la fuerza global de la harina. La tenacidad y la extensibilidad se valoran con P, L y P/L: una W alta no implica por sí sola una masa más tenaz. Estas franjas son las que {brand} usa en toda la app; cada estilo indica su propia horquilla de W.",
@@ -358,6 +359,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       ],
     },
     p_tenacity: {
+      plainDefinition: "Cuánto resiste la masa cuando tiras de ella.",
       name: "P (Tenacidad)",
       definition: "Resistencia m\u00E1xima a la deformaci\u00F3n. Pico de la curva alveogr\u00E1fica \u2014 cu\u00E1nto resiste la masa al estiramiento.",
       whyImportant: "P alto: masa \u00ABdura\u00BB, mantiene la forma en la cocci\u00F3n. P bajo: masa \u00ABblanda\u00BB, f\u00E1cil de estirar, puede colapsar.",
@@ -368,6 +370,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       ],
     },
     l_extensibility: {
+      plainDefinition: "Cuánto se alarga la masa antes de romperse.",
       name: "L (Extensibilidad)",
       definition: "Longitud m\u00E1xima que alcanza el alveolo antes de romperse. Mide cu\u00E1nto se puede alargar la masa.",
       whyImportant: "L alto: masa extensible, f\u00E1cil de estirar sin desgarros. L bajo: masa corta, se rompe.",
@@ -377,23 +380,26 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       ],
     },
     pl_ratio: {
+      plainDefinition: "Indica si la masa tiende a encogerse (valor alto) o a estirarse con facilidad (valor bajo).",
       name: "P/L (Relaci\u00F3n Tenacidad/Extensibilidad)",
       definition: "La relación entre la resistencia de la masa a deformarse y su capacidad para estirarse.",
       whyImportant: "Describe un equilibrio reológico: el valor adecuado depende de la harina, la hidratación y el método, y no garantiza la altura ni la textura de la pizza. Los ejemplos son las horquillas de los estilos de {brand}; el P/L de tu harina está en la ficha técnica del molino.",
     },
     falling_number: {
+      plainDefinition: "Indica lo activas que son las enzimas de la harina que convierten el almidón en azúcares.",
       name: "Falling Number (Hagberg-Perten)",
       definition: "Tiempo que tarda un v\u00E1stago en caer a trav\u00E9s de una suspensi\u00F3n de harina calentada. Mide la actividad amil\u00E1sica.",
       whyImportant: "FN bajo (<250): fermentaci\u00F3n r\u00E1pida pero masa inestable. FN alto (>300): estable para maduraciones largas.",
       ranges: [
-        { label: "<200 Amilasa alt\u00EDsima", value: "Masa pegajosa", note: "Desaconsejado para pizza" },
-        { label: "200\u2013250 Alta", value: "Miga h\u00FAmeda", note: "Pan r\u00E1pido" },
-        { label: "250\u2013300 Media", value: "Buen equilibrio", note: "Pizza 8-12h" },
-        { label: "300\u2013400 Baja", value: "Seca, lenta", note: "Pizza 24-48h" },
-        { label: ">400 Muy baja", value: "Seca", note: "Pasta seca" },
+        { label: "Amilasa alt\u00EDsima · Masa pegajosa", value: "<200", note: "Desaconsejado para pizza" },
+        { label: "Alta · Miga h\u00FAmeda", value: "200\u2013250", note: "Pan r\u00E1pido" },
+        { label: "Media · Buen equilibrio", value: "250\u2013300", note: "Pizza 8-12h" },
+        { label: "Baja · Seca, lenta", value: "300\u2013400", note: "Pizza 24-48h" },
+        { label: "Muy baja · Seca", value: ">400", note: "Pasta seca" },
       ],
     },
     hydration: {
+      plainDefinition: "Cuánta agua lleva la masa respecto a la harina: con un 65 % pones 65 g de agua por cada 100 g de harina.",
       name: "Hidrataci\u00F3n (H%)",
       definition: "Porcentaje en peso de agua respecto a la harina en la masa.",
       formula: "H% = (peso del agua / peso de la harina) × 100",
@@ -434,11 +440,13 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       ],
     },
     lab: {
+      plainDefinition: "Las bacterias de la masa madre que dan a la masa su sabor ligeramente ácido.",
       name: "LAB (Bacterias l\u00E1cticas)",
       definition: "Bacterias que fermentan az\u00FAcares produciendo \u00E1cido l\u00E1ctico (y ac\u00E9tico). Presentes en la masa madre.",
       whyImportant: "Pueden modificar acidez y fructanos según cepas, harina y proceso. Su presencia no certifica una masa low FODMAP.",
     },
     q10: {
+      plainDefinition: "Cuántas veces se acelera el levado cuando hace {tenDegrees} más.",
       name: "Q\u2081\u2080 (Coeficiente de temperatura)",
       definition: "Factor multiplicador de la velocidad de reacci\u00F3n bioqu\u00EDmica por cada aumento de 10\u00B0C.",
       whyImportant: "Con Q₁₀ = {q10ComAbove} la velocidad se multiplica por {q10ComAbove} cada {tenDegrees}: {q10ExampleRefHours} a {q10RefTemp} ≈ {q10ExampleWarmHours} a {q10ExampleWarmTemp}. Los valores de esta entrada son estimaciones del modelo de {brand}.",
@@ -527,7 +535,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     gluten: {
       name: "Gluten",
       definition: "La gliadina y la glutenina forman, con agua y amasado, una red elástica y extensible en la masa.",
-      whyImportant: "Elasticidad gracias a las gluteninas (enlaces S-S), viscosidad gracias a las gliadinas (enlaces H). Una prote\u00F3lisis larga rompe enlaces \u2192 masa m\u00E1s extensible.",
+      whyImportant: "Elasticidad gracias a las gluteninas (enlaces S-S), viscosidad gracias a las gliadinas (enlaces H). Una proteólisis larga hace la masa más extensible, pero el gluten sigue ahí: las fermentaciones largas o con masa madre no hacen la pizza apta para celíacos. Las alergias e intolerancias se configuran en el Perfil.",
     },
     proteolysis: {
       name: "Prote\u00F3lisis",
@@ -535,7 +543,8 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       whyImportant: "Puede modificar la extensibilidad y la resistencia de la masa. Depende de la harina, los microorganismos, la temperatura y el proceso: no existe una duración óptima universal ni mide la digestibilidad individual.",
     },
     thickness_factor: {
-      name: "Thickness Factor (TF, factor de grosor)",
+      plainDefinition: "Cuánta masa hace falta por cada centímetro cuadrado de pizza: cuanto más alto, más gruesa la pizza.",
+      name: "Carga de masa (Thickness Factor, TF)",
       definition: "Cantidad de masa por unidad de superficie: los gramos de masa por cada cm² de pizza.",
       formula: "TF = peso del bollo (g) / área de la pizza (cm²)",
       whyImportant: "Métrica habitual en las calculadoras de masa norteamericanas (en oz/in²; 1 oz/in² ≈ 4,39 g/cm²). {brand} la expresa en g/cm² para dimensionar los bollos; junto con el horno orienta el tiempo de cocción y lo crujiente. Los ejemplos se calculan a partir del peso del bollo y la forma de cada estilo.",
@@ -563,10 +572,10 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       definition: "Puntuación de 0 a 100 sobre la cercanía a la referencia del estilo. No certifica el cumplimiento de un pliego.",
       formula: "A = Ingredientes × {authWIngredients} + Proceso × {authWProcess} + Equipo × {authWEquipment}",
       ranges: [
-        { label: "{aBand0}", value: "Rigurosamente auténtica" },
-        { label: "{aBand1}", value: "Fiel con adaptaciones" },
-        { label: "{aBand2}", value: "Inspirada pero modificada" },
-        { label: "{aBand3}", value: "Libremente interpretada" },
+        { label: "Rigurosamente auténtica", value: "{aBand0}" },
+        { label: "Fiel con adaptaciones", value: "{aBand1}" },
+        { label: "Inspirada pero modificada", value: "{aBand2}" },
+        { label: "Libremente interpretada", value: "{aBand3}" },
       ],
       whyImportant: "Los pesos son una elección de {brand}, no una medida. Reglas del producto: sin el combustible que pide el estilo, la puntuación no supera {authFuelCap}; por debajo de la temperatura mínima del estilo se reduce en proporción.",
     },
@@ -575,17 +584,78 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       definition: "Puntuación de 0 a 100 sobre la facilidad de preparación con el horno, harina y experiencia disponibles. Los requisitos que bloquean la receta se evalúan aparte.",
       formula: "F = Horno × {feasWOven} + Harina × {feasWFlour} + Experiencia × {feasWSkill}",
       ranges: [
-        { label: "{fBand0}", value: "Muy factible" },
-        { label: "{fBand1}", value: "Factible con atención" },
-        { label: "{fBand2}", value: "Difícil" },
-        { label: "{fBand3}", value: "Riesgo alto" },
+        { label: "Muy factible", value: "{fBand0}" },
+        { label: "Factible con atención", value: "{fBand1}" },
+        { label: "Difícil", value: "{fBand2}" },
+        { label: "Riesgo alto", value: "{fBand3}" },
       ],
       whyImportant: "Los pesos son una elección de {brand}, no una medida. Si la receta no se puede hacer con tu cocina, la compatibilidad no supera {nonFeasibleCeiling}, sean cuales sean las otras puntuaciones.",
     },
     d_score: {
       name: "D-Score (Maduración estimada)",
       definition: "Estimación del modelo basada en tiempo, temperatura, levadura y prefermentos. No mide la digestibilidad individual ni calcula los FODMAP.",
-      ranges: [{"label":"{dBand0}","value":"Índice alto"},{"label":"{dBand1}","value":"Índice medio-alto"},{"label":"{dBand2}","value":"Índice medio"},{"label":"{dBand3}","value":"Índice bajo"}],
+      ranges: [{ label: "Índice alto", value: "{dBand0}" },{ label: "Índice medio-alto", value: "{dBand1}" },{ label: "Índice medio", value: "{dBand2}" },{ label: "Índice bajo", value: "{dBand3}" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: "División (staglio)",
+      definition: "Dividir la masa en piezas del mismo peso, una por pizza, y cerrarlas en bolas.",
+      whyImportant: "Los bollos del mismo peso fermentan y se hornean igual. La receta indica el peso de cada bollo.",
+    },
+    ball_shaping: {
+      name: "Boleado (pirlatura)",
+      definition: "El gesto que cierra el trozo de masa en una bola lisa y tensa: lo haces girar sobre sí mismo, en la mesa o entre las manos, hasta que la superficie queda tirante.",
+      whyImportant: "Una superficie tensa retiene el gas durante el apresto y da un bollo que se estira en redondo. Si la masa se rompe, has tirado demasiado: déjala reposar unos minutos.",
+    },
+    gluten_development: {
+      name: "Desarrollo del gluten (incordatura)",
+      definition: "El momento en que la masa queda lisa y elástica y deja de pegarse a las manos o al bol: la red de gluten se ha formado.",
+      whyImportant: "Una masa bien desarrollada retiene el gas del levado. Prueba práctica: estira un trocito entre los dedos; si forma una película fina sin romperse enseguida, está lista. Amasar demasiado con la máquina, en cambio, calienta y debilita la masa.",
+    },
+    folds: {
+      name: "Pliegues",
+      definition: "Estiras una parte de la masa y la doblas sobre el resto, giras la masa y repites por cada lado. Se hacen a intervalos durante el reposo, en lugar de amasar más tiempo.",
+      whyImportant: "Refuerzan la red de gluten sin calentar la masa, sobre todo en masas muy hidratadas. El «slap & fold» es una variante: levantas la masa, la golpeas contra la mesa y la doblas sobre sí misma.",
+    },
+    poke_test: {
+      name: "Prueba del dedo (poke test)",
+      definition: "Hunde un dedo enharinado alrededor de un centímetro en el bollo y mira cómo se recupera.",
+      whyImportant: "Si la marca vuelve despacio y queda un poco, el bollo está listo. Si vuelve enseguida, necesita más tiempo. Si queda hundida y el bollo se desinfla, ha fermentado de más. Es una indicación práctica, no una medida.",
+    },
+    cornicione: {
+      name: "Cornicione (borde)",
+      definition: "El borde de la pizza, más alto e hinchado que el centro: en el horno el gas de la masa se expande y lo levanta.",
+      whyImportant: "Para conseguirlo, al estirar empuja el aire del centro hacia el borde sin aplastarlo. La altura y los alveolos dependen del estilo, la hidratación, la fermentación y el calor del horno.",
+    },
+    oven_floor_dome: {
+      name: "Solera y bóveda",
+      definition: "La solera es la base del horno donde se apoya la pizza; la bóveda es la parte de arriba. La solera cuece la base por contacto; la bóveda cuece los ingredientes y el borde con el calor que irradia.",
+      whyImportant: "Si la base se quema y los ingredientes quedan crudos, la solera está demasiado caliente respecto a la bóveda; si pasa lo contrario, está demasiado fría. En un horno doméstico la piedra o el acero hacen de solera y el grill de bóveda.",
+    },
+    pre_ferment: {
+      name: "Prefermento",
+      definition: "Una parte de la harina y el agua mezclada con levadura horas antes de la masa final y dejada madurar. Los más usados son la biga (firme) y el poolish (líquido).",
+      whyImportant: "Aporta aroma y cambia cómo se trabaja la masa final. En la receta es una fase aparte, y sus cantidades forman parte del total: no se suman. La autólisis no es un prefermento, porque no lleva levadura.",
+    },
+    sourdough: {
+      name: "Masa madre (lievito madre)",
+      definition: "Una masa de harina y agua donde viven levaduras salvajes y bacterias lácticas, mantenida con refrescos de harina y agua. Una parte se usa en lugar de la levadura de panadería.",
+      whyImportant: "Levanta más despacio que la levadura de panadería y da un sabor ligeramente ácido. Su actividad depende de cómo la refresques: por eso la dosis con masa madre es una hipótesis del modelo, que debes adaptar a la tuya.",
+    },
+    flour_type: {
+      name: "Tipo de harina (00, 0, 1, 2, integral)",
+      definition: "En Italia el tipo indica lo refinada que es la harina de trigo blando: la 00 es la más blanca, luego 0, 1, 2 e integral, que contiene el grano entero. Se fija por las cenizas, es decir, los minerales que quedan al quemar la harina.",
+      whyImportant: "El tipo no dice lo fuerte que es la harina: una 00 puede ser floja o muy fuerte. La fuerza es la W, si aparece en el paquete. Cuando no la indicas, el modelo supone un intervalo típico para ese tipo.",
+    },
+    manitoba: {
+      name: "Manitoba",
+      definition: "Harina de trigo blando rica en proteínas, en origen de trigos norteamericanos (el nombre viene de la provincia canadiense de Manitoba). Hoy en el comercio indica una harina muy fuerte.",
+      whyImportant: "Se usa para fermentaciones largas o mezclada con una 00 para subir la fuerza. Sola da una masa tenaz, más difícil de estirar.",
+    },
+    semola_rimacinata: {
+      name: "Sémola remolida (semola rimacinata)",
+      definition: "Sémola de trigo duro molida por segunda vez, más fina que la sémola normal: amarilla y algo granulosa al tacto.",
+      whyImportant: "Se usa para espolvorear la mesa y la pala, porque hace deslizar la pizza y se quema menos que la harina, y en pequeña cantidad en la masa de algunos estilos. El gluten del trigo duro es menos extensible que el del trigo blando.",
     },
   },
 };

@@ -26,6 +26,28 @@ function unlockDocumentScroll() {
 }
 
 /**
+ * Where the modal's Tab loop sends focus, or null to let the key through.
+ * FW-04: a Tab already handled by a layer inside the dialog (the TermLink
+ * moving into its popover) is not corrected again.
+ */
+export function tabLoopTarget(state: {
+  defaultPrevented: boolean;
+  isTop: boolean;
+  shiftKey: boolean;
+  hasCandidates: boolean;
+  insidePanel: boolean;
+  atFirst: boolean;
+  atLast: boolean;
+}): "first" | "last" | "panel" | null {
+  if (state.defaultPrevented || !state.isTop) return null;
+  if (!state.hasCandidates) return "panel";
+  if (!state.insidePanel) return state.shiftKey ? "last" : "first";
+  if (state.shiftKey && state.atFirst) return "last";
+  if (!state.shiftKey && state.atLast) return "first";
+  return null;
+}
+
+/**
  * Shared modal keyboard contract: autofocus, Tab loop, Escape and focus restore.
  * FW-12: Escape passes through the shared escape stack (escape-stack.ts), so
  * only the top-most layer closes; the Tab loop runs only on the top-most modal.
@@ -86,27 +108,22 @@ export function useDialogFocus<TElement extends HTMLElement>({
     });
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Tab" || modalStack[modalStack.length - 1] !== layer.id) return;
-
+      if (event.key !== "Tab") return;
       const candidates = focusable();
-      if (!candidates.length) {
-        event.preventDefault();
-        panel.focus({ preventScroll: true });
-        return;
-      }
-      const first = candidates[0];
-      const last = candidates[candidates.length - 1];
       const active = document.activeElement;
-      if (!(active instanceof Node) || !panel.contains(active)) {
-        event.preventDefault();
-        (event.shiftKey ? last : first).focus();
-      } else if (event.shiftKey && (active === first || active === panel)) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && active === last) {
-        event.preventDefault();
-        first.focus();
-      }
+      const target = tabLoopTarget({
+        defaultPrevented: event.defaultPrevented,
+        isTop: modalStack[modalStack.length - 1] === layer.id,
+        shiftKey: event.shiftKey,
+        hasCandidates: candidates.length > 0,
+        insidePanel: active instanceof Node && panel.contains(active),
+        atFirst: active === candidates[0] || active === panel,
+        atLast: active === candidates[candidates.length - 1],
+      });
+      if (!target) return;
+      event.preventDefault();
+      if (target === "panel") panel.focus({ preventScroll: true });
+      else (target === "first" ? candidates[0] : candidates[candidates.length - 1]).focus();
     };
 
     document.addEventListener("keydown", handleKeyDown);

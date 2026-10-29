@@ -67,9 +67,12 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  30 → D-060 (main): la forza della farina come intervallo («W 260–310»).
  *  31 → FW-06: punteggio spiegabile, pesi D-E presi dal motore, tetto di
  *       autenticità detto come regola.
+ *  32 → FW-04: voci del glossario per il procedimento e le farine, definizioni
+ *       semplici, formule tradotte, «Valori tipici»/«Perché conta», tabelle
+ *       con il valore nella prima colonna, «Carico d'impasto», TermLink.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 31;
+export const LOCALE_BUNDLE_REV = 32;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

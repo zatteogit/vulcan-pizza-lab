@@ -532,15 +532,15 @@ export const JA_LOCALE: CmsContent = {
     },
     "2": {
       name: "\u4E2D\u7D1A\u8005",
-      description: "何度かピザを作ったことがある",
+      description: "レシピを見ながら何度かピザを作ったことがある",
     },
     "3": {
       name: "\u4E0A\u7D1A\u8005",
-      description: "折りたたみと発酵を管理できる",
+      description: "よくピザを作り、やわらかい生地も扱える",
     },
     "4": {
       name: "\u30A8\u30AD\u30B9\u30D1\u30FC\u30C8",
-      description: "生地・時間・技法を調整できる",
+      description: "分量や時間を自分で調整する",
     },
   },
   families: {
@@ -778,8 +778,8 @@ export const JA_LOCALE: CmsContent = {
     noResults: "「{query}」の用語はありません",
     allCategories: "\u3059\u3079\u3066",
     formulaLabel: "\u5F0F",
-    rangesLabel: "\u4EE3\u8868\u7684\u306A\u7BC4\u56F2",
-    whyImportantLabel: "\u306A\u305C\u91CD\u8981\u304B",
+    rangesLabel: "代表的な値",
+    whyImportantLabel: "なぜ重要か",
     relatedLabel: "\u95A2\u9023",
     backToHome: "\u30DB\u30FC\u30E0\u306B\u623B\u308B",
     termCount: "{count}\u7528\u8A9E",
@@ -807,6 +807,17 @@ export const JA_LOCALE: CmsContent = {
       "\u52A0\u5DE5\u3001\u8A2D\u5099\u3001\u8A08\u6E2C",
     catScoring: "\u30B9\u30B3\u30A2",
     catScoringDesc: "{brand}の点数の読み方",
+    // FW-04
+    catTechnique: "作業と工程",
+    catTechniqueDesc: "こね上げからオーブンまで、工程で使う言葉",
+    catFlour: "粉",
+    catFlourDesc: "粉の種類と読み方",
+    rangesValueHeader: "値",
+    rangesMeaningHeader: "意味",
+    technicalLabel: "専門的な定義",
+    modelNoteLabel: "{brand}のモデルでは",
+    seeAlsoLabel: "関連ページ",
+    inGlossaryLabel: "用語集：",
   },
   engineMessages: {
     "allergen.conflict": "{allergen}を含む材料：{ingredients}。",
@@ -1377,6 +1388,8 @@ export const JA_LOCALE: CmsContent = {
     sheetOilLabel: "油の温度",
     sheetOilHeat: "揚げる前に油を適温にします。オーブンは不要です。",
     sheetFryTurn: "揚げ時間の半分で裏返します",
+    // FW-04
+    pillDoughLoad: "生地量（面積あたり）",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1772,6 +1785,8 @@ export const JA_LOCALE: CmsContent = {
     pantryProfileEmpty: "粉やイーストの指定がありません：スタイルの標準から始めます。",
     pantryProfileEdit: "「作る」で編集",
     ftuSourdoughNote: "天然酵母があれば、長時間発酵ではパン用イーストの代わりに提案することがあります。",
+    // FW-04
+    ftuFlourTypeNote: "タイプ（00、0、全粒粉）は粉の精製度を表し、強さは表しません。袋にWが書かれていれば、あとでパントリーに入力できます。",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1869,7 +1884,6 @@ export const JA_LOCALE: CmsContent = {
     exploreFilterRecipes: "代表的なレシピ",
     learnFilterSubtitle: "以下のガイドは一般的な内容で、このスタイルにも当てはまります。",
     learnRemoveFilter: "スタイルフィルターを解除",
-    learnOpenGlossary: "用語集を開く",
     learnPathLabel: "学習ロードマップ",
     learnStartPath: "ロードマップを開始",
     learnTermOfTheDay: "本日の用語 — {category}",
@@ -1898,6 +1912,8 @@ export const JA_LOCALE: CmsContent = {
     deactivate: "解除",
     passToEasy: "Easyモードに切替",
     activateNerd: "Nerdモードを有効化",
+    // FW-04
+    learnOpenTerm: "用語集で詳しく見る",
   },
   configurator: {
     hydrationLabel: "\u6C34\u5206\u91CF",
@@ -2071,7 +2087,6 @@ export const JA_LOCALE: CmsContent = {
       "塩は前発酵ではなく本捏ねで加えます。前発酵に入れると酵母の働きが鈍ります。",
     learnedFromAttempts: "\u3053\u308C\u307E\u3067\u306E{n}\u56DE\u306E\u8A18\u9332\u304B\u3089\u5B66\u3073\u307E\u3057\u305F",
     applyCorrections: "\u88DC\u6B63\u3092\u9069\u7528",
-    learnInlineTitle: "\u8A73\u3057\u304F\uFF1A{label}",
     tipsCountOne: "{n}件のアドバイス",
     tipsCountMany: "{n}件のアドバイス",
     servingUnits: {

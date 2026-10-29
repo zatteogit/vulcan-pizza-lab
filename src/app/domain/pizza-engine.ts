@@ -4200,17 +4200,17 @@ export const SKILL_LEVELS: {
   {
     level: 2,
     name: "Intermedio",
-    description: "Ho già fatto qualche pizza",
+    description: "Ho fatto la pizza qualche volta seguendo una ricetta",
   },
   {
     level: 3,
     name: "Avanzato",
-    description: "Gestisco pieghe e lievitazioni",
+    description: "Faccio la pizza spesso e so gestire un impasto morbido",
   },
   {
     level: 4,
     name: "Esperto",
-    description: "Adatto impasti, tempi e tecniche",
+    description: "Cambio dosi e tempi da solo",
   },
 ];
 

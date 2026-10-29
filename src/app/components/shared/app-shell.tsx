@@ -626,13 +626,15 @@ export function AppShell() {
   }, []);
 
   /* Scelta di un risultato: il link (o Invio) porta alla pagina, che parte
-     dall'alto. */
+     dall'alto. FW-04 (S04-A-04, S12-B-01): con un'ancora (#termine) lo
+     scorrimento lo fa la pagina (useHashTarget); qui non si torna in cima. */
   const selectSearchResult = useCallback(
     (link?: string) => {
       searchReturnRef.current = null;
       setSearchOpen(false);
       setSearchQuery("");
       if (link) navigate(link);
+      if (link?.includes("#")) return;
       requestAnimationFrame(() => window.scrollTo(0, 0));
     },
     [navigate],

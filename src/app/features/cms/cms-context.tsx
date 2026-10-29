@@ -714,6 +714,8 @@ interface CmsProfile {
   pantryProfileEmpty: string;
   pantryProfileEdit: string;
   ftuSourdoughNote: string;
+  /** FW-04 */
+  ftuFlourTypeNote: string;
 }
 
 /** Page-level strings for nav, explore, learn, recipe, not-found, search */
@@ -793,7 +795,6 @@ interface CmsPages {
   // Learn page extensions
   learnFilterSubtitle: string;
   learnRemoveFilter: string;
-  learnOpenGlossary: string;
   learnPathLabel: string;
   learnStartPath: string;
   learnTermOfTheDay: string;
@@ -824,6 +825,8 @@ interface CmsPages {
   deactivate: string;
   passToEasy: string;
   activateNerd: string;
+  /** FW-04 */
+  learnOpenTerm: string;
 }
 
 /** Recipe configurator slider labels and tooltips */
@@ -1106,7 +1109,6 @@ export interface CmsContent {
     /** Pannello F2 "Vulcan ha imparato dai tuoi tentativi" (prima hardcoded). */
     learnedFromAttempts?: string;
     applyCorrections?: string;
-    learnInlineTitle: string;
     tipsCountOne: string;
     tipsCountMany: string;
     servingUnits: Record<string, { singular: string; plural: string }>;
@@ -1270,6 +1272,17 @@ export interface CmsContent {
     catMechanicsDesc: string;
     catScoring: string;
     catScoringDesc: string;
+    /** FW-04 */
+    catTechnique: string;
+    catTechniqueDesc: string;
+    catFlour: string;
+    catFlourDesc: string;
+    rangesValueHeader: string;
+    rangesMeaningHeader: string;
+    technicalLabel: string;
+    modelNoteLabel: string;
+    seeAlsoLabel: string;
+    inGlossaryLabel: string;
   };
   /** Engine message templates — keyed by EngineMsg.key, supports {param} interpolation */
   engineMessages: Record<string, string>;
@@ -1351,6 +1364,8 @@ export interface CmsContent {
     sheetOilLabel: string;
     sheetOilHeat: string;
     sheetFryTurn: string;
+    /** FW-04 */
+    pillDoughLoad: string;
   };
   /** Style descriptions — keyed by style ID */
   styleDescriptions: Record<string, string>;
@@ -1749,9 +1764,9 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   skillLevels: {
     "1": { name: "Principiante", description: "Non ho mai impastato" },
-    "2": { name: "Intermedio",   description: "Ho già fatto qualche pizza" },
-    "3": { name: "Avanzato",     description: "Gestisco pieghe e lievitazioni" },
-    "4": { name: "Esperto",      description: "Adatto impasti, tempi e tecniche" },
+    "2": { name: "Intermedio",   description: "Ho fatto la pizza qualche volta seguendo una ricetta" },
+    "3": { name: "Avanzato",     description: "Faccio la pizza spesso e so gestire un impasto morbido" },
+    "4": { name: "Esperto",      description: "Cambio dosi e tempi da solo" },
   },
   /* FW-14 (D-G): le famiglie hanno solo il nome. Descrizioni ed emoji non le
      mostrava nessuna schermata (e la descrizione di «Contemporanea» era falsa
@@ -1985,7 +2000,6 @@ export const CMS_DEFAULTS: CmsContent = {
       "Il sale va nell’impasto finale, non nel prefermento: lì frenerebbe il lievito.",
     learnedFromAttempts: "Ho imparato dai tuoi {n} tentativi",
     applyCorrections: "Applica le correzioni",
-    learnInlineTitle: "Approfondisci: {label}",
     tipsCountOne: "{n} consiglio",
     tipsCountMany: "{n} consigli",
     servingUnits: {
@@ -2137,8 +2151,8 @@ export const CMS_DEFAULTS: CmsContent = {
     noResults: "Nessun termine per «{query}»",
     allCategories: "Tutti",
     formulaLabel: "Formula",
-    rangesLabel: "Range tipici",
-    whyImportantLabel: "Perch\u00E9 importante",
+    rangesLabel: "Valori tipici",
+    whyImportantLabel: "Perché conta",
     relatedLabel: "Correlati",
     backToHome: "Torna alla home",
     termCount: "{count} termini",
@@ -2162,6 +2176,17 @@ export const CMS_DEFAULTS: CmsContent = {
     catMechanicsDesc: "Lavorazione, attrezzature e misure",
     catScoring: "Punteggi",
     catScoringDesc: "Come leggere i punteggi di {brand}",
+    // FW-04
+    catTechnique: "Gesti e fasi",
+    catTechniqueDesc: "Le parole del procedimento, dall’impasto al forno",
+    catFlour: "Farine",
+    catFlourDesc: "Tipi di farina e come leggerli",
+    rangesValueHeader: "Valore",
+    rangesMeaningHeader: "Che cosa indica",
+    technicalLabel: "Definizione tecnica",
+    modelNoteLabel: "Nel modello di {brand}",
+    seeAlsoLabel: "Vedi anche",
+    inGlossaryLabel: "Nel glossario:",
   },
   engineMessages: {
     ...DIETARY_MESSAGES_IT,
@@ -2545,6 +2570,8 @@ export const CMS_DEFAULTS: CmsContent = {
     sheetOilLabel: "Temperatura dell'olio",
     sheetOilHeat: "Porta l'olio a temperatura prima di friggere: il forno non serve.",
     sheetFryTurn: "Girala a metà frittura",
+    // FW-04
+    pillDoughLoad: "Carico d’impasto",
   },
   styleDescriptions: {
     ...Object.fromEntries(Object.entries(STYLES_DB).map(([id, style]) => [id, style.description])),
@@ -2782,6 +2809,8 @@ export const CMS_DEFAULTS: CmsContent = {
     pantryProfileEmpty: "Nessuna farina o lievito indicato: partiamo da quelli tipici dello stile.",
     pantryProfileEdit: "Modifica in Crea",
     ftuSourdoughNote: "Con il lievito madre, nelle lievitazioni lunghe potremo proporti la pasta madre al posto del lievito di birra.",
+    // FW-04
+    ftuFlourTypeNote: "Il tipo (00, 0, integrale) dice quanto è raffinata la farina, non quanto è forte. Se sul sacco c’è la W, potrai indicarla nella tua dispensa.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -2861,7 +2890,6 @@ export const CMS_DEFAULTS: CmsContent = {
     exploreFilterRecipes: "Ricette iconiche",
     learnFilterSubtitle: "Le guide qui sotto sono generali e valgono anche per questo stile.",
     learnRemoveFilter: "Rimuovi filtro stile",
-    learnOpenGlossary: "Apri il glossario",
     learnPathLabel: "Percorso didattico",
     learnStartPath: "Inizia il percorso",
     learnTermOfTheDay: "Termine del giorno — {category}",
@@ -2890,6 +2918,8 @@ export const CMS_DEFAULTS: CmsContent = {
     deactivate: "Disattiva",
     passToEasy: "Passa a Easy",
     activateNerd: "Attiva modalità Nerd",
+    // FW-04
+    learnOpenTerm: "Apri la voce nel glossario",
   },
   configurator: {
     hydrationLabel: "Idratazione",
@@ -3629,8 +3659,8 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "glossary.noResults", label: "Nessun risultato ({query})", type: "text" },
       { path: "glossary.allCategories", label: "Tutte le categorie", type: "text" },
       { path: "glossary.formulaLabel", label: "Formula", type: "text" },
-      { path: "glossary.rangesLabel", label: "Range tipici", type: "text" },
-      { path: "glossary.whyImportantLabel", label: "Perch\u00E9 importante", type: "text" },
+      { path: "glossary.rangesLabel", label: "Valori tipici", type: "text" },
+      { path: "glossary.whyImportantLabel", label: "Perch\u00E9 conta", type: "text" },
       { path: "glossary.relatedLabel", label: "Correlati", type: "text" },
       { path: "glossary.backToHome", label: "Torna alla home", type: "text" },
       { path: "glossary.termCount", label: "Conteggio termini ({count})", type: "text" },

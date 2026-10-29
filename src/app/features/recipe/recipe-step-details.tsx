@@ -1,6 +1,6 @@
 /* ═══ STEP DETAILS — "come si fa" collassabile + learn-inline (estratto lug 2026) ═══ */
 
-import { ChevronDown, ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
+import { ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { motionDuration, motionSpring } from "../../components/ds/motion";
 import { useId, useState } from "react";
@@ -9,23 +9,14 @@ import type { StepTroubleshooting } from "../../data/troubleshooting-data";
 import { TroubleshootingSheet } from "./troubleshooting-panel";
 import type { CmsContent } from "../cms/cms-context";
 import { t } from "../cms/i18n";
-import { getTermById } from "../../data/glossary-data";
 import { WhyButton } from "../science/why-button";
+import { GlossaryTermLinks } from "../glossary/term-link";
+import { stepGlossaryTerms } from "../glossary/step-terms";
 
-/* ═══ Learning contestuale: ogni fase porta al suo termine nel glossario ═══
-   (feedback giugno 2026 — il "come si impara" richiamabile dalla ricetta) */
-const STEP_GLOSSARY: Record<string, { hash: string }> = {
-  bulk: { hash: "bulk_fermentation" },
-  proof: { hash: "ball_fermentation" },
-  bake: { hash: "maillard" },
-  mix: { hash: "hydration" },
-};
-
-/* Impasto non lievitato (Focaccia di Recco): puntata e appretto sono un
-   riposo (ENG-5). Glossario e troubleshooting di quelle fasi parlano di
-   lievitazione («La puntata», «È andata lunga?» → impasto troppo lievitato),
-   quindi lì non si mostrano. */
-const REST_STEP_IDS = new Set(["bulk", "proof"]);
+/* ═══ Learning contestuale — FW-04 (S09-A-15, S09-B-07) ═══
+   Le parole del passo (incordatura, staglio, appretto…) sono TermLink sempre
+   visibili, anche quando il passo non ha «Come si fa»: la mappa vive in
+   features/glossary/step-terms.ts, condivisa con la modalità cottura. */
 
 /* FW-02 (S09-B-08): durata e temperatura dei riposi lievitati hanno il loro
    «Perché?»: la velocità con la temperatura (stima Q10) per la puntata, la
@@ -57,22 +48,13 @@ export function StepDetails({
   troubleshooting?: StepTroubleshooting & { title: string };
 }) {
   const [open, setOpen] = useState(false);
-  const [glossaryOpen, setGlossaryOpen] = useState(false);
   const [troubleOpen, setTroubleOpen] = useState(false);
   const detailsScroll = useDisclosureScroll(open);
-  const glossaryScroll = useDisclosureScroll(glossaryOpen && open);
   const reducedMotion = useReducedMotion();
   const transition = reducedMotion ? { duration: motionDuration.reduced } : motionSpring.denseDisclosure;
   const detailsId = useId();
-  const glossaryId = useId();
-  const learnStepId =
-    stepId && !(unleavened && REST_STEP_IDS.has(stepId)) ? stepId : undefined;
-
-  const glossaryHash = learnStepId === "preferment"
-    ? preFermentType === "poolish" ? "poolish" : preFermentType === "biga" ? "biga" : undefined
-    : learnStepId ? STEP_GLOSSARY[learnStepId]?.hash : undefined;
-  const glossaryTerm = glossaryHash ? getTermById(glossaryHash, cms) : undefined;
-  const scienceNoteId = learnStepId ? STEP_SCIENCE_NOTE[learnStepId] : undefined;
+  const glossaryTerms = stepGlossaryTerms(stepId, { unleavened, preFermentType });
+  const scienceNoteId = stepId && !(unleavened && (stepId === "bulk" || stepId === "proof")) ? STEP_SCIENCE_NOTE[stepId] : undefined;
 
   const hasDetails = Boolean(longDesc || tips.length);
   const troubleLabel = troubleshooting && cms.cooking.troubleStepLinks?.[troubleshooting.labelKey];
@@ -91,7 +73,7 @@ export function StepDetails({
     </button>
   ) : null;
 
-  if (!hasDetails && !troubleAction) return null;
+  if (!hasDetails && !troubleAction && glossaryTerms.length === 0) return null;
   return (
     <div className="step-details">
       {hasDetails && <button
@@ -150,47 +132,11 @@ export function StepDetails({
               </span>
             </div>
           ))}
-          {glossaryTerm && (
-            <>
-            <button
-              ref={glossaryScroll.anchorRef}
-              type="button"
-              onClick={() => { if (!glossaryOpen) glossaryScroll.prepare(); setGlossaryOpen((value) => !value); }}
-              className="step-details__glossary-toggle type-data"
-              aria-expanded={glossaryOpen}
-              aria-controls={glossaryOpen ? glossaryId : undefined}
-            >
-              {t(cms.cooking.learnInlineTitle, { label: glossaryTerm.name })}
-              {/* FW-03 (S09-B-12): si apre sul posto, quindi chevron come «Come si fa» */}
-              <ChevronDown size={14} aria-hidden="true" className="step-details__glossary-chevron" />
-            </button>
-            {glossaryOpen && (
-              <motion.div
-                ref={glossaryScroll.contentRef}
-                id={glossaryId}
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                transition={transition}
-                onUpdate={(latest) => { if (typeof latest.height === "number" || typeof latest.height === "string") glossaryScroll.follow(latest.height); }}
-                onAnimationComplete={glossaryScroll.complete}
-                className="step-details__content"
-              >
-                <div className="step-details__glossary-content type-body" data-glossary-term={glossaryTerm.id}
-                  role="region" aria-label={glossaryTerm.name}>
-                  <p>{glossaryTerm.definition}</p>
-                  {glossaryTerm.whyImportant && <div className="step-details__glossary-why">
-                    <h4>{cms.glossary.whyImportantLabel}</h4>
-                    <p>{glossaryTerm.whyImportant}</p>
-                  </div>}
-                </div>
-              </motion.div>
-            )}
-            </>
-          )}
           {scienceNoteId && <WhyButton noteId={scienceNoteId} label={cms.science?.notes?.[scienceNoteId]?.title} className="step-details__why" />}
           {troubleAction}
         </motion.div>
       )}
+      <GlossaryTermLinks termIds={glossaryTerms} className="step-details__terms" />
       {troubleshooting && (
         <TroubleshootingSheet open={troubleOpen} context={troubleshooting} onClose={() => setTroubleOpen(false)} />
       )}

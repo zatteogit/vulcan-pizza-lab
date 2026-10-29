@@ -16,6 +16,8 @@ export interface TroubleshootingMessages {
 export interface GlossaryMessages {
   terms: Record<string, {
     name: string;
+    /** FW-04: livello 1 in parole semplici (S12-B-08). */
+    plainDefinition?: string;
     definition: string;
     whyImportant?: string;
     /** FW-05: solo per le formule con parole da tradurre. */

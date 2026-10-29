@@ -5,7 +5,7 @@
 import type { GlossaryMessageSource } from "../i18n/domain-contracts";
 import { withBrand } from "../config/brand";
 import { GLOSSARY_CATEGORIES, GLOSSARY_TERMS, type GlossaryCategory, type GlossaryTerm } from "./glossary-terms";
-export { GLOSSARY_CATEGORIES, GLOSSARY_TERMS, LOCALIZED_FORMULA_TERMS, type GlossaryCategory, type GlossaryTerm } from "./glossary-terms";
+export { GLOSSARY_CATEGORIES, GLOSSARY_TERMS, LOCALIZED_FORMULA_TERMS, type GlossaryCategory, type GlossaryPage, type GlossaryTerm } from "./glossary-terms";
 import { interpolate } from "../i18n/interpolate";
 import { formatNumber, formatPercent, formatRange, formatTemp, formatUnit } from "../i18n/format";
 import {
@@ -134,6 +134,18 @@ function fill(text: string, values: Record<string, string>): string {
   return withBrand(interpolate(text, values));
 }
 
+/** FW-04 (revisione): i numeri scritti nelle tabelle dei valori (conducibilità,
+ *  falling number) seguono la lingua attiva: «2,5–3,5» in italiano, «8–12 h»
+ *  e non «8-12h». Nessun numero cambia, solo la scrittura. */
+export function localizeRangeText(text: string, locale: string): string {
+  return text
+    .replace(/(\d+)-(\d+)\s?h\b/g, (_m, a: string, b: string) => formatRange(Number(a), Number(b), locale, { unit: "hour" }))
+    .replace(/\d+\.\d+/g, (n) => {
+      const digits = n.split(".")[1].length;
+      return formatNumber(Number(n), locale, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+    });
+}
+
 /* === i18n: LOCALIZED GETTERS === */
 
 /** Return localized term content (falls back to Italian hardcoded) */
@@ -148,9 +160,11 @@ export function getLocalizedTerm(term: GlossaryTerm, cms?: GlossaryMessageSource
       : term.ranges);
   const whyImportant = loc?.whyImportant ?? term.whyImportant;
   const formula = loc?.formula ?? term.formula;
+  const plainDefinition = loc?.plainDefinition ?? term.plainDefinition;
   return {
     ...term,
     name: loc?.name ?? term.name,
+    ...(plainDefinition !== undefined ? { plainDefinition: fill(plainDefinition, values) } : {}),
     definition: fill(loc?.definition ?? term.definition, values),
     ...(whyImportant !== undefined ? { whyImportant: fill(whyImportant, values) } : {}),
     ...(formula !== undefined ? { formula: fill(formula, values) } : {}),
@@ -158,8 +172,8 @@ export function getLocalizedTerm(term: GlossaryTerm, cms?: GlossaryMessageSource
       ranges: ranges.map((range) => ({
         ...range,
         label: fill(range.label, values),
-        value: fill(range.value, values),
-        ...(range.note ? { note: fill(range.note, values) } : {}),
+        value: localizeRangeText(fill(range.value, values), locale),
+        ...(range.note ? { note: localizeRangeText(fill(range.note, values), locale) } : {}),
       })),
     } : {}),
   };

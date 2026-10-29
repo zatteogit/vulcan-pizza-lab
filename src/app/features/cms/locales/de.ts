@@ -460,15 +460,15 @@ export const DE_LOCALE: CmsContent = {
     },
     "2": {
       name: "Fortgeschritten",
-      description: "Ich habe schon einige Pizzen gemacht",
+      description: "Ich habe ein paar Mal Pizza nach Rezept gemacht",
     },
     "3": {
       name: "Erfahren",
-      description: "Ich beherrsche Falten und Teigführung",
+      description: "Ich backe oft Pizza und komme mit weichem Teig zurecht",
     },
     "4": {
       name: "Experte",
-      description: "Ich passe Teige, Zeiten und Techniken an",
+      description: "Ich passe Mengen und Zeiten selbst an",
     },
   },
   families: {
@@ -691,8 +691,8 @@ export const DE_LOCALE: CmsContent = {
     noResults: "Keine Begriffe für „{query}“",
     allCategories: "Alle",
     formulaLabel: "Formel",
-    rangesLabel: "Typische Bereiche",
-    whyImportantLabel: "Warum wichtig",
+    rangesLabel: "Typische Werte",
+    whyImportantLabel: "Warum es zählt",
     relatedLabel: "Verwandt",
     backToHome: "Zur\u00FCck zur Startseite",
     termCount: "{count} Begriffe",
@@ -719,6 +719,17 @@ export const DE_LOCALE: CmsContent = {
     catMechanicsDesc: "Verarbeitung, Ger\u00E4te und Messungen",
     catScoring: "Bewertung",
     catScoringDesc: "Die Punktzahlen von {brand} verstehen",
+    // FW-04
+    catTechnique: "Handgriffe und Phasen",
+    catTechniqueDesc: "Die Wörter des Ablaufs, vom Kneten bis zum Ofen",
+    catFlour: "Mehle",
+    catFlourDesc: "Mehltypen und wie man sie liest",
+    rangesValueHeader: "Wert",
+    rangesMeaningHeader: "Bedeutung",
+    technicalLabel: "Technische Definition",
+    modelNoteLabel: "Im Modell von {brand}",
+    seeAlsoLabel: "Siehe auch",
+    inGlossaryLabel: "Im Glossar:",
   },
   engineMessages: {
     "allergen.conflict": "Enthält {allergen}: {ingredients}.",
@@ -1300,6 +1311,8 @@ export const DE_LOCALE: CmsContent = {
     sheetOilLabel: "Öltemperatur",
     sheetOilHeat: "Bring das Öl vor dem Frittieren auf Temperatur: Ein Ofen ist nicht nötig.",
     sheetFryTurn: "Nach der Hälfte der Frittierzeit wenden",
+    // FW-04
+    pillDoughLoad: "Teig pro Fläche",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1637,6 +1650,8 @@ export const DE_LOCALE: CmsContent = {
     pantryProfileEmpty: "Kein Mehl und keine Hefe angegeben: Wir gehen vom Stil-Typischen aus.",
     pantryProfileEdit: "In Erstellen bearbeiten",
     ftuSourdoughNote: "Mit Sauerteig schlagen wir ihn bei langen Gärzeiten eventuell statt Backhefe vor.",
+    // FW-04
+    ftuFlourTypeNote: "Der Typ (00, 0, Vollkorn) sagt, wie fein das Mehl ausgemahlen ist, nicht wie stark es ist. Steht der W-Wert auf der Packung, kannst du ihn später in deiner Vorratskammer angeben.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1722,7 +1737,6 @@ export const DE_LOCALE: CmsContent = {
     exploreFilterRecipes: "Kult-Rezepte",
     learnFilterSubtitle: "Die Anleitungen unten sind allgemein und gelten auch für diesen Stil.",
     learnRemoveFilter: "Stilfilter entfernen",
-    learnOpenGlossary: "Glossar öffnen",
     learnPathLabel: "Lernpfad",
     learnStartPath: "Pfad starten",
     learnTermOfTheDay: "Begriff des Tages — {category}",
@@ -1751,6 +1765,8 @@ export const DE_LOCALE: CmsContent = {
     deactivate: "Deaktivieren",
     passToEasy: "Zu Easy wechseln",
     activateNerd: "Nerd-Modus aktivieren",
+    // FW-04
+    learnOpenTerm: "Eintrag im Glossar öffnen",
   },
   configurator: {
     hydrationLabel: "Hydratation",
@@ -1921,7 +1937,6 @@ export const DE_LOCALE: CmsContent = {
       "Das Salz kommt in den Hauptteig, nicht in den Vorteig: Dort bremst es die Hefe.",
     learnedFromAttempts: "Ich habe aus deinen {n} Versuchen gelernt",
     applyCorrections: "Korrekturen anwenden",
-    learnInlineTitle: "Mehr erfahren: {label}",
     tipsCountOne: "{n} Tipp",
     tipsCountMany: "{n} Tipps",
     servingUnits: {

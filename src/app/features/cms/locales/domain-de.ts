@@ -353,6 +353,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
 export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
   terms: {
     w_alveograph: {
+      plainDefinition: "Die Stärke des Mehls: Je höher sie ist, desto länger hält der Teig beim Gehen durch. Sie steht oft auf der Packung (zum Beispiel W 280).",
       name: "W (Chopin-Alveograph)",
       definition: "Gesamtenergie, die n\u00F6tig ist, um eine Teigblase bis zum Platzen aufzubl\u00E4hen. Misst die Mehlst\u00E4rke insgesamt.",
       whyImportant: "W beschreibt die Gesamtstärke des Mehls. Dehnwiderstand und Dehnbarkeit werden mit P, L und P/L beurteilt: ein hoher W-Wert allein bedeutet keinen zäheren Teig. Diese Stufen verwendet {brand} in der ganzen App; jeder Stil nennt seinen eigenen W-Bereich.",
@@ -364,6 +365,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       ],
     },
     p_tenacity: {
+      plainDefinition: "Wie stark der Teig Widerstand leistet, wenn du daran ziehst.",
       name: "P (Z\u00E4higkeit)",
       definition: "Maximaler Widerstand gegen Verformung. H\u00F6chstpunkt der Alveogrammkurve \u2014 wie stark sich der Teig dem Dehnen widersetzt.",
       whyImportant: "Hoher P: \u201Efester\u201C Teig, beh\u00E4lt beim Backen die Form. Niedriger P: \u201Eweicher\u201C Teig, leicht auszuziehen, kann zusammenfallen.",
@@ -374,6 +376,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       ],
     },
     l_extensibility: {
+      plainDefinition: "Wie weit sich der Teig dehnen lässt, bevor er reißt.",
       name: "L (Dehnbarkeit)",
       definition: "Maximale L\u00E4nge, die die Teigblase vor dem Platzen erreicht. Misst, wie weit sich der Teig dehnen l\u00E4sst.",
       whyImportant: "Hoher L: dehnbarer Teig, l\u00E4sst sich ohne Risse ausziehen. Niedriger L: kurzer Teig, rei\u00DFt leicht.",
@@ -383,23 +386,26 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       ],
     },
     pl_ratio: {
+      plainDefinition: "Zeigt, ob der Teig eher zurückschnellt (hoher Wert) oder sich leicht dehnen lässt (niedriger Wert).",
       name: "P/L (Verh\u00E4ltnis Z\u00E4higkeit/Dehnbarkeit)",
       definition: "Verhältnis zwischen dem Verformungswiderstand des Teigs und seiner Dehnbarkeit.",
       whyImportant: "Beschreibt ein rheologisches Gleichgewicht: der passende Wert hängt von Mehl, Hydratation und Methode ab und garantiert weder Höhe noch Konsistenz der Pizza. Die Beispiele sind die Bereiche der Stile von {brand}; den P/L deines Mehls findest du im Datenblatt der Mühle.",
     },
     falling_number: {
+      plainDefinition: "Zeigt, wie aktiv die Enzyme im Mehl sind, die Stärke in Zucker umwandeln.",
       name: "Falling Number (Hagberg-Perten)",
       definition: "Zeit, die ein R\u00FChrstab braucht, um durch eine erhitzte Mehlsuspension zu fallen. Misst die Amylaseaktivit\u00E4t.",
       whyImportant: "Niedrige FN (<250): schnelle G\u00E4rung, aber instabiler Teig. Hohe FN (>300): stabil f\u00FCr lange Reifung.",
       ranges: [
-        { label: "<200 Sehr hohe Amylase", value: "Klebriger Teig", note: "F\u00FCr Pizza nicht empfohlen" },
-        { label: "200\u2013250 Hoch", value: "Feuchte Krume", note: "Schnelles Brot" },
-        { label: "250\u2013300 Mittel", value: "Gute Balance", note: "Pizza 8-12h" },
-        { label: "300\u2013400 Niedrig", value: "Trocken, langsam", note: "Pizza 24-48h" },
-        { label: ">400 Sehr niedrig", value: "Trocken", note: "Trockenpasta" },
+        { label: "Sehr hohe Amylase · Klebriger Teig", value: "<200", note: "F\u00FCr Pizza nicht empfohlen" },
+        { label: "Hoch · Feuchte Krume", value: "200\u2013250", note: "Schnelles Brot" },
+        { label: "Mittel · Gute Balance", value: "250\u2013300", note: "Pizza 8-12h" },
+        { label: "Niedrig · Trocken, langsam", value: "300\u2013400", note: "Pizza 24-48h" },
+        { label: "Sehr niedrig · Trocken", value: ">400", note: "Trockenpasta" },
       ],
     },
     hydration: {
+      plainDefinition: "Wie viel Wasser der Teig im Verhältnis zum Mehl enthält: Bei 65 % kommen auf 100 g Mehl 65 g Wasser.",
       name: "Hydratation (H%)",
       definition: "Gewichtsanteil des Wassers bezogen auf das Mehl im Teig.",
       formula: "H% = (Wassergewicht / Mehlgewicht) × 100",
@@ -440,11 +446,13 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       ],
     },
     lab: {
+      plainDefinition: "Die Bakterien im Sauerteig, die dem Teig seinen leicht säuerlichen Geschmack geben.",
       name: "LAB (Milchs\u00E4urebakterien)",
       definition: "Bakterien, die Zucker verg\u00E4ren und dabei Milchs\u00E4ure (und Essigs\u00E4ure) bilden. Im Sauerteig enthalten.",
       whyImportant: "Sie können Säure und Fruktane je nach Stämmen, Mehl und Verfahren verändern. Ihre Anwesenheit belegt keine Low-FODMAP-Eignung.",
     },
     q10: {
+      plainDefinition: "Um wie viel Mal schneller der Teig geht, wenn es {tenDegrees} wärmer ist.",
       name: "Q\u2081\u2080 (Temperaturkoeffizient)",
       definition: "Faktor, um den sich die Geschwindigkeit einer biochemischen Reaktion pro 10\u00B0C Temperaturanstieg vervielfacht.",
       whyImportant: "Mit Q₁₀ = {q10ComAbove} vervielfacht sich die Geschwindigkeit alle {tenDegrees} um {q10ComAbove}: {q10ExampleRefHours} bei {q10RefTemp} ≈ {q10ExampleWarmHours} bei {q10ExampleWarmTemp}. Die Werte dieses Eintrags sind Schätzungen des Modells von {brand}.",
@@ -533,7 +541,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     gluten: {
       name: "Gluten",
       definition: "Gliadin und Glutenin bilden mit Wasser und Kneten ein elastisches, dehnbares Netzwerk im Teig.",
-      whyImportant: "Elastizit\u00E4t durch Glutenine (S-S-Bindungen), Viskosit\u00E4t durch Gliadine (H-Bindungen). Lange Proteolyse spaltet Bindungen \u2192 dehnbarerer Teig.",
+      whyImportant: "Elastizität durch Glutenine (S-S-Bindungen), Viskosität durch Gliadine (H-Bindungen). Eine lange Proteolyse macht den Teig dehnbarer, aber das Gluten bleibt: Lange Gare oder Sauerteig machen die Pizza nicht geeignet für Menschen mit Zöliakie. Allergien und Unverträglichkeiten legst du im Profil fest.",
     },
     proteolysis: {
       name: "Proteolyse",
@@ -541,7 +549,8 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       whyImportant: "Sie kann Dehnbarkeit und Stabilität des Teigs verändern. Mehl, Mikroorganismen, Temperatur und Verfahren beeinflussen sie: Es gibt keine universelle optimale Dauer und keine Messung der individuellen Verdaulichkeit.",
     },
     thickness_factor: {
-      name: "Thickness Factor (TF)",
+      plainDefinition: "Wie viel Teig du pro Quadratzentimeter Pizza brauchst: Je höher der Wert, desto dicker die Pizza.",
+      name: "Teig pro Fläche (Thickness Factor, TF)",
       definition: "Teigmenge pro Fläche: Gramm Teig je cm² Pizza.",
       formula: "TF = Teiglinggewicht (g) / Pizzafläche (cm²)",
       whyImportant: "Eine in nordamerikanischen Teigrechnern verbreitete Kennzahl (in oz/in²; 1 oz/in² ≈ 4,39 g/cm²). {brand} gibt sie in g/cm² an, um die Teiglinge zu bemessen; zusammen mit dem Ofen bestimmt sie Backzeit und Knusprigkeit. Die Beispiele sind aus Teiglinggewicht und Form jedes Stils berechnet.",
@@ -569,10 +578,10 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       definition: "Punktzahl von 0 bis 100 für die Nähe zur Stilreferenz. Sie bestätigt keine Konformität mit einem Regelwerk.",
       formula: "A = Zutaten × {authWIngredients} + Verfahren × {authWProcess} + Ausstattung × {authWEquipment}",
       ranges: [
-        { label: "{aBand0}", value: "Streng authentisch" },
-        { label: "{aBand1}", value: "Treu mit Anpassungen" },
-        { label: "{aBand2}", value: "Inspiriert, aber verändert" },
-        { label: "{aBand3}", value: "Frei interpretiert" },
+        { label: "Streng authentisch", value: "{aBand0}" },
+        { label: "Treu mit Anpassungen", value: "{aBand1}" },
+        { label: "Inspiriert, aber verändert", value: "{aBand2}" },
+        { label: "Frei interpretiert", value: "{aBand3}" },
       ],
       whyImportant: "Die Gewichte sind eine Entscheidung von {brand}, keine Messung. Produktregeln: ohne den Brennstoff, den der Stil vorsieht, liegt der Wert höchstens bei {authFuelCap}; unter der Mindesttemperatur des Stils sinkt er anteilig.",
     },
@@ -581,17 +590,78 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       definition: "Punktzahl von 0 bis 100 für die einfache Zubereitung mit vorhandenem Ofen, Mehl und Erfahrung. Ausschlusskriterien werden gesondert geprüft.",
       formula: "F = Ofen × {feasWOven} + Mehl × {feasWFlour} + Erfahrung × {feasWSkill}",
       ranges: [
-        { label: "{fBand0}", value: "Sehr gut machbar" },
-        { label: "{fBand1}", value: "Machbar mit Sorgfalt" },
-        { label: "{fBand2}", value: "Schwierig" },
-        { label: "{fBand3}", value: "Hohes Risiko" },
+        { label: "Sehr gut machbar", value: "{fBand0}" },
+        { label: "Machbar mit Sorgfalt", value: "{fBand1}" },
+        { label: "Schwierig", value: "{fBand2}" },
+        { label: "Hohes Risiko", value: "{fBand3}" },
       ],
       whyImportant: "Die Gewichte sind eine Entscheidung von {brand}, keine Messung. Lässt sich das Rezept mit deiner Küche nicht umsetzen, liegt die Kompatibilität höchstens bei {nonFeasibleCeiling}, unabhängig von den anderen Werten.",
     },
     d_score: {
       name: "D-Score (Geschätzte Reife)",
       definition: "Modellschätzung anhand von Zeit, Temperatur, Hefe und Vorteigen. Sie misst weder die persönliche Verdaulichkeit noch den FODMAP-Gehalt.",
-      ranges: [{"label":"{dBand0}","value":"Hoher Index"},{"label":"{dBand1}","value":"Mittelhoher Index"},{"label":"{dBand2}","value":"Mittlerer Index"},{"label":"{dBand3}","value":"Niedriger Index"}],
+      ranges: [{ label: "Hoher Index", value: "{dBand0}" },{ label: "Mittelhoher Index", value: "{dBand1}" },{ label: "Mittlerer Index", value: "{dBand2}" },{ label: "Niedriger Index", value: "{dBand3}" }],
+    },
+    /* FW-04: voci del procedimento e delle farine (D-044). */
+    dough_division: {
+      name: "Teilen (Staglio)",
+      definition: "Die Teigmasse in gleich schwere Stücke teilen, eins pro Pizza, und zu Kugeln schließen.",
+      whyImportant: "Gleich schwere Teiglinge gehen und backen gleich. Das Gewicht jedes Teiglings steht im Rezept.",
+    },
+    ball_shaping: {
+      name: "Rundwirken (Pirlatura)",
+      definition: "Der Handgriff, der ein Teigstück zu einer glatten, straffen Kugel schließt: Du drehst es auf der Arbeitsfläche oder zwischen den Händen, bis die Oberfläche gespannt ist.",
+      whyImportant: "Eine gespannte Oberfläche hält das Gas bei der Stückgare und ergibt einen Teigling, der sich rund ausziehen lässt. Reißt der Teig, hast du zu fest gezogen: Lass ihn ein paar Minuten ruhen.",
+    },
+    gluten_development: {
+      name: "Auskneten (Incordatura)",
+      definition: "Der Punkt, an dem der Teig glatt und elastisch wird und nicht mehr an Händen oder Schüssel klebt: Das Glutennetz hat sich gebildet.",
+      whyImportant: "Ein gut ausgekneteter Teig hält das Gas beim Gehen. Praktische Probe: Zieh ein kleines Stück zwischen den Fingern auseinander; wird es zu einem dünnen Film, ohne sofort zu reißen, ist er fertig. Zu langes Kneten mit der Maschine erwärmt und schwächt den Teig dagegen.",
+    },
+    folds: {
+      name: "Dehnen und Falten",
+      definition: "Du ziehst einen Teil des Teigs hoch und faltest ihn über den Rest, drehst die Masse und wiederholst das auf jeder Seite. Das geschieht in Abständen während der Ruhe, statt länger zu kneten.",
+      whyImportant: "Es stärkt das Glutennetz, ohne den Teig zu erwärmen, vor allem bei sehr weichen Teigen. „Slap & Fold“ ist eine Variante: Du hebst den Teig an, schlägst ihn auf die Arbeitsfläche und faltest ihn über sich selbst.",
+    },
+    poke_test: {
+      name: "Fingerprobe (Poke-Test)",
+      definition: "Drück einen bemehlten Finger etwa einen Zentimeter tief in den Teigling und beobachte, wie die Delle zurückgeht.",
+      whyImportant: "Geht die Delle langsam zurück und bleibt eine kleine Spur, ist der Teigling fertig. Geht sie sofort zurück, braucht er noch Zeit. Bleibt sie eingedrückt und fällt der Teigling zusammen, ist er übergärt. Das ist ein praktischer Hinweis, keine Messung.",
+    },
+    cornicione: {
+      name: "Cornicione (Rand)",
+      definition: "Der Rand der Pizza, höher und luftiger als die Mitte: Beim Backen dehnt sich das Gas im Teig aus und hebt ihn an.",
+      whyImportant: "Dafür schiebst du beim Ausziehen die Luft von der Mitte zum Rand, ohne ihn plattzudrücken. Höhe und Poren hängen von Stil, Hydration, Gare und Ofenhitze ab.",
+    },
+    oven_floor_dome: {
+      name: "Ofenboden und Gewölbe",
+      definition: "Der Ofenboden ist die Fläche, auf der die Pizza liegt; das Gewölbe ist die Decke darüber. Der Boden backt die Unterseite durch Kontakt, das Gewölbe backt Belag und Rand mit der abgestrahlten Hitze.",
+      whyImportant: "Verbrennt die Unterseite und bleibt der Belag roh, ist der Boden im Verhältnis zum Gewölbe zu heiß; im umgekehrten Fall ist er zu kalt. Im Haushaltsofen übernehmen Stein oder Stahl die Rolle des Bodens und der Grill die des Gewölbes.",
+    },
+    pre_ferment: {
+      name: "Vorteig",
+      definition: "Ein Teil von Mehl und Wasser, der Stunden vor dem Hauptteig mit Hefe angesetzt wird und reift. Am häufigsten sind Biga (fest) und Poolish (flüssig).",
+      whyImportant: "Er bringt Aroma und verändert, wie sich der Hauptteig verarbeiten lässt. Im Rezept ist er eine eigene Phase, und seine Mengen gehören zur Gesamtmenge: Sie kommen nicht dazu. Die Autolyse ist kein Vorteig, weil sie keine Hefe enthält.",
+    },
+    sourdough: {
+      name: "Sauerteig (Lievito madre)",
+      definition: "Ein Teig aus Mehl und Wasser, in dem wilde Hefen und Milchsäurebakterien leben; er wird mit frischem Mehl und Wasser aufgefrischt. Ein Teil davon ersetzt die Backhefe.",
+      whyImportant: "Er treibt langsamer als Backhefe und gibt einen leicht säuerlichen Geschmack. Wie aktiv er ist, hängt davon ab, wie du ihn auffrischst: Deshalb ist die Sauerteigmenge eine Annahme des Modells, die du an deinen anpasst.",
+    },
+    flour_type: {
+      name: "Mehltyp (00, 0, 1, 2, Vollkorn)",
+      definition: "In Italien gibt der Typ an, wie fein Weichweizenmehl ausgemahlen ist: 00 ist das hellste, dann 0, 1, 2 und Vollkorn, das das ganze Korn enthält. Er richtet sich nach dem Aschegehalt, also den Mineralstoffen, die beim Verbrennen des Mehls zurückbleiben.",
+      whyImportant: "Der Typ sagt nicht, wie stark das Mehl ist: Ein 00 kann schwach oder sehr stark sein. Die Stärke ist der W-Wert, falls er auf der Packung steht. Wenn du ihn nicht angibst, nimmt das Modell einen typischen Bereich für diesen Typ an.",
+    },
+    manitoba: {
+      name: "Manitoba",
+      definition: "Proteinreiches Weichweizenmehl, ursprünglich aus nordamerikanischem Weizen (der Name stammt von der kanadischen Provinz Manitoba). Heute bezeichnet es im Handel ein sehr starkes Mehl.",
+      whyImportant: "Es wird für lange Gare verwendet oder mit einem 00 gemischt, um die Stärke zu erhöhen. Allein ergibt es einen zähen Teig, der sich schwerer ausziehen lässt.",
+    },
+    semola_rimacinata: {
+      name: "Semola rimacinata (doppelt gemahlener Hartweizengrieß)",
+      definition: "Hartweizengrieß, der ein zweites Mal gemahlen wurde und feiner ist als normaler Grieß: gelb und leicht körnig.",
+      whyImportant: "Man streut ihn auf Arbeitsfläche und Schieber, weil die Pizza darauf gleitet und er weniger verbrennt als Mehl, und in kleinen Mengen in den Teig mancher Stile. Das Gluten von Hartweizen ist weniger dehnbar als das von Weichweizen.",
     },
   },
 };

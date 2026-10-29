@@ -113,7 +113,8 @@ describe.each(Object.entries(BUNDLES))("glossario e motore, %s", (locale, bundle
     for (const w of Object.values(AUTH_AXIS_WEIGHTS) as number[]) expect(term("a_score").formula).toContain(pct(w));
     for (const w of Object.values(FEAS_AXIS_WEIGHTS) as number[]) expect(term("f_score").formula).toContain(pct(w));
     for (const [id, type] of [["a_score", "A"], ["f_score", "F"], ["d_score", "D"]] as const) {
-      expect(term(id).ranges!.map((r) => r.label)).toEqual(scoreBandRanges(type).map(([a, b]) => formatRange(a, b, locale)));
+      // FW-04 (S12-A-14): il numero sta sempre nella colonna del valore.
+      expect(term(id).ranges!.map((r) => r.value)).toEqual(scoreBandRanges(type).map(([a, b]) => formatRange(a, b, locale)));
     }
   });
 
@@ -249,9 +250,9 @@ describe("server MCP e glossario (S12-V-01)", () => {
     expect(arrhenius.whyImportant).not.toMatch(/β|\{\w+\}/);
     const aScore = glossary.run({ term: "a_score", lang }).data as { formula: string };
     expect(aScore.formula).toContain(values.authWIngredients);
-    const fScore = glossary.run({ term: "f_score", lang }).data as { formula: string; ranges: { label: string }[] };
+    const fScore = glossary.run({ term: "f_score", lang }).data as { formula: string; ranges: { value: string }[] };
     expect(fScore.formula).toContain(values.feasWOven);
-    expect(fScore.ranges[0].label).toBe(values.fBand0);
+    expect(fScore.ranges[0].value).toBe(values.fBand0);
   });
 });
 

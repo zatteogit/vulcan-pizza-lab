@@ -20,6 +20,14 @@ import { withBrand } from "../../config/brand";
 import { glossaryFactValues } from "../../data/glossary-data";
 import { stylesDeclaringPreFerment } from "../../domain/science/engine-facts";
 import { STYLES_DB } from "../../domain/styles-db";
+import { GlossaryTermLinks } from "../glossary/term-link";
+
+/* FW-04 (S14-B-15): le parole tecniche della scheda portano al glossario. */
+const PRE_FERMENT_TERMS: Record<PreFermentId, readonly string[]> = {
+  biga: ["pre_ferment", "biga", "l_extensibility", "dough_division"],
+  poolish: ["pre_ferment", "poolish", "l_extensibility"],
+  autolisi: ["autolysis", "l_extensibility"],
+};
 
 /* === PRE-FERMENT IDS ===
  * Audit totale n. 10: i testi e i valori vivono solo nel CMS (7 lingue,
@@ -91,9 +99,12 @@ interface PreFermentCardProps {
   headingLevel?: 2 | 3 | 4;
   /** FW-05 (S14-A-02): dosi del prefermento della ricetta aperta. */
   recipeContext?: { flourG: number; yeastG: number };
+  /** FW-04 (S14-B-16): aperta dal deep link (#pf-poolish). */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext }: PreFermentCardProps) {
+export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext, open, onOpenChange }: PreFermentCardProps) {
   const { cms, bcp47 } = useCms();
   const pf = cms.preFerment;
   const id: PreFermentId = (PRE_FERMENT_IDS as readonly string[]).includes(preFermentType)
@@ -144,6 +155,8 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
         variant="inline"
         headingLevel={headingLevel}
         id={`pf-card-${id}`}
+        open={open}
+        onOpenChange={onOpenChange}
         className="preferment-guide-card__disclosure"
         triggerClassName="preferment-guide-card__header"
         summary={<>
@@ -208,6 +221,8 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
                   ))}
                 </ul>
               </div>
+
+              <GlossaryTermLinks termIds={PRE_FERMENT_TERMS[id]} />
 
               {/* Confronto: solo dove la tabella non è già in pagina (S14-A-10) */}
               {showComparison && (

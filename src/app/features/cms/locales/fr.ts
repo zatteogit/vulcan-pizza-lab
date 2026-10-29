@@ -472,15 +472,15 @@ export const FR_LOCALE: CmsContent = {
     },
     "2": {
       name: "Interm\u00E9diaire",
-      description: "J’ai déjà fait quelques pizzas",
+      description: "J’ai fait la pizza quelques fois en suivant une recette",
     },
     "3": {
       name: "Avanc\u00E9",
-      description: "Je maîtrise rabats et fermentation",
+      description: "Je fais souvent la pizza et je sais travailler une pâte molle",
     },
     "4": {
       name: "Expert",
-      description: "J’adapte pâvos, temps et techniques",
+      description: "J’ajuste moi-même les doses et les temps",
     },
   },
   families: {
@@ -703,8 +703,8 @@ export const FR_LOCALE: CmsContent = {
     noResults: "Aucun terme pour « {query} »",
     allCategories: "Tous",
     formulaLabel: "Formule",
-    rangesLabel: "Plages typiques",
-    whyImportantLabel: "Pourquoi c\u2019est important",
+    rangesLabel: "Valeurs typiques",
+    whyImportantLabel: "Pourquoi cela compte",
     relatedLabel: "Apparent\u00E9s",
     backToHome: "Retour \u00E0 l\u2019accueil",
     termCount: "{count} termes",
@@ -731,6 +731,17 @@ export const FR_LOCALE: CmsContent = {
       "Fa\u00E7onnage, \u00E9quipements et mesures",
     catScoring: "Scores",
     catScoringDesc: "Comprendre les scores de {brand}",
+    // FW-04
+    catTechnique: "Gestes et étapes",
+    catTechniqueDesc: "Les mots de la méthode, du pétrissage au four",
+    catFlour: "Farines",
+    catFlourDesc: "Types de farine et comment les lire",
+    rangesValueHeader: "Valeur",
+    rangesMeaningHeader: "Ce que cela indique",
+    technicalLabel: "Définition technique",
+    modelNoteLabel: "Dans le modèle de {brand}",
+    seeAlsoLabel: "Voir aussi",
+    inGlossaryLabel: "Dans le glossaire :",
   },
   engineMessages: {
     "allergen.conflict": "Contient : {allergen}. Ingrédients concernés : {ingredients}.",
@@ -1319,6 +1330,8 @@ export const FR_LOCALE: CmsContent = {
     sheetOilLabel: "Température de l'huile",
     sheetOilHeat: "Porter l'huile à température avant de frire : pas besoin de four.",
     sheetFryTurn: "La retourner à mi-friture",
+    // FW-04
+    pillDoughLoad: "Charge de pâte",
   },
   styleDescriptions: {
     napoletana_stg:
@@ -1659,6 +1672,8 @@ export const FR_LOCALE: CmsContent = {
     pantryProfileEmpty: "Aucune farine ni levure indiquée : nous partons de ce qui est typique du style.",
     pantryProfileEdit: "Modifier dans Créer",
     ftuSourdoughNote: "Avec un levain, pour les longues fermentations nous pourrons le proposer à la place de la levure de boulanger.",
+    // FW-04
+    ftuFlourTypeNote: "Le type (00, 0, complète) indique à quel point la farine est raffinée, pas sa force. Si le W figure sur le paquet, vous pourrez l’indiquer ensuite dans votre garde-manger.",
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
@@ -1745,7 +1760,6 @@ export const FR_LOCALE: CmsContent = {
     exploreFilterRecipes: "Recettes emblématiques",
     learnFilterSubtitle: "Les guides ci-dessous sont généraux et valent aussi pour ce style.",
     learnRemoveFilter: "Supprimer le filtre de style",
-    learnOpenGlossary: "Ouvrir le glossaire",
     learnPathLabel: "Parcours d'apprentissage",
     learnStartPath: "Démarrer le parcours",
     learnTermOfTheDay: "Terme du jour — {category}",
@@ -1774,6 +1788,8 @@ export const FR_LOCALE: CmsContent = {
     deactivate: "Désactiver",
     passToEasy: "Passer en Easy",
     activateNerd: "Activer le mode Nerd",
+    // FW-04
+    learnOpenTerm: "Ouvrir la fiche du glossaire",
   },
   configurator: {
     hydrationLabel: "Hydratation",
@@ -1991,7 +2007,6 @@ export const FR_LOCALE: CmsContent = {
     prefermentSaltNote: "Le sel va dans la pâte finale, pas dans le préferment, où il freinerait la levure.",
     learnedFromAttempts: "J'ai appris de vos {n} essais",
     applyCorrections: "Appliquer les corrections",
-    learnInlineTitle: "En savoir plus : {label}",
     tipsCountOne: "{n} conseil",
     tipsCountMany: "{n} conseils",
     servingUnits: {

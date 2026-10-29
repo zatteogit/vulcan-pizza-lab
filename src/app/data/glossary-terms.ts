@@ -6,6 +6,8 @@ import { BRAND } from "../config/brand";
  * motore e intervalli derivati dagli stili stanno in glossary-data.ts. */
 
 export type GlossaryCategory =
+  | "technique"
+  | "flour"
   | "rheology"
   | "fermentation"
   | "thermal"
@@ -13,22 +15,41 @@ export type GlossaryCategory =
   | "mechanics"
   | "scoring";
 
+/** FW-04 (S12-A-11): pagine che approfondiscono una voce («Vedi anche»). */
+export type GlossaryPage = "profile" | "pre-ferments" | "troubleshooting";
+
 export interface GlossaryTerm {
   id: string;
   name: string;
   symbol?: string;
   category: GlossaryCategory;
+  /** FW-04 (S12-B-08): livello 1, in parole semplici; si mostra per primo. */
+  plainDefinition?: string;
   definition: string;
   unit?: string;
   formula?: string;
-  /** FW-05: `key` lega una fascia a una regola del motore (scala della W). */
+  /** FW-05: `key` lega una fascia a una regola del motore (scala della W).
+   *  FW-04 (S12-A-14): `value` è sempre il numero o l'intervallo, `label`
+   *  che cosa vuol dire, `note` un esempio. */
   ranges?: { label: string; value: string; note?: string; key?: string }[];
   whyImportant?: string;
   relatedTerms?: string[];
-  relatedPages?: string[];
+  relatedPages?: GlossaryPage[];
+  /** FW-04: note del registro della scienza (FW-01) non già collegate con
+   *  ScienceNote.glossaryTermId; il test verifica che esistano. */
+  noteIds?: string[];
 }
 
 export const GLOSSARY_CATEGORIES: Record<GlossaryCategory, { label: string; description: string }> = {
+  /* FW-04 (S12-B-07): le parole del procedimento vengono prima. */
+  technique: {
+    label: "Gesti e fasi",
+    description: "Le parole del procedimento, dall'impasto al forno",
+  },
+  flour: {
+    label: "Farine",
+    description: "Tipi di farina e come leggerli",
+  },
   rheology: {
     label: "Reologia",
     description: "Proprietà meccaniche della farina e dell'impasto",
@@ -60,6 +81,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "w_alveograph",
     name: GLOSSARY_COPY_IT.w_alveograph.name,
+    plainDefinition: GLOSSARY_COPY_IT.w_alveograph.plainDefinition,
     symbol: "W",
     category: "rheology",
     definition: GLOSSARY_COPY_IT.w_alveograph.definition,
@@ -79,6 +101,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "p_tenacity",
     name: GLOSSARY_COPY_IT.p_tenacity.name,
+    plainDefinition: GLOSSARY_COPY_IT.p_tenacity.plainDefinition,
     symbol: "P",
     category: "rheology",
     definition: GLOSSARY_COPY_IT.p_tenacity.definition,
@@ -94,6 +117,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "l_extensibility",
     name: GLOSSARY_COPY_IT.l_extensibility.name,
+    plainDefinition: GLOSSARY_COPY_IT.l_extensibility.plainDefinition,
     symbol: "L",
     category: "rheology",
     definition: GLOSSARY_COPY_IT.l_extensibility.definition,
@@ -108,6 +132,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "pl_ratio",
     name: GLOSSARY_COPY_IT.pl_ratio.name,
+    plainDefinition: GLOSSARY_COPY_IT.pl_ratio.plainDefinition,
     symbol: "P/L",
     category: "rheology",
     definition: GLOSSARY_COPY_IT.pl_ratio.definition,
@@ -119,16 +144,17 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "falling_number",
     name: GLOSSARY_COPY_IT.falling_number.name,
+    plainDefinition: GLOSSARY_COPY_IT.falling_number.plainDefinition,
     symbol: "FN",
     category: "rheology",
     definition: GLOSSARY_COPY_IT.falling_number.definition,
     unit: "s",
     ranges: [
-      { label: "<200 Altissima amilasi", value: "Impasto appiccicoso", note: "Sconsigliato pizza" },
-      { label: "200–250 Alta", value: "Mollica umida", note: "Pane rapido" },
-      { label: "250–300 Media", value: "Buon equilibrio", note: "Pizza 8-12h" },
-      { label: "300–400 Bassa", value: "Asciutto, lento", note: "Pizza 24-48h" },
-      { label: ">400 Molto bassa", value: "Secco", note: "Pasta secca" },
+      { label: "Altissima amilasi · Impasto appiccicoso", value: "< 200", note: "Sconsigliato pizza" },
+      { label: "Alta · Mollica umida", value: "200–250", note: "Pane rapido" },
+      { label: "Media · Buon equilibrio", value: "250–300", note: "Pizza 8-12h" },
+      { label: "Bassa · Asciutto, lento", value: "300–400", note: "Pizza 24-48h" },
+      { label: "Molto bassa · Secco", value: "> 400", note: "Pasta secca" },
     ],
     whyImportant: GLOSSARY_COPY_IT.falling_number.whyImportant,
     relatedTerms: ["w_alveograph"],
@@ -136,6 +162,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "hydration",
     name: GLOSSARY_COPY_IT.hydration.name,
+    plainDefinition: GLOSSARY_COPY_IT.hydration.plainDefinition,
     symbol: "H%",
     category: "rheology",
     definition: GLOSSARY_COPY_IT.hydration.definition,
@@ -196,6 +223,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "lab",
     name: GLOSSARY_COPY_IT.lab.name,
+    plainDefinition: GLOSSARY_COPY_IT.lab.plainDefinition,
     category: "fermentation",
     definition: GLOSSARY_COPY_IT.lab.definition,
     whyImportant: GLOSSARY_COPY_IT.lab.whyImportant,
@@ -204,6 +232,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "q10",
     name: GLOSSARY_COPY_IT.q10.name,
+    plainDefinition: GLOSSARY_COPY_IT.q10.plainDefinition,
     symbol: "Q₁₀",
     category: "fermentation",
     definition: GLOSSARY_COPY_IT.q10.definition,
@@ -343,7 +372,8 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     category: "chemistry",
     definition: GLOSSARY_COPY_IT.gluten.definition,
     whyImportant: GLOSSARY_COPY_IT.gluten.whyImportant,
-    relatedTerms: ["proteolysis", "w_alveograph"],
+    relatedTerms: ["proteolysis", "w_alveograph", "sourdough"],
+    relatedPages: ["profile"],
   },
   {
     id: "proteolysis",
@@ -358,6 +388,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   {
     id: "thickness_factor",
     name: GLOSSARY_COPY_IT.thickness_factor.name,
+    plainDefinition: GLOSSARY_COPY_IT.thickness_factor.plainDefinition,
     symbol: "TF",
     category: "mechanics",
     definition: GLOSSARY_COPY_IT.thickness_factor.definition,
@@ -401,10 +432,10 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     /* FW-05 (S12-A-03/B-03): pesi, fasce e tetti come li calcola il motore. */
     formula: "A = Ingredienti × {authWIngredients} + Processo × {authWProcess} + Attrezzatura × {authWEquipment}",
     ranges: [
-      { label: "{aBand0}", value: "Rigorosamente autentica" },
-      { label: "{aBand1}", value: "Fedele con adattamenti" },
-      { label: "{aBand2}", value: "Ispirata ma modificata" },
-      { label: "{aBand3}", value: "Liberamente interpretata" },
+      { label: "Rigorosamente autentica", value: "{aBand0}" },
+      { label: "Fedele con adattamenti", value: "{aBand1}" },
+      { label: "Ispirata ma modificata", value: "{aBand2}" },
+      { label: "Liberamente interpretata", value: "{aBand3}" },
     ],
     whyImportant: `I pesi sono una scelta di ${BRAND.name}, non una misura. Regole di prodotto: senza il combustibile previsto dallo stile il punteggio non supera {authFuelCap}; sotto la temperatura minima dello stile si riduce in proporzione.`,
   },
@@ -415,10 +446,10 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     definition: GLOSSARY_COPY_IT.f_score.definition,
     formula: "F = Forno × {feasWOven} + Farina × {feasWFlour} + Esperienza × {feasWSkill}",
     ranges: [
-      { label: "{fBand0}", value: "Altamente fattibile" },
-      { label: "{fBand1}", value: "Fattibile con attenzione" },
-      { label: "{fBand2}", value: "Difficile" },
-      { label: "{fBand3}", value: "Alto rischio" },
+      { label: "Altamente fattibile", value: "{fBand0}" },
+      { label: "Fattibile con attenzione", value: "{fBand1}" },
+      { label: "Difficile", value: "{fBand2}" },
+      { label: "Alto rischio", value: "{fBand3}" },
     ],
     whyImportant: `I pesi sono una scelta di ${BRAND.name}, non una misura. Se la ricetta non si può fare con la tua cucina, la compatibilità non supera {nonFeasibleCeiling}, qualunque siano gli altri punteggi.`,
   },
@@ -428,12 +459,117 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     category: "scoring",
     definition: GLOSSARY_COPY_IT.d_score.definition,
     ranges: [
-      { label: "{dBand0}", value: "Indice alto" },
-      { label: "{dBand1}", value: "Indice medio-alto" },
-      { label: "{dBand2}", value: "Indice medio" },
-      { label: "{dBand3}", value: "Indice basso" },
+      { label: "Indice alto", value: "{dBand0}" },
+      { label: "Indice medio-alto", value: "{dBand1}" },
+      { label: "Indice medio", value: "{dBand2}" },
+      { label: "Indice basso", value: "{dBand3}" },
     ],
     relatedTerms: ["fodmap", "q10"],
+  },
+  /* ═══ GESTI E FASI — FW-04 (D-044, S12-B-07, S09-A-15) ═══ */
+  {
+    id: "dough_division",
+    name: GLOSSARY_COPY_IT.dough_division.name,
+    category: "technique",
+    definition: GLOSSARY_COPY_IT.dough_division.definition,
+    whyImportant: GLOSSARY_COPY_IT.dough_division.whyImportant,
+    relatedTerms: ["bulk_fermentation", "ball_shaping", "ball_fermentation"],
+  },
+  {
+    id: "ball_shaping",
+    name: GLOSSARY_COPY_IT.ball_shaping.name,
+    category: "technique",
+    definition: GLOSSARY_COPY_IT.ball_shaping.definition,
+    whyImportant: GLOSSARY_COPY_IT.ball_shaping.whyImportant,
+    relatedTerms: ["dough_division", "ball_fermentation"],
+  },
+  {
+    id: "gluten_development",
+    name: GLOSSARY_COPY_IT.gluten_development.name,
+    category: "technique",
+    definition: GLOSSARY_COPY_IT.gluten_development.definition,
+    whyImportant: GLOSSARY_COPY_IT.gluten_development.whyImportant,
+    relatedTerms: ["gluten", "folds", "stability"],
+  },
+  {
+    id: "folds",
+    name: GLOSSARY_COPY_IT.folds.name,
+    category: "technique",
+    definition: GLOSSARY_COPY_IT.folds.definition,
+    whyImportant: GLOSSARY_COPY_IT.folds.whyImportant,
+    relatedTerms: ["gluten_development", "hydration"],
+  },
+  {
+    id: "poke_test",
+    name: GLOSSARY_COPY_IT.poke_test.name,
+    category: "technique",
+    definition: GLOSSARY_COPY_IT.poke_test.definition,
+    whyImportant: GLOSSARY_COPY_IT.poke_test.whyImportant,
+    relatedTerms: ["ball_fermentation", "bulk_fermentation"],
+    relatedPages: ["troubleshooting"],
+  },
+  {
+    id: "cornicione",
+    name: GLOSSARY_COPY_IT.cornicione.name,
+    category: "technique",
+    definition: GLOSSARY_COPY_IT.cornicione.definition,
+    whyImportant: GLOSSARY_COPY_IT.cornicione.whyImportant,
+    relatedTerms: ["hydration", "maillard"],
+  },
+  {
+    id: "oven_floor_dome",
+    name: GLOSSARY_COPY_IT.oven_floor_dome.name,
+    category: "technique",
+    definition: GLOSSARY_COPY_IT.oven_floor_dome.definition,
+    whyImportant: GLOSSARY_COPY_IT.oven_floor_dome.whyImportant,
+    relatedTerms: ["thermal_conductivity", "maillard"],
+    relatedPages: ["troubleshooting"],
+  },
+  {
+    id: "pre_ferment",
+    name: GLOSSARY_COPY_IT.pre_ferment.name,
+    category: "fermentation",
+    definition: GLOSSARY_COPY_IT.pre_ferment.definition,
+    whyImportant: GLOSSARY_COPY_IT.pre_ferment.whyImportant,
+    relatedTerms: ["biga", "poolish", "sourdough", "autolysis"],
+    relatedPages: ["pre-ferments"],
+    noteIds: ["pre-ferment"],
+  },
+  {
+    id: "sourdough",
+    name: GLOSSARY_COPY_IT.sourdough.name,
+    category: "fermentation",
+    definition: GLOSSARY_COPY_IT.sourdough.definition,
+    whyImportant: GLOSSARY_COPY_IT.sourdough.whyImportant,
+    relatedTerms: ["lab", "yeast", "pre_ferment"],
+    noteIds: ["sourdough-starter-dose"],
+  },
+
+  /* ═══ FARINE — FW-04 (S15-A-09) ═══ */
+  {
+    id: "flour_type",
+    name: GLOSSARY_COPY_IT.flour_type.name,
+    category: "flour",
+    definition: GLOSSARY_COPY_IT.flour_type.definition,
+    whyImportant: GLOSSARY_COPY_IT.flour_type.whyImportant,
+    relatedTerms: ["w_alveograph", "manitoba", "semola_rimacinata"],
+    noteIds: ["flour-w-by-grade"],
+  },
+  {
+    id: "manitoba",
+    name: GLOSSARY_COPY_IT.manitoba.name,
+    category: "flour",
+    definition: GLOSSARY_COPY_IT.manitoba.definition,
+    whyImportant: GLOSSARY_COPY_IT.manitoba.whyImportant,
+    relatedTerms: ["w_alveograph", "flour_type"],
+  },
+  {
+    id: "semola_rimacinata",
+    name: GLOSSARY_COPY_IT.semola_rimacinata.name,
+    category: "flour",
+    definition: GLOSSARY_COPY_IT.semola_rimacinata.definition,
+    whyImportant: GLOSSARY_COPY_IT.semola_rimacinata.whyImportant,
+    relatedTerms: ["flour_type", "gluten"],
   },
 ];
 

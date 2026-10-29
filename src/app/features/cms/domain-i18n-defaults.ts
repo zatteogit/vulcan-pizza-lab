@@ -153,6 +153,7 @@ const brandToken = (text: string) => text.split(BRAND.name).join("{brand}");
 export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
   terms: Object.fromEntries(GLOSSARY_TERMS.map((term) => [term.id, {
     name: term.name,
+    ...(term.plainDefinition !== undefined ? { plainDefinition: brandToken(term.plainDefinition) } : {}),
     definition: brandToken(term.definition),
     ...(term.whyImportant !== undefined ? { whyImportant: brandToken(term.whyImportant) } : {}),
     ...((LOCALIZED_FORMULA_TERMS as readonly string[]).includes(term.id) && term.formula ? { formula: term.formula } : {}),

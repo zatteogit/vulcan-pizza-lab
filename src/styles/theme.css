@@ -2893,45 +2893,60 @@
     letter-spacing: var(--tracking-fine);
   }
 
-  .glossary-ranges__list {
+  /* FW-04 (S12-A-14, S12-B-12): valori tipici in una tabella vera, colonne
+     fisse (valore | che cosa indica), nota in sans sotto il significato. */
+  .glossary-ranges__table {
+    width: 100%;
     margin-top: var(--space-1-5);
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-2xs);
+    border-collapse: separate;
+    border-spacing: 0 var(--space-0-5);
+    font-size: var(--font-size-md);
   }
 
-  .glossary-ranges__row {
-    display: flex;
-    align-items: baseline;
-    gap: var(--gap-sm);
+  .glossary-ranges__table th {
+    padding-inline: var(--space-3);
+    padding-block: var(--space-1);
+    text-align: start;
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+  }
+
+  .glossary-ranges__table td {
     padding-inline: var(--space-3);
     padding-block: var(--space-1-5);
-    border-radius: var(--radius-lg);
-    background: transparent;
+    vertical-align: baseline;
   }
 
-  .glossary-ranges__row:nth-child(odd) {
+  .glossary-ranges__row:nth-child(odd) td {
     background: var(--surface-container);
   }
 
+  .glossary-ranges__row td:first-child {
+    border-start-start-radius: var(--radius-lg);
+    border-end-start-radius: var(--radius-lg);
+  }
+
+  .glossary-ranges__row td:last-child {
+    border-start-end-radius: var(--radius-lg);
+    border-end-end-radius: var(--radius-lg);
+  }
+
   .glossary-ranges__value {
-    flex-shrink: 0;
-    font-size: var(--font-size-md);
+    width: 1%;
+    white-space: nowrap;
     color: var(--text-default);
     font-feature-settings: "tnum";
-    min-width: var(--space-20);
   }
 
   .glossary-ranges__label {
-    font-size: var(--font-size-md);
     color: var(--text-muted);
   }
 
   .glossary-ranges__note {
-    font-family: var(--font-serif);
-    font-style: italic;
+    display: block;
     font-size: var(--font-size-sm);
-    color: var(--text-muted);
+    color: var(--text-subtle);
   }
 
   .glossary-why__text {
@@ -2961,6 +2976,89 @@
 
   .glossary-related__tag:active {
     transform: scale(0.95);
+  }
+
+  /* ═══ FW-04 — glossario come fonte delle definizioni ═══
+     Deep link: la voce atterra sotto la testata (useHashTarget, block start).
+     TermLink: il termine stesso è il pulsante, sottolineato a puntini. */
+  .glossary-card,
+  .preferment-cards > [id],
+  [id^="trouble-"]:not([id$="-toggle"]) {
+    scroll-margin-block-start: var(--space-20);
+  }
+
+  .glossary-section__label {
+    margin: 0;
+    font-weight: var(--weight-regular);
+  }
+
+  .glossary-card__body {
+    padding-top: var(--space-3);
+  }
+
+  .glossary-formula__value {
+    margin-bottom: 0;
+  }
+
+  .glossary-related__tag--page {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .info-tip__trigger.info-tip__trigger--term {
+    width: auto;
+    height: auto;
+    min-height: var(--space-6);
+    border-radius: var(--radius-sm);
+    padding-inline: var(--space-0-5);
+    font: inherit;
+    color: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+    opacity: 1;
+  }
+
+  /* Senza testo del campo la definizione apre il popover: niente filetto. */
+  .info-tip__content > .info-tip__term:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .term-link {
+    text-decoration: underline dotted;
+    text-decoration-thickness: var(--border-width-thin);
+    text-underline-offset: var(--space-1);
+  }
+
+  .info-tip__trigger--term:hover .term-link,
+  .info-tip__trigger--active .term-link {
+    color: var(--text-accent);
+  }
+
+  /* Popover del TermLink nel body: posizione calcolata dal trigger
+     (--tip-left/--tip-top/--tip-bottom), stessa larghezza del calcolo JS. */
+  .info-tip__popover.info-tip__popover--fixed {
+    position: fixed;
+    left: var(--tip-left);
+    top: var(--tip-top, auto);
+    bottom: var(--tip-bottom, auto);
+    max-width: calc(var(--dimension-viewport-width-full) - 2 * var(--space-4));
+  }
+
+  .term-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+    margin-top: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .term-links__label {
+    color: var(--text-subtle);
   }
 
   /* ═══ PAGE: Explore ═══ */
@@ -12008,35 +12106,6 @@
     font-size: var(--font-size-xl);
   }
 
-  .step-details__glossary-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1-5);
-    margin-top: var(--gap-sm);
-    background: transparent;
-    border: none;
-    padding: 0;
-    color: var(--text-accent);
-    text-decoration: underline;
-    text-underline-offset: var(--space-0-75);
-    min-height: var(--space-9);
-    cursor: pointer;
-  }
-
-  .step-details__glossary-content {
-    margin-top: var(--gap-xs);
-    border-radius: var(--radius-2xl);
-    padding-inline: var(--space-4);
-    padding-block: var(--space-3);
-    background: var(--container-bg-low);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-    color: var(--text-muted);
-    line-height: var(--leading-normal);
-  }
-
-  .step-details__glossary-why { margin-block-start: var(--space-3); }
-  .step-details__glossary-why h4 { color: var(--text-default); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); margin-block-end: var(--space-1); }
-
   .step-details__trouble-link {
     cursor: pointer;
     display: inline-flex;
@@ -12049,15 +12118,9 @@
     min-height: var(--space-9);
   }
 
-  /* FW-03 (S09-B-12): disclosure in linea con chevron, link a foglio con freccia */
-  .step-details__glossary-chevron {
-    flex-shrink: 0;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .step-details__glossary-toggle[aria-expanded="true"] .step-details__glossary-chevron {
-    transform: rotate(180deg);
-  }
+  /* FW-03 (S09-B-12): link a foglio con freccia. FW-04: le parole del passo
+     sono TermLink (.step-details__terms), non più un accordion «Impara». */
+  .step-details__terms { margin-top: var(--gap-sm); }
 
   .step-details > .step-details__trouble-link { margin-top: 0; }
 
@@ -20390,6 +20453,13 @@
   .troubleshooting-card__why {
     justify-self: start;
     margin-top: var(--space-1);
+  }
+
+  /* FW-04: la nota del modello nella voce del glossario apre la scienza intera. */
+  .glossary-model__why {
+    display: flex;
+    width: fit-content;
+    margin-block: var(--space-1) var(--space-2);
   }
   /* ═══ /FW-02 ═══ */
 

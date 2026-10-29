@@ -11,6 +11,7 @@ import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { uiMessage } from "../../i18n/ui-messages";
 import { WhyButton } from "../science/why-button";
 import { flourWText } from "../../domain/flour-w-display";
+import { TermLink } from "../glossary/term-link";
 
 interface RecipeStatStripProps {
   recipe: GeneratedRecipe;
@@ -56,8 +57,9 @@ export function RecipeStatStrip({
   const w = deltaOf("flourW");
   const f = deltaOf("fermentation");
   const hChanged = h ? { canonical: fmt.percent(h.reference.value) } : undefined;
-  // Stesso formato del valore attuale nella cella (prima «W285» contro «280 W»).
-  const flourWValue = (v: number) => `W ${v}`;
+  // Stesso formato del valore attuale nella cella. FW-04 (S07-B-15): «W 280»
+  // con la sigla davanti, come sul sacco: «280 W» si leggeva come watt.
+  const flourWValue = (v: number | string) => uiMessage("format.flourW", [v]);
   const wChanged = w ? { canonical: flourWValue(w.reference.value) } : undefined;
   const fermentCell = fermentationCellText(
     { hours: recipe.fermentation_hours, tempC: recipe.fermentation_temp_c },
@@ -79,15 +81,17 @@ export function RecipeStatStrip({
     recipe.verdict.outcome !== "not_feasible";
   const cells: {
     label: string;
+    /** FW-04: l'etichetta apre la voce del glossario. */
+    termId?: string;
     value: string;
     changed?: { canonical: string };
     note?: string;
     model?: string;
   }[] = [
-    { label: ui.statHydration, value: fmt.percent(recipe.hydration_pct), changed: hChanged },
+    { label: ui.statHydration, termId: "hydration", value: fmt.percent(recipe.hydration_pct), changed: hChanged },
     // D-060: l'intervallo dello stile; il valore puntuale solo quando si
     // confronta col riferimento (due intervalli uguali non direbbero nulla).
-    { label: ui.statFlourStrength ?? "Forza farina", value: wChanged ? flourWValue(recipe.flour_w) : `W ${flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)}`, changed: wChanged },
+    { label: ui.statFlourStrength ?? "Forza farina", termId: "w_alveograph", value: wChanged ? flourWValue(recipe.flour_w) : flourWValue(flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)), changed: wChanged },
     {
       label: recipe.style.dough.unleavened ? ui.statRest : ui.statFermentation,
       value: fermentCell.value,
@@ -116,7 +120,7 @@ export function RecipeStatStrip({
           key={cell.label}
           className={i > 0 ? "stat-strip__cell stat-strip__cell--divider" : "stat-strip__cell"}
         >
-          <SpecCell label={cell.label} value={cell.value} index={i} changed={cell.changed} optimized={optimized} />
+          <SpecCell label={cell.label} termId={cell.termId} value={cell.value} index={i} changed={cell.changed} optimized={optimized} />
           {cell.model && <small className="type-data-sm recipe-oven-model">{cell.model}</small>}
           {cell.note && <p className="stat-strip__note">{cell.note}</p>}
         </div>
@@ -140,6 +144,7 @@ export function RecipeStatStrip({
    tecnica (riusata dal blocco nerd nel dialog Personalizza). */
 export function SpecCell({
   label,
+  termId,
   value,
   index = 0,
   changed,
@@ -149,6 +154,8 @@ export function SpecCell({
   whyNoteId,
 }: {
   label: string;
+  /** FW-04 (S07-B-15): l'etichetta diventa un TermLink verso il glossario. */
+  termId?: string;
   value: string;
   index?: number;
   changed?: { canonical: string };
@@ -178,7 +185,7 @@ export function SpecCell({
         className={science ? "stat-strip__label stat-strip__label--science" : "stat-strip__label"}
         title={label}
       >
-        {label}
+        {termId ? <TermLink termId={termId}>{label}</TermLink> : label}
       </div>
       <AnimatePresence initial={false} mode="popLayout">
         <motion.div
@@ -219,6 +226,17 @@ export function SpecCell({
                 : "stat-strip__value-current"
             }
           >
+            {parts.prefix && (
+              <span
+                className={
+                  small
+                    ? "stat-strip__value-sub stat-strip__value-sub--small"
+                    : "stat-strip__value-sub"
+                }
+              >
+                {parts.prefix}
+              </span>
+            )}
             <span
               className={
                 small
@@ -259,11 +277,15 @@ export function SpecCell({
 }
 
 function splitStatValue(value: string): {
+  prefix?: string;
   main: string;
   unit?: string;
   extra?: string;
 } {
   const normalized = value.trim();
+  /* FW-04: sigla davanti al numero («W 280»). */
+  const prefixed = normalized.match(/^([A-Z]{1,2})\s+([\d.,]+)$/);
+  if (prefixed) return { prefix: prefixed[1], main: prefixed[2] };
   const compact = normalized.match(/^([\d.,]+)(°C|°F|%)$/);
   if (compact) return { main: compact[1], unit: compact[2] };
 
