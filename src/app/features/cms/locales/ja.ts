@@ -1016,6 +1016,8 @@ export const JA_LOCALE: CmsContent = {
     "timeline.oven.staticShelf": "上下火のオーブンを最大にし、網は中段より上にします。縁の仕上げ：最後の60-90sはグリル（上火のみ最大）で、目を離さずに焼きます。",
     "timeline.oven.staticStoneSet": "上下火のオーブンを最大ではなく{temp}に設定し、石・鋼板は中段より上で十分に熱しておきます。",
     "timeline.oven.staticShelfSet": "上下火のオーブンを最大ではなく{temp}に設定し、網は中段より上にします。",
+    "timeline.oven.electricHighSet": "高温の電気オーブンを最大出力ではなく{temp}に設定し、石をしっかり予熱します。焼成の途中でピザを回し、縁全体に焼き色をつけます。",
+    "timeline.oven.gasSet": "ガスオーブンを最大火力ではなく{temp}に設定し、石を網に置いて下からの熱を確保します。途中でピザを回して均一に焼きます。",
     "timeline.mix.title": "こね",
     "timeline.divide.title": "分割",
     "timeline.divide.multiPiece": "1単位ごとに{pieces}等分にし、丸めるか円盤状にします。",

@@ -983,6 +983,8 @@ export const PT_LOCALE: CmsContent = {
     "timeline.oven.staticShelf": "Forno convencional (resistência em cima + embaixo) no máximo, grade em altura média-alta. Para a borda: últimos 60-90s sob o grill (só a resistência superior no máximo), sempre de olho.",
     "timeline.oven.staticStoneSet": "Forno convencional (resistência em cima + embaixo) a {temp}, não no máximo; pedra/aço já quentes em altura média-alta.",
     "timeline.oven.staticShelfSet": "Forno convencional (resistência em cima + embaixo) a {temp}, não no máximo; grade em altura média-alta.",
+    "timeline.oven.electricHighSet": "Forno elétrico de alta temperatura a {temp}, não na potência máxima; pedra bem pré-aquecida. Gire a pizza na metade do tempo para dourar a borda por inteiro.",
+    "timeline.oven.gasSet": "Forno a gás a {temp}, não na chama máxima; pedra na grade para o calor vir de baixo; gire a pizza na metade do tempo para uniformizar.",
     "timeline.mix.title": "Amassamento",
     "timeline.divide.title": "Divisão",
     "timeline.divide.multiPiece": "Divida cada porção em {pieces} pedaços iguais. Forme uma bolinha ou um disco.",

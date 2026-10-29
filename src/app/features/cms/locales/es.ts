@@ -983,6 +983,8 @@ export const ES_LOCALE: CmsContent = {
     "timeline.oven.staticShelf": "Horno convencional (resistencia arriba + abajo) al máximo, rejilla en una altura media-alta. Para el borde: últimos 60-90s bajo el gratinador (solo resistencia superior al máximo), sin quitarle ojo.",
     "timeline.oven.staticStoneSet": "Horno convencional (resistencia arriba + abajo) a {temp}, no al máximo; piedra/acero ya calientes en una altura media-alta.",
     "timeline.oven.staticShelfSet": "Horno convencional (resistencia arriba + abajo) a {temp}, no al máximo; rejilla en una altura media-alta.",
+    "timeline.oven.electricHighSet": "Horno eléctrico de alta temperatura a {temp}, no a máxima potencia; piedra bien precalentada. Gira la pizza a mitad de cocción para dorar el borde por todo el contorno.",
+    "timeline.oven.gasSet": "Horno de gas a {temp}, no a llama máxima; piedra en la rejilla para el calor desde abajo; gira la pizza a mitad de cocción para que se haga por igual.",
     "timeline.mix.title": "Amasado",
     "timeline.divide.title": "Boleado",
     "timeline.divide.multiPiece": "Divide cada porción en {pieces} trozos iguales. Forma una bola o un disco.",

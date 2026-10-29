@@ -3351,23 +3351,29 @@ function ovenBakeSetup(eq: EquipmentContext | undefined, bakeTempC?: number): En
   if (heat === "wood_side_flame") {
     return em("timeline.oven.woodSideFlame", METHOD_MESSAGES_IT["timeline.oven.woodSideFlame"]);
   }
+  // FW-07 (S10-A-22): «al massimo» solo se la cottura usa davvero la massima
+  // del forno (entro 10 °C); altrimenti si imposta la temperatura. Vale per
+  // tutti i forni che hanno un comando di potenza (casa, elettrico, gas).
+  const belowMax = bakeTempC !== undefined && eq?.ovenMaxTempC !== undefined && bakeTempC < eq.ovenMaxTempC - 10;
   switch (eq?.ovenType) {
     case "coal":
       return em("timeline.oven.coal", METHOD_MESSAGES_IT["timeline.oven.coal"]);
     case "wood":
       return em("timeline.oven.wood", METHOD_MESSAGES_IT["timeline.oven.wood"]);
     case "electric_high":
-      return em("timeline.oven.electricHigh", METHOD_MESSAGES_IT["timeline.oven.electricHigh"]);
+      return belowMax
+        ? em("timeline.oven.electricHighSet", METHOD_MESSAGES_IT["timeline.oven.electricHighSet"], { temp: bakeTempC })
+        : em("timeline.oven.electricHigh", METHOD_MESSAGES_IT["timeline.oven.electricHigh"]);
     case "gas":
-      return em("timeline.oven.gas", METHOD_MESSAGES_IT["timeline.oven.gas"]);
+      return belowMax
+        ? em("timeline.oven.gasSet", METHOD_MESSAGES_IT["timeline.oven.gasSet"], { temp: bakeTempC })
+        : em("timeline.oven.gas", METHOD_MESSAGES_IT["timeline.oven.gas"]);
     case "gas_pizza":
       return em("timeline.oven.gasPizza", METHOD_MESSAGES_IT["timeline.oven.gasPizza"]);
     case "home":
     case "electric_standard":
     default:
-      // FW-07 (S10-A-22): «al massimo» solo se la cottura usa davvero la
-      // massima del forno (entro 10 °C); altrimenti si imposta la temperatura.
-      if (bakeTempC !== undefined && eq?.ovenMaxTempC !== undefined && bakeTempC < eq.ovenMaxTempC - 10) {
+      if (belowMax) {
         return hasStone
           ? em("timeline.oven.staticStoneSet", METHOD_MESSAGES_IT["timeline.oven.staticStoneSet"], { temp: bakeTempC })
           : em("timeline.oven.staticShelfSet", METHOD_MESSAGES_IT["timeline.oven.staticShelfSet"], { temp: bakeTempC });

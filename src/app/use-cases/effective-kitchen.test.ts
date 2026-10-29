@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { kitchenConstraints, nextSavedOven, resolveEffectiveKitchen } from "./effective-kitchen";
+import { kitchenConstraints, nextSavedOven, profileOvenType, resolveEffectiveKitchen } from "./effective-kitchen";
 import { ALL_OVEN_MODELS, type OvenModel } from "../data/oven-models";
 import { generateRecipe, STYLES_DB, type UserConstraints } from "../domain/pizza-engine";
 
@@ -110,4 +110,39 @@ describe("motore con la cucina effettiva", () => {
     const nap = generateRecipe(STYLES_DB.napoletana_stg, base).timeline.find((s) => s.id === "bake")!;
     expect(nap.msg?.description?.some((m) => m.key === "timeline.oven.staticShelf" || m.key === "timeline.homeTray.bake")).toBe(true);
   });
+
+  it("Effeuno 509 °C e forno a gas: «impostato a» sotto la massima, «al massimo» solo alla massima (S10-A-22)", () => {
+    const ovenKey = (c: UserConstraints, id: string) => {
+      const r = generateRecipe(STYLES_DB[id], c);
+      const m = r.timeline.find((s) => s.id === "bake")!.msg?.description?.find((x) => x.key.startsWith("timeline.oven."));
+      return { key: m?.key, params: m?.params, temp: r.oven_temp_c };
+    };
+    const effeuno = kitchenConstraints(resolveEffectiveKitchen({ oven: { ovenType: "electric_high", maxTemp: 509, modelId: "effeuno-p134h" } }, undefined, {}, models));
+    for (const id of ["focaccia_genovese", "teglia_romana", "chicago_deep", "new_york"]) {
+      const o = ovenKey({ ...base, ...effeuno }, id);
+      expect(o.key, id).toBe("timeline.oven.electricHighSet");
+      expect(o.params, id).toEqual({ temp: o.temp });
+    }
+    // La napoletana in un elettrico da 450 °C cuoce alla massima: resta «massima potenza».
+    expect(ovenKey({ ...base, oven_type: "electric_high", oven_max_temp_c: 450 }, "napoletana_stg").key).toBe("timeline.oven.electricHigh");
+    const gas = { ...base, oven_type: "gas" as const, oven_max_temp_c: 300 };
+    expect(ovenKey(gas, "focaccia_genovese").key).toBe("timeline.oven.gasSet");
+  });
 });
+
+describe("profileOvenType (FW-07): Profilo e Crea leggono lo stesso forno", () => {
+  it("dopo una scelta in Crea il Profilo mostra quel forno, non la vecchia lista", () => {
+    // Effeuno salvato dal profilo, poi in Crea si tocca «Casa».
+    const fromProfile = { ovenType: "electric_high" as const, maxTemp: 509, modelId: "effeuno-p134h" };
+    const afterCrea = nextSavedOven(fromProfile, "home");
+    expect(profileOvenType(afterCrea, ["electric_high"])).toBe("home");
+    expect(profileOvenType(afterCrea, ["electric_high"])).toBe(resolveEffectiveKitchen({ oven: afterCrea }, undefined, {}, models).oven.type);
+  });
+
+  it("senza preferenza salvata usa la vecchia lista, poi il vecchio forno, poi casa", () => {
+    expect(profileOvenType(null, ["wood"])).toBe("wood");
+    expect(profileOvenType(undefined, undefined, "gas")).toBe("gas");
+    expect(profileOvenType(undefined, ["non_esiste"])).toBe("home");
+  });
+});
+

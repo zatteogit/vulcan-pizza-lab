@@ -28,6 +28,14 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 | Video totali | 2,6 MB (6 file; erano 48,6) | 3 MB |
 | Immagini totali | 38,5 MB (254 file WebP) | 42 MB |
 
+Aggiornamento del 29/10/2026 (FW-07): la cucina effettiva unica aveva portato il
+JS totale a 903,9 kB, oltre il limite. Il limite resta 900 kB; il peso è stato
+recuperato togliendo da `dist/` due strumenti interni che in produzione non
+partono mai: il pannello di debug AI (`debug-workspace`, ~10 kB gzip, ora
+importato solo con `import.meta.env.DEV`) e l'esploratore dei temi
+(`theme-switcher`, ora caricato a richiesta solo con `TOOLS_ENABLED`). Totale
+dopo FW-07: 892,6 kB in 62 chunk.
+
 Il controllo gira in CI dopo la build (`.github/workflows/verify.yml`). I limiti
 sono un cricchetto: si abbassano quando si migliora, non si alzano per far
 passare lavoro nuovo. Con la traduzione dei condimenti (I18N-2) ogni bundle di

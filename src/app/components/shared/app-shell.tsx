@@ -36,7 +36,6 @@ const SearchResultsView = lazy(() =>
   import("../../features/search/search-results-view").then((m) => ({ default: m.SearchResultsView })),
 );
 import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
-import { ThemeSwitcher } from "../../features/dev-tools/theme-switcher";
 import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { IconButton } from "../ds/index";
 import { VulcanHero } from "./vulcan-hero";
@@ -45,6 +44,12 @@ import { EDITION } from "../../config/edition";
 import { motionDuration, motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../../config/tools";
+
+/* Esploratore dei temi: strumento interno, caricato solo dove gli strumenti
+   sono attivi (sviluppo e test). In produzione il chunk non viene emesso. */
+const ThemeSwitcher = TOOLS_ENABLED
+  ? lazy(() => import("../../features/dev-tools/theme-switcher").then((m) => ({ default: m.ThemeSwitcher })))
+  : null;
 
 const MotionLink = motion(Link);
 
@@ -818,8 +823,13 @@ export function AppShell() {
             <DebugOverlay />
           )}
 
-          {/* Theme explorer — confronto temi rivista di cucina (fase esplorativa) */}
-          <ThemeSwitcher />
+          {/* Theme explorer — confronto temi rivista di cucina (fase esplorativa).
+              Strumento interno: fuori da dist/ in produzione (budget P-5). */}
+          {ThemeSwitcher && (
+            <Suspense fallback={null}>
+              <ThemeSwitcher />
+            </Suspense>
+          )}
         </div>
         </CookSessionProvider>
       </StylesOverrideProvider>
