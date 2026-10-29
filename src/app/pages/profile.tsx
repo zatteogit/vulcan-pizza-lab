@@ -6,7 +6,7 @@ import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 
 import { TOOLS_ENABLED } from "../config/tools";
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
-import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, RotateCcw, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
+import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Download, Globe, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, RotateCcw, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
 import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { Suspense, lazy, useCallback,useEffect,useId,useMemo,useRef,useState } from "react";
@@ -781,12 +781,23 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
    * Strumenti, superfici, dieta e posizione vivono nella pagina Profilo:
    * nessuna domanda tecnica prima di aver mostrato il valore dell'app. */
   const steps = [
-    { num: "01", title: p.ftuOvenTitle, subtitle: p.ftuOvenSubtitle, optional: false },
-    { num: "02", title: p.ftuSkillTitle, subtitle: p.ftuSkillSubtitle, optional: false },
-    { num: "03", title: p.ftuPantryTitle, subtitle: p.ftuPantrySubtitle, optional: true },
-    { num: "04", title: uiMessage("pages.profile.tutto-pronto-0d7ff4fd"), subtitle: uiMessage("pages.profile.creiamo-la-tua-prima-pizza-96bbe504"), optional: false },
+    { title: p.ftuOvenTitle, subtitle: p.ftuOvenSubtitle, optional: false },
+    { title: p.ftuSkillTitle, subtitle: p.ftuSkillSubtitle, optional: false },
+    { title: p.ftuPantryTitle, subtitle: p.ftuPantrySubtitle, optional: true },
+    { title: uiMessage("pages.profile.tutto-pronto-0d7ff4fd"), subtitle: uiMessage("pages.profile.creiamo-la-tua-prima-pizza-96bbe504"), optional: false },
   ];
   const lastStep = steps.length - 1;
+
+  /* G5-WP-02: righe del riepilogo nel congedo (forno, livello, dispensa). */
+  const pantryLabels = [...FTU_FLOURS, ...FTU_FLOURS_SPECIAL, ...FTU_YEASTS]
+    .filter((item) => ftuFlours.includes(item.id) || ftuYeasts.includes(item.id))
+    .map((item) => (p as unknown as Record<string, string>)[item.labelKey] || item.id);
+  const ovenModel = savedModel && savedOven?.ovenType === ovenType ? `${savedModel.brand} ${savedModel.model}` : cms.ovenPresets[ovenType]?.name ?? ovenType;
+  const summaryRows = [
+    { step: 0, label: p.ftuSummaryOven, value: `${ovenModel} · ${fmt.celsius(ovenTemp)}` },
+    { step: 1, label: p.ftuSummarySkill, value: skillLevel !== null ? cms.skillLevels[String(skillLevel)]?.name ?? String(skillLevel) : p.ftuSummaryNotSet },
+    { step: 2, label: p.ftuSummaryPantry, value: pantryLabels.length > 0 ? pantryLabels.join(", ") : p.ftuSummaryNotSet },
+  ];
 
   const toggleArrayItem = (arr: string[], id: string): string[] =>
     arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
@@ -861,7 +872,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
         {/* Step header */}
         <div ref={stepHeaderRef} tabIndex={-1} className="profile-ftu__step-header">
           <span className="type-label-compact profile-ftu__step-label">
-            {steps[step].num} — {p.ftuWelcome}
+            {uiMessage("pages.profile.ftu-step-of", [step + 1, steps.length])}
           </span>
           <Heading level="page" className="profile-ftu__step-title">
             {steps[step].title}
@@ -1090,47 +1101,27 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step === 3 && (
               <div className="profile-ftu__done">
                 <div className="profile-ftu__done-emoji"><PartyPopper size={32} aria-hidden="true" /></div>
-                <p className="profile-ftu__done-title">
-                  {p.ftuDoneTitle}
-                </p>
-                <ul className="profile-ftu__done-list">
-                  <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji"><Pizza size={20} aria-hidden="true" /></span>
-                    <div className="profile-ftu__done-item-body">
-                      <div className="profile-ftu__done-item-title">
-                        {p.ftuDoneCreateTitle}
-                      </div>
-                      <div
-                        className="type-body-xs profile-ftu__done-item-desc"
-                        dangerouslySetInnerHTML={{ __html: p.ftuDoneCreateDesc }}
-                      />
+                {/* G5-WP-02 (S15-B-06, D-G5-1): al posto di tre card che non
+                    portavano da nessuna parte, il riepilogo delle scelte, ognuna
+                    modificabile. */}
+                <dl data-region="ftu-summary" className="profile-ftu__summary">
+                  {summaryRows.map((row) => (
+                    <div key={row.step} data-region="ftu-summary-row" className="profile-ftu__summary-row">
+                      <dt className="type-label-compact profile-ftu__summary-label">{row.label}</dt>
+                      <dd className="profile-ftu__summary-value">{row.value}</dd>
+                      <dd className="profile-ftu__summary-action">
+                        <button
+                          type="button"
+                          className="type-data-sm profile-ftu__summary-edit"
+                          onClick={() => setStep(row.step)}
+                          aria-label={t(p.ftuSummaryEditAria, { field: row.label })}
+                        >
+                          {p.ftuSummaryEdit}
+                        </button>
+                      </dd>
                     </div>
-                  </li>
-                  <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji"><Compass size={20} aria-hidden="true" /></span>
-                    <div className="profile-ftu__done-item-body">
-                      <div className="profile-ftu__done-item-title">
-                        {p.ftuDoneExploreTitle}
-                      </div>
-                      <div
-                        className="type-body-xs profile-ftu__done-item-desc"
-                        dangerouslySetInnerHTML={{ __html: p.ftuDoneExploreDesc }}
-                      />
-                    </div>
-                  </li>
-                  <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji"><GraduationCap size={20} aria-hidden="true" /></span>
-                    <div className="profile-ftu__done-item-body">
-                      <div className="profile-ftu__done-item-title">
-                        {p.ftuDoneLearnTitle}
-                      </div>
-                      <div
-                        className="type-body-xs profile-ftu__done-item-desc"
-                        dangerouslySetInnerHTML={{ __html: p.ftuDoneLearnDesc }}
-                      />
-                    </div>
-                  </li>
-                </ul>
+                  ))}
+                </dl>
                 <p
                   className="type-body-xs profile-ftu__done-footnote"
                   dangerouslySetInnerHTML={{ __html: p.ftuDoneProfileNote }}

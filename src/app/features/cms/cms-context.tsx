@@ -533,7 +533,6 @@ interface CmsProfile {
   locationNone: string;
   locationNoResults: string;
   // FTU
-  ftuWelcome: string;
   ftuOvenTitle: string;
   ftuOvenSubtitle: string;
   ftuSkillTitle: string;
@@ -634,13 +633,13 @@ interface CmsProfile {
   flourTipo1: string;
   flourTipo2: string;
   // Onboarding Done screen
-  ftuDoneTitle: string;
-  ftuDoneCreateTitle: string;
-  ftuDoneCreateDesc: string;
-  ftuDoneExploreTitle: string;
-  ftuDoneExploreDesc: string;
-  ftuDoneLearnTitle: string;
-  ftuDoneLearnDesc: string;
+  ftuSummaryOven: string;
+  ftuSummarySkill: string;
+  ftuSummaryPantry: string;
+  ftuSummaryEdit: string;
+  /** {field}: nome della riga («Forno»). */
+  ftuSummaryEditAria: string;
+  ftuSummaryNotSet: string;
   ftuDoneProfileNote: string;
   specialFloursOnboarding: string;
   locationRemove: string;
@@ -2383,7 +2382,6 @@ export const CMS_DEFAULTS: CmsContent = {
     resetConfirmAction: "Riconfigura",
     devModeOn: "Modalità sviluppo attiva",
     devModeOff: "Attiva modalità sviluppo",
-    ftuWelcome: "Benvenuto",
     ftuOvenTitle: "Che forno hai?",
     ftuOvenSubtitle: "Il forno definisce gli stili possibili",
     ftuSkillTitle: "Quanta esperienza hai?",
@@ -2475,13 +2473,12 @@ export const CMS_DEFAULTS: CmsContent = {
     flourSegale: "Segale",
     flourTipo1: "Tipo 1",
     flourTipo2: "Tipo 2",
-    ftuDoneTitle: "Crea, scopri, impara.",
-    ftuDoneCreateTitle: "Crea una ricetta",
-    ftuDoneCreateDesc: "Scegli uno stile e adattalo alla tua cucina.",
-    ftuDoneExploreTitle: "Esplora gli stili",
-    ftuDoneExploreDesc: "Scopri tradizioni, ricette e interpretazioni d’autore.",
-    ftuDoneLearnTitle: "Impara la teoria",
-    ftuDoneLearnDesc: "Capisci le tecniche e trova risposte ai dubbi.",
+    ftuSummaryOven: "Forno",
+    ftuSummarySkill: "Livello",
+    ftuSummaryPantry: "Dispensa",
+    ftuSummaryEdit: "Modifica",
+    ftuSummaryEditAria: "Modifica {field}",
+    ftuSummaryNotSet: "Da indicare",
     ftuDoneProfileNote: "Puoi completare o cambiare le tue preferenze dal Profilo, quando vuoi.",
     specialFloursOnboarding: "Altre farine (farro, kamut, segale, tipo 1 e 2…)",
     locationRemove: "Rimuovi posizione",

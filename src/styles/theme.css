@@ -5378,9 +5378,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /* G5-WP-02 (S15-B-07): dall'alto, non centrato: «Avanti» non si sposta
+       da un passo all'altro. */
+    justify-content: flex-start;
     padding-inline: var(--space-6);
-    padding-block: var(--space-12);
+    padding-block: var(--space-12) var(--space-0);
     background: var(--container-page);
     color: var(--text-default);
   }
@@ -5388,6 +5390,11 @@
   .profile-ftu__card {
     width: 100%;
     max-width: var(--measure-sm);
+    /* G5-WP-02 (S15-B-07): la card riempie l'altezza e la navigazione va in
+       fondo, così «Avanti» resta nello stesso punto a ogni passo. */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .profile-ftu__dots {
@@ -5564,44 +5571,51 @@
     color: var(--primary);
   }
 
-  .profile-ftu__done-title {
-    font-size: var(--font-size-xl);
-    color: var(--text-default);
-    text-align: center;
-    line-height: var(--leading-relaxed);
+  /* G5-WP-02 (S15-B-06): riepilogo delle scelte nel congedo, ognuna modificabile. */
+  .profile-ftu__summary {
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-0);
   }
 
-  .profile-ftu__done-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding-left: 0;
-  }
-
-  .profile-ftu__done-item {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--gap-sm);
+  .profile-ftu__summary-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space-0-5) var(--space-3);
     padding: var(--space-3);
     border-radius: var(--radius-xl);
     background: var(--container-bg-low);
     border: var(--border-width-thin) solid var(--container-border);
-    list-style: none;
   }
 
-  .profile-ftu__done-item-emoji {
-    display: inline-flex;
-    flex-shrink: 0;
-    color: var(--primary);
-  }
-
-  .profile-ftu__done-item-title {
-    font-weight: var(--weight-semibold);
-    color: var(--text-default);
-  }
-
-  .profile-ftu__done-item-desc {
+  .profile-ftu__summary-label {
+    grid-column: 1;
     color: var(--text-muted);
+  }
+
+  .profile-ftu__summary-value {
+    grid-column: 1;
+    margin: var(--space-0);
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+  }
+
+  .profile-ftu__summary-action {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin: var(--space-0);
+  }
+
+  .profile-ftu__summary-edit {
+    min-block-size: var(--space-11);
+    padding-inline: var(--space-3);
+    color: var(--text-accent);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-5);
   }
 
   .profile-ftu__done-footnote {
@@ -5614,9 +5628,17 @@
   .profile-ftu__nav {
     display: grid;
     grid-template-columns: 1fr auto;
+    /* La riga di «Salta» resta anche quando il bottone non c'è (congedo). */
+    grid-template-rows: auto var(--space-11);
     align-items: center;
     gap: var(--space-2) var(--space-3);
-    margin-top: var(--space-10);
+    margin-top: auto;
+    /* G5-WP-02 (S15-B-07): la navigazione resta in fondo alla finestra. */
+    position: sticky;
+    inset-block-end: var(--space-0);
+    z-index: 1;
+    padding-block: var(--space-3) calc(var(--space-4) + env(safe-area-inset-bottom, var(--space-0)));
+    background: var(--container-page);
   }
 
   /* «Salta» (audit n. 33): azione secondaria, testo sottolineato. */
@@ -6604,10 +6626,6 @@
 
   /* ── Bare-wrapper fixes (semantics ratchet) ── */
   .profile-ftu__pantry-group {
-    display: block;
-  }
-
-  .profile-ftu__done-item-body {
     display: block;
   }
 
