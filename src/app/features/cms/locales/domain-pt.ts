@@ -814,6 +814,11 @@ export const SCIENCE_PT: CmsScience = {
       l1: "Com o mesmo número, vem primeiro o estilo que sua cozinha cobre com mais margem: é uma escolha da {brand}.",
       l2: "O número não muda: muda só a ordem, e só entre estilos do mesmo grupo com a mesma pontuação. A margem é a média de dois valores entre 0 e 1: quanto o forno passa da temperatura mínima do estilo e quanto as horas disponíveis passam da maturação mínima, cada um em proporção ao mínimo (1 quer dizer o dobro ou mais). Nas fritas conta só o tempo. Vale em Criar, em Descobrir e para os assistentes.",
     },
+    "linked-params": {
+      title: "Parâmetros ligados",
+      l1: "Uma regra de {brand}, não um modelo físico: os outros valores passam para a mesma posição do seu intervalo de estilo.",
+      l2: "Se levar a hidratação para o máximo do estilo, a força da farinha e as horas de fermentação também vão para o máximo dos seus intervalos; o P/L, se o alterar, vai no sentido contrário. A temperatura segue as horas: parte alta do intervalo no frigorífico, meio em fresco, parte baixa à temperatura ambiente. Os valores ficam sempre dentro dos intervalos do estilo. Não diz que sejam os melhores para a sua farinha ou a sua cozinha: é um atalho para manter a coerência. Vem ligado a partir do nível Avançado, só atua com os parâmetros avançados abertos e cada alteração desfaz-se com «Desfazer».",
+    },
     digestibility: {
       title: "Índice de digestibilidade",
       l1: "Um índice do modelo sobre o processo, não uma promessa de saúde.",
@@ -876,6 +881,7 @@ export const SCIENCE_PT: CmsScience = {
     "thickness-factor": "TF = peso da bola de massa (g) / área da pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(média ponderada de A e F; A) · pesos padrão: Autenticidade (A) 55 %, Facilidade (F) 45 % · não viável: C ≤ 39",
     "ranking-tiebreak": "M = média de min(1; max(0; (T − T_min) / T_min)) e min(1; max(0; (H − H_min) / H_min)) · T forno, H horas disponíveis · fritas: só H",
+    "linked-params": "r = (v − v_min) / (v_max − v_min), entre 0 e 1 · x = x_min + r × (x_max − x_min) · v valor que move, x cada outro valor, min e max do intervalo do estilo · P/L: 1 − r",
   },
   sourceNotes: {
     "internal-db": "base de dados de trabalho interna do projeto, não pública",

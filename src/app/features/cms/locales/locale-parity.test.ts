@@ -116,3 +116,14 @@ describe.each(Object.entries({ it: CMS_DEFAULTS, ...BUNDLES }))("FW-14 lessico d
     expect(Object.entries(texts).filter(([, text]) => ORIGINAL_TERM.test(text ?? "")).map(([key]) => key)).toEqual([]);
   });
 });
+
+/* Revisione G2 (WCAG 2.5.3, nome contiene l'etichetta): il «Ripristina» del
+ * Personalizza mostra recipeResetPreset ma si chiama resetToReference. */
+describe("il nome accessibile del reset contiene il testo visibile", () => {
+  for (const [id, locale] of Object.entries({ it: CMS_DEFAULTS, en: EN_LOCALE, de: DE_LOCALE, es: ES_LOCALE, fr: FR_LOCALE, pt: PT_LOCALE, ja: JA_LOCALE })) {
+    it(id, () => {
+      const visible = locale.ui.recipeResetPreset.toLocaleLowerCase();
+      expect(String(locale.engineMessages?.["recipeSetup.resetToReference"]).toLocaleLowerCase()).toContain(visible);
+    });
+  }
+});

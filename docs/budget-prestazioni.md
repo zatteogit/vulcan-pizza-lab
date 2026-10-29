@@ -97,6 +97,15 @@ giro: il router senza data router (`createBrowserRouter` pesa ~28 kB) e i
 campi dei dati che nessuna pagina legge (per esempio prezzi e deviazioni in
 `flour-database.ts`), da decidere con chi cura i dati.
 
+**G2-WP-02 (29/10/2026).** Il ramo dell'area G2 partiva da 499,7 kB senza
+lingue; le etichette del range, la temperatura manuale e «Non lo so» ne
+aggiungevano circa 0,6. Recuperati senza toccare limiti né script: i tre
+suggerimenti di temperatura del configuratore (`hint*Ferment*`, calcolati e mai
+mostrati) e due testi del CMS che nessun codice legge più (`adjustByHand`,
+`changeTiming`), più il calcolo dell'etichetta di `AdaptiveHint` in un solo
+punto e i marcatori dello slider generati da una lista. Risultato: 499,8 kB
+senza lingue, 598,6 kB per utente. Il margine resta di circa 0,2 kB.
+
 ### Ondata 3 dell'audit: router dichiarativo (29/10/2026)
 
 Con G5 (onboarding e profilo, 6 pacchetti) il codice senza lingue arrivava a

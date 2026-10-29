@@ -844,6 +844,11 @@ export const SCIENCE_EN: CmsScience = {
       l1: "At the same number, the style your kitchen covers with more margin comes first: it is a {brand} choice.",
       l2: "The number does not change: only the order does, and only among styles in the same group with the same score. The margin is the mean of two values between 0 and 1: how far the oven exceeds the style's minimum temperature and how far the hours available exceed the minimum maturation, each in proportion to the minimum (1 means double or more). For fried styles only time counts. It applies in Create, in Explore and for assistants.",
     },
+    "linked-params": {
+      title: "Linked settings",
+      l1: "A {brand} rule, not a physical model: the other values move to the same position within their style range.",
+      l2: "If you push hydration towards the top of the style range, flour strength and fermentation hours also move towards the top of theirs; P/L, if you edit it, goes the other way. Temperature follows the hours: upper part of the range in the fridge, middle cool, lower part at room temperature. Values always stay within the style ranges. It does not say they are the best for your flour or your kitchen: it is a shortcut to stay consistent. It starts on from the Advanced level up, acts only with advanced settings open, and every change can be reverted with «Undo».",
+    },
     digestibility: {
       title: "Digestibility index",
       l1: "A model index about the process, not a health promise.",
@@ -906,6 +911,7 @@ export const SCIENCE_EN: CmsScience = {
     "thickness-factor": "TF = dough ball weight (g) / pizza area (cm²) · 1 oz/in² ≈ 4.39 g/cm²",
     "score-weights": "C = min(weighted mean of A and F; A) · default weights: Authenticity (A) 55%, Ease (F) 45% · not feasible: C ≤ 39",
     "ranking-tiebreak": "M = mean of min(1; max(0; (T − T_min) / T_min)) and min(1; max(0; (H − H_min) / H_min)) · T oven, H hours available · fried: H only",
+    "linked-params": "r = (v − v_min) / (v_max − v_min), between 0 and 1 · x = x_min + r × (x_max − x_min) · v value you move, x each other value, min and max of the style range · P/L: 1 − r",
   },
   sourceNotes: {
     "internal-db": "the project's internal working database, not public",

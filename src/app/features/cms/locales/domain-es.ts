@@ -808,6 +808,11 @@ export const SCIENCE_ES: CmsScience = {
       l1: "Con el mismo número, va primero el estilo que tu cocina cubre con más margen: es una elección de {brand}.",
       l2: "El número no cambia: solo cambia el orden, y solo entre estilos del mismo grupo con la misma puntuación. El margen es la media de dos valores entre 0 y 1: cuánto supera el horno la temperatura mínima del estilo y cuánto superan las horas disponibles la maduración mínima, cada uno en proporción al mínimo (1 significa el doble o más). En las fritas solo cuenta el tiempo. Vale en Crear, en Descubrir y para los asistentes.",
     },
+    "linked-params": {
+      title: "Parámetros vinculados",
+      l1: "Una regla de {brand}, no un modelo físico: los demás valores se colocan en la misma posición de su intervalo de estilo.",
+      l2: "Si llevas la hidratación hacia el máximo del estilo, la fuerza de la harina y las horas de fermentación también van hacia el máximo de sus intervalos; el P/L, si lo modificas, va al revés. La temperatura sigue a las horas: parte alta del intervalo en nevera, centro en fresco, parte baja a temperatura ambiente. Los valores siempre quedan dentro de los intervalos del estilo. No dice que sean los mejores para tu harina o tu cocina: es un atajo para mantener la coherencia. Viene activado desde el nivel Avanzado, solo actúa con los parámetros avanzados abiertos y cada cambio se deshace con «Deshacer».",
+    },
     digestibility: {
       title: "Índice de digestibilidad",
       l1: "Un índice del modelo sobre el proceso, no una promesa de salud.",
@@ -870,6 +875,7 @@ export const SCIENCE_ES: CmsScience = {
     "thickness-factor": "TF = peso del bollo (g) / área de la pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(media ponderada de A y F; A) · pesos predeterminados: Autenticidad (A) 55 %, Facilidad (F) 45 % · no factible: C ≤ 39",
     "ranking-tiebreak": "M = media de min(1; max(0; (T − T_min) / T_min)) y min(1; max(0; (H − H_min) / H_min)) · T horno, H horas disponibles · fritas: solo H",
+    "linked-params": "r = (v − v_min) / (v_max − v_min), entre 0 y 1 · x = x_min + r × (x_max − x_min) · v valor que mueves, x cada otro valor, min y max del intervalo del estilo · P/L: 1 − r",
   },
   sourceNotes: {
     "internal-db": "base de datos de trabajo interna del proyecto, no pública",

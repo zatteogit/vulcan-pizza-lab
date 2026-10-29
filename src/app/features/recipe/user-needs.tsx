@@ -27,10 +27,10 @@ Wheat
 import { pantryFlourName } from "./pantry-flour-names";
 import { AnimatePresence,motion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
-import React,{ useEffect,useMemo,useRef,useState } from "react";
-import { Chip, SelectionMark } from "../../components/ds/index";
+import React,{ useEffect,useId,useMemo,useRef,useState } from "react";
+import { Chip, Disclosure, SelectionMark } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
-import { timeSlotText } from "./time-slot-text";
+import { timeSlotText, timeSlotWhen } from "./time-slot-text";
 import { CustomTimeSlot } from "./custom-time-slot";
 import { useRecommend } from "./use-recommend";
 import { earliestFeasibleMeal, slotsWithoutFeasibleStyle, type EarliestFeasibleMeal } from "../../domain/feasible-slot";
@@ -84,6 +84,8 @@ const TIME_COLORS: Record<
   day_after_lunch: { bg: "var(--time-dayafter)", text: "var(--time-dayafter-on)" },
   long_ferment: { bg: "var(--time-weekend)", text: "var(--time-weekend-on)" },
   no_preference: { bg: "var(--secondary)", text: "var(--time-any-on)" },
+  // S05-A-15: l'orario su misura non prende il colore di «Nessuna preferenza».
+  custom: { bg: "var(--time-custom)", text: "var(--time-custom-on)" },
 };
 
 function getTimeColors(slotId?: string | null) {
@@ -407,6 +409,8 @@ interface SettingsSummaryBarProps {
   showHelp?: boolean;
   /** FW-12: il focus torna qui dopo la scelta del momento. */
   timeChipRef?: React.Ref<HTMLButtonElement>;
+  /** S05-A-07: id del pannello del tempo che il chip apre e chiude. */
+  timeDrawerId?: string;
 }
 
 function SettingsSummaryBar({
@@ -420,6 +424,7 @@ function SettingsSummaryBar({
   onChangeTime,
   showHelp = true,
   timeChipRef,
+  timeDrawerId,
 }: SettingsSummaryBarProps) {
   /* R10: la chip rappresenta la cucina nel suo insieme, non solo il forno.
      Label "La tua cucina"; il tipo di forno e la temperatura vivono nel drawer. */
@@ -469,13 +474,14 @@ function SettingsSummaryBar({
             }}
             ref={timeChipRef}
             onClick={onChangeTime}
-            aria-pressed={timeActive}
+            aria-expanded={timeActive}
+            aria-controls={timeDrawerId}
+            aria-label={uiMessage("ui.timeChipAria", [selectedTimeLabel])}
             className={timeActive ? "needs-summary__time-chip needs-summary__time-chip--active" : "needs-summary__time-chip"}
             style={{
               ["--needs-time-bg" as any]: timeColors.bg,
               ["--needs-time-text" as any]: timeColors.text,
             }}
-            title={cms.misc.changeTiming}
           >
             <Clock size={13} />
             <span data-slot="label">{selectedTimeLabel}</span>
@@ -682,6 +688,7 @@ export function UserNeeds({
   };
 
   const [showTempTip, setShowTempTip] = useState(false);
+  const timeDrawerId = useId();
   const drawerTransition = compact ? motionSpring.drawerCompact : motionSpring.drawerRegular;
 
   return (
@@ -725,6 +732,7 @@ export function UserNeeds({
               onChangeTime={onChangeTime}
               showHelp={!compact}
               timeChipRef={timeChipRef}
+              timeDrawerId={timeDrawerId}
             />
             {/* FW-12 (S05-B-12): conferma della scelta per chi usa lo screen reader. */}
             <p className="sr-only" role="status">{timeAnnouncement}</p>
@@ -886,7 +894,6 @@ export function UserNeeds({
 
                     {/* Equipment */}
                     <div data-slot="equipment">
-                      <SupplyPolicyControls kind="equipment" constraints={constraints} onChange={onConstraintsChange} />
                       <SectionHeader title={cms.sections.equipment.title} subtitle={cms.sections.equipment.description} compact={compact} />
                       <div className={compact ? "needs-equipment needs-equipment--compact" : "needs-equipment"}>
                         {/* Impastamento */}
@@ -911,6 +918,10 @@ export function UserNeeds({
                           </div>
                         </div>
                       </div>
+                      {/* G2-WP-04: prima la lista, poi (se serve) le regole della lista. */}
+                      <Disclosure className="needs-supply-options" variant="inline" summary={cms.ui.supplyMoreOptions}>
+                        <SupplyPolicyControls kind="equipment" constraints={constraints} onChange={onConstraintsChange} />
+                      </Disclosure>
                     </div>
                   </div>
                 </motion.div>
@@ -1004,12 +1015,15 @@ export function UserNeeds({
               {compact && !hideTimeSlots && (
                 <motion.div
                   key="time"
+                  id={timeDrawerId}
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={drawerTransition}
                   className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
+                  {/* S05-A-07: il pannello dice che si sceglie quando si mangia. */}
+                  <SectionHeader title={cms.sections.when.title} subtitle={cms.tips.timeSlot} compact />
                   <TimeSlotPicker
                     slots={dynamicSlots}
                     suggestedSlot={suggestedSlot}
@@ -1017,7 +1031,6 @@ export function UserNeeds({
                     onTimeSlotChange={handleCompactSlotPick}
                     customTimeSlot={customTimeSlot}
                     cms={cms}
-                    compact
                     slotsWithoutStyle={slotsWithoutStyle}
                     earliestMeal={earliestMeal}
                   />
@@ -1029,27 +1042,6 @@ export function UserNeeds({
           {/* ═══ LOGO ANIMATO + TITOLO ═══ (hero passato dal genitore) */}
           {hero && <div data-region="masthead">{hero}</div>}
 
-          {!compact && !hideTimeSlots && (
-            <>
-              {/* When — niente titolone: il sottotitolo dell'hero ("Seleziona il
-                  momento...") è già l'istruzione. Le card SONO l'azione. */}
-              <div data-region="slots">
-                <TimeSlotPicker
-                  slots={dynamicSlots}
-                  suggestedSlot={suggestedSlot}
-                  selectedTimeSlot={selectedTimeSlot}
-                  onTimeSlotChange={onTimeSlotChange}
-                  customTimeSlot={customTimeSlot}
-                  cms={cms}
-                  slotsWithoutStyle={slotsWithoutStyle}
-                  earliestMeal={earliestMeal}
-                />
-              </div>
-              <InlineTip>
-                {cms.tips.timeSlot}
-              </InlineTip>
-            </>
-          )}
         </div>
       </div>
     </div>
@@ -1063,7 +1055,6 @@ function TimeSlotPicker({
   onTimeSlotChange,
   customTimeSlot,
   cms,
-  compact = false,
   slotsWithoutStyle,
   earliestMeal,
 }: {
@@ -1076,14 +1067,13 @@ function TimeSlotPicker({
   onTimeSlotChange: (slot: TimeSlot) => void;
   customTimeSlot: TimeSlot | null;
   cms: CmsContent;
-  compact?: boolean;
 }) {
   const { bcp47 } = useCms();
   return (
     <div className="needs-slot-picker">
       <div
         data-region="slot-list"
-        className={compact ? "needs-slot-list needs-slot-list--compact" : "needs-slot-list"}
+        className="needs-slot-list needs-slot-list--compact"
       >
         {slots.map((slot) => {
           const active = selectedTimeSlot === slot.id;
@@ -1091,7 +1081,8 @@ function TimeSlotPicker({
           const suggested = slot.id === suggestedSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
-          const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
+          const displayLabel = timeSlotText(slot, cms, bcp47).label;
+          const displaySublabel = timeSlotWhen(slot, cms, bcp47);
           return (
             <button
               key={slot.id}
@@ -1099,7 +1090,7 @@ function TimeSlotPicker({
               aria-pressed={active}
               onClick={() => onTimeSlotChange(slot)}
               className={
-                (compact ? "needs-slot-list__item needs-slot-list__item--compact" : "needs-slot-list__item") +
+                "needs-slot-list__item needs-slot-list__item--compact" +
                 (active ? " needs-slot-list__item--active" : "")
               }
               style={{
@@ -1107,23 +1098,23 @@ function TimeSlotPicker({
                 ["--needs-time-text" as any]: colors.text,
               }}
             >
-              <div className={compact ? "needs-slot-list__lead needs-slot-list__lead--compact" : "needs-slot-list__lead"}>
+              <div className="needs-slot-list__lead needs-slot-list__lead--compact">
                 <div
                   className={
-                    (compact ? "needs-slot-list__icon-wrap needs-slot-list__icon-wrap--compact" : "needs-slot-list__icon-wrap") +
+                    "needs-slot-list__icon-wrap needs-slot-list__icon-wrap--compact" +
                     (active ? " needs-slot-list__icon-wrap--active" : "")
                   }
                 >
-                  <Icon size={compact ? 15 : 18} />
+                  <Icon size={15} />
                 </div>
                 <div className="needs-slot-list__body">
-                  <span className={compact ? "needs-slot-list__label needs-slot-list__label--compact" : "needs-slot-list__label"}>
+                  <span className="needs-slot-list__label needs-slot-list__label--compact">
                     {displayLabel}
                   </span>
                   <span
                     className={
                       "type-numeric needs-slot-list__sublabel" +
-                      (compact ? " needs-slot-list__sublabel--compact" : "") +
+                      " needs-slot-list__sublabel--compact" +
                       (active ? " needs-slot-list__sublabel--active" : "")
                     }
                   >
@@ -1154,25 +1145,24 @@ function TimeSlotPicker({
         })}
       </div>
 
-      <div className={compact ? "needs-slot-grid needs-slot-grid--compact" : "needs-slot-grid"}>
+      <div className="needs-slot-grid needs-slot-grid--compact">
         {slots.map((slot) => {
           const active = selectedTimeSlot === slot.id;
-          // D-036 (FW-20): «Consigliato» resta visibile anche dopo una scelta.
-          const suggested = slot.id === suggestedSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
-          const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
+          const displayLabel = timeSlotText(slot, cms, bcp47).label;
+          const displaySublabel = timeSlotWhen(slot, cms, bcp47);
           return (
             <motion.button
               key={slot.id}
               type="button"
               aria-pressed={active}
               onClick={() => onTimeSlotChange(slot)}
-              whileHover={{ y: compact ? -2 : -4 }}
+              whileHover={{ y: -2 }}
               whileTap={{ scale: 0.97 }}
               transition={motionSpring.statValue}
               className={
-                (compact ? "needs-slot-grid__item needs-slot-grid__item--compact" : "needs-slot-grid__item") +
+                "needs-slot-grid__item needs-slot-grid__item--compact" +
                 (active ? " needs-slot-grid__item--active" : "")
               }
               style={{
@@ -1183,35 +1173,28 @@ function TimeSlotPicker({
               {!active && (
                 <span
                   aria-hidden="true"
-                  className={compact ? "needs-slot-grid__glow needs-slot-grid__glow--compact" : "needs-slot-grid__glow"}
+                  className="needs-slot-grid__glow needs-slot-grid__glow--compact"
                 />
-              )}
-              {suggested && !compact && (
-                <div className="needs-slot-grid__ideal-row">
-                  <span className="needs-slot-grid__badge needs-slot-grid__badge--ideal">
-                    {cms.ui.badgeIdeal}
-                  </span>
-                </div>
               )}
               <div
                 className={
-                  (compact ? "needs-slot-grid__icon-wrap needs-slot-grid__icon-wrap--compact" : "needs-slot-grid__icon-wrap") +
+                  "needs-slot-grid__icon-wrap needs-slot-grid__icon-wrap--compact" +
                   (active ? " needs-slot-grid__icon-wrap--active" : "")
                 }
               >
-                <Icon size={compact ? 16 : 20} />
+                <Icon size={16} />
               </div>
               {/* Griglia: le label variano tra 1 e 2 righe ("Tonight" vs
                   "Tomorrow at lunch"); riservare sempre 2 righe (non-compact)
                   allinea i sottotitoli orari sulla stessa baseline in tutte le card. */}
-              <div className={compact ? "needs-slot-grid__body needs-slot-grid__body--compact" : "needs-slot-grid__body"}>
-                <span className={compact ? "needs-slot-grid__label needs-slot-grid__label--compact" : "needs-slot-grid__label"}>
+              <div className="needs-slot-grid__body needs-slot-grid__body--compact">
+                <span className="needs-slot-grid__label needs-slot-grid__label--compact">
                   {displayLabel}
                 </span>
                 <span
                   className={
                     "type-numeric needs-slot-grid__sublabel" +
-                    (compact ? " needs-slot-grid__sublabel--compact" : "") +
+                    " needs-slot-grid__sublabel--compact" +
                     (active ? " needs-slot-grid__sublabel--active" : "")
                   }
                 >
@@ -1224,7 +1207,7 @@ function TimeSlotPicker({
 
               {active && (
                 <span
-                  className={compact ? "needs-slot-grid__current needs-slot-grid__current--compact" : "needs-slot-grid__current"}
+                  className="needs-slot-grid__current needs-slot-grid__current--compact"
                   aria-hidden="true"
                 >
                   <span className="needs-slot-list__check">

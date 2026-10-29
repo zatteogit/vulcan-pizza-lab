@@ -30,7 +30,20 @@ import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { kitchenConstraints, resolveEffectiveKitchen } from "../../use-cases/effective-kitchen";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
 import { FLOUR_STRENGTH_SCALE, flourFitForStyle } from "../../domain/flour-strength";
-import { formatNumber, formatRange } from "../../i18n/format";
+import { formatList, formatNumber, formatRange } from "../../i18n/format";
+import { WhyButton } from "../science/why-button";
+import { sliderZoneLabels } from "./slider-zone";
+import {
+LINKED_FIELD_ORDER,
+defaultSmartLink,
+linkedActive,
+linkedChanges,
+mergeLinked,
+propagateLinked,
+type LinkedField,
+type LinkedRun,
+type LinkedValues,
+} from "./linked-params";
 
 interface RecipeConfiguratorProps {
   style: PizzaStyle;
@@ -80,9 +93,6 @@ function computeAdaptiveHints(
   fermentTemp: number,
   flourPL: number | undefined,
   cfg: any,
-  /* FW-11 (S06-A-10): le temperature già formattate, perché i testi
-     {fridgeTemp}/{coolTemp}/{ambientTemp} non restino segnaposto. */
-  temps: { fridgeTemp: string; coolTemp: string; ambientTemp: string },
 ): AdaptiveHints {
   const hints: AdaptiveHints = {
     hydration: null,
@@ -136,24 +146,14 @@ function computeAdaptiveHints(
   }
 
   // === Fermentation → Temp advice (relative to style range) ===
+  // G2-WP-02: resta solo la scelta suggerita (ripiego del badge quando manca
+  // l'ottimo del motore); i tre testi non comparivano in nessuna schermata.
   if (fPos > 0.6 && fermentTemp > 16) {
-    // Upper 40% of fermentation range + ambient temp → suggest fridge
-    hints.fermentTemp = {
-      hint: t(cfg.hintLongFermentUseFridge, { hours: String(fermentHours), ...temps }),
-      suggestedTemp: "fridge",
-    };
+    hints.fermentTemp = { suggestedTemp: "fridge" };
   } else if (fPos < 0.3 && fermentTemp <= 6) {
-    // Lower 30% of fermentation range + fridge → suggest ambient
-    hints.fermentTemp = {
-      hint: t(cfg.hintShortFermentUseWarm, { hours: String(fermentHours), ...temps }),
-      suggestedTemp: "ambient",
-    };
+    hints.fermentTemp = { suggestedTemp: "ambient" };
   } else if (fPos >= 0.3 && fPos <= 0.6 && (fermentTemp <= 6 || fermentTemp > 16)) {
-    // Middle range → suggest cool
-    hints.fermentTemp = {
-      hint: t(cfg.hintMediumFermentUseCool, { hours: String(fermentHours), ...temps }),
-      suggestedTemp: "cool",
-    };
+    hints.fermentTemp = { suggestedTemp: "cool" };
   }
 
   // === Hydration → Fermentation: high H in range needs proportionally high F ===
@@ -179,26 +179,30 @@ function computeAdaptiveHints(
 }
 
 /* ═══ ADAPTIVE HINT COMPONENT — estremamente compatto e inline ═══ */
-function AdaptiveHint({ hint, adaptiveMin, adaptiveMax, unit, label }: {
+function AdaptiveHint({ hint, adaptiveMin, adaptiveMax, unit }: {
   hint?: string;
   adaptiveMin?: number;
   adaptiveMax?: number;
   unit?: string;
-  label: string;
 }) {
+  const cfg = useCms().cms.configurator;
   if (!hint) return null;
+  const hasMin = adaptiveMin != null;
+  const hasMax = adaptiveMax != null;
+  /* Le etichette stanno nel CMS in 7 lingue: niente doppione nel catalogo UI. */
+  const label = hasMax && !hasMin ? cfg.hintLimitMaxLabel : hasMin && !hasMax ? cfg.hintLimitMinLabel : cfg.hintAdaptiveLabel;
   return (
     <div className="config-hint">
       <Sparkles size={12} className="config-hint__icon" />
       <span className="config-hint__text">
         <strong>
           {label}
-          {adaptiveMin !== undefined || adaptiveMax !== undefined ? " " : ""}
-          {adaptiveMin !== undefined && adaptiveMax !== undefined
+          {hasMin || hasMax ? " " : ""}
+          {hasMin && hasMax
             ? `(${adaptiveMin}–${adaptiveMax}${unit || ""})`
-            : adaptiveMin !== undefined
+            : hasMin
               ? `(≥ ${adaptiveMin}${unit || ""})`
-              : adaptiveMax !== undefined
+              : hasMax
                 ? `(≤ ${adaptiveMax}${unit || ""})`
                 : ""}
           :
@@ -297,8 +301,20 @@ export function RecipeConfigurator({
   const coolTemp = fmt.celsius(12);
   const ambientTemp = fmt.celsius(22);
 
-  const [smartLink, setSmartLink] = useState(true);
-  const propagatingRef = useRef(false);
+  /* G2-WP-01 · D-G2-1 (A): il collegamento parte acceso solo dal livello 3
+     e agisce solo con gli avanzati aperti, dove si vede e si spegne. */
+  const smartLinkDefault = defaultSmartLink(constraints.skill_level);
+  const [smartLink, setSmartLink] = useState(smartLinkDefault);
+  /* Ultima propagazione: valori di prima e di dopo, per «Annulla». */
+  const [linked, setLinked] = useState<LinkedRun | null>(null);
+  /* Valori di partenza dei campi mossi dal collegamento e non più toccati
+     dall'utente: il contatore «N modificati» conta quelli ancora diversi. */
+  const [linkedOrigin, setLinkedOrigin] = useState<LinkedValues>({});
+  /* Revisione G2: «Annulla» sparisce dopo l'uso; il fuoco torna al controllo
+     da cui è partita la propagazione, mai su <body>. */
+  const linkedSourceRef = useRef<Element | null>(null);
+  const forgetOrigin = (fields: readonly string[]) =>
+    setLinkedOrigin((origin) => Object.fromEntries(Object.entries(origin).filter(([f]) => !fields.includes(f))));
   const [showAdvanced, setShowAdvanced] = useState(() => loadAdvancedOpen(constraints.skill_level));
   const toggleAdvanced = () => {
     setShowAdvanced((open) => {
@@ -324,78 +340,76 @@ export function RecipeConfigurator({
     }
   }, [style, constraints]);
 
-  const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
-
-  const ratio = (v: number, lo: number, hi: number) =>
-    hi === lo ? 0.5 : (v - lo) / (hi - lo);
-
-  const mapTo = (r: number, tLo: number, tHi: number, sliderMin: number, sliderMax: number, step: number) => {
-    const margin = (tHi - tLo) * 0.2;
-    const raw = tLo + r * (tHi - tLo);
-    const clamped = clamp(raw, tLo - margin, tHi + margin);
-    const snapped = Math.round(clamped / step) * step;
-    return clamp(snapped, sliderMin, sliderMax);
+  const current: Record<LinkedField, number | undefined> = {
+    hydration: customHydration,
+    flourW: customFlourW,
+    flourPL: customFlourPL,
+    fermentHours: customFermentHours,
+    fermentTemp: customFermentTemp,
+  };
+  const setters: Record<LinkedField, ((v: number) => void) | undefined> = {
+    hydration: onHydrationChange,
+    flourW: onFlourWChange,
+    flourPL: onFlourPLChange,
+    fermentHours: onFermentHoursChange,
+    fermentTemp: onFermentTempChange,
   };
 
-  const mapToInverse = (r: number, tLo: number, tHi: number, sliderMin: number, sliderMax: number, step: number) => {
-    return mapTo(1 - r, tLo, tHi, sliderMin, sliderMax, step);
+  const apply = (values: LinkedValues) => {
+    for (const field of Object.keys(values) as LinkedField[]) setters[field]?.(values[field]!);
   };
 
-  const tempFromHours = (hours: number): number => {
-    const midF = (sF[0] + sF[1]) / 2;
-    if (hours >= midF + (sF[1] - midF) * 0.3) return 4;    // upper third → fridge
-    if (hours >= midF - (midF - sF[0]) * 0.3) return 12;   // middle third → cool
-    return 22;                                                // lower third → ambient
-  };
-
-  const hoursFromTemp = (temp: number): number => {
-    if (temp <= 6) return Math.round(sF[0] + (sF[1] - sF[0]) * 0.8);    // fridge → 80% of range
-    if (temp <= 16) return Math.round(sF[0] + (sF[1] - sF[0]) * 0.5);   // cool → 50% of range
-    return Math.round(sF[0] + (sF[1] - sF[0]) * 0.2);                    // ambient → 20% of range
-  };
-
-  const propagate = (source: string, value: number) => {
-    if (!smartLink || propagatingRef.current) return;
-    propagatingRef.current = true;
-
-    if (source === "fermentTemp") {
-      const hours = hoursFromTemp(value);
-      onFermentHoursChange(hours);
-      const r = ratio(hours, sF[0], sF[1]);
-      onHydrationChange(mapTo(r, sH[0], sH[1], 45, 105, 1));
-      onFlourWChange(mapTo(r, sW[0], sW[1], 100, 420, 10));
-      if (onFlourPLChange) onFlourPLChange(mapToInverse(r, sPL[0], sPL[1], 0.30, 0.90, 0.01));
-    } else {
-      let r: number;
-      switch (source) {
-        case "hydration":    r = ratio(value, sH[0], sH[1]); break;
-        case "flourW":       r = ratio(value, sW[0], sW[1]); break;
-        case "flourPL":      r = ratio(value, sPL[0], sPL[1]); r = 1 - r; break; // P/L is inverse
-        case "fermentHours": r = ratio(value, sF[0], sF[1]); break;
-        default: r = 0.5;
-      }
-
-      if (source !== "hydration")    onHydrationChange(mapTo(r, sH[0], sH[1], 45, 105, 1));
-      if (source !== "flourW")       onFlourWChange(mapTo(r, sW[0], sW[1], 100, 420, 10));
-      if (source !== "flourPL" && onFlourPLChange)
-        onFlourPLChange(mapToInverse(r, sPL[0], sPL[1], 0.30, 0.90, 0.01));
-      if (source !== "fermentHours") {
-        const hours = mapTo(r, sF[0], sF[1], 1, 96, 1);
-        onFermentHoursChange(hours);
-        onFermentTempChange(tempFromHours(hours));
-      } else {
-        onFermentTempChange(tempFromHours(value));
-      }
+  /* L'utente cambia `source`: il campo è di nuovo suo; se il collegamento è
+     attivo, gli altri si spostano e il riepilogo dice quali. */
+  const change = (source: LinkedField, value: number) => {
+    setters[source]?.(value);
+    forgetOrigin([source]);
+    if (!linkedActive(smartLink, showAdvanced)) {
+      setLinked(null);
+      return;
     }
-
-    propagatingRef.current = false;
+    const next = propagateLinked(source, value, {
+      hydration: sH,
+      flourW: sW,
+      flourPL: sPL,
+      fermentHours: sF,
+      includePL: Boolean(onFlourPLChange) && customFlourPL !== undefined,
+    });
+    const run = mergeLinked(linked, current, source, next);
+    for (const f of linkedChanges(current, next)) setters[f]?.(next[f]!);
+    setLinked(run);
+    setLinkedOrigin((origin) => ({ ...run?.before, ...origin }));
+    linkedSourceRef.current = document.activeElement;
   };
 
-  const handleH = (v: number) => { onHydrationChange(v); propagate("hydration", v); };
-  const handleW = (v: number) => { onFlourWChange(v); propagate("flourW", v); };
-  const handlePL = (v: number) => { const r = Math.round(v * 100) / 100; onFlourPLChange?.(r); propagate("flourPL", r); };
-  const handleFH = (v: number) => { onFermentHoursChange(v); propagate("fermentHours", v); };
-  const handleFT = (v: number) => { onFermentTempChange(v); propagate("fermentTemp", v); };
+  const undoLinked = () => {
+    if (!linked) return;
+    apply(linked.before);
+    forgetOrigin(Object.keys(linked.before));
+    setLinked(null);
+    requestAnimationFrame(() => (linkedSourceRef.current as HTMLElement | null)?.focus());
+  };
+
+  const handleH = (v: number) => change("hydration", v);
+  const handleW = (v: number) => change("flourW", v);
+  const handlePL = (v: number) => change("flourPL", Math.round(v * 100) / 100);
+  const handleFH = (v: number) => change("fermentHours", v);
+  const handleFT = (v: number) => change("fermentTemp", v);
+
+  /* Il riepilogo vale finché i valori sono quelli lasciati dal collegamento
+     (sparisce se un'altra azione, per esempio «Ottimizza», li cambia). */
+  const linkedSummary = linked && (Object.keys(linked.after) as LinkedField[]).every((f) => current[f] === linked.after[f])
+    ? formatList(LINKED_FIELD_ORDER.filter((f) => f in linked.after).map((f) => {
+        const v = linked.after[f]!;
+        const [label, text] =
+          f === "hydration" ? [cfg.hydrationLabel, fmt.percent(v)]
+          : f === "flourW" ? [cfg.flourWLabel, fmt.number(v)]
+          : f === "flourPL" ? [cfg.plLabel, fmt.number(v, { minimumFractionDigits: 2, maximumFractionDigits: 2 })]
+          : f === "fermentHours" ? [style.dough.unleavened ? cfg.restLabel : cfg.fermentLabel, fmt.durationShort(v)]
+          : [uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-e4ff14ef"), fmt.celsius(v)];
+        return uiMessage("features.recipe.recipe-configurator.linkedItem", [label, text]);
+      }), bcp47)
+    : null;
 
   const adaptiveHints = computeAdaptiveHints(
     style,
@@ -405,7 +419,6 @@ export function RecipeConfigurator({
     customFermentTemp,
     customFlourPL,
     cfg,
-    { fridgeTemp, coolTemp, ambientTemp },
   );
 
   /* FW-14 (S06-B-02): una sola fonte per la raccomandazione. Il badge
@@ -417,8 +430,8 @@ export function RecipeConfigurator({
     ? adaptiveHints.fermentTemp?.suggestedTemp
     : optimumTemp <= 6 ? "fridge" : optimumTemp <= 16 ? "cool" : "ambient";
 
-  const changedAdvanced = [
-    !smartLink,
+  const changedAdvanced = (Object.keys(linkedOrigin) as LinkedField[]).filter((f) => current[f] !== linkedOrigin[f]).length + [
+    smartLink !== smartLinkDefault,
     customSalt !== undefined && Math.abs(customSalt - style.dough.salt_pct) >= 0.05,
     usePreFerment !== Boolean(style.requires_pre_ferment),
     customFlourPL !== undefined &&
@@ -459,20 +472,43 @@ export function RecipeConfigurator({
         {showAdvanced && (
           <button
             type="button"
-            onClick={() => setSmartLink(!smartLink)}
+            onClick={() => {
+              setSmartLink(!smartLink);
+              setLinked(null);
+            }}
             className={smartLink ? "config-link-toggle config-link-toggle--on" : "config-link-toggle"}
             aria-pressed={smartLink}
-            title={uiMessage("features.recipe.recipe-configurator.i-parametri-si-adattano-fra-loro-c31575f0")}
           >
             {smartLink ? <Link size={14} aria-hidden="true" /> : <Unlink size={14} aria-hidden="true" />}
             {uiMessage("features.recipe.recipe-configurator.smart-link-95995174")}
           </button>
         )}
       </div>
+      {/* G2-WP-01: la regola si legge senza passare il mouse (L1) e la
+          scienza è dietro «Perché?»; ogni propagazione si annuncia e si annulla. */}
+      {showAdvanced && (
+        <section data-region="linked-params" className="config-linked" aria-label={uiMessage("features.recipe.recipe-configurator.smart-link-95995174")}>
+          <p className="config-linked__help">
+            {uiMessage("features.recipe.recipe-configurator.linkedHelp")}
+            <WhyButton noteId="linked-params" />
+          </p>
+          <p role="status" aria-live="polite" className="config-linked__status">
+            {smartLink && linkedSummary && (
+              <>
+                {uiMessage("features.recipe.recipe-configurator.linkedChanged", [linkedSummary])}
+                <button type="button" className="config-linked__undo" onClick={undoLinked}>
+                  {uiMessage("features.recipe.recipe-configurator.linkedUndo")}
+                </button>
+              </>
+            )}
+          </p>
+        </section>
+      )}
 
       {referenceStyle && referenceStyle.dough.hydration_pct_range.some((v, i) => v !== sH[i]) && (
         <p className="config-legend">{engineMsgTexts([{
-          key: "range.hydrationBasis", fallback: "Idratazione — riferimento di catalogo: {catalogMin}–{catalogMax}%; metodo selezionato: {methodMin}–{methodMax}%.",
+          /* Il testo sta solo nel CMS (default it + 6 lingue): niente doppione. */
+          key: "range.hydrationBasis", fallback: "",
           params: { catalogMin: referenceStyle.dough.hydration_pct_range[0], catalogMax: referenceStyle.dough.hydration_pct_range[1], methodMin: sH[0], methodMax: sH[1] },
         }], cms, bcp47)[0]}</p>
       )}
@@ -500,21 +536,7 @@ export function RecipeConfigurator({
               adaptiveMax={adaptiveHints.hydration?.adaptiveMax}
               optimalValue={optimum?.hydration ?? Math.round((sH[0] + sH[1]) / 2)}
             />
-            {adaptiveHints.hydration && (
-              <AdaptiveHint
-                hint={adaptiveHints.hydration.hint}
-                adaptiveMin={adaptiveHints.hydration.adaptiveMin}
-                adaptiveMax={adaptiveHints.hydration.adaptiveMax}
-                unit="%"
-                label={
-                  adaptiveHints.hydration.adaptiveMax != null && adaptiveHints.hydration.adaptiveMin == null
-                    ? (cfg.hintLimitMaxLabel || uiMessage("features.recipe.recipe-configurator.limite-max-6dd61da8"))
-                    : adaptiveHints.hydration.adaptiveMin != null && adaptiveHints.hydration.adaptiveMax == null
-                      ? (cfg.hintLimitMinLabel || uiMessage("features.recipe.recipe-configurator.limite-min-ace7b14a"))
-                      : cfg.hintAdaptiveLabel
-                }
-              />
-            )}
+            <AdaptiveHint {...adaptiveHints.hydration} unit="%" />
           </div>
 
           {/* F11 beginner mode: il principiante sceglie la farina in linguaggio
@@ -522,9 +544,15 @@ export function RecipeConfigurator({
           {!showAdvanced ? (
             <BeginnerFlourPicker
               value={customFlourW}
-              onChange={handleW}
+              onChange={(w) => {
+                /* La farina del principiante è un dato della dispensa, non una leva. */
+                onFlourWChange(w);
+                forgetOrigin(["flourW"]);
+                setLinked(null);
+              }}
               styleRange={style.dough.flour_w_range}
-              label={<Label>{cfg.flourWLabel}</Label>}
+              typicalW={optimum?.flour_w ?? Math.round((sW[0] + sW[1]) / 2 / 10) * 10}
+              label={<><Label>{cfg.flourWLabel}</Label><InfoTip termId="w_alveograph">{uiMessage("features.recipe.recipe-configurator.flourPickerTip")}</InfoTip></>}
             />
           ) : (
           <>
@@ -546,21 +574,7 @@ export function RecipeConfigurator({
               adaptiveMax={adaptiveHints.flourW?.adaptiveMax}
               optimalValue={optimum?.flour_w ?? Math.round((sW[0] + sW[1]) / 2 / 10) * 10}
             />
-            {adaptiveHints.flourW && (
-              <AdaptiveHint
-                hint={adaptiveHints.flourW.hint}
-                adaptiveMin={adaptiveHints.flourW.adaptiveMin}
-                adaptiveMax={adaptiveHints.flourW.adaptiveMax}
-                unit=""
-                label={
-                  adaptiveHints.flourW.adaptiveMax != null && adaptiveHints.flourW.adaptiveMin == null
-                    ? (cfg.hintLimitMaxLabel || uiMessage("features.recipe.recipe-configurator.limite-max-6dd61da8"))
-                    : adaptiveHints.flourW.adaptiveMin != null && adaptiveHints.flourW.adaptiveMax == null
-                      ? (cfg.hintLimitMinLabel || uiMessage("features.recipe.recipe-configurator.limite-min-ace7b14a"))
-                      : cfg.hintAdaptiveLabel
-                }
-              />
-            )}
+            <AdaptiveHint {...adaptiveHints.flourW} unit="" />
           </div>
 
           {/* Flour P/L */}
@@ -582,21 +596,7 @@ export function RecipeConfigurator({
                 adaptiveMax={adaptiveHints.flourPL?.adaptiveMax}
                 optimalValue={Math.round((style.dough.flour_pl_range[0] + style.dough.flour_pl_range[1]) / 2 * 100) / 100}
               />
-              {adaptiveHints.flourPL && (
-                <AdaptiveHint
-                  hint={adaptiveHints.flourPL.hint}
-                  adaptiveMin={adaptiveHints.flourPL.adaptiveMin}
-                  adaptiveMax={adaptiveHints.flourPL.adaptiveMax}
-                  unit=""
-                  label={
-                    adaptiveHints.flourPL.adaptiveMax != null && adaptiveHints.flourPL.adaptiveMin == null
-                      ? (cfg.hintLimitMaxLabel || uiMessage("features.recipe.recipe-configurator.limite-max-6dd61da8"))
-                      : adaptiveHints.flourPL.adaptiveMin != null && adaptiveHints.flourPL.adaptiveMax == null
-                        ? (cfg.hintLimitMinLabel || uiMessage("features.recipe.recipe-configurator.limite-min-ace7b14a"))
-                        : cfg.hintAdaptiveLabel
-                  }
-                />
-              )}
+              <AdaptiveHint {...adaptiveHints.flourPL} unit="" />
             </div>
           )}
           {/* FW-08: P/L in sola lettura, con la via per modificarlo. */}
@@ -669,21 +669,7 @@ export function RecipeConfigurator({
                   adaptiveMax={adaptiveHints.fermentation?.adaptiveMax}
                   optimalValue={optimum?.fermentation_hours ?? Math.round((sF[0] + sF[1]) / 2)}
                 />
-                {adaptiveHints.fermentation && (
-                  <AdaptiveHint
-                    hint={adaptiveHints.fermentation.hint}
-                    adaptiveMin={adaptiveHints.fermentation.adaptiveMin}
-                    adaptiveMax={adaptiveHints.fermentation.adaptiveMax}
-                    unit={uiMessage("features.recipe.recipe-configurator.h-27d5482e")}
-                    label={
-                      adaptiveHints.fermentation.adaptiveMax != null && adaptiveHints.fermentation.adaptiveMin == null
-                        ? (cfg.hintLimitMaxLabel || uiMessage("features.recipe.recipe-configurator.limite-max-6dd61da8"))
-                        : adaptiveHints.fermentation.adaptiveMin != null && adaptiveHints.fermentation.adaptiveMax == null
-                          ? (cfg.hintLimitMinLabel || uiMessage("features.recipe.recipe-configurator.limite-min-ace7b14a"))
-                          : cfg.hintAdaptiveLabel
-                    }
-                  />
-                )}
+                <AdaptiveHint {...adaptiveHints.fermentation} unit={uiMessage("features.recipe.recipe-configurator.h-27d5482e")} />
               </div>
 
               {/* Pre-fermento — U-3: tra i parametri avanzati */}
@@ -782,6 +768,8 @@ export function RecipeConfigurator({
                   <div className="config-temp-header__label-group">
                     <Label>{uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}</Label>
                     <InfoTip label={uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}>{uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-dell-impasto-737f1c50")}</InfoTip>
+                    {/* G2-WP-02 (S06-A-14): il perché, con la stima del motore. */}
+                    <WhyButton noteId="q10-fermentation" context={{ tempC: customFermentTemp, hours: customFermentHours }} />
                   </div>
                   {suggestedTemp && (
                     <span className="config-temp-header__badge">
@@ -809,63 +797,50 @@ export function RecipeConfigurator({
                     unit="°C"
                     format={fmt.celsius}
                     gradient={SLIDER_GRADIENTS.temperature}
+                    optimalValue={optimumTemp}
                   />
                 ) : (() => {
-                  const activeVal = customFermentTemp <= 6 ? "fridge" : customFermentTemp <= 16 ? "cool" : "ambient";
-                  const tempMap = { fridge: 4, cool: 12, ambient: 22 };
-                  const isFridgeActive = activeVal === "fridge";
-                  const isCoolActive = activeVal === "cool";
-                  const isAmbientActive = activeVal === "ambient";
+                  /* G2-WP-02 (S06-B-16): un valore diverso da 4, 12 o 22 °C non
+                     si arrotonda alla scelta rapida più vicina: compare com'è,
+                     in sola lettura, finché non tocchi una delle tre. */
+                  const tempMap = { fridge: 4, cool: 12, ambient: 22 } as const;
+                  const quick = (Object.keys(tempMap) as (keyof typeof tempMap)[]).find((k) => tempMap[k] === customFermentTemp);
+                  const activeVal: keyof typeof tempMap | "other" = quick ?? "other";
+                  const quickLabels = {
+                    fridge: t(cfg.tempFridge, { fridgeTemp }),
+                    cool: t(cfg.tempCool, { coolTemp }),
+                    ambient: t(cfg.tempAmbient, { ambientTemp }),
+                  };
+                  const otherLabel = customFermentTemp === optimumTemp
+                    ? fmt.celsius(customFermentTemp)
+                    : uiMessage("features.recipe.recipe-configurator.tempManual", [fmt.celsius(customFermentTemp)]);
                   return (
                     <SegmentedControl
                       value={activeVal}
-                      onValueChange={(val) => handleFT(tempMap[val])}
+                      onValueChange={(val) => { if (val !== "other") handleFT(tempMap[val]); }}
                       ariaLabel={uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-e4ff14ef")}
                       size="sm"
                       fullWidth
+                      className="config-temp-quick"
                       options={[
-                        {
-                          value: "fridge",
+                        /* Il punto ripete il badge «Consigliato» qui sopra: niente title=. */
+                        ...(Object.keys(tempMap) as (keyof typeof tempMap)[]).map((k) => ({
+                          value: k,
                           label: (
                             <span className="config-temp-option">
-                              {t(cfg.tempFridge, { fridgeTemp })}
-                              {suggestedTemp === "fridge" && (
+                              {quickLabels[k]}
+                              {suggestedTemp === k && (
                                 <span
-                                  className={isFridgeActive ? "config-temp-option__dot config-temp-option__dot--active" : "config-temp-option__dot"}
-                                  title={uiMessage("features.recipe.recipe-configurator.consigliato-de822f3c")}
+                                  className={activeVal === k ? "config-temp-option__dot config-temp-option__dot--active" : "config-temp-option__dot"}
+                                  aria-hidden="true"
                                 />
                               )}
                             </span>
                           ),
-                        },
-                        {
-                          value: "cool",
-                          label: (
-                            <span className="config-temp-option">
-                              {t(cfg.tempCool, { coolTemp })}
-                              {suggestedTemp === "cool" && (
-                                <span
-                                  className={isCoolActive ? "config-temp-option__dot config-temp-option__dot--active" : "config-temp-option__dot"}
-                                  title={uiMessage("features.recipe.recipe-configurator.consigliato-de822f3c")}
-                                />
-                              )}
-                            </span>
-                          ),
-                        },
-                        {
-                          value: "ambient",
-                          label: (
-                            <span className="config-temp-option">
-                              {t(cfg.tempAmbient, { ambientTemp })}
-                              {suggestedTemp === "ambient" && (
-                                <span
-                                  className={isAmbientActive ? "config-temp-option__dot config-temp-option__dot--active" : "config-temp-option__dot"}
-                                  title={uiMessage("features.recipe.recipe-configurator.consigliato-de822f3c")}
-                                />
-                              )}
-                            </span>
-                          ),
-                        },
+                        })),
+                        ...(activeVal === "other"
+                          ? [{ value: "other" as const, label: <span className="config-temp-option">{otherLabel}</span> }]
+                          : []),
                       ]}
                     />
                   );
@@ -1115,6 +1090,7 @@ export function RecipeConfigurator({
                     step={0.02}
                     unit=""
                     valueText={state}
+                    valueKind="text"
                     zoneLabels={[
                       uiMessage("features.recipe.recipe-configurator.thicknessTickThin"),
                       uiMessage("features.recipe.recipe-configurator.thicknessTickThick"),
@@ -1163,15 +1139,22 @@ function BeginnerFlourPicker({
   value,
   onChange,
   styleRange,
+  typicalW,
   label,
 }: {
   value: number;
   onChange: (w: number) => void;
   styleRange: [number, number];
+  /** G2-WP-02 (D-G2-2): la W tipica dello stile per chi non sa che farina ha. */
+  typicalW: number;
   label: React.ReactNode;
 }) {
+  /* «Non lo so» è una scelta dell'utente, non si deduce dal valore: resta
+     selezionata finché la W è quella che ha impostato. */
+  const [unknownW, setUnknownW] = useState<number | null>(null);
+  const unknown = unknownW !== null && unknownW === value;
   const strength = flourStrength(value);
-  const selected = BEGINNER_FLOURS.find((f) => f.classes.includes(strength)) ?? BEGINNER_FLOURS[0];
+  const selected = unknown ? null : BEGINNER_FLOURS.find((f) => f.classes.includes(strength)) ?? BEGINNER_FLOURS[0];
   const { bcp47 } = useCms();
   const [wMin, wMax] = styleRange;
   /* FW-05 (S06-A-04): stessa regola della fattibilità del motore. Prima la
@@ -1188,7 +1171,10 @@ function BeginnerFlourPicker({
             <button
               key={f.label}
               type="button"
-              onClick={() => onChange(f.w)}
+              onClick={() => {
+                setUnknownW(null);
+                onChange(f.w);
+              }}
               className={active ? "config-flour-picker__option config-flour-picker__option--active" : "config-flour-picker__option"}
               aria-pressed={active}
             >
@@ -1201,7 +1187,28 @@ function BeginnerFlourPicker({
             </button>
           );
         })}
+        <button
+          type="button"
+          onClick={() => {
+            setUnknownW(typicalW);
+            onChange(typicalW);
+          }}
+          className={unknown ? "config-flour-picker__option config-flour-picker__option--active" : "config-flour-picker__option"}
+          aria-pressed={unknown}
+        >
+          <span className="config-flour-picker__option-label">
+            {uiMessage("features.recipe.recipe-configurator.flourUnknown")}
+          </span>
+          <span className="config-flour-picker__option-sub">
+            {uiMessage("features.recipe.recipe-configurator.flourUnknownSub")}
+          </span>
+        </button>
       </div>
+      {unknown ? (
+        <p className="config-flour-picker__fit">
+          {uiMessage("features.recipe.recipe-configurator.flourUnknownHint")}
+        </p>
+      ) : (
       <p className={isIdealFit ? "config-flour-picker__fit config-flour-picker__fit--ideal" : fit === "weak" ? "config-flour-picker__fit config-flour-picker__fit--weak" : "config-flour-picker__fit"}>
         {fit === "ideal"
           ? uiMessage("features.recipe.recipe-configurator.perfetta-per-questo-stile-4307e09e")
@@ -1209,6 +1216,7 @@ function BeginnerFlourPicker({
             ? uiMessage("features.recipe.recipe-configurator.flourFitWeak", [formatNumber(wMin, bcp47)])
             : uiMessage("features.recipe.recipe-configurator.flourFitStrong", [formatRange(wMin, wMax, bcp47)])}
       </p>
+      )}
     </div>
   );
 }
@@ -1230,6 +1238,7 @@ function GradientSlider({
   optimalValue,
   label,
   valueText,
+  valueKind = "number",
   zoneLabels,
   name,
   format,
@@ -1251,6 +1260,9 @@ function GradientSlider({
   label?: React.ReactNode;
   /** Testo al posto del numero (es. spessore: «Standard per questo stile»). */
   valueText?: string;
+  /** S06-B-22: 'text' quando valueText è una frase, resa come etichetta e
+   *  non nel corpo grande delle cifre. Esplicito, mai indovinato. */
+  valueKind?: "number" | "text";
   /** Parole al posto dei numeri sotto le tacche del range. */
   zoneLabels?: [string, string];
   /** Nome accessibile dell'input (U-10, F05): il testo dell'etichetta visibile. */
@@ -1286,7 +1298,9 @@ function GradientSlider({
     (rangeMin !== undefined && rangeMax !== undefined
       ? value >= rangeMin && (ceiling || value <= rangeMax)
       : true);
+  const oor = inRange ? "" : " config-slider__value--oor";
 
+  const zone = sliderZoneLabels(min, max, rangeMin, rangeMax, ceiling);
   const zoneLeftPct =
     rangeMin !== undefined
       ? Math.max(0, Math.min(100, ((rangeMin - min) / (max - min)) * 100))
@@ -1312,13 +1326,11 @@ function GradientSlider({
         {label && (
           <div className="config-slider__label-group">{label}</div>
         )}
-        {valueText ? (
-          <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
-            {valueText}
-          </span>
-        ) : !editable ? (
-          <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
-            {valueLabel(value)}
+        {valueText || !editable ? (
+          <span
+            className={`${valueKind === "text" ? "type-label config-slider__value config-slider__value--text" : "type-numeric config-slider__value"}${oor}`}
+          >
+            {valueText || valueLabel(value)}
           </span>
         ) : editing ? (
           <span className="type-numeric config-slider__value config-slider__value--editing">
@@ -1345,7 +1357,7 @@ function GradientSlider({
               setDraft(String(value));
               setEditing(true);
             }}
-            className={inRange ? "type-numeric config-slider__value config-slider__value--button" : "type-numeric config-slider__value config-slider__value--button config-slider__value--oor"}
+            className={`type-numeric config-slider__value config-slider__value--button${oor}`}
             title={uiMessage("features.recipe.recipe-configurator.typeValue")}
             aria-label={`${name ?? ""}: ${valueLabel(value)} · ${uiMessage("features.recipe.recipe-configurator.typeValue")}`}
           >
@@ -1371,36 +1383,23 @@ function GradientSlider({
         </div>
 
         {/* Zone markers */}
-        {rangeMin !== undefined && rangeMin >= min && rangeMin <= max && (
-          <div className="config-slider__zone-tick--start">
+        {[rangeMin, rangeMax].map((tick, i) => tick !== undefined && tick >= min && tick <= max && (
+          <div key={i} className={i ? "config-slider__zone-tick--end" : "config-slider__zone-tick--start"}>
             <div className="config-slider__zone-tick-bar" />
           </div>
-        )}
-        {rangeMax !== undefined && rangeMax >= min && rangeMax <= max && (
-          <div className="config-slider__zone-tick--end">
-            <div className="config-slider__zone-tick-bar" />
-          </div>
-        )}
+        ))}
 
         {/* Adaptive limit markers (dashed barrier lines) */}
-        {adaptiveMin !== undefined && adaptiveMin >= min && adaptiveMin <= max && (
+        {[adaptiveMin, adaptiveMax].map((limit, i) => limit !== undefined && limit >= min && limit <= max && (
           <div
+            key={i}
             className="config-slider__limit-marker"
-            style={{ ["--marker-pos" as any]: `${((adaptiveMin - min) / (max - min)) * 100}%` }}
+            style={{ ["--marker-pos" as any]: `${((limit - min) / (max - min)) * 100}%` }}
           >
             <div className="config-slider__limit-marker-line" />
             <div className="config-slider__limit-marker-tick" />
           </div>
-        )}
-        {adaptiveMax !== undefined && adaptiveMax >= min && adaptiveMax <= max && (
-          <div
-            className="config-slider__limit-marker"
-            style={{ ["--marker-pos" as any]: `${((adaptiveMax - min) / (max - min)) * 100}%` }}
-          >
-            <div className="config-slider__limit-marker-line" />
-            <div className="config-slider__limit-marker-tick" />
-          </div>
-        )}
+        ))}
 
         {/* Optimal sweet spot marker (▼ triangle) */}
         {optimalValue !== undefined && optimalValue >= min && optimalValue <= max && (() => {
@@ -1431,16 +1430,24 @@ function GradientSlider({
         />
       </div>
 
-      {/* Zone labels */}
-      {rangeMin !== undefined && rangeMax !== undefined && (
+      {/* G2-WP-02 (S06-A-03/B-03): i numeri del range sotto le tacche, non ai
+          bordi; se il range esce dalla traccia, una riga di testo. */}
+      {zone.kind === "ticks" && (
         <div className="config-slider__zone-labels">
-          <span className="type-numeric config-slider__zone-label">
-            {zoneLabels?.[0] ?? (format ? format(rangeMin) : numberLabel(rangeMin))}
+          <span className="type-numeric config-slider__zone-label" data-align={zone.startAlign}>
+            {zoneLabels?.[0] ?? (format ? format(rangeMin!) : numberLabel(rangeMin!))}
           </span>
-          <span className="type-numeric config-slider__zone-label config-slider__zone-label--end">
-            {zoneLabels?.[1] ?? (format ? format(rangeMax) : numberLabel(rangeMax))}
+          <span className="type-numeric config-slider__zone-label config-slider__zone-label--end" data-align={zone.endAlign}>
+            {zoneLabels?.[1] ?? (format ? format(rangeMax!) : numberLabel(rangeMax!))}
           </span>
         </div>
+      )}
+      {zone.kind === "outside" && (
+        <p className="type-data-sm config-slider__zone-note">
+          {zone.beyondCeiling
+            ? uiMessage("features.recipe.recipe-configurator.rangeOutsideTrack", [valueLabel(rangeMin!), valueLabel(rangeMax!)])
+            : uiMessage("features.recipe.recipe-configurator.rangeOutsideScale", [valueLabel(rangeMin!), valueLabel(rangeMax!)])}
+        </p>
       )}
     </div>
   );

@@ -91,7 +91,7 @@ export function ProcedureTimeline({
       <div data-region="section">
         {recipe.dough_balls > 1 && (
           <p className="procedure-timeline-step__desc">
-            {engineMessage(cms, "timeline.batchModel", "Tempi stimati per una persona: stesura e condimento di tutte le unità, poi cotture una alla volta. Servizio scaglionato; nessuna sovrapposizione prevista.")}
+            {engineMessage(cms, "timeline.batchModel", "")}
           </p>
         )}
         {/* ── Compensations banner (PizzaNerd inline) ── */}

@@ -814,6 +814,11 @@ export const SCIENCE_DE: CmsScience = {
       l1: "Bei gleicher Zahl kommt zuerst der Stil, den deine Küche mit mehr Spielraum abdeckt: eine Wahl von {brand}.",
       l2: "Die Zahl ändert sich nicht, nur die Reihenfolge, und nur zwischen Stilen derselben Gruppe mit gleicher Punktzahl. Der Spielraum ist das Mittel aus zwei Werten zwischen 0 und 1: wie weit der Ofen die Mindesttemperatur des Stils übertrifft und wie weit die verfügbaren Stunden die Mindestreifezeit übertreffen, jeweils im Verhältnis zum Minimum (1 heißt das Doppelte oder mehr). Bei frittierten Stilen zählt nur die Zeit. Das gilt in Erstellen, in Entdecken und für Assistenten.",
     },
+    "linked-params": {
+      title: "Verknüpfte Werte",
+      l1: "Eine Regel von {brand}, kein physikalisches Modell: Die anderen Werte rücken an dieselbe Stelle ihres Stilbereichs.",
+      l2: "Schiebst du die Hydration an das obere Ende des Stilbereichs, wandern auch Mehlstärke und Gärstunden an das obere Ende ihrer Bereiche; P/L geht, wenn du es bearbeitest, in die Gegenrichtung. Die Temperatur folgt den Stunden: oberer Teil des Bereichs im Kühlschrank, Mitte kühl, unterer Teil bei Raumtemperatur. Die Werte bleiben immer innerhalb der Stilbereiche. Das heißt nicht, dass sie für dein Mehl oder deine Küche die besten sind: Es ist eine Abkürzung, um stimmig zu bleiben. Ab der Stufe Erfahren ist es eingeschaltet, es wirkt nur bei geöffneten erweiterten Einstellungen, und jede Änderung kannst du mit «Rückgängig» zurücknehmen.",
+    },
     digestibility: {
       title: "Verdaulichkeitsindex",
       l1: "Ein Modellindex für den Prozess, kein Gesundheitsversprechen.",
@@ -876,6 +881,7 @@ export const SCIENCE_DE: CmsScience = {
     "thickness-factor": "TF = Teiglinggewicht (g) / Pizzafläche (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(gewichtetes Mittel aus A und F; A) · Standardgewichte: Authentizität (A) 55 %, Einfachheit (F) 45 % · nicht machbar: C ≤ 39",
     "ranking-tiebreak": "M = Mittel aus min(1; max(0; (T − T_min) / T_min)) und min(1; max(0; (H − H_min) / H_min)) · T Ofen, H verfügbare Stunden · frittiert: nur H",
+    "linked-params": "r = (v − v_min) / (v_max − v_min), zwischen 0 und 1 · x = x_min + r × (x_max − x_min) · v der Wert, den du verschiebst, x jeder andere Wert, min und max des Stilbereichs · P/L: 1 − r",
   },
   sourceNotes: {
     "internal-db": "interne Arbeitsdatenbank des Projekts, nicht öffentlich",

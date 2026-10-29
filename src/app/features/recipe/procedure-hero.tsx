@@ -363,10 +363,10 @@ export function ProcedureHeroControls({
           <div id={comfortDescId} className={comfortDescClass}>
             {comfortToggled
               ? nightActivesLeft > 0
-                ? engineMessage(cms, "timelineComfort.activePartial", "Attiva, ma alcune fasi restano di notte: scegli un altro pasto qui sopra.")
-                : engineMessage(cms, "timelineComfort.active", "Attiva: evita le fasi notturne.")
+                ? engineMessage(cms, "timelineComfort.activePartial", "")
+                : engineMessage(cms, "timelineComfort.active", "")
               : currentComfortPlan
-                ? engineMessage(cms, "timelineComfort.nightDetected", "Fasi attive di notte rilevate.")
+                ? engineMessage(cms, "timelineComfort.nightDetected", "")
                 : nightWithoutPlan
                   ? t(engineMessage(cms, feasibleMeals.length > 0 ? "timelineComfort.nightNoPlan" : "timelineComfort.nightNoPlanNoMeal", ""), {
                       n: nightActivesLeft,

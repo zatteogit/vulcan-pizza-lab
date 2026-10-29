@@ -1,6 +1,8 @@
 import type { TimeSlot } from "../../domain/pizza-engine";
 import type { CmsContent } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
+import { formatAtClock, formatDuration } from "../../i18n/format";
+import { uiMessage } from "../../i18n/ui-messages";
 
 /* ═══ Testi degli slot del pasto, per lingua (M-2) ═══
  * Il motore dà ore (al quarto d'ora per difetto), pasto e giorno; qui si
@@ -46,4 +48,22 @@ export function timeSlotText(
   const weekday = day.toLocaleDateString(bcp47, { weekday: "long" });
   const template = slot.meal === "dinner" ? cms.ui.slotWeekdayDinner : cms.ui.slotWeekdayLunch;
   return { label: capitalize(t(template, { day: weekday }), bcp47), sublabel };
+}
+
+/** S05-A-07: sottotitolo delle card del pannello «Quando» — a che ora si
+ *  mangia e fra quanto («alle 20:00 · tra 4 h 45 min»). La durata è quella del
+ *  motore (al quarto d'ora per difetto), l'ora è l'istante del pasto. Senza
+ *  istante resta la sola durata. */
+export function timeSlotWhen(slot: TimeSlot, cms: CmsContent, bcp47: string): string {
+  if (slot.targetAt === undefined) return timeSlotText(slot, cms, bcp47).sublabel;
+  // Ognuna delle due parti va a capo solo intera, mai «tra 4 h / 30 min».
+  const keep = (part: string) => part.replace(/ /g, "\u00a0");
+  return uiMessage(
+    "ui.slotAtIn",
+    [
+      keep(formatAtClock(slot.targetAt, bcp47)),
+      keep(uiMessage("format.relativeIn", [formatDuration(slot.hours * 60, bcp47)], bcp47)),
+    ],
+    bcp47,
+  );
 }

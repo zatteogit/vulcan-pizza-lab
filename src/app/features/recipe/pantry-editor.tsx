@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Plus, Search, X } from "lucide-react";
-import { Dialog, Disclosure, IconButton, SegmentedControl, Switch } from "../../components/ds/index";
+import { Chip, Dialog, Disclosure, IconButton, SegmentedControl, Switch } from "../../components/ds/index";
 import { FLOURS_DB } from "../../data/flour-database";
 import { TOPPING_LIBRARY } from "../../data/topping-library";
-import { normalizePantryFlourDetails, pantryIngredientId, type PantryFlourDetails } from "../../domain/pantry-ingredients";
+import { EXCLUDABLE_DOUGH_INGREDIENTS, normalizePantryFlourDetails, pantryIngredientId, pantryToppingIngredients, type PantryFlourDetails } from "../../domain/pantry-ingredients";
 import type { UserConstraints } from "../../domain/pizza-engine";
 import { savePantryConstraints } from "../../adapters/browser/pantry-storage";
 import { SupplyPolicyControls } from "./supply-policy-controls";
@@ -26,14 +26,13 @@ export function PantryEditor({ constraints, onChange, onClose, flourOptions }: {
   const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(20);
   const [detailsId, setDetailsId] = useState<string | null>(null);
+  const [excludedOnly, setExcludedOnly] = useState(false);
   const save = (patch: Partial<UserConstraints>) => {
     const next = { ...constraints, ...patch };
     onChange(next);
     savePantryConstraints(next);
   };
   const ingredientNames = useMemo(() => pantryIngredientNames(cms), [cms]);
-  // Stable keys come from the engine's source ingredients, never translated copy.
-  const doughNames = ["Sale", "Zucchero", "Olio EVO", "Burro", "Strutto", "Acqua"];
   const flourItems: Item[] = [
     // FW-01: le farine generiche non hanno più una W stimata: si mostra la descrizione.
     ...flourOptions.map(f => ({ ...f, flour: true, detail: f.w || f.detail })),
@@ -44,19 +43,17 @@ export function PantryEditor({ constraints, onChange, onClose, flourOptions }: {
     ...Object.entries(constraints.pantry_flour_details ?? {}).filter(([id]) => id.startsWith("custom:")).map(([id, f]) => ({id, name:f.name || ui.pantryMyFlour, producer:f.producer, flour:true, detail:f.w ? t(ui.pantryWValue,{w:f.w}) : ui.pantryUnspecified})),
   ];
   const toppings = useMemo(() => {
-    const unique = new Map<string, Item>();
-    for (const recipe of Object.values(TOPPING_LIBRARY)) for (const ingredient of recipe.ingredients) {
-      const id = pantryIngredientId(ingredient.name);
-      if (!unique.has(id)) unique.set(id, { id, name: ingredientNames.get(id) ?? ingredient.name });
-    }
-    return [...unique.values()].sort((a,b) => a.name.localeCompare(b.name, bcp47));
+    // Acqua e sale restano fuori anche qui: escluderli bloccherebbe ogni stile.
+    return pantryToppingIngredients(Object.values(TOPPING_LIBRARY))
+      .map(({ id, name }): Item => ({ id, name: ingredientNames.get(id) ?? name }))
+      .sort((a,b) => a.name.localeCompare(b.name, bcp47));
   }, [ingredientNames, bcp47]);
   const ingredients: Item[] = tab === "flour" ? flourItems : tab === "topping" ? toppings : [
     ...["fresh", "dry", "sourdough"].map(id => ({ id, name:cms.yeastLabels[id] ?? id, yeast:true })),
-    ...doughNames.map(name => ({id:pantryIngredientId(name), name:ingredientNames.get(pantryIngredientId(name)) ?? name})),
+    ...EXCLUDABLE_DOUGH_INGREDIENTS.map(name => ({id:pantryIngredientId(name), name:ingredientNames.get(pantryIngredientId(name)) ?? name})),
   ];
   const normalizedQuery = query.trim().toLocaleLowerCase();
-  const filtered = ingredients.filter(item => `${constraints.pantry_flour_details?.[item.id]?.name ?? ""} ${constraints.pantry_flour_details?.[item.id]?.producer ?? ""} ${item.name} ${item.producer ?? ""}`.toLocaleLowerCase().includes(normalizedQuery));
+  const matches = (item: Item) => (!excludedOnly || status(item) === "excluded") && `${constraints.pantry_flour_details?.[item.id]?.name ?? ""} ${constraints.pantry_flour_details?.[item.id]?.producer ?? ""} ${item.name} ${item.producer ?? ""}`.toLocaleLowerCase().includes(normalizedQuery);
   const status = (item: Item): Status => {
     const have = item.flour ? constraints.pantry_flours : item.yeast ? constraints.pantry_yeasts : constraints.pantry_ingredients ?? [];
     const excluded = item.flour ? constraints.excluded_flours ?? [] : item.yeast ? constraints.excluded_yeasts ?? [] : constraints.excluded_ingredients ?? [];
@@ -70,20 +67,24 @@ export function PantryEditor({ constraints, onChange, onClose, flourOptions }: {
       [excludedKey]: [...(constraints[excludedKey] ?? []).filter(id => id !== item.id), ...(value === "excluded" ? [item.id] : [])],
     });
   };
+  const filtered = ingredients.filter(matches);
+  const excludedCount = ingredients.filter(item => status(item) === "excluded").length;
   const statuses = [{value:"available" as const,label:ui.pantryHave}, {value:"unknown" as const,label:ui.pantryUnspecified}, {value:"excluded" as const,label:ui.pantryDoNotUse}];
   const saveDetail = (id: string, detail: PantryFlourDetails) => save({pantry_flour_details:normalizePantryFlourDetails({...constraints.pantry_flour_details,[id]:detail})});
   return createPortal(
     <Dialog open onClose={onClose} ariaLabel={ui.pantryFull} className="pantry-editor">
       <div className="pantry-editor__header"><h2>{ui.pantryFull}</h2><IconButton variant="bare" onClick={onClose} aria-label={ui.close}><X size={20}/></IconButton></div>
       <p className="pantry-editor__hint">{ui.pantryStatusHint}</p>
-      <SegmentedControl value={tab} ariaLabel={ui.pantryFull} onValueChange={value=>{setTab(value);setQuery("");setLimit(20);setDetailsId(null);}}
+      <SegmentedControl value={tab} ariaLabel={ui.pantryFull} onValueChange={value=>{setTab(value);setQuery("");setLimit(20);setDetailsId(null);setExcludedOnly(false);}}
         options={[{value:"flour",label:ui.pantryFlours},{value:"dough",label:ui.pantryDough},{value:"topping",label:ui.pantryToppings}]} fullWidth size="sm" />
       <div className="pantry-editor__search"><Search size={16} aria-hidden="true"/><input className="pantry-editor__input" type="search" value={query} onChange={event=>{setQuery(event.target.value);setLimit(20);}} placeholder={ui.pantrySearch} aria-label={ui.pantrySearch}/></div>
       <div className="pantry-editor__scroll">
         <Disclosure className="pantry-editor__policies" variant="inline" summary={ui.pantryPolicies}>
-          <SupplyPolicyControls kind="flour" constraints={constraints} onChange={onChange} flourOptions={flourItems.map(item=>({id:item.id,label:item.name}))}/>
-          <label className="pantry-editor__complete"><span data-slot="label">{ui.pantryToppingsComplete}</span><Switch checked={constraints.pantry_ingredients_complete===true} onCheckedChange={value=>save({pantry_ingredients_complete:value})}/></label>
+          <SupplyPolicyControls kind="flour" constraints={constraints} onChange={onChange}/>
+          {/* G2-WP-04: un solo modo di escludere (lo stato per riga); qui il riepilogo filtra la lista. */}
+          <Chip label={t(ui.pantryExcludedSummary,{n:excludedCount})} active={excludedOnly} onToggle={()=>{setExcludedOnly(!excludedOnly);setLimit(20);}} />
         </Disclosure>
+        {tab === "topping" && <label className="pantry-editor__complete"><span data-slot="label">{ui.pantryToppingsComplete}</span><Switch checked={constraints.pantry_ingredients_complete===true} onCheckedChange={value=>save({pantry_ingredients_complete:value})}/></label>}
         {tab === "flour" && <button type="button" className="pantry-editor__add" onClick={()=>{
           const id=`custom:${crypto.randomUUID()}`;
           save({pantry_flour_details:{...constraints.pantry_flour_details,[id]:{name:ui.pantryMyFlour}},pantry_flours:[...constraints.pantry_flours,id]});

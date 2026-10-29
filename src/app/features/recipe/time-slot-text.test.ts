@@ -1,10 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+import { registerUiMessages } from "../../i18n/ui-messages";
+import { UI_MESSAGES_EN } from "../../i18n/ui-messages.en";
 import { generateTimeSlots, NO_PREFERENCE_SLOT, type EngineMsg } from "../../domain/pizza-engine";
 import { CMS_DEFAULTS } from "../cms/cms-context";
 import { EN_LOCALE } from "../cms/locales/en";
 import { DE_LOCALE } from "../cms/locales/de";
 import { engineMsgTexts } from "./engine-msg-text";
-import { timeSlotText } from "./time-slot-text";
+import { timeSlotText, timeSlotWhen } from "./time-slot-text";
 
 /* Giovedì 22/10/2026 alle 16:20: «Stasera» è fra 3 h 40 min, al quarto d'ora
    per difetto 3 h 30 min; il quarto slot cade di sabato. */
@@ -62,5 +64,24 @@ describe("engineMsgTexts (M-5)", () => {
   it("le motivazioni dell'ottimizzatore non restano in italiano", () => {
     const room = em("opt.roomFerment", "Fermentazione…", { hours: 8, temp: 22 });
     expect(engineMsgTexts([room], EN_LOCALE, "en-GB")[0]).toMatch(/^8 hrs fermentation at room temperature \(22\s?°C\)/);
+  });
+});
+
+describe("timeSlotWhen (S05-A-07)", () => {
+  /* P1 alle 15:15: «Stasera» è alle 20:00, fra 4 h 45 min. */
+  const at1515 = new Date(2026, 9, 22, 15, 15);
+  const tonight = generateTimeSlots(at1515).find((slot) => slot.id === "tonight")!;
+  beforeAll(() => registerUiMessages("en", UI_MESSAGES_EN));
+
+  it("dice a che ora si mangia e fra quanto, nella lingua attiva", () => {
+    const plain = (text: string) => text.replace(/\u00a0/g, " ");
+    expect(plain(timeSlotWhen(tonight, CMS_DEFAULTS, "it-IT"))).toBe("alle 20:00 · tra 4 h 45 min");
+    expect(plain(timeSlotWhen(tonight, EN_LOCALE, "en-GB"))).toMatch(/^at 20:00 · in 4 hrs? 45 mins?$/);
+    // Si va a capo solo attorno al «·».
+    expect(timeSlotWhen(tonight, CMS_DEFAULTS, "it-IT").split(" ")).toHaveLength(3);
+  });
+
+  it("senza istante del pasto resta la sola durata", () => {
+    expect(timeSlotWhen(NO_PREFERENCE_SLOT, CMS_DEFAULTS, "it-IT")).toBe(CMS_DEFAULTS.ui.slotNoPreferenceSub);
   });
 });

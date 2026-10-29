@@ -647,6 +647,7 @@ export function HomePage() {
       setSelectedFlourId(null);
       setStyleSettingsPanel(null);
       setPendingInterpretation(interpretation);
+      setCreateStart(interpretation ? null : "");
     },
     [constraints.available_hours, engineConstraints, resetForStyle, cms],
   );
@@ -813,11 +814,22 @@ export function HomePage() {
     activeInterpretationId ? getInterpretationById(activeInterpretationId) ?? null : activeVersion ? null : undefined,
     activeVersion ?? undefined) : null, [selectedStyle, activeVersion, activeInterpretationId]);
   const createReferencePreset = selectedStyle && createReferenceEntry ? recipePresetState(selectedStyle, createReferenceEntry.version, createReferenceEntry.interpretation) : null;
-  const createDirty = Boolean(selectedStyle && createReferencePreset && (isRecipePresetModified(createReferencePreset, {
+  const createCurrentParams = {
     hydration: customHydration, flourW: customFlourW, flourPL: customFlourPL, salt: customSalt,
     fermentHours: customFermentHours, fermentTemp: customFermentTemp, usePreFerment,
     preFerment: preFermentChoice, panConfig, toppingConcept: selectedToppingConcept, flourBlend: customFlourBlend,
-  }) || Math.min(constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal)));
+  };
+  const createDirty = Boolean(selectedStyle && createReferencePreset && (isRecipePresetModified(createReferencePreset, createCurrentParams) || Math.min(constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal)));
+  /* Revisione G2: il Crea parte già adattato alla cucina (applySelectStyle).
+     Quei valori sono una scelta di Vulcan, non una modifica dell'utente: li
+     fotografiamo dopo il commit dello stile e, finché coincidono, il
+     Personalizza dice «Adattata alla tua cucina» invece di «modificata». */
+  const createKey = JSON.stringify([createCurrentParams, constraints.oven_max_temp_c]);
+  const [createStart, setCreateStart] = useState<string | null>(null);
+  useEffect(() => {
+    if (createStart === "" && selectedStyle) setCreateStart(createKey);
+  });
+  const createAdaptedOnly = createDirty && createStart === createKey;
   const createOrigin = activeInterpretationId ? getInterpretationById(activeInterpretationId) : null;
   const createReferenceName = createOrigin?.author ?? createOrigin?.pizzeria ?? createOrigin?.organization ?? (activeVersion ? cms.messages?.[`version.label.${activeVersion.label}`] ?? activeVersion.label : selectedStyle?.name ?? "");
 
@@ -1377,6 +1389,12 @@ export function HomePage() {
                   style={selectedStyle}
                   versions={styleVersions}
                   activeVersion={activeVersion}
+                  startingVersionId={createReferenceEntry?.version?.id ?? null}
+                  startingInterpretationId={createReferenceEntry?.interpretation?.id ?? null}
+                  isModified={createDirty}
+                  modifiedLabel={createAdaptedOnly ? cms.cooking.optimizedForSetup : undefined}
+                  resetToOriginal
+                  onResetToReference={handleResetCreateToCanonical}
                   customHydration={customHydration}
                   customFlourW={customFlourW}
                   customFermentHours={customFermentHours}
@@ -1388,10 +1406,7 @@ export function HomePage() {
                   onNotice={setSetupNotice}
                   open={setupPanelOpen}
                   onOpenChange={setSetupPanelOpen}
-                  onRequestOpen={handleOpenCreatePersonalization}
-                  isCanonical={!createDirty}
                   scores={recipe.scores}
-                  hideTrigger
                   recipe={recipe}
                 >
                   <RecipeConfigurator
