@@ -56,8 +56,34 @@ export function compareToReference(recipe: GeneratedRecipe, reference: Generated
     hydration: Math.abs(recipe.hydration_pct - reference.hydration_pct) >= 0.05,
     flourW: Math.round(recipe.flour_w) !== Math.round(reference.flour_w),
     fermentation: Math.abs(recipe.fermentation_hours - reference.fermentation_hours) >= 0.05
-      || recipe.fermentation_temp_c !== reference.fermentation_temp_c,
+      // La temperatura si mostra in gradi interi: sotto il grado non è una modifica.
+      || Math.round(recipe.fermentation_temp_c) !== Math.round(reference.fermentation_temp_c),
   };
   return (Object.keys(changed) as ReferenceParam[]).filter((p) => changed[p])
     .map((param) => ({ param, reference: side(reference, param), current: side(recipe, param) }));
+}
+
+/** FW-14 (revisione): testo della cella «Lievitazione» e del suo «Prima».
+ *  La cella dichiara di solito l'ambiente (frigo/ambiente); se il delta sta
+ *  nella temperatura e l'ambiente non cambia, l'etichetta d'ambiente
+ *  renderebbe identici i due lati («12 h ambiente → 12 h ambiente»): allora
+ *  entrambi i lati mostrano la temperatura, con lo stesso formatter. */
+export interface FermentationCellFormat {
+  duration: (hours: number) => string;
+  celsius: (tempC: number) => string;
+  env: (tempC: number) => string;
+}
+export function fermentationCellText(
+  current: { hours: number; tempC: number },
+  delta: ReferenceDelta | undefined,
+  fmt: FermentationCellFormat,
+): { value: string; canonical?: string } {
+  const ref = delta?.param === "fermentation"
+    ? { hours: delta.reference.value, tempC: delta.reference.tempC ?? current.tempC }
+    : undefined;
+  const tempOnly = !!ref && Math.round(ref.tempC) !== Math.round(current.tempC)
+    && fmt.env(ref.tempC) === fmt.env(current.tempC);
+  const text = (s: { hours: number; tempC: number }) =>
+    `${fmt.duration(s.hours)} ${tempOnly ? fmt.celsius(s.tempC) : fmt.env(s.tempC)}`;
+  return ref ? { value: text(current), canonical: text(ref) } : { value: text(current) };
 }

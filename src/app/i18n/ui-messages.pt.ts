@@ -269,7 +269,7 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "features.recipe.recipe-learning-panel.approfondimento-d68393e7": "Para saber mais",
   "features.recipe.recipe-match-card.amore-a-prima-vista-d3108980": "Excelente compatibilidade",
   "features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75": "Leia o motivo da pontuação baixa antes de decidir como continuar.",
-  "features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050": "Continuam a existir diferenças importantes face ao original. Consulte o detalhe.",
+  "features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050": "Continuam a existir diferenças importantes face à referência. Consulte o detalhe.",
   "features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af": "A avaliar",
   "features.recipe.recipe-match-card.cuore-spezzato-42157bb9": "A rever",
   "features.recipe.recipe-match-card.dettagli-8f4ce7d9": "Detalhes",

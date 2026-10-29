@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generateRecipe, STYLES_DB, type UserConstraints } from "./pizza-engine";
-import { compareToReference, recipeDisplayName, stgDepartures } from "./recipe-reference";
+import { compareToReference, fermentationCellText, recipeDisplayName, stgDepartures } from "./recipe-reference";
 
 const kitchen: UserConstraints = {
   oven_type: "wood", oven_max_temp_c: 485, available_hours: 24,
@@ -71,5 +71,56 @@ describe("compareToReference", () => {
       { param: "flourW", reference: { value: 280 }, current: { value: 300 } },
       { param: "fermentation", reference: { value: 10, tempC: 22 }, current: { value: 10, tempC: 4 } },
     ]);
+  });
+});
+
+/* FW-14 (revisione): un delta di sola temperatura nello stesso ambiente
+ * deve leggersi nella cella, non «12 h ambiente → 12 h ambiente». */
+describe("fermentationCellText", () => {
+  const fmt = {
+    duration: (h: number) => `${h} h`,
+    celsius: (t: number) => `${t} °C`,
+    env: (t: number) => (t < 10 ? "frigo" : "ambiente"),
+  };
+  const fresh = () => generateRecipe(STYLES_DB.napoletana_stg, kitchen, {
+    customHydration: 58, customFlourW: 280, customFlourPL: 0.6,
+    customFermentationHours: 10, customFermentationTempC: 12,
+  });
+  it("solo la temperatura cambia, stesso ambiente: il delta c'è e la cella mostra i gradi sui due lati", () => {
+    const recipe = fresh();
+    const deltas = compareToReference(recipe, reference());
+    expect(deltas).toEqual([
+      { param: "fermentation", reference: { value: 10, tempC: 22 }, current: { value: 10, tempC: 12 } },
+    ]);
+    const cell = fermentationCellText({ hours: recipe.fermentation_hours, tempC: recipe.fermentation_temp_c }, deltas[0], fmt);
+    expect(cell).toEqual({ value: "10 h 12 °C", canonical: "10 h 22 °C" });
+    expect(cell.value).not.toBe(cell.canonical);
+  });
+  it("ambiente diverso: i due lati dicono l'ambiente e restano diversi", () => {
+    const cold = generateRecipe(STYLES_DB.napoletana_stg, kitchen, {
+      customHydration: 58, customFlourW: 280, customFlourPL: 0.6,
+      customFermentationHours: 10, customFermentationTempC: 4,
+    });
+    const [delta] = compareToReference(cold, reference());
+    const cell = fermentationCellText({ hours: cold.fermentation_hours, tempC: cold.fermentation_temp_c }, delta, fmt);
+    expect(cell).toEqual({ value: "10 h frigo", canonical: "10 h ambiente" });
+  });
+  it("senza delta la cella dice solo ore e ambiente, e mezzo grado non è una modifica", () => {
+    const ref = reference();
+    expect(compareToReference({ ...ref, fermentation_temp_c: 22.3 }, ref)).toEqual([]);
+    expect(fermentationCellText({ hours: 10, tempC: 22 }, undefined, fmt)).toEqual({ value: "10 h ambiente" });
+  });
+  it("in ogni delta di lievitazione mostrato i due lati della cella sono diversi", () => {
+    const ref = reference();
+    for (const tempC of [4, 8, 12, 16, 18, 26]) for (const hours of [8, 10, 12]) {
+      const r = generateRecipe(STYLES_DB.napoletana_stg, kitchen, {
+        customHydration: 58, customFlourW: 280, customFlourPL: 0.6,
+        customFermentationHours: hours, customFermentationTempC: tempC,
+      });
+      const d = compareToReference(r, ref).find((x) => x.param === "fermentation");
+      if (!d) continue;
+      const cell = fermentationCellText({ hours: r.fermentation_hours, tempC: r.fermentation_temp_c }, d, fmt);
+      expect(cell.canonical, `${hours} h ${tempC} °C`).not.toBe(cell.value);
+    }
   });
 });

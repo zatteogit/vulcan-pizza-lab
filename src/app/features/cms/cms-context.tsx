@@ -1426,7 +1426,7 @@ export const CMS_DEFAULTS: CmsContent = {
 
     recipeOpenCreate: "Apri in Crea",
     createSourceTitle: "Parti da {style}",
-    createSourceHint: "Qui puoi adattare lo stile alla tua cucina e confrontare le modifiche con l’originale.",
+    createSourceHint: "Qui puoi adattare lo stile alla tua cucina e confrontare le modifiche con il riferimento.",
     createSourceAction: "Vedi la proposta su misura",
 
     supplyUnknownHint: "Una voce non selezionata resta da verificare. Se hai elencato tutto, indica che la lista è completa.",
@@ -1779,13 +1779,13 @@ export const CMS_DEFAULTS: CmsContent = {
     ballEstimateTooltip: "Stima indicativa basata sulla pezzatura tradizionale dello stile",
     tabRecipe: "Ricetta",
     tabRecipeTailored: "Ricetta su misura",
-    recipeCanonical: "Ricetta originale",
-    recipeCanonicalEyebrow: "Originale",
+    recipeCanonical: "Riferimento",
+    recipeCanonicalEyebrow: "Riferimento",
     preCookTitle: "Prima di iniziare",
     preCookBody:
-      "Stai consultando l’originale. Prima di prepararlo, controlla le condizioni oppure adattalo alla tua cucina.",
+      "Stai consultando il riferimento. Prima di prepararlo, controlla le condizioni oppure adattalo alla tua cucina.",
     preCookAdapt: "Adattala alla mia cucina",
-    preCookStart: "Usa l’originale",
+    preCookStart: "Usa il riferimento",
     matchTones: {
       t90: {
         title: UI_MESSAGES_IT["features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"],
@@ -1818,18 +1818,18 @@ export const CMS_DEFAULTS: CmsContent = {
     ceilingUnviable:
       "Con le condizioni attuali la proposta arriva a {ceiling}/100. Controlla i limiti o scegli un altro stile.",
     ceilingOvenWall:
-      "Il forno limita la proposta a {ceiling}/100: la cottura si discosta dall’originale.",
+      "Il forno limita la proposta a {ceiling}/100: la cottura si discosta dal riferimento.",
     ceilingNeeds: "Per arrivare a {ceiling}/100 ti serve: {needs}.",
     ceilingNeedsAtCeiling: "Per questa versione serve: {needs}.",
     ceilingOptimize: "Con le modifiche proposte puoi arrivare a {ceiling}/100.",
-    ceilingCanonicalOk: "Anche l’originale rispetta i requisiti della tua cucina.",
+    ceilingCanonicalOk: "Anche il riferimento rispetta i requisiti della tua cucina.",
     ceilingCompromise:
-      "La proposta arriva a {ceiling}/100 e richiede adattamenti rispetto all’originale.",
+      "La proposta arriva a {ceiling}/100 e richiede adattamenti rispetto al riferimento.",
     needFlour: "una farina ~W{w}",
     makePossible: "Rendila possibile",
     adaptToKitchen: "Adatta alla mia cucina",
     optimizeForMe: "Adatta alla mia cucina",
-    resetToOriginal: "Torna all'originale",
+    resetToOriginal: "Torna al riferimento",
     saveVersion: "Salva nel ricettario",
     savedVersion: "Salvata nel ricettario",
     optimizedForSetup: "Adattata alla tua cucina",
@@ -1964,7 +1964,7 @@ export const CMS_DEFAULTS: CmsContent = {
     feedbackNo: "No, a posto così",
     feedbackPlaceholder: "Cosa hai cambiato? Come è venuta? Dettagli utili...",
     preFermentCompare: "Confronto rapido",
-    scoreExplainer: "Il punteggio combina i criteri della ricetta. Requisiti non rispettati e distanza dall’originale possono limitarlo.",
+    scoreExplainer: "Il punteggio combina i criteri della ricetta. Requisiti non rispettati e distanza dal riferimento possono limitarlo.",
     companionContext: "La temperatura della cucina e il tempo a disposizione guidano tutto il processo.",
     companionSetup: "Adattiamo la ricetta alla tua esperienza, al forno e alla dispensa reale.",
     companionStyles: "Ogni stile ha parametri unici: scegli quello che meglio si adatta alle tue condizioni.",
@@ -2149,7 +2149,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "rec.timeCompatible": "Lievitazione {fMin}–{fMax}: compatibile con il tuo tempo",
     "rec.timeAdaptable": "Fermentazione adattabile a ~{hours}",
     "rec.timeInsufficient": "Richiede minimo {fMin}, hai {available}",
-    "rec.needsWoodOven": "L’originale prevede il forno a legna; con il tuo forno la cottura cambia.",
+    "rec.needsWoodOven": "Il riferimento prevede il forno a legna; con il tuo forno la cottura cambia.",
     "rec.ovenAdapted": "Il tuo forno arriva a {temp}: temperatura ideale {ideal}, cottura adattata",
     "rec.needsDeck": "Per questa cottura serve pietra o acciaio preriscaldato: non risultano nella tua cucina",
     "timeline.homeTray.preheat": "Preriscalda il forno al massimo ({temp}) con una teglia capovolta già dentro, finché anche la teglia è ben calda. Intanto termina il riposo dell’impasto.",

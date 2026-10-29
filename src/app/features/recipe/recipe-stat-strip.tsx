@@ -4,7 +4,7 @@ import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { isFriedStyle, GeneratedRecipe, type OvenType } from "../../domain/pizza-engine";
-import { compareToReference } from "../../domain/recipe-reference";
+import { compareToReference, fermentationCellText } from "../../domain/recipe-reference";
 import { useState } from "react";
 import { Link } from "react-router";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
@@ -57,15 +57,17 @@ export function RecipeStatStrip({
   // Stesso formato del valore attuale nella cella (prima «W285» contro «280 W»).
   const flourWValue = (v: number) => `${v} W`;
   const wChanged = w ? { canonical: flourWValue(w.reference.value) } : undefined;
-  const fChanged = f
-    ? { canonical: `${fmt.durationShort(f.reference.value)} ${envOf(f.reference.tempC ?? recipe.fermentation_temp_c)}` }
-    : undefined;
+  const fermentCell = fermentationCellText(
+    { hours: recipe.fermentation_hours, tempC: recipe.fermentation_temp_c },
+    f,
+    { duration: fmt.durationShort, celsius: fmt.celsius, env: envOf },
+  );
+  const fChanged = fermentCell.canonical ? { canonical: fermentCell.canonical } : undefined;
 
   /* Round 6-7 (note Matteo): in tabella SOLO i valori che cambiano e
      caratterizzano la ricetta — via Cottura (derivato), dentro la Forza
      farina che fa paio con l'idratazione; la lievitazione dichiara il
      CONTESTO (ambiente/frigo), non solo le ore. */
-  const fermentEnv = envOf(recipe.fermentation_temp_c);
   /* Audit totale n. 6: la ricetta (anche l'originale) si calcola sul TUO
      forno; se resta sotto il minimo dello stile lo diciamo accanto al valore. */
   const ovenBelowStyle =
@@ -84,7 +86,7 @@ export function RecipeStatStrip({
     { label: ui.statFlourStrength ?? "Forza farina", value: flourWValue(recipe.flour_w), changed: wChanged },
     {
       label: recipe.style.dough.unleavened ? ui.statRest : ui.statFermentation,
-      value: `${fmt.durationShort(recipe.fermentation_hours)} ${fermentEnv}`,
+      value: fermentCell.value,
       changed: fChanged,
     },
     // M-6: le fritte non hanno forno, la temperatura è quella dell'olio.

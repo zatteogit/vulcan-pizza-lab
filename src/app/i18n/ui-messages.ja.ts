@@ -269,7 +269,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.recipe-learning-panel.approfondimento-d68393e7": "詳しく",
   "features.recipe.recipe-match-card.amore-a-prima-vista-d3108980": "よく合っています",
   "features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75": "点数が低い理由を読んでから、進め方を選んでください。",
-  "features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050": "元のレシピとの違いが大きいため、詳細を確認してください。",
+  "features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050": "基準レシピとの違いが大きいため、詳細を確認してください。",
   "features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af": "条件を確認しましょう",
   "features.recipe.recipe-match-card.cuore-spezzato-42157bb9": "見直しが必要です",
   "features.recipe.recipe-match-card.dettagli-8f4ce7d9": "詳細",
