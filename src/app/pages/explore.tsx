@@ -5,6 +5,7 @@
 
 import { ArrowRight } from "lucide-react";
 import { CompatibilityPill, StyleMetaChip } from "../features/recipe/style-card-parts";
+import { ChangeOvenLink } from "../features/recipe/change-oven-link";
 import { AnimatePresence,motion } from "motion/react";
 import { useId, useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
@@ -734,6 +735,8 @@ function SignatureRecipeCard({
             </div>
           )}
       </TiltCard>
+      {/* FW-10: fuori dal link della card, sotto: vedi ChangeOvenLink. */}
+      <ChangeOvenLink recipe={match?.recipe} />
     </motion.article>
   );
 }
@@ -847,9 +850,9 @@ function StyleCatalogCard({
               <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} recipe={match.recipe} />
             </div>
           )}
-
-
       </TiltCard>
+      {/* FW-10: fuori dal link della card, sotto: vedi ChangeOvenLink. */}
+      <ChangeOvenLink recipe={match?.recipe} />
     </motion.article>
   );
 }

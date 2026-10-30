@@ -472,6 +472,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "verdict.lowerHydration": "加水率を下げる",
   "verdict.why": "理由",
   "explore.forKitchen": "あなたのキッチンに合うスタイル",
+  "explore.card.changeOven": "オーブンを変更",
   "profile.dietGlutenNote": "「グルテンフリー」を選ぶと、すべてのレシピが実行不可と表示されます。{brand}には検証済みのグルテンフリーの方法がまだありません。",
   "profile.dietGlutenWhy": "なぜ？",
   "features.recipe.recipe-stat-strip.modified": "変更された値。変更前 {0}、現在 {1}",

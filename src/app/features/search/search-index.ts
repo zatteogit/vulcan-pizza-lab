@@ -22,6 +22,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import { formatNumber, formatOvenFuel, formatPercent, formatTemp } from "../../i18n/format";
 import { OVEN_MODELS, type OvenModel } from "../../data/oven-models";
 import { METHOD_PATH } from "../method/method-link";
+import { ovenSetupLink } from "../profile/oven-setup-link";
 import type { CmsContent } from "../cms/cms-context";
 import { placeNameLocalizer } from "../cms/i18n";
 import { PRE_FERMENT_IDS, fillPreFermentText, preFermentName, preFermentStyleLinks } from "../recipe/pre-ferment-guide";
@@ -223,7 +224,7 @@ export function buildSearchIndex(cms: CmsContent, ovens: readonly OvenModel[] = 
           type: "oven",
           title: name,
           subtitle: `${formatOvenFuel(oven.fuel)} · ${uiMessage("features.profile.oven-model-search.upTo", [formatTemp(oven.maxTempC, cms.locale.id)])}`,
-          link: `/profile?tab=setup&ovenQuery=${encodeURIComponent(name)}`,
+          link: ovenSetupLink(name),
         },
         cms.ovenPresets?.[oven.ovenType]?.name ?? "",
       ),

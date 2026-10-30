@@ -83,6 +83,7 @@ import { uiMessage } from "../i18n/ui-messages";
 import { MICRO_DOSE_GRAMS, formatMass, pluralPick } from "../i18n/format";
 import { AccountPanel } from "../features/account/account-panel";
 import { OvenModelSearch } from "../features/profile/oven-model-search";
+import { OVEN_QUERY_PARAM } from "../features/profile/oven-setup-link";
 import { SettingEffectNote } from "../features/profile/setting-effect-note";
 import { SkillEffectDetails } from "../features/profile/skill-effect-details";
 import { DietPreferences } from "../features/profile/diet-preferences";
@@ -1851,7 +1852,7 @@ export function ProfilePage() {
             onClear={() => setOvenModelId(null)}
             currentTempC={ovenTemp}
             onRestore={(model: OvenModel) => setOvenTemp(model.maxTempC)}
-            initialQuery={searchParams.get("ovenQuery") ?? undefined}
+            initialQuery={searchParams.get(OVEN_QUERY_PARAM) ?? undefined}
           />
           <div className="profile-oven-list" role="radiogroup" aria-label={p.ovenTitle}>
             {OVEN_PRESETS.map((preset) => {
