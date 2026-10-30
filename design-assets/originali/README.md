@@ -50,3 +50,15 @@ Dopo la rigenerazione: `npm run verify` e `npm run build`.
 
 I video stanno in `public/videos/` e non vengono ricompressi. Il poster
 (`<nome>-poster.webp`) è il primo fotogramma, estratto con `--posters`.
+
+## Foto consegnate già in WebP
+
+Alcune foto arrivano già pronte nelle due larghezze, senza originale in questa
+cartella (es. i condimenti del Lotto 1, #165, i cui master PNG stanno fuori dal
+repository). Lo script non le riscrive e le tiene in tabella finché esistono
+sia `<nome>.webp` sia `<nome>-640.webp`. Per aggiornare solo la tabella dopo
+averne aggiunte:
+
+```bash
+python3 scripts/build-responsive-images.py --table-only
+```

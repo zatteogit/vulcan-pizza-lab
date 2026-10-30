@@ -17,6 +17,7 @@ Uso:
     python3 scripts/build-responsive-images.py              # tutte le immagini
     python3 scripts/build-responsive-images.py --quality 82 # qualità diversa (default 80)
     python3 scripts/build-responsive-images.py --posters    # anche i poster dei video (serve ffmpeg)
+    python3 scripts/build-responsive-images.py --table-only # solo la tabella, dai WebP esistenti
 
 Richiede Python 3.9+ e Pillow con supporto WebP (python3 -m pip install Pillow).
 """
@@ -104,6 +105,35 @@ def convert_all(quality: int) -> tuple[list[tuple[str, int, int, int, int]], int
     return entries, written, total_in
 
 
+def delivered_pairs(entries: list[tuple[str, int, int, int, int]]) -> list[tuple[str, int, int, int, int]]:
+    """Coppie <nome>.webp + <nome>-640.webp consegnate già pronte, senza un
+    originale qui (es. le foto dei condimenti del Lotto 1, #165): restano in
+    tabella e lo script non le riscrive."""
+    known = {rel for rel, *_ in entries}
+    pairs = []
+    for small in sorted(OUT.rglob(f"*-{SMALL_WIDTH}.webp")):
+        main_path = small.with_name(small.name[: -len(f"-{SMALL_WIDTH}.webp")] + ".webp")
+        rel = main_path.relative_to(OUT).with_suffix("").as_posix()
+        if rel in known or not main_path.exists():
+            continue
+        with Image.open(main_path) as main_image, Image.open(small) as small_image:
+            pairs.append((rel, main_image.width, main_image.height, small_image.width, small_image.height))
+    return pairs
+
+
+def existing_entries() -> list[tuple[str, int, int, int, int]]:
+    """Le voci della tabella lette dai WebP già generati, senza riconvertire."""
+    entries = []
+    for source in sorted(p for p in ORIGINALS.rglob("*") if p.suffix.lower() in SOURCE_EXTS):
+        rel = source.relative_to(ORIGINALS).with_suffix("")
+        main_path = OUT / rel.with_suffix(".webp")
+        small_path = OUT / rel.parent / f"{rel.name}-{SMALL_WIDTH}.webp"
+        if main_path.exists() and small_path.exists():
+            with Image.open(main_path) as main_image, Image.open(small_path) as small_image:
+                entries.append((rel.as_posix(), main_image.width, main_image.height, small_image.width, small_image.height))
+    return entries
+
+
 def write_table(entries: list[tuple[str, int, int, int, int]]) -> None:
     import_base = Path("../../../assets")
     lines = [
@@ -137,6 +167,9 @@ def report_orphans() -> None:
             rel = source.relative_to(ORIGINALS).with_suffix("")
             expected.add(OUT / rel.with_suffix(".webp"))
             expected.add(OUT / rel.parent / f"{rel.name}-{SMALL_WIDTH}.webp")
+    for rel, *_ in delivered_pairs([]):
+        expected.add(OUT / f"{rel}.webp")
+        expected.add(OUT / f"{rel}-{SMALL_WIDTH}.webp")
     orphans = sorted(p for p in OUT.rglob("*.webp") if p not in expected)
     for orphan in orphans:
         print(f"ATTENZIONE: {orphan.relative_to(ROOT)} non ha un originale (non cancellato)")
@@ -164,11 +197,20 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--quality", type=int, default=80, help="qualità WebP 0-100 (default 80)")
     parser.add_argument("--posters", action="store_true", help="rigenera anche i poster dei video")
+    parser.add_argument("--table-only", action="store_true", help="rifà solo la tabella dai WebP esistenti, senza riconvertire")
     args = parser.parse_args()
     if not features.check("webp"):
         sys.exit("Pillow senza supporto WebP")
+    if args.table_only:
+        entries = existing_entries()
+        entries = sorted(entries + delivered_pairs(entries))
+        write_table(entries)
+        print(f"Tabella: {TABLE.relative_to(ROOT)} ({len(entries)} voci)")
+        report_orphans()
+        return
 
     entries, written, total_in = convert_all(args.quality)
+    entries = sorted(entries + delivered_pairs(entries))
     write_table(entries)
     total_out = sum(p.stat().st_size for p in OUT.rglob("*.webp"))
     print(

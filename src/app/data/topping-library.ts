@@ -90,6 +90,14 @@ import thumbnailRicottaCicoli from "../../assets/toppings/topping_ricottacicoli.
 import thumbnailMeatLovers from "../../assets/toppings/topping_meatlovers.webp";
 import thumbnailSpinaci from "../../assets/toppings/topping_spinaci.webp";
 import thumbnailProsciuttoFunghi from "../../assets/toppings/topping_prosciuttofunghi.webp";
+import thumbnailWurstelPatatine from "../../assets/toppings/topping_wurstelpatatine.webp";
+import thumbnailProsciuttoCotto from "../../assets/toppings/topping_prosciuttocotto.webp";
+import thumbnailFunghi from "../../assets/toppings/topping_funghi.webp";
+import thumbnailNapoli from "../../assets/toppings/topping_napoli.webp";
+import thumbnailParmigiana from "../../assets/toppings/topping_parmigiana.webp";
+import thumbnailNorma from "../../assets/toppings/topping_norma.webp";
+import thumbnailBufalina from "../../assets/toppings/topping_bufalina.webp";
+import thumbnailItalianSausage from "../../assets/toppings/topping_italiansausage.webp";
 import thumbnailVariantMargheritaAvpn from "../../assets/toppings/variants/margherita_napoletana_avpn.webp";
 import thumbnailVariantMargheritaRomana from "../../assets/toppings/variants/margherita_romana.webp";
 import thumbnailVariantMargheritaAmericana from "../../assets/toppings/variants/margherita_americana.webp";
@@ -751,6 +759,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Salsiccia",
     description: "Salsiccia al finocchio a pezzetti, messa cruda su salsa e mozzarella: il condimento più diffuso nelle pizzerie di Chicago.",
     emoji: "🌭",
+    thumbnail: thumbnailItalianSausage,
     flavor_profile: "salty_savory",
     occasions: ["classico", "birra"],
   },
@@ -763,6 +772,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Würstel e patatine",
     description: "Pomodoro, mozzarella, würstel e patatine fritte messe all'uscita dal forno. In molte pizzerie si chiama «Americana».",
     emoji: "🌭",
+    thumbnail: thumbnailWurstelPatatine,
     flavor_profile: "rich",
     occasions: ["bambini", "famiglia", "serata amici"],
   },
@@ -771,6 +781,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Prosciutto cotto",
     description: "Pomodoro, mozzarella e prosciutto cotto. Semplice, senza funghi.",
     emoji: "🥓",
+    thumbnail: thumbnailProsciuttoCotto,
     flavor_profile: "salty_savory",
     occasions: ["bambini", "classico", "cena famiglia"],
   },
@@ -779,6 +790,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Funghi",
     description: "Pomodoro, mozzarella e champignon saltati in padella prima, così non bagnano la pizza.",
     emoji: "🍄",
+    thumbnail: thumbnailFunghi,
     flavor_profile: "earthy",
     occasions: ["vegetariano", "classico"],
   },
@@ -787,6 +799,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Napoli",
     description: "Pomodoro, mozzarella, acciughe e origano. A Roma si chiama «Napoli», a Napoli «Romana»; capperi e olive solo in alcune varianti.",
     emoji: "🐟",
+    thumbnail: thumbnailNapoli,
     flavor_profile: "salty_savory",
     occasions: ["classico", "pizzeria"],
   },
@@ -795,6 +808,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Parmigiana",
     description: "Pomodoro, melanzane fritte, mozzarella o provola, parmigiano e basilico: la parmigiana di melanzane sulla pizza.",
     emoji: "🍆",
+    thumbnail: thumbnailParmigiana,
     flavor_profile: "rich",
     occasions: ["vegetariano", "estate", "comfort"],
   },
@@ -803,6 +817,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Norma",
     description: "Pomodoro, melanzane fritte e basilico, con ricotta salata grattugiata dopo il forno, come la pasta alla Norma catanese.",
     emoji: "🍆",
+    thumbnail: thumbnailNorma,
     flavor_profile: "salty_savory",
     occasions: ["vegetariano", "estate", "tradizione siciliana"],
   },
@@ -811,6 +826,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Bufalina",
     description: "Pomodoro, mozzarella di bufala campana e basilico. La bufala rilascia molto siero: va sgocciolata e, nei forni lenti, messa all'uscita.",
     emoji: "🐃",
+    thumbnail: thumbnailBufalina,
     flavor_profile: "creamy",
     occasions: ["classico", "estate"],
   },
