@@ -53,7 +53,7 @@ describe("riferimento della teglia casalinga in giornata (Benedetta Rossi)", () 
     expect(r.yeast_source).toMatchObject({ source_type: "dry", source_pct: 1.4, converted: false });
     expect([r.hydration_pct, r.flour_w, r.fermentation_hours, r.fermentation_temp_c]).toEqual([80, 280, 2, 26]);
     expect([r.oven_temp_c, r.cook_time_sec]).toEqual([210, 1800]);
-    expect(r.source_notes?.map((n) => n.key)).toEqual(["source.convertedDoses", "fermentation.warmPlace"]);
+    expect(r.source_notes?.map((n) => n.key)).toEqual(["source.convertedDoses", "fermentation.warmPlace", "topping.sauceSeasoning"]);
     expect(r.verdict.outcome).not.toBe("not_feasible");
     // L'impasto si mescola, non s'impasta; la salsa va prima dell'appretto in teglia.
     expect(r.timeline.find((s) => s.id === "mix")?.msg?.description?.[0]?.key).toBe("timeline.mix.stir");
@@ -70,7 +70,7 @@ describe("riferimento della teglia casalinga in giornata (Benedetta Rossi)", () 
     const r = canonicalRecipe(style, { ...home, pantry_yeasts: ["fresh"], pantry_inventory_complete: true }, weights);
     expect(r.yeast_type).toBe("fresh");
     expect(r.yeast_source?.converted).toBe(true);
-    expect(r.source_notes?.map((n) => n.key)).toEqual(["source.convertedDoses", "yeast.sourceDryAsFresh", "fermentation.warmPlace"]);
+    expect(r.source_notes?.map((n) => n.key)).toEqual(["source.convertedDoses", "yeast.sourceDryAsFresh", "fermentation.warmPlace", "topping.sauceSeasoning"]);
   });
 });
 
@@ -125,7 +125,7 @@ describe("MCP", () => {
     for (const extra of [{ recipe_mode: "canonical" }, { interpretation_id: "benedetta_rossi" }]) {
       const data = call("generate_recipe", { style_id: "teglia_in_giornata", oven_type: "home", oven_max_temp_c: 250, dough_balls: 1, ...extra }).structuredContent;
       expect(data.yeast_source, JSON.stringify(extra)).toMatchObject({ source_type: "dry", source_pct: 1.4, type: "dry", pct: 1.4, converted: false });
-      expect(data.source_notes.map((n: { key: string }) => n.key)).toEqual(["source.convertedDoses", "fermentation.warmPlace"]);
+      expect(data.source_notes.map((n: { key: string }) => n.key)).toEqual(["source.convertedDoses", "fermentation.warmPlace", "topping.sauceSeasoning"]);
       expect(data.ingredients.find((i: { name: string }) => i.name === "flour")?.grams).toBe(500);
     }
   });

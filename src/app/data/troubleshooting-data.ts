@@ -286,7 +286,8 @@ function withoutIssues(trouble: StepTroubleshooting, drop: (id: string) => boole
  * Nessun fallback a un problema del forno per passi sconosciuti o riposi non lievitati.
  * FW-05: `coldRetard` (puntata in frigo) toglie «non cresce» (S13-B-02: al freddo
  * crescere poco è normale); `glutenFree` toglie le diagnosi sul glutine.
- * G4b-WP-03: «si attacca alla pala» (P22) solo se la pizza va in forno con la pala. */
+ * G4b-WP-03: «si attacca alla pala» (P22) solo se la pizza va in forno con la pala.
+ * B2 (seguito): niente «impasto appiccicoso» (P01) sotto «mescola senza impastare». */
 export function getStepTroubleshooting(
   step: Pick<TimelineStep, 'id' | 'variant' | 'msg'>,
   context: { unleavened?: boolean; filled?: boolean; coldRetard?: boolean; glutenFree?: boolean; peel?: boolean } = {},
@@ -302,6 +303,9 @@ export function getStepTroubleshooting(
   if (!trouble) return trouble;
   return withoutIssues(trouble, (id) =>
     (!context.peel && id === 'P22') ||
+    // B2 (seguito): l'impasto mescolato senza impastare è appiccicoso per
+    // ricetta; «aggiungi farina» (P01) contraddirebbe la fonte.
+    (step.variant === 'stir' && id === 'P01') ||
     (!!context.coldRetard && step.id === 'bulk' && id === 'P04') ||
     (!!context.glutenFree && GLUTEN_DEPENDENT_ISSUES.has(id)));
 }

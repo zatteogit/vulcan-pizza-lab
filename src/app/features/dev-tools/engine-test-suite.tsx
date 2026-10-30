@@ -35,6 +35,7 @@ import {
   getQ10,
   generateRecipe,
   optimizeRecipe,
+  isUnworkedPanDough,
   defaultFermentTempC,
   estimatePL,
   recommendStyles,
@@ -137,7 +138,7 @@ function runDbIntegrity(): TestResult[] {
   // T01-03: Famiglie valide
   {
     const { ms } = timed(() => null);
-    const validFamilies = ["napoletana", "romana", "americana", "contemporanea", "regionale"];
+    const validFamilies = ["napoletana", "romana", "americana", "contemporanea", "regionale", "casa"];
     const invalid = styles.filter(s => !validFamilies.includes(s.family));
     results.push({ id: "T01-03", name: "Famiglie valide", status: invalid.length === 0 ? "pass" : "fail", detail: invalid.length ? `Invalide: ${invalid.map(s => s.id).join(", ")}` : `Tutte in ${validFamilies.join("/")}`, ms });
   }
@@ -1271,13 +1272,20 @@ function runOptimizer(): TestResult[] {
     results.push({ id: "T13-03", name: "Rispetta ore disponibili (≤10h)", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : "Tutti ≤ 10h", ms });
   }
 
-  // T13-04: rispetta il tetto d'idratazione per principiante (skill 1 → ≤68%)
+  // T13-04: rispetta il tetto d'idratazione per principiante (skill 1 → ≤68%).
+  // B2 (seguito): l'impasto mescolato e allargato in teglia non si lavora a
+  // mano: niente tetto, ma resta nell'intervallo dello stile.
   {
     const errs: string[] = [];
     const { ms } = timed(() => {
       const c = makeConstraints({ skill_level: 1 });
       for (const s of styles) {
         const o = optimizeRecipe(s, c);
+        if (isUnworkedPanDough(s)) {
+          const [hMin, hMax] = s.dough.hydration_pct_range;
+          if (o.params.hydration_base < hMin || o.params.hydration_base > hMax) errs.push(`${s.id}: H=${o.params.hydration_base}% fuori ${hMin}–${hMax}%`);
+          continue;
+        }
         if (o.recipe.hydration_pct > 68) errs.push(`${s.id}: H=${o.recipe.hydration_pct}% > 68%`);
       }
     });

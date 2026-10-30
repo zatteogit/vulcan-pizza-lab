@@ -2128,13 +2128,14 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     id: "families",
     label: "Famiglie & Tiers",
     icon: "layers",
-    description: "Nomi delle 5 famiglie pizza e delle 3 fasce di compatibilita",
+    description: "Nomi delle 6 famiglie pizza e delle 3 fasce di compatibilita",
     fields: [
       { path: "families.napoletana.name", label: "Napoletana — Nome", type: "text" },
       { path: "families.romana.name", label: "Romana — Nome", type: "text" },
       { path: "families.americana.name", label: "Americana — Nome", type: "text" },
       { path: "families.contemporanea.name", label: "Contemporanea — Nome", type: "text" },
       { path: "families.regionale.name", label: "Tradizioni regionali — Nome", type: "text" },
+      { path: "families.casa.name", label: "Di casa — Nome", type: "text" },
       // Tiers
       { path: "tiers.perfect.label", label: "Tier Perfetto — Label", type: "text" },
       { path: "tiers.perfect.subtitle", label: "Tier Perfetto — Sub", type: "text" },

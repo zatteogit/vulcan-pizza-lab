@@ -20,6 +20,9 @@ export const PIZZA_FAMILIES: Record<
   // Le famiglie hanno solo il nome: descrizioni ed emoji non le mostrava
   // nessuna schermata (budget JS); il nome localizzato è in cms.families.
   regionale: { name: "Tradizioni regionali" },
+  // B2 (decisione 1 di Matteo, 30/10/2026): le pizze nate in cucina, non in
+  // pizzeria (ricette di casa, blog, TV). Ultima: dopo le tradizioni.
+  casa: { name: "Di casa" },
 };
 
 /** Uno stile appartiene a una famiglia se è la sua primaria O una secondaria.
@@ -1597,8 +1600,18 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   teglia_in_giornata: {
     id: "teglia_in_giornata",
     proof_in_pan: true,
+    /* B2 (seguito): il processo dello stile è quello del riferimento
+     * (Benedetta Rossi, base «fonte»): impasto diretto mescolato senza
+     * impastare, 10 minuti in teglia. Così anche la proposta su misura, la
+     * ricetta senza preset e l'MCP non chiedono incordatura, pieghe o staglio
+     * (guardia in use-cases/teglia-in-giornata.test.ts). */
+    method_profile: {
+      id: "teglia_in_giornata", direct_only: true, proof_hours: 1 / 6, proof_in_pan: true, mix_without_kneading: true,
+      source_url: "https://www.fattoincasadabenedetta.it/ricetta/pizza-in-teglia/",
+    },
     name: "Teglia casalinga in giornata",
-    family: "regionale",
+    // Decisione 1 di Matteo (30/10/2026): famiglia «Di casa».
+    family: "casa",
     origin: { city: "Italia" },
     dough: {
       flour_w_range: [250, 330],

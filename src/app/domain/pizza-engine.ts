@@ -72,7 +72,8 @@ export type FamilyId =
   | "romana"
   | "americana"
   | "contemporanea"
-  | "regionale";
+  | "regionale"
+  | "casa";
 
 export interface DoughParameters {
   flour_w_range: [number, number];
@@ -167,6 +168,23 @@ const DEFAULT_LAYOUT: Required<Omit<LayoutSpec, "folds">> = {
 export function getLayoutSpec(style: PizzaStyle): Required<Omit<LayoutSpec, "folds">> & { folds?: number } {
   if (!style.layout) return { ...DEFAULT_LAYOUT };
   return { ...DEFAULT_LAYOUT, ...style.layout };
+}
+
+/** B2 (seguito, 30/10/2026): impasto che non si lavora a mano. Si mescola
+ *  senza impastare (`mix_without_kneading`: niente incordatura, niente
+ *  pieghe) e va dritto nella teglia unta, dove si allarga con le mani unte e
+ *  fa l'appretto (`proof_in_pan`, un pezzo per teglia). Non si impasta, non
+ *  si fanno palline, non si stende sul banco né si trasferisce con la pala:
+ *  le difficoltà dell'idratazione alta per chi comincia (impastare un impasto
+ *  appiccicoso, pirlarlo, stenderlo senza strapparlo) non ci sono. Lo usano
+ *  l'avviso «idratazione per principianti», il tetto d'idratazione per
+ *  livello dell'ottimizzatore e i passi della timeline (niente staglio con
+ *  una teglia sola). Nessuno stile di prima ha questo profilo. */
+export function isUnworkedPanDough(style: PizzaStyle): boolean {
+  return Boolean(style.method_profile?.mix_without_kneading) &&
+    Boolean(style.proof_in_pan) &&
+    getLayoutSpec(style).type === "single" &&
+    !style.dough.unleavened;
 }
 
 /** True se lo stile è "farcito" (ripieno/sdoppiato a libro): l'UI mostra
@@ -681,8 +699,9 @@ export interface TimelineStep {
     description?: EngineMsg[];
     tip?: { beginner: EngineMsg; nerd: EngineMsg };
   };
-  /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. */
-  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan";
+  /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. «stir»:
+   *  l'impasto si mescola senza impastare (B2), niente incordatura né pieghe. */
+  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan" | "stir";
   /** G3-WP-03 (S09-A-13): variante del passo del condimento scelta dal motore
    *  con la cottura effettiva (basilico prima del forno o appena sfornata). */
   bake_length?: ToppingBakeLength;
@@ -1043,12 +1062,18 @@ export function estimatePL(flourW: number, stylePlRange: [number, number]): numb
  * del range dello stile, ma il valore preciso dell'interpretazione.
  * Tolleranza simmetrica più stretta: ±3% H / ±25W / ±0.07 P/L / ±4h.
  */
-interface AuthenticityCenter {
+export interface AuthenticityCenter {
   hydration_pct?: number;
   flour_w?: number;
   flour_pl?: number;
   fermentation_hours?: number;
 }
+
+/** Tolleranze attorno al centro di un'interpretazione: entro queste il motore
+ *  considera la ricetta fedele al canone (nessuna penalità d'autenticità).
+ *  Le usa anche l'ottimizzatore per non allontanare la proposta su misura dal
+ *  riferimento di una fonte (B2, seguito: `searchAround` di optimizeRecipe). */
+export const INTERPRETATION_TOLERANCE = { hydration_pct: 3, flour_w: 25, fermentation_hours: 4 } as const;
 
 /* FW-06: il tetto del combustibile identitario si definisce in recipe-score
  * (FW-05, pesi e fasce come dati); qui si riespone per l'interfaccia. */
@@ -1083,7 +1108,7 @@ function calculateAuthenticityScore(
     (style.dough.hydration_pct_range[0] +
       style.dough.hydration_pct_range[1]) /
       2;
-  const hTolerance = interpretationCenter?.hydration_pct !== undefined ? 3 : 5;
+  const hTolerance = interpretationCenter?.hydration_pct !== undefined ? INTERPRETATION_TOLERANCE.hydration_pct : 5;
   const hDeviation = Math.abs(hydration - hCenter);
   if (hDeviation > hTolerance) {
     const penalty = Math.min(25, hDeviation * 2.5);
@@ -1099,7 +1124,7 @@ function calculateAuthenticityScore(
     (style.dough.flour_w_range[0] +
       style.dough.flour_w_range[1]) /
       2;
-  const wTolerance = interpretationCenter?.flour_w !== undefined ? 25 : 30;
+  const wTolerance = interpretationCenter?.flour_w !== undefined ? INTERPRETATION_TOLERANCE.flour_w : 30;
   const wDeviation = Math.abs(flourW - wCenter);
   if (wDeviation > wTolerance) {
     const penalty = Math.min(20, (wDeviation - wTolerance) * 0.5);
@@ -1158,8 +1183,9 @@ function calculateAuthenticityScore(
     // Centro = ore canoniche dell'interpretazione, tolleranza ±4h
     const fCenter = interpretationCenter.fermentation_hours;
     const fDeviation = Math.abs(fermentationHours - fCenter);
-    if (fDeviation > 4) {
-      const penalty = Math.min(15, (fDeviation - 4) * 1.5);
+    const fTolerance = INTERPRETATION_TOLERANCE.fermentation_hours;
+    if (fDeviation > fTolerance) {
+      const penalty = Math.min(15, (fDeviation - fTolerance) * 1.5);
       breakdown.processo -= penalty;
       penalties.push(
         em("auth.fermentOffCenter", `Fermentazione lontana dal canone (-${penalty.toFixed(1)}%)`, { penalty: penalty.toFixed(1) }),
@@ -1296,17 +1322,21 @@ function calculateFeasibilityScore(
   // Skill factor (30%) — Audit Scientifico S3: deve considerare W, metodo, non solo H+skill
   let skillScore = 90;
 
-  // Hydration × skill interaction — soglie più alte per Intermedio/Avanzato
-  if (hydration > HIGH_HYDRATION_PCT && skillLevel === 1) {
+  // Hydration × skill interaction — soglie più alte per Intermedio/Avanzato.
+  // B2 (seguito): la difficoltà è nel lavorare a mano un impasto molle
+  // (impastare, pirlare, stendere); se l'impasto si mescola col cucchiaio e si
+  // allarga nella teglia unta (isUnworkedPanDough) l'avviso non vale.
+  const handlesWetDough = !isUnworkedPanDough(style);
+  if (handlesWetDough && hydration > HIGH_HYDRATION_PCT && skillLevel === 1) {
     skillScore = 30;
     warnings.push(
       em("feas.hydrationBeginnerHigh", METHOD_MESSAGES_IT["feas.hydrationBeginnerHigh"]),
     );
-  } else if (hydration > 85 && skillLevel === 2) {
+  } else if (handlesWetDough && hydration > 85 && skillLevel === 2) {
     // Solo idratazioni davvero estreme (>85%) generano warning per Intermedio
     skillScore = 65;
     warnings.push(em("feas.hydrationNeedsPractice", "Idratazione estrema (>85%) richiede pratica"));
-  } else if (hydration > 65 && skillLevel === 1) {
+  } else if (handlesWetDough && hydration > 65 && skillLevel === 1) {
     skillScore = 50;
     warnings.push(em("feas.hydrationMedBeginner", METHOD_MESSAGES_IT["feas.hydrationMedBeginner"]));
   }
@@ -2782,6 +2812,8 @@ export function generateRecipe(
           ? [em("fermentation.warmPlace", METHOD_MESSAGES_IT["fermentation.warmPlace"],
             { temp: WARM_PLACE.calcC, tempMin: WARM_PLACE.windowC[0], tempMax: WARM_PLACE.windowC[1], app: BRAND.name })]
           : []),
+        // B2 (seguito): ciò che la fonte del condimento non dice (salsa «condita»).
+        ...(defaultTopping?.source_note ? [defaultTopping.source_note] : []),
       ];
       return notes.length > 0 ? { source_notes: notes } : {};
     })(),
@@ -2982,6 +3014,13 @@ export function optimizeRecipe(
   versionRanges?: VersionRangeOverrides,
   activeImpastoRef?: string,
   interpretationCenter?: AuthenticityCenter,
+  /** B2 (seguito): riferimento da cui la proposta non si allontana. Restringe
+   *  solo lo SPAZIO DI RICERCA (idratazione, W e ore entro
+   *  INTERPRETATION_TOLERANCE dal centro, dentro gli intervalli dello stile);
+   *  i punteggi restano quelli dello stile, così la ricetta ricostruita dai
+   *  parametri vale quanto la candidata. Lo passa il caso d'uso per gli stili
+   *  il cui riferimento è una fonte (recipe-entry.ts). */
+  searchAround?: AuthenticityCenter,
 ): OptimizedRecipe {
   constraints = { ...constrainOvenToCapacity(constraints), available_hours: floorToQuarterHour(constraints.available_hours) };
   const safeRange = (r: [number, number]): [number, number] =>
@@ -3010,6 +3049,17 @@ export function optimizeRecipe(
   const [hMin, hMax] = safeRange(effStyle.dough.hydration_pct_range);
   const [wMin, wMax] = safeRange(effStyle.dough.flour_w_range);
   const [fMin, fMax] = safeRange(effStyle.dough.fermentation_hours_range);
+  /* Finestra di ricerca: intervallo dello stile, stretto attorno al
+   * riferimento se c'è `searchAround` (mai fuori dall'intervallo). */
+  const around = (range: [number, number], center: number | undefined, tolerance: number): [number, number] => {
+    if (center === undefined) return range;
+    const lo = Math.max(range[0], center - tolerance);
+    const hi = Math.min(range[1], center + tolerance);
+    return lo <= hi ? [lo, hi] : range;
+  };
+  const [hSearchMin, hSearchMax] = around([hMin, hMax], searchAround?.hydration_pct, INTERPRETATION_TOLERANCE.hydration_pct);
+  const [wSearchMin, wSearchMax] = around([wMin, wMax], searchAround?.flour_w, INTERPRETATION_TOLERANCE.flour_w);
+  const [fSearchMin, fSearchMax] = around([fMin, fMax], searchAround?.fermentation_hours, INTERPRETATION_TOLERANCE.fermentation_hours);
 
   // ── Ricetta sonda: overhead fisso della timeline (ENG-4) e compensazione
   // d'idratazione del forno (ENG-6), con gli stessi vincoli e la stessa cottura. ──
@@ -3039,8 +3089,8 @@ export function optimizeRecipe(
       ? avail
       : fermentationWindowHours(avail, overheadMinutes);
   let hourCands = _uniqRounded([
-    ...[fMin, (fMin + fMax) / 2, fMax].map((h) => Math.max(fMin, floorToQuarterHour(h))),
-    ...(fermentWindow >= fMin && fermentWindow <= fMax ? [fermentWindow] : []),
+    ...[fSearchMin, (fSearchMin + fSearchMax) / 2, fSearchMax].map((h) => Math.max(fSearchMin, floorToQuarterHour(h))),
+    ...(fermentWindow >= fSearchMin && fermentWindow <= fSearchMax ? [fermentWindow] : []),
   ]).filter((h) => h <= fermentWindow);
   if (hourCands.length === 0) {
     // Anche il minimo dello stile è oltre il tempo disponibile: si fa il meglio
@@ -3055,23 +3105,29 @@ export function optimizeRecipe(
   // ENG-6: i candidati sono idratazioni BASE; la compensazione del forno si
   // applica sopra (compensateCustomHydration). Il tetto di livello vale
   // sull'idratazione FINALE, quindi la base si ferma a tetto − compensazione.
-  const skillCeilBase = _hydrationCeilingForSkill(constraints.skill_level) - hydrationDelta;
-  const skillCeilingBinding = skillCeilBase < hMax;
-  const hCeil = Math.min(hMax, skillCeilBase);
-  const hLo = Math.min(hMin, hCeil);
+  // B2 (seguito): il tetto di livello serve a non proporre impasti che non
+  // si sanno lavorare a mano; un impasto mescolato col cucchiaio e allargato
+  // nella teglia unta non si lavora (isUnworkedPanDough), quindi resta
+  // nell'intervallo dello stile.
+  const skillCeilBase = isUnworkedPanDough(style)
+    ? Infinity
+    : _hydrationCeilingForSkill(constraints.skill_level) - hydrationDelta;
+  const skillCeilingBinding = skillCeilBase < hSearchMax;
+  const hCeil = Math.min(hSearchMax, skillCeilBase);
+  const hLo = Math.min(hSearchMin, hCeil);
   const hydrCands = _uniqRounded(
     _uniqRounded([hLo, (hLo + hCeil) / 2, hCeil], 0).map((h) => Math.min(h, hCeil)),
     1,
   );
 
   // ── Spazio farina: midpoint stile + match con la dispensa (se compatibile) ──
-  const wMid = Math.round((wMin + wMax) / 2);
+  const wMid = Math.round((wSearchMin + wSearchMax) / 2);
   const wCandSet: number[] = [wMid];
   for (const id of constraints.pantry_flours) {
     const r = pantryFlourRange(constraints, id);
     if (!r) continue;
-    const w = Math.round(Math.max(wMin, Math.min(wMax, (r[0] + r[1]) / 2)));
-    if (r[0] <= wMax && r[1] >= wMin) wCandSet.push(w); // overlap col range stile
+    const w = Math.round(Math.max(wSearchMin, Math.min(wSearchMax, (r[0] + r[1]) / 2)));
+    if (r[0] <= wSearchMax && r[1] >= wSearchMin) wCandSet.push(w); // overlap col range stile
   }
   const wCands = _uniqRounded(wCandSet, 0);
 
@@ -3592,7 +3648,8 @@ function generateTimeline(
     const k = knead as KneadGuidance;
     steps.push(
       keyedStep(
-        { id: "mix", duration_minutes: k.duration_minutes, icon: "hand", timing_label: "Inizio" },
+        { id: "mix", duration_minutes: k.duration_minutes, icon: "hand", timing_label: "Inizio",
+          ...(style.method_profile?.mix_without_kneading ? { variant: "stir" as const } : {}) },
         em("timeline.mix.title", "Impasto"),
         [k.description],
         k.tip,
@@ -3716,7 +3773,19 @@ function generateTimeline(
     (servingUnitForDivide === "teglia" ||
       servingUnitForDivide === "pala" ||
       servingUnitForDivide === "focaccia");
-  steps.push({
+  // B2 (seguito): l'impasto mescolato senza impastare va dalla ciotola alla
+  // teglia unta; con una teglia sola non c'è niente da dividere.
+  // Con più teglie l'impasto si divide direttamente nelle teglie unte: niente
+  // banco, panetti o pirlatura (variante «pan»).
+  const unworkedDough = isUnworkedPanDough(style);
+  const skipDivide = unworkedDough && bakeRounds <= 1;
+  if (unworkedDough && !skipDivide) {
+    steps.push(keyedStep(
+      { id: "divide", variant: "pan", duration_minutes: 15, icon: "scissors", timing_label: "15 min" },
+      em("timeline.divide.pansTitle", METHOD_MESSAGES_IT["timeline.divide.pansTitle"]),
+      [em("timeline.divide.pans", METHOD_MESSAGES_IT["timeline.divide.pans"])],
+    ));
+  } else if (!skipDivide) steps.push({
     id: "divide",
     title: "Staglio",
     ...(isMultiPiece
@@ -3787,9 +3856,15 @@ function generateTimeline(
     : preheatDuringProof
       ? undefined
       : "whole_proof";
+  // B2 (seguito): negli stili che lievitano in teglia non ci sono panetti;
+  // stessi testi della UI (timeline.preheat.descPan e descPanWholeProof).
   const preheatWhile =
     preheatVariant === "during_rest"
       ? "Intanto i panetti riposano."
+      : style.proof_in_pan
+        ? preheatVariant === "whole_proof"
+          ? "Intanto l'impasto fa l'appretto in teglia."
+          : "Intanto l'impasto finisce l'appretto in teglia."
       : preheatVariant === "whole_proof"
         ? "Intanto i panetti fanno l'appretto."
         : "Intanto i panetti finiscono l'appretto.";

@@ -4,6 +4,7 @@ import {
   STYLES_DB,
   calculateOvenCompensations,
   fermentationSpeedRatio,
+  isUnworkedPanDough,
   generateRecipe,
   getQ10,
   optimizeRecipe,
@@ -481,7 +482,14 @@ describe("compensazioni dichiarate = applicate (ENG-6)", () => {
           const label = `${style.id}@${oven} skill${skill}`;
           const delta = calculateOvenCompensations(recipe.style, recipe.oven_temp_c).hydration_delta_pct;
           errors.push(...checkRecipe(recipe, label, delta > 0));
-          if (recipe.hydration_pct > ceilings[skill] + 1e-9) {
+          // B2 (seguito): l'impasto mescolato e allargato in teglia non ha il
+          // tetto di livello, ma la base resta nell'intervallo dello stile.
+          if (isUnworkedPanDough(recipe.style)) {
+            const [hMin, hMaxStyle] = recipe.style.dough.hydration_pct_range;
+            if (result.params.hydration_base < hMin || result.params.hydration_base > hMaxStyle) {
+              errors.push(`${label}: base ${result.params.hydration_base} fuori dall'intervallo dello stile`);
+            }
+          } else if (recipe.hydration_pct > ceilings[skill] + 1e-9) {
             errors.push(`${label}: idratazione ${recipe.hydration_pct} oltre il tetto ${ceilings[skill]}`);
           }
           const [, hMax] = recipe.style.dough.hydration_pct_range;

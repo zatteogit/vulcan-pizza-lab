@@ -26,6 +26,8 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   "fermentation.warmPlace": "La fonte dice «in un luogo caldo», senza gradi: {app} calcola a {temp}, e va bene fra {tempMin} e {tempMax}. Aspetta che l'impasto raddoppi, non l'ora sull'orologio.",
   // B2 (D-066): misure di casa (ml, cucchiaini, bustine) convertite in grammi.
   "source.convertedDoses": "La fonte misura in millilitri, cucchiaini e bustine: i grammi sono una conversione di {app}. Sui grammi piccoli, come sale e zucchero, il margine è di circa il 25%.",
+  // B2 (seguito): la fonte dice «condita» senza dettaglio (salsa della margherita).
+  "topping.sauceSeasoning": "La fonte dice solo «salsa condita», senza dire con che cosa: olio e sale nella salsa sono una lettura di {app}.",
   "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
   "topping.geometry": "Superficie {area} cm² · riferimento {reference} cm² · dosi ×{scale}.",
   "auth.layoutChanged": "Formato diverso dal riferimento: la variante modifica la struttura della ricetta",
@@ -65,6 +67,8 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   "timeline.mix.hands.desc": "Impasta a mano fino a incordatura (~15-20 min) con pieghe sul piano.",
   // B2: la fonte mescola senza impastare (MethodProcessProfile.mix_without_kneading).
   "timeline.mix.stir": "Mescola gli ingredienti con un cucchiaio, aggiungendo i liquidi poco alla volta, finché non restano grumi di farina. L'impasto è molto morbido e appiccicoso: non va impastato.",
+  "timeline.divide.pansTitle": "Dividi nelle teglie",
+  "timeline.divide.pans": "Pesa l'impasto e dividilo fra le teglie unte, versandolo con una spatola o con le mani unte: non va lavorato né arrotondato.",
   "timeline.mix.hands.descHighHydration": "Impasta a mano fino a incordatura (~15-20 min) con lo slap & fold.",
   "timeline.mix.hands.tipBeginner": "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
   "timeline.mix.hands.tipNerd": "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica. Oltre il {pct}% di idratazione si passa allo slap & fold.",

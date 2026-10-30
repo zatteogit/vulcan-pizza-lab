@@ -648,3 +648,49 @@ righe nuove (`teglia_in_giornata`), nessun numero cambiato. Classifica di
 `recommendStyles` (ricette su misura): P1 (casa 250 °C, 24 h) stesso ordine
 relativo, lo stile nuovo entra 14° con 97; P3 (Effeuno 509 °C, 48 h) stesso
 ordine, lo stile nuovo 30° con 97 (pari voto, ultimo per margine di cucina).
+
+## Tranche B2, seguito · decisioni di Matteo e difetti della teglia in giornata (30/10/2026)
+
+Correzioni generali, attive solo per i dati che le dichiarano; nessuno stile
+di prima cambia (`preset-numbers.regression.json` identico; in
+`recipes.golden.json` cambiano solo le due righe della teglia in giornata,
+`timeline_min` 622 → 612: l'impasto senza preset ora si mescola, 10 minuti
+invece dei 20 dell'impasto a mano).
+
+- **Impasto che non si lavora a mano** (`isUnworkedPanDough`: profilo
+  `mix_without_kneading` + `proof_in_pan`, un pezzo per teglia). La
+  difficoltà dell'idratazione alta per chi comincia è nel lavoro a mano
+  (impastare un impasto appiccicoso, pirlarlo, stenderlo e trasferirlo);
+  un impasto mescolato col cucchiaio e allargato con le mani unte nella
+  teglia unta non ha nessuno di questi passaggi. Per questi impasti: niente
+  avvisi `feas.hydrationBeginnerHigh` / `MedBeginner` (segnali «Impasto
+  esigente» e «Abbassa l'idratazione»), niente tetto d'idratazione per livello
+  nell'ottimizzatore. Lo stesso impasto impastato a mano, o non in teglia,
+  resta «esigente» (test). Riferimento di Benedetta, principiante: 89 → 97.
+- **Processo dello stile.** `teglia_in_giornata` ha il `method_profile` del
+  suo riferimento (diretto, mescolato, 10 minuti in teglia): anche la ricetta
+  senza preset, la proposta su misura e l'MCP mescolano invece di impastare.
+  Guardia: i flag del profilo dello stile coincidono con quelli del
+  riferimento.
+- **Proposta su misura vicina al riferimento-fonte**
+  (`optimizeRecipe(..., searchAround)`, `sourceReferenceCenter`). Causa: la
+  ricerca copriva tutta la forbice dello stile e il punteggio di digeribilità
+  cresce con le ore (2 h → 23, 6 h → 50, 12 h → 66), quindi vinceva sempre
+  12 h; per chi comincia il tetto di livello (68 %) portava l'acqua sotto il
+  minimo dello stile (75 %). Ora, per gli stili col riferimento da una fonte,
+  lo spazio di ricerca sta entro `INTERPRETATION_TOLERANCE` (±3 % d'acqua,
+  ±25 W, ±4 h: le stesse tolleranze con cui il motore chiama una ricetta
+  fedele all'interpretazione) e dentro gli intervalli dello stile; i punteggi
+  non cambiano. Principiante, forno di casa, cena di domani: prima 68 %,
+  W 290, 12 h a 22 °C; ora 77 %, W 280, 6 h a 22 °C (con 6 ore fino al pasto:
+  5 h). Vale anche per «Ottimizza per me» dal riferimento.
+- **Testi.** Passo «Impasto» con variante `stir` (niente glossario di
+  incordatura e pieghe, niente «impasto appiccicoso» fra i problemi); con una
+  teglia sola niente staglio, con più teglie «Dividi nelle teglie» (stessi
+  15 minuti, niente panetti né pirlatura); preriscaldo degli stili che
+  lievitano in teglia: «Intanto l'impasto (finisce) l'appretto in teglia»
+  invece di «i panetti» anche nel testo del motore (MCP), come nella UI.
+- **Nota della salsa.** Un condimento può dichiarare una scelta di Vulcan su
+  ciò che la fonte non dice (`ToppingRecipe.source_note`, nelle
+  `source_notes`): la margherita della teglia in giornata dice che olio e sale
+  della salsa «condita» sono una lettura di Vulcan.

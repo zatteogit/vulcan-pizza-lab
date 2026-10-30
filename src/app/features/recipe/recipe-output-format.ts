@@ -519,6 +519,8 @@ function localizeStepBase(
     case "divide": {
       // Con layout multi-piece, motore già genera desc specifica
       if (hasSpecialLayout && (layout.pieces_per_unit ?? 1) > 1) return formatRawStep(step);
+      // B2 (seguito): impasto mescolato diviso direttamente nelle teglie.
+      if (step.variant === "pan") return formatRawStep(step);
       // Teglia/pala/focaccia: staglio delicato, niente pirlatura stretta.
       const unit = getServingUnit(recipe.style);
       const isGentle = unit === "teglia" || unit === "pala" || unit === "focaccia";

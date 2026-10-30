@@ -328,6 +328,7 @@ export const IT_LOCALE: CmsContent = {
     americana:     { name: "Americana" },
     contemporanea: { name: "Contemporanea" },
     regionale:     { name: "Tradizioni regionali" },
+    casa:          { name: "Di casa" },
   },
   allFamiliesLabel: "Tutte le famiglie",
   tiers: {

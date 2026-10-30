@@ -100,6 +100,7 @@ const FAMILY_IDS: (FamilyId | "all")[] = [
   "americana",
   "contemporanea",
   "regionale",
+  "casa",
 ];
 
 type ExploreFilter = "all" | "styles" | "recipes";

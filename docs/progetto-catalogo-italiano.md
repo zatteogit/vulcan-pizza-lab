@@ -838,8 +838,8 @@ utente in giapponese 557,3 → 558,7 kB (limite 570); catalogo `ja` +0,3 kB.
 
 #### Teglia casalinga in giornata (`teglia_in_giornata`)
 
-- **Famiglia** «Tradizioni regionali» (scelta dell'agente, da confermare:
-  vedi sotto) · **origine** «Italia», cucina di casa: nessuna città, le tre
+- **Famiglia** «Di casa» (decisione 1 di Matteo, 30/10; prima «Tradizioni
+  regionali», scelta dell'agente) · **origine** «Italia», cucina di casa: nessuna città, le tre
   fonti sono ricette di casa pubblicate fra il 2009 e oggi · **testo di
   regole**: nessuno.
 - **Intervalli** (contengono le tre fonti del §9.2–9.3, così le versioni di
@@ -955,7 +955,9 @@ Codice senza lingue 452,6 → 453,9 kB (limite 465); per utente in giapponese
 559,3 → 561,3 kB (limite 570); CSS invariato (72,4 kB, nessuna regola
 nuova); immagini 41,4 MB (limite 42). `LOCALE_BUNDLE_REV` 57.
 
-#### Da decidere con Matteo
+#### Decise da Matteo il 30/10 (erano da decidere)
+
+Esito nel paragrafo «Seguito» qui sotto.
 
 1. **Famiglia**: «Tradizioni regionali» (scelta dell'agente), oppure
    «Contemporanea» (oggi nessuno stile l'ha come famiglia principale), oppure
@@ -979,6 +981,79 @@ nuova); immagini 41,4 MB (limite 42). `LOCALE_BUNDLE_REV` 57.
 6. **Dettagli generici del motore** visti nel procedimento: il passo
    «Staglio» (15 min) con una teglia sola, «i panetti» nel preriscaldo, i
    link del glossario «Incordatura» e «Pieghe» sotto il passo «Impasto».
+
+#### Seguito: decisioni di Matteo e difetti corretti (30/10/2026)
+
+Ramo `tranche-b2-fix` (sopra `tranche-b2`). Misure del motore in
+`docs/motore-correzioni-2026-10-22.md` («Tranche B2, seguito»); test in
+`use-cases/teglia-in-giornata-seguito.test.ts`.
+
+1. **Famiglia «Di casa»** (`casa`): le pizze nate in cucina, non in pizzeria.
+   Nome in 7 lingue (Di casa, Home-made, Hausgemacht, Caseras, Fait maison,
+   Caseiras, 家庭のピザ), ultima fra le famiglie (dopo «Tradizioni
+   regionali»): chip e gruppo in Scopri e in Crea, filtro MCP `family`.
+2. **Un solo riferimento.** Se il riferimento dello stile è una versione
+   d'autore (base `fonte`, vale per ogni stile così, non per ID) Crea e la
+   scheda mostrano una chip sola, «Riferimento · Benedetta Rossi»
+   (`InterpretationSwitcher`, prop `styleId`; testi già nel CMS), e la
+   ricetta si intitola «Riferimento, ispirata a Benedetta Rossi»
+   (`recipe.referenceLabel.sourceReference`, 7 lingue). Le altre versioni
+   d'autore restano «Ispirata a…».
+3. **Salsa condita.** Era solo un commento nei dati: la nota non compariva.
+   Ora il condimento dichiara la scelta (`source_note`,
+   `topping.sauceSeasoning`, 7 lingue) e la ricetta la mostra con le altre
+   note della fonte: «La fonte dice solo «salsa condita», senza dire con che
+   cosa: olio e sale nella salsa sono una lettura di Vulcan.» Compare anche
+   sulla proposta su misura (stesso condimento) e nell'MCP.
+4. **Proposta su misura.** Causa: l'ottimizzatore cercava su tutta la
+   forbice dello stile; la digeribilità cresce con le ore (2 h → 23, 6 h → 50,
+   12 h → 66) e vinceva sempre 12 h; per chi comincia il tetto di livello
+   (68 %) portava l'acqua sotto il minimo (75 %). Correzione: per gli stili col
+   riferimento da una fonte la ricerca resta entro le tolleranze del motore
+   attorno al riferimento (±3 % d'acqua, ±25 W, ±4 h) e dentro gli intervalli;
+   il tetto di livello non vale per un impasto che non si lavora a mano
+   (punto 6). Principiante, forno di casa, cena di domani: prima 68 %, W 290,
+   12 h a 22 °C; ora 77 %, W 280, 6 h a 22 °C (5 h con 6 ore fino al pasto). La
+   voce e l'MCP «adapted» leggono questa proposta; il triangolo e
+   «Consigliato» degli slider in Crea usano la stessa ricerca.
+5. **«Luogo caldo · 26 °C»** al posto di «26 °C (manuale)» nella scelta
+   rapida della temperatura quando la ricetta usa il luogo caldo della fonte
+   (`tempWarmPlace`, 7 lingue); con il lievito della fonte (ore e temperatura
+   della versione) niente «min consigliato ≥ 8 h» dell'euristica
+   idratazione → ore. Resta il badge «Consigliato: Ambiente», che è la
+   proposta su misura (22 °C).
+6. **Segnali da esperto.** L'avviso «idratazione per principianti» (chip
+   «Impasto esigente», azione «Abbassa l'idratazione») è pensato per il lavoro
+   a mano di un impasto molle: impastarlo, pirlarlo, stenderlo, metterlo sulla
+   pala. All'80 % mescolato col cucchiaio e allargato con le mani unte nella
+   teglia unta nessuno di questi passaggi c'è: non scatta più
+   (`isUnworkedPanDough`, regola generale sul processo; nessuno stile di
+   prima ha questo processo). Lo stesso impasto impastato a mano, o la
+   focaccia barese in teglia ma impastata, resta «esigente». Riferimento per
+   chi comincia: 89 → 97 (Scopri e scheda); Crea 87 → 97.
+7. **Testi generici.** Lo stile ha il processo del riferimento (mescolato,
+   10 minuti in teglia: `method_profile`), quindi anche la ricetta senza
+   preset e la proposta su misura mescolano. Con una teglia niente staglio;
+   con più teglie «Dividi nelle teglie» (stessi 15 minuti, niente panetti né
+   pirlatura); sotto «Mescola» niente glossario «Incordatura / Pieghe» né il
+   problema «impasto appiccicoso → aggiungi farina»; il preriscaldo dice
+   «l'impasto fa l'appretto in teglia» anche nel testo del motore (MCP).
+
+**Non regressione.** `preset-numbers.regression.json` identico;
+`recipes.golden.json`: solo `teglia_in_giornata/ideal` e `/home`,
+`timeline_min` 622 → 612 (mescolare 10 minuti invece di impastare 20). La
+ricetta di Benedetta resta quella della fonte (500/400/6/7/46/8 g, 967 g).
+
+**Prova nel browser** (`vite preview`, forno di casa 250 °C, it ed en-GB, 390
+e 1280 px): scheda con «Riferimento, ispirata a Benedetta Rossi», tre note
+della fonte, chip unica, 97, nessun segnale da esperto, procedimento senza
+staglio; Scopri con il gruppo «Di casa (1)»; Crea: chip unica, su misura
+80 % → 77 % e 2 h 26 °C → 6 h 22 °C, pannello con «Luogo caldo · 26 °C»
+e senza minimo di ore, «Dividi nelle teglie» con 4 teglie.
+
+**Budget** (gzip): codice senza lingue 453,9 → 455,0 kB (limite 465); per
+utente in giapponese 561,3 → 562,5 kB (limite 570); CSS invariato (72,4 kB).
+`LOCALE_BUNDLE_REV` 58.
 
 #### Per la B3 (Adriano) e la B4 (Paoletta)
 

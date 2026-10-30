@@ -136,9 +136,11 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *       impasto mescolato senza impastare (timeline.mix.stir), margherita
  *       della teglia in giornata (toppingI18n) e Benedetta Rossi
  *       (inspirationI18n).
+ *  58 → tranche B2, seguito (decisioni di Matteo del 30/10): famiglia «Di
+ *       casa» (families.casa), nota sulla salsa condita (topping.sauceSeasoning).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 57;
+export const LOCALE_BUNDLE_REV = 58;
 
 /* 52 resta: l'italiano diventa un bundle lazy (30/10/2026) ma la forma dei
  * bundle e degli snapshot salvati non cambia; l'italiano non ha snapshot. */

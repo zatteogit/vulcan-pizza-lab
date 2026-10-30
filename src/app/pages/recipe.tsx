@@ -53,6 +53,7 @@ saltRangePct,
 import { styleWithSelectedTopping } from "../hooks/use-recipe-state";
 import {
 RecipeConfigurator,
+sourceTiming,
 } from "../features/recipe/recipe-configurator";
 import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
 import { SaveFailedNotice } from "../features/recipe/save-failed-notice";
@@ -981,6 +982,7 @@ function RecipeContent({
               activeId={activeInterpretationId}
               onSelect={handleInterpretationSelect}
               defaultInterpretation={styleCanonicalVariant}
+              styleId={style.id}
             />
             <RecipeStatStrip
               recipe={recipe}
@@ -1017,6 +1019,7 @@ function RecipeContent({
                 <RecipeConfigurator
                   style={recipe.style}
                   referenceStyle={style}
+                  sourceTiming={sourceTiming(recipe)}
                   constraints={constraints}
                   onConstraintsChange={(c) => {
                     markAdapted();

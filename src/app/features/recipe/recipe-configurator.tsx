@@ -5,6 +5,7 @@ import { useCms } from "../cms/cms-context";
 import { createFormatter,t } from "../cms/i18n";
 import { InfoTip } from "../../components/shared/info-tip";
 import {
+type GeneratedRecipe,
 OVEN_PRESETS,
 OvenType,
 PRE_FERMENT_FLOUR_PCT,
@@ -28,6 +29,7 @@ import { onlySourdoughYeast } from "../../domain/recipe-phases";
 import { uiMessage } from "../../i18n/ui-messages";
 import { useDetailLevel } from "../../hooks/use-detail-level";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
+import { sourceReferenceCenter } from "../../use-cases/recipe-entry";
 import { kitchenConstraints, resolveEffectiveKitchen } from "../../use-cases/effective-kitchen";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
 import { FLOUR_STRENGTH_SCALE, flourFitForStyle } from "../../domain/flour-strength";
@@ -46,9 +48,28 @@ type LinkedRun,
 type LinkedValues,
 } from "./linked-params";
 
+/** B2 (seguito, 30/10/2026): ore e temperatura sono quelle di una fonte.
+ *  `yeastFromSource`: la dose di lievito è della fonte, scritta per le sue
+ *  ore (yeast_source), quindi il minimo di ore suggerito dall'euristica
+ *  «idratazione alta → lievitazione lunga» la contraddirebbe e non si mostra.
+ *  `warmPlace`: la temperatura è il «luogo caldo» della fonte (WARM_PLACE,
+ *  nota fermentation.warmPlace) e si chiama così, non «manuale». */
+export interface SourceTiming {
+  yeastFromSource: boolean;
+  warmPlace: boolean;
+}
+
+export function sourceTiming(recipe: Pick<GeneratedRecipe, "yeast_source" | "source_notes">): SourceTiming {
+  return {
+    yeastFromSource: Boolean(recipe.yeast_source),
+    warmPlace: Boolean(recipe.source_notes?.some((note) => note.key === "fermentation.warmPlace")),
+  };
+}
+
 interface RecipeConfiguratorProps {
   style: PizzaStyle;
   referenceStyle?: PizzaStyle;
+  sourceTiming?: SourceTiming;
   constraints: UserConstraints;
   onConstraintsChange: (c: UserConstraints) => void;
   customHydration: number;
@@ -253,6 +274,7 @@ function saveAdvancedOpen(open: boolean) {
 export function RecipeConfigurator({
   style,
   referenceStyle,
+  sourceTiming: timing,
   constraints,
   onConstraintsChange,
   customHydration,
@@ -335,7 +357,9 @@ export function RecipeConfigurator({
   // W, fermentazione). ~0.1ms, memoizzato su stile+vincoli.
   const optimum = useMemo(() => {
     try {
-      return optimizeRecipe(style, constraints).params;
+      // B2 (seguito): stesso spazio di ricerca della proposta su misura.
+      return optimizeRecipe(style, constraints, undefined, undefined, undefined,
+        undefined, undefined, undefined, sourceReferenceCenter(style)).params;
     } catch {
       return null;
     }
@@ -412,7 +436,7 @@ export function RecipeConfigurator({
       }), bcp47)
     : null;
 
-  const adaptiveHints = computeAdaptiveHints(
+  const computedHints = computeAdaptiveHints(
     style,
     customHydration,
     customFlourW,
@@ -421,6 +445,8 @@ export function RecipeConfigurator({
     customFlourPL,
     cfg,
   );
+  /* B2 (seguito): con il lievito della fonte le ore sono quelle della fonte. */
+  const adaptiveHints = timing?.yeastFromSource ? { ...computedHints, fermentation: null } : computedHints;
 
   /* FW-14 (S06-B-02): una sola fonte per la raccomandazione. Il badge
      «Consigliato» segue l'ottimo del motore (lo stesso del triangolo sugli
@@ -812,7 +838,9 @@ export function RecipeConfigurator({
                     cool: t(cfg.tempCool, { coolTemp }),
                     ambient: t(cfg.tempAmbient, { ambientTemp }),
                   };
-                  const otherLabel = customFermentTemp === optimumTemp
+                  const otherLabel = timing?.warmPlace
+                    ? uiMessage("features.recipe.recipe-configurator.tempWarmPlace", [fmt.celsius(customFermentTemp)])
+                    : customFermentTemp === optimumTemp
                     ? fmt.celsius(customFermentTemp)
                     : uiMessage("features.recipe.recipe-configurator.tempManual", [fmt.celsius(customFermentTemp)]);
                   return (

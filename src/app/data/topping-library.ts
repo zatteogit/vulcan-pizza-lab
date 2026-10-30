@@ -1,4 +1,5 @@
 import { METHOD_MESSAGES_IT } from "./method-messages";
+import { BRAND } from "../config/brand";
 /* ═══ TOPPING LIBRARY — Sprint 11 Fase 2 + Sprint 12 Fase 2 ═══
  *
  * REGOLA DI STRATIFICAZIONE:
@@ -933,6 +934,10 @@ export interface ToppingRecipe {
   /** A real preparation variant, not merely a topping omission. */
   layout_override?: LayoutSpec;
   method_note?: EngineMsg;
+  /** B2 (seguito): scelta di Vulcan su ciò che la fonte non dice (es. come
+   *  si condisce la salsa). La ricetta la dichiara fra le note della fonte
+   *  (`source_notes`), non fra le varianti di metodo. */
+  source_note?: EngineMsg;
   id: string;
   /** Link al concetto culturale di alto livello. */
   concept_ref: string;
@@ -1060,6 +1065,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "margherita_teglia_in_giornata",
     concept_ref: "margherita",
     preferred_for_styles: ["teglia_in_giornata"],
+    source_note: { key: "topping.sauceSeasoning", fallback: METHOD_MESSAGES_IT["topping.sauceSeasoning"], params: { app: BRAND.name } },
     ingredients: [
       { name: "Salsa di pomodoro condita (pomodoro, olio, sale)", components: ["pomodoro", "olio", "sale"], amount: { value: 300, unit: "g" }, notes: "tiepida" },
       { name: "Mozzarella a dadini", amount: { value: 250, unit: "g" }, notes: "negli ultimi 5 minuti di cottura" },
