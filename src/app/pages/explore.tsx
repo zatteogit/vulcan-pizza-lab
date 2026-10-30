@@ -5,7 +5,6 @@
 
 import { ArrowRight } from "lucide-react";
 import { CompatibilityPill, StyleMetaChip } from "../features/recipe/style-card-parts";
-import { ChangeOvenLink } from "../features/recipe/change-oven-link";
 import { AnimatePresence,motion } from "motion/react";
 import { useId, useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
@@ -690,7 +689,7 @@ function SignatureRecipeCard({
           state={{ exploreBackTo }}
           aria-labelledby={labelledBy}
           aria-describedby={[signalsId, acronymHelp ? acronymHelpId : ""].filter(Boolean).join(" ") || undefined}
-          className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
+          className={`explore-card${isNerd ? " explore-card--nerd" : ""}${match?.recipe.verdict.outcome === "not_feasible" ? " explore-card--blocked" : ""}`}
         >
           <figure className="explore-card__media">
           <ImageWithFallback
@@ -735,8 +734,6 @@ function SignatureRecipeCard({
             </div>
           )}
       </TiltCard>
-      {/* FW-10: fuori dal link della card, sotto: vedi ChangeOvenLink. */}
-      <ChangeOvenLink recipe={match?.recipe} />
     </motion.article>
   );
 }
@@ -813,7 +810,7 @@ function StyleCatalogCard({
           to={`/recipe/${style.id}?mode=canonical`}
           state={{ exploreBackTo }}
           aria-describedby={acronymHelp ? acronymHelpId : undefined}
-          className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
+          className={`explore-card${isNerd ? " explore-card--nerd" : ""}${match?.recipe.verdict.outcome === "not_feasible" ? " explore-card--blocked" : ""}`}
         >
           {/* Photo area — 3/4 aspect like Create cards */}
         <figure className="explore-card__media">
@@ -850,9 +847,9 @@ function StyleCatalogCard({
               <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} recipe={match.recipe} />
             </div>
           )}
+
+
       </TiltCard>
-      {/* FW-10: fuori dal link della card, sotto: vedi ChangeOvenLink. */}
-      <ChangeOvenLink recipe={match?.recipe} />
     </motion.article>
   );
 }

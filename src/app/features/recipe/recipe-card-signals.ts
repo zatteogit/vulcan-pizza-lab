@@ -1,6 +1,6 @@
 import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
-import { SKILL_WARNING_KEYS, summarizeVerdict } from "../../domain/verdict-summary";
+import { SKILL_WARNING_KEYS } from "../../domain/verdict-summary";
 import { onlyPantryChecks, PANTRY_CHECK_KEYS } from "../../use-cases/recommendation-groups";
 
 export interface CardSignal {
@@ -76,12 +76,4 @@ export function recipePresentationState(recipe: GeneratedRecipe): "blocked" | "c
   if (recipe.verdict.outcome === "not_feasible") return "blocked";
   if (recipe.verdict.outcome === "warnings" && onlyPantryChecks(recipe.verdict, recipe.dietary_warnings?.length ?? 0)) return "ready";
   return recipe.verdict.outcome === "warnings" ? "check" : "ready";
-}
-
-/** Scopri, «Cambia forno»: solo se la causa principale del «non fattibile» è
- *  il forno (temperatura o tipo). La causa è quella del verdetto letto da
- *  FW-10 (summarizeVerdict), non un secondo calcolo: con una dieta, il tempo
- *  o l'attrezzatura davanti al forno l'azione non compare. */
-export function ovenIsPrimaryBlocker(recipe: GeneratedRecipe): boolean {
-  return summarizeVerdict(recipe.verdict).primary?.kind === "oven_too_cold";
 }

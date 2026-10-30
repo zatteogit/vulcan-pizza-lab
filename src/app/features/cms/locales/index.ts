@@ -112,8 +112,8 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  50 → G1a-WP-02: gruppo «Forni» della ricerca (pages.searchCatOvens).
  *  51 → G1a-WP-03: nome del pulsante Profilo («Profilo e cucina», navProfileKitchen).
  *  52 → chiavi uiMessage generate senza lo slug del testo (namespace + hash).
- *  53 → FW-10, seguito: «Cambia forno» sulle card di Scopri bloccate dal
- *       forno (explore.card.changeOven).
+ *  53 → FW-10, seguito: «Cambia forno» nell'avviso «Così non è fattibile»
+ *       quando la causa è il forno (verdict.changeOven).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
 export const LOCALE_BUNDLE_REV = 53;

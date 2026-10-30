@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generateRecipe, STYLES_DB, type GeneratedRecipe, type UserConstraints } from "../../domain/pizza-engine";
-import { ovenIsPrimaryBlocker, recipeCardSignals, recipePresentationState } from "./recipe-card-signals";
-import { canonicalRecipe } from "./kitchen-compatibility";
+import { recipeCardSignals, recipePresentationState } from "./recipe-card-signals";
 
 const constraints: UserConstraints = { oven_type: "home", oven_max_temp_c: 250, available_hours: 48, skill_level: 4,
   dough_balls: 4, has_mixer: true, has_pizza_stone: true, has_pizza_steel: true, has_baking_pan: true,
@@ -100,43 +99,5 @@ describe("voto e stato operativo distinti", () => {
   });
   it("il blocco resta prioritario rispetto a un voto alto e alle modifiche", () => {
     expect(recipePresentationState(withVerdict({outcome:"not_feasible"}))).toBe("blocked");
-  });
-});
-
-/* FW-10, seguito: «Cambia forno» sulle card di Scopri solo quando la causa
- * principale del blocco (summarizeVerdict) è il forno. */
-describe("FW-10: «Cambia forno» solo se il forno è la causa principale", () => {
-  const home: UserConstraints = { ...constraints, available_hours: 0, skill_level: 2 };
-  it("Napoletana STG col forno di casa a 250 °C: il forno blocca, l'azione c'è", () => {
-    const recipe = canonicalRecipe(STYLES_DB.napoletana_stg, home);
-    expect(recipe.verdict.outcome).toBe("not_feasible");
-    expect(ovenIsPrimaryBlocker(recipe)).toBe(true);
-  });
-  it("lo stesso stile in un forno a legna a 450 °C non è bloccato: niente azione", () => {
-    const recipe = canonicalRecipe(STYLES_DB.napoletana_stg, { ...home, oven_type: "wood", oven_max_temp_c: 450 });
-    expect(recipe.verdict.outcome).not.toBe("not_feasible");
-    expect(ovenIsPrimaryBlocker(recipe)).toBe(false);
-  });
-  it("bloccata dal tempo (pasto troppo vicino): niente azione sul forno", () => {
-    const recipe = generateRecipe(STYLES_DB.focaccia_genovese, { ...constraints, available_hours: 3, meal_deadline: true });
-    expect(recipe.verdict.blockers.map(b => b.kind)).toContain("time_window");
-    expect(recipe.verdict.blockers.map(b => b.kind)).not.toContain("oven_too_cold");
-    expect(ovenIsPrimaryBlocker(recipe)).toBe(false);
-  });
-  it("dieta e forno insieme: la causa principale è la dieta, l'azione non compare", () => {
-    const recipe = canonicalRecipe(STYLES_DB.napoletana_stg, { ...home, dietary_filters: ["vegan"] });
-    expect(recipe.verdict.blockers.map(b => b.kind)).toEqual(expect.arrayContaining(["dietary_conflict", "oven_too_cold"]));
-    expect(ovenIsPrimaryBlocker(recipe)).toBe(false);
-  });
-  it("si legge il verdetto, non si ricalcola: il forno dopo il tempo resta la causa principale", () => {
-    const both = withVerdict({ outcome: "not_feasible", blockers: [
-      { kind: "time_window", available_h: 3, needed_h: 8 },
-      { kind: "oven_too_cold", oven_c: 250, style_min_c: 350 },
-    ] });
-    expect(ovenIsPrimaryBlocker(both)).toBe(true);
-    const excluded = withVerdict({ outcome: "not_feasible", blockers: [
-      { kind: "resource_excluded", resource: "equipment", message: { key: "need.purchaseRefused", fallback: "" } },
-    ] });
-    expect(ovenIsPrimaryBlocker(excluded)).toBe(false);
   });
 });
