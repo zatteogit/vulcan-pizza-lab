@@ -125,6 +125,83 @@ modellare con cura.
 Correzioni d'identità: Sardenaira (cipolla e De.Co. contro la ricetta CNA) e
 sfincione bianco di Bagheria distinto dallo sfincione in bianco.
 
+### 4.1 Stato della tranche A (30/10/2026)
+
+**A1, su main (#155).** Würstel e patatine, Prosciutto cotto, Funghi, Napoli,
+Parmigiana, Norma, Bufalina: 7 concetti, 14 ricette.
+
+**A2.** I nove condimenti di Gemini, ognuno con una fase delicata:
+
+| Concetto (ID) | Ricette e stili | Fase |
+|---|---|---|
+| Pugliese (`pugliese`) | `pugliese_napoletana` (STG, canotto, al metro), `pugliese_romana` (tonda, teglia, pala, pinsa, trancio) | napoletana: cipolla stufata prima (pre-preparazione); romana: cipolla cruda a velo, con il testo per le cotture brevi che dice di stufarla |
+| Crudaiola (`crudaiola`) | `crudaiola_classica` (napoletane e romane) | solo fior di latte in forno; pomodorini, rucola e parmigiano `after_bake` |
+| Tirolese (`tirolese`) | `tirolese_classica` (tonda, teglia, pala, canotto, trancio) | speck `after_bake` |
+| Bismarck (`bismarck`) | `bismarck_classica` (tonda, pala, canotto, trancio) | uovo negli ultimi 4-5 minuti nel testo del passo; con le cotture brevi (`description_short_bake`) l'uovo entra subito |
+| Mimosa (`mimosa`) | `mimosa_classica` (tonda, teglia, pala, canotto, trancio) | tutto in forno |
+| Lucana (`lucana`) | `lucana_classica` (canotto, tonda, teglia, pala) | cruschi fritti a parte, `after_bake` |
+| Rossini (`rossini`) | `rossini_classica` (tonda, teglia, pala, canotto) | uovo sodo e maionese `after_bake`, a pizza intiepidita; classico locale di Pesaro, «Tradizionale», non da disciplinare |
+| Patate, lardo e rosmarino (`patate_lardo`) | `patate_lardo_romana` (teglia, pala, pinsa) | lardo `after_bake`; +4 minuti per le patate come `patate_rosmarino_romana` |
+| Gamberetti e zucchine (`gamberetti_zucchine`) | `gamberetti_zucchine_classica` (canotto, tonda, teglia, pala, pinsa) | gamberetti saltati a parte, `after_bake` |
+
+Scelte:
+
+- **Fasi senza campi nuovi nel motore.** «Prima del forno» è `after_shape`,
+  «dopo il forno» è `after_bake`, la cottura breve usa
+  `description_short_bake` (G3-WP-03). «Negli ultimi minuti» non è un punto
+  della timeline: lo dice il testo del passo prima della cottura, come il
+  prosciutto cotto della A1. Un punto «durante la cottura» resta per la
+  tranche C.
+- **Concetti nuovi, non varianti.** Il resolver sceglie una sola ricetta per
+  concetto e stile: un «patate e rosmarino con lardo» sugli stessi stili non
+  sarebbe mai scelto oppure sostituirebbe la versione vegetariana. Per questo
+  `patate_lardo` è un concetto a sé (riusa la preparazione delle patate di
+  `patate_rosmarino_romana`); `zucca_speck` (Bonci) resta distinto dalla
+  Tirolese. Ingredienti riusati dalla A1: pelati, passata, fior di latte,
+  prosciutto cotto con i suoi componenti.
+- **Grammature di Vulcan**, allineate alla A1 (pelati 80 g e fior di latte
+  70-80 g sulla napoletana, passata 80-90 g e fior di latte 80 g sulla romana).
+  Nessun condimento assegnato agli stili americani, alle focacce o ai fritti.
+- **Allergeni.** Uovo, maionese (uova, con l'avviso sulla senape in
+  etichetta), gamberetti (crostacei), formaggi (latte). Parmigiano Reggiano al
+  posto del Grana Padano nella Crudaiola: il Grana contiene lisozima d'uovo.
+  Nel filtro vegano lardo e gamberetti sono ora animali (prima «da
+  verificare») e il mais è compatibile.
+
+**Correzioni d'identità.**
+
+- *Sardenaira.* La ricetta etichettata «De.Co. di Sanremo» usava una salsa
+  cotta con la cipolla. Il disciplinare De.Co. del Comune di Sanremo prevede
+  pomodoro fresco o polpa a crudo, aglio in camicia, acciughe sotto sale,
+  capperi, olive taggiasche e origano, senza cipolla; la cipolla resta nelle
+  versioni di casa e nella pissalandrea. Corretti ingrediente, passo e testi in
+  7 lingue; dosi invariate. Fonti: AIFB, «La Sardenaira» (20/07/2016,
+  https://www.aifb.it/cultura-enogastronomica-italiana/piatti-tradizione-italiana/giornata-nazionale-della-sardenaira/),
+  che cita il disciplinare e riporta «Nessuna presenza di cipolle, se non nelle
+  preparazioni casalinghe»; Wikipedia, «Sardenaira», che cita il PDF del Comune
+  (comunedisanremo.it/dotAsset/eb3f8bb4-b197-4dbd-942b-c70683faa0f3.pdf, oggi
+  404; la copia su web.archive.org non era raggiungibile da qui); Dissapore
+  (15/03/2024) per la pissalandrea con cipolla. Stato: **plausibile**, letto
+  in fonti secondarie che citano il disciplinare; il testo primario va riletto.
+  La «ricetta CNA» citata nel rapporto Gemini **non è stata trovata**: nessuna
+  modifica basata su di essa.
+- *Sfincione bianco di Bagheria.* Mancava la ricotta di pecora: tuma (o
+  primosale), ricotta di pecora, acciughe, cipolle stufate, mollica tostata con
+  caciocavallo, senza pomodoro. Nome e descrizione lo distinguono dallo
+  «sfincione in bianco» palermitano (olio, rosmarino e sale, ricetta iconica
+  `sfincione_bianca`). Fonti: Balarm, «Richiama il bianco della purezza…»
+  (11/07/2020,
+  https://www.balarm.it/news/richiama-il-bianco-della-purezza-ma-e-un-tripudio-del-gusto-e-lo-sfincione-bagherese-118990);
+  Scatti di Gusto, ricetta di Gioacchino Gargano (23/03/2025,
+  https://www.scattidigusto.it/ricette/sfincione-bianco-bagherese-ricetta-originale-della-focaccia-siciliana/).
+  Il disciplinare della Comunità Slow Food dei panificatori di Bagheria (2019,
+  citato da Gambero Rosso) non era leggibile (403): stato **plausibile**.
+
+**Restano** i P2 (salsiccia e patate, speck e scamorza, radicchio e
+gorgonzola, mortadella e pistacchio con burrata) e il budget: con la A2 il «JS
+per utente» supera il tetto di D-059 (numeri nel riepilogo della PR); il
+prerequisito del §7 torna aperto.
+
 ## 5. Stili regionali (tranche B e oltre, uno per volta)
 
 Candidati, nessuno pronto: ognuno entra con fonte completa o con la

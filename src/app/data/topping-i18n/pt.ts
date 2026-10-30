@@ -280,6 +280,43 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       name: "Bufalina",
       description: "Tomate, Mozzarella di bufala campana e manjericão. A búfala solta muito soro: precisa ser escorrida e, nos fornos lentos, colocada ao sair do forno.",
     },
+    // D-065 — tranche A2
+    pugliese: {
+      name: "Pugliese",
+      description: "Tomate, mozzarella, cebola e orégano. A cebola vai crua, em fatias finíssimas, quando a pizza assa por bastante tempo, e refogada antes nos fornos rápidos, onde não daria tempo de cozinhar.",
+    },
+    crudaiola: {
+      name: "Crudaiola",
+      description: "Base branca com fior di latte no forno; tomates-cereja, rúcula e lascas de parmesão crus, tudo depois do forno.",
+    },
+    tirolese: {
+      name: "Tirolese",
+      description: "Tomate e mozzarella no forno, speck fatiado colocado na saída: sobre a pizza quente ele amacia sem ressecar.",
+    },
+    bismarck: {
+      name: "Bismarck",
+      description: "Tomate, mozzarella, presunto cozido e um ovo no centro. No forno de casa o ovo entra nos últimos minutos: a clara firma e a gema fica mole.",
+    },
+    mimosa: {
+      name: "Mimosa",
+      description: "Base branca de creme de leite fresco e mozzarella com presunto cozido e milho verde, tudo no forno.",
+    },
+    lucana: {
+      name: "Lucana",
+      description: "Fior di latte e linguiça lucanica no forno; peperoni cruschi esfarelados só na saída: no forno eles escurecem e ficam amargos.",
+    },
+    rossini: {
+      name: "Rossini",
+      description: "O clássico de Pesaro: tomate e mozzarella no forno, depois ovo cozido em rodelas e maionese, frios. Também aparece na pizza al taglio, vendida em pedaços.",
+    },
+    patate_lardo: {
+      name: "Batata, lardo e alecrim",
+      description: "Batatas em fatias finas e alecrim no forno; o lardo fatiado vai sobre a pizza quente na saída, onde fica translúcido sem derreter.",
+    },
+    gamberetti_zucchine: {
+      name: "Camarão e abobrinha",
+      description: "Base branca com fior di latte e abobrinha; os camarões, salteados antes na frigideira, entram no final.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2519,6 +2556,202 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
         },
       },
     },
+    // D-065 — tranche A2
+    pugliese_napoletana: {
+      variant_name: "cebola refogada",
+      ingredients: {
+        "0": {
+          name: "Tomates pelados esmagados à mão (tomate, suco de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Cebola branca refogada",
+          notes: "peso cru",
+        },
+        "3": {
+          name: "Orégano seco",
+        },
+        "4": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    pugliese_romana: {
+      variant_name: "cebola crua",
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Cebola branca em fatias finíssimas",
+          notes: "crua, cortada o mais fino possível",
+        },
+        "3": {
+          name: "Orégano seco",
+        },
+        "4": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    crudaiola_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Tomates-cereja frescos",
+          notes: "em gomos, depois do forno",
+        },
+        "2": {
+          name: "Sal refinado para os tomates",
+        },
+        "3": {
+          name: "Rúcula",
+          notes: "depois do forno",
+        },
+        "4": {
+          name: "Lascas de Parmigiano Reggiano",
+          notes: "depois do forno",
+        },
+        "5": {
+          name: "Azeite extravirgem",
+          notes: "metade no forno, metade sobre os ingredientes frescos",
+        },
+      },
+    },
+    tirolese_classica: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Speck fatiado (carne suína, sal, especiarias)",
+          notes: "depois do forno",
+        },
+      },
+    },
+    bismarck_classica: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Presunto cozido fatiado (carne suína, sal, aromas)",
+        },
+        "3": {
+          name: "Ovo",
+          notes: "inteiro, em temperatura ambiente",
+        },
+      },
+    },
+    mimosa_classica: {
+      ingredients: {
+        "0": {
+          name: "Creme de leite fresco",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Presunto cozido em cubinhos (carne suína, sal, aromas)",
+        },
+        "3": {
+          name: "Milho verde escorrido",
+        },
+      },
+    },
+    lucana_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Linguiça lucanica em pedacinhos (carne suína, sal, páprica doce, funcho silvestre)",
+          notes: "sem a tripa",
+        },
+        "2": {
+          name: "Peperoni cruschi (pimentões doces secos, óleo de girassol)",
+          notes: "fritos, depois do forno",
+        },
+        "3": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    rossini_classica: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Ovo cozido",
+          notes: "em rodelas, depois do forno",
+        },
+        "3": {
+          name: "Maionese (óleo de girassol, ovos, vinagre, suco de limão, sal)",
+          notes: "fria; algumas contêm mostarda, confira o rótulo",
+        },
+      },
+    },
+    patate_lardo_romana: {
+      bake_note: "As batatas pedem alguns minutos a mais para dourar.",
+      ingredients: {
+        "0": {
+          name: "Batatas amarelas em fatias finas",
+        },
+        "1": {
+          name: "Alecrim fresco",
+          notes: "folhinhas",
+        },
+        "2": {
+          name: "Azeite extravirgem",
+        },
+        "3": {
+          name: "Lardo em fatias finas (toucinho suíno, sal, pimenta, ervas)",
+          notes: "depois do forno",
+        },
+        "4": {
+          name: "Flor de sal",
+          notes: "no fim do forno",
+        },
+      },
+    },
+    gamberetti_zucchine_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Abobrinha em rodelas finas",
+        },
+        "2": {
+          name: "Camarões descascados",
+          notes: "salteados, depois do forno",
+        },
+        "3": {
+          name: "Alho e salsinha",
+        },
+        "4": {
+          name: "Azeite extravirgem",
+          notes: "para a frigideira e para regar",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -3208,6 +3441,119 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       description: "Assim que sair do forno, distribua a búfala em pedaços e o manjericão.",
       tip_beginner: "Nos assamentos longos, a búfala no forno fica borrachuda e solta um lago de soro: colocada depois, continua macia.",
       tip_nerd: "A búfala tem mais água e mais gordura que o fior di latte: depois de alguns minutos de calor, a coalhada se contrai e expele o soro, que molha a base.",
+    },
+    // D-065 — tranche A2
+    stufare_cipolla_pugliese: {
+      title: "Refogue a cebola",
+      description: "Corte a cebola em fatias finas e refogue por 10-12 minutos em fogo baixo com um fio de azeite e uma pitada de sal, até ficar macia e transparente. Deixe amornar.",
+      tip_beginner: "Em 60-90 segundos de forno a cebola crua fica crocante e ardida: refogada antes, ela já chega macia.",
+      tip_nerd: "Para amaciar, a cebola precisa perder água e suas paredes celulares precisam ceder, e a 100 °C isso leva minutos: o forno napolitano é rápido demais.",
+    },
+    spread_pugliese_nap: {
+      title: "Cobertura Pugliese",
+      description: "Tomates pelados esmagados e fior di latte. Distribua a cebola refogada, o orégano e um fio de azeite.",
+    },
+    spread_pugliese_rom: {
+      title: "Cobertura Pugliese",
+      description: "Passata e fior di latte. Distribua a cebola crua em fatias finíssimas, o orégano e um fio de azeite: numa fornada demorada a cebola cozinha sobre a pizza.",
+      description_short_bake: "Passata e fior di latte. Distribua a cebola, o orégano e um fio de azeite. Numa fornada tão rápida a cebola crua fica crocante: se quiser macia, refogue antes por 10 minutos na frigideira.",
+      tip_beginner: "Corte o mais fino que conseguir: fatias grossas ficam cruas no meio.",
+      tip_nerd: "A cebola fininha perde água com o calor do teto do forno e doura nas bordas; acima de 2-3 mm de espessura não dá tempo de amaciar.",
+    },
+    condire_pomodorini_crudaiola: {
+      title: "Tempere os tomates-cereja",
+      description: "Corte os tomates-cereja em gomos, tempere com o sal e um fio de azeite e deixe num escorredor enquanto a pizza assa, para que percam o excesso de água.",
+    },
+    spread_crudaiola: {
+      title: "Só fior di latte no forno",
+      description: "Distribua o fior di latte sobre a massa com um fio de azeite. Tomates-cereja, rúcula e parmesão não vão ao forno.",
+    },
+    finish_crudaiola: {
+      title: "Os frescos na saída",
+      description: "Assim que tirar a pizza do forno, distribua os tomates-cereja escorridos, a rúcula e as lascas de parmesão. Finalize com o azeite restante.",
+      tip_beginner: "Espere um minuto antes de pôr a rúcula: sobre a mozzarella fervendo ela murcha na hora.",
+      tip_nerd: "Cozidos, os tomates-cereja e a rúcula perdem água e aromas voláteis; crus sobre a pizza quente continuam crocantes, e é esse contraste de quente e frio que faz a crudaiola.",
+    },
+    spread_tirolese: {
+      title: "Tomate e mozzarella",
+      description: "Espalhe a passata e distribua o fior di latte. O speck não vai ao forno.",
+    },
+    finish_tirolese: {
+      title: "Speck na saída",
+      description: "Assim que tirar a pizza do forno, arrume as fatias de speck sobre a pizza quente.",
+      tip_beginner: "No forno o speck resseca e fica duro e salgado: sobre a pizza quente ele continua macio.",
+      tip_nerd: "O speck é cru, salgado e defumado, com pouca água: o calor residual basta para deixar a gordura translúcida sem ressecar a fatia.",
+    },
+    spread_bismarck: {
+      title: "Cobertura Bismarck",
+      description: "Passata, fior di latte e presunto cozido; deixe o centro livre. Leve ao forno sem o ovo: nos últimos 4-5 minutos abra o forno, quebre o ovo no centro e termine de assar até a clara firmar.",
+      description_short_bake: "Passata, fior di latte e presunto cozido, com uma cavidade no centro. Quebre o ovo na cavidade logo antes de levar ao forno: numa fornada tão rápida não há um momento para pôr depois.",
+      tip_beginner: "Quebre o ovo antes numa xícara: assim ele desliza para o centro sem estourar a gema.",
+      tip_nerd: "A clara começa a firmar por volta de 62 °C e fica firme perto de 80 °C; a gema engrossa a partir de uns 65 °C. Em 10-12 minutos de forno doméstico o ovo fica duro; em 4-5 a clara firma e a gema continua mole.",
+    },
+    spread_mimosa: {
+      title: "Cobertura Mimosa",
+      description: "Espalhe o creme de leite numa camada fina, deixando a borda livre. Distribua o fior di latte, o presunto cozido e o milho bem escorrido.",
+      tip_beginner: "Seque o milho com papel-toalha: o líquido da lata encharca a base.",
+      tip_nerd: "O creme de leite no lugar do tomate traz gordura e pouca água: a base fica branca e cremosa, mas uma camada grossa atrasa o cozimento do centro.",
+    },
+    friggere_cruschi_lucana: {
+      title: "Frite os peperoni cruschi",
+      description: "Tire o cabinho e as sementes. Mergulhe os pimentões no óleo a 160-170 °C por 3-5 segundos, até ficarem vermelho-escuros e crocantes, e escorra sobre papel. Se comprar já fritos, pule este passo.",
+      tip_beginner: "Bastam poucos segundos: se escurecerem demais ficam amargos e é preciso refazer.",
+      tip_nerd: "O crusco é um pimentão seco, quase sem água e rico em açúcares: no óleo quente fica crocante num instante e pouco depois carameliza até queimar.",
+    },
+    spread_lucana: {
+      title: "Fior di latte e linguiça",
+      description: "Distribua o fior di latte e a linguiça em pedacinhos. Finalize com um fio de azeite. Os cruschi não vão ao forno.",
+    },
+    finish_lucana: {
+      title: "Cruschi na saída",
+      description: "Assim que tirar a pizza do forno, esfarele os peperoni cruschi por cima.",
+      tip_beginner: "No forno os cruschi escurecem num instante e ficam amargos: vão sempre sobre a pizza já assada.",
+      tip_nerd: "Eles já estão fritos e secos: o calor da pizza basta para liberar o aroma sem cozinhá-los de novo.",
+    },
+    rassodare_uova_rossini: {
+      title: "Cozinhe os ovos",
+      description: "Coloque os ovos em água já fervendo e cozinhe por 9 minutos. Esfrie em água fria, descasque e corte em rodelas.",
+    },
+    spread_rossini: {
+      title: "Tomate e mozzarella",
+      description: "Espalhe a passata e distribua o fior di latte. Ovo e maionese vão frios, depois do forno.",
+    },
+    finish_rossini: {
+      title: "Ovo cozido e maionese, frios",
+      description: "Deixe a pizza amornar por uns dois minutos. Distribua as rodelas de ovo cozido e finalize com a maionese em pequenas porções.",
+      tip_beginner: "Sobre a pizza fervendo a maionese derrete e fica oleosa: espere parar de soltar vapor.",
+      tip_nerd: "A maionese é óleo emulsionado na gema: com o calor as proteínas da gema coagulam e a emulsão desanda, soltando o óleo.",
+    },
+    patate_mandolina_lardo: {
+      title: "Fatie e deixe as batatas de molho",
+      description: "Fatie as batatas com 1-2 mm no mandolim, deixe de molho por 20 minutos em água fria, escorra e seque bem.",
+    },
+    spread_patate_lardo: {
+      title: "Batata e alecrim no forno",
+      description: "Arrume as batatas em fatias sobrepostas e tempere com o azeite e o alecrim. O lardo não vai ao forno.",
+    },
+    finish_patate_lardo: {
+      title: "Lardo na saída",
+      description: "Assim que tirar a pizza do forno, estenda as fatias de lardo sobre as batatas quentes e finalize com a flor de sal.",
+      tip_beginner: "O lardo já é salgado: prove antes de pôr a flor de sal.",
+      tip_nerd: "O lardo é quase só gordura: no forno derrete e frita; sobre as batatas quentes fica apenas translúcido e perfumado.",
+    },
+    saltare_gamberetti_zucchine: {
+      title: "Salteie a abobrinha e os camarões",
+      description: "Salteie a abobrinha por 3-4 minutos na frigideira com metade do azeite, até amaciar, e salgue. Na mesma frigideira, aqueça o alho no azeite restante e salteie os camarões por 1-2 minutos, até ficarem rosados. Desligue o fogo e junte a salsinha.",
+      tip_beginner: "Não cozinhe demais os camarões: depois de uns dois minutos eles ficam borrachudos, e o forno os ressecaria ainda mais.",
+      tip_nerd: "As proteínas do camarão se contraem já acima de 60 °C e expulsam água: uma salteada rápida e o acréscimo na saída os mantêm suculentos.",
+    },
+    spread_gamberetti_zucchine: {
+      title: "Fior di latte e abobrinha",
+      description: "Distribua o fior di latte e a abobrinha salteada. Os camarões entram no final.",
+    },
+    finish_gamberetti_zucchine: {
+      title: "Camarões na saída",
+      description: "Assim que tirar a pizza do forno, distribua os camarões com o caldinho de alho e salsinha.",
     },
   },
 };

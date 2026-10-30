@@ -127,6 +127,10 @@ confermare come le altre.
 - Disciplinari e letteratura citati nei commenti del motore (per esempio STG
   AVPN 2024): elenco da completare con link e licenza.
 - Foto Unsplash dello showcase e crediti: `ATTRIBUTIONS.md`.
+- Catalogo italiano (D-065): le grammature dei condimenti sono di Vulcan; le
+  correzioni d'identità di Sardenaira e sfincione bianco di Bagheria citano le
+  loro fonti (ente, data, URL e stato) in `docs/progetto-catalogo-italiano.md`
+  §4.1.
 
 ## 6. Indice delle evidenze
 

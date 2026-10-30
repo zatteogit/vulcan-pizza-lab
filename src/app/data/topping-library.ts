@@ -830,6 +830,83 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     flavor_profile: "creamy",
     occasions: ["classico", "estate"],
   },
+  /* ═══ D-065 — tranche A2: condimenti con una fase delicata ═══
+   * Da docs/progetto-catalogo-italiano.md §4 (proposte del rapporto Gemini).
+   * Ognuno ha un ingrediente che il forno rovina o che va cotto a parte: la
+   * fase si modella con i passi esistenti (prima del forno, «after_bake»,
+   * testo per le cotture brevi), senza campi nuovi nel motore. */
+  pugliese: {
+    id: "pugliese",
+    name: "Pugliese",
+    description: "Pomodoro, mozzarella, cipolla e origano. La cipolla va cruda a velo nelle cotture lunghe e stufata prima nei forni veloci, dove non farebbe in tempo a cuocere.",
+    emoji: "🧅",
+    flavor_profile: "salty_savory",
+    occasions: ["classico", "pizzeria", "vegetariano"],
+  },
+  crudaiola: {
+    id: "crudaiola",
+    name: "Crudaiola",
+    description: "Base bianca con fior di latte in forno; pomodorini, rucola e scaglie di parmigiano a crudo, tutti dopo il forno.",
+    emoji: "🍅",
+    flavor_profile: "fresh",
+    occasions: ["estate", "fresco"],
+  },
+  tirolese: {
+    id: "tirolese",
+    name: "Tirolese",
+    description: "Pomodoro e mozzarella in forno, speck a fette messo all'uscita: sulla pizza calda si ammorbidisce senza seccarsi.",
+    emoji: "🥓",
+    flavor_profile: "salty_savory",
+    occasions: ["classico", "pizzeria"],
+  },
+  bismarck: {
+    id: "bismarck",
+    name: "Bismarck",
+    description: "Pomodoro, mozzarella, prosciutto cotto e un uovo al centro. Nel forno di casa l'uovo entra negli ultimi minuti: l'albume si rapprende e il tuorlo resta morbido.",
+    emoji: "🍳",
+    flavor_profile: "rich",
+    occasions: ["classico", "pizzeria"],
+  },
+  mimosa: {
+    id: "mimosa",
+    name: "Mimosa",
+    description: "Base bianca di panna e mozzarella con prosciutto cotto e mais dolce, tutto in forno.",
+    emoji: "🌽",
+    flavor_profile: "creamy",
+    occasions: ["bambini", "famiglia"],
+  },
+  lucana: {
+    id: "lucana",
+    name: "Lucana",
+    description: "Fior di latte e salsiccia lucanica in forno, peperoni cruschi sbriciolati solo all'uscita: in forno anneriscono e diventano amari.",
+    emoji: "🌶️",
+    flavor_profile: "salty_savory",
+    occasions: ["basilicata", "tradizione"],
+  },
+  rossini: {
+    id: "rossini",
+    name: "Rossini",
+    description: "Il classico di Pesaro: pomodoro e mozzarella in forno, poi uovo sodo a fette e maionese, a freddo. Si trova anche al taglio.",
+    emoji: "🥚",
+    flavor_profile: "rich",
+    occasions: ["pesaro", "marche", "tradizione"],
+  },
+  patate_lardo: {
+    id: "patate_lardo",
+    name: "Patate, lardo e rosmarino",
+    description: "Patate a fette sottili e rosmarino in forno; il lardo a fette va sulla pizza calda all'uscita, dove diventa traslucido senza sciogliersi.",
+    emoji: "🥔",
+    flavor_profile: "rich",
+    occasions: ["taglio romano", "inverno", "comfort"],
+  },
+  gamberetti_zucchine: {
+    id: "gamberetti_zucchine",
+    name: "Gamberetti e zucchine",
+    description: "Base bianca con fior di latte e zucchine; i gamberetti, saltati prima in padella, si aggiungono alla fine.",
+    emoji: "🍤",
+    flavor_profile: "fresh",
+    occasions: ["estate", "mare"],
+  },
 };
 
 /* ═══ ToppingRecipe — la realizzazione concreta ═══ */
@@ -3872,6 +3949,347 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
         beginner: "Nelle cotture lunghe la bufala in forno diventa gommosa e lascia un lago di siero: all'uscita resta morbida.",
         nerd: "La bufala ha più acqua e più grasso del fior di latte: oltre qualche minuto di calore la cagliata si contrae e spurga il siero, che bagna la base.",
       },
+    }],
+  },
+
+  /* ═══ D-065 — tranche A2: condimenti con una fase delicata ═══
+   * Stesse basi della tranche A1 (pelati e fior di latte sulla napoletana,
+   * passata e fior di latte sulla romana). Le fasi usano solo ciò che il
+   * motore ha già: «after_shape» prima del forno, «after_bake» all'uscita,
+   * description_short_bake quando la cottura breve cambia il gesto. «Negli
+   * ultimi minuti» non è un punto della timeline: lo dice il testo del passo
+   * prima della cottura (come il prosciutto cotto della tranche A1). */
+  pugliese_napoletana: {
+    id: "pugliese_napoletana",
+    concept_ref: "pugliese",
+    variant_name: "cipolla stufata",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati schiacciati a mano (pomodoro, succo di pomodoro)", components: ["pomodoro", "succo di pomodoro"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 70, unit: "g" } },
+      { name: "Cipolla bianca stufata", amount: { value: 60, unit: "g" }, notes: "peso da cruda" },
+      { name: "Origano secco", amount: { value: 1, unit: "g" } },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    pre_prep_steps: [{
+      id: "stufare_cipolla_pugliese",
+      title: "Stufa la cipolla",
+      description: "Affetta sottile la cipolla e stufala 10-12 minuti a fuoco basso con un filo d'olio e un pizzico di sale, finché è morbida e trasparente. Lasciala intiepidire.",
+      duration_minutes: 15,
+      timing: "just_before_assembly",
+      tip: {
+        beginner: "In 60-90 secondi di forno la cipolla cruda resta croccante e pungente: stufata prima arriva già morbida.",
+        nerd: "Per ammorbidirsi la cipolla deve perdere acqua e far cedere le pareti delle cellule, e a 100 °C servono minuti: la cottura napoletana è troppo breve.",
+      },
+    }],
+    assembly_steps: [{
+      id: "spread_pugliese_nap",
+      title: "Condimento Pugliese",
+      description: "Pelati schiacciati e fior di latte. Distribuisci la cipolla stufata, l'origano e un filo d'olio.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+  pugliese_romana: {
+    id: "pugliese_romana",
+    concept_ref: "pugliese",
+    variant_name: "cipolla cruda",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana", "trancio_milanese"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 90, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Cipolla bianca a velo", amount: { value: 50, unit: "g" }, notes: "cruda, affettata sottilissima" },
+      { name: "Origano secco", amount: { value: 1, unit: "g" } },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    assembly_steps: [{
+      id: "spread_pugliese_rom",
+      title: "Condimento Pugliese",
+      description: "Passata e fior di latte. Distribuisci la cipolla cruda a velo, l'origano e un filo d'olio: nella cottura lunga la cipolla cuoce sulla pizza.",
+      description_short_bake: "Passata e fior di latte. Distribuisci la cipolla, l'origano e un filo d'olio. In una cottura così breve la cipolla cruda resta croccante: se la vuoi morbida, stufala prima 10 minuti in padella.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+      tip: {
+        beginner: "Affettala più sottile che puoi: le fette spesse restano crude al centro.",
+        nerd: "Il velo di cipolla perde acqua sotto il calore del cielo del forno e si colora ai bordi; uno spessore oltre i 2-3 mm non fa in tempo ad ammorbidirsi.",
+      },
+    }],
+  },
+
+  crudaiola_classica: {
+    id: "crudaiola_classica",
+    concept_ref: "crudaiola",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro", "tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana"],
+    ingredients: [
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Pomodorini freschi", amount: { value: 80, unit: "g" }, notes: "a spicchi, dopo il forno" },
+      { name: "Sale fino sui pomodorini", amount: { value: 1, unit: "g" } },
+      { name: "Rucola", amount: { value: 15, unit: "g" }, notes: "dopo il forno" },
+      { name: "Parmigiano Reggiano a scaglie", amount: { value: 10, unit: "g" }, notes: "dopo il forno" },
+      { name: "Olio EVO", amount: { value: 8, unit: "ml" }, notes: "metà in forno, metà sul fresco" },
+    ],
+    pre_prep_steps: [{
+      id: "condire_pomodorini_crudaiola",
+      title: "Condisci i pomodorini",
+      description: "Taglia i pomodorini a spicchi, condiscili con il sale e un filo d'olio e lasciali in uno scolapasta mentre la pizza cuoce, così perdono l'acqua in eccesso.",
+      duration_minutes: 5,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_crudaiola",
+      title: "Solo fior di latte in forno",
+      description: "Distribuisci il fior di latte sull'impasto con un filo d'olio. Pomodorini, rucola e parmigiano non vanno in forno.",
+      insert_at: "after_shape",
+      duration_minutes: 2,
+      replaces_generic: true,
+    }, {
+      id: "finish_crudaiola",
+      title: "Il fresco all'uscita",
+      description: "Appena sfornata, distribuisci i pomodorini sgocciolati, la rucola e le scaglie di parmigiano. Finisci con l'olio rimasto.",
+      insert_at: "after_bake",
+      duration_minutes: 2,
+      tip: {
+        beginner: "Aspetta un minuto prima di mettere la rucola: sulla mozzarella bollente appassisce subito.",
+        nerd: "Cotti, pomodorini e rucola perdono acqua e profumi volatili; a crudo sulla pizza calda restano croccanti, ed è il contrasto caldo-freddo a fare la crudaiola.",
+      },
+    }],
+  },
+
+  tirolese_classica: {
+    id: "tirolese_classica",
+    concept_ref: "tirolese",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "napoletana_canotto", "trancio_milanese"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Speck a fette (carne di suino, sale, spezie)", components: ["carne di suino", "sale", "spezie"], amount: { value: 40, unit: "g" }, notes: "dopo il forno" },
+    ],
+    assembly_steps: [{
+      id: "spread_tirolese",
+      title: "Pomodoro e mozzarella",
+      description: "Stendi la passata e distribuisci il fior di latte. Lo speck non va in forno.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }, {
+      id: "finish_tirolese",
+      title: "Speck all'uscita",
+      description: "Appena sfornata, adagia le fette di speck sulla pizza calda.",
+      insert_at: "after_bake",
+      duration_minutes: 1,
+      tip: {
+        beginner: "In forno lo speck si secca e diventa duro e salato: sulla pizza calda resta morbido.",
+        nerd: "Lo speck è crudo, salato e affumicato, con poca acqua: il calore residuo basta a rendere traslucido il grasso senza disidratare la fetta.",
+      },
+    }],
+  },
+
+  bismarck_classica: {
+    id: "bismarck_classica",
+    concept_ref: "bismarck",
+    preferred_for_styles: ["tonda_romana", "pala_romana", "napoletana_canotto", "trancio_milanese"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Prosciutto cotto a fette (carne di suino, sale, aromi)", components: ["carne di suino", "sale", "aromi"], amount: { value: 40, unit: "g" } },
+      { name: "Uovo", amount: { value: 1, unit: "pcs" }, notes: "intero, a temperatura ambiente" },
+    ],
+    assembly_steps: [{
+      id: "spread_bismarck",
+      title: "Condimento Bismarck",
+      description: "Passata, fior di latte e prosciutto cotto; lascia libero il centro. Inforna senza uovo: negli ultimi 4-5 minuti di cottura apri il forno, rompi l'uovo al centro e finisci la cottura finché l'albume è rappreso.",
+      description_short_bake: "Passata, fior di latte e prosciutto cotto, con un incavo al centro. Rompi l'uovo nell'incavo subito prima di infornare: in una cottura così breve non c'è un momento per aggiungerlo dopo.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+      tip: {
+        beginner: "Rompi l'uovo prima in una tazzina: lo fai scivolare al centro senza rompere il tuorlo.",
+        nerd: "L'albume comincia a rapprendersi verso i 62 °C e diventa compatto verso gli 80 °C, il tuorlo si addensa da circa 65 °C: in 10-12 minuti di forno di casa l'uovo diventa sodo, in 4-5 l'albume si rapprende e il tuorlo resta morbido.",
+      },
+    }],
+  },
+
+  mimosa_classica: {
+    id: "mimosa_classica",
+    concept_ref: "mimosa",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "napoletana_canotto", "trancio_milanese"],
+    ingredients: [
+      { name: "Panna fresca", amount: { value: 40, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Prosciutto cotto a dadini (carne di suino, sale, aromi)", components: ["carne di suino", "sale", "aromi"], amount: { value: 40, unit: "g" } },
+      { name: "Mais dolce sgocciolato", amount: { value: 40, unit: "g" } },
+    ],
+    assembly_steps: [{
+      id: "spread_mimosa",
+      title: "Condimento Mimosa",
+      description: "Stendi la panna in uno strato sottile lasciando libero il bordo. Distribuisci il fior di latte, il prosciutto cotto e il mais ben sgocciolato.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+      tip: {
+        beginner: "Asciuga il mais su carta da cucina: il liquido della scatola bagna la base.",
+        nerd: "La panna al posto del pomodoro porta grasso e poca acqua: la base resta bianca e cremosa, ma un velo spesso rallenta la cottura del centro.",
+      },
+    }],
+  },
+
+  lucana_classica: {
+    id: "lucana_classica",
+    concept_ref: "lucana",
+    preferred_for_styles: ["napoletana_canotto", "tonda_romana", "teglia_romana", "pala_romana"],
+    ingredients: [
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Salsiccia lucanica a pezzetti (carne di suino, sale, peperone dolce, finocchietto)", components: ["carne di suino", "sale", "peperone dolce", "finocchietto"], amount: { value: 50, unit: "g" }, notes: "senza budello" },
+      { name: "Peperoni cruschi (peperoni dolci essiccati, olio di semi di girasole)", components: ["peperoni dolci essiccati", "olio di semi di girasole"], amount: { value: 6, unit: "g" }, notes: "fritti, dopo il forno" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    pre_prep_steps: [{
+      id: "friggere_cruschi_lucana",
+      title: "Friggi i peperoni cruschi",
+      description: "Togli il picciolo e i semi. Immergi i peperoni nell'olio a 160-170 °C per 3-5 secondi, finché diventano rosso scuro e croccanti, e scolali su carta. Se li compri già fritti, salta questo passo.",
+      duration_minutes: 10,
+      timing: "just_before_assembly",
+      tip: {
+        beginner: "Bastano pochi secondi: se scuriscono troppo diventano amari, e vanno rifatti.",
+        nerd: "Il crusco è un peperone essiccato, quasi senz'acqua e ricco di zuccheri: nell'olio caldo croccantisce in un attimo e poco dopo caramella fino a bruciare.",
+      },
+    }],
+    assembly_steps: [{
+      id: "spread_lucana",
+      title: "Fior di latte e salsiccia",
+      description: "Distribuisci il fior di latte e la salsiccia a pezzetti. Finisci con un filo d'olio. I cruschi non vanno in forno.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }, {
+      id: "finish_lucana",
+      title: "Cruschi all'uscita",
+      description: "Appena sfornata, sbriciola sopra i peperoni cruschi.",
+      insert_at: "after_bake",
+      duration_minutes: 1,
+      tip: {
+        beginner: "In forno i cruschi anneriscono in un attimo e diventano amari: vanno sempre sulla pizza già sfornata.",
+        nerd: "Sono già fritti e asciutti: il calore della pizza basta a farne uscire il profumo senza cuocerli di nuovo.",
+      },
+    }],
+  },
+
+  rossini_classica: {
+    id: "rossini_classica",
+    concept_ref: "rossini",
+    preferred_for_styles: ["tonda_romana", "teglia_romana", "pala_romana", "napoletana_canotto"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", components: ["pomodoro", "sale"], amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Uovo sodo", amount: { value: 1, unit: "pcs" }, notes: "a fette, dopo il forno" },
+      { name: "Maionese (olio di semi di girasole, uova, aceto, succo di limone, sale)", components: ["olio di semi di girasole", "uova", "aceto", "succo di limone", "sale"], amount: { value: 25, unit: "g" }, notes: "a freddo; alcune contengono senape, controlla l'etichetta" },
+    ],
+    pre_prep_steps: [{
+      id: "rassodare_uova_rossini",
+      title: "Rassoda le uova",
+      description: "Metti le uova in acqua già bollente e cuocile 9 minuti. Raffreddale in acqua fredda, sgusciale e tagliale a fette.",
+      duration_minutes: 15,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_rossini",
+      title: "Pomodoro e mozzarella",
+      description: "Stendi la passata e distribuisci il fior di latte. Uovo e maionese vanno a freddo, dopo il forno.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }, {
+      id: "finish_rossini",
+      title: "Uovo sodo e maionese a freddo",
+      description: "Lascia intiepidire la pizza un paio di minuti. Distribuisci le fette di uovo sodo e completa con la maionese a ciuffetti.",
+      insert_at: "after_bake",
+      duration_minutes: 2,
+      tip: {
+        beginner: "Sulla pizza bollente la maionese si scioglie e diventa unta: aspetta che smetta di fumare.",
+        nerd: "La maionese è olio emulsionato nel tuorlo: col calore le proteine del tuorlo coagulano e l'emulsione si rompe, separando l'olio.",
+      },
+    }],
+  },
+
+  patate_lardo_romana: {
+    id: "patate_lardo_romana",
+    concept_ref: "patate_lardo",
+    preferred_for_styles: ["teglia_romana", "pala_romana", "pinsa_romana"],
+    ingredients: [
+      { name: "Patate gialle a fette sottili", amount: { value: 160, unit: "g" } },
+      { name: "Rosmarino fresco", amount: { value: 3, unit: "pcs" }, notes: "aghi" },
+      { name: "Olio EVO", amount: { value: 10, unit: "ml" } },
+      { name: "Lardo a fette sottili (lardo di suino, sale, pepe, aromi)", components: ["lardo di suino", "sale", "pepe", "aromi"], amount: { value: 30, unit: "g" }, notes: "dopo il forno" },
+      { name: "Fior di sale", amount: { value: 1, unit: "g" }, notes: "a fine cottura" },
+    ],
+    pre_prep_steps: [{
+      id: "patate_mandolina_lardo",
+      title: "Affetta e ammolla le patate",
+      description: "Affetta le patate a 1-2 mm con la mandolina, mettile a bagno 20 minuti in acqua fredda, scolale e asciugale bene.",
+      duration_minutes: 25,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_patate_lardo",
+      title: "Patate e rosmarino in forno",
+      description: "Disponi le patate a scaglie sovrapposte e condiscile con l'olio e il rosmarino. Il lardo non va in forno.",
+      insert_at: "after_shape",
+      duration_minutes: 5,
+      replaces_generic: true,
+    }, {
+      id: "finish_patate_lardo",
+      title: "Lardo all'uscita",
+      description: "Appena sfornata, stendi le fette di lardo sulle patate calde e finisci con il fior di sale.",
+      insert_at: "after_bake",
+      duration_minutes: 1,
+      tip: {
+        beginner: "Il lardo è già salato: assaggia prima di aggiungere il fior di sale.",
+        nerd: "Il lardo è quasi tutto grasso: in forno si scioglie e frigge, sulle patate calde diventa solo traslucido e profumato.",
+      },
+    }],
+    bake_adjustments: {
+      additional_minutes: 4,
+      note: "Le patate richiedono qualche minuto in più per dorarsi.",
+    },
+  },
+
+  gamberetti_zucchine_classica: {
+    id: "gamberetti_zucchine_classica",
+    concept_ref: "gamberetti_zucchine",
+    preferred_for_styles: ["napoletana_canotto", "tonda_romana", "teglia_romana", "pala_romana", "pinsa_romana"],
+    ingredients: [
+      { name: "Fior di latte", amount: { value: 70, unit: "g" } },
+      { name: "Zucchine a rondelle sottili", amount: { value: 80, unit: "g" } },
+      { name: "Gamberetti sgusciati", amount: { value: 60, unit: "g" }, notes: "saltati in padella, dopo il forno" },
+      { name: "Aglio e prezzemolo", components: ["aglio", "prezzemolo"], amount: { value: 3, unit: "g" } },
+      { name: "Olio EVO", amount: { value: 8, unit: "ml" }, notes: "per la padella e a filo" },
+    ],
+    pre_prep_steps: [{
+      id: "saltare_gamberetti_zucchine",
+      title: "Salta zucchine e gamberetti",
+      description: "Salta le zucchine 3-4 minuti in padella con metà dell'olio, finché si ammorbidiscono, e salale. Nella stessa padella scalda l'aglio con l'olio rimasto e salta i gamberetti 1-2 minuti, finché diventano rosa. Spegni e aggiungi il prezzemolo.",
+      duration_minutes: 10,
+      timing: "just_before_assembly",
+      tip: {
+        beginner: "Non cuocere troppo i gamberetti: dopo un paio di minuti diventano gommosi, e il forno li seccherebbe ancora di più.",
+        nerd: "Le proteine dei gamberetti si contraggono già sopra i 60 °C e spremono fuori l'acqua: una cottura breve in padella e l'aggiunta all'uscita li tengono succosi.",
+      },
+    }],
+    assembly_steps: [{
+      id: "spread_gamberetti_zucchine",
+      title: "Fior di latte e zucchine",
+      description: "Distribuisci il fior di latte e le zucchine saltate. I gamberetti si aggiungono alla fine.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }, {
+      id: "finish_gamberetti_zucchine",
+      title: "Gamberetti all'uscita",
+      description: "Appena sfornata, distribuisci i gamberetti con il loro fondo di aglio e prezzemolo.",
+      insert_at: "after_bake",
+      duration_minutes: 1,
     }],
   },
 };

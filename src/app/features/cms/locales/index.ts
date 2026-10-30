@@ -122,9 +122,10 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *  52 → chiavi uiMessage generate senza lo slug del testo (namespace + hash).
  *  53 → FW-10, seguito: «Cambia forno» nell'avviso «Così non è fattibile»
  *       quando la causa è il forno (verdict.changeOven).
+ *  54 → D-065 tranche A2: nove condimenti (toppingI18n) nelle sei lingue.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 53;
+export const LOCALE_BUNDLE_REV = 54;
 
 /* 52 resta: l'italiano diventa un bundle lazy (30/10/2026) ma la forma dei
  * bundle e degli snapshot salvati non cambia; l'italiano non ha snapshot. */

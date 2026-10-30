@@ -280,6 +280,43 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       name: "Bufalina",
       description: "Tomate, Mozzarella di bufala campana und Basilikum. Büffelmozzarella gibt viel Molke ab: gut abtropfen lassen und in langsamen Öfen erst nach dem Backen auflegen.",
     },
+    // D-065 — tranche A2
+    pugliese: {
+      name: "Pugliese",
+      description: "Tomate, Mozzarella, Zwiebel und Oregano. Bei langen Backzeiten kommt die Zwiebel roh und hauchdünn darauf, in schnellen Öfen vorher geschmort, weil sie dort nicht mehr gar würde.",
+    },
+    crudaiola: {
+      name: "Crudaiola",
+      description: "Weiße Basis mit Fior di latte im Ofen; Kirschtomaten, Rucola und Parmigiano-Späne kommen roh dazu, alles erst nach dem Backen.",
+    },
+    tirolese: {
+      name: "Tirolese",
+      description: "Tomate und Mozzarella im Ofen, Speckscheiben erst nach dem Backen: Auf der heißen Pizza wird der Speck weich, ohne auszutrocknen.",
+    },
+    bismarck: {
+      name: "Bismarck",
+      description: "Tomate, Mozzarella, Kochschinken und ein Ei in der Mitte. Im Haushaltsofen kommt das Ei erst in den letzten Minuten dazu: Das Eiweiß stockt, das Eigelb bleibt weich.",
+    },
+    mimosa: {
+      name: "Mimosa",
+      description: "Weiße Basis aus Sahne und Mozzarella mit Kochschinken und Mais, alles im Ofen gebacken.",
+    },
+    lucana: {
+      name: "Lucana",
+      description: "Fior di latte und Lucanica-Wurst im Ofen, zerbröselte Peperoni cruschi erst danach: Im Ofen werden sie schwarz und bitter.",
+    },
+    rossini: {
+      name: "Rossini",
+      description: "Der Klassiker aus Pesaro: Tomate und Mozzarella im Ofen, danach kalt hartgekochtes Ei in Scheiben und Mayonnaise. Gibt es auch als Pizza vom Blech.",
+    },
+    patate_lardo: {
+      name: "Kartoffeln, Lardo und Rosmarin",
+      description: "Dünne Kartoffelscheiben und Rosmarin im Ofen; der Lardo in Scheiben kommt nach dem Backen auf die heiße Pizza und wird glasig, ohne zu schmelzen.",
+    },
+    gamberetti_zucchine: {
+      name: "Garnelen und Zucchini",
+      description: "Weiße Basis mit Fior di latte und Zucchini; die vorher in der Pfanne gebratenen Garnelen kommen zum Schluss dazu.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2519,6 +2556,202 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
         },
       },
     },
+    // D-065 — tranche A2
+    pugliese_napoletana: {
+      variant_name: "geschmorte Zwiebel",
+      ingredients: {
+        "0": {
+          name: "Von Hand zerdrückte geschälte Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Geschmorte weiße Zwiebel",
+          notes: "Rohgewicht",
+        },
+        "3": {
+          name: "Getrockneter Oregano",
+        },
+        "4": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    pugliese_romana: {
+      variant_name: "rohe Zwiebel",
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Hauchdünne weiße Zwiebel",
+          notes: "roh, so dünn wie möglich geschnitten",
+        },
+        "3": {
+          name: "Getrockneter Oregano",
+        },
+        "4": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    crudaiola_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Frische Kirschtomaten",
+          notes: "in Spalten, nach dem Backen",
+        },
+        "2": {
+          name: "Feines Salz für die Tomaten",
+        },
+        "3": {
+          name: "Rucola",
+          notes: "nach dem Backen",
+        },
+        "4": {
+          name: "Parmigiano-Reggiano-Späne",
+          notes: "nach dem Backen",
+        },
+        "5": {
+          name: "Natives Olivenöl extra",
+          notes: "halb im Ofen, halb auf die frischen Zutaten",
+        },
+      },
+    },
+    tirolese_classica: {
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Speck in Scheiben (Schweinefleisch, Salz, Gewürze)",
+          notes: "nach dem Backen",
+        },
+      },
+    },
+    bismarck_classica: {
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Kochschinken in Scheiben (Schweinefleisch, Salz, Aromen)",
+        },
+        "3": {
+          name: "Ei",
+          notes: "ganz, zimmerwarm",
+        },
+      },
+    },
+    mimosa_classica: {
+      ingredients: {
+        "0": {
+          name: "Frische Sahne",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Kochschinken in Würfeln (Schweinefleisch, Salz, Aromen)",
+        },
+        "3": {
+          name: "Abgetropfter Mais",
+        },
+      },
+    },
+    lucana_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Lucanica-Wurst in kleinen Stücken (Schweinefleisch, Salz, Paprika edelsüß, wilder Fenchel)",
+          notes: "ohne Darm",
+        },
+        "2": {
+          name: "Peperoni cruschi (getrocknete süße Paprikaschoten, Sonnenblumenöl)",
+          notes: "frittiert, nach dem Backen",
+        },
+        "3": {
+          name: "Natives Olivenöl extra",
+        },
+      },
+    },
+    rossini_classica: {
+      ingredients: {
+        "0": {
+          name: "Tomatenpassata (Tomaten, Salz)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Hartgekochtes Ei",
+          notes: "in Scheiben, nach dem Backen",
+        },
+        "3": {
+          name: "Mayonnaise (Sonnenblumenöl, Eier, Essig, Zitronensaft, Salz)",
+          notes: "kalt; manche enthalten Senf, Etikett prüfen",
+        },
+      },
+    },
+    patate_lardo_romana: {
+      bake_note: "Die Kartoffeln brauchen ein paar Minuten länger, um goldbraun zu werden.",
+      ingredients: {
+        "0": {
+          name: "Gelbe Kartoffeln in dünnen Scheiben",
+        },
+        "1": {
+          name: "Frischer Rosmarin",
+          notes: "Nadeln",
+        },
+        "2": {
+          name: "Natives Olivenöl extra",
+        },
+        "3": {
+          name: "Lardo in dünnen Scheiben (Schweinerückenspeck, Salz, Pfeffer, Kräuter)",
+          notes: "nach dem Backen",
+        },
+        "4": {
+          name: "Fleur de Sel",
+          notes: "am Ende der Backzeit",
+        },
+      },
+    },
+    gamberetti_zucchine_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Zucchini in dünnen Scheiben",
+        },
+        "2": {
+          name: "Geschälte Garnelen",
+          notes: "gebraten, nach dem Backen",
+        },
+        "3": {
+          name: "Knoblauch und Petersilie",
+        },
+        "4": {
+          name: "Natives Olivenöl extra",
+          notes: "für die Pfanne und zum Beträufeln",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -3208,6 +3441,119 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       description: "Direkt nach dem Backen den Büffelmozzarella in Stücken und das Basilikum verteilen.",
       tip_beginner: "Bei langen Backzeiten wird Büffelmozzarella im Ofen gummiartig und hinterlässt einen See aus Molke: Nach dem Backen aufgelegt bleibt er weich.",
       tip_nerd: "Büffelmozzarella hat mehr Wasser und mehr Fett als Fior di latte: Nach mehr als ein paar Minuten Hitze zieht sich der Bruch zusammen und presst Molke aus, die den Boden durchnässt.",
+    },
+    // D-065 — tranche A2
+    stufare_cipolla_pugliese: {
+      title: "Zwiebel schmoren",
+      description: "Schneide die Zwiebel in dünne Scheiben und schmore sie 10-12 Minuten bei schwacher Hitze mit etwas Öl und einer Prise Salz, bis sie weich und glasig ist. Lass sie etwas abkühlen.",
+      tip_beginner: "In 60-90 Sekunden im Ofen bleibt rohe Zwiebel knackig und scharf: Vorher geschmort kommt sie schon weich auf die Pizza.",
+      tip_nerd: "Damit Zwiebel weich wird, muss sie Wasser verlieren und ihre Zellwände müssen nachgeben, und das dauert bei 100 °C Minuten: Die neapolitanische Backzeit ist zu kurz.",
+    },
+    spread_pugliese_nap: {
+      title: "Belag Pugliese",
+      description: "Zerdrückte geschälte Tomaten und Fior di latte. Verteile die geschmorte Zwiebel und den Oregano, dazu ein Faden Öl.",
+    },
+    spread_pugliese_rom: {
+      title: "Belag Pugliese",
+      description: "Passata und Fior di latte. Verteile die hauchdünne rohe Zwiebel und den Oregano, dazu ein Faden Öl: Bei langer Backzeit gart die Zwiebel auf der Pizza.",
+      description_short_bake: "Passata und Fior di latte. Verteile die Zwiebel und den Oregano, dazu ein Faden Öl. Bei so kurzer Backzeit bleibt rohe Zwiebel knackig: Wenn du sie weich magst, schmore sie vorher 10 Minuten in der Pfanne.",
+      tip_beginner: "Schneide sie so dünn wie möglich: Dicke Scheiben bleiben in der Mitte roh.",
+      tip_nerd: "Die dünne Zwiebel verliert unter der Hitze der Ofendecke Wasser und bräunt an den Rändern; Scheiben über 2-3 mm werden nicht mehr rechtzeitig weich.",
+    },
+    condire_pomodorini_crudaiola: {
+      title: "Kirschtomaten würzen",
+      description: "Schneide die Kirschtomaten in Spalten, würze sie mit dem Salz und etwas Öl und lass sie in einem Sieb abtropfen, während die Pizza backt, damit sie überschüssiges Wasser verlieren.",
+    },
+    spread_crudaiola: {
+      title: "Nur Fior di latte in den Ofen",
+      description: "Verteile den Fior di latte mit einem Faden Öl auf dem Teig. Kirschtomaten, Rucola und Parmigiano kommen nicht in den Ofen.",
+    },
+    finish_crudaiola: {
+      title: "Frische Zutaten nach dem Backen",
+      description: "Verteile direkt nach dem Backen die abgetropften Kirschtomaten, den Rucola und die Parmigiano-Späne. Zum Schluss das restliche Öl.",
+      tip_beginner: "Warte eine Minute, bevor du den Rucola auflegst: Auf kochend heißem Mozzarella welkt er sofort.",
+      tip_nerd: "Gegart verlieren Kirschtomaten und Rucola Wasser und flüchtige Aromen; roh auf der heißen Pizza bleiben sie knackig, und genau dieser Kontrast von heiß und kalt macht die Crudaiola aus.",
+    },
+    spread_tirolese: {
+      title: "Tomate und Mozzarella",
+      description: "Verstreiche die Passata und verteile den Fior di latte. Der Speck kommt nicht in den Ofen.",
+    },
+    finish_tirolese: {
+      title: "Speck nach dem Backen",
+      description: "Leg die Speckscheiben direkt nach dem Backen auf die heiße Pizza.",
+      tip_beginner: "Im Ofen trocknet Speck aus und wird hart und salzig: Auf der heißen Pizza bleibt er weich.",
+      tip_nerd: "Speck ist roh, gesalzen und geräuchert und hat wenig Wasser: Die Restwärme reicht, damit das Fett glasig wird, ohne dass die Scheibe austrocknet.",
+    },
+    spread_bismarck: {
+      title: "Belag Bismarck",
+      description: "Passata, Fior di latte und Kochschinken; lass die Mitte frei. Schieb die Pizza ohne Ei in den Ofen: Öffne ihn in den letzten 4-5 Minuten, schlag das Ei in die Mitte und back weiter, bis das Eiweiß gestockt ist.",
+      description_short_bake: "Passata, Fior di latte und Kochschinken, mit einer Mulde in der Mitte. Schlag das Ei direkt vor dem Backen in die Mulde: Bei so kurzer Backzeit gibt es keinen Moment, es später hinzuzufügen.",
+      tip_beginner: "Schlag das Ei zuerst in eine Tasse: So gleitet es in die Mitte, ohne dass das Eigelb aufplatzt.",
+      tip_nerd: "Eiweiß beginnt bei etwa 62 °C zu stocken und wird gegen 80 °C fest, Eigelb dickt ab etwa 65 °C an: In 10-12 Minuten im Haushaltsofen wird das Ei hart, in 4-5 Minuten stockt das Eiweiß und das Eigelb bleibt weich.",
+    },
+    spread_mimosa: {
+      title: "Belag Mimosa",
+      description: "Verstreiche die Sahne in einer dünnen Schicht und lass den Rand frei. Verteile Fior di latte, Kochschinken und den gut abgetropften Mais.",
+      tip_beginner: "Tupf den Mais mit Küchenpapier trocken: Die Flüssigkeit aus der Dose weicht den Boden auf.",
+      tip_nerd: "Sahne statt Tomate bringt Fett und wenig Wasser: Der Boden bleibt weiß und cremig, aber eine dicke Schicht bremst das Garen in der Mitte.",
+    },
+    friggere_cruschi_lucana: {
+      title: "Peperoni cruschi frittieren",
+      description: "Entferne Stiel und Kerne. Tauch die Schoten 3-5 Sekunden in 160-170 °C heißes Öl, bis sie dunkelrot und knusprig sind, und lass sie auf Papier abtropfen. Wenn du sie schon frittiert kaufst, überspring diesen Schritt.",
+      tip_beginner: "Ein paar Sekunden reichen: Werden sie zu dunkel, schmecken sie bitter und du musst neu anfangen.",
+      tip_nerd: "Der Crusco ist eine getrocknete Paprika, fast ohne Wasser und reich an Zucker: Im heißen Öl wird er sofort knusprig und karamellisiert kurz danach, bis er verbrennt.",
+    },
+    spread_lucana: {
+      title: "Fior di latte und Wurst",
+      description: "Verteile den Fior di latte und die Wurststücke. Zum Schluss ein Faden Öl. Die Cruschi kommen nicht in den Ofen.",
+    },
+    finish_lucana: {
+      title: "Cruschi nach dem Backen",
+      description: "Zerbrösle die Peperoni cruschi direkt nach dem Backen über der Pizza.",
+      tip_beginner: "Im Ofen werden Cruschi im Nu schwarz und bitter: Sie kommen immer erst auf die fertige Pizza.",
+      tip_nerd: "Sie sind schon frittiert und trocken: Die Hitze der Pizza reicht, um ihr Aroma freizusetzen, ohne sie erneut zu garen.",
+    },
+    rassodare_uova_rossini: {
+      title: "Eier hart kochen",
+      description: "Gib die Eier in bereits kochendes Wasser und koche sie 9 Minuten. Schreck sie in kaltem Wasser ab, schäl sie und schneide sie in Scheiben.",
+    },
+    spread_rossini: {
+      title: "Tomate und Mozzarella",
+      description: "Verstreiche die Passata und verteile den Fior di latte. Ei und Mayonnaise kommen kalt nach dem Backen dazu.",
+    },
+    finish_rossini: {
+      title: "Hartgekochtes Ei und Mayonnaise, kalt",
+      description: "Lass die Pizza ein paar Minuten abkühlen. Verteile die Eischeiben und gib die Mayonnaise in kleinen Tupfen darauf.",
+      tip_beginner: "Auf der kochend heißen Pizza schmilzt Mayonnaise und wird ölig: Warte, bis sie nicht mehr dampft.",
+      tip_nerd: "Mayonnaise ist in Eigelb emulgiertes Öl: Bei Hitze gerinnen die Eigelbproteine, die Emulsion bricht und das Öl tritt aus.",
+    },
+    patate_mandolina_lardo: {
+      title: "Kartoffeln hobeln und wässern",
+      description: "Hobel die Kartoffeln mit der Mandoline 1-2 mm dünn, leg sie 20 Minuten in kaltes Wasser, gieß sie ab und trockne sie gut.",
+    },
+    spread_patate_lardo: {
+      title: "Kartoffeln und Rosmarin in den Ofen",
+      description: "Leg die Kartoffelscheiben überlappend aus und würze sie mit Öl und Rosmarin. Der Lardo kommt nicht in den Ofen.",
+    },
+    finish_patate_lardo: {
+      title: "Lardo nach dem Backen",
+      description: "Leg die Lardo-Scheiben direkt nach dem Backen auf die heißen Kartoffeln und streu das Fleur de Sel darüber.",
+      tip_beginner: "Lardo ist schon salzig: Probier, bevor du das Fleur de Sel dazugibst.",
+      tip_nerd: "Lardo ist fast reines Fett: Im Ofen schmilzt und brät er, auf heißen Kartoffeln wird er nur glasig und duftend.",
+    },
+    saltare_gamberetti_zucchine: {
+      title: "Zucchini und Garnelen braten",
+      description: "Brate die Zucchini 3-4 Minuten mit der Hälfte des Öls in der Pfanne, bis sie weich werden, und salze sie. Erhitze in derselben Pfanne den Knoblauch im restlichen Öl und brate die Garnelen 1-2 Minuten, bis sie rosa sind. Nimm die Pfanne vom Herd und gib die Petersilie dazu.",
+      tip_beginner: "Gare die Garnelen nicht zu lange: Nach ein paar Minuten werden sie gummiartig, und der Ofen würde sie noch mehr austrocknen.",
+      tip_nerd: "Die Proteine der Garnelen ziehen sich schon über 60 °C zusammen und pressen Wasser heraus: Kurz in der Pfanne gebraten und nach dem Backen aufgelegt bleiben sie saftig.",
+    },
+    spread_gamberetti_zucchine: {
+      title: "Fior di latte und Zucchini",
+      description: "Verteile den Fior di latte und die gebratenen Zucchini. Die Garnelen kommen zum Schluss dazu.",
+    },
+    finish_gamberetti_zucchine: {
+      title: "Garnelen nach dem Backen",
+      description: "Verteile die Garnelen direkt nach dem Backen mit ihrem Knoblauch-Petersilien-Sud auf der Pizza.",
     },
   },
 };

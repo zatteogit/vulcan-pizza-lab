@@ -280,6 +280,43 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       name: "Bufalina",
       description: "Tomate, mozzarella di bufala campana y albahaca. La búfala suelta mucho suero: hay que escurrirla y, en hornos lentos, ponerla al sacar la pizza.",
     },
+    // D-065 — tranche A2
+    pugliese: {
+      name: "Pugliese",
+      description: "Tomate, mozzarella, cebolla y orégano. La cebolla va cruda y en láminas finísimas en las cocciones largas, y pochada antes en los hornos rápidos, donde no le daría tiempo a hacerse.",
+    },
+    crudaiola: {
+      name: "Crudaiola",
+      description: "Base blanca con fior di latte al horno; tomates cherry, rúcula y lascas de parmesano en crudo, todo después del horno.",
+    },
+    tirolese: {
+      name: "Tirolese",
+      description: "Tomate y mozzarella al horno, speck en lonchas al sacarla: sobre la pizza caliente se ablanda sin secarse.",
+    },
+    bismarck: {
+      name: "Bismarck",
+      description: "Tomate, mozzarella, jamón cocido y un huevo en el centro. En el horno de casa el huevo entra en los últimos minutos: la clara cuaja y la yema queda tierna.",
+    },
+    mimosa: {
+      name: "Mimosa",
+      description: "Base blanca de nata y mozzarella con jamón cocido y maíz dulce, todo al horno.",
+    },
+    lucana: {
+      name: "Lucana",
+      description: "Fior di latte y salchicha lucanica al horno; peperoni cruschi desmenuzados solo al sacarla: en el horno se ennegrecen y amargan.",
+    },
+    rossini: {
+      name: "Rossini",
+      description: "El clásico de Pesaro: tomate y mozzarella al horno, y después huevo duro en rodajas y mayonesa, en frío. También se encuentra al corte.",
+    },
+    patate_lardo: {
+      name: "Patatas, lardo y romero",
+      description: "Patatas en láminas finas y romero al horno; el lardo en lonchas va sobre la pizza caliente al sacarla, donde se vuelve translúcido sin derretirse.",
+    },
+    gamberetti_zucchine: {
+      name: "Gambas y calabacín",
+      description: "Base blanca con fior di latte y calabacín; las gambas, salteadas antes en la sartén, se añaden al final.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2519,6 +2556,202 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
         },
       },
     },
+    // D-065 — tranche A2
+    pugliese_napoletana: {
+      variant_name: "cebolla pochada",
+      ingredients: {
+        "0": {
+          name: "Tomates pelados aplastados a mano (tomate, jugo de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Cebolla blanca pochada",
+          notes: "peso en crudo",
+        },
+        "3": {
+          name: "Orégano seco",
+        },
+        "4": {
+          name: "AOVE",
+        },
+      },
+    },
+    pugliese_romana: {
+      variant_name: "cebolla cruda",
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Cebolla blanca en láminas finísimas",
+          notes: "cruda, cortada lo más fina posible",
+        },
+        "3": {
+          name: "Orégano seco",
+        },
+        "4": {
+          name: "AOVE",
+        },
+      },
+    },
+    crudaiola_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Tomates cherry frescos",
+          notes: "en gajos, después del horno",
+        },
+        "2": {
+          name: "Sal fina para los tomates",
+        },
+        "3": {
+          name: "Rúcula",
+          notes: "después del horno",
+        },
+        "4": {
+          name: "Lascas de Parmigiano Reggiano",
+          notes: "después del horno",
+        },
+        "5": {
+          name: "AOVE",
+          notes: "mitad al horno, mitad sobre lo fresco",
+        },
+      },
+    },
+    tirolese_classica: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Speck en lonchas (carne de cerdo, sal, especias)",
+          notes: "después del horno",
+        },
+      },
+    },
+    bismarck_classica: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jamón cocido en lonchas (carne de cerdo, sal, aromas)",
+        },
+        "3": {
+          name: "Huevo",
+          notes: "entero, a temperatura ambiente",
+        },
+      },
+    },
+    mimosa_classica: {
+      ingredients: {
+        "0": {
+          name: "Nata fresca",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jamón cocido en dados (carne de cerdo, sal, aromas)",
+        },
+        "3": {
+          name: "Maíz dulce escurrido",
+        },
+      },
+    },
+    lucana_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Salchicha lucanica en trocitos (carne de cerdo, sal, pimentón dulce, hinojo silvestre)",
+          notes: "sin tripa",
+        },
+        "2": {
+          name: "Peperoni cruschi (pimientos dulces secos, aceite de girasol)",
+          notes: "fritos, después del horno",
+        },
+        "3": {
+          name: "AOVE",
+        },
+      },
+    },
+    rossini_classica: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Huevo duro",
+          notes: "en rodajas, después del horno",
+        },
+        "3": {
+          name: "Mayonesa (aceite de girasol, huevos, vinagre, zumo de limón, sal)",
+          notes: "en frío; algunas llevan mostaza, revisa la etiqueta",
+        },
+      },
+    },
+    patate_lardo_romana: {
+      bake_note: "Las patatas necesitan unos minutos más para dorarse.",
+      ingredients: {
+        "0": {
+          name: "Patatas amarillas en láminas finas",
+        },
+        "1": {
+          name: "Romero fresco",
+          notes: "hojas",
+        },
+        "2": {
+          name: "AOVE",
+        },
+        "3": {
+          name: "Lardo en lonchas finas (tocino de cerdo, sal, pimienta, hierbas)",
+          notes: "después del horno",
+        },
+        "4": {
+          name: "Flor de sal",
+          notes: "al final de la cocción",
+        },
+      },
+    },
+    gamberetti_zucchine_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Calabacín en rodajas finas",
+        },
+        "2": {
+          name: "Gambas peladas",
+          notes: "salteadas, después del horno",
+        },
+        "3": {
+          name: "Ajo y perejil",
+        },
+        "4": {
+          name: "AOVE",
+          notes: "para la sartén y en hilo",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -3208,6 +3441,119 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       description: "Nada más sacarla del horno, reparte la búfala en trozos y la albahaca.",
       tip_beginner: "En las cocciones largas, la búfala en el horno se vuelve gomosa y deja un charco de suero: añadida al final, queda tierna.",
       tip_nerd: "La búfala tiene más agua y más grasa que el fior di latte: tras unos minutos de calor, la cuajada se contrae y expulsa el suero, que moja la base.",
+    },
+    // D-065 — tranche A2
+    stufare_cipolla_pugliese: {
+      title: "Pocha la cebolla",
+      description: "Corta la cebolla en láminas finas y póchala 10-12 minutos a fuego bajo con un hilo de aceite y una pizca de sal, hasta que esté tierna y transparente. Deja que se temple.",
+      tip_beginner: "En 60-90 segundos de horno la cebolla cruda queda crujiente y picante: pochada antes llega ya tierna.",
+      tip_nerd: "Para ablandarse, la cebolla tiene que perder agua y sus paredes celulares tienen que ceder, y a 100 °C eso lleva minutos: la cocción napolitana es demasiado corta.",
+    },
+    spread_pugliese_nap: {
+      title: "Aliño Pugliese",
+      description: "Tomates pelados aplastados y fior di latte. Reparte la cebolla pochada, el orégano y un hilo de aceite.",
+    },
+    spread_pugliese_rom: {
+      title: "Aliño Pugliese",
+      description: "Passata y fior di latte. Reparte la cebolla cruda en láminas, el orégano y un hilo de aceite: en una cocción larga la cebolla se hace sobre la pizza.",
+      description_short_bake: "Passata y fior di latte. Reparte la cebolla, el orégano y un hilo de aceite. En una cocción tan corta la cebolla cruda queda crujiente: si la quieres tierna, póchala antes 10 minutos en la sartén.",
+      tip_beginner: "Córtala lo más fina que puedas: las láminas gruesas quedan crudas en el centro.",
+      tip_nerd: "La cebolla en láminas pierde agua con el calor de la bóveda del horno y se dora por los bordes; a partir de 2-3 mm de grosor no le da tiempo a ablandarse.",
+    },
+    condire_pomodorini_crudaiola: {
+      title: "Aliña los tomates cherry",
+      description: "Corta los tomates cherry en gajos, alíñalos con la sal y un hilo de aceite y déjalos en un colador mientras se hornea la pizza, para que suelten el exceso de agua.",
+    },
+    spread_crudaiola: {
+      title: "Solo fior di latte al horno",
+      description: "Reparte el fior di latte sobre la masa con un hilo de aceite. Los tomates cherry, la rúcula y el parmesano no van al horno.",
+    },
+    finish_crudaiola: {
+      title: "Lo fresco al sacarla",
+      description: "Nada más sacarla, reparte los tomates cherry escurridos, la rúcula y las lascas de parmesano. Termina con el aceite restante.",
+      tip_beginner: "Espera un minuto antes de poner la rúcula: sobre la mozzarella hirviendo se marchita enseguida.",
+      tip_nerd: "Cocinados, los tomates cherry y la rúcula pierden agua y aromas volátiles; en crudo sobre la pizza caliente siguen crujientes, y es ese contraste de caliente y frío lo que define la crudaiola.",
+    },
+    spread_tirolese: {
+      title: "Tomate y mozzarella",
+      description: "Extiende la passata y reparte el fior di latte. El speck no va al horno.",
+    },
+    finish_tirolese: {
+      title: "Speck al sacarla",
+      description: "Nada más sacarla, coloca las lonchas de speck sobre la pizza caliente.",
+      tip_beginner: "En el horno el speck se seca y queda duro y salado: sobre la pizza caliente se mantiene tierno.",
+      tip_nerd: "El speck es crudo, salado y ahumado, con poca agua: el calor residual basta para que la grasa se vuelva translúcida sin secar la loncha.",
+    },
+    spread_bismarck: {
+      title: "Aliño Bismarck",
+      description: "Passata, fior di latte y jamón cocido; deja libre el centro. Hornea sin el huevo: en los últimos 4-5 minutos abre el horno, casca el huevo en el centro y termina la cocción hasta que la clara cuaje.",
+      description_short_bake: "Passata, fior di latte y jamón cocido, con un hueco en el centro. Casca el huevo en el hueco justo antes de hornear: en una cocción tan corta no hay momento para añadirlo después.",
+      tip_beginner: "Casca primero el huevo en una taza: así lo deslizas al centro sin romper la yema.",
+      tip_nerd: "La clara empieza a cuajar hacia los 62 °C y se vuelve firme hacia los 80 °C; la yema espesa a partir de unos 65 °C. En 10-12 minutos de horno doméstico el huevo queda duro; en 4-5 la clara cuaja y la yema queda tierna.",
+    },
+    spread_mimosa: {
+      title: "Aliño Mimosa",
+      description: "Extiende la nata en una capa fina dejando libre el borde. Reparte el fior di latte, el jamón cocido y el maíz bien escurrido.",
+      tip_beginner: "Seca el maíz con papel de cocina: el líquido de la lata empapa la base.",
+      tip_nerd: "La nata en lugar del tomate aporta grasa y poca agua: la base queda blanca y cremosa, pero una capa gruesa retrasa la cocción del centro.",
+    },
+    friggere_cruschi_lucana: {
+      title: "Fríe los peperoni cruschi",
+      description: "Quita el pedúnculo y las semillas. Sumerge los pimientos en aceite a 160-170 °C durante 3-5 segundos, hasta que se pongan rojo oscuro y crujientes, y escúrrelos sobre papel. Si los compras ya fritos, sáltate este paso.",
+      tip_beginner: "Bastan unos segundos: si se oscurecen demasiado amargan y hay que repetirlos.",
+      tip_nerd: "El crusco es un pimiento seco, casi sin agua y rico en azúcares: en el aceite caliente se vuelve crujiente al instante y poco después se carameliza hasta quemarse.",
+    },
+    spread_lucana: {
+      title: "Fior di latte y salchicha",
+      description: "Reparte el fior di latte y la salchicha en trocitos. Termina con un hilo de aceite. Los cruschi no van al horno.",
+    },
+    finish_lucana: {
+      title: "Cruschi al sacarla",
+      description: "Nada más sacarla, desmenuza por encima los peperoni cruschi.",
+      tip_beginner: "En el horno los cruschi se ennegrecen en un momento y amargan: van siempre sobre la pizza ya horneada.",
+      tip_nerd: "Ya están fritos y secos: el calor de la pizza basta para liberar su aroma sin volver a cocinarlos.",
+    },
+    rassodare_uova_rossini: {
+      title: "Cuece los huevos duros",
+      description: "Pon los huevos en agua ya hirviendo y cuécelos 9 minutos. Enfríalos en agua fría, pélalos y córtalos en rodajas.",
+    },
+    spread_rossini: {
+      title: "Tomate y mozzarella",
+      description: "Extiende la passata y reparte el fior di latte. El huevo y la mayonesa van en frío, después del horno.",
+    },
+    finish_rossini: {
+      title: "Huevo duro y mayonesa en frío",
+      description: "Deja templar la pizza un par de minutos. Reparte las rodajas de huevo duro y termina con la mayonesa a puntitos.",
+      tip_beginner: "Sobre la pizza hirviendo la mayonesa se derrite y queda grasienta: espera a que deje de humear.",
+      tip_nerd: "La mayonesa es aceite emulsionado en yema: con el calor las proteínas de la yema coagulan y la emulsión se corta, soltando el aceite.",
+    },
+    patate_mandolina_lardo: {
+      title: "Corta y remoja las patatas",
+      description: "Corta las patatas en láminas de 1-2 mm con la mandolina, ponlas en remojo 20 minutos en agua fría, escúrrelas y sécalas bien.",
+    },
+    spread_patate_lardo: {
+      title: "Patatas y romero al horno",
+      description: "Coloca las patatas en láminas superpuestas y alíñalas con el aceite y el romero. El lardo no va al horno.",
+    },
+    finish_patate_lardo: {
+      title: "Lardo al sacarla",
+      description: "Nada más sacarla, extiende las lonchas de lardo sobre las patatas calientes y termina con la flor de sal.",
+      tip_beginner: "El lardo ya es salado: prueba antes de añadir la flor de sal.",
+      tip_nerd: "El lardo es casi todo grasa: en el horno se derrite y se fríe; sobre las patatas calientes solo se vuelve translúcido y aromático.",
+    },
+    saltare_gamberetti_zucchine: {
+      title: "Saltea el calabacín y las gambas",
+      description: "Saltea el calabacín 3-4 minutos en la sartén con la mitad del aceite, hasta que se ablande, y sálalo. En la misma sartén calienta el ajo con el aceite restante y saltea las gambas 1-2 minutos, hasta que se pongan rosadas. Apaga el fuego y añade el perejil.",
+      tip_beginner: "No cocines demasiado las gambas: pasados un par de minutos se vuelven gomosas, y el horno las secaría todavía más.",
+      tip_nerd: "Las proteínas de las gambas se contraen ya por encima de los 60 °C y expulsan agua: un salteado breve y añadirlas al sacar la pizza las mantienen jugosas.",
+    },
+    spread_gamberetti_zucchine: {
+      title: "Fior di latte y calabacín",
+      description: "Reparte el fior di latte y el calabacín salteado. Las gambas se añaden al final.",
+    },
+    finish_gamberetti_zucchine: {
+      title: "Gambas al sacarla",
+      description: "Nada más sacarla, reparte las gambas con su jugo de ajo y perejil.",
     },
   },
 };
