@@ -1,0 +1,275 @@
+{
+  "date": "2026-10-30",
+  "tool": "built-in image_gen",
+  "style": "User-selected coloured terracotta pen outlines, ivory washes, clean alpha; no granular overlay.",
+  "scope": "Learning hub, expanded glossary entries, preferment guide, relevant advice in full troubleshooting guide. Cooking sheets remain compact.",
+  "constraints": [
+    "No generated scientific cutaways or maturity comparisons without references",
+    "Captions distinguish freshly mixed biga and rested poolish",
+    "Finger test drawing shows the gesture, not a proof of readiness",
+    "Autolysis is flour and water, not a preferment",
+    "Source photos are local research references, not product assets"
+  ],
+  "assets": [
+    {
+      "id": "biga",
+      "stage": "Biga appena miscelata",
+      "asset": "src/assets/learn/biga.webp",
+      "sha256": "777cd8c9088134861aff2842fbd02b35c482e5215e8276778ca68ca96a359224",
+      "bytes": 61804,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:biga",
+        "preferments:biga"
+      ],
+      "references": [
+        {
+          "page": "https://www.flickr.com/photos/grongar/3683817769/",
+          "author": "Rebecca Siegel (grongar)",
+          "license": "CC BY 2.0",
+          "license_url": "https://creativecommons.org/licenses/by/2.0/",
+          "note": "Original title: Ciabatta - Biga dough mixed. Exact hydration not established by photograph."
+        }
+      ]
+    },
+    {
+      "id": "poolish",
+      "stage": "Poolish dopo il riposo",
+      "asset": "src/assets/learn/poolish.webp",
+      "sha256": "d01fc1f5efabfa2d192fb1b5f86fdcdd7342c62a5ac345e7829d77756312c9b2",
+      "bytes": 58846,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:poolish",
+        "preferments:poolish",
+        "learn:resources"
+      ],
+      "references": [
+        {
+          "page": "https://commons.wikimedia.org/wiki/File:Poolish_for_Artos.jpg",
+          "author": "Rebecca Siegel (grongar)",
+          "license": "CC BY 2.0",
+          "license_url": "https://creativecommons.org/licenses/by/2.0/",
+          "note": "Photographer describes the morning after mixing."
+        }
+      ]
+    },
+    {
+      "id": "autolysis",
+      "stage": "Preparazione del riposo di farina e acqua",
+      "asset": "src/assets/learn/autolysis.webp",
+      "sha256": "0572a1bafe9e16592ad882bc058d35bdf44b1a8a8e869c707accb7eacd97f5c5",
+      "bytes": 53482,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:autolysis",
+        "preferments:autolisi"
+      ],
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2017/09/29/using-the-autolyse-method",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image_sm/public/2024-03/autolyse.jpg?itok=XGI7FATi",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        }
+      ]
+    },
+    {
+      "id": "folds",
+      "stage": "Un singolo stretch and fold in ciotola",
+      "asset": "src/assets/learn/folds.webp",
+      "sha256": "67332027a9abdb3b0c3f6351d98fd975c60d457faa35551d7389211c6e29370e",
+      "bytes": 48242,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:folds",
+        "troubleshooting:P01",
+        "learn:resources"
+      ],
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2019/06/Bread-Dough-in-Bulk-Fermentation-via-@kingarthurflour-11.jpg",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        }
+      ]
+    },
+    {
+      "id": "windowpane",
+      "stage": "Un piccolo pezzo teso in una membrana integra",
+      "asset": "src/assets/learn/windowpane.webp",
+      "sha256": "cda6df89f5847dc66a74445413c1626ad32555e6ccd77afcbdaa2b962b7fafdb",
+      "bytes": 33326,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:gluten_development",
+        "glossary:gluten",
+        "learn:resources"
+      ],
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2022/10/14/what-is-the-windowpane-test-for-bread-dough",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image_sm/public/2022-10/Windowpane-test-10.jpg?itok=LGIYkhrm",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        }
+      ]
+    },
+    {
+      "id": "division",
+      "stage": "Separazione di una porzione cruda con tarocco",
+      "asset": "src/assets/learn/division.webp",
+      "sha256": "1b4923827cd4886cf8d7db1d3c00a71180ac2e6927f58098a14afd82f3b7c0a3",
+      "bytes": 43320,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:dough_division"
+      ],
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2014/12/Pizza_Blog_Sequenced-5.jpg",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        }
+      ]
+    },
+    {
+      "id": "ball-shaping",
+      "stage": "Chiusura del panetto con mani raccolte",
+      "asset": "src/assets/learn/ball-shaping.webp",
+      "sha256": "3bd8500bcf14ce52e85a4bf07660014d70b59974f1970531a6927ffde5647653",
+      "bytes": 55532,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:ball_shaping",
+        "troubleshooting:P23",
+        "learn:path"
+      ],
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2014/12/Pizza_Blog_Sequenced-10.jpg",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        }
+      ]
+    },
+    {
+      "id": "poke-test",
+      "stage": "Gesto di pressione, senza diagnosi di maturazione",
+      "asset": "src/assets/learn/poke-test.webp",
+      "sha256": "ea57fc51d1f9619293ba1c6fc1e6d7af863623df1f617d46bf2c505f72754cee",
+      "bytes": 31298,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:poke_test",
+        "troubleshooting:P03",
+        "learn:resources"
+      ],
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2022/08/22/how-to-tell-if-bread-dough-has-risen-enough",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/styles/450x300/public/2026-09/how%20to%20proof%20bread%20in%20oven.jpg?itok=ObTC5JL5",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        },
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2014/12/Pizza_Blog_Sequenced-11.jpg",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        }
+      ]
+    },
+    {
+      "id": "stretching",
+      "stage": "Pressione con i polpastrelli al centro, bordo risparmiato",
+      "asset": "src/assets/learn/stretching.webp",
+      "sha256": "00ed5a5f054ac44c34849ddcd5fb95abdf7273e87d7536aa803c2f5296d5d2ad",
+      "bytes": 52140,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "troubleshooting:P02",
+        "troubleshooting:P07",
+        "troubleshooting:P16",
+        "troubleshooting:P19"
+      ],
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2014/12/Pizza_Blog_Sequenced-16.jpg",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        }
+      ]
+    },
+    {
+      "id": "cornicione",
+      "stage": "Bordo cotto visto da fuori, senza sezione inventata",
+      "asset": "src/assets/learn/cornicione.webp",
+      "sha256": "48fca7408bc86f90819218d72fdf83562821bad8376583bca28a74bb39d7ddcb",
+      "bytes": 83050,
+      "size": [
+        768,
+        512
+      ],
+      "placements": [
+        "glossary:cornicione"
+      ],
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2014/12/Pizza_Blog_Sequenced-33.jpg",
+          "publisher": "King Arthur Baking",
+          "usage": "Observed physical reference; original photograph not bundled."
+        }
+      ]
+    }
+  ],
+  "total_bytes": 521040,
+  "validation": {
+    "verify": "131 files, 1697 tests passed, 1 skipped; all guards passed",
+    "build": "passed",
+    "budget": "passed: images 41.6 MiB / 42 MiB; CSS 72.7 KiB / 74 KiB; JS per user 559.5 KiB / 570 KiB",
+    "browser": [
+      "Learning hub desktop and 390px mobile; all five preview images loaded, no horizontal overflow",
+      "Glossary folds hash link, search, expanded caption and source at 390px",
+      "Preferment biga hash link and autolysis expanded",
+      "Troubleshooting P02 hash link with advice and stretching figure at 390px"
+    ],
+    "screenshots": [
+      "review-desktop.jpg",
+      "review-mobile.jpg"
+    ],
+    "production_deployed": false
+  }
+}

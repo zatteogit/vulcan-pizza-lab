@@ -4,6 +4,7 @@
 /* i18n: all user-facing strings resolved via useCms().preFerment */
 
 import { Lightbulb } from "lucide-react";
+import type { ReactNode } from "react";
 import { Disclosure, Surface } from "../../components/ds/index";
 import { Clock, Droplets, Thermometer } from 'lucide-react';
 import { Link } from "react-router";
@@ -112,6 +113,8 @@ export function PreFermentStyleList({ kind, locale }: { kind: "biga" | "poolish"
 
 /* === COMPONENT === */
 interface PreFermentCardProps {
+  /** Learning-page figure; recipe cards stay compact. */
+  illustration?: ReactNode;
   preFermentType?: string;
   /** FW-03 (S14-A-10): false dove la tabella di confronto è già in pagina. */
   showComparison?: boolean;
@@ -127,7 +130,7 @@ interface PreFermentCardProps {
   showExample?: boolean;
 }
 
-export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext, open, onOpenChange, showExample }: PreFermentCardProps) {
+export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext, open, onOpenChange, showExample, illustration }: PreFermentCardProps) {
   const { cms, bcp47 } = useCms();
   const pf = cms.preFerment;
   const id: PreFermentId = (PRE_FERMENT_IDS as readonly string[]).includes(preFermentType)
@@ -193,6 +196,7 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
               <p className="preferment-guide-card__description">
                 {fill(item.description)}
               </p>
+              {illustration}
               {contextLine && (
                 <p className="preferment-guide-card__context" data-region="note">
                   {contextLine}

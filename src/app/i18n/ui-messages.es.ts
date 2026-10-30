@@ -1,5 +1,18 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.license": "CC BY 2.0",
+  "learn.visual.biga": "Biga recién mezclada: una masa irregular con pliegues y bordes desgarrados.",
+  "learn.visual.poolish": "Poolish después del reposo: superficie húmeda, pequeños orificios y burbujas irregulares.",
+  "learn.visual.autolysis": "Harina y agua reunidas para el reposo de autólisis, antes de añadir levadura y sal.",
+  "learn.visual.folds": "Pliegues: estira un borde y dóblalo sobre la masa sin desgarrarlo.",
+  "learn.visual.windowpane": "Prueba de la membrana: estira suavemente una pequeña porción hasta formar una película fina.",
+  "learn.visual.division": "División: la rasqueta separa una porción de la masa antes de formar las bolas.",
+  "learn.visual.ballShaping": "Boleado: las manos recogen y cierran la bola, tensando la superficie sin desgarrarla.",
+  "learn.visual.pokeTest": "Presiona suavemente con un dedo y observa cómo se recupera la marca: la forma por sí sola no indica el grado de fermentación.",
+  "learn.visual.stretching": "Estirado a mano: presiona del centro hacia fuera y deja el borde más grueso sin aplastarlo.",
+  "learn.visual.cornicione": "Borde elevado y centro más bajo: la altura y el dorado varían según el estilo y la cocción.",
+  "learn.visual.source": "Ilustración con referencia fotográfica:",
+
   "edition.partner": "para {0}",
   "recipe.slots.noneFeasibleTitle": "No hay tiempo para este momento",
   "recipe.slots.noneFeasibleBody": "Con tu cocina ningún estilo cabe en el tiempo: la fermentación, el estirado y el precalentamiento necesitan más. El primer momento posible es {0}.",

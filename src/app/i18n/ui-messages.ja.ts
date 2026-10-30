@@ -1,5 +1,18 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.license": "CC BY 2.0",
+  "learn.visual.biga": "混ぜた直後のビガ。形は不均一で、折り目やちぎれた縁が見られます。",
+  "learn.visual.poolish": "休ませた後のプーリッシュ。湿った表面に小さな穴と不規則な気泡が見られます。",
+  "learn.visual.autolysis": "オートリーズのために粉と水を合わせた状態。イーストと塩はこの休ませる工程の後に加えます。",
+  "learn.visual.folds": "折りたたみ。生地の端を伸ばし、ちぎらないように本体の上へ折り返します。",
+  "learn.visual.windowpane": "薄膜テスト。少量の生地をそっと伸ばし、薄い膜になるかを確かめます。",
+  "learn.visual.division": "分割。丸める前に、カードで生地から一部分を切り分けます。",
+  "learn.visual.ballShaping": "丸め。両手で生地を包んで閉じ、表面を破らないように張りを作ります。",
+  "learn.visual.pokeTest": "指でそっと押し、くぼみの戻り方を観察します。生地の形だけでは発酵の進み具合は判断できません。",
+  "learn.visual.stretching": "手で伸ばす。中央から外へ押し広げ、厚めの縁は押しつぶさずに残します。",
+  "learn.visual.cornicione": "盛り上がった縁と低い中央。高さと焼き色はピザのスタイルと焼き方で変わります。",
+  "learn.visual.source": "写真を参考にしたイラスト：",
+
   "edition.partner": "{0} 向け",
   "recipe.slots.noneFeasibleTitle": "この時間には間に合いません",
   "recipe.slots.noneFeasibleBody": "あなたのキッチンでは、どのスタイルも時間内に収まりません。発酵・成形・予熱にもっと時間がかかります。最も早く可能なのは{0}です。",

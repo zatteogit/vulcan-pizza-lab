@@ -26,12 +26,7 @@ import {
 import { QUICK_HELP_ISSUE_IDS } from "../data/troubleshooting-data";
 import { GLOSSARY_CATEGORY_ICONS, glossaryCategoryLabel } from "../features/glossary/glossary-categories";
 import { FireGlow } from "../features/cooking/fire-glow";
-import {
-  Bowl,
-  Flask,
-  RisingDough,
-  Oven as OvenIllustration,
-} from "../features/cooking/step-illustrations";
+import { GLOSSARY_VISUALS, LearningIllustration, type LearningIllustrationId } from "../features/learning/learning-illustration";
 import { learningPathPreview, learningPathRecipe, learningStyleForKitchen } from "../use-cases/learning-path";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { hasChosenSkill, loadSkill, useProfileDefaults } from "../hooks/use-profile-defaults";
@@ -142,21 +137,21 @@ export function LearnPage() {
       id: "glossary",
       label: pg.learnGlossary,
       desc: pg.learnGlossaryDesc,
-      illustration: Bowl,
+      illustration: "folds" as LearningIllustrationId,
       to: "/learn/glossary",
     },
     {
       id: "troubleshooting",
       label: pg.learnTroubleshooting,
       desc: pg.learnTroubleshootingDesc,
-      illustration: OvenIllustration,
+      illustration: "poke-test" as LearningIllustrationId,
       to: "/learn/troubleshooting",
     },
     {
       id: "prefermenti",
       label: pg.learnPreFerments,
       desc: pg.learnPreFermentsDesc,
-      illustration: Flask,
+      illustration: "poolish" as LearningIllustrationId,
       to: "/learn/pre-ferments",
     },
   ];
@@ -166,7 +161,7 @@ export function LearnPage() {
     id: "method",
     label: uiMessage("pages.method.title"),
     desc: uiMessage("pages.learn.methodDesc"),
-    illustration: RisingDough,
+    illustration: "windowpane" as LearningIllustrationId,
     to: METHOD_PATH,
   };
   if (detailLevel === "technical") SECTIONS.unshift(methodSection);
@@ -257,7 +252,7 @@ export function LearnPage() {
             aria-labelledby={`${cardIds}-path-title`}
           >
             <div className="learn-path__illustration" aria-hidden="true">
-              <RisingDough size={90} />
+              <LearningIllustration id="ball-shaping" decorative />
             </div>
 
             <div className="learn-path__content">
@@ -338,7 +333,9 @@ export function LearnPage() {
           >
             <div className="learn-term__body">
               <div className="learn-term__icon" aria-hidden="true">
-                <TermIcon size={32} />
+                {GLOSSARY_VISUALS[term.id]
+                  ? <LearningIllustration id={GLOSSARY_VISUALS[term.id]!} decorative />
+                  : <TermIcon size={32} />}
               </div>
               <div className="learn-term__content">
                 <h3
@@ -400,7 +397,7 @@ export function LearnPage() {
                     data-tone={section.id}
                   >
                     <div className="learn-resources__icon">
-                      <section.illustration size={52} />
+                      <LearningIllustration id={section.illustration} decorative />
                     </div>
                     <div className="learn-resources__content">
                       <h3 className="learn-resources__label">

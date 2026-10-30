@@ -1,5 +1,18 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "learn.visual.license": "CC BY 2.0",
+  "learn.visual.biga": "Biga logo após a mistura: uma massa irregular, com dobras e bordas rasgadas.",
+  "learn.visual.poolish": "Poolish após o repouso: superfície húmida, pequenos orifícios e bolhas irregulares.",
+  "learn.visual.autolysis": "Farinha e água reunidas para o repouso de autólise, antes de adicionar fermento e sal.",
+  "learn.visual.folds": "Dobras: estica uma ponta e dobra-a sobre a massa, sem a rasgar.",
+  "learn.visual.windowpane": "Teste da membrana: estica suavemente um pequeno pedaço até formar uma película fina.",
+  "learn.visual.division": "Divisão: a espátula separa uma porção da massa antes de formar as bolas.",
+  "learn.visual.ballShaping": "Bolear: as mãos recolhem e fecham a bola, criando tensão na superfície sem a rasgar.",
+  "learn.visual.pokeTest": "Pressiona suavemente com um dedo e observa como a marca recupera: a forma, por si só, não indica o ponto de fermentação.",
+  "learn.visual.stretching": "Estender à mão: pressiona do centro para fora e deixa a borda mais espessa sem a achatar.",
+  "learn.visual.cornicione": "Borda elevada e centro mais baixo: a altura e o dourado variam com o estilo e a cozedura.",
+  "learn.visual.source": "Ilustração com referência fotográfica:",
+
   "edition.partner": "para {0}",
   "recipe.slots.noneFeasibleTitle": "Não dá tempo para este momento",
   "recipe.slots.noneFeasibleBody": "Com a sua cozinha nenhum estilo cabe no tempo: fermentação, abertura e pré-aquecimento levam mais. O primeiro momento possível é {0}.",

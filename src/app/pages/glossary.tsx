@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router";
 import { useHashTarget } from "../hooks/use-hash-target";
 import { getScienceNote, notesForGlossaryTerm } from "../data/science-notes";
 import { WhyButton } from "../features/science/why-button";
+import { GLOSSARY_VISUALS, LearningIllustration } from "../features/learning/learning-illustration";
 import { useCms } from "../features/cms/cms-context";
 import { t } from "../features/cms/i18n";
 import { Disclosure, EmptyState, FilterChip, Surface } from "../components/ds/index";
@@ -379,6 +380,7 @@ function TermCard({
         </>}
       >
             <div className="glossary-card__body">
+              {GLOSSARY_VISUALS[term.id] && <LearningIllustration id={GLOSSARY_VISUALS[term.id]!} />}
               {/* FW-04: livello 2 (definizione tecnica, perché conta), poi il
                   livello 3 (formula, valori, modello) e i rimandi. */}
               {term.plainDefinition && (
