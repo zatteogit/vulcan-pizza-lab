@@ -21,9 +21,9 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 
 | Build | Oggi | Budget (`npm run check:budget`) |
 |---|---|---|
-| Chunk JS più grande (gzip) | 75 kB (React) | 100 kB |
-| JS senza i cataloghi delle lingue (gzip) | 497,9 kB (29/10/2026, integrazione dell'ondata 2) | 500 kB |
-| JS per utente: codice + la lingua più pesante (gzip) | 595,9 kB (con `ja`, 98 kB) | 600 kB |
+| Chunk JS più grande (gzip) | 79,8 kB (catalogo `ja`, 30/10/2026) | 100 kB |
+| JS senza i cataloghi delle lingue, italiano compreso (gzip) | 448,0 kB (30/10/2026, italiano come le altre lingue) | 500 kB |
+| JS per utente: codice + la lingua più pesante (gzip) | 551,1 kB (con `ja`, 103,1 kB; in italiano 497,9) | 600 kB |
 | JS emesso in tutto, 7 lingue (gzip) | 974 kB in 73 chunk | solo informazione (D-059) |
 | CSS (gzip) | 61 kB (443 kB non compresso) | 75 kB |
 | Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
@@ -205,7 +205,7 @@ prima altrove) e circa 0,7 kB nel chunk d'ingresso (lettura della foto
 pubblicata). Dopo: 494,3 kB senza lingue, 598,0 kB per utente. Decisione di
 Matteo: «per js e cms fai come meglio credi».
 
-Due limiti noti della misura, da tenere presenti:
+Due limiti noti della misura, da tenere presenti (risolti il 30/10/2026, vedi «L'italiano come le altre lingue»):
 
 - **Il «per utente» è sottostimato per le lingue diverse dall'italiano**: chi
   usa una lingua straniera scarica anche il catalogo inglese di riserva, che
@@ -353,6 +353,61 @@ Rischi: un bundle incompleto mostrerebbe un campo vuoto invece dell'italiano
 dipende da una richiesta in più se il precaricamento non parte (lo splash
 copre l'attesa, nessun testo vuoto o chiave grezza); gli snapshot salvati
 restano validi (forma dei bundle invariata).
+
+### Risultato (30/10/2026, ramo `italiano-lazy`)
+
+Fatto in tre passi, ognuno con `verify`, `lint`, build e `check:budget` verdi:
+
+1. **Niente riserva inglese.** La base di una lingua non carica più `en`: il
+   test di parità esige ora ogni foglia dell'italiano (anche numeri, media e
+   `messages`) in ogni bundle.
+2. **Italiano lazy.** `CMS_DEFAULTS` è diventato `IT_LOCALE` in
+   `locales/it.ts` (chunk `it-…` con `UI_MESSAGES_IT` e i default di
+   dominio); la base di ogni lingua è il suo bundle e basta. `main.tsx`
+   aspetta il bundle della lingua di avvio (`bootLocaleId()`); lo script di
+   `localePreloadPlugin` lo chiede con `modulepreload` prima del foglio di
+   stile (dopo, aspettava il CSS: su 4G lento partiva 1,7 s più tardi). Il
+   server MCP e la voce registrano `UI_MESSAGES_IT` da sé; i test e il
+   design system mettono in cache l'italiano con `primeLocaleBundle()`.
+   Forma dei bundle e degli snapshot invariata: `LOCALE_BUNDLE_REV` resta 52.
+3. **Conto onesto** in `check-budget.mjs`: l'italiano è una lingua (deve
+   esistere un chunk `it-…`); per ogni lingua si sommano i suoi chunk e i
+   chunk di lingua che importano; fallisce se un chunk di codice importa
+   staticamente un chunk di lingua; `RUNTIME_FALLBACK` dichiara le riserve
+   caricate a runtime (oggi nessuna) e il conto le somma. Stampa il «per
+   utente» di ogni lingua.
+
+| Misura (gzip) | main 2ad2a2b | ramo |
+|---|---|---|
+| JS senza lingue | 495,4 kB (italiano dentro) | **448,0 kB** |
+| JS per utente (lingua più pesante, ja) | 598,5 kB | **551,1 kB** |
+| Chunk d'ingresso `index` | 95,1 kB | 42,4 kB |
+| Chunk più grande | 95,1 kB (`index`) | 79,8 kB (`ja`) |
+| Scaricato davvero in it / en / ja (codice + lingua + riserva) | 495,4 / 584,5 / 687,6 kB | 497,9 / 537,2 / 551,1 kB |
+
+Per lingua sul ramo: ja 103,1 · de 97,4 · fr 96,8 · es 93,3 · pt 93,0 ·
+en 89,1 · it 49,9 kB. Chi parte in italiano scarica circa 2,5 kB in più di
+prima (il chunk `it` e i suoi quattro chunk condivisi al posto del codice
+d'ingresso e di `ui-messages-it`), chi parte in un'altra lingua tra 47 e 136
+kB in meno.
+
+**Primo caricamento** (vite preview, 390×844, 4G lento e CPU ×4, mediane):
+in italiano su Scopri primo render 2597 → 2683 ms e LCP 4956 → 4832 ms (9
+prove), sulla ricetta 2553 → 2563 ms e LCP 5832 → 5768 ms (5 prove): nel
+rumore. In giapponese alla prima visita il primo testo è già giapponese
+(prima l'italiano, poi il cambio), LCP 5496 → 4980 ms e 152 kB in meno.
+Provati con Playwright it, en-GB, ja, il cambio lingua dal profilo nei due
+sensi, ricetta, Scopri, cottura e gli stati salvati (snapshot di una
+revisione vecchia, modifiche CMS italiane senza lingua, JSON rovinato):
+nessun errore in console, nessuna chiave grezza.
+
+**Limiti.** Restano 500/600 kB: c'è margine per le tranche B–D del catalogo
+(oggi ogni condimento nuovo pesa ancora nel codice in italiano e in ogni
+lingua). Proposta per Matteo, dopo le tranche: abbassarli col cricchetto.
+
+**Resta da fare**: il passo 4 del piano (i testi italiani dei dati, circa 45
+kB nel codice, a cominciare dai condimenti di `topping-library.ts`, circa
+17 kB), da pianificare con chi cura dati e server.
 
 ## Interventi consigliati, in ordine di resa
 
