@@ -69,6 +69,12 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
       story: "IT業界で20年働いたあと、ケン・フォーキッシュ（Ken Forkish）はポートランドでKen’s Artisan Bakery（2001年）とKen’s Artisan Pizza（2006年）を開きました。著書「Flour Water Salt Yeast」（2012年）はJames Beard FoundationとIACPの賞を受け、長時間発酵を家庭のキッチンに広めました。",
       badge: "FWSYの著者",
     },
+    benedetta_rossi: {
+      signature_name: "ベネデッタ・ロッシの天板ピザに着想を得て",
+      technique_signature: "マニトバ粉と00粉を半分ずつ、80%のぬるま湯、オイル、砂糖、粉に混ぜ込むドライイースト。こねずに手で作る、とてもやわらかい生地。暖かい場所で2時間、油を引いた天板で10分。",
+      story: "ベネデッタ・ロッシは、サイト「Fatto in casa da Benedetta」とテレビで家庭料理のレシピを紹介しています。彼女の天板ピザは数時間で作れます。たっぷりのイースト、暖かい場所、210 °Cの家庭用オーブン。モッツァレラは最後の5分にのせます。",
+      badge: "家庭料理",
+    },
     da_michele_napoli: {
       signature_name: "マルゲリータとマリナーラ、ほぼそれだけ",
       technique_signature: "メニューは最小限。何十年もマルゲリータとマリナーラだけで、現在は4種類。薪窯で、飾り気なし。",

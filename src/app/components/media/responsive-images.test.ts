@@ -8,7 +8,8 @@ import { RESPONSIVE_IMAGE_ENTRIES } from "./responsive-images.generated";
 describe("immagini responsive (BUN-1)", () => {
   it("ogni foto locale usata dall'app ha la variante 640 e le dimensioni", () => {
     const photos = [
-      ...Object.values(STYLE_PHOTOS),
+      // B2: "placeholder" è il segnaposto di ImageWithFallback, non un file.
+      ...Object.values(STYLE_PHOTOS).filter((photo) => photo !== "placeholder"),
       ...SIGNATURE_RECIPES.map((recipe) => recipe.photo).filter((photo): photo is string => Boolean(photo)),
       ...Object.values(TOPPING_LIBRARY)
         .map((recipe) => getToppingThumbnail(recipe))

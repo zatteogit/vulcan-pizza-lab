@@ -33,6 +33,10 @@ describe("riconoscimento", () => {
     ["new york", "new_york"],
     ["Chicago deep dish", "chicago_deep"],
     ["Pizza al padellino", "padellino_torino"],
+    // B2: «pizza in teglia» resta della teglia romana.
+    ["teglia casalinga", "teglia_in_giornata"],
+    ["la pizza in teglia in giornata", "teglia_in_giornata"],
+    ["pizza in teglia", "teglia_romana"],
   ])("stile: «%s» → %s", (text, id) => {
     expect(recognizeStyle(text, it_)).toBe(id);
   });
@@ -231,8 +235,13 @@ describe("risposte", () => {
   });
 
   /* Nessuno stile fattibile: lo stile al forno che si sblocca con meno tempo,
-     con il suo minimo vero (il blocco di tempo più alto), come dice l'MCP. */
-  it.each([1, 2, 3, 6])("consiglio senza stili fattibili in %i ore: il più rapido al forno e il suo minimo vero", (hours) => {
+     con il suo minimo vero (il blocco di tempo più alto), come dice l'MCP.
+     B2: con 6 ore ora c'è uno stile fattibile (la teglia casalinga in
+     giornata): il caso «nessuno» si prova con 5. */
+  it("in 6 ore col forno di casa consiglia la teglia casalinga in giornata", () => {
+    expect(siri("che pizza posso fare con 6 ore").speech).toContain("Ti consiglio Teglia casalinga in giornata.");
+  });
+  it.each([1, 2, 3, 5])("consiglio senza stili fattibili in %i ore: il più rapido al forno e il suo minimo vero", (hours) => {
     const answer = siri(`che pizza posso fare con ${hours} ore`);
     const all = callMcpTool("recommend_styles", { oven_type: "home", available_hours: hours, recipe_mode: "adapted", include_not_feasible: true, limit: 30 }).styles as { id: string; name: string; blockers?: { kind: string; needed_h?: number }[] }[];
     const timeOnly = all

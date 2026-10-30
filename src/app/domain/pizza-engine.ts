@@ -215,6 +215,10 @@ export interface MethodProcessProfile {
   direct_only?: boolean;
   proof_hours?: number;
   proof_in_pan?: boolean;
+  /** B2: la fonte mescola con un cucchiaio senza impastare (impasto molto
+   *  morbido e appiccicoso, nessuna incordatura): il passo «Impasto» lo dice
+   *  al posto dell'impasto a mano o in macchina. */
+  mix_without_kneading?: boolean;
 }
 
 export interface PizzaStyle {
@@ -1782,10 +1786,19 @@ function calcDoughWeight(
   return Math.round(style.shape.dough_weight_g * areaRatio * thicknessRatio);
 }
 
+/** F3 — forbice del sale come leva utente (% sulla farina): 1,5–3,5 %, ma il
+ *  sale dello stile resta raggiungibile. Tranche B2: la teglia casalinga in
+ *  giornata ha l'1,2 % della sua fonte (1 cucchiaino su 500 g, D-066); prima
+ *  il motore l'avrebbe alzato all'1,5 %. Per gli altri stili (sale ≥ 1,8 %)
+ *  non cambia nulla. */
+export function saltRangePct(style: PizzaStyle): [number, number] {
+  return [Math.min(1.5, style.dough.salt_pct), 3.5];
+}
+
 /** Styles that support thickness customization */
 export function supportsThickness(style: PizzaStyle): boolean {
   return ["teglia_romana", "detroit", "focaccia_genovese",
-    "sfincione", "grandma_style", "padellino_torino", "chicago_deep"].includes(style.id);
+    "sfincione", "grandma_style", "padellino_torino", "chicago_deep", "teglia_in_giornata"].includes(style.id);
 }
 
 /** Styles that use a baking pan/vessel (rectangular or round) */
@@ -1793,6 +1806,7 @@ export function needsPan(style: PizzaStyle): boolean {
   return [
     "teglia_romana", "detroit", "focaccia_genovese",
     "sfincione", "grandma_style", "chicago_deep", "padellino_torino",
+    "teglia_in_giornata",
   ].includes(style.id);
 }
 
@@ -1881,6 +1895,9 @@ export interface GenerateRecipeOptions {
   /** B1 (D-068, decisione 7) — la fonte dice «luogo caldo» senza gradi: alla
    *  temperatura di WARM_PLACE la ricetta dichiara la scelta di Vulcan. */
   warmPlace?: boolean;
+  /** B2 (D-066) — la fonte misura in millilitri, cucchiaini o bustine: la
+   *  ricetta dichiara che i grammi sono una conversione di Vulcan. */
+  convertedDoses?: boolean;
 }
 
 export type PreFermentType = "biga" | "poolish";
@@ -1926,6 +1943,7 @@ export function generateRecipe(
     preFerment,
     sourceYeast,
     warmPlace,
+    convertedDoses,
   } = options;
   const doughBalls = constraints.dough_balls;
 
@@ -2115,10 +2133,12 @@ export function generateRecipe(
     defaultFermentTempC(style, fermentationHours);
 
   // F3 — sale effettivo: leva utente (customSalt) con fallback allo stile. Clampato
-  // a un range sensato (1.5–3.5%) per non uscire dal ragionevole.
+  // a un range sensato (1.5–3.5%) per non uscire dal ragionevole; B2: il sale
+  // dello stile stesso non si alza mai (saltRangePct).
+  const [saltMin, saltMax] = saltRangePct(style);
   const effectiveSaltPct =
     customSalt != null
-      ? Math.max(1.5, Math.min(3.5, customSalt))
+      ? Math.max(saltMin, Math.min(saltMax, customSalt))
       : style.dough.salt_pct;
 
   // ENG-6 (decisione di Matteo, 22/10/2026): la compensazione di idratazione si
@@ -2750,6 +2770,9 @@ export function generateRecipe(
       : {}),
     ...(() => {
       const notes: EngineMsg[] = [
+        ...(convertedDoses
+          ? [em("source.convertedDoses", METHOD_MESSAGES_IT["source.convertedDoses"], { app: BRAND.name })]
+          : []),
         ...(sourceYeastApplied?.converted
           ? [em(sourceYeastApplied.type === "fresh" ? "yeast.sourceDryAsFresh" : "yeast.sourceFreshAsDry",
             METHOD_MESSAGES_IT[sourceYeastApplied.type === "fresh" ? "yeast.sourceDryAsFresh" : "yeast.sourceFreshAsDry"],
@@ -3323,7 +3346,7 @@ function keyedStep(
 interface KneadGuidance {
   description: EngineMsg;
   duration_minutes: number;
-  tip: { beginner: EngineMsg; nerd: EngineMsg };
+  tip?: { beginner: EngineMsg; nerd: EngineMsg };
 }
 
 function mixerKneadGuidance(eq?: EquipmentContext, hydration?: number): KneadGuidance {
@@ -3544,7 +3567,9 @@ function generateTimeline(
   const isNoKnead = style.dough.process_type.includes("no_knead");
   // No-knead: l'impastatrice è irrilevante (mescola + pieghe a mano). Altrimenti
   // la descrizione/durata/consigli cambiano col tipo di impastatrice dichiarato.
-  const knead = isNoKnead ? null : mixerKneadGuidance(equipment, hydration);
+  const knead = isNoKnead ? null : style.method_profile?.mix_without_kneading
+    ? { description: em("timeline.mix.stir", METHOD_MESSAGES_IT["timeline.mix.stir"]), duration_minutes: 10 }
+    : mixerKneadGuidance(equipment, hydration);
   if (isNoKnead) {
     // No-knead: testi dal CMS (timelineLabels.mix_noknead) nella UI.
     steps.push({

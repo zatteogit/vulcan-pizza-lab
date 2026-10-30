@@ -28,7 +28,7 @@ function sameRecipe(data: Record<string,any>, recipe: GeneratedRecipe, context: 
 }
 
 describe("MCP kitchen → browser recipe parity", () => {
-  it("all 29 styles, originals and Create adaptations, in three kitchens", () => {
+  it("all 30 styles, originals and Create adaptations, in three kitchens", () => {
     for (const c of [kitchen,{...kitchen,oven_type:"home" as const,oven_max_temp_c:250,available_hours:24,meal_deadline:true},
       {...kitchen,oven_type:"wood" as const,oven_max_temp_c:485,skill_level:4 as const,available_hours:72}]) {
       for (const style of Object.values(STYLES_DB)) for (const recipe_mode of ["canonical","adapted"]) {
@@ -60,10 +60,10 @@ describe("MCP kitchen → browser recipe parity", () => {
 
   it("recommendations and generation use the same new constraints and recipe mode", () => {
     for (const recipe_mode of ["canonical","adapted"]) {
-      const input={...args,recipe_mode,excluded_flours:["riso"],pantry_yeasts:["dry"],equipment_inventory_complete:true,allow_equipment_purchase:false,include_not_feasible:true,include_recipe:true,limit:29};
+      const input={...args,recipe_mode,excluded_flours:["riso"],pantry_yeasts:["dry"],equipment_inventory_complete:true,allow_equipment_purchase:false,include_not_feasible:true,include_recipe:true,limit:30};
       const recs=call("recommend_styles",input);
       expect(recs.isError).toBe(false);
-      expect(recs.structuredContent.styles).toHaveLength(29);
+      expect(recs.structuredContent.styles).toHaveLength(30);
       for (const rec of recs.structuredContent.styles) {
         const {include_recipe:_recipe,include_not_feasible:_blocked,limit:_limit,...recipeInput}=input;
         const r=call("generate_recipe",{...recipeInput,style_id:rec.id}).structuredContent;
@@ -132,7 +132,7 @@ describe("MCP kitchen → browser recipe parity", () => {
     const r=call("generate_recipe",{...args,style_id:"napoletana_canotto",pre_ferment:"poolish",pre_ferment_flour_pct:45}).structuredContent;
     expect(r.pre_ferment.flour_pct).toBe(45);
     expect(r.pre_ferment.flour_g+r.pre_ferment.final_dough.flour_g).toBe(r.ingredients.find((i:{name:string})=>i.name==="flour").grams);
-    const recs=call("recommend_styles",{...args,pre_ferment:"biga",limit:29});
+    const recs=call("recommend_styles",{...args,pre_ferment:"biga",limit:30});
     expect(recs.isError).toBe(false);
     expect(recs.structuredContent.styles.some((s:{id:string})=>s.id==="focaccia_recco")).toBe(false);
   });
@@ -146,7 +146,7 @@ describe("MCP kitchen → browser recipe parity", () => {
   // D-062: a pari compatibilità, lo stesso spareggio di Crea (margine di forno e tempo).
   it("recommend_styles breaks ties by kitchen margin, like the app", () => {
     const c={...kitchen,available_hours:48};
-    const styles=call("recommend_styles",{...c,recipe_mode:"adapted",include_not_feasible:true,limit:29}).structuredContent.styles as {id:string;compatibility:number;kitchen_margin:number}[];
+    const styles=call("recommend_styles",{...c,recipe_mode:"adapted",include_not_feasible:true,limit:30}).structuredContent.styles as {id:string;compatibility:number;kitchen_margin:number}[];
     const app=recommendStyles(c,undefined,undefined,(style,cur)=>tailoredRecipeEntry(style,cur,weights).recipe)
       .map(r=>({id:r.style.id,score:r.recipe.scores.composite,margin:kitchenMargin(r.style,c)}))
       .sort(compareByCompatibility);

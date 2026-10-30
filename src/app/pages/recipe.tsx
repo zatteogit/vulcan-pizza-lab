@@ -47,7 +47,8 @@ type PanConfig,
   type PreFermentChoice,
 type PizzaStyle,
 type SkillLevel,
-type UserConstraints
+type UserConstraints,
+saltRangePct,
 } from "../domain/pizza-engine";
 import { styleWithSelectedTopping } from "../hooks/use-recipe-state";
 import {
@@ -731,7 +732,8 @@ function RecipeContent({
       setCustomFermentHours((f) => Math.max(1, Math.round(f * feedbackCorrection.fermentMultiplier)));
     }
     if (feedbackCorrection.saltDelta !== 0) {
-      setCustomSalt((s) => Math.max(1.5, Math.min(3.5, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
+      const [saltMin, saltMax] = saltRangePct(style);
+      setCustomSalt((s) => Math.max(saltMin, Math.min(saltMax, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedbackCorrection, style.id, savedOven?.ovenType, savedOven?.maxTemp]);

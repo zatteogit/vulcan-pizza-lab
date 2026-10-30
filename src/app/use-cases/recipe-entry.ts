@@ -82,7 +82,7 @@ export function canonicalInterpretation(style: PizzaStyle): Interpretation | nul
  *  l'apertura del preset e per la ricetta di Crea, così le due coincidono
  *  (test di authorVersionRecipe). Il motore usa la dose della fonte solo
  *  finché ore e temperatura della ricetta sono queste. */
-export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace"> {
+export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace" | "convertedDoses"> {
   if (!interpretation) return {};
   const o = interpretation.parameter_overrides;
   const tempC = interpretationFermentTempC(interpretation);
@@ -92,6 +92,7 @@ export function interpretationEngineOptions(interpretation: Interpretation | nul
       ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours, temp_c: tempC } }
       : {}),
     ...(o?.warm_place ? { warmPlace: true } : {}),
+    ...(interpretation.converted_doses ? { convertedDoses: true } : {}),
   };
 }
 

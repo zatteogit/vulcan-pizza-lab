@@ -19,6 +19,7 @@ isFriedStyle,
 needsPan,
 optimizeRecipe,
 supportsThickness,
+saltRangePct,
 } from "../../domain/pizza-engine";
 import { SegmentedControl, Select, Stepper, Switch } from "../../components/ds/index";
 import { Disclosure } from "../../components/ds/Disclosure";
@@ -627,12 +628,12 @@ export function RecipeConfigurator({
                 label={<Label>{uiMessage("features.recipe.recipe-configurator.0028d743")}</Label>}
                 value={Math.round(customSalt * 10) / 10}
                 onChange={onSaltChange}
-                min={1.5}
-                max={3.5}
+                min={saltRangePct(style)[0]}
+                max={saltRangePct(style)[1]}
                 step={0.1}
                 unit="%"
-                rangeMin={Math.max(1.5, style.dough.salt_pct - 0.3)}
-                rangeMax={Math.min(3.5, style.dough.salt_pct + 0.3)}
+                rangeMin={Math.max(saltRangePct(style)[0], style.dough.salt_pct - 0.3)}
+                rangeMax={Math.min(saltRangePct(style)[1], style.dough.salt_pct + 0.3)}
                 gradient={SLIDER_GRADIENTS.flourW}
                 optimalValue={style.dough.salt_pct}
               />

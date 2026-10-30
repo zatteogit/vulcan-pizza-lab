@@ -69,6 +69,12 @@ export const INSPIRATION_I18N_FR: InspirationTranslation = {
       story: "Après vingt ans dans l’informatique, Ken Forkish ouvre à Portland Ken’s Artisan Bakery (2001) et Ken’s Artisan Pizza (2006). Son « Flour Water Salt Yeast » (2012), primé par la James Beard Foundation et l’IACP, a fait entrer la fermentation longue dans les cuisines familiales.",
       badge: "Auteur de FWSY",
     },
+    benedetta_rossi: {
+      signature_name: "Inspirée de la pizza en plaque de Benedetta Rossi",
+      technique_signature: "Moitié farine Manitoba et moitié 00, eau tiède à 80%, huile, sucre et levure sèche mélangée à la farine. Une pâte très molle, faite à la main ; 2 heures dans un endroit chaud, puis 10 minutes dans la plaque huilée.",
+      story: "Benedetta Rossi publie des recettes de cuisine maison sur son site « Fatto in casa da Benedetta » et à la télévision. Sa pizza en plaque se fait en quelques heures : beaucoup de levure, un endroit chaud et le four domestique à 210 °C, avec la mozzarella dans les 5 dernières minutes.",
+      badge: "Cuisine maison",
+    },
     da_michele_napoli: {
       signature_name: "Margherita et Marinara, et pas grand-chose d’autre",
       technique_signature: "Carte réduite à l’essentiel : pendant des décennies, seulement Margherita et Marinara, aujourd’hui quatre pizzas. Four à bois et pas de fioritures.",

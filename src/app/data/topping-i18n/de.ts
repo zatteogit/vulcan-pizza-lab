@@ -360,6 +360,12 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
         },
       },
     },
+    margherita_teglia_in_giornata: {
+      ingredients: {
+        "0": { name: "Gewürzte Tomatensoße (Tomaten, Öl, Salz)", notes: "lauwarm" },
+        "1": { name: "Mozzarella in Würfeln", notes: "in den letzten 5 Minuten des Backens" },
+      },
+    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2766,6 +2772,10 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       description: "Verteile die gesalzene Passata gleichmäßig. Gib den gewürfelten Mozzarella darauf. Ein Faden Öl. Basilikum erst am Ende der Backzeit.",
       tip_beginner: "Heimofen = lange Backzeit (12-20 min). Frisches Basilikum kommt erst dazu, SOBALD die Pizza herauskommt, sonst verbrennt es.",
       tip_nerd: "Die flüchtigen Aromastoffe im Basilikum (Linalool, Eukalyptol) zerfallen über 100°C. Bei Backzeiten >5min gibst du es besser nach dem Backen dazu.",
+    },
+    spread_margherita_teglia_in_giornata: {
+      title: "Soße jetzt, Mozzarella zum Schluss",
+      description: "Verteile die lauwarme Soße bis an die Ränder auf dem frisch ausgebreiteten Teig und lass ihn im Blech gehen. Backe ihn; in den letzten 5 Minuten öffne den Ofen, verteile die Mozzarellawürfel und backe fertig.",
     },
     spread_margherita_us: {
       title: "Belag Margherita americana",

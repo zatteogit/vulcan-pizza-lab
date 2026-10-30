@@ -617,6 +617,30 @@ const DERIVED_STYLE_SEEDS: DerivedStyleSeed[] = [
     scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Taglio dopo cottura." },
     equipment: { mixerRequired: false, mixerType: "manuale", mixingTime_min: 10, surfaceType: "teglia", specialEquipment: ["Teglia tonda pesante", "Olio abbondante"], note: "La teglia oliata crea il fondo quasi fritto." },
   },
+  /* B2: valori della ricetta di riferimento (Benedetta Rossi, pagina ufficiale
+   * verificata il 30/10/2026). Spessore in mm non scritto dalla fonte: 0 = non
+   * mostrato. Preriscaldo, tempo d'impasto e rotazioni: stime di Vulcan. */
+  {
+    styleId: "teglia_in_giornata",
+    name: "Teglia casalinga in giornata",
+    doughWeight_g: 967,
+    panSize_cm: 35,
+    panShape: "rectangular",
+    thickness_mm: 0,
+    stretchMethod: "Allargata nella teglia unta con le mani unte",
+    restAfterBall_min: 0,
+    saltPct: 1.2,
+    hydrationCenter: 80,
+    fermentation: [2, 12],
+    processType: "direct",
+    coldMaturation: false,
+    oven: { idealTemp_c: 210, minTemp_c: 200, maxTemp_c: 280, ovenType: "elettrico_std", preheatingMin: 20, note: "Forno di casa: 210 °C statico (200 °C ventilato) nella ricetta di riferimento; 250 °C e oltre nelle versioni croccanti." },
+    baking: { minSeconds: 720, maxSeconds: 1800, idealSeconds: 1800, turns: 0, note: "25 minuti con la salsa, poi la mozzarella e altri 5 minuti." },
+    topping: { toppingOrder: ["olio", "salsa", "mozzarella_negli_ultimi_minuti"], saucePosition: "sotto", cheeseType: "Mozzarella a dadini", cheesePosition: "sopra_salsa", note: "Salsa tiepida già condita prima della cottura; la mozzarella negli ultimi 5 minuti." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Impasto mescolato a mano, senza pieghe." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Taglio a quadrotti dopo la cottura." },
+    equipment: { mixerRequired: false, mixerType: "manuale", mixingTime_min: 10, surfaceType: "teglia", specialEquipment: ["Teglia 35×35 o placca del forno", "Olio per la teglia"], note: "Si fa a mano: l'impasto resta molto morbido e appiccicoso." },
+  },
 ];
 
 function derivedSeed(styleId: string): DerivedStyleSeed | undefined {

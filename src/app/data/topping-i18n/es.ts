@@ -360,6 +360,12 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
         },
       },
     },
+    margherita_teglia_in_giornata: {
+      ingredients: {
+        "0": { name: "Salsa de tomate aliñada (tomate, aceite, sal)", notes: "tibia" },
+        "1": { name: "Mozzarella en dados", notes: "en los últimos 5 minutos de horneado" },
+      },
+    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2766,6 +2772,10 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       description: "Extiende la passata salada de forma uniforme. Reparte la mozzarella en dados. Un hilo de aceite. Albahaca solo al final de la cocción.",
       tip_beginner: "Horno doméstico = cocción larga (12-20 min). La albahaca fresca se añade NADA MÁS sacar la pizza; si no, se quema.",
       tip_nerd: "Los compuestos volátiles de la albahaca (linalol, eucaliptol) se degradan por encima de 100°C. Para cocciones >5min es mejor añadirla tras el horneado.",
+    },
+    spread_margherita_teglia_in_giornata: {
+      title: "La salsa ahora, la mozzarella al final",
+      description: "Reparte la salsa tibia sobre la masa recién extendida, hasta los bordes, y déjala levar en la bandeja. Hornea; en los últimos 5 minutos abre el horno, reparte la mozzarella en dados y termina la cocción.",
     },
     spread_margherita_us: {
       title: "Aliño Margherita americana",

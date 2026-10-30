@@ -99,6 +99,11 @@ export interface Interpretation {
   /** Stato della fonte letta (§3 del catalogo): obbligatorio per `autore`,
    *  verificato o plausibile per stare nel catalogo. */
   source_status?: SourceStatus;
+  /** B2 (D-066): la fonte misura in millilitri, cucchiaini o bustine e i
+   *  grammi sono una conversione di Vulcan; la ricetta lo dichiara
+   *  (nota `source.convertedDoses`). Le conversioni sono nel §9.3 di
+   *  docs/progetto-catalogo-italiano.md. */
+  converted_doses?: true;
 
   /* ─── Narrativa ─── */
   /** Nome firma (es. "Margherita Sbagliata"). Visibile prominentemente. */
@@ -120,7 +125,8 @@ export interface Interpretation {
   verified_canonical?: boolean;
 }
 
-/* ═══ LIBRERIA — 12 voci, testi verificati sulle fonti il 24/10/2026 ═══
+/* ═══ LIBRERIA — 13 voci, testi verificati sulle fonti il 24/10/2026 (Benedetta
+ * Rossi il 30/10/2026) ═══
  * Registro e fonti: docs/fonti-dati.md §5. Le ricette dei maestri sono
  * «Ispirata a…» (C-5, D-027): ricostruzioni da fonti pubbliche. */
 const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
@@ -425,6 +431,47 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     badge: "Dal 1870",
     skill_required: 2,
     verified_canonical: true,
+  },
+
+  /* ─── AUTORI (1) ─── Tranche B2 (docs/progetto-catalogo-italiano.md §9) */
+  /* Benedetta Rossi, «Pizza in teglia in collaborazione con Paneangeli»,
+   * pagina ufficiale verificata col browser di Matteo il 30/10/2026 (§9.9):
+   * 250 g di manitoba e 250 g di 00, 400 ml d'acqua tiepida, 50 ml d'olio,
+   * 1 cucchiaino di sale, 2 di zucchero, 1 bustina di lievito di birra secco
+   * (7 g); 2 ore in un luogo caldo, 10 minuti in teglia 35×35 (o placca),
+   * 25 minuti a 210 °C statico (200 °C ventilato) + 5 con la mozzarella.
+   * Dosi convertite da Vulcan (D-066, §9.3): acqua 1 g/ml → 400 g (399 a
+   * 20 °C), olio 0,913 g/ml → 46 g, sale 6 g, zucchero 8 g; W 280 = metà
+   * manitoba (W 340–380) e metà 00 (W 170–220) con le forbici della dispensa
+   * (FLOUR_W_RANGES). Riferimento provvisorio dello stile (decisione 3). */
+  benedetta_rossi: {
+    id: "benedetta_rossi",
+    process_profile: {
+      id: "benedetta_rossi", direct_only: true, proof_hours: 1 / 6, proof_in_pan: true, mix_without_kneading: true,
+      source_url: "https://www.fattoincasadabenedetta.it/ricetta/pizza-in-teglia/",
+    },
+    type: "autore",
+    author: "Benedetta Rossi",
+    base_style_id: "teglia_in_giornata",
+    base_topping_concept_id: "margherita",
+    parameter_overrides: {
+      hydration_pct: 80,
+      flour_w: 280,
+      fermentation_hours: 2,
+      warm_place: true,
+      use_pre_ferment: false,
+      dough_weight_g: 967,
+    },
+    source_yeast: { type: "dry", pct: 1.4 },
+    source_status: "verified",
+    converted_doses: true,
+    signature_name: "Ispirata alla pizza in teglia di Benedetta Rossi",
+    technique_signature: "Metà manitoba e metà 00, acqua tiepida all'80%, olio, zucchero e lievito di birra secco mescolato alla farina. Impasto molto morbido, fatto a mano; 2 ore al caldo, poi 10 minuti nella teglia unta.",
+    story: "Benedetta Rossi pubblica ricette di cucina di casa sul sito «Fatto in casa da Benedetta» e in televisione. La sua pizza in teglia si fa in poche ore: molto lievito, un luogo caldo e il forno di casa a 210 °C, con la mozzarella negli ultimi 5 minuti.",
+    url: "https://www.fattoincasadabenedetta.it/ricetta/pizza-in-teglia/",
+    emoji: "🏠",
+    badge: "Cucina di casa",
+    skill_required: 1,
   },
 
 };

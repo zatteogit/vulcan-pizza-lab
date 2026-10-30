@@ -35,6 +35,7 @@ PizzaStyle,
 STYLES_DB,
 TimeSlot,
 UserConstraints,
+saltRangePct,
 } from "../domain/pizza-engine";
 import { RecipeConfigurator } from "../features/recipe/recipe-configurator";
 import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
@@ -986,7 +987,8 @@ export function HomePage() {
       setCustomFermentHours((f) => Math.max(1, Math.round(f * feedbackCorrection.fermentMultiplier)));
     }
     if (feedbackCorrection.saltDelta !== 0) {
-      setCustomSalt((s) => Math.max(1.5, Math.min(3.5, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
+      const [saltMin, saltMax] = saltRangePct(selectedStyle);
+      setCustomSalt((s) => Math.max(saltMin, Math.min(saltMax, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
     }
   }, [feedbackCorrection, selectedStyle, setCustomHydration, setCustomFermentHours, setCustomSalt]);
 

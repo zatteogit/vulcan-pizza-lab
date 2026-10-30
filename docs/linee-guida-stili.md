@@ -125,6 +125,7 @@ solo dal codice. Il numero di condimenti è quello mostrato nella scheda.
 | `pizza_fritta_tonda` | con fonte (AVPN) | `pizza_fritta_tonda_ripiena` | 1 | Foto propria dal 24/10 (D-039): due dischi farciti e fritti |
 | `pizza_montanara` | con fonte (AVPN, parziale) | `montanara_classica` | 1 | — |
 | `calzone_napoletano` | senza fonte | `calzone_napoletano_classico` | 3 | — |
+| `teglia_in_giornata` | con fonte (Benedetta Rossi, riferimento; B2, 30/10/2026) | `margherita_teglia_in_giornata` | 1 | Scheda in `docs/progetto-catalogo-italiano.md` §9.11; foto in arrivo (segnaposto) |
 
 ## 4. Priorità per C-2
 

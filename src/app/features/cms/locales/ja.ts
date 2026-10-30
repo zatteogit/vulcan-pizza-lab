@@ -65,6 +65,7 @@ export const JA_LOCALE: CmsContent = {
       fugazzeta: "型（モルデ）に厚い2枚を重ね、間にモッツァレラ",
       california_style: "薄い丸生地に軽いグルメトッピング",
       greek_pan: "たっぷり油を引いた丸型で伸ばす",
+      teglia_in_giornata: "油を塗った手で、油を引いた天板に広げる",
     },
   },
   /* FW-11: esonimi dei luoghi d'origine degli stili. */
@@ -979,6 +980,7 @@ export const JA_LOCALE: CmsContent = {
     "timeline.mix.generic.tipBeginner": "生地がフックに巻きつき、ボウルの側面から離れたら完成です。",
     "timeline.mix.generic.tipNerd": "こね上げ温度（~24°C）を確認してください。それを超えるとグルテンが劣化します。",
     "timeline.mix.hands.desc": "グルテンがつながるまで手でこねます（約15-20分）。台の上で折りたたみながら行います。",
+    "timeline.mix.stir": "スプーンで材料を混ぜ、液体を少しずつ加えて、粉のかたまりがなくなるまで混ぜます。生地はとてもやわらかく、べたつきます。こねないでください。",
     "timeline.mix.hands.descHighHydration": "グルテンがつながるまで手でこねます（約15-20分）。スラップ＆フォールドで行います。",
     "timeline.mix.hands.tipBeginner": "生地がなめらかになり、手から離れるようになったら完成です。べたつきすぎる場合は5分待ってから再開しましょう。",
     "timeline.mix.hands.tipNerd": "グルテンは、グルテニンとグリアジンが安定したジスルフィド結合を形成することでつながります。ウィンドウペインテストでグルテンの網目を確認します。加水率が{pct}%を超えるとスラップ＆フォールドに切り替えます。",
@@ -1011,6 +1013,7 @@ export const JA_LOCALE: CmsContent = {
     "yeast.sourceDryAsFresh": "出典ではドライイーストを粉に対して{sourcePct}%使います。パントリーにあるのは生イーストなので、ここでは{pct}%です。{app}が1対3の比率で換算しました（ドライイースト1 gは生イースト約3 gに相当）。",
     "yeast.sourceFreshAsDry": "出典では生イーストを粉に対して{sourcePct}%使います。パントリーにあるのはドライイーストなので、ここでは{pct}%です。{app}が1対3の比率で換算しました（ドライイースト1 gは生イースト約3 gに相当）。",
     "fermentation.warmPlace": "出典には「暖かい場所で」とだけあり、温度の指定はありません。{app}は{temp}で計算しており、{tempMin}〜{tempMax}なら問題ありません。時計ではなく、生地が2倍に膨らむのを待ってください。",
+    "source.convertedDoses": "出典の分量はミリリットル、小さじ、袋で書かれています。グラムは{app}による換算です。塩や砂糖のような少量の材料では、誤差はおよそ25%です。",
     "diet.singleBase": "生地をすべて使って1枚の土台にし、上に玉ねぎをのせる。2枚目の生地や縁を閉じる工程はない。",
     "topping.geometry": "面積 {area} cm² · 基準 {reference} cm² · 分量 ×{scale}。",
     "auth.layoutChanged": "基準とは異なる形です。このバージョンでは構造も変わります",
@@ -1297,6 +1300,7 @@ export const JA_LOCALE: CmsContent = {
     fugazzeta: "2枚の生地の間にたっぷりのモッツァレラを詰め、玉ねぎをのせます。トマトを使わないブエノスアイレスの定番です。",
     california_style: "薄い生地に、バーベキューチキンや山羊のチーズ、いちじく、ルッコラなど、意外な組み合わせをのせます。",
     greek_pan: "オイルをたっぷり塗った丸型で焼き、底は香ばしく、中はふんわり。モッツァレラとチェダーを合わせます。",
+    teglia_in_giornata: "その日のうちに作って家庭用オーブンで焼く天板ピザ。水分の多いやわらかい生地に、たっぷりのイースト、暖かい場所で数時間。冷蔵庫で24〜48時間熟成させるローマの天板ピザとは別物です。",
   },
   styleChars: {
     napoletana_stg:
@@ -1342,6 +1346,7 @@ export const JA_LOCALE: CmsContent = {
     fugazzeta: "\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9\u3092\u8A70\u3081\u305F\u4E8C\u5C64|\u8868\u9762\u306B\u7389\u306D\u304E\u3001\u30C8\u30DE\u30C8\u306A\u3057|\u539A\u304F\u3066\u67D4\u3089\u304B\u3044\uFF08al molde\uFF09|\u4ED5\u4E0A\u3052\u306B\u30AA\u30EC\u30AC\u30CE\u3068\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB",
     california_style: "\u8584\u3044\u624B\u4F5C\u308A\u751F\u5730|\u65EC\u306E\u30B0\u30EB\u30E1\u98DF\u6750|\u4F1D\u7D71\u306B\u3068\u3089\u308F\u308C\u306A\u3044\u7D44\u307F\u5408\u308F\u305B|\u30B7\u30A7\u30D5\u4E3B\u5C0E\u306E\u30A2\u30D7\u30ED\u30FC\u30C1",
     greek_pan: "\u6CB9\u305F\u3063\u3077\u308A\u306E\u578B\u3001\u63DA\u3052\u713C\u304D\u306E\u5E95|\u539A\u304F\u3075\u3093\u308F\u308A\u3057\u305F\u30AF\u30E9\u30E0|\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9+\u30C1\u30A7\u30C0\u30FC\u306E\u30DF\u30C3\u30AF\u30B9|\u30AE\u30EA\u30B7\u30E3\u7CFB\u30A2\u30E1\u30EA\u30AB\u30F3\u30C0\u30A4\u30CA\u30FC",
+    teglia_in_giornata: "その日のうちに完成|加水率は約80%|油をしっかり引いた家庭用の天板|家庭用オーブン",
   },
   deviationLabels: {
     unclassified: "未確認",

@@ -51,6 +51,12 @@ describe("linee guida degli stili", () => {
     expect(styles.filter((s) => !STYLE_PHOTOS[s.id]).map((s) => s.id)).toEqual([]);
   });
 
+  /* B2: il segnaposto solo dove la foto è dichiarata in arrivo; quando arriva
+     la foto vera la voce si toglie da qui. */
+  it("segnaposto al posto della foto solo per gli stili in attesa", () => {
+    expect(styles.filter((s) => STYLE_PHOTOS[s.id] === "placeholder").map((s) => s.id)).toEqual(["teglia_in_giornata"]);
+  });
+
   /* Audit totale n. 6: una versione senza range propri resta nei range dello
    * stile (la Detroit «classica» aveva 36 h su 8–24). */
   it("le versioni senza range propri stanno nei range dello stile", () => {

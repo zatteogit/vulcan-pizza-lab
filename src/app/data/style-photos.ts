@@ -61,6 +61,10 @@ export const STYLE_PHOTOS: Record<string, string> = {
   fugazzeta: photoFugazzeta,
   california_style: photoCaliforniaStyle,
   greek_pan: photoGreekPan,
+  /* B2: la foto arriverà dall'agente immagini (docs/progetto-catalogo-italiano.md
+   * §9.11). "placeholder" è il segnaposto editoriale di ImageWithFallback
+   * (superficie calda e glifo della pizza), mai la foto di un altro stile. */
+  teglia_in_giornata: "placeholder",
 };
 
 /* VPL-D/C: video di cottura per-stile (serviti da public/videos, lazy dal tag

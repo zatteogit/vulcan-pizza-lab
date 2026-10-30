@@ -526,6 +526,21 @@
                   "greek pan pizza"
                 ]
               }
+            },
+            {
+              "id": "teglia_in_giornata",
+              "name": {
+                "value": "teglia casalinga",
+                "synonyms": [
+                  "teglia casalinga in giornata",
+                  "teglia in giornata",
+                  "pizza in teglia in giornata",
+                  "pizza in teglia casalinga",
+                  "teglia di casa",
+                  "teglia casalinga in giornata",
+                  "teglia casalinga in giornata"
+                ]
+              }
             }
           ]
         },

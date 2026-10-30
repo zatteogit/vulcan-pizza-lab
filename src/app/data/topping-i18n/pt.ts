@@ -360,6 +360,12 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
         },
       },
     },
+    margherita_teglia_in_giornata: {
+      ingredients: {
+        "0": { name: "Molho de tomate temperado (tomate, azeite, sal)", notes: "morno" },
+        "1": { name: "Mussarela em cubinhos", notes: "nos últimos 5 minutos de forno" },
+      },
+    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2766,6 +2772,10 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       description: "Espalhe a passata salgada de forma uniforme. Distribua a mozzarella em cubinhos. Um fio de azeite. Manjericão só no fim do forno.",
       tip_beginner: "Forno doméstico = forno longo (12-20 min). O manjericão fresco entra ASSIM QUE a pizza sai, senão queima.",
       tip_nerd: "Os compostos voláteis do manjericão (linalol, eucaliptol) se degradam acima de 100°C. Para fornadas >5min, é melhor adicioná-lo pós-forno.",
+    },
+    spread_margherita_teglia_in_giornata: {
+      title: "Molho agora, mussarela no fim",
+      description: "Espalhe o molho morno sobre a massa recém-aberta, até as bordas, e deixe crescer na assadeira. Leve ao forno; nos últimos 5 minutos, abra o forno, espalhe a mussarela em cubinhos e termine de assar.",
     },
     spread_margherita_us: {
       title: "Cobertura Margherita americana",

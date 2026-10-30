@@ -131,9 +131,14 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *       startBlockedReason e titolo della nota non-feasible-ceiling.
  *  56 → tranche B1 (D-068): lievito della fonte (yeastSourceBody/Note,
  *       yeast.sourceDryAsFresh/FreshAsDry) e «luogo caldo» (fermentation.warmPlace).
+ *  57 → tranche B2: stile teglia_in_giornata (styleDescriptions, styleChars,
+ *       parametricText.stretch), dosi convertite (source.convertedDoses),
+ *       impasto mescolato senza impastare (timeline.mix.stir), margherita
+ *       della teglia in giornata (toppingI18n) e Benedetta Rossi
+ *       (inspirationI18n).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 56;
+export const LOCALE_BUNDLE_REV = 57;
 
 /* 52 resta: l'italiano diventa un bundle lazy (30/10/2026) ma la forma dei
  * bundle e degli snapshot salvati non cambia; l'italiano non ha snapshot. */

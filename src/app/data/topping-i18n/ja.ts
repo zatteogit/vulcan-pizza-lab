@@ -360,6 +360,12 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
         },
       },
     },
+    margherita_teglia_in_giornata: {
+      ingredients: {
+        "0": { name: "味付けしたトマトソース（トマト、オイル、塩）", notes: "温かいもの" },
+        "1": { name: "角切りのモッツァレラ", notes: "焼き上がりの最後の5分に" },
+      },
+    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2766,6 +2772,10 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
       description: "塩を加えたピューレを均一に広げます。角切りのモッツァレラを散らし、オリーブオイルを回しかけます。バジルは焼き上がりにだけ加えます。",
       tip_beginner: "家庭用オーブン＝長い焼成（12-20分）。生のバジルはオーブンから出した【直後】に加えます。そうしないと焦げてしまいます。",
       tip_nerd: "バジルの揮発性成分（リナロール、ユーカリプトール）は100°Cを超えると分解します。5分を超える焼成では、焼成後に加えるほうが適しています。",
+    },
+    spread_margherita_teglia_in_giornata: {
+      title: "ソースは今、モッツァレラは最後に",
+      description: "広げたばかりの生地に温かいソースを縁まで塗り、天板のまま発酵させます。オーブンに入れ、焼き上がりの最後の5分でオーブンを開けて角切りのモッツァレラを散らし、焼き上げます。",
     },
     spread_margherita_us: {
       title: "アメリカ風Margheritaのトッピング",

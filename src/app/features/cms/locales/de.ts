@@ -55,6 +55,7 @@ export const DE_LOCALE: CmsContent = {
       fugazzeta: "Zwei hohe Lagen in der Molde mit Mozzarella dazwischen",
       california_style: "Dünner runder Boden, leichter Gourmet-Belag",
       greek_pan: "In der gut geölten runden Form ausgebreitet",
+      teglia_in_giornata: "Mit geölten Händen im geölten Blech ausgebreitet",
     },
   },
   /* FW-11: esonimi dei luoghi d'origine degli stili. */
@@ -910,6 +911,7 @@ export const DE_LOCALE: CmsContent = {
     "timeline.mix.generic.tipBeginner": "Fertig, wenn sich der Teig um den Haken wickelt und sich vom Schüsselrand löst.",
     "timeline.mix.generic.tipNerd": "Prüfe die Endtemperatur des Teigs (~24°C): Darüber baut das Gluten ab.",
     "timeline.mix.hands.desc": "Knete von Hand bis zur vollen Glutenentwicklung (~15-20 min) und falte dabei auf der Arbeitsfläche.",
+    "timeline.mix.stir": "Verrühre die Zutaten mit einem Löffel und gib die Flüssigkeiten nach und nach dazu, bis keine Mehlklümpchen mehr übrig sind. Der Teig ist sehr weich und klebrig: nicht kneten.",
     "timeline.mix.hands.descHighHydration": "Knete von Hand bis zur vollen Glutenentwicklung (~15-20 min) mit Slap & Fold.",
     "timeline.mix.hands.tipBeginner": "Der Teig ist fertig, wenn er glatt ist und sich von den Händen löst. Wenn er zu klebrig ist, warte 5 min und versuch es erneut.",
     "timeline.mix.hands.tipNerd": "Das Glutennetz entsteht, wenn Glutenin und Gliadin stabile Disulfidbrücken bilden. Die Fensterprobe prüft das Glutennetz. Über {pct} % Hydration wechselst du zu Slap & Fold.",
@@ -942,6 +944,7 @@ export const DE_LOCALE: CmsContent = {
     "yeast.sourceDryAsFresh": "Die Quelle verwendet Trockenhefe, {sourcePct}% auf das Mehl. In deinem Vorrat ist Frischhefe: Hier beträgt die Menge {pct}%, von {app} im Verhältnis 1 zu 3 umgerechnet (1 g Trockenhefe entspricht etwa 3 g Frischhefe).",
     "yeast.sourceFreshAsDry": "Die Quelle verwendet Frischhefe, {sourcePct}% auf das Mehl. In deinem Vorrat ist Trockenhefe: Hier beträgt die Menge {pct}%, von {app} im Verhältnis 1 zu 3 umgerechnet (1 g Trockenhefe entspricht etwa 3 g Frischhefe).",
     "fermentation.warmPlace": "Die Quelle sagt „an einem warmen Ort“, ohne Gradangabe: {app} rechnet mit {temp}, alles zwischen {tempMin} und {tempMax} passt. Warte, bis sich der Teig verdoppelt hat, statt auf die Uhr zu schauen.",
+    "source.convertedDoses": "Die Quelle misst in Millilitern, Teelöffeln und Päckchen: Die Gramm sind eine Umrechnung von {app}. Bei kleinen Mengen wie Salz und Zucker liegt die Unsicherheit bei etwa 25 %.",
     "diet.singleBase": "Ein Boden aus dem gesamten Teig: Zwiebeln darauf, ohne zweiten Teigkreis oder Verschließen.",
     "topping.geometry": "Fläche {area} cm² · Referenz {reference} cm² · Mengen ×{scale}.",
     "auth.layoutChanged": "Anderes Format als die Vorlage: Diese Variante verändert den Aufbau",
@@ -1218,6 +1221,7 @@ export const DE_LOCALE: CmsContent = {
     fugazzeta: "Zwei Teiglagen mit reichlich Mozzarella dazwischen. Oben Zwiebel, keine Tomate: ein Klassiker aus Buenos Aires.",
     california_style: "Ein dünner Boden für ungewöhnliche Kombinationen, von Barbecue-Hähnchen bis Ziegenkäse, Feigen und Rucola.",
     greek_pan: "In einer gut geölten runden Form gebacken, mit knusprigem Boden und weichem Inneren. Mit Mozzarella und Cheddar belegt.",
+    teglia_in_giornata: "Blechpizza, am selben Tag zubereitet und im Haushaltsbackofen gebacken: ein weicher Teig mit viel Wasser, viel Hefe und ein paar Stunden an einem warmen Ort. Sie ist keine römische Blechpizza, die 24 bis 48 Stunden im Kühlschrank reift.",
   },
   styleChars: {
     napoletana_stg:
@@ -1263,6 +1267,7 @@ export const DE_LOCALE: CmsContent = {
     fugazzeta: "Doppelschicht mit Mozzarella-F\u00FCllung|Zwiebeln obenauf, keine Tomate|Hoch und weich (al molde)|Zum Schluss Oregano und Oliven\u00F6l",
     california_style: "D\u00FCnner handwerklicher Boden|Saisonale Gourmet-Zutaten|Untraditionelle Kombinationen|Koch-getriebener Ansatz",
     greek_pan: "Stark ge\u00F6lte Form, frittierter Boden|Weiche, dicke Krume|Mix Mozzarella + Cheddar|Griechisch-amerikanischer Diner",
+    teglia_in_giornata: "Am selben Tag fertig|Hydration um 80%|Gut geöltes Backblech|Haushaltsbackofen",
   },
   deviationLabels: {
     unclassified: "Ungeprüft",

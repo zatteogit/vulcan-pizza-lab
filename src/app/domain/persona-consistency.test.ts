@@ -90,9 +90,9 @@ describe("persona audit: dietary requirements override the generic score",()=>{
     expect(getDietaryWarnings(["vegan"],[{name:"Acciughe"}])[0].severity).toBe("critical");
   });
   it("never recommends a wheat recipe for gluten-free, even with a high affinity",()=>{
-    const input={...kitchen,dietary_filters:["gluten_free"],recipe_mode:"adapted",limit:29,include_recipe:true};
+    const input={...kitchen,dietary_filters:["gluten_free"],recipe_mode:"adapted",limit:30,include_recipe:true};
     const all=call("recommend_styles",{...input,include_not_feasible:true}).styles;
-    expect(all).toHaveLength(29);
+    expect(all).toHaveLength(30);
     for(const r of all){expect(r.outcome,r.id).toBe("not_feasible");expect(r.compatibility,r.id).toBeLessThanOrEqual(39);}
     expect(call("recommend_styles",input).styles).toEqual([]);
     const mix=getDietaryWarnings(["gluten_free"],[{name:"Farina di riso",gluten:false}]);

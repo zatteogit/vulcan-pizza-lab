@@ -621,3 +621,30 @@ sul codice, prima (`116906f`) e dopo, con l'MCP `generate_recipe`
   canotto 90, pinsa 89, teglia 88, New York 88).
 - **Parità MCP ↔ browser:** i passi espongono anche `round_seconds` e
   `recovery_seconds`; la guida dell'MCP dice che il recupero è compreso.
+
+## Tranche B2 · teglia casalinga in giornata (30/10/2026)
+
+Stile nuovo `teglia_in_giornata` con il riferimento di Benedetta Rossi
+(`docs/progetto-catalogo-italiano.md` §9.11). Tre ritocchi al motore, tutti
+inerti per gli stili che c'erano:
+
+- **Sale della fonte** (`saltRangePct`). La forbice del sale come leva utente
+  era 1,5–3,5 % per tutti: l'1,2 % di Benedetta (1 cucchiaino su 500 g)
+  diventava 1,5 % (7,5 g invece di 6). Ora il minimo è
+  `min(1,5, sale dello stile)`; vale anche per lo slider e per la correzione
+  «troppo salata» in Crea e nella ricetta. Gli altri stili hanno sale ≥ 1,8 %:
+  forbice invariata (test in `use-cases/teglia-in-giornata.test.ts`).
+- **Impasto senza impastare** (`MethodProcessProfile.mix_without_kneading`,
+  messaggio `timeline.mix.stir`). La fonte mescola col cucchiaio: prima il
+  passo diceva «Impasta a mano fino a incordatura (~15-20 min) con lo slap &
+  fold». Solo i profili che lo dichiarano (oggi Benedetta): `mix 20` → `10`.
+- **Dosi convertite** (`converted_doses` → `source.convertedDoses` nelle
+  `source_notes`), D-066: la ricetta dice che i grammi sono una conversione.
+- `needsPan` e `supportsThickness` comprendono lo stile nuovo (teglia e
+  spessore modificabili in Crea).
+
+Misure: `preset-numbers.regression.json` e `recipes.golden.json` hanno solo
+righe nuove (`teglia_in_giornata`), nessun numero cambiato. Classifica di
+`recommendStyles` (ricette su misura): P1 (casa 250 °C, 24 h) stesso ordine
+relativo, lo stile nuovo entra 14° con 97; P3 (Effeuno 509 °C, 48 h) stesso
+ordine, lo stile nuovo 30° con 97 (pari voto, ultimo per margine di cucina).
