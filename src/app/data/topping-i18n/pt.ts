@@ -209,11 +209,11 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     sardenaira: {
       name: "Sardenaira",
-      description: "A focaccia coberta de Sanremo: molho de tomate e cebola, anchovas, azeitonas taggiasche, alcaparras e alho.",
+      description: "A focaccia coberta de Sanremo: tomate, anchovas salgadas, azeitonas taggiasche, alcaparras, alho com casca e orégano. A versão De.Co. não leva cebola, que aparece nas versões caseiras e na pissalandrea.",
     },
     sfincione_bianco: {
-      name: "Sfincione bianco (bagherese)",
-      description: "A variante de Bagheria sem tomate: tuma, anchovas, cebola refogada, caciocavallo e miolo de pão tostado.",
+      name: "Sfincione bianco de Bagheria",
+      description: "O sfincione de Bagheria, sem tomate: tuma, ricota de ovelha, anchovas, cebola refogada e miolo de pão tostado com caciocavallo. Não é o “sfincione in bianco” de Palermo, que leva só azeite, alecrim e sal.",
     },
     gorgonzola_pere: {
       name: "Gorgonzola e Pera",
@@ -1740,7 +1740,8 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       variant_name: "De.Co. de Sanremo",
       ingredients: {
         "0": {
-          name: "Molho de tomate denso cozido com cebola (tomate, cebola, azeite)",
+          name: "Tomates frescos em pedaços ou polpa de tomate",
+          notes: "crus e bem escorridos; sem cebola",
         },
         "1": {
           name: "Anchovas salgadas dessalgadas",
@@ -1773,15 +1774,19 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
           notes: "afundada na massa",
         },
         "2": {
-          name: "Cebolas brancas refogadas lentamente",
+          name: "Ricota de ovelha",
+          notes: "às colheradas sobre a tuma",
         },
         "3": {
-          name: "Caciocavallo curado ralado",
+          name: "Cebolas brancas refogadas lentamente",
         },
         "4": {
-          name: "Miolo de pão tostado com orégano",
+          name: "Caciocavallo curado ralado",
         },
         "5": {
+          name: "Miolo de pão tostado com orégano",
+        },
+        "6": {
           name: "Pimenta-do-reino e azeite extravirgem",
         },
       },
@@ -2953,7 +2958,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     spread_sardenaira: {
       title: "Cobrir a Sardenaira",
-      description: "Espalhe o molho denso de tomate e cebola sobre a massa alta e fofa. Afunde as anchovas e os dentes de alho com casca. Distribua azeitonas taggiasche, alcaparras e orégano; bastante azeite extravirgem. Forno lento na assadeira. Não é uma pizza: é uma focaccia coberta.",
+      description: "Espalhe o tomate cru sobre a massa alta e fofa. Afunde as anchovas e os dentes de alho com casca. Distribua azeitonas taggiasche, alcaparras e orégano; bastante azeite extravirgem. Asse devagar na assadeira. Não é uma pizza: é uma focaccia coberta.",
     },
     bagherese_prep: {
       title: "Cebolas refogadas e miolo de pão tostado",
@@ -2961,7 +2966,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     spread_sfincione_bianco: {
       title: "Sfincione bianco sem tomate",
-      description: "Sem tomate. Afunde na massa as fatias de tuma e as anchovas derretidas. Cubra com as cebolas refogadas, o caciocavallo ralado e o miolo de pão tostado. Pimenta e azeite. A variante de Bagheria.",
+      description: "Sem tomate. Afunde na massa as fatias de tuma e as anchovas derretidas e depois distribua a ricota às colheradas. Cubra com as cebolas refogadas, o caciocavallo ralado e o miolo de pão tostado. Pimenta e azeite.",
     },
     recco_nduja_fill: {
       title: "Crescenza e 'nduja entre as folhas de massa",
