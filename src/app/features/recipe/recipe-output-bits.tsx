@@ -161,7 +161,7 @@ export function GlossaryWLink({ w, label = String(w) }: { w: number; label?: str
                   </span>
                   {active && (
                     <span className="bits-glossary-w-modal__range-current type-numeric">
-                      {uiMessage("features.recipe.recipe-output-bits.w-262d147c")}{w}
+                      {uiMessage("features.recipe.recipe-output-bits.262d147c")}{w}
                     </span>
                   )}
                 </div>

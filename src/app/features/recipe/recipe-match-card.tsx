@@ -377,7 +377,7 @@ export function RecipeMatchCard({
                 className={`match-kicker__icon ${tone.low || notFeasible ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
                 aria-hidden="true"
               />
-              <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
+              <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.0335207f")}</span>
             </div>
             {/* Esito operativo accanto al punteggio. */}
             <div className="match-verdict">

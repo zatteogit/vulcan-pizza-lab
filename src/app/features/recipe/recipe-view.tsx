@@ -200,7 +200,7 @@ export function RecipeView({
     <IconButton type="button"
       className="recipe-view-favorite"
       aria-describedby={toast ? favoriteFeedbackId : undefined}
-      aria-label={favorite ? uiMessage("features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86")}
+      aria-label={favorite ? uiMessage("features.recipe.recipe-view.7f61dbbb") : uiMessage("features.recipe.recipe-view.b5037a86")}
       aria-pressed={favorite} onClick={handleFavoriteClick} size="lg" variant="bare">
       <Bookmark size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
     </IconButton>

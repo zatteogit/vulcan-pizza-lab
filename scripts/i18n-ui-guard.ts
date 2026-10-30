@@ -295,18 +295,6 @@ function isHumanCopy(value: string): boolean {
   );
 }
 
-function slug(value: string): string {
-  const normalized = value
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/\{\d+\}/g, " value ")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 42);
-  return normalized || "copy";
-}
-
 function namespaceFor(root: string, file: string): string {
   return rel(path.join(root, "src/app"), file)
     .replace(/\.tsx$/, "")
@@ -315,9 +303,11 @@ function namespaceFor(root: string, file: string): string {
     .join(".");
 }
 
+/* Solo namespace + hash: lo slug del testo raddoppiava il peso della chiave
+   nei cataloghi e in ogni chiamata (budget D-059, 30/10/2026). */
 function keyFor(root: string, file: string, message: string): string {
   const hash = createHash("sha1").update(message).digest("hex").slice(0, 8);
-  return `${namespaceFor(root, file)}.${slug(message)}-${hash}`;
+  return `${namespaceFor(root, file)}.${hash}`;
 }
 
 function templateData(expression: Expression): { message: string; values: string[] } | null {
@@ -868,7 +858,7 @@ function writeCatalog(
     [
       "/**",
       ` * ${description}`,
-      " * Le chiavi sono stabili: namespace + slug + hash del messaggio.",
+      " * Le chiavi sono stabili: namespace + hash del messaggio.",
       " */",
       `export const ${exportName}: Record<string, string> = ${JSON.stringify(ordered, null, 2)};`,
       "",

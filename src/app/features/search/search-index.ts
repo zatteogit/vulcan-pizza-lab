@@ -193,7 +193,7 @@ export function buildSearchIndex(cms: CmsContent, ovens: readonly OvenModel[] = 
           title: flour.name,
           /* FW-11 (S04-A-06): niente «W0» per le farine senza glutine,
              decimali e percentuale nella lingua attiva. */
-          subtitle: uiMessage("components.shared.search-overlay.value-w-value-value-prot-value-98984423", [
+          subtitle: uiMessage("components.shared.search-overlay.98984423", [
             flour.producer === "Generico" ? uiMessage("features.search.flourGenericProducer") : flour.producer,
             flour.w > 0
               ? uiMessage("format.flourW",[formatNumber(flour.w, cms.locale.id)])

@@ -36,10 +36,10 @@ export type PreFermentId = (typeof PRE_FERMENT_IDS)[number];
 
 export function preFermentName(id: PreFermentId): string {
   return id === "biga"
-    ? uiMessage("features.recipe.pre-ferment-guide.biga-4e43b430")
+    ? uiMessage("features.recipe.pre-ferment-guide.4e43b430")
     : id === "poolish"
-      ? uiMessage("features.recipe.pre-ferment-guide.poolish-40fc939a")
-      : uiMessage("features.recipe.pre-ferment-guide.autolisi-c4e938cc");
+      ? uiMessage("features.recipe.pre-ferment-guide.40fc939a")
+      : uiMessage("features.recipe.pre-ferment-guide.c4e938cc");
 }
 
 // FW-01 (S14-A-03): alveolatura e complessità tolte, erano dati «da verificare» (D)

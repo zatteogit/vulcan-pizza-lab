@@ -196,7 +196,7 @@ function DecisionCard({
         {when}
       </div>
       <div className="preferment-decision__best">
-        {uiMessage("pages.pre-ferments.ideale-per-0aebda24")}{best}
+        {uiMessage("pages.pre-ferments.0aebda24")}{best}
       </div>
       {tryHref && tryLabel && (
         <CtaButton as={Link} to={tryHref} variant="secondary" radius="lg" elevated={false} className="preferment-decision__try">

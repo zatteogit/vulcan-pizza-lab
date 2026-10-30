@@ -95,10 +95,10 @@ export function PrintSheet({
         <p className="print-sheet__meta">
           {recipe.dough_balls} {unitLabel} · {fmt.grams(recipe.ball_weight_g)} ·{" "}
           {ui.statHydration} {fmt.percent(recipe.hydration_pct)} ·{" "}
-          {uiMessage("features.recipe.recipe-stat-strip.w-value-f64b6332", [flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)])}
+          {uiMessage("features.recipe.recipe-stat-strip.f64b6332", [flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)])}
           {/* FW-17 (S08-B-06): con un mix la forza che si impasta è quella efficace. */}
           {recipe.effective_gluten_w != null
-            ? ` (${ui.flourEffectiveGluten} ${uiMessage("features.recipe.ingredients-section.w-e07879a9")}${recipe.effective_gluten_w})`
+            ? ` (${ui.flourEffectiveGluten} ${uiMessage("features.recipe.ingredients-section.e07879a9")}${recipe.effective_gluten_w})`
             : ""}{" "}
           ·{" "}
           {ui.statOven} {fmt.celsius(recipe.oven_temp_c)}
@@ -147,7 +147,7 @@ export function PrintSheet({
                         <tr key={`blend-${c.name}`} className="print-sheet__sub">
                           <td>
                             ↳ {c.name} {c.pct}%
-                            {c.w ? uiMessage("features.recipe.ingredients-section.w-value-f84aef04", [c.w]) : ""}
+                            {c.w ? uiMessage("features.recipe.ingredients-section.f84aef04", [c.w]) : ""}
                           </td>
                           <td className="print-sheet__num">{fmt.grams(c.grams)}</td>
                           <td className="print-sheet__num">{pct(c.pct)}</td>

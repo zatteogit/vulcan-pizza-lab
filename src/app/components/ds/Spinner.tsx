@@ -30,7 +30,7 @@ export function Spinner({ size = 24, color = "var(--primary)", className, style 
       animate={{ rotate: 360 }}
       transition={motionTiming.spinner}
       role="status"
-      aria-label={uiMessage("components.ds.spinner.caricamento-9f21540f")}
+      aria-label={uiMessage("components.ds.spinner.9f21540f")}
     >
       <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--surface-container-high)" strokeWidth={stroke} />
       <circle

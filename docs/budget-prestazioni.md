@@ -252,6 +252,18 @@ compatto, lente della rail con etichetta e nome del pulsante Profilo: circa
 margine). Risultato: 494,1 kB senza lingue, 597,9 kB per utente, CSS 74,6 kB
 (76 437 byte su 76 800).
 
+### 30/10/2026: chiavi uiMessage senza lo slug del testo
+
+Integrata G1a sopra main (con G1b e il suo seguito), la build misurava 601,0 kB
+per utente. Le 125 chiavi generate dal guard i18n erano `namespace.slug-hash`:
+lo slug (fino a 42 caratteri del testo italiano) si ripeteva nel catalogo
+italiano, in ogni catalogo straniero e in ogni chiamata. Ora sono
+`namespace.hash` (il guard le genera così) e `LOCALE_BUNDLE_REV` passa a 52.
+Recuperati circa 2,9 kB per utente (1,8 di codice e 1,0 nel catalogo
+giapponese) e circa 1 kB in ciascun catalogo straniero. Dopo: 495,1 kB senza
+lingue, 598,2 kB per utente. Le chiavi scritte a mano (`recipe.schedule.…`)
+restano leggibili: la regola vale solo per quelle generate.
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

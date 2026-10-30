@@ -127,17 +127,17 @@ const TABS: TabDef[] = [
     labelKey: "navExplore",
     /* "Scopri", non "Stili": la sezione contiene ricette iconiche E stili
        (feedback giugno 2026). */
-    get labelFallback() { return uiMessage("components.shared.app-shell.scopri-b4aad9f0"); },
+    get labelFallback() { return uiMessage("components.shared.app-shell.b4aad9f0"); },
     icon: Compass,
     path: "/explore",
     match: ["/explore"],
   },
   /* D-037: Crea è la seconda tab, su /crea. */
-  { id: "create", labelKey: "navCreate", get labelFallback() { return uiMessage("components.shared.app-shell.crea-e7c107d0"); }, icon: Flame, path: "/crea", match: ["/crea"] },
+  { id: "create", labelKey: "navCreate", get labelFallback() { return uiMessage("components.shared.app-shell.e7c107d0"); }, icon: Flame, path: "/crea", match: ["/crea"] },
   {
     id: "learn",
     labelKey: "navLearn",
-    get labelFallback() { return uiMessage("components.shared.app-shell.impara-bc1df07a"); },
+    get labelFallback() { return uiMessage("components.shared.app-shell.bc1df07a"); },
     icon: GraduationCap,
     path: "/learn",
     match: ["/learn"],
@@ -148,7 +148,7 @@ const TABS: TabDef[] = [
 const PROFILE_TAB: TabDef = {
   id: "profile",
   labelKey: "navProfile",
-  get labelFallback() { return uiMessage("components.shared.app-shell.profilo-afedc6c9"); },
+  get labelFallback() { return uiMessage("components.shared.app-shell.afedc6c9"); },
   icon: User,
   path: "/profile",
   match: ["/profile"],

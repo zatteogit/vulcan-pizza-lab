@@ -32,7 +32,7 @@ function shortcutHint(): string | null {
     navigator.platform ??
     "";
   return /mac|iphone|ipad/i.test(platform)
-    ? uiMessage("components.shared.search-button.k-64d86f33")
+    ? uiMessage("components.shared.search-button.64d86f33")
     : uiMessage("components.shared.search-button.shortcut-ctrl");
 }
 

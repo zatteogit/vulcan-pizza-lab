@@ -251,8 +251,8 @@ export function ProcedureHeroControls({
             tabIndex={-1}
             aria-hidden="true"
             className="procedure-hero__edit-time"
-            aria-label={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.startTime])}
-            title={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.startTime])}
+            aria-label={uiMessage("features.recipe.procedure-hero.f8c9ece2", [ui.startTime])}
+            title={uiMessage("features.recipe.procedure-hero.f8c9ece2", [ui.startTime])}
           >
             <Pencil size={14} aria-hidden="true" />
           </IconButton>
@@ -298,7 +298,7 @@ export function ProcedureHeroControls({
                     setStartTime((s) => shiftQuarter(s, -1));
                   }
                 }}
-                aria-label={`${ui.endTime} ${approxEnd ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}${fmt.clockTime(endDisplayTime)} ${endDayLabel}`}
+                aria-label={`${ui.endTime} ${approxEnd ? uiMessage("features.recipe.procedure-hero.dfd4ac18") : ""}${fmt.clockTime(endDisplayTime)} ${endDayLabel}`}
                 aria-keyshortcuts="ArrowUp ArrowDown"
                 aria-describedby={shiftHintId}
                 className="procedure-hero__time-display type-numeric"
@@ -334,8 +334,8 @@ export function ProcedureHeroControls({
             tabIndex={-1}
             aria-hidden="true"
             className="procedure-hero__edit-time"
-            aria-label={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.endTime])}
-            title={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.endTime])}
+            aria-label={uiMessage("features.recipe.procedure-hero.f8c9ece2", [ui.endTime])}
+            title={uiMessage("features.recipe.procedure-hero.f8c9ece2", [ui.endTime])}
           >
             <Pencil size={14} aria-hidden="true" />
           </IconButton>
@@ -366,7 +366,7 @@ export function ProcedureHeroControls({
             className="procedure-hero__now-btn"
           >
             <CalendarClock size={15} aria-hidden="true" />
-            {uiMessage("features.recipe.procedure-hero.inizia-ora-895d8504")}</CtaButton>
+            {uiMessage("features.recipe.procedure-hero.895d8504")}</CtaButton>
           <p id={nowHelpId} className="procedure-hero__now-help">{fromNowHelp}</p>
         </div>
         {plannedFromNow === startTime.getTime() && <p role="status" className="procedure-hero__now-status">
@@ -375,7 +375,7 @@ export function ProcedureHeroControls({
 
         <div className="procedure-hero__meal-picker">
           <p id={mealsLabelId} className="procedure-hero__meals-label">
-            {uiMessage("features.recipe.procedure-hero.pronto-per-il-pasto-503f1512")}</p>
+            {uiMessage("features.recipe.procedure-hero.503f1512")}</p>
           {feasibleMeals.length > 0 ? (
             <div role="group" aria-labelledby={mealsLabelId} className="procedure-hero__meals-row">
               {feasibleMeals.map((slot) => (
@@ -401,7 +401,7 @@ export function ProcedureHeroControls({
               title={uiMessage("recipe.schedule.noMealFits")}
               headingLevel={3}
               actions={[{
-                label: uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.endTime]),
+                label: uiMessage("features.recipe.procedure-hero.f8c9ece2", [ui.endTime]),
                 onClick: () => setEditingEndTime(true),
               }]}
               className="procedure-hero__no-meal"
@@ -473,7 +473,7 @@ export function ProcedureHeroControls({
           <h2 className="procedure-hero__title">{ui.timeline}</h2>
         </div>
         <span className="procedure-hero__total">
-          {uiMessage("features.recipe.procedure-hero.tempo-totale-3c1f6a6f")}{fmt.durationMinutes(totalDurationMin)}
+          {uiMessage("features.recipe.procedure-hero.3c1f6a6f")}{fmt.durationMinutes(totalDurationMin)}
         </span>
       </div>
 
