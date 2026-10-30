@@ -58,6 +58,7 @@ export const ES_LOCALE: CmsContent = {
       fugazzeta: "Doble disco alto en el molde con mozzarella dentro",
       california_style: "Base fina y redonda, ingredientes gourmet ligeros",
       greek_pan: "Extendida en un molde redondo muy aceitado",
+      teglia_in_giornata: "Extendida en la bandeja aceitada con las manos aceitadas",
     },
   },
   /* FW-11: esonimi dei luoghi d'origine degli stili. */
@@ -438,6 +439,7 @@ export const ES_LOCALE: CmsContent = {
     americana: { name: "Americana" },
     contemporanea: { name: "Contempor\u00E1nea" },
     regionale: { name: "Tradiciones regionales" },
+    casa: { name: "Caseras" },
   },
   allFamiliesLabel: "Todas las familias",
   tiers: {
@@ -923,6 +925,9 @@ export const ES_LOCALE: CmsContent = {
     "timeline.mix.generic.tipBeginner": "Está lista cuando la masa se enrolla en el gancho y se despega de las paredes.",
     "timeline.mix.generic.tipNerd": "Controla la temperatura final de la masa (~24°C): por encima, el gluten se degrada.",
     "timeline.mix.hands.desc": "Amasa a mano hasta desarrollar la malla glutínica (~15-20 min), con pliegues sobre la encimera.",
+    "timeline.mix.stir": "Mezcla los ingredientes con una cuchara, añadiendo los líquidos poco a poco, hasta que no queden grumos de harina. La masa es muy blanda y pegajosa: no la amases.",
+    "timeline.divide.pansTitle": "Reparte en las bandejas",
+    "timeline.divide.pans": "Pesa la masa y repártela entre las bandejas aceitadas, vertiéndola con una espátula o con las manos aceitadas: no la trabajes ni la bolees.",
     "timeline.mix.hands.descHighHydration": "Amasa a mano hasta desarrollar la malla glutínica (~15-20 min) con slap & fold.",
     "timeline.mix.hands.tipBeginner": "La masa está lista cuando está lisa y se despega de las manos. Si se pega demasiado, espera 5 min y vuelve a intentarlo.",
     "timeline.mix.hands.tipNerd": "La malla glutínica se forma cuando la glutenina y la gliadina crean puentes disulfuro estables. La prueba de la membrana comprueba la red de gluten. Por encima del {pct} % de hidratación se pasa al slap & fold.",
@@ -955,6 +960,8 @@ export const ES_LOCALE: CmsContent = {
     "yeast.sourceDryAsFresh": "La fuente usa levadura seca, {sourcePct}% sobre la harina. En tu despensa hay levadura fresca: aquí la dosis es {pct}%, convertida por {app} con la proporción 1 a 3 (1 g de levadura seca equivale a unos 3 g de fresca).",
     "yeast.sourceFreshAsDry": "La fuente usa levadura fresca, {sourcePct}% sobre la harina. En tu despensa hay levadura seca: aquí la dosis es {pct}%, convertida por {app} con la proporción 1 a 3 (1 g de levadura seca equivale a unos 3 g de fresca).",
     "fermentation.warmPlace": "La fuente dice «en un lugar cálido», sin grados: {app} calcula a {temp}, y vale cualquier punto entre {tempMin} y {tempMax}. Espera a que la masa doble su volumen, no a la hora del reloj.",
+    "source.convertedDoses": "La fuente mide en mililitros, cucharaditas y sobres: los gramos son una conversión de {app}. En las cantidades pequeñas, como la sal y el azúcar, el margen es de alrededor del 25 %.",
+    "topping.sauceSeasoning": "La fuente solo dice «salsa aliñada», sin decir con qué: el aceite y la sal de la salsa son una lectura de {app}.",
     "diet.singleBase": "Una base con toda la masa: cebolla encima, sin segundo disco ni cierre.",
     "topping.geometry": "Superficie {area} cm² · referencia {reference} cm² · cantidades ×{scale}.",
     "auth.layoutChanged": "Formato distinto de la referencia: la variante cambia la estructura de la receta",
@@ -1235,6 +1242,7 @@ export const ES_LOCALE: CmsContent = {
     fugazzeta: "Dos capas de masa encierran abundante mozzarella. Encima, cebolla y nada de tomate: un clásico de Buenos Aires.",
     california_style: "Una base fina para combinaciones poco habituales, desde pollo barbacoa hasta queso de cabra, higos y rúcula.",
     greek_pan: "Cocida en un molde redondo bien aceitado, con base crujiente e interior tierno. Combina mozzarella y cheddar.",
+    teglia_in_giornata: "Pizza en bandeja hecha y horneada el mismo día en el horno de casa: una masa tierna con mucha agua, mucha levadura y unas horas en un lugar cálido. No es la pizza en bandeja romana, que madura en la nevera de 24 a 48 horas.",
   },
   styleChars: {
     napoletana_stg:
@@ -1280,6 +1288,7 @@ export const ES_LOCALE: CmsContent = {
     fugazzeta: "Doble capa rellena de mozzarella|Cebolla encima, sin tomate|Alta y tierna (al molde)|Or\u00E9gano y AOVE al final",
     california_style: "Base fina artesanal|Ingredientes gourmet de temporada|Combinaciones no tradicionales|Enfoque de autor",
     greek_pan: "Bandeja muy aceitada, base frita|Miga tierna y gruesa|Mezcla mozzarella + cheddar|Diner grecoamericano",
+    teglia_in_giornata: "Lista el mismo día|Hidratación en torno al 80%|Bandeja de casa bien aceitada|Horno de casa",
   },
   deviationLabels: {
     unclassified: "Por verificar",

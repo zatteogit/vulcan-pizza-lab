@@ -1,4 +1,5 @@
 import { METHOD_MESSAGES_IT } from "./method-messages";
+import { BRAND } from "../config/brand";
 /* ═══ TOPPING LIBRARY — Sprint 11 Fase 2 + Sprint 12 Fase 2 ═══
  *
  * REGOLA DI STRATIFICAZIONE:
@@ -933,6 +934,10 @@ export interface ToppingRecipe {
   /** A real preparation variant, not merely a topping omission. */
   layout_override?: LayoutSpec;
   method_note?: EngineMsg;
+  /** B2 (seguito): scelta di Vulcan su ciò che la fonte non dice (es. come
+   *  si condisce la salsa). La ricetta la dichiara fra le note della fonte
+   *  (`source_notes`), non fra le varianti di metodo. */
+  source_note?: EngineMsg;
   id: string;
   /** Link al concetto culturale di alto livello. */
   concept_ref: string;
@@ -1047,6 +1052,31 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
         beginner: "Forno casa = cottura lunga (12-20 min). Basilico fresco va aggiunto APPENA esce, altrimenti brucia.",
         nerd: "I composti volatili del basilico (linalolo, eucaliptolo) degradano sopra i 100°C. Per cotture >5min meglio aggiungere post-bake.",
       },
+    }],
+  },
+
+  /* Tranche B2: la margherita della ricetta di Benedetta Rossi (pagina
+   * ufficiale, verificata il 30/10/2026), dosi per la teglia 35×35 dello
+   * stile: 300 g di salsa tiepida già condita prima dell'ultima lievitazione,
+   * 250 g di mozzarella a dadini negli ultimi 5 minuti. «Condita» senza
+   * dettaglio nella fonte: olio e sale sono la lettura di Vulcan. Gli ultimi
+   * minuti non sono un punto della timeline: li dice il passo (§4.1). */
+  margherita_teglia_in_giornata: {
+    id: "margherita_teglia_in_giornata",
+    concept_ref: "margherita",
+    preferred_for_styles: ["teglia_in_giornata"],
+    source_note: { key: "topping.sauceSeasoning", fallback: METHOD_MESSAGES_IT["topping.sauceSeasoning"], params: { app: BRAND.name } },
+    ingredients: [
+      { name: "Salsa di pomodoro condita (pomodoro, olio, sale)", components: ["pomodoro", "olio", "sale"], amount: { value: 300, unit: "g" }, notes: "tiepida" },
+      { name: "Mozzarella a dadini", amount: { value: 250, unit: "g" }, notes: "negli ultimi 5 minuti di cottura" },
+    ],
+    assembly_steps: [{
+      id: "spread_margherita_teglia_in_giornata",
+      title: "Salsa ora, mozzarella a fine cottura",
+      description: "Distribuisci la salsa tiepida sull'impasto appena steso, fino ai bordi, e lascialo lievitare in teglia. Inforna; negli ultimi 5 minuti di cottura apri il forno, distribuisci la mozzarella a dadini e finisci la cottura.",
+      insert_at: "before_proof",
+      duration_minutes: 3,
+      replaces_generic: true,
     }],
   },
 
@@ -4551,6 +4581,7 @@ const REPRESENTATIVE_CONCEPT_ORDER_BY_STYLE: Record<string, readonly string[]> =
   fugazzeta: ["fugazzeta", "fugazza"],
   california_style: ["bbq_chicken", "margherita", "smoked_salmon", "hawaiiana"],
   greek_pan: ["greek_feta", "cheese_pizza", "diavola", "ortolana"],
+  teglia_in_giornata: ["margherita"],
 };
 
 const REPRESENTATIVE_CONCEPT_ORDER_BY_FAMILY: Partial<Record<FamilyId, readonly string[]>> = {

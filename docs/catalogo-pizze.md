@@ -14,7 +14,7 @@ I dati sono stati estratti direttamente dai database e file di configurazione de
 
 ## 1. Famiglie di Pizze
 
-Gli stili sono raggruppati in **5 famiglie principali** (FW-14, D-G: «Tradizioni regionali» da confermare da Matteo stile per stile) che determinano l'approccio culturale ed i flussi di lavoro:
+Gli stili sono raggruppati in **6 famiglie principali** (FW-14, D-G: «Tradizioni regionali» da confermare da Matteo stile per stile; «Di casa» decisa da Matteo il 30/10/2026, D-069) che determinano l'approccio culturale ed i flussi di lavoro:
 
 | Famiglia | Emoji | Descrizione |
 | :--- | :--- | :--- |
@@ -23,6 +23,7 @@ Gli stili sono raggruppati in **5 famiglie principali** (FW-14, D-G: «Tradizion
 | **Americana** | 🗽 | Adattamenti italo-americani e delle Americhe (anche la Fugazzeta argentina): praticità, street food, teglie generose e combinazioni ricche. |
 | **Contemporanea** | 🔬 | Sperimentazione su digeribilità, farine alternative, altissime idratazioni e tecniche di lievitazione avanzate. |
 | **Tradizioni regionali** | 🗺️ | Pizze e focacce storiche delle regioni italiane fuori dalla tradizione napoletana e romana: Genovese, Recco IGP, Sfincione, Padellino, Ciaccino, Trancio milanese, Barese. |
+| **Di casa** | 🏠 | Pizze nate in cucina, non in pizzeria: ricette di casa da blog, TV e libri, per il forno di casa. Oggi la Teglia casalinga in giornata. |
 
 ---
 
@@ -225,6 +226,14 @@ Di seguito l'elenco ordinato di tutti i **28 stili di pizza** configurati nel mo
 *   **Cottura**: Teglia rotonda d'acciaio pesantemente oliata. Ideale `245°C` per `14 min` (`840s`).
 *   **Forma**: Tonda spessa, panetto da `400g` per diametro `30cm`.
 *   **Descrizione**: Pizza diffusa nei diner americani gestiti da famiglie greche. Mollica spessa e spumosa, fondo fritto e croccante grazie all'abbondante olio nella teglia, cosparsa di mix mozzarella e cheddar.
+
+### 29. Teglia casalinga in giornata (`teglia_in_giornata`)
+*   **Famiglia**: Di casa | **Origine**: Italia (cucina di casa) | **Emoji**: 🏠
+*   **Impasto**: Idratazione `75% - 82%`, farina `W 250 - 330`, sale `1.2%`, olio `9.2%`, zucchero `1.6%` (valori della ricetta di riferimento). Fermentazione `2h - 12h`, al caldo.
+*   **Cottura**: Forno di casa. Ideale `210°C` per `30 min` (`1800s`): 25 minuti con la salsa, poi la mozzarella e altri 5.
+*   **Forma**: Teglia di casa unta `35×35 cm`, `967g` (0,79 g/cm²).
+*   **Riferimento**: «Riferimento, ispirata a Benedetta Rossi» (base fonte, provvisorio; in Crea una chip sola «Riferimento · Benedetta Rossi»). Processo dello stile: impasto mescolato col cucchiaio, allargato nella teglia unta. Versioni di Adriano Continisio e Paoletta in arrivo (tranche B3, B4).
+*   **Descrizione**: Pizza in teglia fatta e cotta in giornata: impasto morbido, molto lievito, qualche ora al caldo. Non è la teglia romana (24–48 h in frigo). Dettagli in `docs/progetto-catalogo-italiano.md` §9.11.
 
 ---
 

@@ -69,6 +69,12 @@ export const INSPIRATION_I18N_DE: InspirationTranslation = {
       story: "Nach zwanzig Jahren in der IT eröffnete Ken Forkish in Portland Ken’s Artisan Bakery (2001) und Ken’s Artisan Pizza (2006). Sein Buch „Flour Water Salt Yeast“ (2012), ausgezeichnet von der James Beard Foundation und der IACP, hat die lange Teigführung in die Küchen zu Hause gebracht.",
       badge: "Autor von FWSY",
     },
+    benedetta_rossi: {
+      signature_name: "Inspiriert von der Blechpizza von Benedetta Rossi",
+      technique_signature: "Halb Manitoba-, halb 00-Mehl, lauwarmes Wasser zu 80%, Öl, Zucker und Trockenhefe, unter das Mehl gemischt. Ein sehr weicher Teig, von Hand gemacht; 2 Stunden an einem warmen Ort, dann 10 Minuten im geölten Blech.",
+      story: "Benedetta Rossi veröffentlicht Rezepte der Hausmannskost auf ihrer Website „Fatto in casa da Benedetta“ und im Fernsehen. Ihre Blechpizza ist in wenigen Stunden fertig: viel Hefe, ein warmer Ort und der Haushaltsbackofen bei 210 °C, den Mozzarella erst in den letzten 5 Minuten.",
+      badge: "Hausmannskost",
+    },
     da_michele_napoli: {
       signature_name: "Margherita und Marinara, und wenig mehr",
       technique_signature: "Aufs Nötigste reduzierte Karte: jahrzehntelang nur Margherita und Marinara, heute vier Pizzen. Holzofen und kein Schnickschnack.",

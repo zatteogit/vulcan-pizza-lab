@@ -339,6 +339,12 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
         "4": { name: "Extra-virgin olive oil" },
       },
     },
+    margherita_teglia_in_giornata: {
+      ingredients: {
+        "0": { name: "Seasoned tomato sauce (tomatoes, oil, salt)", notes: "warm" },
+        "1": { name: "Diced mozzarella", notes: "in the last 5 minutes of baking" },
+      },
+    },
     margherita_americana: {
       ingredients: {
         "0": { name: "Tomato sauce (tomato passata, oregano, sugar, salt)" },
@@ -1533,6 +1539,10 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
         "Home oven = long bake (12-20 min). Add fresh basil the MOMENT it comes out, otherwise it burns.",
       tip_nerd:
         "Basil's volatile compounds (linalool, eucalyptol) break down above 100°C. For bakes >5min it's better to add it post-bake.",
+    },
+    spread_margherita_teglia_in_giornata: {
+      title: "Sauce now, mozzarella at the end",
+      description: "Spread the warm sauce over the freshly stretched dough, right to the edges, and let it rise in the tray. Bake; in the last 5 minutes of baking, open the oven, scatter the diced mozzarella and finish baking.",
     },
     spread_margherita_us: {
       title: "American Margherita topping",

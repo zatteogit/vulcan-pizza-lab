@@ -69,6 +69,12 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
       story: "After twenty years in IT, Ken Forkish opened Ken’s Artisan Bakery (2001) and Ken’s Artisan Pizza (2006) in Portland. His “Flour Water Salt Yeast” (2012), which won awards from the James Beard Foundation and the IACP, brought long fermentation into home kitchens.",
       badge: "Author of FWSY",
     },
+    benedetta_rossi: {
+      signature_name: "Inspired by Benedetta Rossi’s tray pizza",
+      technique_signature: "Half Manitoba and half 00 flour, warm water at 80%, oil, sugar and active dry yeast mixed into the flour. A very soft dough, made by hand; 2 hours somewhere warm, then 10 minutes in the oiled tray.",
+      story: "Benedetta Rossi publishes home-cooking recipes on her website “Fatto in casa da Benedetta” and on television. Her tray pizza takes just a few hours: plenty of yeast, a warm place and a home oven at 210 °C, with the mozzarella added in the last 5 minutes.",
+      badge: "Home cooking",
+    },
     da_michele_napoli: {
       signature_name: "Margherita and Marinara, and little else",
       technique_signature: "A bare-bones menu: for decades only Margherita and Marinara, four pizzas today. Wood-fired oven, no frills.",

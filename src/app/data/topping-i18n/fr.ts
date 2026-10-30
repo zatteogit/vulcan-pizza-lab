@@ -360,6 +360,12 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
         },
       },
     },
+    margherita_teglia_in_giornata: {
+      ingredients: {
+        "0": { name: "Sauce tomate assaisonnée (tomates, huile, sel)", notes: "tiède" },
+        "1": { name: "Mozzarella en dés", notes: "dans les 5 dernières minutes de cuisson" },
+      },
+    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2766,6 +2772,10 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       description: "Étalez uniformément le coulis salé. Répartissez la mozzarella en dés. Un filet d'huile. Le basilic seulement en fin de cuisson.",
       tip_beginner: "Four domestique = cuisson longue (12-20 min). Ajoutez le basilic frais DÈS la sortie du four, sinon il brûle.",
       tip_nerd: "Les composés volatils du basilic (linalol, eucalyptol) se dégradent au-delà de 100°C. Pour des cuissons >5min, mieux vaut l'ajouter après cuisson.",
+    },
+    spread_margherita_teglia_in_giornata: {
+      title: "La sauce maintenant, la mozzarella à la fin",
+      description: "Étalez la sauce tiède sur la pâte tout juste étalée, jusqu'aux bords, et laissez-la lever dans la plaque. Enfournez ; dans les 5 dernières minutes de cuisson, ouvrez le four, répartissez la mozzarella en dés et terminez la cuisson.",
     },
     spread_margherita_us: {
       title: "Garniture Margherita américaine",

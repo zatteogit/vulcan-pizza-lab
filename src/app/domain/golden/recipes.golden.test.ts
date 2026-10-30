@@ -14,7 +14,7 @@ import {
 
 /* ═══ Golden test per stile (M-9) e impossibilità dichiarata (M-10) ═══
  *
- * Tre scenari fissi per ognuno dei 29 stili:
+ * Tre scenari fissi per ognuno dei 30 stili:
  *   ideal — forno alla temperatura ideale dello stile (a legna se lo richiede),
  *           livello esperto, 72 h, nessun orario del pasto;
  *   home  — forno di casa a 250 °C, livello 2, «Nessuna preferenza» (24 h);
@@ -76,6 +76,9 @@ const EXPECTED: Record<string, Expected> = {
   fugazzeta: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
   california_style: { ideal: CHECK_PANTRY, home: OVEN, rush: OVEN_LATE_SHORT },
   greek_pan: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
+  // B2: senza preset il motore usa il centro della forbice (7 h a 22 °C) e la
+  // dose del modello; in 2 h, con 4 teglie da cuocere una alla volta, non ci sta.
+  teglia_in_giornata: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
 };
 
 const STYLES: PizzaStyle[] = Object.values(STYLES_DB);

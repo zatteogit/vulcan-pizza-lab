@@ -846,6 +846,8 @@ const STYLE_REFERENCES: Record<string, StyleReference> = {
   pizza_spaccata: provisional("spaccata_tradizionale"),
   trancio_milanese: provisional("trancio_pizzeria"),
   chicago_tavern: provisional("tavern_cracker"),
+  // B2: Benedetta Rossi, provvisorio (decisione 3 di Matteo del 30/10/2026).
+  teglia_in_giornata: sourceReference("benedetta_rossi"),
 };
 
 /** Riferimento dichiarato dello stile; senza voce: centro degli intervalli. */

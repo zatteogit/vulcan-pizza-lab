@@ -65,6 +65,7 @@ export const EN_LOCALE: CmsContent = {
       fugazzeta: "Two tall layers in the molde with mozzarella inside",
       california_style: "Thin round base, light gourmet toppings",
       greek_pan: "Spread in a well-oiled round pan",
+      teglia_in_giornata: "Spread in the oiled tray with oiled hands",
     },
   },
   /* FW-11: esonimi dei luoghi d'origine degli stili. */
@@ -450,6 +451,7 @@ export const EN_LOCALE: CmsContent = {
     americana: { name: "American" },
     contemporanea: { name: "Contemporary" },
     regionale: { name: "Regional traditions" },
+    casa: { name: "Home-made" },
   },
   allFamiliesLabel: "All families",
   tiers: {
@@ -1092,6 +1094,9 @@ export const EN_LOCALE: CmsContent = {
     "timeline.mix.generic.tipBeginner": "Ready when the dough wraps around the hook and comes away from the sides of the bowl.",
     "timeline.mix.generic.tipNerd": "Check the final dough temperature (~24°C): any higher and the gluten starts to break down.",
     "timeline.mix.hands.desc": "Knead by hand until the gluten is developed (~15-20 min), folding on the worktop.",
+    "timeline.mix.stir": "Stir the ingredients with a spoon, adding the liquids a little at a time, until no lumps of flour are left. The dough is very soft and sticky: do not knead it.",
+    "timeline.divide.pansTitle": "Divide between the trays",
+    "timeline.divide.pans": "Weigh the dough and divide it between the oiled trays, pouring it with a spatula or oiled hands: do not work or round it.",
     "timeline.mix.hands.descHighHydration": "Knead by hand until the gluten is developed (~15-20 min) using slap & fold.",
     "timeline.mix.hands.tipBeginner": "The dough is ready when it's smooth and pulls away from your hands. If it's too sticky, wait 5 min and try again.",
     "timeline.mix.hands.tipNerd": "The gluten develops when glutenin and gliadin form stable disulfide bridges. The windowpane test checks the gluten network. Above {pct}% hydration you switch to slap & fold.",
@@ -1124,6 +1129,8 @@ export const EN_LOCALE: CmsContent = {
     "yeast.sourceDryAsFresh": "The source uses dry yeast, {sourcePct}% on the flour. Your pantry has fresh yeast: here the dose is {pct}%, converted by {app} at a 1 to 3 ratio (1 g of dry yeast is worth about 3 g of fresh).",
     "yeast.sourceFreshAsDry": "The source uses fresh yeast, {sourcePct}% on the flour. Your pantry has dry yeast: here the dose is {pct}%, converted by {app} at a 1 to 3 ratio (1 g of dry yeast is worth about 3 g of fresh).",
     "fermentation.warmPlace": "The source says “in a warm place”, without degrees: {app} calculates at {temp}, and anything between {tempMin} and {tempMax} works. Wait for the dough to double, not for the clock.",
+    "source.convertedDoses": "The source measures in millilitres, teaspoons and sachets: the grams are a conversion by {app}. For small amounts, such as salt and sugar, the margin is about 25%.",
+    "topping.sauceSeasoning": "The source only says “seasoned sauce”, without saying what with: the oil and salt in the sauce are {app}'s reading.",
     "diet.singleBase": "One base using all the dough: onions on top, without a second disc or sealing.",
     "topping.geometry": "Area {area} cm² · reference {reference} cm² · amounts ×{scale}.",
     "auth.layoutChanged": "Different format from the reference: this variant changes the recipe structure",
@@ -1404,6 +1411,7 @@ export const EN_LOCALE: CmsContent = {
     fugazzeta: "Two dough layers hold a generous mozzarella filling. Onion on top, no tomato: a Buenos Aires classic.",
     california_style: "A thin base for unusual combinations, from barbecue chicken to goat’s cheese, figs and rocket.",
     greek_pan: "Baked in a well-oiled round pan, with a crisp base and soft interior. Topped with mozzarella and cheddar.",
+    teglia_in_giornata: "Tray pizza made and baked on the same day in a home oven: a soft dough with plenty of water, plenty of yeast and a few hours somewhere warm. It is not Roman tray pizza, which matures in the fridge for 24 to 48 hours.",
   },
   styleChars: {
     napoletana_stg:
@@ -1449,6 +1457,7 @@ export const EN_LOCALE: CmsContent = {
     fugazzeta: "Double layer stuffed with mozzarella|Onion on top, no tomato|Tall and soft (al molde)|Oregano and EVO oil to finish",
     california_style: "Thin artisan base|Seasonal gourmet ingredients|Non-traditional combinations|Chef-driven approach",
     greek_pan: "Heavily oiled pan, fried bottom|Thick, soft crumb|Mozzarella + cheddar blend|Greek-American diner",
+    teglia_in_giornata: "Ready the same day|Hydration around 80%|Well-oiled home tray|Home oven",
   },
   deviationLabels: {
     unclassified: "Unverified",

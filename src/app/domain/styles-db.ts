@@ -20,6 +20,9 @@ export const PIZZA_FAMILIES: Record<
   // Le famiglie hanno solo il nome: descrizioni ed emoji non le mostrava
   // nessuna schermata (budget JS); il nome localizzato è in cms.families.
   regionale: { name: "Tradizioni regionali" },
+  // B2 (decisione 1 di Matteo, 30/10/2026): le pizze nate in cucina, non in
+  // pizzeria (ricette di casa, blog, TV). Ultima: dopo le tradizioni.
+  casa: { name: "Di casa" },
 };
 
 /** Uno stile appartiene a una famiglia se è la sua primaria O una secondaria.
@@ -1582,5 +1585,77 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     hydration_category: "medium",
     emoji: "🫓",
     default_topping_ref: "greek_cheese_pan",
+  },
+  /* Tranche B2 (docs/progetto-catalogo-italiano.md §9.5, decisioni di Matteo
+   * del 30/10/2026): la pizza in teglia fatta in casa in giornata. Uno stile
+   * con tre versioni d'autore (Benedetta Rossi in B2, Adriano Continisio e
+   * Paoletta in B3/B4). Gli intervalli contengono le tre fonti del §9.2–9.3:
+   * W 250 (Adriano) – 330 (Paoletta), acqua 80 % in tutte e tre, 2 h
+   * (Benedetta) – 12 h (Adriano), forno 210 °C (Benedetta) – 250–280 °C,
+   * 0,48–0,79 g/cm². Il centro è la ricetta di riferimento (Benedetta, base
+   * «fonte»): teglia 35×35, 967 g, sale 1,2 %, olio 9,2 %, zucchero 1,6 %,
+   * 210 °C per 25 + 5 minuti. Adriano e Paoletta hanno sale, olio, zucchero e
+   * forno diversi: arriveranno con i loro override (B3, B4). ID diverso dal
+   * preset `teglia_casalinga` della teglia romana, che resta com'è (§9.4). */
+  teglia_in_giornata: {
+    id: "teglia_in_giornata",
+    proof_in_pan: true,
+    /* B2 (seguito): il processo dello stile è quello del riferimento
+     * (Benedetta Rossi, base «fonte»): impasto diretto mescolato senza
+     * impastare, 10 minuti in teglia. Così anche la proposta su misura, la
+     * ricetta senza preset e l'MCP non chiedono incordatura, pieghe o staglio
+     * (guardia in use-cases/teglia-in-giornata.test.ts). */
+    method_profile: {
+      id: "teglia_in_giornata", direct_only: true, proof_hours: 1 / 6, proof_in_pan: true, mix_without_kneading: true,
+      source_url: "https://www.fattoincasadabenedetta.it/ricetta/pizza-in-teglia/",
+    },
+    name: "Teglia casalinga in giornata",
+    // Decisione 1 di Matteo (30/10/2026): famiglia «Di casa».
+    family: "casa",
+    origin: { city: "Italia" },
+    dough: {
+      flour_w_range: [250, 330],
+      flour_pl_range: [0.50, 0.65],
+      hydration_pct_range: [75, 82],
+      salt_pct: 1.2, // Benedetta: 1 cucchiaino ≈ 6 g su 500 g (D-066)
+      oil_pct: 9.2, // Benedetta: 50 ml ≈ 46 g
+      fat_type: "oil",
+      sugar_pct: 1.6, // Benedetta: 2 cucchiaini ≈ 8 g
+      fermentation_hours_range: [2, 12],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "rectangular",
+      dough_weight_g: 967, // Benedetta: 500 + 400 + 6 + 46 + 8 + 7 g, 0,79 g/cm²
+      thickness_factor: 0.79,
+      length_cm: 35,
+      width_cm: 35,
+    },
+    baking: {
+      oven_type_required: "home",
+      temp_c_range: [200, 280],
+      temp_c_ideal: 210, // Benedetta: 210 °C statico (200 °C ventilato)
+      cook_time_sec_range: [720, 1800],
+      cook_time_sec_ideal: 1800, // 25 minuti + 5 con la mozzarella
+    },
+    crust_type: "thick_airy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    serving_unit: "teglia",
+    default_dough_balls: 1,
+    servings_per_unit: [4, 6],
+    description:
+      "Pizza in teglia fatta e cotta in giornata nel forno di casa: impasto morbido con molta acqua, molto lievito e qualche ora al caldo. Non è la teglia romana, che matura in frigo da 24 a 48 ore.",
+    key_characteristics: [
+      "Pronta in giornata",
+      "Idratazione intorno all'80%",
+      "Teglia di casa ben unta",
+      "Forno di casa",
+    ],
+    hydration_category: "high",
+    emoji: "🏠",
+    default_topping_ref: "margherita",
   },
 };

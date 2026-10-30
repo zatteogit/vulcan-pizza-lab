@@ -12,6 +12,7 @@ import { Link } from "react-router";
 import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
 import { INSPIRED_BY_TYPES, type Interpretation } from "../../data/interpretation-library";
+import { getStyleReference } from "../../data/style-versions";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import { ModalSheet, Surface } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -51,14 +52,20 @@ export function InterpretationSwitcher({
   activeId,
   onSelect,
   defaultInterpretation = null,
+  styleId,
 }: {
   interpretations: Interpretation[];
   activeId: string | null;
   onSelect: (interpretation: Interpretation | null) => void;
   /** La voce di default (es. il disciplinare dello stile): è la prima chip e
    *  il "ritorno" quando si deseleziona una firma. null = canone dello stile
-   *  (chip "Tradizionale"). Il default non è mai una firma d'autore. */
+   *  (chip "Tradizionale"). Il default non è mai una firma d'autore, salvo
+   *  il riferimento da una fonte (sotto). */
   defaultInterpretation?: Interpretation | null;
+  /** B2 (decisione 2 di Matteo, 30/10/2026): se il riferimento dello stile è
+   *  una sua versione d'autore (base «fonte») c'è una chip sola,
+   *  «Riferimento · Benedetta Rossi», e non due che danno la stessa ricetta. */
+  styleId?: string;
 }) {
   const { cms } = useCms();
   const [modalOpen, setModalOpen] = useState(false);
@@ -78,14 +85,25 @@ export function InterpretationSwitcher({
     if (overflow) scroller.scrollTo({ left: scroller.scrollLeft + overflow, behavior: reducedMotion ? "instant" : "smooth" });
   }, [activeId, reducedMotion]);
   if (interpretations.length === 0) return null;
+  const reference = styleId ? getStyleReference(styleId) : null;
+  const sourceReference = reference?.basis === "fonte"
+    ? interpretations.find((it) => it.id === reference.referenceInterpretationId) ?? null
+    : null;
   const parametric = interpretations
     .filter(changesParameters)
-    .filter((it) => it.id !== defaultInterpretation?.id);
-  const defaultActive = defaultInterpretation
-    ? activeId === defaultInterpretation.id
-    : !activeId;
+    .filter((it) => it.id !== defaultInterpretation?.id && it.id !== sourceReference?.id);
+  const defaultActive = sourceReference
+    ? !activeId || activeId === sourceReference.id
+    : defaultInterpretation
+      ? activeId === defaultInterpretation.id
+      : !activeId;
+  const defaultLabel = sourceReference
+    ? `${cms.misc.inspirationBase} · ${chipName(sourceReference)}`
+    : defaultInterpretation
+      ? chipName(defaultInterpretation)
+      : cms.misc.inspirationBase;
   const shownIds = new Set(
-    [defaultInterpretation?.id, ...parametric.map((it) => it.id)].filter(Boolean),
+    [defaultInterpretation?.id, sourceReference?.id, ...parametric.map((it) => it.id)].filter(Boolean),
   );
   const hiddenCount = interpretations.filter((it) => !shownIds.has(it.id)).length;
 
@@ -110,9 +128,7 @@ export function InterpretationSwitcher({
               aria-pressed={defaultActive}
               className={`interpretation-switcher__chip${defaultActive ? " interpretation-switcher__chip--active" : ""}`}
             >
-              {defaultInterpretation
-                ? chipName(defaultInterpretation)
-                : cms.misc.inspirationBase}
+              {defaultLabel}
             </button>
             {parametric.map((it) => {
               const isActive = it.id === activeId;

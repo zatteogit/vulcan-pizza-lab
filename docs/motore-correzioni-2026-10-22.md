@@ -621,3 +621,76 @@ sul codice, prima (`116906f`) e dopo, con l'MCP `generate_recipe`
   canotto 90, pinsa 89, teglia 88, New York 88).
 - **Parità MCP ↔ browser:** i passi espongono anche `round_seconds` e
   `recovery_seconds`; la guida dell'MCP dice che il recupero è compreso.
+
+## Tranche B2 · teglia casalinga in giornata (30/10/2026)
+
+Stile nuovo `teglia_in_giornata` con il riferimento di Benedetta Rossi
+(`docs/progetto-catalogo-italiano.md` §9.11). Tre ritocchi al motore, tutti
+inerti per gli stili che c'erano:
+
+- **Sale della fonte** (`saltRangePct`). La forbice del sale come leva utente
+  era 1,5–3,5 % per tutti: l'1,2 % di Benedetta (1 cucchiaino su 500 g)
+  diventava 1,5 % (7,5 g invece di 6). Ora il minimo è
+  `min(1,5, sale dello stile)`; vale anche per lo slider e per la correzione
+  «troppo salata» in Crea e nella ricetta. Gli altri stili hanno sale ≥ 1,8 %:
+  forbice invariata (test in `use-cases/teglia-in-giornata.test.ts`).
+- **Impasto senza impastare** (`MethodProcessProfile.mix_without_kneading`,
+  messaggio `timeline.mix.stir`). La fonte mescola col cucchiaio: prima il
+  passo diceva «Impasta a mano fino a incordatura (~15-20 min) con lo slap &
+  fold». Solo i profili che lo dichiarano (oggi Benedetta): `mix 20` → `10`.
+- **Dosi convertite** (`converted_doses` → `source.convertedDoses` nelle
+  `source_notes`), D-066: la ricetta dice che i grammi sono una conversione.
+- `needsPan` e `supportsThickness` comprendono lo stile nuovo (teglia e
+  spessore modificabili in Crea).
+
+Misure: `preset-numbers.regression.json` e `recipes.golden.json` hanno solo
+righe nuove (`teglia_in_giornata`), nessun numero cambiato. Classifica di
+`recommendStyles` (ricette su misura): P1 (casa 250 °C, 24 h) stesso ordine
+relativo, lo stile nuovo entra 14° con 97; P3 (Effeuno 509 °C, 48 h) stesso
+ordine, lo stile nuovo 30° con 97 (pari voto, ultimo per margine di cucina).
+
+## Tranche B2, seguito · decisioni di Matteo e difetti della teglia in giornata (30/10/2026)
+
+Correzioni generali, attive solo per i dati che le dichiarano; nessuno stile
+di prima cambia (`preset-numbers.regression.json` identico; in
+`recipes.golden.json` cambiano solo le due righe della teglia in giornata,
+`timeline_min` 622 → 612: l'impasto senza preset ora si mescola, 10 minuti
+invece dei 20 dell'impasto a mano).
+
+- **Impasto che non si lavora a mano** (`isUnworkedPanDough`: profilo
+  `mix_without_kneading` + `proof_in_pan`, un pezzo per teglia). La
+  difficoltà dell'idratazione alta per chi comincia è nel lavoro a mano
+  (impastare un impasto appiccicoso, pirlarlo, stenderlo e trasferirlo);
+  un impasto mescolato col cucchiaio e allargato con le mani unte nella
+  teglia unta non ha nessuno di questi passaggi. Per questi impasti: niente
+  avvisi `feas.hydrationBeginnerHigh` / `MedBeginner` (segnali «Impasto
+  esigente» e «Abbassa l'idratazione»), niente tetto d'idratazione per livello
+  nell'ottimizzatore. Lo stesso impasto impastato a mano, o non in teglia,
+  resta «esigente» (test). Riferimento di Benedetta, principiante: 89 → 97.
+- **Processo dello stile.** `teglia_in_giornata` ha il `method_profile` del
+  suo riferimento (diretto, mescolato, 10 minuti in teglia): anche la ricetta
+  senza preset, la proposta su misura e l'MCP mescolano invece di impastare.
+  Guardia: i flag del profilo dello stile coincidono con quelli del
+  riferimento.
+- **Proposta su misura vicina al riferimento-fonte**
+  (`optimizeRecipe(..., searchAround)`, `sourceReferenceCenter`). Causa: la
+  ricerca copriva tutta la forbice dello stile e il punteggio di digeribilità
+  cresce con le ore (2 h → 23, 6 h → 50, 12 h → 66), quindi vinceva sempre
+  12 h; per chi comincia il tetto di livello (68 %) portava l'acqua sotto il
+  minimo dello stile (75 %). Ora, per gli stili col riferimento da una fonte,
+  lo spazio di ricerca sta entro `INTERPRETATION_TOLERANCE` (±3 % d'acqua,
+  ±25 W, ±4 h: le stesse tolleranze con cui il motore chiama una ricetta
+  fedele all'interpretazione) e dentro gli intervalli dello stile; i punteggi
+  non cambiano. Principiante, forno di casa, cena di domani: prima 68 %,
+  W 290, 12 h a 22 °C; ora 77 %, W 280, 6 h a 22 °C (con 6 ore fino al pasto:
+  5 h). Vale anche per «Ottimizza per me» dal riferimento.
+- **Testi.** Passo «Impasto» con variante `stir` (niente glossario di
+  incordatura e pieghe, niente «impasto appiccicoso» fra i problemi); con una
+  teglia sola niente staglio, con più teglie «Dividi nelle teglie» (stessi
+  15 minuti, niente panetti né pirlatura); preriscaldo degli stili che
+  lievitano in teglia: «Intanto l'impasto (finisce) l'appretto in teglia»
+  invece di «i panetti» anche nel testo del motore (MCP), come nella UI.
+- **Nota della salsa.** Un condimento può dichiarare una scelta di Vulcan su
+  ciò che la fonte non dice (`ToppingRecipe.source_note`, nelle
+  `source_notes`): la margherita della teglia in giornata dice che olio e sale
+  della salsa «condita» sono una lettura di Vulcan.

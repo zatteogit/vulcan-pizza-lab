@@ -47,11 +47,13 @@ type PanConfig,
   type PreFermentChoice,
 type PizzaStyle,
 type SkillLevel,
-type UserConstraints
+type UserConstraints,
+saltRangePct,
 } from "../domain/pizza-engine";
 import { styleWithSelectedTopping } from "../hooks/use-recipe-state";
 import {
 RecipeConfigurator,
+sourceTiming,
 } from "../features/recipe/recipe-configurator";
 import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
 import { SaveFailedNotice } from "../features/recipe/save-failed-notice";
@@ -731,7 +733,8 @@ function RecipeContent({
       setCustomFermentHours((f) => Math.max(1, Math.round(f * feedbackCorrection.fermentMultiplier)));
     }
     if (feedbackCorrection.saltDelta !== 0) {
-      setCustomSalt((s) => Math.max(1.5, Math.min(3.5, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
+      const [saltMin, saltMax] = saltRangePct(style);
+      setCustomSalt((s) => Math.max(saltMin, Math.min(saltMax, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedbackCorrection, style.id, savedOven?.ovenType, savedOven?.maxTemp]);
@@ -979,6 +982,7 @@ function RecipeContent({
               activeId={activeInterpretationId}
               onSelect={handleInterpretationSelect}
               defaultInterpretation={styleCanonicalVariant}
+              styleId={style.id}
             />
             <RecipeStatStrip
               recipe={recipe}
@@ -1015,6 +1019,7 @@ function RecipeContent({
                 <RecipeConfigurator
                   style={recipe.style}
                   referenceStyle={style}
+                  sourceTiming={sourceTiming(recipe)}
                   constraints={constraints}
                   onConstraintsChange={(c) => {
                     markAdapted();

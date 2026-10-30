@@ -167,6 +167,7 @@ ma non li ho potuti leggere, quindi non contano come fonte.
 | fugazzeta | 220–260, 240 | 1348 | 55–62 | 200–260 | 4–12 | da verificare | |
 | california_style | 280–340, 300 | 1405 | 60–65 | 240–300 | 24–48 | da verificare | |
 | greek_pan | 230–260, 245 | 1455 | 60–68 | 220–280 | 4–12 | da verificare | |
+| teglia_in_giornata | 200–280, 210 | `teglia_in_giornata` | 75–82 | 250–330 | 2–12 | verificato (riferimento) | Tranche B2, 30/10/2026. Intervalli che contengono le tre fonti del §9.2–9.3 di `docs/progetto-catalogo-italiano.md` (Benedetta Rossi, Adriano Continisio, Paoletta); centro, sale 1,2 %, olio 9,2 %, zucchero 1,6 %, teglia 35×35 da 967 g e 210 °C × 30 min dalla ricetta di Benedetta Rossi (pagina ufficiale verificata il 30/10/2026). W 280 per «metà manitoba e metà 00» è una stima di Vulcan da `FLOUR_W_RANGES`. Preriscaldo 20 min e tempo d'impasto 10 min: stime di Vulcan. |
 
 ---
 
@@ -366,6 +367,7 @@ fonte, e i numeri senza fonte sono stati tolti.
 | `da_michele_napoli` | verificato | Oggi quattro pizze; in via Sersale dal 1930 (il 1870 è contestato: Dissapore cita il 1863) | damichele.net 2026; Scatti di Gusto 2017; Smithsonian 2010 |
 | `malati_di_pizza` | errato | Tolta (D-024): è una scuola, non un forum; ricetta senza fonte | malatidipizza.com |
 | `confraternita_pinsa` | errato | Tolta (D-024): nessuna fonte sul ruolo del forum; mix non pubblico | §1.2 |
+| `benedetta_rossi` | verificato | Nuova (tranche B2, 30/10/2026), tipo `autore`: dosi della pagina ufficiale convertite da Vulcan (D-066), lievito della fonte e «luogo caldo» (D-068); riferimento provvisorio di `teglia_in_giornata` | fattoincasadabenedetta.it, «Pizza in teglia» (letta col browser di Matteo il 30/10/2026); Paneangeli, scheda del lievito Mastro Fornaio (bustina da 7 g) |
 
 **Legami con gli stili (FW-14, decisione B del 28/10/2026).** `pepe_caiazzo` e
 `capuano_napoli` hanno base `napoletana_canotto` e non sono più compatibili con
@@ -408,6 +410,7 @@ usano il centro degli intervalli, come prima.
 | `focaccia_genovese` | centro degli intervalli (59 %, W 260, 12 h) | da confermare | `focaccia_moderna` (70 %, W 240) | nessuna versione cade negli intervalli dello stile (55–62 %): o si correggono le versioni o gli intervalli |
 | `padellino_torino` | centro degli intervalli (63 %, W 240, 33 h) | da confermare | `padellino_torinese` (72 %, W 300) | come sopra (60–65 %, W 220–260) |
 | `tonda_romana`, `pinsa_romana`, `new_york`, `detroit`, `pala_romana`, `grandma_style`, `pizza_baciata`, `trancio_milanese`, `chicago_tavern` | versione già scelta prima | da confermare | uguale | — |
+| `teglia_in_giornata` | `benedetta_rossi` (80 %, W 280, 2 h a 26 °C, dose di lievito della fonte) | fonte, provvisorio (decisione 3 di Matteo, 30/10/2026) | — (stile nuovo, B2) | — |
 
 Effetto sulle ricette canoniche (P1 forno di casa 250 °C; P3 elettrico 509 °C):
 cambiano solo gli stili della tabella sopra marcati come cambiati (voto P1/P3

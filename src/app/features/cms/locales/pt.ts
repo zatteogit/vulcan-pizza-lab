@@ -55,6 +55,7 @@ export const PT_LOCALE: CmsContent = {
       fugazzeta: "Disco duplo alto no molde com mozzarella no meio",
       california_style: "Base fina e redonda, coberturas gourmet leves",
       greek_pan: "Estendida em forma redonda bem untada",
+      teglia_in_giornata: "Aberta na assadeira untada com as mãos untadas",
     },
   },
   /* FW-11: esonimi dei luoghi d'origine degli stili. */
@@ -435,6 +436,7 @@ export const PT_LOCALE: CmsContent = {
     americana: { name: "Americana" },
     contemporanea: { name: "Contempor\u00E2nea" },
     regionale: { name: "Tradições regionais" },
+    casa: { name: "Caseiras" },
   },
   allFamiliesLabel: "Todas as fam\u00EDlias",
   tiers: {
@@ -921,6 +923,9 @@ export const PT_LOCALE: CmsContent = {
     "timeline.mix.generic.tipBeginner": "Está pronta quando a massa se enrola no gancho e desgruda das paredes.",
     "timeline.mix.generic.tipNerd": "Confira a temperatura final da massa (~24°C): acima disso, o glúten se degrada.",
     "timeline.mix.hands.desc": "Sove à mão até dar o ponto (~15-20 min), com dobras na bancada.",
+    "timeline.mix.stir": "Misture os ingredientes com uma colher, juntando os líquidos aos poucos, até não sobrarem grumos de farinha. A massa fica muito mole e pegajosa: não sove.",
+    "timeline.divide.pansTitle": "Divida nas assadeiras",
+    "timeline.divide.pans": "Pese a massa e divida-a entre as assadeiras untadas, despejando-a com uma espátula ou com as mãos untadas: não a trabalhe nem a boleie.",
     "timeline.mix.hands.descHighHydration": "Sove à mão até dar o ponto (~15-20 min) com slap & fold.",
     "timeline.mix.hands.tipBeginner": "A massa está pronta quando fica lisa e desgruda das mãos. Se grudar demais, espere 5 min e tente de novo.",
     "timeline.mix.hands.tipNerd": "O ponto acontece quando a glutenina e a gliadina formam pontes dissulfeto estáveis. O teste do véu verifica a rede de glúten. Acima de {pct}% de hidratação passa-se ao slap & fold.",
@@ -953,6 +958,8 @@ export const PT_LOCALE: CmsContent = {
     "yeast.sourceDryAsFresh": "A fonte usa fermento seco, {sourcePct}% sobre a farinha. Na sua despensa há fermento fresco: aqui a dose é {pct}%, convertida pelo {app} na proporção de 1 para 3 (1 g de fermento seco equivale a cerca de 3 g de fresco).",
     "yeast.sourceFreshAsDry": "A fonte usa fermento fresco, {sourcePct}% sobre a farinha. Na sua despensa há fermento seco: aqui a dose é {pct}%, convertida pelo {app} na proporção de 1 para 3 (1 g de fermento seco equivale a cerca de 3 g de fresco).",
     "fermentation.warmPlace": "A fonte diz “em um lugar quente”, sem graus: o {app} calcula a {temp}, e qualquer ponto entre {tempMin} e {tempMax} funciona. Espere a massa dobrar de volume, não o relógio.",
+    "source.convertedDoses": "A fonte mede em mililitros, colheres de chá e sachês: os gramas são uma conversão do {app}. Nas quantidades pequenas, como sal e açúcar, a margem é de cerca de 25%.",
+    "topping.sauceSeasoning": "A fonte diz apenas “molho temperado”, sem dizer com o quê: o azeite e o sal do molho são uma leitura do {app}.",
     "diet.singleBase": "Uma base com toda a massa: cebola por cima, sem segundo disco nem fecho.",
     "topping.geometry": "Área {area} cm² · referência {reference} cm² · quantidades ×{scale}.",
     "auth.layoutChanged": "Formato diferente da referência: esta versão altera a estrutura da receita",
@@ -1229,6 +1236,7 @@ export const PT_LOCALE: CmsContent = {
     fugazzeta: "Duas camadas de massa envolvem bastante mozzarella. Por cima, cebola e nenhum tomate: um clássico de Buenos Aires.",
     california_style: "Uma base fina para combinações pouco habituais, do frango barbecue ao queijo de cabra, figos e rúcula.",
     greek_pan: "Cozida em forma redonda bem untada, com base crocante e interior fofo. Combina mozzarella e cheddar.",
+    teglia_in_giornata: "Pizza de assadeira feita e assada no mesmo dia, no forno de casa: uma massa macia com bastante água, bastante fermento e algumas horas em lugar quente. Não é a pizza de assadeira romana, que matura na geladeira de 24 a 48 horas.",
   },
   styleChars: {
     napoletana_stg:
@@ -1274,6 +1282,7 @@ export const PT_LOCALE: CmsContent = {
     fugazzeta: "Camada dupla recheada de mussarela|Cebola por cima, sem tomate|Alta e macia (al molde)|Or\u00E9gano e azeite extravirgem no final",
     california_style: "Base fina artesanal|Ingredientes gourmet da esta\u00E7\u00E3o|Combina\u00E7\u00F5es n\u00E3o tradicionais|Abordagem autoral de chef",
     greek_pan: "Assadeira bem untada, fundo frito|Miolo macio e alto|Mix mussarela + cheddar|Diner greco-americano",
+    teglia_in_giornata: "Pronta no mesmo dia|Hidratação em torno de 80%|Assadeira de casa bem untada|Forno de casa",
   },
   deviationLabels: {
     unclassified: "Por verificar",

@@ -830,3 +830,239 @@ utente in giapponese 557,3 → 558,7 kB (limite 570); catalogo `ja` +0,3 kB.
   avrà.
 - Per gli 8 °C di Dekracap (B5) il passo «in frigo» va segnato nel profilo
   delle fasi (M3), non spostando la soglia.
+
+### 9.11 Stato di B2 (30/10/2026)
+
+**Fatto** (ramo `tranche-b2`). Scheda dello stile secondo
+`docs/linee-guida-stili.md` §2.
+
+#### Teglia casalinga in giornata (`teglia_in_giornata`)
+
+- **Famiglia** «Di casa» (decisione 1 di Matteo, 30/10; prima «Tradizioni
+  regionali», scelta dell'agente) · **origine** «Italia», cucina di casa: nessuna città, le tre
+  fonti sono ricette di casa pubblicate fra il 2009 e oggi · **testo di
+  regole**: nessuno.
+- **Intervalli** (contengono le tre fonti del §9.2–9.3, così le versioni di
+  B3 e B4 non sono bloccate da `isBlockedByStyle`):
+
+  | Parametro | Intervallo | Perché |
+  |---|---|---|
+  | W | 250–330 | Adriano W 250, Benedetta W 280 (stima: metà manitoba W 340–380 e metà 00 W 170–220, `FLOUR_W_RANGES`), Paoletta W 330 (o 280) |
+  | P/L | 0,50–0,65 | nessuna fonte lo dice: forbice delle farine da pizza di forza media |
+  | Idratazione | 75–82 % | tutte e tre all'80 % circa (Benedetta 79,8 %, Adriano 80 %, Paoletta 80 %) |
+  | Lievitazione | 2–12 h, senza temperatura imposta | Benedetta 2 h al caldo, Paoletta 3 h 30, Adriano circa 11–12 h dal preimpasto |
+  | Forno | 200–280 °C, ideale 210 °C | Benedetta 210 °C statico (200 ventilato), Adriano 250 °C, Paoletta 250–280 °C |
+  | Cottura | 12–30 min, ideale 30 | Paoletta circa 8 + 4–5 min, Adriano 10 + 4–5, Benedetta 25 + 5 |
+  | Carico | teglia 35×35 da 967 g (0,79 g/cm²) | Benedetta; Adriano 0,536 e Paoletta 0,48 g/cm² stanno sotto, con il loro peso (B3, B4) |
+
+  Sale (1,2 %), olio (9,2 %), zucchero (1,6 %), teglia, forno ideale e
+  cottura sono quelli del riferimento (Benedetta): il motore non ha ancora
+  override di sale, olio, zucchero e forno per versione (vedi «Per la B3»).
+- **Che cosa non è**: la teglia romana (24–48 h in frigo, W 300–380, APITER),
+  che la descrizione nomina; il preset «Casalinga» della teglia romana
+  (`teglia_casalinga`, ID invariato); la focaccia; lo sfincione.
+- **Condimento predefinito**: `margherita_teglia_in_giornata` (concetto
+  `margherita`), con le dosi della fonte per la teglia 35×35: 300 g di salsa
+  di pomodoro condita, tiepida, prima dell'ultima lievitazione in teglia
+  (`before_proof`); 250 g di mozzarella a dadini negli ultimi 5 minuti, scritto
+  nel passo (come la A2, §4.1). «Condita» senza dettaglio nella fonte: olio e
+  sale sono la lettura di Vulcan. Solo su questo stile.
+- **Versioni**: Benedetta Rossi (riferimento, base «fonte», provvisorio);
+  Adriano Continisio e Paoletta in B3 e B4. Nessun preset nuovo.
+- **Testi**: descrizione, caratteristiche e stesura in 7 lingue (francese col
+  «vous», portoghese del Brasile); il nome resta italiano come quello degli
+  altri stili. Ricerca: «teglia casalinga», «pizza in teglia», «in giornata»
+  (e «same day» in inglese) trovano lo stile (test). Voce: «teglia
+  casalinga», «teglia in giornata», «pizza in teglia in giornata»; «pizza in
+  teglia» da sola resta della teglia romana. Modello Alexa rigenerato.
+- **Foto: in arrivo** dall'agente immagini. Fino ad allora `STYLE_PHOTOS`
+  punta al segnaposto di `ImageWithFallback` («placeholder»: superficie calda
+  e glifo della pizza), mai la foto di un altro stile; un test elenca gli
+  stili col segnaposto. Quando arriva: originale in `design-assets/originali/`,
+  WebP con `scripts/build-responsive-images.py`, voce in `style-photos.ts`,
+  test aggiornato. Budget immagini oggi 41,4 MB su 42.
+
+#### Versione «Ispirata a Benedetta Rossi» (`benedetta_rossi`)
+
+- Tipo `autore`, fonte **verificata**: Benedetta Rossi, «Pizza in teglia»,
+  https://www.fattoincasadabenedetta.it/ricetta/pizza-in-teglia/ (letta col
+  browser di Matteo il 30/10/2026, §9.9). Il marchio del lievito resta solo
+  nella fonte citata; nei passi «lievito di birra secco, 7 g».
+- **Dosi convertite da Vulcan** (D-066, conversioni del §9.3), confronto con
+  la ricetta generata (teglia 35×35, forno di casa 250 °C, 1 teglia; test in
+  `use-cases/teglia-in-giornata.test.ts`, tolleranza ±1 g sull'acqua, il
+  resto al grammo):
+
+  | | Fonte | Grammi (conversione) | Motore |
+  |---|---|---|---|
+  | Farina | 250 g manitoba + 250 g 00 | 500 | 500 (W 280) |
+  | Acqua | 400 ml | 399 (a 20 °C) | 400 (80 %) |
+  | Olio | 50 ml | 46 | 46 |
+  | Sale | 1 cucchiaino | 6 | 6 |
+  | Zucchero | 2 cucchiaini | 8 | 8 |
+  | Lievito di birra secco | 1 bustina | 7 | 7 (1,4 %, dose della fonte) |
+  | Totale | | 966 | 967 |
+
+  Lievitazione 2 h a 26 °C («luogo caldo», nota dichiarata); forno 210 °C,
+  30 minuti. La ricetta porta tre note sopra il riferimento: dosi convertite
+  (`source.convertedDoses`, nuova), «luogo caldo», e la conversione 1:3 se in
+  dispensa c'è solo lievito fresco.
+- **Processo**: `process_profile` con impasto diretto, appretto in teglia di
+  10 minuti e **impasto mescolato, non impastato** (`mix_without_kneading`,
+  passo `timeline.mix.stir`). Le 2 ore della versione sono il totale: nella
+  tabella di marcia 1 h 30 di puntata, staglio e stesura, la salsa, poi il
+  preriscaldo di 30 minuti, durante il quale l'impasto finisce di lievitare in
+  teglia (regola ENG-5 del preriscaldo). La fonte dice «circa 2 ore», fino al
+  raddoppio, più 10 minuti: lo scarto di 10 minuti è dichiarato qui.
+
+#### Motore
+
+Tre ritocchi, inerti per gli stili esistenti (misure in
+`docs/motore-correzioni-2026-10-22.md`, «Tranche B2»): il sale dello stile
+non si alza più all'1,5 % (`saltRangePct`), il passo «Impasto» può dire
+«mescola senza impastare», la ricetta dichiara le dosi convertite.
+`preset-numbers.regression.json` e `recipes.golden.json`: solo righe nuove,
+in un commit a parte. Conteggi dei test 29 → 30.
+
+#### Cosa vede l'utente (prova nel browser, `vite preview`, forno di casa 250 °C)
+
+- **`/recipe/teglia_in_giornata`** (it ed en-GB, 390 e 1280 px): segnaposto
+  al posto della foto; sopra il titolo «Ispirata a Benedetta Rossi» /
+  «Inspired by Benedetta Rossi» al posto di «Riferimento»; le due note della
+  fonte; versione «Benedetta Rossi»; 80 %, W 250–330, 2 h, 210 °C; 89/100 «Si
+  può fare, con qualche accortezza»; ingredienti 500/400/6/7 secco/46/8 g,
+  967 g. Procedimento: mescola col cucchiaio (10 min), puntata 1 h 30 a 26 °C,
+  staglio, stesura in teglia, salsa (mozzarella negli ultimi 5 minuti),
+  preriscaldo a 210 °C, cottura 30 minuti.
+- **Scopri**: card nel gruppo «Tradizioni regionali», origine «Italia» /
+  «Italy», 89, segnale «Impasto esigente».
+- **Crea**: card a 87 (su misura); nel pannello «Riferimento 89 · Su misura
+  87», tabella «Cosa cambia» (riferimento 80 %, 2 h a 26 °C; su misura 68 %,
+  12 h a 22 °C); con i dettagli tecnici, «Versioni d'autore: Benedetta Rossi,
+  Ispirata alla pizza in teglia di Benedetta Rossi, Con accortezza», tecnica,
+  storia e fonte (fattoincasadabenedetta.it). Aperta in Crea, la temperatura
+  di lievitazione compare come **«26 °C (manuale)»** accanto a «Consigliato:
+  Ambiente».
+- **MCP**: `list_styles` e `get_style` lo vedono (Benedetta fra le
+  interpretazioni); `generate_recipe` canonico o con
+  `interpretation_id: "benedetta_rossi"` restituisce `yeast_source` e le note.
+  **Voce**: «che pizza posso fare con 6 ore» col forno di casa consiglia ora
+  la teglia casalinga in giornata (prima nessuno stile ci stava).
+
+#### Budget (gzip)
+
+Codice senza lingue 452,6 → 453,9 kB (limite 465); per utente in giapponese
+559,3 → 561,3 kB (limite 570); CSS invariato (72,4 kB, nessuna regola
+nuova); immagini 41,4 MB (limite 42). `LOCALE_BUNDLE_REV` 57.
+
+#### Decise da Matteo il 30/10 (erano da decidere)
+
+Esito nel paragrafo «Seguito» qui sotto.
+
+1. **Famiglia**: «Tradizioni regionali» (scelta dell'agente), oppure
+   «Contemporanea» (oggi nessuno stile l'ha come famiglia principale), oppure
+   una famiglia nuova «Casalinga» (7 lingue e un filtro in più).
+2. **Etichetta del riferimento**: sulla ricetta si legge «Ispirata a
+   Benedetta Rossi» e non «Riferimento» (già segnalato in B1). In Crea il
+   selettore mostra due chip, «Riferimento» e «Benedetta Rossi», che danno la
+   stessa ricetta: tenerli, o nascondere il primo quando la base è «fonte»?
+3. **26 °C in Crea**: la scelta rapida lo mostra «(manuale)» con il badge
+   «Consigliato: Ambiente», e il suggerimento adattivo dice «minimo suggerito
+   ≥ 8 h a 80 %». Proposta: una quinta voce «Luogo caldo 26 °C» quando la
+   versione ha `warm_place`, e niente minimo di 8 h per le versioni con lievito
+   della fonte. Non fatto: tocca la UI di G2-WP-02.
+4. **Proposta su misura**: l'ottimizzatore porta lo stile a 68 % e 12 h a
+   22 °C (fuori dall'intervallo d'idratazione, dentro quello delle ore): è la
+   regola di sempre, ma per uno stile «in giornata» Matteo potrebbe volerla
+   vincolata. Anche la voce legge questa proposta, non Benedetta.
+5. **Segnali per il principiante**: «Impasto esigente» e «Abbassa
+   l'idratazione» su una ricetta di casa pensata per chi comincia (80 %
+   mescolato col cucchiaio).
+6. **Dettagli generici del motore** visti nel procedimento: il passo
+   «Staglio» (15 min) con una teglia sola, «i panetti» nel preriscaldo, i
+   link del glossario «Incordatura» e «Pieghe» sotto il passo «Impasto».
+
+#### Seguito: decisioni di Matteo e difetti corretti (30/10/2026)
+
+Ramo `tranche-b2-fix` (sopra `tranche-b2`). Misure del motore in
+`docs/motore-correzioni-2026-10-22.md` («Tranche B2, seguito»); test in
+`use-cases/teglia-in-giornata-seguito.test.ts`.
+
+1. **Famiglia «Di casa»** (`casa`): le pizze nate in cucina, non in pizzeria.
+   Nome in 7 lingue (Di casa, Home-made, Hausgemacht, Caseras, Fait maison,
+   Caseiras, 家庭のピザ), ultima fra le famiglie (dopo «Tradizioni
+   regionali»): chip e gruppo in Scopri e in Crea, filtro MCP `family`.
+2. **Un solo riferimento.** Se il riferimento dello stile è una versione
+   d'autore (base `fonte`, vale per ogni stile così, non per ID) Crea e la
+   scheda mostrano una chip sola, «Riferimento · Benedetta Rossi»
+   (`InterpretationSwitcher`, prop `styleId`; testi già nel CMS), e la
+   ricetta si intitola «Riferimento, ispirata a Benedetta Rossi»
+   (`recipe.referenceLabel.sourceReference`, 7 lingue). Le altre versioni
+   d'autore restano «Ispirata a…».
+3. **Salsa condita.** Era solo un commento nei dati: la nota non compariva.
+   Ora il condimento dichiara la scelta (`source_note`,
+   `topping.sauceSeasoning`, 7 lingue) e la ricetta la mostra con le altre
+   note della fonte: «La fonte dice solo «salsa condita», senza dire con che
+   cosa: olio e sale nella salsa sono una lettura di Vulcan.» Compare anche
+   sulla proposta su misura (stesso condimento) e nell'MCP.
+4. **Proposta su misura.** Causa: l'ottimizzatore cercava su tutta la
+   forbice dello stile; la digeribilità cresce con le ore (2 h → 23, 6 h → 50,
+   12 h → 66) e vinceva sempre 12 h; per chi comincia il tetto di livello
+   (68 %) portava l'acqua sotto il minimo (75 %). Correzione: per gli stili col
+   riferimento da una fonte la ricerca resta entro le tolleranze del motore
+   attorno al riferimento (±3 % d'acqua, ±25 W, ±4 h) e dentro gli intervalli;
+   il tetto di livello non vale per un impasto che non si lavora a mano
+   (punto 6). Principiante, forno di casa, cena di domani: prima 68 %, W 290,
+   12 h a 22 °C; ora 77 %, W 280, 6 h a 22 °C (5 h con 6 ore fino al pasto). La
+   voce e l'MCP «adapted» leggono questa proposta; il triangolo e
+   «Consigliato» degli slider in Crea usano la stessa ricerca.
+5. **«Luogo caldo · 26 °C»** al posto di «26 °C (manuale)» nella scelta
+   rapida della temperatura quando la ricetta usa il luogo caldo della fonte
+   (`tempWarmPlace`, 7 lingue); con il lievito della fonte (ore e temperatura
+   della versione) niente «min consigliato ≥ 8 h» dell'euristica
+   idratazione → ore. Resta il badge «Consigliato: Ambiente», che è la
+   proposta su misura (22 °C).
+6. **Segnali da esperto.** L'avviso «idratazione per principianti» (chip
+   «Impasto esigente», azione «Abbassa l'idratazione») è pensato per il lavoro
+   a mano di un impasto molle: impastarlo, pirlarlo, stenderlo, metterlo sulla
+   pala. All'80 % mescolato col cucchiaio e allargato con le mani unte nella
+   teglia unta nessuno di questi passaggi c'è: non scatta più
+   (`isUnworkedPanDough`, regola generale sul processo; nessuno stile di
+   prima ha questo processo). Lo stesso impasto impastato a mano, o la
+   focaccia barese in teglia ma impastata, resta «esigente». Riferimento per
+   chi comincia: 89 → 97 (Scopri e scheda); Crea 87 → 97.
+7. **Testi generici.** Lo stile ha il processo del riferimento (mescolato,
+   10 minuti in teglia: `method_profile`), quindi anche la ricetta senza
+   preset e la proposta su misura mescolano. Con una teglia niente staglio;
+   con più teglie «Dividi nelle teglie» (stessi 15 minuti, niente panetti né
+   pirlatura); sotto «Mescola» niente glossario «Incordatura / Pieghe» né il
+   problema «impasto appiccicoso → aggiungi farina»; il preriscaldo dice
+   «l'impasto fa l'appretto in teglia» anche nel testo del motore (MCP).
+
+**Non regressione.** `preset-numbers.regression.json` identico;
+`recipes.golden.json`: solo `teglia_in_giornata/ideal` e `/home`,
+`timeline_min` 622 → 612 (mescolare 10 minuti invece di impastare 20). La
+ricetta di Benedetta resta quella della fonte (500/400/6/7/46/8 g, 967 g).
+
+**Prova nel browser** (`vite preview`, forno di casa 250 °C, it ed en-GB, 390
+e 1280 px): scheda con «Riferimento, ispirata a Benedetta Rossi», tre note
+della fonte, chip unica, 97, nessun segnale da esperto, procedimento senza
+staglio; Scopri con il gruppo «Di casa (1)»; Crea: chip unica, su misura
+80 % → 77 % e 2 h 26 °C → 6 h 22 °C, pannello con «Luogo caldo · 26 °C»
+e senza minimo di ore, «Dividi nelle teglie» con 4 teglie.
+
+**Budget** (gzip): codice senza lingue 453,9 → 455,0 kB (limite 465); per
+utente in giapponese 561,3 → 562,5 kB (limite 570); CSS invariato (72,4 kB).
+`LOCALE_BUNDLE_REV` 58.
+
+#### Per la B3 (Adriano) e la B4 (Paoletta)
+
+- Sale, olio e zucchero dello stile sono quelli di Benedetta: le versioni
+  nuove ne hanno altri (Adriano 2 % di sale, 5 % d'olio, niente zucchero).
+  Strada pronta: un impasto della `IMPASTO_LIBRARY` con `dough_overrides`
+  (via `impasto_ref`), oppure override di sale, olio e zucchero nella versione.
+- **Forno per versione**: oggi la versione si apre al forno ideale dello
+  stile (210 °C, `presetOvenTemp`). Adriano e Paoletta cuociono a 250 °C e
+  oltre per 12–15 minuti: serve una cottura nel profilo della versione.
+- `recommend_styles` accetta al massimo 30 stili (`limit`), quanti ce ne
+  sono ora.

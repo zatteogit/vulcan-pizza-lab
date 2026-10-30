@@ -33,6 +33,10 @@ export function stepGlossaryTerms(
   if (options.unleavened && REST_STEP_IDS.has(stepId)) return [];
   let terms = [...(STEP_TERMS[stepId] ?? [])];
   if (options.variant && OIL_VARIANTS.has(options.variant)) terms = terms.filter((id) => id !== "oven_floor_dome");
+  /* B2 (seguito): l'impasto mescolato col cucchiaio non s'incorda e non ha
+   * pieghe: sotto «Mescola senza impastare» quei rimandi contraddicevano il passo. */
+  if (stepId === "mix" && options.variant === "stir") terms = [];
+  if (stepId === "divide" && options.variant === "pan") terms = ["dough_division"];
   if (stepId === "preferment" && (options.preFermentType === "biga" || options.preFermentType === "poolish")) {
     terms.push(options.preFermentType);
   }

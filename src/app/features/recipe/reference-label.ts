@@ -34,6 +34,12 @@ export interface ReferenceLabelInput {
 export function referenceEyebrow(input: ReferenceLabelInput): string {
   const { interpretation: it, version } = input;
   if (input.tailored) return input.tailoredLabel;
+  // B2 (decisione 2 di Matteo, 30/10/2026): il riferimento dello stile è una
+  // sua versione d'autore (base «fonte»): «Riferimento, ispirata a …».
+  const reference = getStyleReference(input.styleId);
+  if (it && reference.basis === "fonte" && reference.referenceInterpretationId === it.id) {
+    return uiMessage("recipe.referenceLabel.sourceReference", [it.author ?? interpretationShortName(it)]);
+  }
   if (it && it.type !== "disciplinare") {
     return uiMessage("recipe.referenceLabel.inspired", [it.author ?? interpretationShortName(it)]);
   }

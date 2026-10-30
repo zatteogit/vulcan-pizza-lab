@@ -6,6 +6,7 @@ import { resolveTopping, getToppingForStyle } from "../data/topping-library";
 import { defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
   type GeneratedRecipe, type GenerateRecipeOptions, type PanConfig, type PizzaStyle,
   type PreFermentChoice, type ScoreWeightsOverride, type UserConstraints, type VersionRangeOverrides,
+  type AuthenticityCenter,
 } from "../domain/pizza-engine";
 
 /** Stile con il condimento scelto dall'utente, come lo riceve il motore:
@@ -76,13 +77,27 @@ export function canonicalInterpretation(style: PizzaStyle): Interpretation | nul
   return id ? getInterpretationById(id) ?? null : null;
 }
 
+/** B2 (seguito, 30/10/2026): per uno stile il cui riferimento è una versione
+ *  d'autore (base «fonte») la proposta su misura parte da lì e non se ne
+ *  allontana oltre le tolleranze con cui il motore la chiama fedele
+ *  (INTERPRETATION_TOLERANCE: ±3 % d'acqua, ±25 W, ±4 h), dentro gli
+ *  intervalli dello stile. Prima l'ottimizzatore cercava su tutta la forbice e
+ *  il punteggio di digeribilità, che cresce con le ore, portava la teglia in
+ *  giornata a 12 h. Per gli altri stili (disciplinare, provvisorio) nulla
+ *  cambia. undefined = nessun vincolo. */
+export function sourceReferenceCenter(style: PizzaStyle): AuthenticityCenter | undefined {
+  if (getStyleReference(style.id).basis !== "fonte") return undefined;
+  const o = canonicalInterpretation(style)?.parameter_overrides;
+  return o ? { hydration_pct: o.hydration_pct, flour_w: o.flour_w, fermentation_hours: o.fermentation_hours } : undefined;
+}
+
 /** B1 (D-068): ciò che una versione d'autore dice al motore oltre ai
  *  parametri: il lievito della fonte (con le ore e la temperatura per cui la
  *  fonte lo scrive) e il «luogo caldo» senza gradi. Una sola funzione per
  *  l'apertura del preset e per la ricetta di Crea, così le due coincidono
  *  (test di authorVersionRecipe). Il motore usa la dose della fonte solo
  *  finché ore e temperatura della ricetta sono queste. */
-export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace"> {
+export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace" | "convertedDoses"> {
   if (!interpretation) return {};
   const o = interpretation.parameter_overrides;
   const tempC = interpretationFermentTempC(interpretation);
@@ -92,6 +107,7 @@ export function interpretationEngineOptions(interpretation: Interpretation | nul
       ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours, temp_c: tempC } }
       : {}),
     ...(o?.warm_place ? { warmPlace: true } : {}),
+    ...(interpretation.converted_doses ? { convertedDoses: true } : {}),
   };
 }
 
@@ -261,7 +277,8 @@ export function buildGeneratedRecipe({
  * cambiava silenziosamente il punteggio dopo il click. */
 export function tailoredRecipeEntry(style: PizzaStyle, constraints: UserConstraints, scoreWeights?: ScoreWeightsOverride, panConfig?: PanConfig) {
   panConfig ??= { panShape: defaultPanShape(style), panLength: style.shape.length_cm, panWidth: style.shape.width_cm, panDiameter: style.shape.diameter_cm, thickness: style.shape.thickness_factor };
-  const optimized = optimizeRecipe(style, constraints, undefined, panConfig, scoreWeights);
+  const optimized = optimizeRecipe(style, constraints, undefined, panConfig, scoreWeights,
+    undefined, undefined, undefined, sourceReferenceCenter(style));
   const r = optimized.recipe;
   const options: GenerateRecipeOptions = {
     customHydration: optimized.params.hydration_compensated ? optimized.params.hydration_base : r.hydration_pct,
@@ -329,8 +346,11 @@ export function optimizeSelectedRecipe(style: PizzaStyle, constraints: UserConst
   panConfig?: PanConfig, version: StyleVersion | null = null, interpretationId: string | null = null) {
   const it = interpretationId ? getInterpretationById(interpretationId) ?? null : null;
   const o = canonicalRecipeEntry(style, scoreWeights, it, version).options;
+  // B2 (seguito): «Ottimizza per me» dal riferimento-fonte (o senza preset)
+  // resta vicino al riferimento, come la proposta su misura.
+  const around = !version && (!it || it.id === canonicalInterpretation(style)?.id) ? sourceReferenceCenter(style) : undefined;
   return optimizeRecipe(styleWithMethodProfile(style, it), constraints, undefined, panConfig, scoreWeights,
-    o.versionRanges, o.activeImpastoRef, o.interpretationCenter);
+    o.versionRanges, o.activeImpastoRef, o.interpretationCenter, around);
 }
 
 export interface RecipeParameters {

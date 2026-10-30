@@ -2,6 +2,7 @@
 import photoVerace from "../../assets/pizzas/verace.webp";
 import photoCanotto from "../../assets/pizzas/canotto.webp";
 import photoTegliaRomana from "../../assets/pizzas/tegliaromana.webp";
+import photoTegliaInGiornata from "../../assets/pizzas/tegliaingiornata.webp";
 import photoRomanaTonda from "../../assets/pizzas/romanatonda.webp";
 import photoPinsa from "../../assets/pizzas/pinsa.webp";
 
@@ -61,6 +62,8 @@ export const STYLE_PHOTOS: Record<string, string> = {
   fugazzeta: photoFugazzeta,
   california_style: photoCaliforniaStyle,
   greek_pan: photoGreekPan,
+  /* B2: foto del Lotto 3 (#180), approvata da Matteo il 30/10/2026. */
+  teglia_in_giornata: photoTegliaInGiornata,
 };
 
 /* VPL-D/C: video di cottura per-stile (serviti da public/videos, lazy dal tag

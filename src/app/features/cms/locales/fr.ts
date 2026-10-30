@@ -55,6 +55,7 @@ export const FR_LOCALE: CmsContent = {
       fugazzeta: "Deux couches épaisses dans le molde avec de la mozzarella au centre",
       california_style: "Base ronde et fine, garnitures gourmandes légères",
       greek_pan: "Étalée dans un moule rond bien huilé",
+      teglia_in_giornata: "Étalée dans la plaque huilée avec les mains huilées",
     },
   },
   /* FW-11: esonimi dei luoghi d'origine degli stili. */
@@ -437,6 +438,7 @@ export const FR_LOCALE: CmsContent = {
     americana: { name: "Am\u00E9ricaine" },
     contemporanea: { name: "Contemporaine" },
     regionale: { name: "Traditions régionales" },
+    casa: { name: "Fait maison" },
   },
   allFamiliesLabel: "Toutes les familles",
   tiers: {
@@ -923,6 +925,9 @@ export const FR_LOCALE: CmsContent = {
     "timeline.mix.generic.tipBeginner": "C'est prêt quand la pâte s'enroule autour du crochet et se décolle des parois.",
     "timeline.mix.generic.tipNerd": "Contrôlez la température finale de la pâte (~24°C) : au-delà, le gluten se dégrade.",
     "timeline.mix.hands.desc": "Pétrissez à la main jusqu'à former le réseau de gluten (~15-20 min), en rabattant la pâte sur le plan de travail.",
+    "timeline.mix.stir": "Mélangez les ingrédients à la cuillère en ajoutant les liquides petit à petit, jusqu'à ce qu'il ne reste plus de grumeaux de farine. La pâte est très molle et collante : ne la pétrissez pas.",
+    "timeline.divide.pansTitle": "Répartissez dans les plaques",
+    "timeline.divide.pans": "Pesez la pâte et répartissez-la dans les plaques huilées, en la versant avec une spatule ou les mains huilées : ne la travaillez pas et ne la boulez pas.",
     "timeline.mix.hands.descHighHydration": "Pétrissez à la main jusqu'à former le réseau de gluten (~15-20 min) en slap & fold.",
     "timeline.mix.hands.tipBeginner": "La pâte est prête quand elle est lisse et se détache des mains. Si elle colle trop, attendez 5 min et réessayez.",
     "timeline.mix.hands.tipNerd": "Le réseau de gluten se forme quand la gluténine et la gliadine créent des ponts disulfures stables. Le test du voile vérifie ce réseau. Au-delà de {pct} % d'hydratation, on passe au slap & fold.",
@@ -955,6 +960,8 @@ export const FR_LOCALE: CmsContent = {
     "yeast.sourceDryAsFresh": "La source utilise de la levure sèche, {sourcePct}% sur la farine. Dans votre garde-manger il y a de la levure fraîche : ici la dose est de {pct}%, convertie par {app} au rapport de 1 à 3 (1 g de levure sèche vaut environ 3 g de fraîche).",
     "yeast.sourceFreshAsDry": "La source utilise de la levure fraîche, {sourcePct}% sur la farine. Dans votre garde-manger il y a de la levure sèche : ici la dose est de {pct}%, convertie par {app} au rapport de 1 à 3 (1 g de levure sèche vaut environ 3 g de fraîche).",
     "fermentation.warmPlace": "La source dit « dans un endroit chaud », sans degrés : {app} calcule à {temp}, et tout convient entre {tempMin} et {tempMax}. Attendez que la pâte double de volume, pas l'heure indiquée par la montre.",
+    "source.convertedDoses": "La source mesure en millilitres, cuillères à café et sachets : les grammes sont une conversion de {app}. Pour les petites quantités, comme le sel et le sucre, la marge est d'environ 25 %.",
+    "topping.sauceSeasoning": "La source dit seulement « sauce assaisonnée », sans préciser avec quoi : l'huile et le sel de la sauce sont une interprétation de {app}.",
     "diet.singleBase": "Une seule base avec toute la pâte : oignons dessus, sans second disque ni fermeture.",
     "topping.geometry": "Surface {area} cm² · référence {reference} cm² · quantités ×{scale}.",
     "auth.layoutChanged": "Format différent de la référence : cette variante change la structure",
@@ -1231,6 +1238,7 @@ export const FR_LOCALE: CmsContent = {
     fugazzeta: "Deux couches de pâte renferment une généreuse portion de mozzarella. Oignon au-dessus, sans tomate : un classique de Buenos Aires.",
     california_style: "Une base fine pour des associations inattendues, du poulet barbecue au fromage de chèvre, aux figues et à la roquette.",
     greek_pan: "Cuite dans un moule rond bien huilé, au fond croustillant et à l’intérieur moelleux. Garnie de mozzarella et cheddar.",
+    teglia_in_giornata: "Pizza en plaque préparée et cuite le jour même dans un four domestique : une pâte moelleuse avec beaucoup d'eau, beaucoup de levure et quelques heures dans un endroit chaud. Ce n'est pas la pizza en plaque romaine, qui mature au réfrigérateur de 24 à 48 heures.",
   },
   styleChars: {
     napoletana_stg:
@@ -1276,6 +1284,7 @@ export const FR_LOCALE: CmsContent = {
     fugazzeta: "Double couche farcie de mozzarella|Oignon dessus, sans tomate|\u00C9paisse et moelleuse (al molde)|Origan et huile d'olive en finition",
     california_style: "Base fine artisanale|Ingr\u00E9dients gourmets de saison|Associations non traditionnelles|Approche de chef",
     greek_pan: "Moule tr\u00E8s huil\u00E9, fond frit|Mie moelleuse et \u00E9paisse|M\u00E9lange mozzarella + cheddar|Diner gr\u00E9co-am\u00E9ricain",
+    teglia_in_giornata: "Prête le jour même|Hydratation autour de 80%|Plaque maison bien huilée|Four domestique",
   },
   deviationLabels: {
     unclassified: "À vérifier",

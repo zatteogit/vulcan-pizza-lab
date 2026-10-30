@@ -55,6 +55,8 @@ export const VOICE_IT: VoiceCatalog = {
     fugazzeta: ["fugazzeta", "fugazza", "fugazzetta", "pizza argentina"],
     california_style: ["california", "californiana", "pizza californiana", "california style"],
     greek_pan: ["greek pan", "greca", "pizza greca", "greek"],
+    // B2: «pizza in teglia» resta della teglia romana (già sua): qui le forme con «casalinga» o «in giornata».
+    teglia_in_giornata: ["teglia casalinga", "teglia casalinga in giornata", "teglia in giornata", "pizza in teglia in giornata", "pizza in teglia casalinga", "teglia di casa"],
   },
   /** Nome detto a voce: senza virgolette, sigle lette bene. */
   spokenStyleNames: {

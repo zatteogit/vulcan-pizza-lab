@@ -69,6 +69,12 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
       story: "Tras veinte años en la informática, Ken Forkish abre en Portland Ken’s Artisan Bakery (2001) y Ken’s Artisan Pizza (2006). Su «Flour Water Salt Yeast» (2012), premiado por la James Beard Foundation y la IACP, llevó la fermentación larga a las cocinas de casa.",
       badge: "Autor de FWSY",
     },
+    benedetta_rossi: {
+      signature_name: "Inspirada en la pizza en bandeja de Benedetta Rossi",
+      technique_signature: "Mitad harina Manitoba y mitad 00, agua tibia al 80%, aceite, azúcar y levadura seca mezclada con la harina. Una masa muy blanda, hecha a mano; 2 horas en un lugar cálido y luego 10 minutos en la bandeja aceitada.",
+      story: "Benedetta Rossi publica recetas de cocina casera en su web «Fatto in casa da Benedetta» y en televisión. Su pizza en bandeja se hace en pocas horas: mucha levadura, un lugar cálido y el horno de casa a 210 °C, con la mozzarella en los últimos 5 minutos.",
+      badge: "Cocina casera",
+    },
     da_michele_napoli: {
       signature_name: "Margherita y Marinara, y poco más",
       technique_signature: "Carta reducida al mínimo: durante décadas solo Margherita y Marinara, hoy cuatro pizzas. Horno de leña y nada de florituras.",

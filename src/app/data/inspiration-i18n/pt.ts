@@ -69,6 +69,12 @@ export const INSPIRATION_I18N_PT: InspirationTranslation = {
       story: "Depois de vinte anos na área de informática, Ken Forkish abre em Portland a Ken’s Artisan Bakery (2001) e a Ken’s Artisan Pizza (2006). Seu “Flour Water Salt Yeast” (2012), premiado pela James Beard Foundation e pela IACP, levou a fermentação longa para as cozinhas de casa.",
       badge: "Autor de FWSY",
     },
+    benedetta_rossi: {
+      signature_name: "Inspirada na pizza de assadeira de Benedetta Rossi",
+      technique_signature: "Metade farinha Manitoba e metade 00, água morna a 80%, azeite, açúcar e fermento biológico seco misturado à farinha. Uma massa muito mole, feita à mão; 2 horas em lugar quente e depois 10 minutos na assadeira untada.",
+      story: "Benedetta Rossi publica receitas de cozinha caseira no site “Fatto in casa da Benedetta” e na televisão. A pizza de assadeira dela fica pronta em poucas horas: bastante fermento, um lugar quente e o forno de casa a 210 °C, com a mussarela nos últimos 5 minutos.",
+      badge: "Cozinha caseira",
+    },
     da_michele_napoli: {
       signature_name: "Margherita e Marinara, e pouco mais",
       technique_signature: "Cardápio reduzido ao essencial: por décadas só Margherita e Marinara, hoje quatro pizzas. Forno a lenha e nada de firulas.",

@@ -81,6 +81,8 @@
   "home · fugazzeta · riferimento": "4×600g | F1453 W857 S29 G44 Z15 | Y2.4fresh 0.16% | h59 W230 PL0.55 | 8h@22C | 240C 1020s | 642min | warnings",
   "home · california_style · riferimento": "4×230g | F549 W346 S11 G11 Z2.5 | Y0.7fresh 0.13% | h63 W270 PL0.6 | 36h@4C | 250C 498s | 2284min | not_feasible",
   "home · greek_pan · riferimento": "4×400g | F929 W595 S19 G46 Z9 | Y1.5fresh 0.16% | h64 W250 PL0.55 | 8h@22C | 245C 840s | 618min | warnings",
+  "home · teglia_in_giornata · riferimento": "4×967g | F2000 W1600 S24 G184 Z32 | Y28dry 1.4% | h80 W280 PL0.57 | 2h@26C | 210C 1800s | 312min | warnings",
+  "home · teglia_in_giornata · benedetta_rossi": "4×967g | F2000 W1600 S24 G184 Z32 | Y28dry 1.4% | h80 W280 PL0.57 | 2h@26C | 210C 1800s | 312min | warnings",
   "dryOnly · napoletana_stg · riferimento": "4×200g | F491 W295 S14 G0 Z0 | Y0.2dry 0.04% | h60 W280 PL0.62 | 12h@22C | 250C 345s | 825min | not_feasible",
   "dryOnly · napoletana_stg · stg_tradizionale": "4×200g | F497 W288 S14 G0 Z0 | Y0.2dry 0.04% | h58 W280 PL0.6 | 12h@22C | 250C 345s | 825min | not_feasible",
   "dryOnly · napoletana_stg · stg_avpn": "4×224g | F550 W330 S15 G0 Z0 | Y0.1dry 0.03% | h60 W300 PL0.62 | 24h@22C | 250C 345s | 1545min | not_feasible",
@@ -163,6 +165,8 @@
   "dryOnly · fugazzeta · riferimento": "4×600g | F1454 W858 S29 G44 Z15 | Y0.8dry 0.05% | h59 W230 PL0.55 | 8h@22C | 240C 1020s | 642min | warnings",
   "dryOnly · california_style · riferimento": "4×230g | F549 W346 S11 G11 Z2.5 | Y0.2dry 0.04% | h63 W270 PL0.6 | 36h@4C | 250C 498s | 2284min | not_feasible",
   "dryOnly · greek_pan · riferimento": "4×400g | F930 W595 S19 G47 Z9 | Y0.5dry 0.05% | h64 W250 PL0.55 | 8h@22C | 245C 840s | 618min | warnings",
+  "dryOnly · teglia_in_giornata · riferimento": "4×967g | F2000 W1600 S24 G184 Z32 | Y28dry 1.4% | h80 W280 PL0.57 | 2h@26C | 210C 1800s | 312min | warnings",
+  "dryOnly · teglia_in_giornata · benedetta_rossi": "4×967g | F2000 W1600 S24 G184 Z32 | Y28dry 1.4% | h80 W280 PL0.57 | 2h@26C | 210C 1800s | 312min | warnings",
   "wood · napoletana_stg · riferimento": "4×250g | F614 W368 S17 G0 Z0 | Y0.8fresh 0.12% | h60 W280 PL0.62 | 12h@22C | 450C 94s | 795min | warnings",
   "wood · napoletana_stg · stg_tradizionale": "4×250g | F621 W360 S17 G0 Z0 | Y0.8fresh 0.12% | h58 W280 PL0.6 | 12h@22C | 450C 94s | 795min | warnings",
   "wood · napoletana_stg · stg_avpn": "4×280g | F688 W413 S19 G0 Z0 | Y0.5fresh 0.08% | h60 W300 PL0.62 | 24h@22C | 450C 94s | 1515min | warnings",
@@ -244,5 +248,7 @@
   "wood · new_haven_apizza · riferimento": "4×300g | F722 W455 S14 G7 Z0 | Y0.8fresh 0.11% | h63 W270 PL0.6 | 48h@4C | 370C 300s | 2973min | warnings",
   "wood · fugazzeta · riferimento": "4×600g | F1453 W857 S29 G44 Z15 | Y2.4fresh 0.16% | h59 W230 PL0.55 | 8h@22C | 240C 1020s | 629min | warnings",
   "wood · california_style · riferimento": "4×230g | F549 W346 S11 G11 Z2.5 | Y0.7fresh 0.13% | h63 W270 PL0.6 | 36h@4C | 300C 360s | 2261min | warnings",
-  "wood · greek_pan · riferimento": "4×400g | F929 W595 S19 G46 Z9 | Y1.5fresh 0.16% | h64 W250 PL0.55 | 8h@22C | 245C 840s | 605min | warnings"
+  "wood · greek_pan · riferimento": "4×400g | F929 W595 S19 G46 Z9 | Y1.5fresh 0.16% | h64 W250 PL0.55 | 8h@22C | 245C 840s | 605min | warnings",
+  "wood · teglia_in_giornata · riferimento": "4×967g | F2000 W1600 S24 G184 Z32 | Y28dry 1.4% | h80 W280 PL0.57 | 2h@26C | 210C 1800s | 299min | warnings",
+  "wood · teglia_in_giornata · benedetta_rossi": "4×967g | F2000 W1600 S24 G184 Z32 | Y28dry 1.4% | h80 W280 PL0.57 | 2h@26C | 210C 1800s | 299min | warnings"
 }
