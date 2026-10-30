@@ -316,26 +316,22 @@ export function StyleDetailSheet({
           {/* ── Title block ── */}
           <div className="style-detail-title">
             <div className="style-detail-title__inner">
-              {/* Family label */}
-              <span className="style-detail-title__family">
-                {familyName}
-              </span>
-              <span className="style-detail-title__dot">
-                ·
-              </span>
-              <span className="style-detail-title__origin">
-                {formatOrigin(style.origin, placeNameLocalizer(cms))}
-              </span>
-
-              {rec && (
-                <>
-                  <span className="style-detail-title__dot">
-                    ·
+              {/* Famiglia · origine · punteggio. G1b-WP-02: i «·» li disegna il
+                  CSS davanti a ogni voce, così vanno a capo con la voce che segue. */}
+              <p className="style-detail-title__meta">
+                <span className="style-detail-title__family">
+                  {familyName}
+                </span>
+                <span className="style-detail-title__origin">
+                  {formatOrigin(style.origin, placeNameLocalizer(cms))}
+                </span>
+                {rec && (
+                  <span className="style-detail-title__score">
+                    <CompatibilityPill context="detail" now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
+                      blocked={rec.recipe.verdict.outcome === "not_feasible"} recipe={rec.recipe} className="style-detail-title__match" />
                   </span>
-                  <CompatibilityPill context="detail" now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
-                    blocked={rec.recipe.verdict.outcome === "not_feasible"} recipe={rec.recipe} className="style-detail-title__match" />
-                </>
-              )}
+                )}
+              </p>
 
               {/* Title */}
               <h2 id={`style-detail-title-${style.id}`} className="style-detail-title__heading">
@@ -556,7 +552,8 @@ export function StyleDetailSheet({
                   {" · "}{fmt.celsius(constraints.oven_max_temp_c)}
                 </p>
               )}
-              <div className="style-detail-match__list">
+              {/* G1b-WP-02: con un esito bloccante la lista va in una colonna (CSS). */}
+              <div className="style-detail-match__list" data-verdict={rec.tier}>
                 {notFeasible && constraints && (
                   <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false} reasonId={blockerId}
                     details={matchNotes.length > 0 ? <div className="style-detail-match__list">{matchNotes.map(noteRow)}</div> : undefined} />

@@ -16094,15 +16094,11 @@
   }
 
   @media (min-width: 640px) {
+    /* G1b-WP-02 (S03-B-25): la toolbar resta nel flusso, una riga sopra il
+       body che scorre: niente passa più sotto Preferiti/Chiudi. */
     .style-detail-sheet__toolbar {
-      position: absolute;
-      top: var(--space-2);
-      right: var(--space-2);
-      padding: var(--space-1);
-      gap: var(--space-1);
-      border-bottom: none;
-      border-radius: var(--radius-full);
-      background: var(--glass-fallback-bg, color-mix(in srgb, var(--surface-container-low) 75%, transparent));
+      justify-content: flex-end;
+      padding-block: var(--space-2);
     }
 
     .style-detail-sheet__close-btn {
@@ -16117,7 +16113,9 @@
       display: flex;
     }
 
-    .style-detail-sheet__body .style-detail-match__list {
+    /* G1b-WP-02 (S03-A-22): due colonne solo senza un esito bloccante; il
+       blocco e le alternative occupano tutta la larghezza. */
+    .style-detail-match > .style-detail-match__list:not([data-verdict="not_feasible"]) {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -16222,16 +16220,32 @@
     font-weight: var(--weight-semibold);
   }
 
-  .style-detail-title__dot {
+  /* G1b-WP-02 (S03-A-22, S03-B-23): famiglia · origine · punteggio. Ogni
+     voce porta il suo «·» davanti; il contenitore sporge a sinistra di un
+     separatore e lo ritaglia, così il punto in testa a ogni riga (anche dopo
+     un a capo) non si vede e nessun punto resta in coda alla riga. Il taglio
+     sta a metà fra il punto e la voce: l'anello di focus della pill resta. */
+  .style-detail-title__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: var(--gap-2xs);
+    margin-inline-start: calc(-1 * var(--space-5));
+    clip-path: inset(calc(-1 * var(--space-2)) calc(-1 * var(--space-2)) calc(-1 * var(--space-2)) var(--space-3-5));
     font-size: var(--font-size-sm);
     color: var(--text-muted);
-    margin-inline: var(--space-1-5);
-    opacity: 0.5;
   }
 
-  .style-detail-title__origin {
-    font-size: var(--font-size-sm);
-    color: var(--text-muted);
+  .style-detail-title__meta > ::before {
+    content: "·" / "";
+    display: inline-block;
+    width: var(--space-5);
+    text-align: center;
+  }
+
+  .style-detail-title__score {
+    display: inline-flex;
+    align-items: center;
   }
 
   .style-detail-title__match {
