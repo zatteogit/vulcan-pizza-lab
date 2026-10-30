@@ -54,6 +54,8 @@ import img_pizzas_romanatonda from "../../../assets/pizzas/romanatonda.webp";
 import img_pizzas_romanatonda_640 from "../../../assets/pizzas/romanatonda-640.webp";
 import img_pizzas_sfincione from "../../../assets/pizzas/sfincione.webp";
 import img_pizzas_sfincione_640 from "../../../assets/pizzas/sfincione-640.webp";
+import img_pizzas_tegliaingiornata from "../../../assets/pizzas/tegliaingiornata.webp";
+import img_pizzas_tegliaingiornata_640 from "../../../assets/pizzas/tegliaingiornata-640.webp";
 import img_pizzas_tegliaromana from "../../../assets/pizzas/tegliaromana.webp";
 import img_pizzas_tegliaromana_640 from "../../../assets/pizzas/tegliaromana-640.webp";
 import img_pizzas_tranciomilanese from "../../../assets/pizzas/tranciomilanese.webp";
@@ -296,6 +298,7 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_pizzas_pinsa, img_pizzas_pinsa_640, 1280, 853, 640, 427],
   [img_pizzas_romanatonda, img_pizzas_romanatonda_640, 1280, 853, 640, 427],
   [img_pizzas_sfincione, img_pizzas_sfincione_640, 1280, 853, 640, 427],
+  [img_pizzas_tegliaingiornata, img_pizzas_tegliaingiornata_640, 1280, 853, 640, 427],
   [img_pizzas_tegliaromana, img_pizzas_tegliaromana_640, 1280, 853, 640, 427],
   [img_pizzas_tranciomilanese, img_pizzas_tranciomilanese_640, 1280, 1024, 640, 512],
   [img_pizzas_verace, img_pizzas_verace_640, 1280, 853, 640, 427],

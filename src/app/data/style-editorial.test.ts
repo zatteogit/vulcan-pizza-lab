@@ -54,7 +54,7 @@ describe("linee guida degli stili", () => {
   /* B2: il segnaposto solo dove la foto è dichiarata in arrivo; quando arriva
      la foto vera la voce si toglie da qui. */
   it("segnaposto al posto della foto solo per gli stili in attesa", () => {
-    expect(styles.filter((s) => STYLE_PHOTOS[s.id] === "placeholder").map((s) => s.id)).toEqual(["teglia_in_giornata"]);
+    expect(styles.filter((s) => STYLE_PHOTOS[s.id] === "placeholder").map((s) => s.id)).toEqual([]);
   });
 
   /* Audit totale n. 6: una versione senza range propri resta nei range dello
