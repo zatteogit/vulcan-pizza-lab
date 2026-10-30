@@ -709,3 +709,24 @@ generata solo se dichiarata.
     Paoletta convertite prima di «pubblicato» e il verbale va nel registro;
     se possibile la foto dello stile viene da lì.*
 12. **Ordine.** *Raccomandazione: B1 → B2 → B3 → B4; B5 solo con la fonte.*
+
+### 9.8 Decisioni di Matteo (30/10/2026)
+
+- **Collocazione (1–3):** uno stile `teglia_in_giornata` («Teglia casalinga
+  in giornata») con tre versioni d'autore. Matteo ha visto il confronto: la
+  versione di Benedetta è alta e morbida (0,79 g/cm², 210 °C), quelle di
+  Adriano e Paoletta sono basse e croccanti (0,48–0,54 g/cm², 250 °C e oltre).
+  Anche così ha scelto di non dividere in due stili. Riferimento: Benedetta,
+  provvisorio. Il preset «Casalinga» della teglia romana tiene il suo ID.
+- **Marchio (5), lievito della fonte (6), «luogo caldo» a 26 °C (7),
+  Paoletta (10):** approvate le raccomandazioni.
+- **Benedetta (4):** pagina Paneangeli. La verifica della pagina ufficiale
+  (teglia 35×35, sale) è affidata a un agente con il Safari di Matteo; fino
+  ad allora restano la teglia 35×35 «plausibile» e il sale a 6 g.
+- **Dekracap (9):** la discussione è dietro login. Un agente con accesso al
+  Safari di Matteo (già autenticato) la trascrive con URL, autore e data; si
+  decide dopo averla letta. Gli 8 °C solo se la fonte li dice.
+- **Prova pratica (11):** non prima di pubblicare. Le ricette escono dopo
+  le verifiche del motore (test e prove nel browser); le prove in cucina, se
+  arrivano, vanno nel registro dopo.
+- **Ordine (12):** B1 → B2 → B3 → B4; B5 (Dekracap) solo con la fonte.
