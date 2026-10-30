@@ -48,7 +48,7 @@ export function RecipeLearningPanel({
               <div className="learning-panel__intro">
                 <p className="learning-panel__eyebrow">
                   <GraduationCap size={16} aria-hidden="true" />
-                  <span data-slot="label">{uiMessage("features.recipe.recipe-learning-panel.approfondimento-d68393e7")}</span>
+                  <span data-slot="label">{uiMessage("features.recipe.recipe-learning-panel.d68393e7")}</span>
                 </p>
                 <h2 id="learning-panel-title" className="learning-panel__title">
                   {style.name}

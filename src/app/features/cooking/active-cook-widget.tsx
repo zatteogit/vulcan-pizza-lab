@@ -10,7 +10,7 @@ import {
   useCookSession,
 } from "./cook-session";
 import { useCms } from "../cms/cms-context";
-import { formatAtClock, formatRelative } from "../../i18n/format";
+import { formatAtClock, formatClock, formatDuration, formatRelative } from "../../i18n/format";
 import { uiMessage } from "../../i18n/ui-messages";
 import { motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
 import { sessionProgress } from "../../use-cases/cook-timing";
@@ -19,11 +19,15 @@ export function ActiveCookWidget({
   canStartRecipe = false,
   hasProfileButton = false,
   compact = false,
+  mini = false,
   inline = false,
 }: {
   canStartRecipe?: boolean;
   hasProfileButton?: boolean;
   compact?: boolean;
+  /** G1a-WP-03 (S01-B-02): accanto al marchio, solo anello e tempo (il
+   *  titolo resta nel nome accessibile). */
+  mini?: boolean;
   /** Participate in the shell's shared action row instead of fixed positioning. */
   inline?: boolean;
 }) {
@@ -51,7 +55,15 @@ export function ActiveCookWidget({
   const activeAccessibleLabel = metrics?.finished
     ? cms.cooking.completed
     : lead?.accessible ?? "";
-  const iconBox = compact ? 24 : 28;
+  /* Mini: il tempo senza parole intorno («35 min», «ca. 21:00»), così sta
+     fra marchio e profilo anche a 360 px. */
+  const small = Boolean(mini && active && metrics && !metrics.finished && !metrics.isDue && countdown);
+  const shownCountdown = small && metrics
+    ? metrics.actionAt - Date.now() < 3_600_000
+      ? formatDuration((metrics.actionAt - Date.now()) / 60_000, bcp47, { seconds: true })
+      : formatClock(metrics.actionAt, bcp47, { approximate: metrics.flexible })
+    : countdown;
+  const iconBox = compact || small ? 24 : 28;
 
   const handleClick = () => {
     if (session) {
@@ -82,6 +94,7 @@ export function ActiveCookWidget({
           inline && "cook-widget--inline",
           active && "cook-widget--active",
           compact && "cook-widget--compact",
+          small && "cook-widget--mini",
           due && "cook-widget--due",
           hasProfileButton && "cook-widget--with-profile",
         ]
@@ -118,10 +131,10 @@ export function ActiveCookWidget({
           )}
         </span>
 
-        <span className="cook-widget__label">{active ? actionLabel : cms.cooking.startShort}</span>
+        <span className="cook-widget__label" data-slot="title">{active ? actionLabel : cms.cooking.startShort}</span>
         {active && (
           <span className="cook-widget__countdown type-data">
-            {metrics?.finished ? cms.cooking.completed : countdown}
+            {metrics?.finished ? cms.cooking.completed : shownCountdown}
           </span>
         )}
         {active && lead?.after && (

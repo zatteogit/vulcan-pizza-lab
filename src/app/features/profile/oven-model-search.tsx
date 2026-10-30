@@ -1,9 +1,9 @@
-import { useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Search, X } from "lucide-react";
 import { IconButton } from "../../components/ds/index";
 import { useEscapeLayer } from "../../components/ds/escape-stack";
 import { uiMessage } from "../../i18n/ui-messages";
-import { formatShortList } from "../../i18n/format";
+import { formatOvenFuel, formatShortList } from "../../i18n/format";
 import {
   OVEN_CATALOG_FILTERED,
   OVEN_MODELS,
@@ -11,7 +11,6 @@ import {
   ovenCatalogBrands,
   ovenSearchExamples,
   searchOvenModels,
-  type OvenFuel,
   type OvenModel,
 } from "../../data/oven-models";
 import type { OvenType } from "../../domain/pizza-engine";
@@ -31,18 +30,6 @@ const SMALL_CATALOG = OVEN_MODELS.length <= 6;
  * lista. La lista non è più una live region: lo stato annuncia solo il numero
  * di risultati e la conferma della scelta. */
 
-function fuelLabel(fuel: OvenFuel): string {
-  switch (fuel) {
-    case "wood":
-      return uiMessage("features.profile.oven-model-search.fuelWood");
-    case "gas":
-      return uiMessage("features.profile.oven-model-search.fuelGas");
-    case "pellet":
-      return uiMessage("features.profile.oven-model-search.fuelPellet");
-    default:
-      return uiMessage("features.profile.oven-model-search.fuelElectric");
-  }
-}
 
 export function OvenModelSearch({
   selectedId,
@@ -52,6 +39,7 @@ export function OvenModelSearch({
   currentTempC,
   onRestore,
   formatOvenType,
+  initialQuery,
 }: {
   selectedId: string | null;
   onPick: (model: OvenModel) => void;
@@ -63,12 +51,16 @@ export function OvenModelSearch({
   onRestore?: (model: OvenModel) => void;
   /** G5-WP-03: nome del tipo di forno per la riga «Usato come». */
   formatOvenType?: (type: OvenType) => string;
+  /** G1a-WP-02 (D-G1a-02): testo già scritto, da un risultato «Forni» della
+   *  ricerca. Il primo risultato è evidenziato, ma il forno cambia solo con un
+   *  tocco o Invio (T10): qui non si sceglie niente. */
+  initialQuery?: string;
 }) {
   const inputId = useId();
   const listId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [query, setQuery] = useState("");
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const [query, setQuery] = useState(initialQuery ?? "");
+  const [activeIndex, setActiveIndex] = useState(() => (initialQuery && searchOvenModels(initialQuery).length > 0 ? 0 : -1));
   const [announcement, setAnnouncement] = useState("");
   const [focused, setFocused] = useState(false);
   const browsing = SMALL_CATALOG && focused && query.trim() === "";
@@ -83,6 +75,12 @@ export function OvenModelSearch({
     setFocused(false);
   };
   useEscapeLayer(expanded, close);
+
+  useEffect(() => {
+    if (!initialQuery) return;
+    inputRef.current?.focus();
+    inputRef.current?.scrollIntoView({ block: "center" });
+  }, [initialQuery]);
 
   const pick = (model: OvenModel) => {
     onPick(model);
@@ -207,7 +205,7 @@ export function OvenModelSearch({
                 {model.brand} {model.model}
               </strong>
               <small className="oven-model-search__meta">
-                {fuelLabel(model.fuel)} · {uiMessage("features.profile.oven-model-search.upTo", [formatTemp(model.maxTempC)])}
+                {formatOvenFuel(model.fuel)} · {uiMessage("features.profile.oven-model-search.upTo", [formatTemp(model.maxTempC)])}
               </small>
             </li>
           ))}

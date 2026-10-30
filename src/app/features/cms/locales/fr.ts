@@ -10,6 +10,7 @@ import {
   TROUBLESHOOTING_FR,
   GLOSSARY_TERMS_FR,
   SCIENCE_FR,
+  FLOURS_FR,
 } from "./domain-fr";
 
 /** French locale bundle */
@@ -1532,6 +1533,7 @@ export const FR_LOCALE: CmsContent = {
     navExplore: "Découvrir",
     navLearn: "Apprendre",
     navProfile: "Profil",
+    navProfileKitchen: "Profil et cuisine",
     navSearch: "Rechercher",
     learnGlossary: "Glossaire",
     learnGlossaryDesc: "Les mots de la pâte, avec formules et valeurs typiques.",
@@ -1551,6 +1553,7 @@ export const FR_LOCALE: CmsContent = {
     searchPlaceholder: "Chercher style, recette, garniture, farine, terme, problème…",
     searchCatStyles: "Styles",
     searchCatFlours: "Farines",
+    searchCatOvens: "Fours",
     searchCatGlossary: "Glossaire",
     searchCatProblems: "Probl\u00E8mes",
     searchCatGuides: "Guides",
@@ -1677,29 +1680,29 @@ export const FR_LOCALE: CmsContent = {
     preCookStart: "Utiliser la référence",
     matchTones: {
       t90: {
-        title: UI_MESSAGES_FR["features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"],
-        canonical: UI_MESSAGES_FR["features.recipe.recipe-match-card.la-canonica-e-la-tua-cucina-parlano-gia-la-37bbb4fd"],
-        adapted: UI_MESSAGES_FR["features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a"],
+        title: "Très bonne compatibilité",
+        canonical: "Un bon point de départ pour votre cuisine. Vérifiez les conditions indiquées.",
+        adapted: "Vérifiez les ingrédients et le matériel nécessaires à cette version.",
       },
       t75: {
-        title: UI_MESSAGES_FR["features.recipe.recipe-match-card.ottima-intesa-55470040"],
-        canonical: UI_MESSAGES_FR["features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12"],
-        adapted: UI_MESSAGES_FR["features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6"],
+        title: "Bonne compatibilité",
+        canonical: "Vérifiez les conditions indiquées avant de commencer.",
+        adapted: "Vérifiez les modifications et les conditions de cette version.",
       },
       t60: {
-        title: UI_MESSAGES_FR["features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af"],
-        canonical: UI_MESSAGES_FR["features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69"],
-        adapted: UI_MESSAGES_FR["features.recipe.recipe-match-card.la-ricetta-funziona-ma-chiede-un-minimo-di-7c183f59"],
+        title: "À examiner",
+        canonical: "Repérez les écarts entre la recette et les conditions de votre cuisine.",
+        adapted: "Cette version demande de l’attention : lisez les conditions et les modifications.",
       },
       t40: {
-        title: UI_MESSAGES_FR["features.recipe.recipe-match-card.per-le-cose-buone-ci-vuole-tempo-e6addc9c"],
-        canonical: UI_MESSAGES_FR["features.recipe.recipe-match-card.la-ricetta-e-seria-meglio-adattarla-al-tuo-551e300f"],
-        adapted: UI_MESSAGES_FR["features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050"],
+        title: "Compatibilité limitée",
+        canonical: "Évaluez les modifications nécessaires ou choisis un style plus adapté à votre cuisine.",
+        adapted: "Des écarts importants avec la référence subsistent. Consultez le détail.",
       },
       t0: {
-        title: UI_MESSAGES_FR["features.recipe.recipe-match-card.cuore-spezzato-42157bb9"],
-        canonical: UI_MESSAGES_FR["features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75"],
-        adapted: UI_MESSAGES_FR["features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf"],
+        title: "À revoir",
+        canonical: "Lisez la raison du score bas avant de décider de la suite.",
+        adapted: "Les modifications ne résolvent pas toutes les limites. Consultez le détail et les alternatives.",
       },
     },
     ceilingUnviableOven: "Avec ce four, la proposition atteint {ceiling}/100. Envisage un style demandant moins de chaleur.",
@@ -1840,6 +1843,7 @@ export const FR_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_FR as any,
   glossaryTerms: GLOSSARY_TERMS_FR as any,
   science: SCIENCE_FR,
+  flours: FLOURS_FR,
   /* FW-06 — punteggio spiegabile (D-E). */
   scoreExplainer: {
     scoreAria: "{label} : {score} sur 100",

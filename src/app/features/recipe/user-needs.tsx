@@ -126,67 +126,67 @@ const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
     id: "00",
     get name() { return pantryFlourName("00"); },
     w: "",
-    get detail() { return uiMessage("features.recipe.user-needs.classica-versatile-21c9cc66"); },
+    get detail() { return uiMessage("features.recipe.user-needs.21c9cc66"); },
   },
   {
     id: "0",
     get name() { return pantryFlourName("0"); },
     w: "",
-    get detail() { return uiMessage("features.recipe.user-needs.media-forza-1dea8ed0"); },
+    get detail() { return uiMessage("features.recipe.user-needs.1dea8ed0"); },
   },
   {
     id: "tipo_1",
     get name() { return pantryFlourName("tipo_1"); },
     w: "",
-    get detail() { return uiMessage("features.recipe.user-needs.rustica-profumo-di-cereale-766e58ac"); },
+    get detail() { return uiMessage("features.recipe.user-needs.766e58ac"); },
   },
   {
     id: "manitoba",
     get name() { return pantryFlourName("manitoba"); },
     w: "W340–380",
-    get detail() { return uiMessage("features.recipe.user-needs.alta-forza-lunga-maturazione-58db76ea"); },
+    get detail() { return uiMessage("features.recipe.user-needs.58db76ea"); },
   },
   {
     id: "integrale",
     get name() { return pantryFlourName("integrale"); },
     w: "",
-    get detail() { return uiMessage("features.recipe.user-needs.piu-fibra-e-sapore-e0f02324"); },
+    get detail() { return uiMessage("features.recipe.user-needs.e0f02324"); },
   },
   {
     id: "semola",
     get name() { return pantryFlourName("semola"); },
     w: "",
-    get detail() { return uiMessage("features.recipe.user-needs.croccantezza-colore-dorato-0119e353"); },
+    get detail() { return uiMessage("features.recipe.user-needs.0119e353"); },
   },
 ];
 
 const FLOUR_OPTIONS_SPECIAL: FlourOption[] = [
-  { id: "farro", get name() { return uiMessage("features.recipe.user-needs.farina-di-farro-cba26b1c"); }, w: "W130–180", get detail() { return uiMessage("features.recipe.user-needs.sapore-nocciolato-digeribile-7f620358"); } },
-  { id: "spelta", get name() { return uiMessage("features.recipe.user-needs.farina-di-spelta-145c7e5d"); }, w: "W150–200", get detail() { return uiMessage("features.recipe.user-needs.grano-antico-aromatica-6b49eff1"); } },
-  { id: "kamut", get name() { return uiMessage("features.recipe.user-needs.farina-di-kamut-23160bf9"); }, w: "W200–260", get detail() { return uiMessage("features.recipe.user-needs.khorasan-dolce-e-burrosa-1c0a0d60"); } },
-  { id: "segale", get name() { return uiMessage("features.recipe.user-needs.farina-di-segale-4d6ef95b"); }, w: "W80–150", get detail() { return uiMessage("features.recipe.user-needs.sapore-intenso-bassa-glutine-b955d1cb"); } },
-  { id: "riso", get name() { return uiMessage("features.recipe.user-needs.farina-di-riso-1d5fb293"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.senza-glutine-croccantezza-c0379498"); } },
-  { id: "mais", get name() { return uiMessage("features.recipe.user-needs.farina-di-mais-41910105"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.senza-glutine-colore-dorato-83a2168b"); } },
-  { id: "saraceno", get name() { return uiMessage("features.recipe.user-needs.grano-saraceno-d1593536"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.senza-glutine-terroso-85af8327"); } },
-  { id: "avena", get name() { return uiMessage("features.recipe.user-needs.farina-di-avena-d11c4a10"); }, w: "W100–140", get detail() { return uiMessage("features.recipe.user-needs.fibra-alta-morbidezza-348c80f9"); } },
-  { id: "ceci", get name() { return uiMessage("features.recipe.user-needs.farina-di-ceci-f7a159a1"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.proteica-sapore-deciso-6623765b"); } },
+  { id: "farro", get name() { return uiMessage("features.recipe.user-needs.cba26b1c"); }, w: "W130–180", get detail() { return uiMessage("features.recipe.user-needs.7f620358"); } },
+  { id: "spelta", get name() { return uiMessage("features.recipe.user-needs.145c7e5d"); }, w: "W150–200", get detail() { return uiMessage("features.recipe.user-needs.6b49eff1"); } },
+  { id: "kamut", get name() { return uiMessage("features.recipe.user-needs.23160bf9"); }, w: "W200–260", get detail() { return uiMessage("features.recipe.user-needs.1c0a0d60"); } },
+  { id: "segale", get name() { return uiMessage("features.recipe.user-needs.4d6ef95b"); }, w: "W80–150", get detail() { return uiMessage("features.recipe.user-needs.b955d1cb"); } },
+  { id: "riso", get name() { return uiMessage("features.recipe.user-needs.1d5fb293"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.c0379498"); } },
+  { id: "mais", get name() { return uiMessage("features.recipe.user-needs.41910105"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.83a2168b"); } },
+  { id: "saraceno", get name() { return uiMessage("features.recipe.user-needs.d1593536"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.85af8327"); } },
+  { id: "avena", get name() { return uiMessage("features.recipe.user-needs.d11c4a10"); }, w: "W100–140", get detail() { return uiMessage("features.recipe.user-needs.348c80f9"); } },
+  { id: "ceci", get name() { return uiMessage("features.recipe.user-needs.f7a159a1"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.6623765b"); } },
 ];
 
 const YEAST_OPTIONS = [
   {
     id: "fresh",
-    get name() { return uiMessage("features.recipe.user-needs.lievito-fresco-f3a7cabd"); },
-    get detail() { return uiMessage("features.recipe.user-needs.cubetto-classico-76ef5715"); },
+    get name() { return uiMessage("features.recipe.user-needs.f3a7cabd"); },
+    get detail() { return uiMessage("features.recipe.user-needs.76ef5715"); },
   },
   {
     id: "dry",
-    get name() { return uiMessage("features.recipe.user-needs.lievito-secco-0043f8c5"); },
-    get detail() { return uiMessage("features.recipe.user-needs.pratico-lunga-conservazione-8c39549a"); },
+    get name() { return uiMessage("features.recipe.user-needs.0043f8c5"); },
+    get detail() { return uiMessage("features.recipe.user-needs.8c39549a"); },
   },
   {
     id: "sourdough",
-    get name() { return uiMessage("features.recipe.user-needs.lievito-madre-180392fb"); },
-    get detail() { return uiMessage("features.recipe.user-needs.sapore-complesso-lunga-maturazione-9d8ec002"); },
+    get name() { return uiMessage("features.recipe.user-needs.180392fb"); },
+    get detail() { return uiMessage("features.recipe.user-needs.9d8ec002"); },
   },
 ];
 

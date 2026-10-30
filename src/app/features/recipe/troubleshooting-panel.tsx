@@ -121,7 +121,7 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
       <div className="troubleshooting-warnings__header">
         <Lightbulb className="troubleshooting-warnings__header-icon" />
         <span className="troubleshooting-warnings__label">
-          {uiMessage("features.recipe.troubleshooting-panel.suggerimenti-968745bd")}</span>
+          {uiMessage("features.recipe.troubleshooting-panel.968745bd")}</span>
         <span className="troubleshooting-warnings__count">
           {warnings.length === 1
             ? uiMessage("features.recipe.troubleshooting-panel.warning-count-one", [warnings.length])
@@ -168,7 +168,7 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
         >
           {expanded ? (
             <div className="troubleshooting-warnings__toggle-content">
-              <ChevronUp className="troubleshooting-warnings__toggle-icon" /> {uiMessage("features.recipe.troubleshooting-panel.mostra-meno-2d38f713")}</div>
+              <ChevronUp className="troubleshooting-warnings__toggle-icon" /> {uiMessage("features.recipe.troubleshooting-panel.2d38f713")}</div>
           ) : (
             <div className="troubleshooting-warnings__toggle-content">
               <ChevronDown className="troubleshooting-warnings__toggle-icon" />
@@ -283,7 +283,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
             radius="xl"
             count={sourceIssues.length}
           >
-            {uiMessage("features.recipe.troubleshooting-panel.tutti-d4ef129b")}</FilterChip>
+            {uiMessage("features.recipe.troubleshooting-panel.d4ef129b")}</FilterChip>
           {categories.map(([key, count]) => {
             const Icon = TROUBLESHOOTING_CATEGORY_ICONS[key] ?? Info;
             return (
@@ -371,7 +371,7 @@ export function TroubleshootingSheet({ open, context, onClose }: {
     <ModalSheet open={open} onClose={dismiss} ariaLabelledby={titleId} size="md" surface="solid" scrim="soft" panelClassName="troubleshooting-sheet">
       <header className="troubleshooting-sheet__header">
         <div className="troubleshooting-sheet__intro">
-          <p className="troubleshooting-sheet__eyebrow">{uiMessage("features.recipe.troubleshooting-panel.guida-troubleshooting-ada8fe75")}</p>
+          <p className="troubleshooting-sheet__eyebrow">{uiMessage("features.recipe.troubleshooting-panel.ada8fe75")}</p>
           <h2 id={titleId} className="troubleshooting-sheet__title">{context.title}</h2>
         </div>
         <IconButton size="lg" onClick={onClose} aria-label={cms.ui.close} className="troubleshooting-sheet__close"><X size={20} aria-hidden="true" /></IconButton>
@@ -429,18 +429,18 @@ function IssueCard({
       >
             <div className="troubleshooting-card__detail-body">
               {/* Causa */}
-              <DetailRow icon={Search} label={uiMessage("features.recipe.troubleshooting-panel.causa-2cff0350")} value={issue.cause} />
+              <DetailRow icon={Search} label={uiMessage("features.recipe.troubleshooting-panel.2cff0350")} value={issue.cause} />
               {/* Test rapido */}
-              <DetailRow icon={FlaskConical} label={uiMessage("features.recipe.troubleshooting-panel.test-rapido-5e89b688")} value={issue.testRapido} />
+              <DetailRow icon={FlaskConical} label={uiMessage("features.recipe.troubleshooting-panel.5e89b688")} value={issue.testRapido} />
               {/* Fix immediato */}
               <DetailRow
                 icon={Wrench}
-                label={uiMessage("features.recipe.troubleshooting-panel.fix-immediato-4a6dd0bf")}
+                label={uiMessage("features.recipe.troubleshooting-panel.4a6dd0bf")}
                 value={issue.fixImmediate}
                 highlight={issue.severity === 'critical'}
               />
               {/* Prevenzione */}
-              <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
+              <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.f9797745")} value={issue.prevention} />
               {/* FW-02 (S13-A-06): dove il consiglio dà una soglia numerica, il
                   «Perché?» dice che è una regola pratica, non tarata sullo stile. */}
               {noteId && <WhyButton noteId={noteId} label={cms.science?.notes?.[noteId]?.title} className="troubleshooting-card__why" />}

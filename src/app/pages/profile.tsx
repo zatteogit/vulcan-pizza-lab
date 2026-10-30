@@ -219,44 +219,44 @@ const OVEN_HEAT_PROFILES: {
 }[] = [
   {
     id: "static_top_bottom",
-    get label() { return uiMessage("pages.profile.sopra-sotto-3f886947"); },
-    get description() { return uiMessage("pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433"); },
+    get label() { return uiMessage("pages.profile.3f886947"); },
+    get description() { return uiMessage("pages.profile.6cb08433"); },
     bestFor: ["home", "electric_standard", "electric_high"],
   },
   {
     id: "top_grill",
-    get label() { return uiMessage("pages.profile.grill-superiore-4368292b"); },
-    get description() { return uiMessage("pages.profile.cielo-forte-per-cornicione-e-doratura-fina-8d35d50c"); },
+    get label() { return uiMessage("pages.profile.4368292b"); },
+    get description() { return uiMessage("pages.profile.8d35d50c"); },
     bestFor: ["home", "electric_standard"],
   },
   {
     id: "bottom_boost",
-    get label() { return uiMessage("pages.profile.spinta-dal-basso-e8551eab"); },
-    get description() { return uiMessage("pages.profile.base-intensa-utile-per-teglie-acciaio-e-cr-cee70bcc"); },
+    get label() { return uiMessage("pages.profile.e8551eab"); },
+    get description() { return uiMessage("pages.profile.cee70bcc"); },
     bestFor: ["electric_standard", "electric_high"],
   },
   {
     id: "fan_assisted",
-    get label() { return uiMessage("pages.profile.ventilato-c306cb96"); },
-    get description() { return uiMessage("pages.profile.aria-in-movimento-asciuga-e-uniforma-va-ge-df314474"); },
+    get label() { return uiMessage("pages.profile.c306cb96"); },
+    get description() { return uiMessage("pages.profile.df314474"); },
     bestFor: ["home", "electric_standard"],
   },
   {
     id: "gas_bottom",
-    get label() { return uiMessage("pages.profile.gas-sotto-011dc103"); },
-    get description() { return uiMessage("pages.profile.fiamma-sotto-la-platea-rotazione-a-meta-co-a0eff472"); },
+    get label() { return uiMessage("pages.profile.011dc103"); },
+    get description() { return uiMessage("pages.profile.a0eff472"); },
     bestFor: ["gas"],
   },
   {
     id: "gas_rear",
-    get label() { return uiMessage("pages.profile.bruciatore-dietro-443293a0"); },
-    get description() { return uiMessage("pages.profile.calore-direzionale-rotazioni-frequenti-e-p-b0292f9e"); },
+    get label() { return uiMessage("pages.profile.443293a0"); },
+    get description() { return uiMessage("pages.profile.b0292f9e"); },
     bestFor: ["gas", "gas_pizza"],
   },
   {
     id: "wood_side_flame",
-    get label() { return uiMessage("pages.profile.fiamma-laterale-ebdd6232"); },
-    get description() { return uiMessage("pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c"); },
+    get label() { return uiMessage("pages.profile.ebdd6232"); },
+    get description() { return uiMessage("pages.profile.d630082c"); },
     bestFor: ["wood"],
   },
 ];
@@ -927,7 +927,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
     { title: p.ftuOvenTitle, subtitle: p.ftuOvenSubtitle, optional: false },
     { title: p.ftuSkillTitle, subtitle: p.ftuSkillSubtitle, optional: false },
     { title: p.ftuPantryTitle, subtitle: p.ftuPantrySubtitle, optional: true },
-    { title: uiMessage("pages.profile.tutto-pronto-0d7ff4fd"), subtitle: uiMessage("pages.profile.creiamo-la-tua-prima-pizza-96bbe504"), optional: false },
+    { title: uiMessage("pages.profile.0d7ff4fd"), subtitle: uiMessage("pages.profile.96bbe504"), optional: false },
   ];
   const lastStep = steps.length - 1;
 
@@ -1790,9 +1790,9 @@ export function ProfilePage() {
           onKeyDown={(event) => handleTablistKeyDown(event, PROFILE_TAB_IDS, profileTab, setProfileTab)}
         >
           {[
-            { id: "recipes" as const, label: uiMessage("pages.profile.ricette-salvate-b5c99ac7") },
-            { id: "setup" as const, label: uiMessage("pages.profile.la-tua-cucina-c2d87895") },
-            { id: "app" as const, label: uiMessage("pages.profile.app-fc4a695f") },
+            { id: "recipes" as const, label: uiMessage("pages.profile.b5c99ac7") },
+            { id: "setup" as const, label: uiMessage("pages.profile.c2d87895") },
+            { id: "app" as const, label: uiMessage("pages.profile.fc4a695f") },
           ].map((tab) => {
             const active = profileTab === tab.id;
             return (
@@ -1851,6 +1851,7 @@ export function ProfilePage() {
             onClear={() => setOvenModelId(null)}
             currentTempC={ovenTemp}
             onRestore={(model: OvenModel) => setOvenTemp(model.maxTempC)}
+            initialQuery={searchParams.get("ovenQuery") ?? undefined}
           />
           <div className="profile-oven-list" role="radiogroup" aria-label={p.ovenTitle}>
             {OVEN_PRESETS.map((preset) => {
@@ -1947,7 +1948,7 @@ export function ProfilePage() {
           <Disclosure
             className="profile-oven-heat"
             variant="card"
-            summary={uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}
+            summary={uiMessage("pages.profile.bfa0da90")}
             meta={heatProfiles.find(profile => profile.id === currentHeat)?.label}
           >
             <SettingEffectNote settingId="ovenHeat" className="type-data-xs profile-oven-heat__hint" />
@@ -1978,7 +1979,7 @@ export function ProfilePage() {
                       </span>
                       {suggested && (
                         <span className="profile-oven-heat__option-badge">
-                          {uiMessage("pages.profile.adatto-0fd37e76")}</span>
+                          {uiMessage("pages.profile.0fd37e76")}</span>
                       )}
                     </span>
                     <span className="type-data-xs profile-oven-heat__option-desc">
@@ -2117,7 +2118,7 @@ export function ProfilePage() {
                             {mixer.label}
                           </span>
                           <span className={`profile-equip-option__badge${levelModifier}`}>
-                            {mixer.level === "professional" ? uiMessage("pages.profile.pro-66d0c5e6") : mixer.level === "semi_pro" ? uiMessage("pages.profile.semi-pro-e857b480") : uiMessage("pages.profile.casa-9ea949c3")}
+                            {mixer.level === "professional" ? uiMessage("pages.profile.66d0c5e6") : mixer.level === "semi_pro" ? uiMessage("pages.profile.e857b480") : uiMessage("pages.profile.9ea949c3")}
                           </span>
                         </div>
                         <div className="type-data-xs profile-equip-option__desc">
@@ -2271,7 +2272,7 @@ export function ProfilePage() {
                   })}
                   {equipment.tools.length > 0 && (
                     <span className="type-data-xs profile-equip-summary__chip profile-equip-summary__chip--muted">
-                      {equipment.tools.length} {uiMessage("pages.profile.utensili-7d6ac61b")}</span>
+                      {equipment.tools.length} {uiMessage("pages.profile.7d6ac61b")}</span>
                   )}
                 </div>
               </motion.div>

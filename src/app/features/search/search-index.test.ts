@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { SIGNATURE_RECIPES, signatureRecipeLink } from "../../data/signature-recipes";
 import { CMS_DEFAULTS, type CmsContent } from "../cms/cms-context";
-import { DEFAULT_SEARCH_SUGGESTIONS, SEARCH_SUGGESTION_IDS } from "../../config/edition";
+import { DEFAULT_SEARCH_SUGGESTIONS, SEARCH_SUGGESTION_IDS, parseEdition } from "../../config/edition";
+import { editionOvenModels } from "../../data/oven-models";
+import { GLOSSARY_TERMS, getLocalizedTerm } from "../../data/glossary-data";
+import DEMO_EDITION from "../../../../editions/demo-forno.json";
 import { UI_MESSAGES_IT } from "../../i18n/ui-messages.it";
 import { FLOURS_DB } from "../../data/flour-database";
 import { DE_LOCALE } from "../cms/locales/de";
@@ -11,6 +14,7 @@ import { FR_LOCALE } from "../cms/locales/fr";
 import { JA_LOCALE } from "../cms/locales/ja";
 import { PT_LOCALE } from "../cms/locales/pt";
 import {
+  GROUP_ORDER,
   buildSearchIndex,
   fold,
   groupResults,
@@ -18,6 +22,7 @@ import {
   rankForKitchen,
   searchIndex,
   searchLexicon,
+  snippetAround,
 } from "./search-index";
 import { editDistance, filterByQuery } from "./text-match";
 
@@ -80,7 +85,9 @@ describe("ricerca", () => {
       expect(e.link.startsWith("/")).toBe(true);
       if (e.type === "problem") expect(e.link).toMatch(/\?issue=/);
       if (e.type === "glossary") expect(e.link).toMatch(/#/);
-      if (e.type === "guide") expect(e.link).toMatch(/#pf-/);
+      /* G1a-WP-02: le guide sono i prefermenti (#pf-) e le pagine di Impara. */
+      if (e.type === "guide") expect(e.link).toMatch(/^\/learn(\/|$)/);
+      if (e.type === "oven") expect(e.link).toMatch(/^\/profile\?tab=setup&ovenQuery=/);
     }
   });
 
@@ -289,5 +296,94 @@ describe("suggerimenti della ricerca", () => {
     expect(SEARCH_SUGGESTION_IDS).not.toContain("caputo");
     expect(SEARCH_SUGGESTION_IDS).not.toContain("bonci");
     expect(DEFAULT_SEARCH_SUGGESTIONS.every((id) => SEARCH_SUGGESTION_IDS.includes(id))).toBe(true);
+  });
+});
+
+/* G1a-WP-01 (S04-A-01, S04-B-02, S04-B-07): le farine portano alla loro scheda
+ * e la nota si cerca solo nella lingua attiva. */
+describe("farine nella ricerca", () => {
+  it("ogni risultato farina porta a /learn/flour/<id>", () => {
+    const flours = IT.filter((e) => e.type === "flour");
+    expect(flours.length).toBe(FLOURS_DB.length);
+    for (const e of flours) expect(e.link).toBe(`/learn/flour/${e.id.slice("flour-".length)}`);
+    expect(ids(IT, "caputo")).toContain("flour-caputo_pizzeria");
+  });
+
+  it("la nota italiana non si trova più in inglese: «idratazione» non porta a Petra 5037", () => {
+    expect(ids(IT, "idratazione")).toContain("flour-petra_5037");
+    expect(ids(EN, "idratazione")).not.toContain("flour-petra_5037");
+    expect(ids(EN, "hydration")).toContain("flour-petra_5037");
+  });
+});
+
+/* G1a-WP-02: forni, guide, ordine dei gruppi, estratto. Indici come in cima
+ * al file (it, en, ja), con il dizionario della lingua. */
+describe("G1a-WP-02 — forni, guide, ordine, estratto", () => {
+  const LOCALES: [string, CmsContent][] = [
+    ["it", CMS_DEFAULTS],
+    ["en", { ...CMS_DEFAULTS, ...EN_LOCALE } as CmsContent],
+    ["ja", { ...CMS_DEFAULTS, ...JA_LOCALE } as CmsContent],
+  ];
+  const search = (cms: CmsContent, q: string, index = buildSearchIndex(cms)) =>
+    searchIndex(index, q, searchLexicon(cms.pages));
+
+  it.each(LOCALES)("%s: «effeuno» trova un forno che apre il Profilo con la ricerca compilata", (_l, cms) => {
+    const ovens = search(cms, "effeuno").filter((r) => r.type === "oven");
+    expect(ovens.length).toBeGreaterThan(0);
+    expect(ovens[0].link).toMatch(/^\/profile\?tab=setup&ovenQuery=Effeuno%20/);
+  });
+
+  it("edizione demo: «aurora» trova i 3 forni del partner e «ooni» nessun forno", () => {
+    const index = buildSearchIndex(CMS_DEFAULTS, editionOvenModels(parseEdition(DEMO_EDITION)));
+    expect(search(CMS_DEFAULTS, "aurora", index).filter((r) => r.type === "oven")).toHaveLength(3);
+    expect(search(CMS_DEFAULTS, "ooni", index).filter((r) => r.type === "oven")).toHaveLength(0);
+  });
+
+  it("le pagine e i percorsi di Impara sono guide: «fermentazione» ne trova almeno una", () => {
+    expect(search(CMS_DEFAULTS, "fermentazione").some((r) => r.type === "guide")).toBe(true);
+    const links = buildSearchIndex(CMS_DEFAULTS).filter((e) => e.type === "guide").map((e) => e.link);
+    for (const link of ["/learn/glossary", "/learn/troubleshooting", "/learn/pre-ferments", "/learn/metodo", "/learn"]) {
+      expect(links).toContain(link);
+    }
+  });
+
+  it.each(LOCALES)("%s: «lievito madre» apre col glossario o le guide, non con le farine", (_l, cms) => {
+    const sourdough = getLocalizedTerm(GLOSSARY_TERMS.find((t) => t.id === "sourdough")!, cms).name;
+    const first = groupResults(search(cms, sourdough))[0]?.[0];
+    expect(["glossary", "guide"]).toContain(first);
+    expect(GROUP_ORDER.indexOf("glossary")).toBeLessThan(GROUP_ORDER.indexOf("flour"));
+    expect(GROUP_ORDER.indexOf("guide")).toBeLessThan(GROUP_ORDER.indexOf("oven"));
+  });
+
+  /* «pinsa» → Biga dell'audit non c'è più (la biga non elenca la pinsa fra
+     gli stili): l'estratto si prova con «impasto appiccicoso» → Segale, l'altro
+     esempio di S04-B-07, e con l'ora di maturazione della biga. */
+  it("«impasto appiccicoso»: la segale mostra l'estratto della nota con la parola trovata", () => {
+    const segale = search(CMS_DEFAULTS, "impasto appiccicoso").find((r) => r.id === "flour-segale");
+    expect(segale?.snippet?.toLowerCase()).toContain("appiccicoso");
+    expect(segale!.snippet!.length).toBeLessThanOrEqual(120);
+  });
+
+  it("i prefermenti nella ricerca hanno i numeri del motore, non i segnaposto", () => {
+    for (const [, cms] of LOCALES) {
+      for (const e of buildSearchIndex(cms).filter((x) => x.id.startsWith("guide-"))) {
+        expect(`${e.subtitle} ${e.extraRaw ?? ""}`, e.id).not.toMatch(/\{[a-zA-Z]+\}/);
+      }
+    }
+  });
+
+  it.each(LOCALES)("%s: chi è trovato nel titolo non ha estratto", (_l, cms) => {
+    const hits = search(cms, "biga");
+    expect(hits.length).toBeGreaterThan(0);
+    for (const r of hits) if (r.score > 0) expect(r.snippet).toBeUndefined();
+  });
+
+  it("estratto tagliato sulle parole, con «…» ai bordi", () => {
+    const text = "Una frase lunga che parla di molte cose diverse prima di arrivare alla pinsa romana, e poi continua ancora per parecchio tempo.";
+    const s = snippetAround(text, "pinsa")!;
+    expect(s.startsWith("…")).toBe(true);
+    expect(s.endsWith("…")).toBe(true);
+    expect(s).toContain("pinsa");
+    expect(snippetAround(text, "assente")).toBeUndefined();
   });
 });

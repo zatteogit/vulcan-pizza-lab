@@ -287,7 +287,7 @@ export function RecipeSetupPanel({
                           {active && modifiedBadge}
                         </span>
                         <span className="setup-option__detail">
-                          {fmt.percent(version.params.hydration_pct)} {uiMessage("features.recipe.recipe-setup-panel.idr-w-6f351627")}{version.params.flour_w}
+                          {fmt.percent(version.params.hydration_pct)} {uiMessage("features.recipe.recipe-setup-panel.6f351627")}{version.params.flour_w}
                         </span>
                       </div>
                       {active && <Check size={16} className="setup-option__check" />}
@@ -471,7 +471,7 @@ function MatchSummary({
   return (
     <div className={rootClass}>
       <div className="setup-match__label-wrap">
-        <span className="setup-match__label">{uiMessage("features.recipe.recipe-setup-panel.match-0335207f")}</span>
+        <span className="setup-match__label">{uiMessage("features.recipe.recipe-setup-panel.0335207f")}</span>
       </div>
 
       <span
@@ -517,6 +517,6 @@ function interpretationName(interpretation: Interpretation): string {
     interpretation.pizzeria ??
     interpretation.organization ??
     interpretation.signature_name ??
-    uiMessage("features.recipe.recipe-setup-panel.interpretazione-b24004b7")
+    uiMessage("features.recipe.recipe-setup-panel.b24004b7")
   );
 }

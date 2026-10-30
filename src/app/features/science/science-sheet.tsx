@@ -34,6 +34,8 @@ export interface ScienceSheetProps {
   context?: ScienceContext;
   /** Valori e controlli di questa ricetta, sotto «Perché». */
   children?: ReactNode;
+  /** Titolo della sezione dei children al posto di «In questa ricetta» (es. la scheda farina). */
+  childrenTitle?: string;
 }
 
 /* Testi letterali: il guard i18n riconosce solo chiamate con la chiave scritta. */
@@ -214,7 +216,7 @@ function HowWeCalculate({ note, assumptions, formula, sourceNotes }: {
   );
 }
 
-export function ScienceSheet({ noteId, open, onClose, initialLevel, context, children }: ScienceSheetProps) {
+export function ScienceSheet({ noteId, open, onClose, initialLevel, context, children, childrenTitle }: ScienceSheetProps) {
   const { cms, bcp47 } = useCms();
   const { view, initialLevel: preferred } = useScienceNote(noteId);
   const baseId = useId().replace(/:/g, "");
@@ -256,7 +258,7 @@ export function ScienceSheet({ noteId, open, onClose, initialLevel, context, chi
             </section>
             {children && (
               <section className="science-sheet__level science-sheet__level--recipe" aria-labelledby={`${titleId}-recipe`}>
-                <h3 id={`${titleId}-recipe`} className="science-sheet__heading">{uiMessage("science.sheet.inThisRecipe")}</h3>
+                <h3 id={`${titleId}-recipe`} className="science-sheet__heading">{childrenTitle ?? uiMessage("science.sheet.inThisRecipe")}</h3>
                 {children}
               </section>
             )}

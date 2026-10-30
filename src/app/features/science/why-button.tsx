@@ -22,10 +22,12 @@ export interface WhyButtonProps {
   initialLevel?: ScienceLevel;
   /** Valori e controlli di questa ricetta, nel foglio sotto «Perché». */
   children?: ReactNode;
+  /** Titolo della sezione dei children nel foglio (default «In questa ricetta»). */
+  childrenTitle?: string;
   className?: string;
 }
 
-export function WhyButton({ noteId, context, label, initialLevel, children, className }: WhyButtonProps) {
+export function WhyButton({ noteId, context, label, initialLevel, children, childrenTitle, className }: WhyButtonProps) {
   const { cms } = useCms();
   const [open, setOpen] = useState(false);
   const [requested, setRequested] = useState(false);
@@ -49,7 +51,7 @@ export function WhyButton({ noteId, context, label, initialLevel, children, clas
         <span className="why-button__label">{label ?? uiMessage("science.why.label")}</span>
       </button>
       {requested && (
-        <ScienceSheet noteId={noteId} open={open} onClose={() => setOpen(false)} initialLevel={initialLevel} context={context}>
+        <ScienceSheet noteId={noteId} open={open} onClose={() => setOpen(false)} initialLevel={initialLevel} context={context} childrenTitle={childrenTitle}>
           {children}
         </ScienceSheet>
       )}

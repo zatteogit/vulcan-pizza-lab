@@ -301,7 +301,7 @@ export function RecommendedStyles({
   };
 
   const FAMILY_FILTERS: { id: FamilyId | "all"; label: string }[] = [
-    { id: "all", label: uiMessage("features.recipe.recommended-styles.tutti-148ba18e") },
+    { id: "all", label: uiMessage("features.recipe.recommended-styles.148ba18e") },
     { id: "napoletana", label: cms.families.napoletana?.name ?? PIZZA_FAMILIES.napoletana.name },
     { id: "romana", label: cms.families.romana?.name ?? PIZZA_FAMILIES.romana.name },
     { id: "americana", label: cms.families.americana?.name ?? PIZZA_FAMILIES.americana.name },

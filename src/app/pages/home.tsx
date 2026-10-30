@@ -1267,7 +1267,7 @@ export function HomePage() {
                     {savedRecipeCount > 0 && (
                     <CtaButton as={Link} to="/profile?tab=recipes" variant="secondary" elevated={false} className="home-saved-recipes">
                       <Bookmark size={18} aria-hidden="true" />
-                      <span data-region="label">{uiMessage("pages.profile.ricette-salvate-b5c99ac7")}</span>
+                      <span data-region="label">{uiMessage("pages.profile.b5c99ac7")}</span>
                       <span data-region="count" className="type-numeric">{savedRecipeCount}</span>
                       <ChevronRight size={16} aria-hidden="true" />
                     </CtaButton>

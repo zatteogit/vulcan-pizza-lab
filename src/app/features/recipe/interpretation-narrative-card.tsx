@@ -19,7 +19,7 @@ import { interpretationShortName } from "./reference-label";
 
 /** Nome primario dell'interpretazione (maestro › locale › ente › firma). */
 function primaryName(it: Interpretation): string {
-  return it.author ?? it.pizzeria ?? it.organization ?? it.signature_name ?? uiMessage("features.recipe.interpretation-narrative-card.interpretazione-b24004b7");
+  return it.author ?? it.pizzeria ?? it.organization ?? it.signature_name ?? uiMessage("features.recipe.interpretation-narrative-card.b24004b7");
 }
 
 /** Riga meta: locale · città · anno (solo i pezzi presenti). */
@@ -257,7 +257,7 @@ function InterpretationNarrativeCard({
       className={`interpretation-card__url${selectable ? " interpretation-card__url--outside" : ""}`}
       onClick={(e) => e.stopPropagation()}
     >
-      {it.author ?? it.pizzeria ?? uiMessage("features.recipe.interpretation-narrative-card.approfondisci-44efee7c")} ↗
+      {it.author ?? it.pizzeria ?? uiMessage("features.recipe.interpretation-narrative-card.44efee7c")} ↗
     </a>
   ) : null;
   const card = (

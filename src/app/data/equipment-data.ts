@@ -11,6 +11,8 @@ type MixerLevel = "domestic" | "semi_pro" | "professional";
 
 interface MixerOption {
   id: MixerType;
+  /** Nome e descrizione arrivano dal CMS (getLocalizedMixerOptions): i dati
+   *  non ne tengono una copia italiana (stesso testo di CMS_DEFAULTS). */
   label: string;
   description: string;
   emoji: string;
@@ -21,18 +23,14 @@ interface MixerOption {
   frictionDegMin?: number;
 }
 
-const MIXER_OPTIONS: MixerOption[] = [
+const MIXER_OPTIONS: Omit<MixerOption, "label" | "description">[] = [
   {
     id: "hands",
-    label: "A mano",
-    description: "Impasto manuale, nessuna attrezzatura",
     emoji: "🤲",
     level: "domestic",
   },
   {
     id: "stand_domestic",
-    label: "Planetaria domestica",
-    description: "KitchenAid, Kenwood, Smeg — 4-7 L, gancio impastatore",
     emoji: "🥣",
     level: "domestic",
     frictionK: 22,
@@ -40,8 +38,6 @@ const MIXER_OPTIONS: MixerOption[] = [
   },
   {
     id: "planetary",
-    label: "Planetaria semi-pro",
-    description: "10-20 L, gancio a spirale, potenza 500W+",
     emoji: "⚙️",
     level: "semi_pro",
     frictionK: 18,
@@ -49,8 +45,6 @@ const MIXER_OPTIONS: MixerOption[] = [
   },
   {
     id: "spiral",
-    label: "Impastatrice a spirale",
-    description: "Vasca fissa/ribaltabile, professionale",
     emoji: "🔄",
     level: "professional",
     frictionK: 12,
@@ -58,8 +52,6 @@ const MIXER_OPTIONS: MixerOption[] = [
   },
   {
     id: "fork",
-    label: "Impastatrice a forcella",
-    description: "Lenta, basso attrito — ideale per alte idratazioni",
     emoji: "🍴",
     level: "professional",
     frictionK: 8,
@@ -125,11 +117,9 @@ interface SurfaceOption {
   bestFor: string[];
 }
 
-const SURFACE_OPTIONS: SurfaceOption[] = [
+const SURFACE_OPTIONS: Omit<SurfaceOption, "label" | "description">[] = [
   {
     id: "refractory_brick",
-    label: "Biscotto refrattario",
-    description: "3 cm, alta massa termica — forno a legna e prosumer",
     emoji: "🧱",
     conductivity: 1.0,
     heatClass: "slow",
@@ -137,8 +127,6 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
   },
   {
     id: "cordierite_stone",
-    label: "Pietra cordierite",
-    description: "1.5 cm, compromesso massa/velocità — forni da pizza elettrici e a gas",
     emoji: "🪨",
     conductivity: 1.5,
     heatClass: "medium",
@@ -146,8 +134,6 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
   },
   {
     id: "steel_plate",
-    label: "Piastra in acciaio",
-    description: "5-10 mm, trasferimento rapidissimo — base croccante in secondi",
     emoji: "🔩",
     conductivity: 50,
     heatClass: "very_fast",
@@ -155,8 +141,6 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
   },
   {
     id: "aluminum_pan",
-    label: "Teglia in alluminio",
-    description: "Leggera, conducibilità estrema — Detroit, teglia romana",
     emoji: "🫕",
     conductivity: 200,
     heatClass: "very_fast",
@@ -164,8 +148,6 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
   },
   {
     id: "blue_steel_pan",
-    label: "Teglia in ferro blu",
-    description: "Antiaderente naturale, bordo alto — teglia romana, focaccia",
     emoji: "🔷",
     conductivity: 50,
     heatClass: "very_fast",
@@ -173,8 +155,6 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
   },
   {
     id: "cast_iron",
-    label: "Padella in ghisa",
-    description: "Alta massa termica, bordo alto — Chicago, padellino",
     emoji: "⚫",
     conductivity: 52,
     heatClass: "very_fast",
@@ -182,8 +162,6 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
   },
   {
     id: "oven_rack",
-    label: "Griglia del forno",
-    description: "Nessuna superficie aggiuntiva — solo la griglia standard",
     emoji: "📐",
     conductivity: 0,
     heatClass: "slow",
@@ -203,31 +181,31 @@ interface ToolOption {
   description: string;
 }
 
-const TOOL_OPTIONS: ToolOption[] = [
+const TOOL_OPTIONS: Omit<ToolOption, "label" | "description">[] = [
   /* Essential */
-  { id: "digital_scale", label: "Bilancia digitale", emoji: "⚖️", category: "essential", description: "Precisione 1g, capacità 5kg+" },
-  { id: "thermometer", label: "Termometro", emoji: "🌡️", category: "essential", description: "IR o a sonda, per impasto e forno" },
-  { id: "scraper", label: "Raschietto", emoji: "🔪", category: "essential", description: "Plastica flessibile per pieghe e taglio" },
+  { id: "digital_scale", emoji: "⚖️", category: "essential", },
+  { id: "thermometer", emoji: "🌡️", category: "essential", },
+  { id: "scraper", emoji: "🔪", category: "essential", },
   /* FW-16: «Cassette per lievitazione» era lo stesso oggetto: unito qui
      (gli id salvati «proofing_boxes» migrano a «containers»). */
-  { id: "containers", label: "Contenitori lievitazione", emoji: "📦", category: "essential", description: "Cassette impilabili o ciotole con coperchio" },
+  { id: "containers", emoji: "📦", category: "essential", },
   /* Precision */
-  { id: "dough_cutter", label: "Tagliapasta", emoji: "📏", category: "precision", description: "Inox, per porzionare panetti con precisione" },
-  { id: "bench_knife", label: "Spatola da banco", emoji: "🗡️", category: "precision", description: "Acciaio inox, per ribaltare impasti ad alta idratazione" },
-  { id: "scoring_blade", label: "Lametta per scoring", emoji: "✂️", category: "precision", description: "Per incisioni decorative sulla superficie" },
+  { id: "dough_cutter", emoji: "📏", category: "precision", },
+  { id: "bench_knife", emoji: "🗡️", category: "precision", },
+  { id: "scoring_blade", emoji: "✂️", category: "precision", },
   /* Handling */
-  { id: "pizza_peel_wood", label: "Pala in legno", emoji: "🪵", category: "handling", description: "Per infornare — basso attrito con semola" },
-  { id: "pizza_peel_metal", label: "Pala in alluminio", emoji: "🪩", category: "handling", description: "Per girare e sfornare — sottile e reattiva" },
-  { id: "pizza_screen", label: "Retina forata", emoji: "🕸️", category: "handling", description: "Alluminio perforato per cottura croccante" },
+  { id: "pizza_peel_wood", emoji: "🪵", category: "handling", },
+  { id: "pizza_peel_metal", emoji: "🪩", category: "handling", },
+  { id: "pizza_screen", emoji: "🕸️", category: "handling", },
   /* Containment */
-  { id: "bannetons", label: "Cestini lievitazione", emoji: "🧺", category: "containment", description: "Per forme tonde, con telo in lino" },
+  { id: "bannetons", emoji: "🧺", category: "containment", },
 ];
 
-const TOOL_CATEGORIES: Record<ToolCategory, { label: string; emoji: string }> = {
-  essential: { label: "Essenziali", emoji: "⭐" },
-  precision: { label: "Precisione", emoji: "🎯" },
-  handling: { label: "Movimentazione", emoji: "🖐️" },
-  containment: { label: "Contenimento", emoji: "📦" },
+const TOOL_CATEGORY_EMOJI: Record<ToolCategory, { emoji: string }> = {
+  essential: { emoji: "⭐" },
+  precision: { emoji: "🎯" },
+  handling: { emoji: "🖐️" },
+  containment: { emoji: "📦" },
 };
 
 /* ═══ FULL EQUIPMENT STATE ═══ */
@@ -376,8 +354,8 @@ export function getLocalizedMixerOptions(cms: EquipCmsLabels): MixerOption[] {
     const map = MIXER_CMS_MAP[m.id];
     return {
       ...m,
-      label: (cms[map.label] as string) || m.label,
-      description: (cms[map.desc] as string) || m.description,
+      label: cms[map.label] ?? "",
+      description: cms[map.desc] ?? "",
     };
   });
 }
@@ -388,8 +366,8 @@ export function getLocalizedSurfaceOptions(cms: EquipCmsLabels): SurfaceOption[]
     const map = SURFACE_CMS_MAP[s.id];
     return {
       ...s,
-      label: (cms[map.label] as string) || s.label,
-      description: (cms[map.desc] as string) || s.description,
+      label: cms[map.label] ?? "",
+      description: cms[map.desc] ?? "",
     };
   });
 }
@@ -398,21 +376,19 @@ export function getLocalizedSurfaceOptions(cms: EquipCmsLabels): SurfaceOption[]
 export function getLocalizedToolOptions(cms: EquipCmsLabels): ToolOption[] {
   return TOOL_OPTIONS.map((t) => {
     const map = TOOL_CMS_MAP[t.id];
-    if (!map) return t;
     return {
       ...t,
-      label: (cms[map.label] as string) || t.label,
-      description: (cms[map.desc] as string) || t.description,
+      label: map ? cms[map.label] ?? "" : t.id,
+      description: map ? cms[map.desc] ?? "" : "",
     };
   });
 }
 
 /** Return localized tool categories */
 export function getLocalizedToolCategories(cms: EquipCmsLabels): Record<ToolCategory, { label: string; emoji: string }> {
-  return {
-    essential: { ...TOOL_CATEGORIES.essential, label: (cms[CAT_CMS_MAP.essential] as string) || TOOL_CATEGORIES.essential.label },
-    precision: { ...TOOL_CATEGORIES.precision, label: (cms[CAT_CMS_MAP.precision] as string) || TOOL_CATEGORIES.precision.label },
-    handling: { ...TOOL_CATEGORIES.handling, label: (cms[CAT_CMS_MAP.handling] as string) || TOOL_CATEGORIES.handling.label },
-    containment: { ...TOOL_CATEGORIES.containment, label: (cms[CAT_CMS_MAP.containment] as string) || TOOL_CATEGORIES.containment.label },
-  };
+  const out = {} as Record<ToolCategory, { label: string; emoji: string }>;
+  for (const id of Object.keys(CAT_CMS_MAP) as ToolCategory[]) {
+    out[id] = { ...TOOL_CATEGORY_EMOJI[id], label: cms[CAT_CMS_MAP[id]] ?? "" };
+  }
+  return out;
 }

@@ -10,6 +10,7 @@ import {
   TROUBLESHOOTING_ES,
   GLOSSARY_TERMS_ES,
   SCIENCE_ES,
+  FLOURS_ES,
 } from "./domain-es";
 
 /** Spanish locale bundle */
@@ -1533,6 +1534,7 @@ export const ES_LOCALE: CmsContent = {
     navExplore: "Explorar",
     navLearn: "Aprender",
     navProfile: "Perfil",
+    navProfileKitchen: "Perfil y cocina",
     navSearch: "Buscar",
     learnGlossary: "Glosario",
     learnGlossaryDesc:
@@ -1554,6 +1556,7 @@ export const ES_LOCALE: CmsContent = {
     searchPlaceholder: "Buscar estilo, receta, ingrediente, harina, término, problema…",
     searchCatStyles: "Estilos",
     searchCatFlours: "Harinas",
+    searchCatOvens: "Hornos",
     searchCatGlossary: "Glosario",
     searchCatProblems: "Problemas",
     searchCatGuides: "Gu\u00EDas",
@@ -1679,29 +1682,29 @@ export const ES_LOCALE: CmsContent = {
     preCookStart: "Usar la referencia",
     matchTones: {
       t90: {
-        title: UI_MESSAGES_ES["features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"],
-        canonical: UI_MESSAGES_ES["features.recipe.recipe-match-card.la-canonica-e-la-tua-cucina-parlano-gia-la-37bbb4fd"],
-        adapted: UI_MESSAGES_ES["features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a"],
+        title: "Compatibilidad excelente",
+        canonical: "Un buen punto de partida para tu cocina. Comprueba los requisitos indicados.",
+        adapted: "Comprueba los ingredientes y el equipo que necesita esta versión.",
       },
       t75: {
-        title: UI_MESSAGES_ES["features.recipe.recipe-match-card.ottima-intesa-55470040"],
-        canonical: UI_MESSAGES_ES["features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12"],
-        adapted: UI_MESSAGES_ES["features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6"],
+        title: "Buena compatibilidad",
+        canonical: "Comprueba los requisitos indicados antes de empezar.",
+        adapted: "Revisa los cambios y requisitos de esta versión.",
       },
       t60: {
-        title: UI_MESSAGES_ES["features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af"],
-        canonical: UI_MESSAGES_ES["features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69"],
-        adapted: UI_MESSAGES_ES["features.recipe.recipe-match-card.la-ricetta-funziona-ma-chiede-un-minimo-di-7c183f59"],
+        title: "Por valorar",
+        canonical: "Comprueba en qué se aleja la receta de las condiciones de tu cocina.",
+        adapted: "Esta versión requiere atención: lee los requisitos y cambios.",
       },
       t40: {
-        title: UI_MESSAGES_ES["features.recipe.recipe-match-card.per-le-cose-buone-ci-vuole-tempo-e6addc9c"],
-        canonical: UI_MESSAGES_ES["features.recipe.recipe-match-card.la-ricetta-e-seria-meglio-adattarla-al-tuo-551e300f"],
-        adapted: UI_MESSAGES_ES["features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050"],
+        title: "Compatibilidad limitada",
+        canonical: "Valora los cambios necesarios o elige un estilo más cercano a tu cocina.",
+        adapted: "Quedan diferencias importantes respecto a la referencia. Consulta el detalle.",
       },
       t0: {
-        title: UI_MESSAGES_ES["features.recipe.recipe-match-card.cuore-spezzato-42157bb9"],
-        canonical: UI_MESSAGES_ES["features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75"],
-        adapted: UI_MESSAGES_ES["features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf"],
+        title: "Por revisar",
+        canonical: "Lee el motivo de la puntuación baja antes de decidir cómo continuar.",
+        adapted: "Los cambios no resuelven todas las limitaciones. Revisa el detalle y las alternativas.",
       },
     },
     ceilingUnviableOven: "Con este horno, la propuesta llega a {ceiling}/100. Valora un estilo que necesite menos calor.",
@@ -1842,6 +1845,7 @@ export const ES_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_ES as any,
   glossaryTerms: GLOSSARY_TERMS_ES as any,
   science: SCIENCE_ES,
+  flours: FLOURS_ES,
   /* FW-06 — punteggio spiegabile (D-E). */
   scoreExplainer: {
     scoreAria: "{label}: {score} de 100",

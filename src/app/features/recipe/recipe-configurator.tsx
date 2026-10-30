@@ -406,7 +406,7 @@ export function RecipeConfigurator({
           : f === "flourW" ? [cfg.flourWLabel, fmt.number(v)]
           : f === "flourPL" ? [cfg.plLabel, fmt.number(v, { minimumFractionDigits: 2, maximumFractionDigits: 2 })]
           : f === "fermentHours" ? [style.dough.unleavened ? cfg.restLabel : cfg.fermentLabel, fmt.durationShort(v)]
-          : [uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-e4ff14ef"), fmt.celsius(v)];
+          : [uiMessage("features.recipe.recipe-configurator.e4ff14ef"), fmt.celsius(v)];
         return uiMessage("features.recipe.recipe-configurator.linkedItem", [label, text]);
       }), bcp47)
     : null;
@@ -480,14 +480,14 @@ export function RecipeConfigurator({
             aria-pressed={smartLink}
           >
             {smartLink ? <Link size={14} aria-hidden="true" /> : <Unlink size={14} aria-hidden="true" />}
-            {uiMessage("features.recipe.recipe-configurator.smart-link-95995174")}
+            {uiMessage("features.recipe.recipe-configurator.95995174")}
           </button>
         )}
       </div>
       {/* G2-WP-01: la regola si legge senza passare il mouse (L1) e la
           scienza è dietro «Perché?»; ogni propagazione si annuncia e si annulla. */}
       {showAdvanced && (
-        <section data-region="linked-params" className="config-linked" aria-label={uiMessage("features.recipe.recipe-configurator.smart-link-95995174")}>
+        <section data-region="linked-params" className="config-linked" aria-label={uiMessage("features.recipe.recipe-configurator.95995174")}>
           <p className="config-linked__help">
             {uiMessage("features.recipe.recipe-configurator.linkedHelp")}
             <WhyButton noteId="linked-params" />
@@ -623,8 +623,8 @@ export function RecipeConfigurator({
           {showAdvanced && customSalt !== undefined && onSaltChange && (
             <div className="config-field">
               <GradientSlider
-              name={uiMessage("features.recipe.recipe-configurator.sale-0028d743")}
-                label={<Label>{uiMessage("features.recipe.recipe-configurator.sale-0028d743")}</Label>}
+              name={uiMessage("features.recipe.recipe-configurator.0028d743")}
+                label={<Label>{uiMessage("features.recipe.recipe-configurator.0028d743")}</Label>}
                 value={Math.round(customSalt * 10) / 10}
                 onChange={onSaltChange}
                 min={1.5}
@@ -661,7 +661,7 @@ export function RecipeConfigurator({
                   min={1}
                   max={96}
                   step={1}
-                  unit={uiMessage("features.recipe.recipe-configurator.h-27d5482e")}
+                  unit={uiMessage("features.recipe.recipe-configurator.27d5482e")}
                   rangeMin={style.dough.fermentation_hours_range[0]}
                   rangeMax={style.dough.fermentation_hours_range[1]}
                   gradient={SLIDER_GRADIENTS.fermentation}
@@ -669,7 +669,7 @@ export function RecipeConfigurator({
                   adaptiveMax={adaptiveHints.fermentation?.adaptiveMax}
                   optimalValue={optimum?.fermentation_hours ?? Math.round((sF[0] + sF[1]) / 2)}
                 />
-                <AdaptiveHint {...adaptiveHints.fermentation} unit={uiMessage("features.recipe.recipe-configurator.h-27d5482e")} />
+                <AdaptiveHint {...adaptiveHints.fermentation} unit={uiMessage("features.recipe.recipe-configurator.27d5482e")} />
               </div>
 
               {/* Pre-fermento — U-3: tra i parametri avanzati */}
@@ -766,19 +766,19 @@ export function RecipeConfigurator({
               <div className="config-field">
                 <div className="config-temp-header">
                   <div className="config-temp-header__label-group">
-                    <Label>{uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}</Label>
-                    <InfoTip label={uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}>{uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-dell-impasto-737f1c50")}</InfoTip>
+                    <Label>{uiMessage("features.recipe.recipe-configurator.df12789a")}</Label>
+                    <InfoTip label={uiMessage("features.recipe.recipe-configurator.df12789a")}>{uiMessage("features.recipe.recipe-configurator.737f1c50")}</InfoTip>
                     {/* G2-WP-02 (S06-A-14): il perché, con la stima del motore. */}
                     <WhyButton noteId="q10-fermentation" context={{ tempC: customFermentTemp, hours: customFermentHours }} />
                   </div>
                   {suggestedTemp && (
                     <span className="config-temp-header__badge">
-                      {uiMessage("features.recipe.recipe-configurator.consigliato-bf1907c1")}{
+                      {uiMessage("features.recipe.recipe-configurator.bf1907c1")}{
                         suggestedTemp === "fridge"
-                          ? uiMessage("features.recipe.recipe-configurator.frigo-51f4c92e")
+                          ? uiMessage("features.recipe.recipe-configurator.51f4c92e")
                           : suggestedTemp === "cool"
-                            ? uiMessage("features.recipe.recipe-configurator.fresco-bffc946d")
-                            : uiMessage("features.recipe.recipe-configurator.ambiente-e6fefb74")
+                            ? uiMessage("features.recipe.recipe-configurator.bffc946d")
+                            : uiMessage("features.recipe.recipe-configurator.e6fefb74")
                       }
                     </span>
                   )}
@@ -788,7 +788,7 @@ export function RecipeConfigurator({
                     per tutti restano le tre scelte rapide. */}
                 {showAdvanced ? (
                   <GradientSlider
-                    name={uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-e4ff14ef")}
+                    name={uiMessage("features.recipe.recipe-configurator.e4ff14ef")}
                     value={customFermentTemp}
                     onChange={handleFT}
                     min={1}
@@ -818,7 +818,7 @@ export function RecipeConfigurator({
                     <SegmentedControl
                       value={activeVal}
                       onValueChange={(val) => { if (val !== "other") handleFT(tempMap[val]); }}
-                      ariaLabel={uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-e4ff14ef")}
+                      ariaLabel={uiMessage("features.recipe.recipe-configurator.e4ff14ef")}
                       size="sm"
                       fullWidth
                       className="config-temp-quick"
@@ -1037,7 +1037,7 @@ export function RecipeConfigurator({
                     {cfg.panArea}
                   </span>
                   <span className="type-numeric config-summary-row__value">
-                    {area} {uiMessage("features.recipe.recipe-configurator.cm2-7776ab6e")}</span>
+                    {area} {uiMessage("features.recipe.recipe-configurator.7776ab6e")}</span>
                 </div>
               </div>
             );
@@ -1130,9 +1130,9 @@ function Label({ children }: { children: React.ReactNode }) {
    glossario), non il tipo 00/0, che indica la raffinazione e non la forza. */
 const scaleBand = (id: FlourStrength) => FLOUR_STRENGTH_SCALE.find((band) => band.id === id)!;
 const BEGINNER_FLOURS: { label: string; sub: (locale: string) => string; w: number; classes: FlourStrength[] }[] = [
-  { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubWeak", [formatNumber(scaleBand("weak").max, locale)]), w: 185, classes: ["weak"] },
-  { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubMedium", [formatRange(scaleBand("medium").min, scaleBand("medium").max - 1, locale)]), w: 250, classes: ["medium"] },
-  { get label() { return uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubStrong", [formatNumber(scaleBand("strong").min, locale)]), w: 300, classes: ["strong", "veryStrong"] },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.62b6eb4c"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubWeak", [formatNumber(scaleBand("weak").max, locale)]), w: 185, classes: ["weak"] },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.0c77aeec"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubMedium", [formatRange(scaleBand("medium").min, scaleBand("medium").max - 1, locale)]), w: 250, classes: ["medium"] },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.a88f9d1e"); }, sub: (locale) => uiMessage("features.recipe.recipe-configurator.flourSubStrong", [formatNumber(scaleBand("strong").min, locale)]), w: 300, classes: ["strong", "veryStrong"] },
 ];
 
 function BeginnerFlourPicker({
@@ -1211,7 +1211,7 @@ function BeginnerFlourPicker({
       ) : (
       <p className={isIdealFit ? "config-flour-picker__fit config-flour-picker__fit--ideal" : fit === "weak" ? "config-flour-picker__fit config-flour-picker__fit--weak" : "config-flour-picker__fit"}>
         {fit === "ideal"
-          ? uiMessage("features.recipe.recipe-configurator.perfetta-per-questo-stile-4307e09e")
+          ? uiMessage("features.recipe.recipe-configurator.4307e09e")
           : fit === "weak"
             ? uiMessage("features.recipe.recipe-configurator.flourFitWeak", [formatNumber(wMin, bcp47)])
             : uiMessage("features.recipe.recipe-configurator.flourFitStrong", [formatRange(wMin, wMax, bcp47)])}

@@ -127,17 +127,17 @@ const TABS: TabDef[] = [
     labelKey: "navExplore",
     /* "Scopri", non "Stili": la sezione contiene ricette iconiche E stili
        (feedback giugno 2026). */
-    get labelFallback() { return uiMessage("components.shared.app-shell.scopri-b4aad9f0"); },
+    get labelFallback() { return uiMessage("components.shared.app-shell.b4aad9f0"); },
     icon: Compass,
     path: "/explore",
     match: ["/explore"],
   },
   /* D-037: Crea è la seconda tab, su /crea. */
-  { id: "create", labelKey: "navCreate", get labelFallback() { return uiMessage("components.shared.app-shell.crea-e7c107d0"); }, icon: Flame, path: "/crea", match: ["/crea"] },
+  { id: "create", labelKey: "navCreate", get labelFallback() { return uiMessage("components.shared.app-shell.e7c107d0"); }, icon: Flame, path: "/crea", match: ["/crea"] },
   {
     id: "learn",
     labelKey: "navLearn",
-    get labelFallback() { return uiMessage("components.shared.app-shell.impara-bc1df07a"); },
+    get labelFallback() { return uiMessage("components.shared.app-shell.bc1df07a"); },
     icon: GraduationCap,
     path: "/learn",
     match: ["/learn"],
@@ -148,7 +148,7 @@ const TABS: TabDef[] = [
 const PROFILE_TAB: TabDef = {
   id: "profile",
   labelKey: "navProfile",
-  get labelFallback() { return uiMessage("components.shared.app-shell.profilo-afedc6c9"); },
+  get labelFallback() { return uiMessage("components.shared.app-shell.afedc6c9"); },
   icon: User,
   path: "/profile",
   match: ["/profile"],
@@ -327,7 +327,9 @@ function BottomTabBar({
           {cms.ui.cancel}
         </motion.button>
       ) : (
-        <motion.div layoutId="dock-action" transition={morph} role="search" className="app-shell-dock__search">
+        /* G1a-WP-03 (S01-B-11): niente landmark «search» attorno a un solo
+           bottone; il landmark sta dove c'è il campo. */
+        <motion.div layoutId="dock-action" transition={morph} data-region="dock-search" className="app-shell-dock__search">
           <SearchButton
             size="lg"
             onOpen={onSearchOpen}
@@ -398,11 +400,14 @@ function SidebarRail({
           ))}
         </div>
 
-        <div role="search" className="app-shell-rail__search">
+        {/* G1a-WP-03 (S01-B-11): icona ed etichetta come le tab, stato
+            «espanso» mentre la ricerca è aperta. */}
+        <div data-region="rail-search" className="app-shell-rail__search">
           <SearchButton
             size="sm"
             onOpen={onSearchOpen}
-            active={searchOpen}
+            label
+            expanded={searchOpen}
           />
         </div>
 
@@ -426,8 +431,21 @@ function SidebarRail({
 }
 
 /* ═══ MARCHIO IN TESTATA — logo nel blob d'impasto + nome (D-040) ═══ */
-function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
+function ShellBrand({ onAboutOpen, onVisibleChange }: { onAboutOpen: () => void; onVisibleChange: (visible: boolean) => void }) {
   const { cms } = useCms();
+  /* G1a-WP-03 (S01-B-02): finché il marchio si vede, la pizzata attiva si
+     riduce per non coprirlo (anche il co-branding del partner). */
+  const lockupRef = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = lockupRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => onVisibleChange(entry.isIntersecting));
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      onVisibleChange(false);
+    };
+  }, [onVisibleChange]);
   // Co-branding delle edizioni dedicate: «Vulcan · per <partner>».
   const partner = EDITION.partner ? uiMessage("edition.partner", [EDITION.partner.name]) : null;
   return (
@@ -436,7 +454,7 @@ function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
       {/* FW-12 (S01-B-05): un solo ciclo, poi fermo (WCAG 2.2.2). */}
       <VulcanHero size={42} energy={45} markRatio={0.5} loops={0} />
       {/* FW-15 (S05-B-21, S18-A-10/B-08): nome e partner in colonna, allineati all'inizio del nome. */}
-      <span className="app-shell-brand__lockup" data-region="brand-lockup">
+      <span ref={lockupRef} className="app-shell-brand__lockup" data-region="brand-lockup">
         <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
         {partner && <span className="app-shell-brand__partner type-data-sm" aria-hidden="true">{partner}</span>}
       </span>
@@ -448,7 +466,8 @@ function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
    Audit Sprint 12: Profilo è impostazione utente, non una tab di navigazione. */
 function ProfileButton({ active, navState }: { active: boolean; navState: LiquidNavState }) {
   const { cms } = useCms();
-  const label = (cms.pages as any)?.navProfile || "Profilo";
+  /* G1a-WP-03 (S01-B-07, D-G1a-03): il nome dice che lì si imposta la cucina. */
+  const label = cms.pages.navProfileKitchen;
   const { scrolled } = navState;
   /* FW-13: misura e raggio vivono in CSS (.app-shell-profile--scrolled). */
   return (
@@ -475,10 +494,13 @@ function CookSessionUI({
   showAction: showActionOutside,
   profilePage,
   compact,
+  brandVisible,
 }: {
   canStartRecipe: boolean;
   hasProfileButton: boolean;
   showAction: boolean;
+  /** G1a-WP-03: il marchio in testata è visibile (solo su mobile). */
+  brandVisible: boolean;
   /** G4a-WP-02 (S10-B-25): sul Profilo il widget c'è solo con una pizzata attiva. */
   profilePage: boolean;
   compact: boolean;
@@ -491,12 +513,14 @@ function CookSessionUI({
       <div
         className={`cook-actions${hasProfileButton ? " cook-actions--beside-profile" : ""}${profilePage ? " cook-actions--beside-close" : ""}${compact ? " cook-actions--compact" : ""}`}
         hidden={!showAction || overlayOpen}
+        data-brand={brandVisible ? "visible" : undefined}
       >
         {showAction && (
         <ActiveCookWidget
           canStartRecipe={canStartRecipe}
           hasProfileButton={hasProfileButton}
           compact={compact}
+          mini={brandVisible}
           inline
         />
         )}
@@ -518,6 +542,7 @@ function CookSessionUI({
  *  le pagine e gli strumenti di sviluppo nel grafo della shell. */
 export function AppShell({ isNotFoundPath }: { isNotFoundPath?: (pathname: string) => boolean } = {}) {
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [brandInView, setBrandInView] = useState(false);
   const [themeMode, setThemeModeState] = useState<ThemeMode>(loadThemeMode);
   const [darkMode, setDarkModeState] = useState(() => resolveThemeMode(loadThemeMode()));
   const [devMode, setDevModeState] = useState(loadDevMode);
@@ -762,7 +787,7 @@ export function AppShell({ isNotFoundPath }: { isNotFoundPath?: (pathname: strin
               {/* Marchio in testata (D-040): solo sulle pagine delle tab, su
                   mobile; su desktop il logo sta già nella barra laterale. Nel
                   banner, non fuori dai landmark (audit n. 30). */}
-              {TABS.some((tab) => tab.path === location.pathname) && <ShellBrand onAboutOpen={() => setAboutOpen(true)} />}
+              {TABS.some((tab) => tab.path === location.pathname) && <ShellBrand onAboutOpen={() => setAboutOpen(true)} onVisibleChange={setBrandInView} />}
             </header>
           )}
 
@@ -776,6 +801,7 @@ export function AppShell({ isNotFoundPath }: { isNotFoundPath?: (pathname: strin
             showAction={showCookAction && !searchOpen}
             profilePage={isProfilePage}
             compact={navState.scrolled}
+            brandVisible={brandInView}
           />
 
           {/* Main content area */}

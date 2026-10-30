@@ -106,7 +106,7 @@ export function ProcedureTimeline({
                   {cms.misc.techAdjustmentsApplied}
                 </span>
                 <span className="type-code procedure-timeline-comp__badge">
-                  {uiMessage("features.recipe.procedure-timeline.nerd-2de974af")}</span>
+                  {uiMessage("features.recipe.procedure-timeline.2de974af")}</span>
                 <span className="type-numeric procedure-timeline-comp__count">
                   {compensations.length}
                 </span>

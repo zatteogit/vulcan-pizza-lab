@@ -1,4 +1,4 @@
-import { METHOD_MESSAGES_IT } from "../data/method-messages";
+import { METHOD_MESSAGES_IT, STEP_COPY_IT } from "../data/method-messages";
 // ═══ VULCAN PIZZA ENGINE ═══
 // Scientific pizza recipe generation based on Progetto Vulcan
 // Last audit alignment: 14 feb 2026 — Audit Verifica Implementativa v1
@@ -700,10 +700,8 @@ export function passiveActivityMessage(step: TimelineStep): EngineMsg | null {
   if (!step.parallel_activity || step.parallel_activity.kind === "rest") return null;
   // Per le fritte si scalda l'olio, non il forno (M-6).
   return step.variant === "oil"
-    ? em("timeline.preheat.includesProofOil",
-      "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.")
-    : em("timeline.preheat.includesProof",
-      "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.");
+    ? em("timeline.preheat.includesProofOil", METHOD_MESSAGES_IT["timeline.preheat.includesProofOil"])
+    : em("timeline.preheat.includesProof", METHOD_MESSAGES_IT["timeline.preheat.includesProof"]);
 }
 
 /** G3-WP-03: la soglia con cui il motore ha scelto il passo del condimento
@@ -3660,22 +3658,14 @@ function generateTimeline(
     description: isMultiPiece
       ? renderStepIt([divideMessage])
       : isGentleDivide
-        ? "Dividi con delicatezza, senza sgonfiare l'impasto."
-        : "Dividi in panetti del peso corretto. Forma le palline.",
+        ? STEP_COPY_IT.divideGentle.desc
+        : STEP_COPY_IT.divide.desc,
     duration_minutes: 15,
     icon: "scissors",
     timing_label: "15 min",
     tip: isGentleDivide
-      ? {
-          beginner:
-            "Mani delicate! Le bolle nell'impasto sono preziose: piega i lembi sotto, senza schiacciare.",
-          nerd: "Con idratazione >75% lo staglio aggressivo collassa gli alveoli formati in puntata: tensione minima, degassamento quasi nullo.",
-        }
-      : {
-          beginner:
-            "Usa una bilancia! Taglia con un tarocco e arrotonda ogni pezzo in una palla liscia.",
-          nerd: "Lo staglio crea tensione superficiale che intrappola CO₂ durante l'appretto e definisce la struttura alveolare finale.",
-        },
+      ? { beginner: STEP_COPY_IT.divideGentle.tipBeginner, nerd: STEP_COPY_IT.divideGentle.tipNerd }
+      : { beginner: STEP_COPY_IT.divide.tipBeginner, nerd: STEP_COPY_IT.divide.tipNerd },
   });
 
   /* ─── APPRETTO + PRERISCALDO (audit roleplay giugno 2026, ENG-5) ───
@@ -3712,11 +3702,7 @@ function generateTimeline(
       timing_label: formatDuration(Math.round(proofStepMinutes / 60)),
       tip: isUnleavened
         ? restTip
-        : {
-            beginner:
-              "I panetti devono essere morbidi. Se li premi con un dito, tornano su lentamente.",
-            nerd: "Poke test: ritorno lento = fermentazione ottimale. Troppo rapido = sotto-lievitato. Nessun ritorno = over-proofed.",
-          },
+        : { beginner: STEP_COPY_IT.proof.tipBeginner, nerd: STEP_COPY_IT.proof.tipNerd },
     });
   }
 
@@ -3745,8 +3731,8 @@ function generateTimeline(
       icon: "flame",
       timing_label: `${preheatMinutes} min`,
       tip: {
-        beginner: "Sotto i 170°C la pizza assorbe olio e diventa unta; sopra i 190°C si colora fuori e resta cruda dentro.",
-        nerd: "Tra 180 e 190°C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
+        beginner: METHOD_MESSAGES_IT["timeline.heatOil.tipBeginner"],
+        nerd: METHOD_MESSAGES_IT["timeline.heatOil.tipNerd"],
       },
     });
   } else steps.push({
@@ -3955,8 +3941,8 @@ function generateTimeline(
         icon: "flame",
         timing_label: formatCookTime(effectiveCookSec),
         tip: {
-          beginner: "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
-          nerd: "Il vapore interno gonfia il disco nei primi secondi; girandola a metà, crosta e ripieno cuociono in modo uniforme.",
+          beginner: METHOD_MESSAGES_IT["timeline.fry.tipBeginner"],
+          nerd: METHOD_MESSAGES_IT["timeline.fry.tipNerd"],
         },
       });
     } else steps.push(

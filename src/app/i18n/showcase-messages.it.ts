@@ -1,6 +1,6 @@
 /**
  * Catalogo italiano dello showcase, separato dal bundle prodotto.
- * Le chiavi sono stabili: namespace + slug + hash del messaggio.
+ * Le chiavi sono stabili: namespace + hash del messaggio (le più vecchie anche lo slug).
  */
 export const SHOWCASE_MESSAGES_IT: Record<string, string> = {
   "components.design-system.carousel-variants.a11y-9126f700": "A11y",

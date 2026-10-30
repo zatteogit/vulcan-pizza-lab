@@ -949,3 +949,32 @@ export const SCIENCE_FR: CmsScience = {
     "faq": "questions fréquentes",
   },
 };
+
+/* G1a-WP-01 — flour notes (keys as FLOUR_NOTES_DEFAULTS). */
+export const FLOURS_FR: Record<string, { note: string }> = {
+  caputo_pizzeria: { note: "Type 00, le classique de la pizza napolitaine. Adaptée aux pousses courtes et moyennes." },
+  caputo_nuvola: { note: "Type 0, pensée pour des bords hauts et alvéolés comme le canotto." },
+  petra_5037: { note: "Absorbe énormément d'eau : adaptée aux longues maturations et à une hydratation élevée. Utilisée pour la pizza romaine en plaque façon Bonci." },
+  "5stagioni_rossa": { note: "Type 00 pour la pizza napolitaine. Adaptée aux longues maturations au réfrigérateur." },
+  dallagiovanna_manitoba_oro: { note: "Manitoba type 0, forte. Élastique et tenace, pour les longues pousses." },
+  manitoba_generica: { note: "Farine de force pour les longues pousses et les hydratations élevées. Elle demande une autolyse." },
+  "00_generica": { note: "Farine faible, adaptée aux pousses courtes et aux pâtes simples." },
+  "0_generica": { note: "Farine moyenne, polyvalente pour la plupart des styles." },
+  integrale_generica: { note: "Mie rustique. Plutôt en mélange avec de la farine blanche, de 30 à 50 %." },
+  semola_generica: { note: "Blé dur : couleur jaune et goût caractéristique. En mélange avec du blé tendre, de 20 à 30 %." },
+  caputo_cuoco: { note: "Type 00 professionnelle pour la pizza napolitaine classique. Pour les longues maturations." },
+  petra_3_evolutiva: { note: "Moulue à la meule de pierre, goût complexe. Pour les longues maturations." },
+  "5stagioni_5lune": { note: "Farine de grande force, pour les pâtes exigeantes et les longues pousses." },
+  mix_gluten_free: { note: "Mélange commercial sans gluten (riz, maïs, tapioca, xanthane). Pousse courte." },
+  farro_dicoccum: { note: "Amidonnier ancien, goût de noisette. Gluten faible : en mélange avec du blé tendre, de 30 à 50 %." },
+  farro_spelta: { note: "Goût doux, gluten fragile. En mélange avec la 00, de 40 à 60 %, pour la structure. Parfaite pour les focaccias rustiques." },
+  kamut_khorasan: { note: "Blé ancien riche en protéines. Jaune doré, goût beurré. En mélange avec du blé tendre, de 30 à 50 %." },
+  segale: { note: "Les pentosanes rendent la pâte collante : au plus 15–20 % du mélange. Goût intense et acidulé, idéal avec le levain." },
+  riso: { note: "Neutre, ne forme pas de gluten. Base des mélanges sans gluten (40–50 %), avec des amidons comme le tapioca et le maïs et des hydrocolloïdes." },
+  mais: { note: "Ne forme pas de gluten, couleur jaune. Donne du croustillant en surface. Au plus 20–30 % avec du blé tendre, ou 40 % dans un mélange sans gluten." },
+  grano_saraceno: { note: "Malgré son nom, ce n'est pas du blé et il ne forme pas de gluten. Goût intense de terre et de noisette. Au plus 15–25 % du mélange. Typique de la tradition alpine." },
+  avena: { note: "Les bêta-glucanes la rendent moelleuse. Au plus 15–20 % avec du blé tendre. Goût doux." },
+  teff: { note: "Céréale éthiopienne qui ne forme pas de gluten. Goût de malt et de chocolat. Au plus 20–30 % dans un mélange sans gluten. Chère." },
+  ceci: { note: "Ne forme pas de gluten, riche en protéines. Traditionnelle dans la farinata ligure. Au plus 10–15 % de la pâte à pizza, pour le goût et le croustillant." },
+  tipo1_macinata_pietra: { note: "Semi-complète et rustique, goût complexe. Un bon compromis entre la 00 et la complète." },
+};

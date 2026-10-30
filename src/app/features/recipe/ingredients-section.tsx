@@ -255,7 +255,7 @@ export function IngredientsSection({
                     )
                   : (
                       <>
-                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} label={flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)} /> {uiMessage("features.recipe.ingredients-section.p-l-c4730ae9")}{recipe.flour_pl}
+                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} label={flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)} /> {uiMessage("features.recipe.ingredients-section.c4730ae9")}{recipe.flour_pl}
                       </>
                     )
             }
@@ -270,7 +270,7 @@ export function IngredientsSection({
                   <span className="type-body ingredients-blend__name">
                     ↳ {c.name}{" "}
                     <span className="type-numeric">
-                      {c.pct}%{c.w ? uiMessage("features.recipe.ingredients-section.w-value-f84aef04", [c.w]) : ""}
+                      {c.pct}%{c.w ? uiMessage("features.recipe.ingredients-section.f84aef04", [c.w]) : ""}
                     </span>
                   </span>
                   <span className="type-numeric ingredients-blend__grams">
@@ -287,7 +287,7 @@ export function IngredientsSection({
                     {ui.flourEffectiveGluten}
                   </span>
                   <span className="type-numeric ingredients-blend__grams">
-                    {uiMessage("features.recipe.ingredients-section.w-e07879a9")}{recipe.effective_gluten_w}
+                    {uiMessage("features.recipe.ingredients-section.e07879a9")}{recipe.effective_gluten_w}
                   </span>
                 </div>
               )}

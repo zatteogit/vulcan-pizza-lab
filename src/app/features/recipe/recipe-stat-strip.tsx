@@ -169,10 +169,10 @@ export function SpecCell({
   const parts = splitStatValue(value);
   const pair = changed ? [changed.canonical, value] : [];
   const changedTitle = !changed ? undefined : optimized
-    ? uiMessage("features.recipe.recipe-stat-strip.prima-value-ottimizzato-value-e6e2e71f", pair)
+    ? uiMessage("features.recipe.recipe-stat-strip.e6e2e71f", pair)
     : uiMessage("features.recipe.recipe-stat-strip.modified", pair);
   const changedLabel = !changed ? undefined : optimized
-    ? uiMessage("features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8", pair)
+    ? uiMessage("features.recipe.recipe-stat-strip.dca62da8", pair)
     : uiMessage("features.recipe.recipe-stat-strip.modified", pair);
   return (
     <motion.div

@@ -13,6 +13,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { useCms } from "../../features/cms/cms-context";
 import { motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
+import { SEARCH_RESULTS_ID } from "./search-field";
 
 const SEARCH_BUTTON_SIZE = {
   sm: { className: "search-button--sm", icon: 20 },
@@ -31,7 +32,7 @@ function shortcutHint(): string | null {
     navigator.platform ??
     "";
   return /mac|iphone|ipad/i.test(platform)
-    ? uiMessage("components.shared.search-button.k-64d86f33")
+    ? uiMessage("components.shared.search-button.64d86f33")
     : uiMessage("components.shared.search-button.shortcut-ctrl");
 }
 
@@ -39,13 +40,17 @@ export function SearchButton({
   size = "md",
   className,
   onOpen,
-  active = false,
+  label = false,
+  expanded,
 }: {
   size?: keyof typeof SEARCH_BUTTON_SIZE;
   className?: string;
   onOpen?: () => void;
-  /** FW-12 (S04-B-18): ricerca aperta. */
-  active?: boolean;
+  /** G1a-WP-03 (S01-B-11): «Cerca» sotto l'icona, come le tab della rail. */
+  label?: boolean;
+  /** G1a-WP-03: ricerca aperta (aria-expanded, risultati in aria-controls);
+   *  sostituisce lo stato «active» di FW-12 (S04-B-18). */
+  expanded?: boolean;
 }) {
   const { cms } = useCms();
   const prefersReducedMotion = useReducedMotion();
@@ -56,8 +61,9 @@ export function SearchButton({
     <motion.button
       type="button"
       onClick={() => onOpen?.()}
-      className={`search-button ${sizing.className}${className ? ` ${className}` : ""}`}
-      data-active={active || undefined}
+      className={`search-button ${sizing.className}${label ? " search-button--labelled" : ""}${className ? ` ${className}` : ""}`}
+      aria-expanded={expanded}
+      aria-controls={expanded === undefined ? undefined : SEARCH_RESULTS_ID}
       whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
       whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
       transition={motionSpring.standard}
@@ -68,6 +74,7 @@ export function SearchButton({
         : cms.pages.navSearch}
     >
       <Search size={sizing.icon} strokeWidth={2} aria-hidden="true" />
+      {label && <span className="type-data app-shell-tab__label" aria-hidden="true">{cms.pages.navSearch}</span>}
     </motion.button>
   );
 }

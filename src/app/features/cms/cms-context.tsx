@@ -1,5 +1,5 @@
 import { STYLES_DB } from "../../domain/styles-db";
-import { METHOD_MESSAGES_IT } from "../../data/method-messages";
+import { METHOD_MESSAGES_IT, STEP_COPY_IT } from "../../data/method-messages";
 import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import { DIETARY_MESSAGES_IT } from "../../data/dietary-data";
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from "react";
@@ -17,6 +17,7 @@ import {
   TROUBLESHOOTING_I18N_DEFAULTS,
   GLOSSARY_TERMS_DEFAULTS,
   SCIENCE_I18N_DEFAULTS,
+  FLOUR_NOTES_DEFAULTS,
 } from "./domain-i18n-defaults";
 import { refreshPublishedMedia, usePublishedMediaRevision } from "../../components/media/published-media";
 import { STYLE_PHOTOS } from "../../data/style-photos";
@@ -692,6 +693,8 @@ interface CmsPages {
   navExplore: string;
   navLearn: string;
   navProfile: string;
+  /** G1a-WP-03 (D-G1a-03): nome del pulsante Profilo nella shell. */
+  navProfileKitchen: string;
   navSearch: string;
   // Explore page
   // Learn page
@@ -714,6 +717,8 @@ interface CmsPages {
   searchPlaceholder: string;
   searchCatStyles: string;
   searchCatFlours: string;
+  /** G1a-WP-02: gruppo «Forni» della ricerca. */
+  searchCatOvens: string;
   searchCatGlossary: string;
   searchCatProblems: string;
   searchCatGuides: string;
@@ -1285,6 +1290,8 @@ export interface CmsContent {
   glossaryTerms: CmsGlossaryTerms;
   /** FW-01 — testi del registro della scienza (note e ipotesi). */
   science: CmsScience;
+  /** G1a-WP-01 — nota editoriale di ogni farina di FLOURS_DB (scheda farina e ricerca). */
+  flours: Record<string, { note: string }>;
   /** FW-06 — il punteggio spiegato (ScoreExplainer) e il ricettario. */
   scoreExplainer: CmsScoreExplainer;
 }
@@ -1700,29 +1707,29 @@ export const CMS_DEFAULTS: CmsContent = {
     preCookStart: "Usa il riferimento",
     matchTones: {
       t90: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.la-canonica-e-la-tua-cucina-parlano-gia-la-37bbb4fd"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a"],
+        title: "Ottima compatibilità",
+        canonical: "Un buon punto di partenza per la tua cucina. Controlla le condizioni indicate.",
+        adapted: "Controlla gli ingredienti e l’attrezzatura richiesti da questa versione.",
       },
       t75: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.ottima-intesa-55470040"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6"],
+        title: "Buona compatibilità",
+        canonical: "Verifica le condizioni indicate prima di iniziare.",
+        adapted: "Controlla le modifiche e i requisiti di questa versione.",
       },
       t60: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.la-ricetta-funziona-ma-chiede-un-minimo-di-7c183f59"],
+        title: "Da valutare",
+        canonical: "Controlla dove la ricetta si discosta dalle condizioni della tua cucina.",
+        adapted: "Questa versione richiede attenzione: leggi i requisiti e le modifiche.",
       },
       t40: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.per-le-cose-buone-ci-vuole-tempo-e6addc9c"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.la-ricetta-e-seria-meglio-adattarla-al-tuo-551e300f"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050"],
+        title: "Compatibilità limitata",
+        canonical: "Valuta le modifiche necessarie o scegli uno stile più vicino alla tua cucina.",
+        adapted: "Restano differenze importanti rispetto al riferimento: consulta il dettaglio.",
       },
       t0: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.cuore-spezzato-42157bb9"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf"],
+        title: "Da rivedere",
+        canonical: "Leggi il motivo del punteggio basso prima di scegliere come procedere.",
+        adapted: "Le modifiche non risolvono tutti i limiti. Controlla il dettaglio e le alternative.",
       },
     },
     ceilingUnviableOven:
@@ -2007,7 +2014,6 @@ export const CMS_DEFAULTS: CmsContent = {
   engineMessages: {
     ...DIETARY_MESSAGES_IT,
     ...ALLERGEN_MESSAGES_IT,
-    "change.topping": "Condimento: {from} → {to}",
 
 
     "card.ready": "Fattibile",
@@ -2016,8 +2022,6 @@ export const CMS_DEFAULTS: CmsContent = {
     "learn.compatiblePath": "Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta.",
     "learn.theoryOnly": "Con questi vincoli manca una ricetta verificata: puoi approfondire la teoria.",
     "learn.openTheory": "Esplora la teoria",
-    "timeline.preheat.includesProof": "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
-    "timeline.preheat.includesProofOil": "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
     // Authenticity penalties
     "auth.hydrationOff": "Idratazione fuori centro (-{penalty}%)",
     "auth.wOutOfRange": "W farina fuori range (-{penalty}%)",
@@ -2073,14 +2077,6 @@ export const CMS_DEFAULTS: CmsContent = {
     "change.salt": "Sale: {from}% → {to}%",
     "change.fat": "Grassi: {from}% → {to}%",
     "change.sugar": "Zuccheri: {from}% → {to}%",
-    "change.hydration": "Idratazione: {from}% → {to}%",
-    "change.flour": "Forza farina: W{from} → W{to}",
-    "change.flourPL": "P/L farina: {from} → {to}",
-    "change.fermentation": "Fermentazione: {fromHours} a {fromTemp} → {toHours} a {toTemp}",
-    "change.prefermentOn": "Si aggiunge un prefermento",
-    "change.prefermentOff": "Si passa all’impasto diretto",
-    "change.prefermentDetails": "Prefermento: {fromType} {from}% → {toType} {to}%",
-    "change.cooking": "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "rec.ovenTooCold": "Forno troppo freddo: {temp} < min {min}",
     "rec.skillMatch": "Adatto al tuo livello",
     "rec.flourMatch": "Farina in dispensa compatibile",
@@ -2147,12 +2143,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.preheat.tipNerd": "La massa termica della superficie domina il primo minuto di cottura: {minutes} min di soak assicurano che pietra/acciaio siano saturi, non solo l'aria del forno.",
     "timeline.heatOil.title": "Olio a temperatura",
     "timeline.heatOil.desc": "Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a {temp} e controllalo con un termometro. Intanto i panetti finiscono l'appretto.",
-    "timeline.heatOil.tipBeginner": "Sotto i 170 °C la pizza assorbe olio e diventa unta; sopra i 190 °C si colora fuori e resta cruda dentro.",
-    "timeline.heatOil.tipNerd": "Tra 180 e 190 °C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
     "timeline.fry.title": "Frittura",
     "timeline.fry.desc": "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
-    "timeline.fry.tipBeginner": "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
-    "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girandola a metà, crosta e ripieno cuociono in modo uniforme.",
     "timeline.mix.title": "Impasto",
     ...METHOD_MESSAGES_IT,
     "timeline.divide.title": "Staglio",
@@ -2236,25 +2228,20 @@ export const CMS_DEFAULTS: CmsContent = {
       tipNerd: "Il riposo completa l'idratazione della farina e rilassa la maglia glutinica: meno ritorno elastico, sfoglia quasi trasparente.",
     },
     divide: {
+      ...STEP_COPY_IT.divide,
       title: "Staglio",
-      desc: "Dividi in panetti del peso corretto. Forma le palline.",
       longDesc: "Rovescia l'impasto su un piano leggermente infarinato. Con un tarocco taglia porzioni del peso indicato in questo passo, pesandole su una bilancia (\u00e8 importante per cottura uniforme). Per ogni pezzo, fai la \"pirlatura\": piega i lembi verso il basso al centro, ruota e arrotonda fino a una palla liscia e tesa. Disponi i panetti su una teglia infarinata, ben distanziati, copri con pellicola.",
-      tipBeginner: "Usa una bilancia! Taglia con un tarocco e arrotonda ogni pezzo in una palla liscia.",
-      tipNerd: "Lo staglio crea tensione superficiale che intrappola CO\u2082 durante l'appretto e definisce la struttura alveolare finale.",
     },
     divide_teglia: {
+      ...STEP_COPY_IT.divideGentle,
       title: "Staglio",
-      desc: "Dividi con delicatezza, senza sgonfiare l'impasto.",
       longDesc: "Rovescia l'impasto sul piano ben infarinato (con le alte idratazioni aiutati con la semola). Con un tarocco taglia le porzioni del peso indicato in questo passo, pesandole su una bilancia. Maneggia il meno possibile: per la teglia NON serve la pirlatura stretta della tonda \u2014 ripiega i lembi sotto formando un filone morbido, senza strizzare fuori l'aria. Le bolle costruite in puntata sono la futura alveolatura. Metti ogni pezzo in un contenitore unto e copri.",
-      tipBeginner: "Mani delicate! Le bolle nell'impasto sono preziose: piega i lembi sotto, senza schiacciare.",
-      tipNerd: "Con idratazione >75% lo staglio aggressivo collassa gli alveoli formati in puntata: tensione minima, degassamento quasi nullo.",
     },
     proof: {
+      ...STEP_COPY_IT.proof,
       title: "Appretto",
       desc: "Lievitazione finale a {temp}",
       longDesc: "I panetti dopo lo staglio devono rilassarsi e gonfiarsi un'ultima volta. Tienili coperti a temperatura ambiente. Sar\u00E0 ora di stenderli quando: (1) sono raddoppiati di volume, (2) la superficie \u00E8 bombata e liscia, (3) il poke-test torna su lentamente (premi col dito: deve tornare in ~5 secondi). Se la pasta non torna su = sovrafermentata; se torna su subito = ancora indietro.",
-      tipBeginner: "I panetti devono essere morbidi. Se li premi con un dito, tornano su lentamente.",
-      tipNerd: "Poke test: ritorno lento = fermentazione ottimale. Troppo rapido = sotto-lievitato. Nessun ritorno = over-proofed.",
     },
     proof_pan: {
       title: "Appretto in teglia",
@@ -2588,6 +2575,7 @@ export const CMS_DEFAULTS: CmsContent = {
     navExplore: "Scopri",
     navLearn: "Impara",
     navProfile: "Profilo",
+    navProfileKitchen: "Profilo e cucina",
     navSearch: "Cerca",
     learnGlossary: "Glossario",
     learnGlossaryDesc: "I termini dell’impasto, con formule e valori tipici.",
@@ -2605,6 +2593,7 @@ export const CMS_DEFAULTS: CmsContent = {
     searchPlaceholder: "Cerca stile, ricetta, condimento, farina, termine, problema…",
     searchCatStyles: "Stili",
     searchCatFlours: "Farine",
+    searchCatOvens: "Forni",
     searchCatGlossary: "Glossario",
     searchCatProblems: "Problemi",
     searchCatGuides: "Guide",
@@ -2709,6 +2698,7 @@ export const CMS_DEFAULTS: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_I18N_DEFAULTS,
   glossaryTerms: GLOSSARY_TERMS_DEFAULTS,
   science: SCIENCE_I18N_DEFAULTS,
+  flours: FLOUR_NOTES_DEFAULTS,
   /* FW-06 — punteggio spiegabile (D-E: contano solo autenticità e facilità). */
   scoreExplainer: {
     scoreAria: "{label}: {score} su 100",

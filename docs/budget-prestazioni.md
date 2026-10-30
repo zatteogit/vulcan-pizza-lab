@@ -216,6 +216,54 @@ Due limiti noti della misura, da tenere presenti:
   l'italiano una lingua caricata come le altre, con una base neutra: è un
   lavoro a sé, da pianificare prima delle tranche B–D del catalogo.
 
+### G1a-WP-01, scheda farina (30/10/2026)
+Il ramo partiva da 492,0 kB senza lingue e 595,6 kB per utente. La pagina
+`/learn/flour/:flourId` (chunk proprio, circa 2,4 kB), le note delle farine
+nel CMS (circa 1,3 kB nel catalogo giapponese) e il rimescolamento dei chunk
+che la pagina provoca portavano a 600,6 kB per utente, sopra il limite.
+Recuperati senza alzare i limiti: i nomi e le descrizioni italiane di
+impastatrici, superfici e utensili in `equipment-data.ts` (il CMS li ha sempre
+nei default: `getLocalized*` non ricade più sulla copia); i testi di staglio,
+appretto e del preriscaldo con appretto, che motore e CMS avevano in due copie
+(ora `STEP_COPY_IT` e `METHOD_MESSAGES_IT` in `method-messages.ts`); le frasi
+«Prima → Ora» di `recipe-entry.ts` e i ripieghi italiani di `blocker-text.ts`.
+Risultato: 494,7 kB senza lingue, 599,6 kB per utente, CSS 74,8 kB invariato.
+
+### G1a-WP-02, ricerca: forni, guide, estratto (30/10/2026)
+Forni e pagine di Impara nell'indice, estratto e sfumatura dei filtri valgono
+circa 0,8 kB senza lingue (600,4 kB per utente). Recuperati senza alzare i
+limiti: i testi delle fasce del punteggio (`cooking.matchTones`) stanno solo
+nel CMS, senza le 15 chiavi uiMessage gemelle in 7 lingue né i ripieghi
+italiani di `recipe-match-card.tsx` (i due chiamanti passano sempre il CMS; in
+portoghese il riferimento della fascia «t90» puntava a una chiave che non
+esisteva, ora c'è il testo); i consigli di olio e frittura in una sola copia
+per motore e CMS; `formatOvenFuel` in `format.ts` invece di un chunk minuscolo
+condiviso. CSS: tolte 13 regole morte (`glossary-card__chevron`,
+`home-step__frame`, `home-step__back`, `home-dietary-warning(s)__*`,
+`ingredients-servings__estimate`, `bits-ing-row__amount-note`,
+`stat-strip__value-trend`, `troubleshooting-card__chevron*`,
+`preferment-guide-card__heading`, `match-info-toggle`). Risultato: 493,8 kB
+senza lingue, 597,6 kB per utente, CSS 74,6 kB.
+
+### G1a-WP-03, shell (30/10/2026)
+Pizzata ridotta accanto al marchio, etichetta della tab attiva nel dock
+compatto, lente della rail con etichetta e nome del pulsante Profilo: circa
+0,3 kB senza lingue e 0,07 kB di CSS (le regole morte tolte in WP-02 fanno da
+margine). Risultato: 494,1 kB senza lingue, 597,9 kB per utente, CSS 74,6 kB
+(76 437 byte su 76 800).
+
+### 30/10/2026: chiavi uiMessage senza lo slug del testo
+
+Integrata G1a sopra main (con G1b e il suo seguito), la build misurava 601,0 kB
+per utente. Le 125 chiavi generate dal guard i18n erano `namespace.slug-hash`:
+lo slug (fino a 42 caratteri del testo italiano) si ripeteva nel catalogo
+italiano, in ogni catalogo straniero e in ogni chiamata. Ora sono
+`namespace.hash` (il guard le genera così) e `LOCALE_BUNDLE_REV` passa a 52.
+Recuperati circa 2,9 kB per utente (1,8 di codice e 1,0 nel catalogo
+giapponese) e circa 1 kB in ciascun catalogo straniero. Dopo: 495,1 kB senza
+lingue, 598,2 kB per utente. Le chiavi scritte a mano (`recipe.schedule.…`)
+restano leggibili: la regola vale solo per quelle generate.
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

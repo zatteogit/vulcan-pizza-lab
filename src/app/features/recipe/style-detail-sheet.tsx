@@ -282,7 +282,7 @@ export function StyleDetailSheet({
           onClick={() => setFav(toggleFavoriteStyle(style.id).includes(style.id))}
           whileTap={{ scale: 0.8 }}
           className={`style-detail-sheet__fav-btn${fav ? " style-detail-sheet__fav-btn--active" : ""}`}
-          aria-label={fav ? uiMessage("features.recipe.style-detail-sheet.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.style-detail-sheet.aggiungi-ai-preferiti-b5037a86")}
+          aria-label={fav ? uiMessage("features.recipe.style-detail-sheet.7f61dbbb") : uiMessage("features.recipe.style-detail-sheet.b5037a86")}
           aria-pressed={fav}
         >
           <motion.span
@@ -364,7 +364,7 @@ export function StyleDetailSheet({
               className={`style-detail-nerd__toggle${showNerd ? " style-detail-nerd__toggle--active" : ""}`}
             >
               {showNerd ? <EyeOff size={13} /> : <Eye size={13} />}
-              {showNerd ? uiMessage("features.recipe.style-detail-sheet.nascondi-dettagli-tecnici-5ce27cbc") : uiMessage("features.recipe.style-detail-sheet.mostra-dettagli-tecnici-73357a85")}
+              {showNerd ? uiMessage("features.recipe.style-detail-sheet.5ce27cbc") : uiMessage("features.recipe.style-detail-sheet.73357a85")}
             </motion.button>
           </div>
 
