@@ -59,6 +59,32 @@ describe.each(Object.entries(BUNDLES))("bundle %s", (_locale, bundle) => {
   });
 });
 
+/* Budget D-059 (30/10/2026): la base di una lingua è il suo bundle, senza la
+ * riserva inglese. Regge solo se ogni bundle ha OGNI foglia dell'italiano,
+ * anche numeri, media e catalogo uiMessage, non soltanto i testi. */
+function allLeaves(value: unknown, path: string[] = [], out: string[][] = []): string[][] {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    for (const [key, child] of Object.entries(value)) allLeaves(child, [...path, key], out);
+  } else {
+    out.push(path);
+  }
+  return out;
+}
+function hasPath(bundle: unknown, path: string[]): boolean {
+  let node: unknown = bundle;
+  for (const segment of path) {
+    if (!node || typeof node !== "object" || !(segment in node)) return false;
+    node = (node as Record<string, unknown>)[segment];
+  }
+  return true;
+}
+describe.each(Object.entries(BUNDLES))("bundle %s, struttura completa", (_locale, bundle) => {
+  it("ha ogni foglia dell'italiano (basta da solo, senza riserva)", () => {
+    const missing = allLeaves(CMS_DEFAULTS).filter((path) => !hasPath(bundle, path));
+    expect(missing.map((path) => path.join("."))).toEqual([]);
+  });
+});
+
 /* Ogni stile del catalogo ha descrizione e caratteristiche nel CMS: senza, la UI
  * ricade sul testo italiano di styles-db in tutte le lingue (14 stili su 28
  * erano così). Con le chiavi in CMS_DEFAULTS, il test sopra le esige ovunque. */

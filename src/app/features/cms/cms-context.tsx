@@ -2855,20 +2855,14 @@ function fallbackBaseFor(overrides: Partial<CmsContent> | null): CmsContent {
     return CMS_DEFAULTS;
   }
 
-  /* Bundle lazy: finché non sono in cache si usa il default IT come base —
+  /* Bundle lazy: finché non è in cache si usa il default IT come base —
      le stringhe salvate negli overrides coprono comunque la UI; il provider
-     ricalcola appena i bundle arrivano (localeTick). */
-  const enBundle = getCachedLocaleBundle("en");
-  let base = enBundle
-    ? (deepMerge(CMS_DEFAULTS, enBundle) as CmsContent)
-    : CMS_DEFAULTS;
-  if (localeId !== "en") {
-    const localeBundle = getCachedLocaleBundle(localeId);
-    if (localeBundle) {
-      base = deepMerge(base, localeBundle) as CmsContent;
-    }
-  }
-  return base;
+     ricalcola appena il bundle arriva (localeTick). Niente riserva inglese:
+     ogni bundle ha tutte le foglie dell'italiano (locale-parity.test.ts), e
+     la riserva costava 89 kB gzip a de/es/fr/pt/ja senza aggiungere un testo
+     (budget D-059, 30/10/2026). */
+  const localeBundle = getCachedLocaleBundle(localeId);
+  return localeBundle ? (deepMerge(CMS_DEFAULTS, localeBundle) as CmsContent) : CMS_DEFAULTS;
 }
 
 // ═══ CONTEXT ═══
@@ -2977,16 +2971,13 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* Lingua attiva non-IT: assicura in cache EN (fallback intermedio) e il
-     bundle della lingua, poi fa ricalcolare la base. */
+  /* Lingua attiva non-IT: assicura in cache il bundle della lingua, poi fa
+     ricalcolare la base. */
   const activeLocaleId = overrides?.locale?.id;
   useEffect(() => {
     if (!activeLocaleId || activeLocaleId === "it") return;
     let cancelled = false;
-    void Promise.all([
-      loadLocaleBundle("en"),
-      loadLocaleBundle(activeLocaleId),
-    ]).then(() => {
+    void loadLocaleBundle(activeLocaleId).then(() => {
       if (!cancelled) setLocaleTick((value) => value + 1);
     });
     return () => {
