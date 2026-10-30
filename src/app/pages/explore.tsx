@@ -689,7 +689,7 @@ function SignatureRecipeCard({
           state={{ exploreBackTo }}
           aria-labelledby={labelledBy}
           aria-describedby={[signalsId, acronymHelp ? acronymHelpId : ""].filter(Boolean).join(" ") || undefined}
-          className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
+          className={`explore-card${isNerd ? " explore-card--nerd" : ""}${match?.recipe.verdict.outcome === "not_feasible" ? " explore-card--blocked" : ""}`}
         >
           <figure className="explore-card__media">
           <ImageWithFallback
@@ -810,7 +810,7 @@ function StyleCatalogCard({
           to={`/recipe/${style.id}?mode=canonical`}
           state={{ exploreBackTo }}
           aria-describedby={acronymHelp ? acronymHelpId : undefined}
-          className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
+          className={`explore-card${isNerd ? " explore-card--nerd" : ""}${match?.recipe.verdict.outcome === "not_feasible" ? " explore-card--blocked" : ""}`}
         >
           {/* Photo area — 3/4 aspect like Create cards */}
         <figure className="explore-card__media">

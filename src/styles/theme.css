@@ -3529,6 +3529,13 @@
     transform: scale(1.05);
   }
 
+  /* Nota di Matteo (30/10): una card «così non è fattibile» deve sembrarlo
+     subito, non uguale a quelle che si possono fare: foto spenta, niente zoom. */
+  .explore-card.explore-card--blocked .explore-card__image {
+    filter: grayscale(1) brightness(.7);
+    transform: none;
+  }
+
   .explore-card__match {
     position: absolute;
     top: var(--space-3);
@@ -9511,6 +9518,13 @@
 
   .match-score-details svg { transition: transform var(--duration-normal) var(--ease-standard); }
   .match-score-group--expanded .match-score-details svg { transform: rotate(180deg); }
+
+  /* Nota di Matteo (30/10): «così non è fattibile» si vede dal riquadro,
+     non solo dal titolo: bordo e fondo nel colore del blocco. */
+  .match-card--blocked {
+    border-color: color-mix(in srgb, var(--status-blocking) 40%, transparent);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--status-blocking) 10%, var(--surface-container-low)), var(--surface-container-lowest));
+  }
 
   .match-card--blocked .match-score-group {
     color: var(--text-warning);

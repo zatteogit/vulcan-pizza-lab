@@ -53,7 +53,8 @@ export function OvenModelSearch({
   formatOvenType?: (type: OvenType) => string;
   /** G1a-WP-02 (D-G1a-02): testo già scritto, da un risultato «Forni» della
    *  ricerca. Il primo risultato è evidenziato, ma il forno cambia solo con un
-   *  tocco o Invio (T10): qui non si sceglie niente. */
+   *  tocco o Invio (T10): qui non si sceglie niente. Vuoto (FW-10, «Cambia
+   *  forno» da Scopri): solo il fuoco nel campo, senza testo. */
   initialQuery?: string;
 }) {
   const inputId = useId();
@@ -77,7 +78,7 @@ export function OvenModelSearch({
   useEscapeLayer(expanded, close);
 
   useEffect(() => {
-    if (!initialQuery) return;
+    if (initialQuery === undefined) return;
     inputRef.current?.focus();
     inputRef.current?.scrollIntoView({ block: "center" });
   }, [initialQuery]);

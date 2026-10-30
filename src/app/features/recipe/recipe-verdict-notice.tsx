@@ -12,6 +12,7 @@ import { createFormatter, t } from "../cms/i18n";
 import { Disclosure, Surface } from "../../components/ds/index";
 import { blockerText } from "./blocker-text";
 import { uiMessage } from "../../i18n/ui-messages";
+import { ovenSetupLink } from "../profile/oven-setup-link";
 
 /* ═══ M-10 — «Così non è fattibile» ═══
  * Quando il motore dichiara la ricetta non fattibile, lo diciamo in cima, con
@@ -77,6 +78,17 @@ export function RecipeVerdictNotice({
         <p className="type-body recipe-verdict__action">
           {t(cms.ui.verdictLaterTime, { hours: fmt.durationShort(remedy.hours) })}
         </p>
+      )}
+      {/* FW-10, seguito: se la causa è il forno (troppo freddo o del tipo
+          sbagliato per lo stile), l'uscita è cambiarlo. Qui e non sulle card
+          di Scopri (nota di Matteo): nel pannello dello stile e nella scheda
+          della ricetta, dove si legge il perché. Il forno salvato cambia solo
+          quando l'utente ne sceglie uno. */}
+      {summary.primary.kind === "oven_too_cold" && (
+        <Link to={ovenSetupLink()} className="type-body recipe-verdict__link">
+          {uiMessage("verdict.changeOven")}
+          <ChevronRight size={14} aria-hidden="true" />
+        </Link>
       )}
       {remedy?.kind === "review_diet" && (
         <Link to="/profile?tab=setup" className="type-body recipe-verdict__link">

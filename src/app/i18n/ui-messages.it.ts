@@ -474,6 +474,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "verdict.lowerHydration": "Abbassa l’idratazione",
   "verdict.why": "Perché",
   "explore.forKitchen": "Adatti alla tua cucina",
+  "verdict.changeOven": "Cambia forno",
   "profile.dietGlutenNote": "Con «Senza glutine» tutte le ricette risultano non fattibili: {brand} non ha ancora un metodo senza glutine verificato.",
   "profile.dietGlutenWhy": "Perché?",
   "features.recipe.recipe-stat-strip.modified": "Valore modificato. Era {0}, ora {1}",
