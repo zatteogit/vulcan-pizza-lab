@@ -693,6 +693,8 @@ interface CmsPages {
   navExplore: string;
   navLearn: string;
   navProfile: string;
+  /** G1a-WP-03 (D-G1a-03): nome del pulsante Profilo nella shell. */
+  navProfileKitchen: string;
   navSearch: string;
   // Explore page
   // Learn page
@@ -2573,6 +2575,7 @@ export const CMS_DEFAULTS: CmsContent = {
     navExplore: "Scopri",
     navLearn: "Impara",
     navProfile: "Profilo",
+    navProfileKitchen: "Profilo e cucina",
     navSearch: "Cerca",
     learnGlossary: "Glossario",
     learnGlossaryDesc: "I termini dell’impasto, con formule e valori tipici.",

@@ -1529,6 +1529,7 @@ export const PT_LOCALE: CmsContent = {
     navExplore: "Explorar",
     navLearn: "Aprender",
     navProfile: "Perfil",
+    navProfileKitchen: "Perfil e cozinha",
     navSearch: "Buscar",
     learnGlossary: "Gloss\u00E1rio",
     learnGlossaryDesc:

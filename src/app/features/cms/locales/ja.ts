@@ -1647,6 +1647,7 @@ export const JA_LOCALE: CmsContent = {
     navExplore: "見つける",
     navLearn: "\u5B66\u3076",
     navProfile: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB",
+    navProfileKitchen: "プロフィールとキッチン",
     navSearch: "\u691C\u7D22",
     learnGlossary: "\u7528\u8A9E\u96C6",
     learnGlossaryDesc:

@@ -1518,6 +1518,7 @@ export const DE_LOCALE: CmsContent = {
     navExplore: "Entdecken",
     navLearn: "Lernen",
     navProfile: "Profil",
+    navProfileKitchen: "Profil und Küche",
     navSearch: "Suchen",
     learnGlossary: "Glossar",
     learnGlossaryDesc: "Teigbegriffe mit Formeln und typischen Werten.",

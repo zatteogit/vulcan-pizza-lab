@@ -1533,6 +1533,7 @@ export const FR_LOCALE: CmsContent = {
     navExplore: "Découvrir",
     navLearn: "Apprendre",
     navProfile: "Profil",
+    navProfileKitchen: "Profil et cuisine",
     navSearch: "Rechercher",
     learnGlossary: "Glossaire",
     learnGlossaryDesc: "Les mots de la pâte, avec formules et valeurs typiques.",

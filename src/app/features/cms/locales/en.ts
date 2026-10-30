@@ -1703,6 +1703,7 @@ export const EN_LOCALE: CmsContent = {
     navExplore: "Explore",
     navLearn: "Learn",
     navProfile: "Profile",
+    navProfileKitchen: "Profile and kitchen",
     navSearch: "Search",
     learnGlossary: "Glossary",
     learnGlossaryDesc: "Dough terminology, with formulas and typical values.",

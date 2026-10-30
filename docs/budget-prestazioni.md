@@ -245,6 +245,13 @@ condiviso. CSS: tolte 13 regole morte (`glossary-card__chevron`,
 `preferment-guide-card__heading`, `match-info-toggle`). Risultato: 493,8 kB
 senza lingue, 597,6 kB per utente, CSS 74,6 kB.
 
+### G1a-WP-03, shell (30/10/2026)
+Pizzata ridotta accanto al marchio, etichetta della tab attiva nel dock
+compatto, lente della rail con etichetta e nome del pulsante Profilo: circa
+0,3 kB senza lingue e 0,07 kB di CSS (le regole morte tolte in WP-02 fanno da
+margine). Risultato: 494,1 kB senza lingue, 597,9 kB per utente, CSS 74,6 kB
+(76 437 byte su 76 800).
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

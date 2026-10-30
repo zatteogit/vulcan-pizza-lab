@@ -18126,8 +18126,24 @@
     font-feature-settings: "tnum";
   }
 
-  .cook-widget--compact .cook-widget__countdown {
+  .cook-widget--compact .cook-widget__countdown,
+  .cook-widget--mini .cook-widget__countdown {
     font-size: var(--font-size-sm);
+  }
+
+  /* G1a-WP-03 (S01-B-02): il titolo si tronca, il tempo mai; accanto al
+     marchio (mini) restano anello e tempo. */
+  .cook-widget__countdown {
+    flex-shrink: 0;
+  }
+
+  .cook-widget--mini {
+    gap: var(--space-1-5);
+    padding-inline: var(--space-2-5);
+  }
+
+  .cook-widget--mini .cook-widget__label {
+    display: none;
   }
 
   /* ═══ COMPONENT: dough-mascot (DoughBlob) ═══
@@ -18497,8 +18513,10 @@
     bottom: calc(var(--space-4) + env(safe-area-inset-bottom, var(--space-0)));
   }
 
+  /* G1a-WP-03 (S01-B-10): largo quanto serve all'etichetta della tab attiva
+     («Entdecken», «Apprendre») senza tagliarla né andare a capo. */
   .app-shell-dock--compact {
-    width: min(var(--space-60), var(--dimension-viewport-width-92));
+    width: min(calc(var(--space-60) + var(--space-12)), var(--dimension-viewport-width-92));
   }
 
   @media (min-width: 768px) {
@@ -18571,8 +18589,8 @@
     gap: 0;
   }
 
-  .app-shell-dock--compact .app-shell-tab--bottom .app-shell-tab__label,
-  .app-shell-dock--compact .app-shell-tab[aria-current="page"] .app-shell-tab__label {
+  /* G1a-WP-03 (S01-B-10): nel dock compatto resta l'etichetta della tab attiva. */
+  .app-shell-dock--compact .app-shell-tab--bottom:not([aria-current="page"]) .app-shell-tab__label {
     max-height: 0;
     opacity: 0;
     transform: translateY(var(--space-1));
@@ -19195,6 +19213,25 @@
   .search-button--sm {
     width: var(--space-11);
     height: var(--space-11);
+  }
+
+  /* G1a-WP-03 (S01-B-11): nella rail la lente ha la grammatica delle tab
+     (icona + etichetta); aperta, prende il colore della tab attiva. */
+  .search-button--labelled {
+    flex-direction: column;
+    gap: var(--gap-2xs);
+    width: auto;
+    height: auto;
+    min-width: var(--space-14);
+    padding-block: var(--space-2);
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+  }
+
+  .search-button[aria-expanded="true"],
+  .search-button[aria-expanded="true"] .app-shell-tab__label {
+    color: var(--primary);
   }
 
   .search-button--md {

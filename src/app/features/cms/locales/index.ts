@@ -110,9 +110,10 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  49 → G1a-WP-01: note delle farine nel CMS (flours.<id>.note), tradotte e
  *       senza i numeri che la scheda farina mostra già.
  *  50 → G1a-WP-02: gruppo «Forni» della ricerca (pages.searchCatOvens).
+ *  51 → G1a-WP-03: nome del pulsante Profilo («Profilo e cucina», navProfileKitchen).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 50;
+export const LOCALE_BUNDLE_REV = 51;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */
