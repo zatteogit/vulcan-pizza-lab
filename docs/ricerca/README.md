@@ -5,6 +5,7 @@ Documenti di ricerca esterni su Vulcan. Sono **ipotesi da verificare**, non deci
 | Documento | Data | Stato |
 |---|---|---|
 | [Report editoriale: white-label e product strategy](report-editoriale-2026-10-22.md) | 22/10/2026 | Versione pubblica, senza le parti economiche e commerciali. Il PDF completo sta nel repository privato `basecamp`, in `ricerca/report-2026/`. |
+| [La Confraternita della Pizza: fonti per Vulcan](confraternita-2026-10-30.md) | 30/10/2026 | Fonte di Dekracap (copia d'archivio) e verifica della pagina di Benedetta per la tranche B; discussioni più lette del forum come spunti per Impara, troubleshooting e attrezzatura. |
 
 Cosa ne è stato fatto, al 22/10/2026:
 

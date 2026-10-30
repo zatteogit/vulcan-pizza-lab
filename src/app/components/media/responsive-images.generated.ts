@@ -82,6 +82,8 @@ import img_toppings_topping_bbqchicken from "../../../assets/toppings/topping_bb
 import img_toppings_topping_bbqchicken_640 from "../../../assets/toppings/topping_bbqchicken-640.webp";
 import img_toppings_topping_bianca from "../../../assets/toppings/topping_bianca.webp";
 import img_toppings_topping_bianca_640 from "../../../assets/toppings/topping_bianca-640.webp";
+import img_toppings_topping_bismarck from "../../../assets/toppings/topping_bismarck.webp";
+import img_toppings_topping_bismarck_640 from "../../../assets/toppings/topping_bismarck-640.webp";
 import img_toppings_topping_boscaiola from "../../../assets/toppings/topping_boscaiola.webp";
 import img_toppings_topping_boscaiola_640 from "../../../assets/toppings/topping_boscaiola-640.webp";
 import img_toppings_topping_bresaolarucola from "../../../assets/toppings/topping_bresaolarucola.webp";
@@ -106,6 +108,8 @@ import img_toppings_topping_cosacca from "../../../assets/toppings/topping_cosac
 import img_toppings_topping_cosacca_640 from "../../../assets/toppings/topping_cosacca-640.webp";
 import img_toppings_topping_crescenzarecco from "../../../assets/toppings/topping_crescenzarecco.webp";
 import img_toppings_topping_crescenzarecco_640 from "../../../assets/toppings/topping_crescenzarecco-640.webp";
+import img_toppings_topping_crudaiola from "../../../assets/toppings/topping_crudaiola.webp";
+import img_toppings_topping_crudaiola_640 from "../../../assets/toppings/topping_crudaiola-640.webp";
 import img_toppings_topping_crudo from "../../../assets/toppings/topping_crudo.webp";
 import img_toppings_topping_crudo_640 from "../../../assets/toppings/topping_crudo-640.webp";
 import img_toppings_topping_detroitpepperoni from "../../../assets/toppings/topping_detroitpepperoni.webp";
@@ -124,6 +128,8 @@ import img_toppings_topping_fugazzeta from "../../../assets/toppings/topping_fug
 import img_toppings_topping_fugazzeta_640 from "../../../assets/toppings/topping_fugazzeta-640.webp";
 import img_toppings_topping_funghi from "../../../assets/toppings/topping_funghi.webp";
 import img_toppings_topping_funghi_640 from "../../../assets/toppings/topping_funghi-640.webp";
+import img_toppings_topping_gamberettizucchine from "../../../assets/toppings/topping_gamberettizucchine.webp";
+import img_toppings_topping_gamberettizucchine_640 from "../../../assets/toppings/topping_gamberettizucchine-640.webp";
 import img_toppings_topping_gorgonzolapere from "../../../assets/toppings/topping_gorgonzolapere.webp";
 import img_toppings_topping_gorgonzolapere_640 from "../../../assets/toppings/topping_gorgonzolapere-640.webp";
 import img_toppings_topping_greekfeta from "../../../assets/toppings/topping_greekfeta.webp";
@@ -136,6 +142,8 @@ import img_toppings_topping_italianbeef from "../../../assets/toppings/topping_i
 import img_toppings_topping_italianbeef_640 from "../../../assets/toppings/topping_italianbeef-640.webp";
 import img_toppings_topping_italiansausage from "../../../assets/toppings/topping_italiansausage.webp";
 import img_toppings_topping_italiansausage_640 from "../../../assets/toppings/topping_italiansausage-640.webp";
+import img_toppings_topping_lucana from "../../../assets/toppings/topping_lucana.webp";
+import img_toppings_topping_lucana_640 from "../../../assets/toppings/topping_lucana-640.webp";
 import img_toppings_topping_margherita from "../../../assets/toppings/topping_margherita.webp";
 import img_toppings_topping_margherita_640 from "../../../assets/toppings/topping_margherita-640.webp";
 import img_toppings_topping_margheritasbagliata from "../../../assets/toppings/topping_margheritasbagliata.webp";
@@ -144,6 +152,8 @@ import img_toppings_topping_marinara from "../../../assets/toppings/topping_mari
 import img_toppings_topping_marinara_640 from "../../../assets/toppings/topping_marinara-640.webp";
 import img_toppings_topping_meatlovers from "../../../assets/toppings/topping_meatlovers.webp";
 import img_toppings_topping_meatlovers_640 from "../../../assets/toppings/topping_meatlovers-640.webp";
+import img_toppings_topping_mimosa from "../../../assets/toppings/topping_mimosa.webp";
+import img_toppings_topping_mimosa_640 from "../../../assets/toppings/topping_mimosa-640.webp";
 import img_toppings_topping_montanara from "../../../assets/toppings/topping_montanara.webp";
 import img_toppings_topping_montanara_640 from "../../../assets/toppings/topping_montanara-640.webp";
 import img_toppings_topping_mortadellapistacchio from "../../../assets/toppings/topping_mortadellapistacchio.webp";
@@ -160,6 +170,8 @@ import img_toppings_topping_ortolana from "../../../assets/toppings/topping_orto
 import img_toppings_topping_ortolana_640 from "../../../assets/toppings/topping_ortolana-640.webp";
 import img_toppings_topping_parmigiana from "../../../assets/toppings/topping_parmigiana.webp";
 import img_toppings_topping_parmigiana_640 from "../../../assets/toppings/topping_parmigiana-640.webp";
+import img_toppings_topping_patatelardo from "../../../assets/toppings/topping_patatelardo.webp";
+import img_toppings_topping_patatelardo_640 from "../../../assets/toppings/topping_patatelardo-640.webp";
 import img_toppings_topping_patateporchetta from "../../../assets/toppings/topping_patateporchetta.webp";
 import img_toppings_topping_patateporchetta_640 from "../../../assets/toppings/topping_patateporchetta-640.webp";
 import img_toppings_topping_pataterosmarino from "../../../assets/toppings/topping_pataterosmarino.webp";
@@ -172,6 +184,8 @@ import img_toppings_topping_prosciuttofunghi from "../../../assets/toppings/topp
 import img_toppings_topping_prosciuttofunghi_640 from "../../../assets/toppings/topping_prosciuttofunghi-640.webp";
 import img_toppings_topping_provolapepe from "../../../assets/toppings/topping_provolapepe.webp";
 import img_toppings_topping_provolapepe_640 from "../../../assets/toppings/topping_provolapepe-640.webp";
+import img_toppings_topping_pugliese from "../../../assets/toppings/topping_pugliese.webp";
+import img_toppings_topping_pugliese_640 from "../../../assets/toppings/topping_pugliese-640.webp";
 import img_toppings_topping_reccocotto from "../../../assets/toppings/topping_reccocotto.webp";
 import img_toppings_topping_reccocotto_640 from "../../../assets/toppings/topping_reccocotto-640.webp";
 import img_toppings_topping_reccoculatello from "../../../assets/toppings/topping_reccoculatello.webp";
@@ -180,6 +194,8 @@ import img_toppings_topping_reccopizzata from "../../../assets/toppings/topping_
 import img_toppings_topping_reccopizzata_640 from "../../../assets/toppings/topping_reccopizzata-640.webp";
 import img_toppings_topping_ricottacicoli from "../../../assets/toppings/topping_ricottacicoli.webp";
 import img_toppings_topping_ricottacicoli_640 from "../../../assets/toppings/topping_ricottacicoli-640.webp";
+import img_toppings_topping_rossini from "../../../assets/toppings/topping_rossini.webp";
+import img_toppings_topping_rossini_640 from "../../../assets/toppings/topping_rossini-640.webp";
 import img_toppings_topping_sardenaira from "../../../assets/toppings/topping_sardenaira.webp";
 import img_toppings_topping_sardenaira_640 from "../../../assets/toppings/topping_sardenaira-640.webp";
 import img_toppings_topping_scarola from "../../../assets/toppings/topping_scarola.webp";
@@ -198,6 +214,8 @@ import img_toppings_topping_stracciatabottarga from "../../../assets/toppings/to
 import img_toppings_topping_stracciatabottarga_640 from "../../../assets/toppings/topping_stracciatabottarga-640.webp";
 import img_toppings_topping_supreme from "../../../assets/toppings/topping_supreme.webp";
 import img_toppings_topping_supreme_640 from "../../../assets/toppings/topping_supreme-640.webp";
+import img_toppings_topping_tirolese from "../../../assets/toppings/topping_tirolese.webp";
+import img_toppings_topping_tirolese_640 from "../../../assets/toppings/topping_tirolese-640.webp";
 import img_toppings_topping_tomatopie from "../../../assets/toppings/topping_tomatopie.webp";
 import img_toppings_topping_tomatopie_640 from "../../../assets/toppings/topping_tomatopie-640.webp";
 import img_toppings_topping_tonnocipolla from "../../../assets/toppings/topping_tonnocipolla.webp";
@@ -292,6 +310,7 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_toppings_topping_4stagioni, img_toppings_topping_4stagioni_640, 1254, 1254, 640, 640],
   [img_toppings_topping_bbqchicken, img_toppings_topping_bbqchicken_640, 1254, 1254, 640, 640],
   [img_toppings_topping_bianca, img_toppings_topping_bianca_640, 1254, 1254, 640, 640],
+  [img_toppings_topping_bismarck, img_toppings_topping_bismarck_640, 1254, 1254, 640, 640],
   [img_toppings_topping_boscaiola, img_toppings_topping_boscaiola_640, 1254, 1254, 640, 640],
   [img_toppings_topping_bresaolarucola, img_toppings_topping_bresaolarucola_640, 1254, 1254, 640, 640],
   [img_toppings_topping_bufalina, img_toppings_topping_bufalina_640, 1254, 1254, 640, 640],
@@ -304,6 +323,7 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_toppings_topping_ciaccino, img_toppings_topping_ciaccino_640, 1254, 1254, 640, 640],
   [img_toppings_topping_cosacca, img_toppings_topping_cosacca_640, 1254, 1254, 640, 640],
   [img_toppings_topping_crescenzarecco, img_toppings_topping_crescenzarecco_640, 1200, 1200, 640, 640],
+  [img_toppings_topping_crudaiola, img_toppings_topping_crudaiola_640, 1254, 1254, 640, 640],
   [img_toppings_topping_crudo, img_toppings_topping_crudo_640, 1254, 1254, 640, 640],
   [img_toppings_topping_detroitpepperoni, img_toppings_topping_detroitpepperoni_640, 1254, 1254, 640, 640],
   [img_toppings_topping_diavola, img_toppings_topping_diavola_640, 1254, 1254, 640, 640],
@@ -313,16 +333,19 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_toppings_topping_fugazza, img_toppings_topping_fugazza_640, 1254, 1254, 640, 640],
   [img_toppings_topping_fugazzeta, img_toppings_topping_fugazzeta_640, 1254, 1254, 640, 640],
   [img_toppings_topping_funghi, img_toppings_topping_funghi_640, 1254, 1254, 640, 640],
+  [img_toppings_topping_gamberettizucchine, img_toppings_topping_gamberettizucchine_640, 1254, 1254, 640, 640],
   [img_toppings_topping_gorgonzolapere, img_toppings_topping_gorgonzolapere_640, 1254, 1254, 640, 640],
   [img_toppings_topping_greekfeta, img_toppings_topping_greekfeta_640, 1254, 1254, 640, 640],
   [img_toppings_topping_hawaiiana, img_toppings_topping_hawaiiana_640, 1254, 1254, 640, 640],
   [img_toppings_topping_hothoney, img_toppings_topping_hothoney_640, 1254, 1254, 640, 640],
   [img_toppings_topping_italianbeef, img_toppings_topping_italianbeef_640, 1254, 1254, 640, 640],
   [img_toppings_topping_italiansausage, img_toppings_topping_italiansausage_640, 1254, 1254, 640, 640],
+  [img_toppings_topping_lucana, img_toppings_topping_lucana_640, 1254, 1254, 640, 640],
   [img_toppings_topping_margherita, img_toppings_topping_margherita_640, 1024, 1024, 640, 640],
   [img_toppings_topping_margheritasbagliata, img_toppings_topping_margheritasbagliata_640, 1254, 1254, 640, 640],
   [img_toppings_topping_marinara, img_toppings_topping_marinara_640, 1254, 1254, 640, 640],
   [img_toppings_topping_meatlovers, img_toppings_topping_meatlovers_640, 1254, 1254, 640, 640],
+  [img_toppings_topping_mimosa, img_toppings_topping_mimosa_640, 1254, 1254, 640, 640],
   [img_toppings_topping_montanara, img_toppings_topping_montanara_640, 1254, 1254, 640, 640],
   [img_toppings_topping_mortadellapistacchio, img_toppings_topping_mortadellapistacchio_640, 1254, 1254, 640, 640],
   [img_toppings_topping_napoli, img_toppings_topping_napoli_640, 1254, 1254, 640, 640],
@@ -331,16 +354,19 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_toppings_topping_norma, img_toppings_topping_norma_640, 1254, 1254, 640, 640],
   [img_toppings_topping_ortolana, img_toppings_topping_ortolana_640, 1254, 1254, 640, 640],
   [img_toppings_topping_parmigiana, img_toppings_topping_parmigiana_640, 1254, 1254, 640, 640],
+  [img_toppings_topping_patatelardo, img_toppings_topping_patatelardo_640, 1254, 1254, 640, 640],
   [img_toppings_topping_patateporchetta, img_toppings_topping_patateporchetta_640, 1254, 1254, 640, 640],
   [img_toppings_topping_pataterosmarino, img_toppings_topping_pataterosmarino_640, 1254, 1254, 640, 640],
   [img_toppings_topping_pizzafritta, img_toppings_topping_pizzafritta_640, 1254, 1254, 640, 640],
   [img_toppings_topping_prosciuttocotto, img_toppings_topping_prosciuttocotto_640, 1254, 1254, 640, 640],
   [img_toppings_topping_prosciuttofunghi, img_toppings_topping_prosciuttofunghi_640, 1254, 1254, 640, 640],
   [img_toppings_topping_provolapepe, img_toppings_topping_provolapepe_640, 1254, 1254, 640, 640],
+  [img_toppings_topping_pugliese, img_toppings_topping_pugliese_640, 1254, 1254, 640, 640],
   [img_toppings_topping_reccocotto, img_toppings_topping_reccocotto_640, 1254, 1254, 640, 640],
   [img_toppings_topping_reccoculatello, img_toppings_topping_reccoculatello_640, 1254, 1254, 640, 640],
   [img_toppings_topping_reccopizzata, img_toppings_topping_reccopizzata_640, 1254, 1254, 640, 640],
   [img_toppings_topping_ricottacicoli, img_toppings_topping_ricottacicoli_640, 1254, 1254, 640, 640],
+  [img_toppings_topping_rossini, img_toppings_topping_rossini_640, 1254, 1254, 640, 640],
   [img_toppings_topping_sardenaira, img_toppings_topping_sardenaira_640, 1254, 1254, 640, 640],
   [img_toppings_topping_scarola, img_toppings_topping_scarola_640, 1254, 1254, 640, 640],
   [img_toppings_topping_scarpetta, img_toppings_topping_scarpetta_640, 1254, 1254, 640, 640],
@@ -350,6 +376,7 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_toppings_topping_spinaci, img_toppings_topping_spinaci_640, 1254, 1254, 640, 640],
   [img_toppings_topping_stracciatabottarga, img_toppings_topping_stracciatabottarga_640, 1254, 1254, 640, 640],
   [img_toppings_topping_supreme, img_toppings_topping_supreme_640, 1254, 1254, 640, 640],
+  [img_toppings_topping_tirolese, img_toppings_topping_tirolese_640, 1254, 1254, 640, 640],
   [img_toppings_topping_tomatopie, img_toppings_topping_tomatopie_640, 1254, 1254, 640, 640],
   [img_toppings_topping_tonnocipolla, img_toppings_topping_tonnocipolla_640, 1254, 1254, 640, 640],
   [img_toppings_topping_vodkapizza, img_toppings_topping_vodkapizza_640, 1254, 1254, 640, 640],

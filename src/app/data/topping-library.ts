@@ -98,6 +98,15 @@ import thumbnailParmigiana from "../../assets/toppings/topping_parmigiana.webp";
 import thumbnailNorma from "../../assets/toppings/topping_norma.webp";
 import thumbnailBufalina from "../../assets/toppings/topping_bufalina.webp";
 import thumbnailItalianSausage from "../../assets/toppings/topping_italiansausage.webp";
+import thumbnailPugliese from "../../assets/toppings/topping_pugliese.webp";
+import thumbnailCrudaiola from "../../assets/toppings/topping_crudaiola.webp";
+import thumbnailTirolese from "../../assets/toppings/topping_tirolese.webp";
+import thumbnailBismarck from "../../assets/toppings/topping_bismarck.webp";
+import thumbnailMimosa from "../../assets/toppings/topping_mimosa.webp";
+import thumbnailLucana from "../../assets/toppings/topping_lucana.webp";
+import thumbnailRossini from "../../assets/toppings/topping_rossini.webp";
+import thumbnailPatateLardo from "../../assets/toppings/topping_patatelardo.webp";
+import thumbnailGamberettiZucchine from "../../assets/toppings/topping_gamberettizucchine.webp";
 import thumbnailVariantMargheritaAvpn from "../../assets/toppings/variants/margherita_napoletana_avpn.webp";
 import thumbnailVariantMargheritaRomana from "../../assets/toppings/variants/margherita_romana.webp";
 import thumbnailVariantMargheritaAmericana from "../../assets/toppings/variants/margherita_americana.webp";
@@ -840,6 +849,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Pugliese",
     description: "Pomodoro, mozzarella, cipolla e origano. La cipolla va cruda a velo nelle cotture lunghe e stufata prima nei forni veloci, dove non farebbe in tempo a cuocere.",
     emoji: "🧅",
+    thumbnail: thumbnailPugliese,
     flavor_profile: "salty_savory",
     occasions: ["classico", "pizzeria", "vegetariano"],
   },
@@ -848,6 +858,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Crudaiola",
     description: "Base bianca con fior di latte in forno; pomodorini, rucola e scaglie di parmigiano a crudo, tutti dopo il forno.",
     emoji: "🍅",
+    thumbnail: thumbnailCrudaiola,
     flavor_profile: "fresh",
     occasions: ["estate", "fresco"],
   },
@@ -856,6 +867,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Tirolese",
     description: "Pomodoro e mozzarella in forno, speck a fette messo all'uscita: sulla pizza calda si ammorbidisce senza seccarsi.",
     emoji: "🥓",
+    thumbnail: thumbnailTirolese,
     flavor_profile: "salty_savory",
     occasions: ["classico", "pizzeria"],
   },
@@ -864,6 +876,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Bismarck",
     description: "Pomodoro, mozzarella, prosciutto cotto e un uovo al centro. Nel forno di casa l'uovo entra negli ultimi minuti: l'albume si rapprende e il tuorlo resta morbido.",
     emoji: "🍳",
+    thumbnail: thumbnailBismarck,
     flavor_profile: "rich",
     occasions: ["classico", "pizzeria"],
   },
@@ -872,6 +885,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Mimosa",
     description: "Base bianca di panna e mozzarella con prosciutto cotto e mais dolce, tutto in forno.",
     emoji: "🌽",
+    thumbnail: thumbnailMimosa,
     flavor_profile: "creamy",
     occasions: ["bambini", "famiglia"],
   },
@@ -880,6 +894,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Lucana",
     description: "Fior di latte e salsiccia lucanica in forno, peperoni cruschi sbriciolati solo all'uscita: in forno anneriscono e diventano amari.",
     emoji: "🌶️",
+    thumbnail: thumbnailLucana,
     flavor_profile: "salty_savory",
     occasions: ["basilicata", "tradizione"],
   },
@@ -888,6 +903,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Rossini",
     description: "Il classico di Pesaro: pomodoro e mozzarella in forno, poi uovo sodo a fette e maionese, a freddo. Si trova anche al taglio.",
     emoji: "🥚",
+    thumbnail: thumbnailRossini,
     flavor_profile: "rich",
     occasions: ["pesaro", "marche", "tradizione"],
   },
@@ -896,6 +912,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Patate, lardo e rosmarino",
     description: "Patate a fette sottili e rosmarino in forno; il lardo a fette va sulla pizza calda all'uscita, dove diventa traslucido senza sciogliersi.",
     emoji: "🥔",
+    thumbnail: thumbnailPatateLardo,
     flavor_profile: "rich",
     occasions: ["taglio romano", "inverno", "comfort"],
   },
@@ -904,6 +921,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     name: "Gamberetti e zucchine",
     description: "Base bianca con fior di latte e zucchine; i gamberetti, saltati prima in padella, si aggiungono alla fine.",
     emoji: "🍤",
+    thumbnail: thumbnailGamberettiZucchine,
     flavor_profile: "fresh",
     occasions: ["estate", "mare"],
   },

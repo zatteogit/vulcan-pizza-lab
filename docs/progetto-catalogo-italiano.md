@@ -730,3 +730,26 @@ generata solo se dichiarata.
   le verifiche del motore (test e prove nel browser); le prove in cucina, se
   arrivano, vanno nel registro dopo.
 - **Ordine (12):** B1 → B2 → B3 → B4; B5 (Dekracap) solo con la fonte.
+
+### 9.9 Fonti lette con il browser di Matteo (30/10/2026)
+
+Dettagli e link in `docs/ricerca/confraternita-2026-10-30.md`.
+
+- **Dekracap: fonte trovata.** È la «Ricetta di Dekracap» pubblicata da Notturno
+  Italiano nel primo post del «WeekEnd della Pizza in Teglia No Knead»
+  (Confraternita della Pizza, 6/10/2014, modificata il 14/10/2015). L'originale
+  (t=69617704) è stato cancellato; si legge la copia di Wayback Machine del
+  12/11/2017. Versione 48 h: farina W 350/400 1180, acqua 1000, lievito 3, sale
+  25, olio EVO 20 (per teglia 30×40: 350/296/1/7,5/6, totale 660 g), cioè
+  idratazione 84,7 %, lievito 0,25 %, sale 2,1 %. Pieghe senza impastatrice,
+  puntata in frigo, staglio a 24 h e di nuovo in frigo, forno al massimo.
+  **8 °C**: scritto nella versione 24 h e confermato da Dekracap per la
+  temperatura dell'impasto in frigo (23/9/2014 e 19/3/2017). Stato:
+  *verificato* sulla copia d'archivio (le pagine 2–340 non sono archiviate);
+  minuti di cottura non indicati. B5 diventa fattibile: versione d'autore della
+  `teglia_romana`, citata con il link all'archivio; gli 8 °C entrano negli
+  override.
+- **Benedetta: verificata sulla pagina ufficiale.** Teglia 35×35 (o placca del
+  forno). Sale «1 cucchiaino» sia nell'elenco sia nel procedimento: nessun
+  «pizzico», quindi 6 g. Lievito secco 7 g. 25 min a 210 °C statico (200 °C
+  ventilato) + 5 con la mozzarella.
