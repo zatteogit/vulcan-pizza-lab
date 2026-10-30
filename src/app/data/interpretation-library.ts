@@ -436,3 +436,20 @@ export function getInterpretationsForStyle(styleId: string): Interpretation[] {
       && !(style && isBlockedByStyle(i, style)),
   );
 }
+
+/** G1b-WP-01 (S03-A-14): le versioni d'autore del pannello stile, con la
+ *  provenienza. Stesse voci di getInterpretationsForStyle; prima quelle nate
+ *  su questo stile ('base', le verificate in testa), poi quelle di altri stili
+ *  che vi si possono applicare ('compatible'). A parità, l'ordine della
+ *  libreria. Funzione pura: il nome dello stile d'origine lo mette la UI. */
+export function relatedAuthorVersions(styleId: string): Array<{ interpretation: Interpretation; relation: "base" | "compatible" }> {
+  const offered = getInterpretationsForStyle(styleId);
+  const rank = (i: Interpretation) => (i.base_style_id === styleId ? (i.verified_canonical ? 0 : 1) : 2);
+  return offered
+    .map((interpretation, index) => ({ interpretation, index }))
+    .sort((a, b) => rank(a.interpretation) - rank(b.interpretation) || a.index - b.index)
+    .map(({ interpretation }) => ({
+      interpretation,
+      relation: interpretation.base_style_id === styleId ? "base" as const : "compatible" as const,
+    }));
+}

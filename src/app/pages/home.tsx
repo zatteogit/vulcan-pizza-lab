@@ -707,6 +707,24 @@ export function HomePage() {
     [applyInterpretationToState, resetCreateBaseRecipe, selectedStyle],
   );
 
+  /* G1b-WP-01 (S03-A-14): «Genera con questa versione» dal pannello stile.
+     Applica la versione d'autore come il selettore del risultato (parametri,
+     condimento della versione, forno al massimo) e resta in Crea. Senza
+     versione è la CTA di sempre. */
+  const handleSheetGenerate = useCallback(
+    (toppingId?: string, interpretationId?: string) => {
+      const interpretation = interpretationId ? getInterpretationById(interpretationId) : undefined;
+      if (!interpretation) {
+        handleGenerateRecipe(toppingId);
+        return;
+      }
+      handleCreateInterpretationSelect(interpretation);
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+      setCurrentStep("result");
+    },
+    [handleGenerateRecipe, handleCreateInterpretationSelect],
+  );
+
   /* "Personalizza": apre il dialog e basta — la ricetta diventa
      personalizzata solo quando un parametro cambia davvero (isDirty). */
   const handleOpenCreatePersonalization = useCallback(() => {
@@ -1624,7 +1642,7 @@ export function HomePage() {
             key={selectedStyle.id}
             style={selectedStyle}
             constraints={engineConstraints}
-            onGenerate={handleGenerateRecipe}
+            onGenerate={handleSheetGenerate}
             onDismiss={() => setSelectedStyle(null)}
           />
       )}

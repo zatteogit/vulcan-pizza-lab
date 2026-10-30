@@ -1144,7 +1144,10 @@ export const FR_LOCALE: CmsContent = {
     sheetFoldInterval: "Toutes les {min} min",
     sheetGenerateBtn: "G\u00E9n\u00E9rer la recette",
     sheetTechniquesLabel:
-      "Techniques d\u2019auteur compatibles",
+      "Versions d’auteur",
+    sheetTechniqueFrom: "issue de {style}",
+    sheetTechniqueGenerate: "Générer avec cette version",
+    sheetTechniqueSource: "Source",
     mixBeginner:
       "{mixer} (~{time} min de p\u00E9trissage).",
     bulkBeginner:

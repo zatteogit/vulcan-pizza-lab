@@ -1230,6 +1230,9 @@ export interface CmsContent {
     sheetFoldInterval: string;
     sheetGenerateBtn: string;
     sheetTechniquesLabel: string;
+    sheetTechniqueFrom: string;
+    sheetTechniqueGenerate: string;
+    sheetTechniqueSource: string;
     // Timeline parametric tips — beginner
     mixBeginner: string;
     bulkBeginner: string;
@@ -2303,7 +2306,10 @@ export const CMS_DEFAULTS: CmsContent = {
     sheetFoldLabel: "Pieghe",
     sheetFoldInterval: "Ogni {min} min",
     sheetGenerateBtn: "Genera ricetta",
-    sheetTechniquesLabel: "Tecniche d'autore compatibili",
+    sheetTechniquesLabel: "Versioni d'autore",
+    sheetTechniqueFrom: "da {style}",
+    sheetTechniqueGenerate: "Genera con questa versione",
+    sheetTechniqueSource: "Fonte",
     // Timeline — beginner
     mixBeginner: "{mixer} (~{time} min di impasto).",
     bulkBeginner: "Esegui {count} pieghe ({type}) ogni {interval} minuti per sviluppare la struttura.",
@@ -3624,7 +3630,10 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "parametricTips.sheetFoldLabel", label: "Sheet: Pieghe", type: "text" },
       { path: "parametricTips.sheetFoldInterval", label: "Sheet: Intervallo pieghe", type: "text", description: "Template: {min}" },
       { path: "parametricTips.sheetGenerateBtn", label: "Sheet: Genera ricetta", type: "text" },
-      { path: "parametricTips.sheetTechniquesLabel", label: "Sheet: Tecniche d'autore", type: "text" },
+      { path: "parametricTips.sheetTechniquesLabel", label: "Sheet: Versioni d'autore", type: "text" },
+      { path: "parametricTips.sheetTechniqueFrom", label: "Sheet: versione da altro stile ({style})", type: "text" },
+      { path: "parametricTips.sheetTechniqueGenerate", label: "Sheet: Genera con questa versione", type: "text" },
+      { path: "parametricTips.sheetTechniqueSource", label: "Sheet: Fonte della versione", type: "text" },
       // Timeline beginner
       { path: "parametricTips.mixBeginner", label: "Mix — Beginner", type: "textarea", description: "Template: {mixer}, {time}" },
       { path: "parametricTips.bulkBeginner", label: "Bulk — Beginner", type: "textarea", description: "Template: {count}, {type}, {interval}" },

@@ -107,6 +107,7 @@ lo aggiunge qui e, se è tecnico, al glossario.
 | **Su misura** | Parametri modificati dall'utente o dall'ottimizzatore | eyebrow, punteggi | «Personalizzata», «Adattata» |
 | **Versione** | Il selettore delle interpretazioni (disciplinari, maestri, pizzerie) | etichetta, aria-label, titolo della modale, pannello Personalizza | «Ispirazione», «Firma», «Interpretazione» come nome del selettore |
 | **Ispirata a {nome}** | Una versione d'autore: ricostruzione da fonti pubbliche, non la ricetta del maestro (D-027) | eyebrow, card | «di {nome}», «ricetta originale di» |
+| **Versioni d'autore** | La sezione del pannello stile con le versioni (maestri, pizzerie, disciplinari) di quello stile; una versione nata su un altro stile dice «da {stile}» (G1b-WP-01) | pannello stile | «Tecniche d'autore compatibili» («compatibili» accanto a una STG suggerisce conformità) |
 | **Profilo impasto** | Le varianti dello stile in `style-versions.ts` (Casalinga, Classica…) | pannello Personalizza, eyebrow «Profilo {nome}» | «Versione» (è il selettore delle interpretazioni) |
 | **prefermento** | Biga, poolish e simili; una sola grafia, minuscola in frase | ovunque in italiano | «pre-fermento», «Pre-Fermento», «preimpasto» |
 | **Salva nel ricettario / Rimuovi dal ricettario** | Salvare una ricetta | segnalibro, card, toast, dialog | «preferiti» (sono gli stili preferiti, un'altra cosa), «Salva questa versione» |

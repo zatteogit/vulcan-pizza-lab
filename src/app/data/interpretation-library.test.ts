@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { STYLES_DB, type UserConstraints } from "../domain/pizza-engine";
 import { canonicalRecipeEntry, recipeFromEntry } from "../use-cases/recipe-entry";
-import { getAllInterpretations, getInterpretationsForStyle, isBlockedByStyle } from "./interpretation-library";
+import { getAllInterpretations, getInterpretationsForStyle, isBlockedByStyle, relatedAuthorVersions } from "./interpretation-library";
 
 /* FW-14 (S07-A-01, decisione B del 28/10/2026): sotto la Napoletana STG non
  * si offrono come versioni le ricette canotto (Pepe, Capuano): contraddicono il
@@ -61,5 +61,36 @@ describe("versioni offerte e verdetto del motore", () => {
         expect(recipe.verdict.blockers.some((b) => styleLimits.has(b.kind)), `${id} · ${it.id}`).toBe(true);
       }
     }
+  });
+});
+
+/* G1b-WP-01 (S03-A-14, S03-B-16): le versioni d'autore del pannello stile
+ * dicono da dove vengono. Le voci sono quelle offerte dallo stile; quelle di
+ * un altro stile hanno relation 'compatible' e la UI scrive «da {stile}». */
+describe("relatedAuthorVersions", () => {
+  const ids = (styleId: string) => relatedAuthorVersions(styleId).map((v) => `${v.interpretation.id}:${v.relation}`);
+  it("sulla STG solo versioni nate sulla STG, il disciplinare in testa", () => {
+    expect(ids("napoletana_stg")).toEqual(["avpn_disciplinare:base", "da_michele_napoli:base"]);
+  });
+  it("sulla teglia la versione di Forkish arriva dal New York ed è in coda", () => {
+    expect(ids("teglia_romana")).toEqual([
+      "apiter_teglia:base", "bonci_pizzarium:base", "bosco_aria_di_pane:base", "forkish_portland:compatible",
+    ]);
+  });
+  it("ogni voce è dello stile o compatibile, le stesse di getInterpretationsForStyle", () => {
+    for (const styleId of Object.keys(STYLES_DB)) {
+      const related = relatedAuthorVersions(styleId);
+      expect(related.map((v) => v.interpretation.id).sort(), styleId)
+        .toEqual(getInterpretationsForStyle(styleId).map((it) => it.id).sort());
+      for (const { interpretation, relation } of related) {
+        if (relation === "base") expect(interpretation.base_style_id).toBe(styleId);
+        else expect(interpretation.compatible_style_ids, interpretation.id).toContain(styleId);
+      }
+      const ranks = related.map((v) => (v.relation === "base" ? (v.interpretation.verified_canonical ? 0 : 1) : 2));
+      expect(ranks, styleId).toEqual([...ranks].sort((a, b) => a - b));
+    }
+  });
+  it("l'ordine è stabile tra due chiamate", () => {
+    for (const styleId of Object.keys(STYLES_DB)) expect(ids(styleId)).toEqual(ids(styleId));
   });
 });

@@ -1320,7 +1320,10 @@ export const EN_LOCALE: CmsContent = {
     sheetFoldLabel: "Folds",
     sheetFoldInterval: "Every {min} min",
     sheetGenerateBtn: "Generate recipe",
-    sheetTechniquesLabel: "Compatible author techniques",
+    sheetTechniquesLabel: "Author versions",
+    sheetTechniqueFrom: "from {style}",
+    sheetTechniqueGenerate: "Generate with this version",
+    sheetTechniqueSource: "Source",
     mixBeginner: "{mixer} (~{time} min mixing).",
     bulkBeginner:
       "Perform {count} folds ({type}) every {interval} minutes to develop structure.",
