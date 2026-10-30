@@ -208,6 +208,9 @@ export const DE_LOCALE: CmsContent = {
     yeastEstimateNote: "Das ist eine Schätzung, keine Messung: Hefemarke, Frische und die tatsächliche Temperatur verschieben sie. Plausible Menge: {low}–{high}.",
     yeastPersonalLegend: "In deiner Küche gehen Teige",
     yeastPersonalHint: "Wenn sie immer übergehen, wähle „schneller“: Wir nehmen dann in allen Rezepten weniger Hefe.",
+    /* B1 (D-068): dose del lievito presa dalla fonte. */
+    yeastSourceBody: "Menge aus der Quelle der Version: {pct} auf das Mehl, für {hours} bei {temp}. Für dieselben Zeiten würde das Modell {model} schätzen; das Rezept behält die Menge der Quelle, weil die Zeiten der Quelle damit aufgehen.",
+    yeastSourceNote: "Wenn du Stunden oder Temperatur änderst, gilt wieder die Menge des Modells. Die Korrektur deiner Küche ändert die Menge der Quelle nicht.",
     yeastSpeedMuchSlower: "Viel langsamer",
     yeastSpeedSlower: "Langsamer",
     yeastSpeedAsExpected: "Wie erwartet",
@@ -935,6 +938,10 @@ export const DE_LOCALE: CmsContent = {
     "timeline.shape.foldedLayers": "Roll eine hauchdünne Teigplatte aus und falte sie {folds}-mal wie ein Buch; verteile die Füllung zwischen den Lagen.",
     // FW-17 (D-P)
     "preferment.sourdoughInstead": "Biga und Poolish werden mit Backhefe angesetzt: Mit nur Sauerteig lässt das Rezept sie weg, denn der Sauerteig ist schon ein Vorteig. Wenn du sie möchtest, nimm Backhefe in deinen Vorrat auf.",
+    // B1 (D-068): lievito della fonte convertito, «luogo caldo» senza gradi.
+    "yeast.sourceDryAsFresh": "Die Quelle verwendet Trockenhefe, {sourcePct}% auf das Mehl. In deinem Vorrat ist Frischhefe: Hier beträgt die Menge {pct}%, von {app} im Verhältnis 1 zu 3 umgerechnet (1 g Trockenhefe entspricht etwa 3 g Frischhefe).",
+    "yeast.sourceFreshAsDry": "Die Quelle verwendet Frischhefe, {sourcePct}% auf das Mehl. In deinem Vorrat ist Trockenhefe: Hier beträgt die Menge {pct}%, von {app} im Verhältnis 1 zu 3 umgerechnet (1 g Trockenhefe entspricht etwa 3 g Frischhefe).",
+    "fermentation.warmPlace": "Die Quelle sagt „an einem warmen Ort“, ohne Gradangabe: {app} rechnet mit {temp}, alles zwischen {tempMin} und {tempMax} passt. Warte, bis sich der Teig verdoppelt hat, statt auf die Uhr zu schauen.",
     "diet.singleBase": "Ein Boden aus dem gesamten Teig: Zwiebeln darauf, ohne zweiten Teigkreis oder Verschließen.",
     "topping.geometry": "Fläche {area} cm² · Referenz {reference} cm² · Mengen ×{scale}.",
     "auth.layoutChanged": "Anderes Format als die Vorlage: Diese Variante verändert den Aufbau",

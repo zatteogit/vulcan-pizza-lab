@@ -180,6 +180,9 @@ export const IT_LOCALE: CmsContent = {
     yeastEstimateNote: "È una stima, non una misura: marca e freschezza del lievito e la temperatura reale la spostano. Dose plausibile: {low}–{high}.",
     yeastPersonalLegend: "Nella tua cucina gli impasti lievitano",
     yeastPersonalHint: "Se ti crescono sempre troppo, scegli «più in fretta»: useremo meno lievito in tutte le ricette.",
+    /* B1 (D-068): dose del lievito presa dalla fonte. */
+    yeastSourceBody: "Dose presa dalla fonte della versione: {pct} sulla farina, per {hours} a {temp}. Con gli stessi tempi il modello stimerebbe {model}: la ricetta tiene la dose della fonte, perché i tempi della fonte tornano con quella.",
+    yeastSourceNote: "Se cambi ore o temperatura, torna la dose del modello. La correzione della tua cucina non tocca la dose della fonte.",
     yeastSpeedMuchSlower: "Molto più piano",
     yeastSpeedSlower: "Più piano",
     yeastSpeedAsExpected: "Come previsto",

@@ -14,8 +14,9 @@ mergeImpastoIntoDough,
 type ImpastoRecipe,
 } from "../data/impasto-library";
 import { getBakingTimeByStyle, getFoldingByStyle, getToppingByStyle } from "../data/parametric-databases";
-import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C } from "./fermentation-constants";
+import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C, WARM_PLACE } from "./fermentation-constants";
 export { PROOF_MIN_TEMP_C };
+import { sourceYeastUse, type SourceYeast, type SourceYeastUse } from "./source-yeast";
 import { isHeatProfileCompatible } from "../data/equipment-data";
 import {
 getToppingForStyle,
@@ -541,6 +542,13 @@ export interface GeneratedRecipe {
   sugar_g: number;
   yeast_g: number;
   yeast_type: "fresh" | "dry" | "sourdough";
+  /** B1 (D-068): la dose di lievito viene dalla fonte della versione d'autore,
+   *  non dal modello. Assente = dose del modello. `model_pct` è la stima del
+   *  modello per lo stesso tipo, le stesse ore e la stessa temperatura. */
+  yeast_source?: SourceYeastUse & { model_pct: number };
+  /** B1 (D-068): scelte di Vulcan sulla fonte, dichiarate nella ricetta
+   *  (lievito convertito per la dispensa, «luogo caldo» senza gradi). */
+  source_notes?: EngineMsg[];
   hydration_pct: number;
   baker_pcts?: { salt: number; fat: number; sugar: number };
   flour_w: number;
@@ -1866,6 +1874,13 @@ export interface GenerateRecipeOptions {
   /** D-043 — biga o poolish scelti dall'utente e quota di farina nel
    *  pre-fermento (% sulla farina totale). Assenti: quelli dello stile. */
   preFerment?: PreFermentChoice;
+  /** B1 (D-068) — lievito della fonte di una versione d'autore: tipo e dose
+   *  al posto della dose del modello, solo con le ore e la temperatura della
+   *  fonte (domain/source-yeast.ts). */
+  sourceYeast?: SourceYeast;
+  /** B1 (D-068, decisione 7) — la fonte dice «luogo caldo» senza gradi: alla
+   *  temperatura di WARM_PLACE la ricetta dichiara la scelta di Vulcan. */
+  warmPlace?: boolean;
 }
 
 export type PreFermentType = "biga" | "poolish";
@@ -1909,6 +1924,8 @@ export function generateRecipe(
     customFlourBlend,
     compensateCustomHydration,
     preFerment,
+    sourceYeast,
+    warmPlace,
   } = options;
   const doughBalls = constraints.dough_balls;
 
@@ -2139,10 +2156,18 @@ export function generateRecipe(
     style.dough.sugar_pct +
     (style.allows_additives ? ovenCompensations.sugar_delta_pct : 0);
 
+  // B1 (D-068): lievito della fonte, solo con le ore e la temperatura della
+  // fonte; tipo e dose sostituiscono la scelta dalla dispensa e il modello.
+  const sourceYeastApplied = sourceYeast && !style.dough.unleavened
+    ? sourceYeastUse(sourceYeast, constraints.pantry_yeasts, constraints.excluded_yeasts ?? [], fermentationHours, fermentationTempC)
+    : null;
+
   // ── Auto yeast selection based on pantry ──
   let yeastType: "fresh" | "dry" | "sourdough";
   const py = constraints.pantry_yeasts;
-  if (py.length === 0) {
+  if (sourceYeastApplied) {
+    yeastType = sourceYeastApplied.type;
+  } else if (py.length === 0) {
     yeastType = (["fresh", "dry", "sourdough"] as const).find(id => !(constraints.excluded_yeasts ?? []).includes(id)) ?? "fresh";
   } else if (
     py.includes("sourdough") &&
@@ -2170,11 +2195,26 @@ export function generateRecipe(
   const preFermentDroppedForSourdough = hasPreFerment && yeastType === "sourdough";
   if (preFermentDroppedForSourdough) hasPreFerment = false;
 
+  // M-11: la correzione personale («la mia cucina lievita più veloce»)
+  // divide la dose: più veloce → meno lievito per le stesse ore.
+  const modelYeastPct = (type: "fresh" | "dry") => Math.max(
+    0.01,
+    calculateYeastPercentage(
+      equivalentFermentationHours(fermentationHours, fermentationTempC, type, hasPreFerment, preFermentType, style.method_profile, stylePlanFolds(style.id)),
+      fermentationTempC,
+      type,
+    ) /
+      clampYeastSpeedFactor(constraints.yeast_speed_factor),
+  );
+
   // Yeast calculation (sourdough uses a different model)
   let yeastPct: number;
   if (style.dough.unleavened) {
     // VPL-B2: impasto non lievitato (Focaccia di Recco) → nessun lievito
     yeastPct = 0;
+  } else if (sourceYeastApplied) {
+    // B1 (D-068): la dose della fonte, senza correzione personale.
+    yeastPct = sourceYeastApplied.pct;
   } else if (yeastType === "sourdough") {
     // Sourdough: ~15-20% of flour weight as starter, expressed as baker's %
     // Less starter for longer fermentations
@@ -2185,17 +2225,7 @@ export function generateRecipe(
           ? 18
           : 20;
   } else {
-    // M-11: la correzione personale («la mia cucina lievita più veloce»)
-    // divide la dose: più veloce → meno lievito per le stesse ore.
-    yeastPct = Math.max(
-      0.01,
-      calculateYeastPercentage(
-        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment, preFermentType, style.method_profile, stylePlanFolds(style.id)),
-        fermentationTempC,
-        yeastType as "fresh" | "dry",
-      ) /
-        clampYeastSpeedFactor(constraints.yeast_speed_factor),
-    );
+    yeastPct = modelYeastPct(yeastType);
   }
 
   // Baker's percentages to grams — using compensated values
@@ -2713,6 +2743,25 @@ export function generateRecipe(
     sugar_g: sugarG,
     yeast_g: yeastG,
     yeast_type: yeastType,
+    // B1 (D-068): campi presenti solo quando servono, così le ricette senza
+    // fonte restano identiche a prima (preset-numbers.regression.test.ts).
+    ...(sourceYeastApplied
+      ? { yeast_source: { ...sourceYeastApplied, model_pct: Math.round(modelYeastPct(sourceYeastApplied.type) * 1000) / 1000 } }
+      : {}),
+    ...(() => {
+      const notes: EngineMsg[] = [
+        ...(sourceYeastApplied?.converted
+          ? [em(sourceYeastApplied.type === "fresh" ? "yeast.sourceDryAsFresh" : "yeast.sourceFreshAsDry",
+            METHOD_MESSAGES_IT[sourceYeastApplied.type === "fresh" ? "yeast.sourceDryAsFresh" : "yeast.sourceFreshAsDry"],
+            { sourcePct: sourceYeastApplied.source_pct, pct: Math.round(sourceYeastApplied.pct * 100) / 100, app: BRAND.name })]
+          : []),
+        ...(warmPlace && fermentationTempC === WARM_PLACE.calcC
+          ? [em("fermentation.warmPlace", METHOD_MESSAGES_IT["fermentation.warmPlace"],
+            { temp: WARM_PLACE.calcC, tempMin: WARM_PLACE.windowC[0], tempMax: WARM_PLACE.windowC[1], app: BRAND.name })]
+          : []),
+      ];
+      return notes.length > 0 ? { source_notes: notes } : {};
+    })(),
     hydration_pct: hydration,
     flour_w: flourW,
     flour_pl: flourPL,

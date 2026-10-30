@@ -206,8 +206,11 @@ export const FR_LOCALE: CmsContent = {
     yeastDryNote: "Avec de la levure sèche, la dose est un tiers de la fraîche.",
     yeastTempModelNote: "L'effet de la température sur la vitesse (facteur Q10 de 2, 1,6 sous 10 °C) est une estimation du modèle, à confirmer par des essais.",
     yeastEstimateNote: "C'est une estimation, pas une mesure : la marque, la fraîcheur de la levure et la température réelle la font varier. Dose plausible : {low}–{high}.",
-    yeastPersonalLegend: "Dans votre cuisine, les pâvos lèvent",
+    yeastPersonalLegend: "Dans votre cuisine, les pâtes lèvent",
     yeastPersonalHint: "Si elles poussent toujours trop, choisissez « plus vite » : nous mettrons moins de levure dans toutes les recettes.",
+    /* B1 (D-068): dose del lievito presa dalla fonte. */
+    yeastSourceBody: "Dose reprise de la source de la version : {pct} sur la farine, pour {hours} à {temp}. Pour les mêmes temps, le modèle estimerait {model} ; la recette garde la dose de la source, car ses temps tiennent avec elle.",
+    yeastSourceNote: "Si vous changez les heures ou la température, la dose du modèle revient. La correction de votre cuisine ne modifie pas la dose de la source.",
     yeastSpeedMuchSlower: "Beaucoup plus lentement",
     yeastSpeedSlower: "Plus lentement",
     yeastSpeedAsExpected: "Comme prévu",
@@ -948,6 +951,10 @@ export const FR_LOCALE: CmsContent = {
     "timeline.shape.foldedLayers": "Étalez une feuille de pâte très fine et pliez-la {folds} fois en livre, en répartissant la garniture entre les plis.",
     // FW-17 (D-P)
     "preferment.sourdoughInstead": "La biga et le poolish se font avec de la levure de boulanger : avec seulement du levain, la recette ne les utilise pas, car le levain sert déjà de préferment. Pour les utiliser, ajoutez de la levure de boulanger à votre garde-manger.",
+    // B1 (D-068): lievito della fonte convertito, «luogo caldo» senza gradi.
+    "yeast.sourceDryAsFresh": "La source utilise de la levure sèche, {sourcePct}% sur la farine. Dans votre garde-manger il y a de la levure fraîche : ici la dose est de {pct}%, convertie par {app} au rapport de 1 à 3 (1 g de levure sèche vaut environ 3 g de fraîche).",
+    "yeast.sourceFreshAsDry": "La source utilise de la levure fraîche, {sourcePct}% sur la farine. Dans votre garde-manger il y a de la levure sèche : ici la dose est de {pct}%, convertie par {app} au rapport de 1 à 3 (1 g de levure sèche vaut environ 3 g de fraîche).",
+    "fermentation.warmPlace": "La source dit « dans un endroit chaud », sans degrés : {app} calcule à {temp}, et tout convient entre {tempMin} et {tempMax}. Attendez que la pâte double de volume, pas l'heure indiquée par la montre.",
     "diet.singleBase": "Une seule base avec toute la pâte : oignons dessus, sans second disque ni fermeture.",
     "topping.geometry": "Surface {area} cm² · référence {reference} cm² · quantités ×{scale}.",
     "auth.layoutChanged": "Format différent de la référence : cette variante change la structure",

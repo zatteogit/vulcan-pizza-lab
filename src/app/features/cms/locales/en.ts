@@ -226,6 +226,9 @@ export const EN_LOCALE: CmsContent = {
     yeastEstimateNote: "It's an estimate, not a measurement: yeast brand, freshness and the real temperature shift it. Plausible dose: {low}–{high}.",
     yeastPersonalLegend: "In your kitchen, doughs rise",
     yeastPersonalHint: "If they always overproof, choose “faster”: we'll use less yeast in every recipe.",
+    /* B1 (D-068): dose del lievito presa dalla fonte. */
+    yeastSourceBody: "Dose taken from the version's source: {pct} on the flour, for {hours} at {temp}. For the same times the model would estimate {model}; the recipe keeps the source's dose, because the source's times work with it.",
+    yeastSourceNote: "If you change the hours or the temperature, the model's dose comes back. Your kitchen correction doesn't change the source's dose.",
     yeastSpeedMuchSlower: "Much slower",
     yeastSpeedSlower: "Slower",
     yeastSpeedAsExpected: "As expected",
@@ -1117,6 +1120,10 @@ export const EN_LOCALE: CmsContent = {
     "timeline.shape.foldedLayers": "Roll out a paper-thin sheet and book-fold it {folds} times, spreading the filling between the folds.",
     // FW-17 (D-P)
     "preferment.sourdoughInstead": "Biga and poolish are made with baker's yeast: with sourdough starter only, the recipe leaves them out, because the starter already works as a pre-ferment. To use them, add baker's yeast to your pantry.",
+    // B1 (D-068): lievito della fonte convertito, «luogo caldo» senza gradi.
+    "yeast.sourceDryAsFresh": "The source uses dry yeast, {sourcePct}% on the flour. Your pantry has fresh yeast: here the dose is {pct}%, converted by {app} at a 1 to 3 ratio (1 g of dry yeast is worth about 3 g of fresh).",
+    "yeast.sourceFreshAsDry": "The source uses fresh yeast, {sourcePct}% on the flour. Your pantry has dry yeast: here the dose is {pct}%, converted by {app} at a 1 to 3 ratio (1 g of dry yeast is worth about 3 g of fresh).",
+    "fermentation.warmPlace": "The source says “in a warm place”, without degrees: {app} calculates at {temp}, and anything between {tempMin} and {tempMax} works. Wait for the dough to double, not for the clock.",
     "diet.singleBase": "One base using all the dough: onions on top, without a second disc or sealing.",
     "topping.geometry": "Area {area} cm² · reference {reference} cm² · amounts ×{scale}.",
     "auth.layoutChanged": "Different format from the reference: this variant changes the recipe structure",

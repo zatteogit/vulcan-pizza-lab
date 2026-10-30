@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { STYLES_DB, type UserConstraints } from "../domain/pizza-engine";
 import { canonicalRecipeEntry, recipeFromEntry } from "../use-cases/recipe-entry";
-import { getAllInterpretations, getInterpretationsForStyle, isBlockedByStyle, relatedAuthorVersions } from "./interpretation-library";
+import { getAllInterpretations, getInterpretationsForStyle, INSPIRED_BY_TYPES, interpretationFermentTempC, isBlockedByStyle, relatedAuthorVersions } from "./interpretation-library";
 
 /* FW-14 (S07-A-01, decisione B del 28/10/2026): sotto la Napoletana STG non
  * si offrono come versioni le ricette canotto (Pepe, Capuano): contraddicono il
@@ -92,5 +92,45 @@ describe("relatedAuthorVersions", () => {
   });
   it("l'ordine è stabile tra due chiamate", () => {
     for (const styleId of Object.keys(STYLES_DB)) expect(ids(styleId)).toEqual(ids(styleId));
+  });
+});
+
+/* Tranche B1 (D-068): campi nuovi della libreria. Oggi nessuna voce li usa
+ * (le versioni arrivano con la B2); le regole valgono da subito. */
+describe("B1 · tipo `autore`, lievito della fonte, temperature", () => {
+  it("una versione `autore` ha l'avviso «Ispirata a…» e una fonte letta, verificata o plausibile", () => {
+    expect(INSPIRED_BY_TYPES).toEqual(["master", "pizzeria", "autore"]);
+    for (const it of getAllInterpretations().filter((i) => i.type === "autore")) {
+      expect(it.author, it.id).toBeTruthy();
+      expect(it.url, it.id).toMatch(/^https?:\/\//);
+      expect(["verified", "plausible"], it.id).toContain(it.source_status);
+    }
+  });
+  it("temperature fra 1 e 30 °C; «luogo caldo» senza una temperatura scritta", () => {
+    for (const it of getAllInterpretations()) {
+      const o = it.parameter_overrides;
+      if (o?.fermentation_temp_c !== undefined) {
+        expect(o.fermentation_temp_c, it.id).toBeGreaterThanOrEqual(1);
+        expect(o.fermentation_temp_c, it.id).toBeLessThanOrEqual(30);
+      }
+      if (o?.warm_place) expect(o.fermentation_temp_c, it.id).toBeUndefined();
+    }
+  });
+  it("il lievito della fonte ha le ore e la temperatura per cui la fonte lo scrive", () => {
+    for (const it of getAllInterpretations().filter((i) => i.source_yeast)) {
+      expect(it.parameter_overrides?.fermentation_hours, it.id).toBeGreaterThan(0);
+      expect(interpretationFermentTempC(it), it.id).toBeDefined();
+      expect(it.source_yeast!.pct, it.id).toBeGreaterThan(0);
+      expect(it.source_yeast!.pct, it.id).toBeLessThanOrEqual(5);
+    }
+  });
+  it("«luogo caldo»: 26 °C di calcolo, anche per i limiti dello stile", () => {
+    const warm = { ...getAllInterpretations()[0], parameter_overrides: { warm_place: true as const } };
+    expect(interpretationFermentTempC(warm)).toBe(26);
+    // La pinsa impone 4 °C: una versione al «luogo caldo» non vi si offre.
+    expect(STYLES_DB.pinsa_romana.dough.fermentation_temp_c).toBe(4);
+    expect(isBlockedByStyle(warm, STYLES_DB.pinsa_romana)).toBe(true);
+    expect(STYLES_DB.focaccia_genovese.dough.fermentation_temp_c).toBeUndefined();
+    expect(isBlockedByStyle(warm, STYLES_DB.focaccia_genovese)).toBe(false);
   });
 });

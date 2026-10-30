@@ -12,6 +12,7 @@ import {
 import { IT_LOCALE } from "../features/cms/locales/it";
 import { AUTHENTICITY_FUEL_CAP, DEFAULT_UI_SCORE_WEIGHTS, explainScore } from "./recipe-score";
 import { compareByCompatibility, kitchenMargin } from "./kitchen-margin";
+import { YEAST_DRY_RATIO } from "./fermentation-model";
 import { defaultSmartLink, linkedActive, propagateLinked } from "../features/recipe/linked-params";
 
 /* Guardie delle decisioni di Matteo (docs/autorialita.md). Una PR le aveva
@@ -250,5 +251,26 @@ describe("D-G2-1: parametri collegati solo per chi li vede, mai fuori range", ()
       includePL: true,
     });
     expect(out.fermentHours).toBe(d.fermentation_hours_range[1]);
+  });
+});
+
+/* D-068 (Matteo, 30/10/2026, decisioni 6 e 7 della tranche B): il lievito
+ * della fonte resta come scritto; si converte solo se in dispensa manca quel
+ * tipo, col rapporto del motore, e lo si dichiara. «Luogo caldo» senza gradi:
+ * 26 °C di calcolo, finestra 24–28 °C, dichiarato come scelta di Vulcan. */
+describe("D-068: lievito della fonte e «luogo caldo»", () => {
+  const options = { customFermentationHours: 2, customFermentationTempC: 26, usePreFerment: false, warmPlace: true,
+    sourceYeast: { type: "dry" as const, pct: 1.4, hours: 2, temp_c: 26 } };
+  it("col tipo della fonte la dose è quella scritta, senza note di conversione", () => {
+    const r = generateRecipe(STYLES_DB.focaccia_genovese, { ...homeKitchen, pantry_yeasts: ["dry"] }, options);
+    expect([r.yeast_type, r.science.yeast_baker_pct]).toEqual(["dry", 1.4]);
+    expect(r.source_notes?.map((n) => n.key)).toEqual(["fermentation.warmPlace"]);
+    expect(r.source_notes?.[0].params).toMatchObject({ temp: 26, tempMin: 24, tempMax: 28 });
+  });
+  it("senza quel tipo: rapporto del motore (secco = un terzo del fresco), dichiarato", () => {
+    const r = generateRecipe(STYLES_DB.focaccia_genovese, { ...homeKitchen, pantry_yeasts: ["fresh"] }, options);
+    expect(r.yeast_type).toBe("fresh");
+    expect(r.science.yeast_baker_pct).toBeCloseTo(1.4 / YEAST_DRY_RATIO, 2);
+    expect(r.source_notes?.[0].key).toBe("yeast.sourceDryAsFresh");
   });
 });

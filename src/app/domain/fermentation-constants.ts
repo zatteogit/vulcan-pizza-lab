@@ -11,3 +11,10 @@ export const PROOF_MIN_TEMP_C = 18;
  *  7 e 17 °C (cantina, «fresco») l'impasto NON va in frigo: la dose di lievito
  *  è calcolata per quella temperatura. */
 export const FRIDGE_MAX_TEMP_C = 6;
+
+/** Tranche B1 (D-068, decisione 7 di Matteo del 30/10/2026): una fonte che
+ *  dice «in un luogo caldo» senza gradi (Benedetta Rossi, Paoletta). Il motore
+ *  calcola a `calcC`; la finestra `windowC` vale con il criterio «al
+ *  raddoppio». Non è una misura della fonte: è una scelta di Vulcan, e la
+ *  ricetta lo dichiara (nota `fermentation.warmPlace`). */
+export const WARM_PLACE = { calcC: 26, windowC: [24, 28] } as const;

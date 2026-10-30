@@ -4,9 +4,15 @@
  * reinterpretano una Ricetta di base con i loro parametri, tecniche signature,
  * storia, anno di codificazione, provenienza.
  *
- * I 4 type:
+ * I 5 type:
  *   master       — pizzaiolo singolo (Bonci, Pepe, Martucci, ecc.)
  *   pizzeria     — locale storico (Pizzarium, da Michele, Pepe in Grani)
+ *   autore       — persona che non fa il pizzaiolo e pubblica un metodo (blog,
+ *                  TV, libro): tranche B1 (D-068, raccomandazione 8 del
+ *                  §9.7, da confermare). Stesso avviso «Ispirata a…» di master e
+ *                  pizzeria e stesse regole di fonte: `url` della fonte letta e
+ *                  `source_status` verificato o plausibile (§3 di
+ *                  docs/progetto-catalogo-italiano.md)
  *   community    — gruppo/forum (oggi nessuna voce: D-024, mancano le fonti)
  *   disciplinare — testo di regole (AVPN, IGP Recco; APITER è di una community)
  *
@@ -19,21 +25,36 @@
  * verità per maestri, pizzerie, disciplinari e community.
  */
 import type { MethodProcessProfile, PizzaStyle, SkillLevel } from "../domain/pizza-engine";
+import type { SourceStatus } from "../domain/science/types";
+import type { CommercialYeast } from "../domain/source-yeast";
+import { WARM_PLACE } from "../domain/fermentation-constants";
 import { STYLES_DB } from "../domain/styles-db";
 import { getImpasto, mergeImpastoIntoDough } from "./impasto-library";
 
-type InterpretationType =
+export type InterpretationType =
   | "master"
   | "pizzeria"
+  | "autore"
   | "community"
   | "disciplinare";
+
+/** Tipi con l'avviso «Ispirata a…» (interpretationDisclaimer): ricostruzioni
+ *  di Vulcan dal metodo di una persona o di un locale (D-027, D-068). */
+export const INSPIRED_BY_TYPES: readonly InterpretationType[] = ["master", "pizzeria", "autore"];
 
 interface InterpretationParameterOverrides {
   hydration_pct?: number;
   flour_w?: number;
   flour_pl?: number;
   fermentation_hours?: number;
-  fermentation_temp_c?: 4 | 12 | 22;
+  /** °C, 1–30 (test). Era `4 | 12 | 22`: la tranche B1 lo apre per il
+   *  «luogo caldo» (26 °C, D-068) e per le temperature scritte dalle fonti. */
+  fermentation_temp_c?: number;
+  /** B1 (D-068, decisione 7): la fonte dice «in un luogo caldo» senza gradi.
+   *  Il calcolo usa WARM_PLACE.calcC (26 °C) e la ricetta dichiara la scelta
+   *  di Vulcan con la finestra 24–28 °C «al raddoppio». Esclude
+   *  `fermentation_temp_c`. */
+  warm_place?: true;
   use_pre_ferment?: boolean;
   dough_weight_g?: number;
   /** Override impasto (link a IMPASTO_LIBRARY). */
@@ -69,6 +90,15 @@ export interface Interpretation {
 
   /* ─── Come la cambia ─── */
   parameter_overrides?: InterpretationParameterOverrides;
+  /** B1 (D-068): lievito scritto dalla fonte (tipo e % sulla farina). Il
+   *  motore lo usa al posto della dose del modello finché ore e temperatura
+   *  sono quelle della versione (`parameter_overrides`, che le deve dire);
+   *  se in dispensa c'è solo l'altro lievito di birra converte 1:3 e lo
+   *  dichiara (domain/source-yeast.ts). */
+  source_yeast?: { type: CommercialYeast; pct: number };
+  /** Stato della fonte letta (§3 del catalogo): obbligatorio per `autore`,
+   *  verificato o plausibile per stare nel catalogo. */
+  source_status?: SourceStatus;
 
   /* ─── Narrativa ─── */
   /** Nome firma (es. "Margherita Sbagliata"). Visibile prominentemente. */
@@ -423,8 +453,16 @@ export function isBlockedByStyle(interpretation: Interpretation, style: PizzaSty
   const dough = impasto ? mergeImpastoIntoDough(style.dough, impasto) : style.dough;
   const [minH, maxH] = dough.fermentation_hours_range;
   if (o.fermentation_hours !== undefined && (o.fermentation_hours < minH || o.fermentation_hours > maxH)) return true;
-  return o.fermentation_temp_c !== undefined && dough.fermentation_temp_c !== undefined
-    && o.fermentation_temp_c !== dough.fermentation_temp_c;
+  const tempC = interpretationFermentTempC(interpretation);
+  return tempC !== undefined && dough.fermentation_temp_c !== undefined
+    && tempC !== dough.fermentation_temp_c;
+}
+
+/** Temperatura di fermentazione della versione: quella scritta, oppure la
+ *  temperatura di calcolo del «luogo caldo» (D-068); undefined = dello stile. */
+export function interpretationFermentTempC(interpretation: Interpretation): number | undefined {
+  const o = interpretation.parameter_overrides;
+  return o?.fermentation_temp_c ?? (o?.warm_place ? WARM_PLACE.calcC : undefined);
 }
 
 /** Interpretazioni offerte su uno Style: base_style_id OR compatible_style_ids,

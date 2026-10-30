@@ -17,7 +17,7 @@ import { pantryIngredientId } from "../../domain/pantry-ingredients";
  * i template del CMS non scrivono l'unità dopo questi parametri. */
 
 /** Parametri che sono sempre temperature. */
-const TEMPERATURE_PARAMS = new Set(["temp", "ideal", "oven", "ddt", "requiredTemp", "fromTemp", "toTemp"]);
+const TEMPERATURE_PARAMS = new Set(["temp", "ideal", "oven", "ddt", "requiredTemp", "fromTemp", "toTemp", "tempMin", "tempMax"]);
 /** Messaggi in cui anche {min} è una temperatura (altrove è un'idratazione). */
 const TEMPERATURE_MIN_KEYS = new Set([
   "feas.ovenTooCold",
