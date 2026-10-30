@@ -239,6 +239,23 @@ describe("ricerca senza glutine (sicurezza alimentare)", () => {
     });
   }
 
+  /* Le espressioni di più parole del dizionario valgono come frase: «senza» e
+     «glutine» sparsi in un testo non bastano per «celiachia». */
+  const SCATTERED: [string, CmsContent, string, string, string][] = [
+    ["it", CMS_DEFAULTS, "celiachia", "Stendi senza strappare: il glutine regge", "Farina senza glutine"],
+    ["de", { ...CMS_DEFAULTS, ...DE_LOCALE } as CmsContent, "zöliakie", "Ohne Eile ziehen, das Gluten hält", "Mehl ohne Gluten"],
+    ["fr", { ...CMS_DEFAULTS, ...FR_LOCALE } as CmsContent, "coeliaque", "Étirez sans forcer : le gluten tient", "Farine sans gluten"],
+    ["es", { ...CMS_DEFAULTS, ...ES_LOCALE } as CmsContent, "celiaquía", "Estira sin forzar: el gluten aguanta", "Harina sin gluten"],
+    ["pt", { ...CMS_DEFAULTS, ...PT_LOCALE } as CmsContent, "celíaco", "Abra sem forçar: o glúten aguenta", "Farinha sem glúten"],
+  ];
+  for (const [locale, cms, query, scattered, phrase] of SCATTERED) {
+    it(`${locale}: le parole della frase sparse nel testo non bastano`, () => {
+      const items = [{ id: "sparse", text: scattered }, { id: "frase", text: phrase }];
+      const found = filterByQuery(items, (i) => i.text, query, searchLexicon(cms.pages)).map((i) => i.id);
+      expect(found, `${locale} «${query}»`).toEqual(["frase"]);
+    });
+  }
+
   it("la parola generica resta una ricerca a sé: «glutine» trova anche il farro", () => {
     const LX = searchLexicon(CMS_DEFAULTS.pages);
     expect(searchIndex(IT, "glutine", LX).map((r) => r.id)).toContain("flour-farro_spelta");

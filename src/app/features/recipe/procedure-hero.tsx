@@ -142,12 +142,10 @@ export function ProcedureHeroControls({
       ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--warning type-data-sm"
       : "procedure-hero__comfort-desc procedure-hero__comfort-desc--idle type-data-sm";
   // S09-B-14: la pianificazione compatta si apre da sola se il piano non
-  // coincide con un pasto o se restano fasi attive di notte da vedere.
-  const nightIssue = Boolean(currentComfortPlan) || nightActivesLeft > 0;
-  const [planOpen, setPlanOpen] = useState(() => selectedMeal === null || nightIssue);
-  useEffect(() => {
-    if (nightIssue) setPlanOpen(true);
-  }, [nightIssue]);
+  // coincide con un pasto. Le fasi di notte non la aprono più (proposta a
+  // Matteo del 29/10, G3-WP-01 opzione b): aperta spingeva il primo passo
+  // sotto la piega; l'avviso sta nella riga di riepilogo.
+  const [planOpen, setPlanOpen] = useState(() => selectedMeal === null);
   const tol = COMFORT_TOLERANCES;
   const comfortWhy = t(engineMessage(cms, "timelineComfort.whyBody", ""), {
     coldPlus: fmt.durationMinutes(tol.cold.plusMaxMin),
@@ -490,6 +488,11 @@ export function ProcedureHeroControls({
               {ui.endTime} <strong className="type-numeric">{approxEnd ? cms.cooking.approxPrefix : ""}{fmt.clockTime(endDisplayTime)}</strong> {endDayLabel}
             </time>
           </p>
+          {!planOpen && nightActivesLeft > 0 && (
+            <p className="procedure-hero__night-note type-data-sm" role="note">
+              {uiMessage("recipe.schedule.nightSummary", [nightActivesLeft, firstNightLabel])}
+            </p>
+          )}
           <Disclosure
             variant="inline"
             summary={uiMessage("recipe.schedule.editPlan")}

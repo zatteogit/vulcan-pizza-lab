@@ -181,11 +181,11 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         prevention: "Stay close to the absorption stated by the mill; if you don't know it, start from the low end of the style's hydration",
       },
       P02: {
-        symptom: "Dough tears during stretching",
-        cause: "Gluten not developed enough or not yet relaxed, dough still cold from the fridge; sometimes a flour with little extensibility (high P/L) or an over-fermented dough",
-        testRapido: "Gently stretch an edge: does it tear straight away instead of stretching?",
-        fixImmediate: "Cover the dough ball and let it rest at room temperature for 30–60 min, then try again",
-        prevention: "Follow the recipe's timings, take the dough balls out of the fridge in time and use a flour with the P/L the style states",
+        symptom: "Dough tears or gets holes while stretching",
+        cause: "Gluten not developed enough or not yet relaxed, dough still cold from the fridge, centre stretched too thin; sometimes a flour with little extensibility (high P/L) or an over-fermented dough",
+        testRapido: "Gently stretch an edge: does it tear straight away instead of stretching, or does a hole open in the centre while the rim is still thick?",
+        fixImmediate: "If a hole has opened, pinch its edges together; then cover the dough ball and let it rest at room temperature for 30–60 min before trying again",
+        prevention: "Follow the recipe's timings, take the dough balls out of the fridge in time, push outwards from the centre towards the rim without thinning the centre too much, and use a flour with the P/L the style states",
       },
       P03: {
         symptom: "Dough collapses when touched",
@@ -338,13 +338,6 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         testRapido: "Does the ball flatten sooner than expected, and does a fingertip dent stay when you press it?",
         fixImmediate: "Stretch it straight away with a little flour on the counter; don't try to re-ball it",
         prevention: "Shape the balls tighter and follow the recipe's hydration and timings; if the kitchen is warm, check the dough earlier",
-      },
-      P24: {
-        symptom: "A hole opens while I'm stretching",
-        cause: "Centre stretched too thin, underdeveloped gluten, dough still cold from the fridge or over-proofed",
-        testRapido: "Does the hole open in the centre while the rim is still thick?",
-        fixImmediate: "Pinch the edges of the hole together; if it opens again, cover the disc and let it rest for a few minutes",
-        prevention: "Push outwards from the centre towards the rim and don't thin the centre too much; take the balls out of the fridge in good time",
       },
     },
     contextual: {

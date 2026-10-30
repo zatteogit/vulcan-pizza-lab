@@ -184,11 +184,11 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         prevention: "Bleib nahe an der Wasseraufnahme, die die Mühle angibt; kennst du sie nicht, beginne am unteren Ende der Hydratation des Stils",
       },
       P02: {
-        symptom: "Teig rei\u00DFt beim Dehnen",
-        cause: "Gluten zu wenig entwickelt oder noch nicht entspannt, Teig noch kalt aus dem Kühlschrank; manchmal ein wenig dehnbares Mehl (hoher P/L) oder ein übergärter Teig",
-        testRapido: "Zieh vorsichtig an einem Rand: reißt er sofort, statt sich zu dehnen?",
-        fixImmediate: "Deck den Teigling ab und lass ihn 30–60 Min. bei Raumtemperatur ruhen, dann versuch es noch einmal",
-        prevention: "Halte die Zeiten des Rezepts ein, nimm die Teiglinge rechtzeitig aus dem Kühlschrank und verwende ein Mehl mit dem P/L, den der Stil angibt",
+        symptom: "Teig reißt oder bekommt Löcher beim Dehnen",
+        cause: "Gluten zu wenig entwickelt oder noch nicht entspannt, Teig noch kalt aus dem Kühlschrank, Mitte zu dünn gezogen; manchmal ein wenig dehnbares Mehl (hoher P/L) oder ein übergärter Teig",
+        testRapido: "Zieh vorsichtig an einem Rand: Reißt er sofort, statt sich zu dehnen, oder öffnet sich in der Mitte ein Loch, während der Rand noch dick ist?",
+        fixImmediate: "Wenn ein Loch entstanden ist, drück die Ränder zusammen; dann deck den Teigling ab und lass ihn 30–60 Min. bei Raumtemperatur ruhen, bevor du es noch einmal versuchst",
+        prevention: "Halte die Zeiten des Rezepts ein, nimm die Teiglinge rechtzeitig aus dem Kühlschrank, drück von der Mitte zum Rand und lass die Mitte nicht zu dünn werden, und verwende ein Mehl mit dem P/L, den der Stil angibt",
       },
       P03: {
         symptom: "Teig kollabiert bei Ber\u00FChrung",
@@ -342,13 +342,6 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         testRapido: "Wird der Teigling früher als erwartet flach, und bleibt die Delle stehen, wenn du hineindrückst?",
         fixImmediate: "Zieh ihn sofort mit wenig Mehl auf der Arbeitsfläche aus; versuch nicht, ihn neu zu formen",
         prevention: "Forme die Teiglinge straffer und halte dich an Hydration und Zeiten des Rezepts; ist die Küche warm, prüf den Teig früher",
-      },
-      P24: {
-        symptom: "Beim Ausziehen reißt ein Loch",
-        cause: "Mitte zu dünn gezogen, Gluten wenig entwickelt, Teig noch kalt aus dem Kühlschrank oder übergärt",
-        testRapido: "Reißt das Loch in der Mitte, während der Rand noch dick ist?",
-        fixImmediate: "Drück die Ränder des Lochs zusammen; reißt es wieder auf, deck den Fladen ab und lass ihn ein paar Minuten ruhen",
-        prevention: "Schieb den Teig von der Mitte zum Rand und mach die Mitte nicht zu dünn; nimm die Teiglinge rechtzeitig aus dem Kühlschrank",
       },
     },
     contextual: {

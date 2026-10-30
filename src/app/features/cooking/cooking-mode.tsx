@@ -787,8 +787,8 @@ export function CookingMode() {
                   <PhaseCountdown step={step} isCurrent={isCurrent} />
                 )}
 
-                {/* FW-19 (S10-A-16): un timer per ogni cottura. */}
-                {isCurrent && !viewingDone && !early && (step.rounds ?? 0) > 1 && step.roundSec ? (
+                {/* FW-19 (S10-A-16): un timer per ogni cottura, anche per una sola. */}
+                {isCurrent && !viewingDone && !early && (step.rounds ?? 0) >= 1 && step.roundSec ? (
                   <BakeRoundsTimer
                     key={step.id + viewIndex}
                     rounds={step.rounds!}

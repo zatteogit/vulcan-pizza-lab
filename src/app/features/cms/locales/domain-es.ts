@@ -180,11 +180,11 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         prevention: "Quédate cerca de la absorción que declara el molino; si no la conoces, empieza por la parte baja de la hidratación del estilo",
       },
       P02: {
-        symptom: "La masa se rompe al estirar",
-        cause: "Gluten poco desarrollado o todavía no relajado, masa aún fría de la nevera; a veces una harina poco extensible (P/L alto) o una masa pasada de fermentación",
-        testRapido: "Estira despacio un borde: ¿se rompe enseguida en lugar de alargarse?",
-        fixImmediate: "Tapa el bollo y déjalo reposar a temperatura ambiente 30–60 min; luego vuelve a intentarlo",
-        prevention: "Respeta los tiempos de la receta, saca los bollos de la nevera con tiempo y usa una harina con el P/L que indica el estilo",
+        symptom: "La masa se rompe o se agujerea al estirar",
+        cause: "Gluten poco desarrollado o todavía no relajado, masa aún fría de la nevera, centro estirado demasiado fino; a veces una harina poco extensible (P/L alto) o una masa pasada de fermentación",
+        testRapido: "Estira despacio un borde: ¿se rompe enseguida en lugar de alargarse, o se abre un agujero en el centro mientras el borde sigue grueso?",
+        fixImmediate: "Si se ha abierto un agujero, pellizca sus bordes para cerrarlo; luego tapa el bollo y déjalo reposar a temperatura ambiente 30–60 min antes de volver a intentarlo",
+        prevention: "Respeta los tiempos de la receta, saca los bollos de la nevera con tiempo, ensancha empujando del centro hacia el borde y deja el centro no demasiado fino y usa una harina con el P/L que indica el estilo",
       },
       P03: {
         symptom: "La masa colapsa al tocarla",
@@ -337,13 +337,6 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         testRapido: "¿El bollo se aplana antes de lo previsto y, si lo presionas, la marca del dedo no se recupera?",
         fixImmediate: "Estíralo enseguida con poca harina sobre la mesa; no intentes bolearlo de nuevo",
         prevention: "Bolea los bollos más tensos y sigue la hidratación y los tiempos de la receta; si la cocina está caliente, revisa la masa antes",
-      },
-      P24: {
-        symptom: "Se abre un agujero mientras estiro",
-        cause: "Centro estirado demasiado fino, gluten poco desarrollado, masa todavía fría de la nevera o pasada de fermentación",
-        testRapido: "¿El agujero se abre en el centro mientras el borde sigue grueso?",
-        fixImmediate: "Junta los bordes del agujero pellizcándolos; si se vuelve a abrir, cubre el disco y déjalo reposar unos minutos",
-        prevention: "Empuja la masa del centro hacia el borde y no adelgaces demasiado el centro; saca los bollos de la nevera con tiempo",
       },
     },
     contextual: {

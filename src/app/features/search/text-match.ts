@@ -55,8 +55,22 @@ const VOWEL_END = /[aeiou]$/;
 const MAX_VARIANTS = 12;
 const WORD_SPLIT = /[^\p{L}\p{N}]+/u;
 
+/* Un'espressione di più parole del dizionario («senza glutine», «lievito di
+   birra») resta una frase: le sue parole devono stare vicine nel testo, non
+   sparse. Prima «celiachia» trovava ogni testo con «senza» e «glutine»
+   lontani fra loro («… senza assottigliare … glutine …»): un rischio per chi
+   cerca davvero cibo senza glutine. */
+const PHRASE_JOIN = "\u0000";
+
 function contentTokens(variant: string, lexicon: SearchLexicon): string[] {
-  const tokens = queryTokens(variant);
+  let protectedVariant = variant;
+  for (const group of lexicon.synonyms) {
+    for (const phrase of group) {
+      if (!phrase.includes(" ")) continue;
+      protectedVariant = protectedVariant.split(` ${phrase} `).join(` ${phrase.replace(/ /g, PHRASE_JOIN)} `);
+    }
+  }
+  const tokens = queryTokens(protectedVariant).map((token) => token.split(PHRASE_JOIN).join(" "));
   const kept = tokens.filter((token) => !lexicon.stopwords.has(token));
   return kept.length > 0 ? kept : tokens;
 }

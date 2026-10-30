@@ -11226,6 +11226,7 @@
   .procedure-hero__summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); margin: var(--space-3) 0 0; }
   .procedure-hero__summary-arrow { color: var(--text-muted); flex-shrink: 0; }
   .procedure-hero__plan { margin-top: var(--space-2); }
+  .procedure-hero__night-note { margin: var(--space-2) 0 0; color: var(--status-caution-fg); }
   @media (max-width: 639px) {
     .procedure-hero__meals-row { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; padding-block-end: var(--space-1); }
     .procedure-hero__meals-row > * { flex-shrink: 0; scroll-snap-align: start; }

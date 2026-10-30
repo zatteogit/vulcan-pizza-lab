@@ -4039,6 +4039,18 @@ function generateTimeline(
     }
   }
 
+  // Proposta a Matteo del 29/10 (G4a-WP-02): anche una pizza sola ha il suo
+  // timer di cottura («Inforna», conto alla rovescia, «Sforna»). Qui servono
+  // solo i secondi veri e le rotazioni: durata del passo ed etichetta restano
+  // quelle di prima, il piano non cambia.
+  if (bakeRounds <= 1 && !steps.some((step) => step.id === "bake2")) {
+    const bake = steps.find((step) => step.id === "bake");
+    if (bake && effectiveCookSec > 0) {
+      bake.round_seconds = effectiveCookSec;
+      bake.turns = Math.max(0, Math.round(getBakingTimeByStyle(style.id)?.turns ?? 1));
+    }
+  }
+
   // Modello esplicito e prudente: un operatore, lavorazioni per unità
   // sequenziali, poi tutte le cotture. Non presumiamo sovrapposizioni di servizio.
   const firstShape = steps.findIndex(step => step.id === "shape");
