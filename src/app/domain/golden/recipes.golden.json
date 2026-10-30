@@ -882,7 +882,7 @@
     "fermentation_c": 22,
     "oven_c": 210,
     "cook_s": 1800,
-    "timeline_min": 622
+    "timeline_min": 612
   },
   "teglia_in_giornata/home": {
     "flour_g": 2029,
@@ -897,6 +897,6 @@
     "fermentation_c": 22,
     "oven_c": 210,
     "cook_s": 1800,
-    "timeline_min": 622
+    "timeline_min": 612
   }
 }
