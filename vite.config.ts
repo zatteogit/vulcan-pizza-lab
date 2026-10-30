@@ -1,4 +1,4 @@
-import { defineConfig, type Plugin } from "vite";
+import { defineConfig, loadEnv, type Plugin } from "vite";
 import path from "path";
 import fs from "fs";
 import { execFileSync } from "child_process";
@@ -29,6 +29,57 @@ function motionWithoutDragPlugin(): Plugin {
         return "export const drag = {};";
       }
       return null;
+    },
+  };
+}
+
+/* Budget CSS (30/10/2026): Tailwind genera le utility leggendo tutto src/,
+   compresi gli strumenti interni (/dev, /cms, /design-system: P-1), che in
+   produzione non entrano in dist/. Le utility citate solo lì (circa 2,8 kB
+   gzip) finivano nel foglio di stile di ogni utente senza corrispondere a
+   nessun elemento. Nelle build senza strumenti questi file escono dalla
+   scansione; se uno di loro entra nel bundle (le sue utility mancherebbero)
+   la build fallisce. In sviluppo e in `build:test` il foglio non cambia. */
+const TOOL_ONLY_SOURCES = [
+  "src/app/components/design-system/",
+  /* Non debug-overlay.tsx: è nel bundle (in produzione rende null). */
+  "src/app/features/dev-tools/debug/",
+  "src/app/features/dev-tools/dev-tools.tsx",
+  "src/app/features/dev-tools/engine-test-suite.tsx",
+  "src/app/features/dev-tools/style-editor-tab.tsx",
+  "src/app/features/dev-tools/theme-switcher.tsx",
+  "src/app/features/recipe/feedback-analysis.tsx",
+  "src/app/pages/cms.tsx",
+  "src/app/pages/design-system.tsx",
+  "src/app/pages/dev.tsx",
+];
+
+function toolOnlyTailwindSourcesPlugin(toolsEnabled: boolean): Plugin {
+  const stylesDir = path.resolve(__dirname, "src/styles");
+  const entry = path.join(stylesDir, "index.css");
+  const toRepo = (id: string) => path.relative(__dirname, id.split("?")[0]).replace(/\\/g, "/");
+  return {
+    name: "vulcan-tool-only-tailwind-sources",
+    apply: "build",
+    enforce: "pre",
+    transform(code, id) {
+      if (toolsEnabled || id !== entry) return null;
+      const exclusions = TOOL_ONLY_SOURCES.map(
+        (source) => `@source not "${path.relative(stylesDir, path.resolve(__dirname, source)).replace(/\\/g, "/")}";`,
+      );
+      return { code: `${code}\n${exclusions.join("\n")}\n`, map: null };
+    },
+    generateBundle(_options, bundle) {
+      if (toolsEnabled) return;
+      /* Solo i moduli finiti nei chunk: Rollup carica anche quelli dietro un
+         import() che la costante TOOLS_ENABLED rende morto, poi li scarta. */
+      const leaked = Object.values(bundle)
+        .flatMap((item) => (item.type === "chunk" ? Object.keys(item.modules) : []))
+        .map(toRepo)
+        .filter((file) => TOOL_ONLY_SOURCES.some((source) => file.startsWith(source)));
+      if (leaked.length > 0) {
+        this.error(`File degli strumenti nel bundle di produzione (le loro utility Tailwind non sono generate): ${leaked.join(", ")}`);
+      }
     },
   };
 }
@@ -250,9 +301,19 @@ function buildInfo(): { date: string; commit: string } {
   return { date: new Date().toISOString().slice(0, 10), commit };
 }
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, mode }) => ({
   define: { __VULCAN_BUILD__: JSON.stringify(buildInfo()) },
-  plugins: [react(), tailwindcss(), saveAnnotationsPlugin(), brandPlugin(), motionWithoutDragPlugin(), localePreloadPlugin()],
+  plugins: [
+    react(),
+    /* Prima di tailwindcss(), che compila index.css; strumenti attivi con la
+       stessa regola di TOOLS_ENABLED (src/app/config/tools.ts). */
+    toolOnlyTailwindSourcesPlugin(command === "serve" || loadEnv(mode, __dirname, "VITE_").VITE_ENABLE_TOOLS === "1"),
+    tailwindcss(),
+    saveAnnotationsPlugin(),
+    brandPlugin(),
+    motionWithoutDragPlugin(),
+    localePreloadPlugin(),
+  ],
   resolve: {
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "./src") },

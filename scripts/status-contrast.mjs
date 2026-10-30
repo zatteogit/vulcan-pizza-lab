@@ -82,6 +82,32 @@ export function statusContrastProblems(themeCss) {
         }
       }
     }
+    problems.push(...blockingSurfaceProblems(theme, resolve, root));
   }
+  return problems;
+}
+
+/* Esito negativo marcato (30/10/2026): sul fondo pieno del blocco
+ * (--status-blocking-surface, una miscela opaca) si leggono titolo, testo,
+ * testo muto e link; il contrassegno ha l'icona ≥ 3:1 sul suo disco. */
+const ON_BLOCKING_SURFACE = ["--status-blocking-fg", "--text-default", "--text-muted", "--cta"];
+const ICON_MIN = 3;
+
+function blockingSurfaceProblems(theme, resolve, root) {
+  const value = root.get("--status-blocking-surface") ?? "";
+  const m = value.match(/^color-mix\(in srgb,\s*var\((--[\w-]+)\)\s+([\d.]+)%,\s*var\((--[\w-]+)\)\)$/);
+  if (!m) return [`--status-blocking-surface non è una miscela color-mix(in srgb, var(--a) N%, var(--b))`];
+  const [tint, base] = [resolve(m[1]), resolve(m[3])];
+  if (!tint || !base) return [`${theme}: --status-blocking-surface non si risolve in colori T1`];
+  const bg = mix(rgb(tint), rgb(base), Number(m[2]) / 100);
+  const problems = [];
+  for (const token of ON_BLOCKING_SURFACE) {
+    const hex = resolve(token);
+    const ratio = hex ? contrast(rgb(hex), bg) : 0;
+    if (ratio < TEXT_MIN) problems.push(`${theme}: ${token} su --status-blocking-surface ${ratio.toFixed(2)}:1 (< ${TEXT_MIN}:1)`);
+  }
+  const [mark, disc] = [resolve("--status-blocking-mark-fg"), resolve("--status-blocking-icon")];
+  const markRatio = mark && disc ? contrast(rgb(mark), rgb(disc)) : 0;
+  if (markRatio < ICON_MIN) problems.push(`${theme}: --status-blocking-mark-fg su --status-blocking-icon ${markRatio.toFixed(2)}:1 (< ${ICON_MIN}:1)`);
   return problems;
 }

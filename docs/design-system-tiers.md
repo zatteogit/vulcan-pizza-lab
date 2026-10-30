@@ -137,6 +137,25 @@ la tabella da `theme.css` (`scripts/status-contrast.mjs`) e fallisce sotto
 corrente (`__sub`, `__desc`, `__text`, `__note`…): D-019 ammette il maiuscolo
 a 11 px solo per gli eyebrow.
 
+**Esito negativo marcato** (nota di Matteo, 30/10/2026: «molto più :(»).
+Card di compatibilità della ricetta (`.match-card--blocked`), avviso
+`RecipeVerdictNotice` non incorporato e pannello stile di Crea
+(`.style-detail-match--blocked`) hanno fondo pieno
+`--status-blocking-surface` (16% del rosso sopra
+`--surface-container-lowest`, opaco), bordo pieno
+`--status-blocking-border-strong` da 2 px, il contrassegno `.blocked-mark`
+(`BlockedMark`: divieto da 28 px su disco da 48 px, `--status-blocking-icon`
+con `--status-blocking-mark-fg`) e il titolo serif extrabold nel colore del
+blocco. Contrasti misurati, anch'essi controllati da `check:type-floor`:
+
+| Sul fondo pieno | Chiaro | Scuro |
+|---|---|---|
+| titolo (`--status-blocking-fg`) | 7,5:1 | 5,9:1 |
+| testo (`--text-default`) | 13,0:1 | 15,3:1 |
+| testo muto (`--text-muted`) | 5,0:1 | 7,1:1 |
+| link (`--cta`) | 4,8:1 | 8,1:1 |
+| icona sul disco | 10,0:1 | 6,3:1 |
+
 ## Accessibilità del sistema
 
 Semantica, focus e tastiera sono proprietà dei componenti e dei pattern, non

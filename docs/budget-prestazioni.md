@@ -25,7 +25,7 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 | JS senza i cataloghi delle lingue, italiano compreso (gzip) | 448,0 kB (30/10/2026, italiano come le altre lingue) | 500 kB |
 | JS per utente: codice + la lingua più pesante (gzip) | 551,1 kB (con `ja`, 103,1 kB; in italiano 497,9) | 600 kB |
 | JS emesso in tutto, 7 lingue (gzip) | 974 kB in 73 chunk | solo informazione (D-059) |
-| CSS (gzip) | 61 kB (443 kB non compresso) | 75 kB |
+| CSS (gzip) | 72,2 kB (516 kB non compresso, 30/10/2026) | 75 kB |
 | Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
 | Video totali | 2,6 MB (6 file; erano 48,6) | 3 MB |
 | Immagini totali | 38,5 MB (254 file WebP) | 42 MB |
@@ -263,6 +263,44 @@ Recuperati circa 2,9 kB per utente (1,8 di codice e 1,0 nel catalogo
 giapponese) e circa 1 kB in ciascun catalogo straniero. Dopo: 495,1 kB senza
 lingue, 598,2 kB per utente. Le chiavi scritte a mano (`recipe.schedule.…`)
 restano leggibili: la regola vale solo per quelle generate.
+
+### 30/10/2026: CSS morto fuori dal foglio di produzione
+
+Il foglio era a 76 676 byte gzip su 76 800 (margine di 124 byte), troppo poco
+per il riquadro dell'esito negativo chiesto da Matteo. Le classi di
+`theme.css` e `layout.css` sono già tutte citate nel codice (lo controlla
+`check:tokens`, regola `dead-composite`): il peso morto stava altrove.
+
+- **Utility Tailwind dei soli strumenti (−2,7 kB gzip).** Tailwind genera le
+  utility leggendo tutto `src/`, compresi vetrina DS, `/dev` e `/cms`, che in
+  produzione non entrano in `dist/` (P-1). 296 utility (`rounded-tl-[48px]`,
+  `lg:grid-cols-[1fr_340px]`, `z-[99996]`, `gap-10`…) erano citate solo lì e
+  finivano nel foglio di ogni utente senza corrispondere a nessun elemento. Il
+  plugin `vulcan-tool-only-tailwind-sources` (`vite.config.ts`) toglie quei
+  file dalla scansione nelle build senza strumenti e fa fallire la build se uno
+  di loro entra nel bundle. In sviluppo e in `build:test` il foglio è identico
+  a prima (stesso hash). Fuori dall'elenco `debug-overlay.tsx`, che è nel
+  bundle anche se in produzione non rende nulla.
+- **Regole e dichiarazioni morte (circa 60 byte gzip):**
+  `.needs-slot-list__badge--current` (nessun componente la usa più: resta
+  solo `--ideal`); la prima `transition` di `.app-shell-profile`, sempre
+  sovrascritta dalla regola FW-13 con lo stesso selettore più avanti; in
+  `layout.css` il `max-width: var(--measure-6xl)` di `.recipe-view-content`
+  in Editorial (stessa media query, sovrascritto da `--measure-3xl` più sotto).
+
+Risultato: CSS 73 945 byte gzip (72,2 kB, 516 kB non compresso; −2 731 byte),
+JS invariato. Screenshot di Scopri, ricetta, Crea, profilo, cottura e Impara a
+390 e 1280 px, chiaro e scuro: identici a prima.
+
+Restano nel foglio, di proposito: le regole usate solo dalla vetrina o da
+`/dev` (`feedback-analysis__*`, circa 0,9 kB gzip, e i componenti DS che il
+prodotto non usa ancora: `Carousel`, `Fab`, `Progress`, `Slider`, `Spinner`…),
+perché i guard leggono `theme.css` come fonte unica (P-5d); i token in
+`STAGED_TOKENS` di `check-design-tokens.mjs`; i token letti solo da
+`showcase.css`; i temi `[data-theme]`, raggiungibili in produzione con
+`?theme=`. Non toccati i ripieghi di `color-mix()` che Tailwind duplica sotto
+`@supports` (circa 43 kB non compressi): servono ai browser senza
+`color-mix()` ed è una scelta di supporto, non codice morto.
 
 ## L'italiano come le altre lingue (30/10/2026)
 

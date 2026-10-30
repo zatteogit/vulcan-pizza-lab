@@ -1085,6 +1085,12 @@
   --status-blocking-bg: color-mix(in srgb, var(--status-blocking) 12%, transparent);
   --status-blocking-border: color-mix(in srgb, var(--status-blocking) 35%, transparent);
   --status-blocking-icon: var(--status-blocking);
+  /* Esito negativo marcato (nota di Matteo, 30/10/2026): fondo pieno al 16%
+     sopra la superficie (opaco: il contrasto non dipende da cosa sta sotto),
+     bordo pieno e contrassegno pieno con l'icona nel colore «on». */
+  --status-blocking-surface: color-mix(in srgb, var(--status-blocking) 16%, var(--surface-container-lowest));
+  --status-blocking-border-strong: var(--status-blocking);
+  --status-blocking-mark-fg: var(--destructive-foreground);
   --status-neutral-fg: var(--status-neutral);
   --status-neutral-bg: var(--surface-container-low);
   --status-neutral-border: var(--outline-variant);
@@ -8527,12 +8533,6 @@
     border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 40%, transparent);
   }
 
-  .needs-slot-list__badge--current {
-    flex-shrink: 0;
-    background: color-mix(in srgb, var(--overlay-text) 25%, transparent);
-    border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 40%, transparent);
-  }
-
   /* ── Time slot picker: desktop grid (>= sm) ── */
   .needs-slot-grid {
     display: none;
@@ -9520,14 +9520,49 @@
   .match-score-group--expanded .match-score-details svg { transform: rotate(180deg); }
 
   /* Nota di Matteo (30/10): «così non è fattibile» si vede dal riquadro,
-     non solo dal titolo: bordo e fondo nel colore del blocco. */
+     non solo dal titolo. Seguito dello stesso giorno («molto più :(»): fondo
+     pieno e bordo pieno nel colore del blocco, contrassegno grande in testa e
+     titolo con più peso. Testo, link e testo muto restano AA sul fondo
+     (scripts/status-contrast.mjs). */
   .match-card--blocked {
-    border-color: color-mix(in srgb, var(--status-blocking) 40%, transparent);
-    background: linear-gradient(135deg, color-mix(in srgb, var(--status-blocking) 10%, var(--surface-container-low)), var(--surface-container-lowest));
+    border: var(--border-width-strong) solid var(--status-blocking-border-strong);
+    background: var(--status-blocking-surface);
   }
 
   .match-card--blocked .match-score-group {
-    color: var(--text-warning);
+    color: var(--status-blocking-fg);
+    border-inline-end-color: var(--status-blocking-border);
+  }
+
+  .match-card__blocked-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .match-card__blocked-title {
+    margin: 0;
+    min-width: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-7xl);
+    font-weight: var(--weight-extrabold);
+    line-height: var(--leading-snug);
+    color: var(--status-blocking-fg);
+    text-wrap: balance;
+  }
+
+  /* Contrassegno dell'esito negativo: il divieto pieno, grande. */
+  .blocked-mark {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-12);
+    height: var(--space-12);
+    border-radius: var(--radius-full);
+    background: var(--status-blocking-icon);
+    color: var(--status-blocking-mark-fg);
   }
 
   .match-score-value {
@@ -11651,29 +11686,32 @@
     gap: var(--space-2);
     margin: 0 0 var(--space-4);
     padding: var(--space-4);
-    border-inline-start: var(--space-1) solid var(--text-warning);
+    border: var(--border-width-strong) solid var(--status-blocking-border-strong);
+    background: var(--status-blocking-surface);
   }
 
   /* Dentro il blocco compatibilità: niente riquadro, il tono lo dà il blocco. */
   .recipe-verdict--embedded {
     margin: var(--space-2) 0 var(--space-1);
     padding: 0;
-    border-inline-start: none;
+    border: none;
+    background: none;
   }
 
   .recipe-verdict__header {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-  }
-
-  .recipe-verdict__icon {
-    flex: none;
-    color: var(--icon-warning);
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
   }
 
   .recipe-verdict__title {
     margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-7xl);
+    font-weight: var(--weight-extrabold);
+    line-height: var(--leading-snug);
+    color: var(--status-blocking-fg);
   }
 
   .recipe-verdict__reasons,
@@ -16435,6 +16473,35 @@
     margin-top: var(--space-4);
   }
 
+  .style-detail-match__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  /* Esito negativo marcato, come la card della ricetta. */
+  .style-detail-match--blocked {
+    padding: var(--space-4);
+    border: var(--border-width-strong) solid var(--status-blocking-border-strong);
+    border-radius: var(--radius-xl);
+    background: var(--status-blocking-surface);
+  }
+
+  .style-detail-match--blocked .style-detail-match__head {
+    margin-bottom: var(--space-2);
+  }
+
+  .style-detail-match--blocked .style-detail-match__heading {
+    margin-bottom: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-7xl);
+    font-weight: var(--weight-extrabold);
+    letter-spacing: normal;
+    line-height: var(--leading-snug);
+    text-transform: none;
+    color: var(--status-blocking-fg);
+  }
+
   .style-detail-match__heading {
     font-size: var(--font-size-sm);
     font-weight: var(--weight-bold);
@@ -16679,6 +16746,7 @@
   }
 
   .recommended-tier-header__icon {
+    flex: none;
     width: var(--space-8);
     height: var(--space-8);
     border-radius: var(--radius-full);
@@ -16704,9 +16772,9 @@
   }
 
   /* FW-09 (S05-B-11): il sottotitolo dice cosa vuol dire il gruppo; prima su
-     mobile era nascosto e «Con condizioni» restava senza spiegazione. */
+     mobile era nascosto e «Con condizioni» restava senza spiegazione. Elemento
+     di una colonna flex: niente display, è già un blocco. */
   .recommended-tier-header__subtitle {
-    display: block;
     font-family: var(--font-body);
     color: var(--text-muted);
     font-size: var(--font-size-md);
@@ -16714,7 +16782,6 @@
 
   @media (min-width: 640px) {
     .recommended-tier-header__subtitle {
-      display: inline;
       font-size: var(--font-size-lg);
     }
   }
@@ -16729,7 +16796,10 @@
     opacity: 0.75;
   }
 
+  /* Il conteggio non si stringe: a 390 px un sottotitolo lungo (de, fr, en,
+     pt) mandava a capo le cifre («1» sopra «4»). Si stringe il sottotitolo. */
   .recommended-tier-header__count {
+    flex: none;
     color: var(--text-muted);
     font-size: var(--font-size-md);
     font-feature-settings: "tnum";
@@ -18831,7 +18901,6 @@
     color: var(--text-default);
     box-shadow: var(--elevation-profile-button);
     text-decoration: none;
-    transition: background var(--duration-moderate) var(--ease-standard), border-color var(--duration-moderate) var(--ease-standard), box-shadow var(--duration-moderate) var(--ease-standard);
     will-change: transform, width, height;
   }
 

@@ -1,6 +1,6 @@
 import { useMemo, type ReactNode } from "react";
 import { Link } from "react-router";
-import { AlertTriangle, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import {
   feasibleAlternativeStyles,
   type GeneratedRecipe,
@@ -13,6 +13,7 @@ import { Disclosure, Surface } from "../../components/ds/index";
 import { blockerText } from "./blocker-text";
 import { uiMessage } from "../../i18n/ui-messages";
 import { ovenSetupLink } from "../profile/oven-setup-link";
+import { BlockedMark } from "./recipe-match-icon";
 
 /* ═══ M-10 — «Per ora non si può fare» ═══
  * Quando il motore dichiara la ricetta non fattibile, lo diciamo in cima, con
@@ -131,7 +132,7 @@ export function RecipeVerdictNotice({
   return (
     <Surface as="section" className="recipe-verdict" aria-labelledby="recipe-verdict-title">
       <header className="recipe-verdict__header">
-        <AlertTriangle aria-hidden="true" size={18} className="recipe-verdict__icon" />
+        <BlockedMark />
         <h2 id="recipe-verdict-title" className="type-heading-xs recipe-verdict__title">
           {cms.ui.verdictTitle}
         </h2>
