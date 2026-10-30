@@ -16746,6 +16746,7 @@
   }
 
   .recommended-tier-header__icon {
+    flex: none;
     width: var(--space-8);
     height: var(--space-8);
     border-radius: var(--radius-full);
@@ -16771,9 +16772,9 @@
   }
 
   /* FW-09 (S05-B-11): il sottotitolo dice cosa vuol dire il gruppo; prima su
-     mobile era nascosto e «Con condizioni» restava senza spiegazione. */
+     mobile era nascosto e «Con condizioni» restava senza spiegazione. Elemento
+     di una colonna flex: niente display, è già un blocco. */
   .recommended-tier-header__subtitle {
-    display: block;
     font-family: var(--font-body);
     color: var(--text-muted);
     font-size: var(--font-size-md);
@@ -16781,7 +16782,6 @@
 
   @media (min-width: 640px) {
     .recommended-tier-header__subtitle {
-      display: inline;
       font-size: var(--font-size-lg);
     }
   }
@@ -16796,7 +16796,10 @@
     opacity: 0.75;
   }
 
+  /* Il conteggio non si stringe: a 390 px un sottotitolo lungo (de, fr, en,
+     pt) mandava a capo le cifre («1» sopra «4»). Si stringe il sottotitolo. */
   .recommended-tier-header__count {
+    flex: none;
     color: var(--text-muted);
     font-size: var(--font-size-md);
     font-feature-settings: "tnum";
