@@ -941,3 +941,32 @@ export const SCIENCE_ES: CmsScience = {
     "faq": "preguntas frecuentes",
   },
 };
+
+/* G1a-WP-01 — flour notes (keys as FLOUR_NOTES_DEFAULTS). */
+export const FLOURS_ES: Record<string, { note: string }> = {
+  caputo_pizzeria: { note: "Tipo 00, la clásica para la pizza napolitana. Adecuada para fermentaciones cortas y medias." },
+  caputo_nuvola: { note: "Tipo 0, pensada para bordes altos y alveolados como el canotto." },
+  petra_5037: { note: "Absorbe muchísima agua: adecuada para maduraciones largas y una hidratación alta. Usada para la pizza romana en bandeja al estilo Bonci." },
+  "5stagioni_rossa": { note: "Tipo 00 para la pizza napolitana. Adecuada para maduraciones largas en la nevera." },
+  dallagiovanna_manitoba_oro: { note: "Manitoba tipo 0, fuerte. Elástica y tenaz, para fermentaciones largas." },
+  manitoba_generica: { note: "Harina de fuerza para fermentaciones largas e hidrataciones altas. Pide autólisis." },
+  "00_generica": { note: "Harina floja, adecuada para fermentaciones cortas y masas sencillas." },
+  "0_generica": { note: "Harina media, versátil para la mayoría de los estilos." },
+  integrale_generica: { note: "Alveolado rústico. Mejor mezclada con harina blanca, del 30 al 50 %." },
+  semola_generica: { note: "Trigo duro: color amarillo y sabor característico. Mezclada con trigo blando, del 20 al 30 %." },
+  caputo_cuoco: { note: "Tipo 00 profesional para la pizza napolitana clásica. Para maduraciones largas." },
+  petra_3_evolutiva: { note: "Molida a la piedra, sabor complejo. Para maduraciones largas." },
+  "5stagioni_5lune": { note: "Harina de fuerza alta, para masas exigentes y fermentaciones largas." },
+  mix_gluten_free: { note: "Mezcla comercial sin gluten (arroz, maíz, tapioca, xantana). Fermentación corta." },
+  farro_dicoccum: { note: "Escanda antigua, sabor a avellana. Gluten débil: mezclada con trigo blando, del 30 al 50 %." },
+  farro_spelta: { note: "Sabor dulce, gluten frágil. Mezclada con la 00, del 40 al 60 %, para dar estructura. Muy buena para focaccias rústicas." },
+  kamut_khorasan: { note: "Grano antiguo rico en proteínas. Amarillo dorado, sabor mantecoso. Mezclada con trigo blando, del 30 al 50 %." },
+  segale: { note: "Los pentosanos hacen la masa pegajosa: como mucho el 15–20 % de la mezcla. Sabor intenso y ácido, ideal con masa madre." },
+  riso: { note: "Neutra, no forma gluten. Base de las mezclas sin gluten (40–50 %), con almidones como tapioca y maíz y con hidrocoloides." },
+  mais: { note: "No forma gluten, color amarillo. Da crujiente en la superficie. Como mucho el 20–30 % con trigo blando, o el 40 % en una mezcla sin gluten." },
+  grano_saraceno: { note: "Pese al nombre no es trigo y no forma gluten. Sabor intenso a tierra y avellana. Como mucho el 15–25 % de la mezcla. Típico de la tradición alpina." },
+  avena: { note: "Los betaglucanos la hacen tierna. Como mucho el 15–20 % con trigo blando. Sabor dulce." },
+  teff: { note: "Cereal etíope que no forma gluten. Sabor a malta y chocolate. Como mucho el 20–30 % en una mezcla sin gluten. Cara." },
+  ceci: { note: "No forma gluten, rica en proteínas. Tradicional en la farinata ligur. Como mucho el 10–15 % de la masa de pizza, por sabor y crujiente." },
+  tipo1_macinata_pietra: { note: "Semiintegral y rústica, sabor complejo. Un buen término medio entre la 00 y la integral." },
+};

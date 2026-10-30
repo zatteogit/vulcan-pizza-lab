@@ -33,13 +33,13 @@ export function blockerText(blocker: RecipeBlocker, cms: CmsContent, bcp47: stri
     case "fermentation_too_long":
       return engineMsgTexts([{
         key: "gen.fermentationTooLong",
-        fallback: "Lievitazione di {hours}: supera il massimo previsto da questa ricetta ({maxHours}). Scegli un metodo verificato per una durata maggiore.",
+        fallback: cms.engineMessages["gen.fermentationTooLong"],
         params: { hours: blocker.fermentation_h, maxHours: blocker.style_max_h },
       }], cms, bcp47)[0];
     case "fermentation_temperature":
       return engineMsgTexts([{
         key: "gen.fermentationTemperature",
-        fallback: "Questo metodo prevede maturazione a {requiredTemp}; è stata impostata a {temp}. Ripristina il regime previsto o scegli un altro metodo verificato.",
+        fallback: cms.engineMessages["gen.fermentationTemperature"],
         params: { temp: blocker.actual_c, requiredTemp: blocker.required_c },
       }], cms, bcp47)[0];
   }

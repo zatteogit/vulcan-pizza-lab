@@ -49,6 +49,8 @@ export const APP_ROUTES: AppRoute[] = [
 
   /* ═══ DETAIL ROUTES ═══ */
   { path: "recipe/:styleId", Component: page(() => import("./pages/recipe"), "RecipePage") },
+  /* G1a-WP-01: scheda di una farina (i risultati «Farine» della ricerca). */
+  { path: "learn/flour/:flourId", Component: page(() => import("./pages/flour"), "FlourPage") },
 
   /* ═══ TOOL ROUTES (hidden from tab bar) ═══
      In produzione l'array è vuoto già in compilazione: /dev, /cms e

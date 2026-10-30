@@ -10,6 +10,7 @@ import {
   TROUBLESHOOTING_JA,
   GLOSSARY_TERMS_JA,
   SCIENCE_JA,
+  FLOURS_JA,
 } from "./domain-ja";
 
 /**
@@ -1956,6 +1957,7 @@ export const JA_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_JA as any,
   glossaryTerms: GLOSSARY_TERMS_JA as any,
   science: SCIENCE_JA,
+  flours: FLOURS_JA,
   /* FW-06 — punteggio spiegabile (D-E). */
   scoreExplainer: {
     scoreAria: "{label}：100点中{score}点",

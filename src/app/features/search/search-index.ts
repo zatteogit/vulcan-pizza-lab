@@ -186,9 +186,11 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
             formatPercent(flour.proteine_pct, cms.locale.id),
             catLabel,
           ]),
-          link: "/profile",
+          /* G1a-WP-01 (S04-A-01): la scheda della farina, non più /profile. */
+          link: `/learn/flour/${flour.id}`,
         },
-        `${flour.producer} ${flour.category.replace(/_/g, " ")} ${flour.note}`,
+        /* La nota nella lingua attiva (prima l'italiano di flour-database in ogni lingua, S04-B-07). */
+        `${flour.producer} ${flour.category.replace(/_/g, " ")} ${cms.flours?.[flour.id]?.note ?? ""}`,
       ),
     );
   }

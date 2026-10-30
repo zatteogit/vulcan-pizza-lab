@@ -10,6 +10,7 @@ import {
   TROUBLESHOOTING_PT,
   GLOSSARY_TERMS_PT,
   SCIENCE_PT,
+  FLOURS_PT,
 } from "./domain-pt";
 
 /** Portuguese locale bundle */
@@ -1837,6 +1838,7 @@ export const PT_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_PT as any,
   glossaryTerms: GLOSSARY_TERMS_PT as any,
   science: SCIENCE_PT,
+  flours: FLOURS_PT,
   /* FW-06 — punteggio spiegabile (D-E). */
   scoreExplainer: {
     scoreAria: "{label}: {score} de 100",

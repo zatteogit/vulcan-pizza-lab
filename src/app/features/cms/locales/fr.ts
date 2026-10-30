@@ -10,6 +10,7 @@ import {
   TROUBLESHOOTING_FR,
   GLOSSARY_TERMS_FR,
   SCIENCE_FR,
+  FLOURS_FR,
 } from "./domain-fr";
 
 /** French locale bundle */
@@ -1840,6 +1841,7 @@ export const FR_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_FR as any,
   glossaryTerms: GLOSSARY_TERMS_FR as any,
   science: SCIENCE_FR,
+  flours: FLOURS_FR,
   /* FW-06 — punteggio spiegabile (D-E). */
   scoreExplainer: {
     scoreAria: "{label} : {score} sur 100",

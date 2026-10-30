@@ -107,9 +107,11 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       Bagheria con la ricotta (toppingI18n) nelle sei lingue.
  *  48 → G1b, seguito: recipe.referenceLabel.authorAdapt (la versione d’autore
  *       si adatta con l’azione della match card e diventa «Su misura»).
+ *  49 → G1a-WP-01: note delle farine nel CMS (flours.<id>.note), tradotte e
+ *       senza i numeri che la scheda farina mostra già.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 48;
+export const LOCALE_BUNDLE_REV = 49;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

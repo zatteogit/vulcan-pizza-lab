@@ -433,3 +433,32 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "faq": "domande frequenti",
   },
 };
+
+/* G1a-WP-01 — nota editoriale delle farine (prima `note` in flour-database.ts, solo in italiano): senza i numeri che la scheda mostra già e senza affermazioni sulla salute. */
+export const FLOUR_NOTES_DEFAULTS: Record<string, { note: string }> = {
+  caputo_pizzeria: { note: "Tipo 00, il classico per la pizza napoletana. Adatta a lievitazioni brevi e medie." },
+  caputo_nuvola: { note: "Tipo 0, pensata per cornicioni alti e alveolati come il canotto." },
+  petra_5037: { note: "Assorbe moltissima acqua: adatta a lunghe maturazioni e a un'idratazione alta. Usata per la teglia romana del metodo Bonci." },
+  "5stagioni_rossa": { note: "Tipo 00 per la pizza napoletana. Adatta a lunghe maturazioni in frigorifero." },
+  dallagiovanna_manitoba_oro: { note: "Manitoba tipo 0, forte. Elastica e tenace, per lunghe lievitazioni." },
+  manitoba_generica: { note: "Farina di forza per lunghe lievitazioni e idratazioni alte. Vuole l'autolisi." },
+  "00_generica": { note: "Farina debole, adatta a lievitazioni brevi e impasti semplici." },
+  "0_generica": { note: "Farina media, versatile per la maggior parte degli stili." },
+  integrale_generica: { note: "Alveolatura rustica. Meglio in miscela con farina bianca, dal 30 al 50%." },
+  semola_generica: { note: "Grano duro: colore giallo e sapore caratteristico. In miscela con grano tenero, dal 20 al 30%." },
+  caputo_cuoco: { note: "Tipo 00 professionale per la pizza napoletana classica. Per lunghe maturazioni." },
+  petra_3_evolutiva: { note: "Macinata a pietra, sapore complesso. Per lunghe maturazioni." },
+  "5stagioni_5lune": { note: "Farina di forza alta, per impasti complessi e lunghe lievitazioni." },
+  mix_gluten_free: { note: "Miscela commerciale senza glutine (riso, mais, tapioca, xantano). Lievitazione breve." },
+  farro_dicoccum: { note: "Farro antico, sapore di nocciola. Glutine debole: in miscela con grano tenero, dal 30 al 50%." },
+  farro_spelta: { note: "Sapore dolce, glutine fragile. In miscela con la 00, dal 40 al 60%, per dare struttura. Ottima per focacce rustiche." },
+  kamut_khorasan: { note: "Grano antico ricco di proteine. Colore giallo dorato, sapore burroso. In miscela con grano tenero, dal 30 al 50%." },
+  segale: { note: "I pentosani rendono l'impasto appiccicoso: al massimo il 15–20% della miscela. Sapore intenso e acidulo, ideale con il lievito madre." },
+  riso: { note: "Neutra, non forma glutine. Base delle miscele senza glutine (40–50%), con amidi come tapioca e mais e con idrocolloidi." },
+  mais: { note: "Non forma glutine, colore giallo. Dà croccantezza in superficie. Al massimo il 20–30% con grano tenero, o il 40% in una miscela senza glutine." },
+  grano_saraceno: { note: "Nonostante il nome non è un grano e non forma glutine. Sapore intenso di terra e nocciola. Al massimo il 15–25% della miscela. Tipica della tradizione alpina." },
+  avena: { note: "I beta-glucani la rendono morbida. Al massimo il 15–20% con grano tenero. Sapore dolce." },
+  teff: { note: "Cereale etiope che non forma glutine. Sapore di malto e cioccolato. Al massimo il 20–30% in una miscela senza glutine. Costosa." },
+  ceci: { note: "Non forma glutine, ricca di proteine. Tradizionale nella farinata ligure. Al massimo il 10–15% nell'impasto della pizza, per sapore e croccantezza." },
+  tipo1_macinata_pietra: { note: "Semi-integrale e rustica, sapore complesso. Un buon compromesso tra 00 e integrale." },
+};

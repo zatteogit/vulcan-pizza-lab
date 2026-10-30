@@ -977,3 +977,32 @@ export const SCIENCE_EN: CmsScience = {
     "faq": "frequently asked questions",
   },
 };
+
+/* G1a-WP-01 — flour notes (keys as FLOUR_NOTES_DEFAULTS). */
+export const FLOURS_EN: Record<string, { note: string }> = {
+  caputo_pizzeria: { note: "Type 00, the classic for Neapolitan pizza. Suited to short and medium rises." },
+  caputo_nuvola: { note: "Type 0, made for tall, airy crusts such as the canotto." },
+  petra_5037: { note: "Absorbs a great deal of water: suited to long maturation and high hydration. Used for Bonci-style Roman pan pizza." },
+  "5stagioni_rossa": { note: "Type 00 for Neapolitan pizza. Suited to long cold maturation in the fridge." },
+  dallagiovanna_manitoba_oro: { note: "Strong type 0 Manitoba. Elastic and tenacious, for long rises." },
+  manitoba_generica: { note: "Strong flour for long rises and high hydration. It wants an autolyse." },
+  "00_generica": { note: "Weak flour, suited to short rises and simple doughs." },
+  "0_generica": { note: "Medium flour, versatile for most styles." },
+  integrale_generica: { note: "Rustic crumb. Best blended with white flour, 30 to 50%." },
+  semola_generica: { note: "Durum wheat: yellow colour and a distinctive flavour. Blend with soft wheat, 20 to 30%." },
+  caputo_cuoco: { note: "Professional type 00 for classic Neapolitan pizza. For long maturation." },
+  petra_3_evolutiva: { note: "Stone-milled, complex flavour. For long maturation." },
+  "5stagioni_5lune": { note: "High-strength flour for demanding doughs and long rises." },
+  mix_gluten_free: { note: "Commercial gluten-free blend (rice, maize, tapioca, xanthan). Short rise." },
+  farro_dicoccum: { note: "Ancient emmer, nutty flavour. Weak gluten: blend with soft wheat, 30 to 50%." },
+  farro_spelta: { note: "Sweet flavour, fragile gluten. Blend with 00, 40 to 60%, for structure. Great for rustic focaccia." },
+  kamut_khorasan: { note: "Ancient grain rich in protein. Golden yellow, buttery flavour. Blend with soft wheat, 30 to 50%." },
+  segale: { note: "Pentosans make the dough sticky: at most 15–20% of the blend. Intense, tangy flavour, ideal with sourdough starter." },
+  riso: { note: "Neutral and forms no gluten. The base of gluten-free blends (40–50%), with starches such as tapioca and maize and with hydrocolloids." },
+  mais: { note: "Forms no gluten, yellow colour. Adds surface crispness. At most 20–30% with soft wheat, or 40% in a gluten-free blend." },
+  grano_saraceno: { note: "Despite the name it is not wheat and forms no gluten. Intense earthy, nutty flavour. At most 15–25% of the blend. Typical of Alpine tradition." },
+  avena: { note: "Beta-glucans make it soft. At most 15–20% with soft wheat. Sweet flavour." },
+  teff: { note: "Ethiopian grain that forms no gluten. Malty, chocolatey flavour. At most 20–30% in a gluten-free blend. Expensive." },
+  ceci: { note: "Forms no gluten, rich in protein. Traditional in Ligurian farinata. At most 10–15% of a pizza dough, for flavour and crispness." },
+  tipo1_macinata_pietra: { note: "Semi-wholemeal and rustic, complex flavour. A good compromise between 00 and wholemeal." },
+};

@@ -216,6 +216,19 @@ Due limiti noti della misura, da tenere presenti:
   l'italiano una lingua caricata come le altre, con una base neutra: è un
   lavoro a sé, da pianificare prima delle tranche B–D del catalogo.
 
+### G1a-WP-01, scheda farina (30/10/2026)
+Il ramo partiva da 492,0 kB senza lingue e 595,6 kB per utente. La pagina
+`/learn/flour/:flourId` (chunk proprio, circa 2,4 kB), le note delle farine
+nel CMS (circa 1,3 kB nel catalogo giapponese) e il rimescolamento dei chunk
+che la pagina provoca portavano a 600,6 kB per utente, sopra il limite.
+Recuperati senza alzare i limiti: i nomi e le descrizioni italiane di
+impastatrici, superfici e utensili in `equipment-data.ts` (il CMS li ha sempre
+nei default: `getLocalized*` non ricade più sulla copia); i testi di staglio,
+appretto e del preriscaldo con appretto, che motore e CMS avevano in due copie
+(ora `STEP_COPY_IT` e `METHOD_MESSAGES_IT` in `method-messages.ts`); le frasi
+«Prima → Ora» di `recipe-entry.ts` e i ripieghi italiani di `blocker-text.ts`.
+Risultato: 494,7 kB senza lingue, 599,6 kB per utente, CSS 74,8 kB invariato.
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

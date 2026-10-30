@@ -34,7 +34,8 @@ export function RouteTitle({ isNotFoundPath }: { isNotFoundPath?: (pathname: str
       document.title = `${cms.pages.notFoundTitle} · ${BRAND.name}`;
       return;
     }
-    if (pathname.startsWith("/recipe/")) return;
+    /* La ricetta e la scheda farina mettono il proprio nome (G1a-WP-01). */
+    if (pathname.startsWith("/recipe/") || pathname.startsWith("/learn/flour/")) return;
     const section = sectionTitle(pathname, cms.pages);
     document.title = section ? `${section} · ${BRAND.name}` : BRAND.name;
   }, [pathname, cms.pages, notFound]);

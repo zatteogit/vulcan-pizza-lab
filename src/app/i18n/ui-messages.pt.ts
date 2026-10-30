@@ -766,5 +766,16 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "cooking.rounds.fry.startedSingle": "Fritura iniciada: dura cerca de {0}.",
   "cooking.rounds.fry.turn": "Na metade: vire-a com a escumadeira",
   "cooking.rounds.fry.out": "Escorra em papel absorvente!",
-  "cooking.rounds.fry.allDone": "Todas as frituras feitas ({0})"
+  "cooking.rounds.fry.allDone": "Todas as frituras feitas ({0})",
+  "ui.flour.sheet": "Ficha da farinha",
+  "ui.flour.producer": "Produtor: {0}",
+  "ui.flour.suitableFor": "Adequada a:",
+  "ui.flour.fermentation": "Fermentação: {0}",
+  "ui.flour.technicalData": "Dados técnicos",
+  "ui.flour.protein": "Proteína",
+  "ui.flour.notMeasurable": "o produtor não o declara",
+  "ui.flour.sources": "Fontes desta farinha",
+  "ui.flour.noSource": "Não lemos nenhuma ficha do produtor: os valores são típicos e estão por verificar.",
+  "ui.flour.notFoundTitle": "Farinha não encontrada",
+  "ui.flour.notFoundDesc": "Não há nenhuma farinha neste endereço ({0}). Procure-a pelo nome ou pelo produtor."
 };

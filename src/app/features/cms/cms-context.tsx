@@ -1,5 +1,5 @@
 import { STYLES_DB } from "../../domain/styles-db";
-import { METHOD_MESSAGES_IT } from "../../data/method-messages";
+import { METHOD_MESSAGES_IT, STEP_COPY_IT } from "../../data/method-messages";
 import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import { DIETARY_MESSAGES_IT } from "../../data/dietary-data";
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from "react";
@@ -17,6 +17,7 @@ import {
   TROUBLESHOOTING_I18N_DEFAULTS,
   GLOSSARY_TERMS_DEFAULTS,
   SCIENCE_I18N_DEFAULTS,
+  FLOUR_NOTES_DEFAULTS,
 } from "./domain-i18n-defaults";
 import { refreshPublishedMedia, usePublishedMediaRevision } from "../../components/media/published-media";
 import { STYLE_PHOTOS } from "../../data/style-photos";
@@ -1285,6 +1286,8 @@ export interface CmsContent {
   glossaryTerms: CmsGlossaryTerms;
   /** FW-01 — testi del registro della scienza (note e ipotesi). */
   science: CmsScience;
+  /** G1a-WP-01 — nota editoriale di ogni farina di FLOURS_DB (scheda farina e ricerca). */
+  flours: Record<string, { note: string }>;
   /** FW-06 — il punteggio spiegato (ScoreExplainer) e il ricettario. */
   scoreExplainer: CmsScoreExplainer;
 }
@@ -2007,7 +2010,6 @@ export const CMS_DEFAULTS: CmsContent = {
   engineMessages: {
     ...DIETARY_MESSAGES_IT,
     ...ALLERGEN_MESSAGES_IT,
-    "change.topping": "Condimento: {from} → {to}",
 
 
     "card.ready": "Fattibile",
@@ -2016,8 +2018,6 @@ export const CMS_DEFAULTS: CmsContent = {
     "learn.compatiblePath": "Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta.",
     "learn.theoryOnly": "Con questi vincoli manca una ricetta verificata: puoi approfondire la teoria.",
     "learn.openTheory": "Esplora la teoria",
-    "timeline.preheat.includesProof": "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
-    "timeline.preheat.includesProofOil": "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
     // Authenticity penalties
     "auth.hydrationOff": "Idratazione fuori centro (-{penalty}%)",
     "auth.wOutOfRange": "W farina fuori range (-{penalty}%)",
@@ -2073,14 +2073,6 @@ export const CMS_DEFAULTS: CmsContent = {
     "change.salt": "Sale: {from}% → {to}%",
     "change.fat": "Grassi: {from}% → {to}%",
     "change.sugar": "Zuccheri: {from}% → {to}%",
-    "change.hydration": "Idratazione: {from}% → {to}%",
-    "change.flour": "Forza farina: W{from} → W{to}",
-    "change.flourPL": "P/L farina: {from} → {to}",
-    "change.fermentation": "Fermentazione: {fromHours} a {fromTemp} → {toHours} a {toTemp}",
-    "change.prefermentOn": "Si aggiunge un prefermento",
-    "change.prefermentOff": "Si passa all’impasto diretto",
-    "change.prefermentDetails": "Prefermento: {fromType} {from}% → {toType} {to}%",
-    "change.cooking": "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "rec.ovenTooCold": "Forno troppo freddo: {temp} < min {min}",
     "rec.skillMatch": "Adatto al tuo livello",
     "rec.flourMatch": "Farina in dispensa compatibile",
@@ -2236,25 +2228,20 @@ export const CMS_DEFAULTS: CmsContent = {
       tipNerd: "Il riposo completa l'idratazione della farina e rilassa la maglia glutinica: meno ritorno elastico, sfoglia quasi trasparente.",
     },
     divide: {
+      ...STEP_COPY_IT.divide,
       title: "Staglio",
-      desc: "Dividi in panetti del peso corretto. Forma le palline.",
       longDesc: "Rovescia l'impasto su un piano leggermente infarinato. Con un tarocco taglia porzioni del peso indicato in questo passo, pesandole su una bilancia (\u00e8 importante per cottura uniforme). Per ogni pezzo, fai la \"pirlatura\": piega i lembi verso il basso al centro, ruota e arrotonda fino a una palla liscia e tesa. Disponi i panetti su una teglia infarinata, ben distanziati, copri con pellicola.",
-      tipBeginner: "Usa una bilancia! Taglia con un tarocco e arrotonda ogni pezzo in una palla liscia.",
-      tipNerd: "Lo staglio crea tensione superficiale che intrappola CO\u2082 durante l'appretto e definisce la struttura alveolare finale.",
     },
     divide_teglia: {
+      ...STEP_COPY_IT.divideGentle,
       title: "Staglio",
-      desc: "Dividi con delicatezza, senza sgonfiare l'impasto.",
       longDesc: "Rovescia l'impasto sul piano ben infarinato (con le alte idratazioni aiutati con la semola). Con un tarocco taglia le porzioni del peso indicato in questo passo, pesandole su una bilancia. Maneggia il meno possibile: per la teglia NON serve la pirlatura stretta della tonda \u2014 ripiega i lembi sotto formando un filone morbido, senza strizzare fuori l'aria. Le bolle costruite in puntata sono la futura alveolatura. Metti ogni pezzo in un contenitore unto e copri.",
-      tipBeginner: "Mani delicate! Le bolle nell'impasto sono preziose: piega i lembi sotto, senza schiacciare.",
-      tipNerd: "Con idratazione >75% lo staglio aggressivo collassa gli alveoli formati in puntata: tensione minima, degassamento quasi nullo.",
     },
     proof: {
+      ...STEP_COPY_IT.proof,
       title: "Appretto",
       desc: "Lievitazione finale a {temp}",
       longDesc: "I panetti dopo lo staglio devono rilassarsi e gonfiarsi un'ultima volta. Tienili coperti a temperatura ambiente. Sar\u00E0 ora di stenderli quando: (1) sono raddoppiati di volume, (2) la superficie \u00E8 bombata e liscia, (3) il poke-test torna su lentamente (premi col dito: deve tornare in ~5 secondi). Se la pasta non torna su = sovrafermentata; se torna su subito = ancora indietro.",
-      tipBeginner: "I panetti devono essere morbidi. Se li premi con un dito, tornano su lentamente.",
-      tipNerd: "Poke test: ritorno lento = fermentazione ottimale. Troppo rapido = sotto-lievitato. Nessun ritorno = over-proofed.",
     },
     proof_pan: {
       title: "Appretto in teglia",
@@ -2709,6 +2696,7 @@ export const CMS_DEFAULTS: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_I18N_DEFAULTS,
   glossaryTerms: GLOSSARY_TERMS_DEFAULTS,
   science: SCIENCE_I18N_DEFAULTS,
+  flours: FLOUR_NOTES_DEFAULTS,
   /* FW-06 — punteggio spiegabile (D-E: contano solo autenticità e facilità). */
   scoreExplainer: {
     scoreAria: "{label}: {score} su 100",

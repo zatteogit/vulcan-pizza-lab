@@ -10,6 +10,7 @@ import {
   TROUBLESHOOTING_ES,
   GLOSSARY_TERMS_ES,
   SCIENCE_ES,
+  FLOURS_ES,
 } from "./domain-es";
 
 /** Spanish locale bundle */
@@ -1842,6 +1843,7 @@ export const ES_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_ES as any,
   glossaryTerms: GLOSSARY_TERMS_ES as any,
   science: SCIENCE_ES,
+  flours: FLOURS_ES,
   /* FW-06 — punteggio spiegabile (D-E). */
   scoreExplainer: {
     scoreAria: "{label}: {score} de 100",

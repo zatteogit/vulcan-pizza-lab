@@ -10,6 +10,7 @@ import {
   TROUBLESHOOTING_DE,
   GLOSSARY_TERMS_DE,
   SCIENCE_DE,
+  FLOURS_DE,
 } from "./domain-de";
 
 /** German locale bundle */
@@ -1814,6 +1815,7 @@ export const DE_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_DE as any,
   glossaryTerms: GLOSSARY_TERMS_DE as any,
   science: SCIENCE_DE,
+  flours: FLOURS_DE,
   /* FW-06 — punteggio spiegabile (D-E). */
   scoreExplainer: {
     scoreAria: "{label}: {score} von 100",

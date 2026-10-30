@@ -766,5 +766,16 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "cooking.rounds.fry.startedSingle": "Fry started: it takes about {0}.",
   "cooking.rounds.fry.turn": "Halfway: flip it with the skimmer",
   "cooking.rounds.fry.out": "Drain it on paper towels!",
-  "cooking.rounds.fry.allDone": "All fries done ({0})"
+  "cooking.rounds.fry.allDone": "All fries done ({0})",
+  "ui.flour.sheet": "Flour sheet",
+  "ui.flour.producer": "Producer: {0}",
+  "ui.flour.suitableFor": "Suited to:",
+  "ui.flour.fermentation": "Rises: {0}",
+  "ui.flour.technicalData": "Technical data",
+  "ui.flour.protein": "Protein",
+  "ui.flour.notMeasurable": "not declared by the producer",
+  "ui.flour.sources": "Sources for this flour",
+  "ui.flour.noSource": "No producer sheet read: the values are typical and still to be checked.",
+  "ui.flour.notFoundTitle": "Flour not found",
+  "ui.flour.notFoundDesc": "There is no flour at this address ({0}). Search for it by name or producer."
 };

@@ -766,5 +766,16 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "cooking.rounds.fry.startedSingle": "Friture lancée : elle dure environ {0}.",
   "cooking.rounds.fry.turn": "À mi-cuisson : retournez-la avec l'écumoire",
   "cooking.rounds.fry.out": "Égouttez-la sur du papier absorbant !",
-  "cooking.rounds.fry.allDone": "Toutes les fritures sont faites ({0})"
+  "cooking.rounds.fry.allDone": "Toutes les fritures sont faites ({0})",
+  "ui.flour.sheet": "Fiche farine",
+  "ui.flour.producer": "Producteur : {0}",
+  "ui.flour.suitableFor": "Adaptée à :",
+  "ui.flour.fermentation": "Pousses : {0}",
+  "ui.flour.technicalData": "Données techniques",
+  "ui.flour.protein": "Protéines",
+  "ui.flour.notMeasurable": "le producteur ne le déclare pas",
+  "ui.flour.sources": "Sources de cette farine",
+  "ui.flour.noSource": "Aucune fiche du producteur lue : les valeurs sont typiques et restent à vérifier.",
+  "ui.flour.notFoundTitle": "Farine introuvable",
+  "ui.flour.notFoundDesc": "Aucune farine à cette adresse ({0}). Cherchez-la par nom ou par producteur."
 };

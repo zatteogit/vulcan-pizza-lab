@@ -766,5 +766,16 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "cooking.rounds.fry.startedSingle": "揚げを開始：約{0}かかります。",
   "cooking.rounds.fry.turn": "半分経過：網じゃくしで裏返しましょう",
   "cooking.rounds.fry.out": "キッチンペーパーで油を切りましょう！",
-  "cooking.rounds.fry.allDone": "すべて揚げ終わり（{0}回）"
+  "cooking.rounds.fry.allDone": "すべて揚げ終わり（{0}回）",
+  "ui.flour.sheet": "粉の詳細",
+  "ui.flour.producer": "メーカー：{0}",
+  "ui.flour.suitableFor": "向いているスタイル：",
+  "ui.flour.fermentation": "発酵：{0}",
+  "ui.flour.technicalData": "技術データ",
+  "ui.flour.protein": "たんぱく質",
+  "ui.flour.notMeasurable": "メーカーは公表していません",
+  "ui.flour.sources": "この粉の出典",
+  "ui.flour.noSource": "メーカーの資料は未確認です。値は一般的なもので、確認が必要です。",
+  "ui.flour.notFoundTitle": "粉が見つかりません",
+  "ui.flour.notFoundDesc": "このアドレス（{0}）の粉はありません。名前かメーカーで検索してください。"
 };

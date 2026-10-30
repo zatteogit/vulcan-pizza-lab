@@ -25,7 +25,7 @@ export interface FlourEntry {
   fermentazione_max_h: number;
   prezzo_eur_kg: number;
   stili_compatibili: string[];
-  note: string;
+  /* G1a-WP-01: la nota editoriale sta nel CMS (`flours.<id>.note`, 7 lingue). */
 }
 
 /* === FARINE DATABASE (da Notion — 25 entries, allineate a marzo 2026) === */
@@ -49,7 +49,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 24,
     prezzo_eur_kg: 1.0,
     stili_compatibili: ["napoletana_stg", "tonda_romana"],
-    note: "Farina Tipo 00, il classico per pizza napoletana. Ottima per fermentazioni brevi e medie (4-24h).",
   },
   {
     id: "caputo_nuvola",
@@ -70,7 +69,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 24,
     prezzo_eur_kg: 1.2,
     stili_compatibili: ["napoletana_stg", "napoletana_canotto", "teglia_romana", "pala_romana"],
-    note: "Farina Tipo 0, ideale per cornicioni alveolati (canotto). Lievitazioni 18-24h.",
   },
   {
     id: "petra_5037",
@@ -91,7 +89,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 72,
     prezzo_eur_kg: 1.8,
     stili_compatibili: ["napoletana_canotto", "teglia_romana", "pinsa_romana", "pala_romana"],
-    note: "Altissimo assorbimento (85%+). Ideale per lunghe maturazioni e alta idratazione. Teglia romana metodo Bonci.",
   },
   {
     id: "5stagioni_rossa",
@@ -112,7 +109,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 48,
     prezzo_eur_kg: 1.3,
     stili_compatibili: ["napoletana_stg", "napoletana_canotto", "pala_romana", "grandma_style"],
-    note: "Farina Tipo 00 per pizza napoletana. Ottima per lunghe maturazioni a freddo fino a 48h.",
   },
   {
     id: "dallagiovanna_manitoba_oro",
@@ -133,7 +129,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 96,
     prezzo_eur_kg: 2.0,
     stili_compatibili: ["napoletana_canotto", "pinsa_romana", "new_york"],
-    note: "Farina Tipo 0 Manitoba forte. Elastica e tenace, ideale per lunghe lievitazioni (24-96h).",
   },
   {
     id: "manitoba_generica",
@@ -154,7 +149,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 120,
     prezzo_eur_kg: 2.5,
     stili_compatibili: ["napoletana_canotto", "new_york", "chicago_deep", "grandma_style"],
-    note: "Farina di forza per lunghe lievitazioni e grandi idratazioni. Richiede autolisi.",
   },
   // Farine generiche (corrispondono ai FLOUR_W_RANGES del motore)
   {
@@ -176,7 +170,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 12,
     prezzo_eur_kg: 0.8,
     stili_compatibili: ["tonda_romana", "focaccia_genovese", "sfincione"],
-    note: "Farina debole, adatta a fermentazioni brevi e impasti senza pretese.",
   },
   {
     id: "0_generica",
@@ -197,7 +190,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 24,
     prezzo_eur_kg: 1.0,
     stili_compatibili: ["napoletana_stg", "new_york", "padellino_torino", "grandma_style"],
-    note: "Farina media, versatile per la maggior parte degli stili.",
   },
   {
     id: "integrale_generica",
@@ -218,7 +210,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 36,
     prezzo_eur_kg: 1.5,
     stili_compatibili: ["teglia_romana", "focaccia_genovese"],
-    note: "Ricca di fibre e nutrienti. Alveolatura rustica. Mix 30-50% con farina bianca consigliato.",
   },
   {
     id: "semola_generica",
@@ -239,7 +230,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 24,
     prezzo_eur_kg: 1.2,
     stili_compatibili: ["sfincione", "focaccia_genovese"],
-    note: "Grano duro, colore giallo, sapore caratteristico. Mix 20-30% con grano tenero.",
   },
   // Farine di marca — da Notion Database 🌾 (espansione 15 marzo 2026)
   {
@@ -261,7 +251,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 96,
     prezzo_eur_kg: 1.8,
     stili_compatibili: ["napoletana_stg", "tonda_romana", "napoletana_canotto"],
-    note: "Farina professionale Tipo 00 per pizza napoletana classica. Lunghe maturazioni.",
   },
   {
     id: "petra_3_evolutiva",
@@ -287,7 +276,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 120,
     prezzo_eur_kg: 2.8,
     stili_compatibili: ["napoletana_canotto", "tonda_romana", "pinsa_romana"],
-    note: "Macinazione a pietra. Lunghe maturazioni 48-120h. Sapore complesso.",
   },
   {
     id: "5stagioni_5lune",
@@ -308,7 +296,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 96,
     prezzo_eur_kg: 2.5,
     stili_compatibili: ["napoletana_canotto", "new_york", "detroit"],
-    note: "Farina di forza superiore per impasti complessi e lunghe lievitazioni.",
   },
   {
     id: "mix_gluten_free",
@@ -329,7 +316,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 4,
     prezzo_eur_kg: 6.0,
     stili_compatibili: ["tonda_romana"],
-    note: "Mix commerciale GF (riso+mais+tapioca+xantano). Lievitazione breve. Risultato simile a farina normale.",
   },
   // ═══ FARINE ALTERNATIVE — Espansione Fase B (16 marzo 2026) ═══
   {
@@ -351,7 +337,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 18,
     prezzo_eur_kg: 3.5,
     stili_compatibili: ["focaccia_genovese", "tonda_romana", "padellino_torino"],
-    note: "Farro antico, sapore nocciolato. Glutine debole — mix 30-50% con grano tenero. Riduce FODMAP.",
   },
   {
     id: "farro_spelta",
@@ -372,7 +357,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 24,
     prezzo_eur_kg: 3.0,
     stili_compatibili: ["focaccia_genovese", "padellino_torino", "sfincione"],
-    note: "Spelta: sapore dolce, glutine fragile. Mix 40-60% con 00 per struttura. Ottima per focacce rustiche.",
   },
   {
     id: "kamut_khorasan",
@@ -393,7 +377,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 24,
     prezzo_eur_kg: 4.5,
     stili_compatibili: ["tonda_romana", "focaccia_genovese"],
-    note: "Grano antico ad alta proteina. Colore giallo dorato, sapore burroso. Mix 30-50% con grano tenero.",
   },
   {
     id: "segale",
@@ -414,7 +397,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 12,
     prezzo_eur_kg: 2.5,
     stili_compatibili: ["focaccia_genovese", "sfincione"],
-    note: "Pentosani rendono l'impasto appiccicoso. Max 15-20% nel mix. Sapore intenso, acido. Abbinamento ideale con lievito madre.",
   },
   {
     id: "riso",
@@ -435,7 +417,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 4,
     prezzo_eur_kg: 2.0,
     stili_compatibili: ["tonda_romana"],
-    note: "GF, neutra. Base per mix gluten-free (40-50%). Combinare con amidi (tapioca, mais) e idrocolloidi.",
   },
   {
     id: "mais",
@@ -456,7 +437,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 4,
     prezzo_eur_kg: 1.5,
     stili_compatibili: ["sfincione"],
-    note: "GF, colore giallo. Croccantezza superficiale. Max 20-30% nel mix con grano tenero, o 40% in mix GF.",
   },
   {
     id: "grano_saraceno",
@@ -477,7 +457,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 8,
     prezzo_eur_kg: 4.0,
     stili_compatibili: ["focaccia_genovese"],
-    note: "GF nonostante il nome. Sapore terroso-nocciolato intenso. Max 15-25% nel mix. Tipico della tradizione alpina.",
   },
   {
     id: "avena",
@@ -498,7 +477,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 12,
     prezzo_eur_kg: 2.5,
     stili_compatibili: ["focaccia_genovese", "padellino_torino"],
-    note: "Beta-glucani la rendono morbida. Max 15-20% nel mix con grano tenero. Sapore dolce. GF certificata disponibile.",
   },
   {
     id: "teff",
@@ -519,7 +497,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 8,
     prezzo_eur_kg: 6.0,
     stili_compatibili: [],
-    note: "GF, grano etiope. Alto ferro e calcio. Sapore di malto-cioccolato. Max 20-30% nel mix GF. Costoso.",
   },
   {
     id: "ceci",
@@ -540,7 +517,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 4,
     prezzo_eur_kg: 3.0,
     stili_compatibili: ["focaccia_recco"],
-    note: "GF, alta proteina. Tradizionale nella farinata/cecina ligure. Max 10-15% nel mix pizza per sapore e croccantezza.",
   },
   {
     id: "tipo1_macinata_pietra",
@@ -561,7 +537,6 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_max_h: 36,
     prezzo_eur_kg: 1.8,
     stili_compatibili: ["napoletana_stg", "focaccia_genovese", "padellino_torino", "sfincione"],
-    note: "Semi-integrale rustica. Sapore complesso, fibre parziali. Ottimo compromesso tra 00 e integrale.",
   },
 ];
 

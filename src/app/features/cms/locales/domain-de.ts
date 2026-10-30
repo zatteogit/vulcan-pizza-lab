@@ -947,3 +947,32 @@ export const SCIENCE_DE: CmsScience = {
     "faq": "häufige Fragen",
   },
 };
+
+/* G1a-WP-01 — flour notes (keys as FLOUR_NOTES_DEFAULTS). */
+export const FLOURS_DE: Record<string, { note: string }> = {
+  caputo_pizzeria: { note: "Type 00, der Klassiker für neapolitanische Pizza. Geeignet für kurze und mittlere Gare." },
+  caputo_nuvola: { note: "Type 0, gemacht für hohe, luftige Ränder wie beim Canotto." },
+  petra_5037: { note: "Nimmt sehr viel Wasser auf: geeignet für lange Reifung und hohe Hydration. Verwendet für römische Blechpizza nach Bonci." },
+  "5stagioni_rossa": { note: "Type 00 für neapolitanische Pizza. Geeignet für lange Reifung im Kühlschrank." },
+  dallagiovanna_manitoba_oro: { note: "Starkes Manitoba Type 0. Elastisch und zäh, für lange Gare." },
+  manitoba_generica: { note: "Starkes Mehl für lange Gare und hohe Hydration. Es braucht eine Autolyse." },
+  "00_generica": { note: "Schwaches Mehl, geeignet für kurze Gare und einfache Teige." },
+  "0_generica": { note: "Mittelstarkes Mehl, vielseitig für die meisten Stile." },
+  integrale_generica: { note: "Rustikale Porung. Am besten gemischt mit hellem Mehl, 30 bis 50 %." },
+  semola_generica: { note: "Hartweizen: gelbe Farbe und eigener Geschmack. Gemischt mit Weichweizen, 20 bis 30 %." },
+  caputo_cuoco: { note: "Professionelles Type 00 für klassische neapolitanische Pizza. Für lange Reifung." },
+  petra_3_evolutiva: { note: "Steingemahlen, vielschichtiger Geschmack. Für lange Reifung." },
+  "5stagioni_5lune": { note: "Sehr starkes Mehl für anspruchsvolle Teige und lange Gare." },
+  mix_gluten_free: { note: "Glutenfreie Fertigmischung (Reis, Mais, Tapioka, Xanthan). Kurze Gare." },
+  farro_dicoccum: { note: "Alter Emmer, nussiger Geschmack. Schwaches Gluten: gemischt mit Weichweizen, 30 bis 50 %." },
+  farro_spelta: { note: "Süßlicher Geschmack, empfindliches Gluten. Mit 00 gemischt, 40 bis 60 %, für Struktur. Sehr gut für rustikale Focaccia." },
+  kamut_khorasan: { note: "Altes Getreide mit viel Eiweiß. Goldgelb, butteriger Geschmack. Gemischt mit Weichweizen, 30 bis 50 %." },
+  segale: { note: "Pentosane machen den Teig klebrig: höchstens 15–20 % der Mischung. Kräftig und säuerlich, ideal mit Sauerteig." },
+  riso: { note: "Neutral, bildet kein Gluten. Basis glutenfreier Mischungen (40–50 %), mit Stärken wie Tapioka und Mais und mit Hydrokolloiden." },
+  mais: { note: "Bildet kein Gluten, gelbe Farbe. Gibt Knusprigkeit an der Oberfläche. Höchstens 20–30 % mit Weichweizen oder 40 % in einer glutenfreien Mischung." },
+  grano_saraceno: { note: "Trotz des Namens kein Weizen, bildet kein Gluten. Kräftig erdig-nussiger Geschmack. Höchstens 15–25 % der Mischung. Typisch für die Alpenküche." },
+  avena: { note: "Beta-Glucane machen es weich. Höchstens 15–20 % mit Weichweizen. Süßlicher Geschmack." },
+  teff: { note: "Äthiopisches Getreide, das kein Gluten bildet. Geschmack nach Malz und Schokolade. Höchstens 20–30 % in einer glutenfreien Mischung. Teuer." },
+  ceci: { note: "Bildet kein Gluten, viel Eiweiß. Traditionell in der ligurischen Farinata. Höchstens 10–15 % im Pizzateig, für Geschmack und Knusprigkeit." },
+  tipo1_macinata_pietra: { note: "Halbvollkorn und rustikal, vielschichtiger Geschmack. Ein guter Kompromiss zwischen 00 und Vollkorn." },
+};

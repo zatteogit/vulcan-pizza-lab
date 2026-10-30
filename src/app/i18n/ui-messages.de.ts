@@ -766,5 +766,16 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "cooking.rounds.fry.startedSingle": "Frittieren gestartet: Es dauert etwa {0}.",
   "cooking.rounds.fry.turn": "Halbzeit: mit dem Schaumlöffel wenden",
   "cooking.rounds.fry.out": "Auf Küchenpapier abtropfen lassen!",
-  "cooking.rounds.fry.allDone": "Alles frittiert ({0})"
+  "cooking.rounds.fry.allDone": "Alles frittiert ({0})",
+  "ui.flour.sheet": "Mehlprofil",
+  "ui.flour.producer": "Hersteller: {0}",
+  "ui.flour.suitableFor": "Geeignet für:",
+  "ui.flour.fermentation": "Gare: {0}",
+  "ui.flour.technicalData": "Technische Daten",
+  "ui.flour.protein": "Eiweiß",
+  "ui.flour.notMeasurable": "vom Hersteller nicht angegeben",
+  "ui.flour.sources": "Quellen zu diesem Mehl",
+  "ui.flour.noSource": "Kein Datenblatt des Herstellers gelesen: Die Werte sind typisch und noch zu prüfen.",
+  "ui.flour.notFoundTitle": "Mehl nicht gefunden",
+  "ui.flour.notFoundDesc": "Unter dieser Adresse ({0}) gibt es kein Mehl. Such es nach Name oder Hersteller."
 };

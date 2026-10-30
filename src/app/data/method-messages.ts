@@ -1,6 +1,18 @@
 /** Italian source copy shared by the engine and CMS: a method instruction must
  * not drift between the MCP fallback and the localized UI. */
 export const METHOD_MESSAGES_IT: Record<string, string> = {
+  // G1a (budget): «Prima → Ora» di recipe-entry.ts, una sola copia per motore e CMS.
+  "change.topping": "Condimento: {from} → {to}",
+  "change.hydration": "Idratazione: {from}% → {to}%",
+  "change.flour": "Forza farina: W{from} → W{to}",
+  "change.flourPL": "P/L farina: {from} → {to}",
+  "change.fermentation": "Fermentazione: {fromHours} a {fromTemp} → {toHours} a {toTemp}",
+  "change.prefermentOn": "Si aggiunge un prefermento",
+  "change.prefermentOff": "Si passa all’impasto diretto",
+  "change.prefermentDetails": "Prefermento: {fromType} {from}% → {toType} {to}%",
+  "change.cooking": "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
+  "timeline.preheat.includesProof": "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
+  "timeline.preheat.includesProofOil": "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
   // FW-17 (D-P): niente biga o poolish col solo lievito madre.
   "preferment.sourdoughInstead": "Biga e poolish si fanno con il lievito di birra: con il solo lievito madre la ricetta non li usa, perché il lievito madre fa già da prefermento. Per averli, aggiungi un lievito di birra alla dispensa.",
   "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
@@ -119,3 +131,22 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   "sust.pureDough": "Impasto puro: solo farina, acqua, sale, lievito",
   "sust.sourdoughZeroImpact": "Lievito madre: autoprodotto, a impatto zero"
 };
+
+/** G1a (budget): staglio e appretto, gli stessi testi nei passi del motore
+ *  (MCP) e nel CMS (`timeline.divide`, `divide_teglia`, `proof`). */
+export const STEP_COPY_IT = {
+  divide: {
+    desc: "Dividi in panetti del peso corretto. Forma le palline.",
+    tipBeginner: "Usa una bilancia! Taglia con un tarocco e arrotonda ogni pezzo in una palla liscia.",
+    tipNerd: "Lo staglio crea tensione superficiale che intrappola CO\u2082 durante l'appretto e definisce la struttura alveolare finale.",
+  },
+  divideGentle: {
+    desc: "Dividi con delicatezza, senza sgonfiare l'impasto.",
+    tipBeginner: "Mani delicate! Le bolle nell'impasto sono preziose: piega i lembi sotto, senza schiacciare.",
+    tipNerd: "Con idratazione >75% lo staglio aggressivo collassa gli alveoli formati in puntata: tensione minima, degassamento quasi nullo.",
+  },
+  proof: {
+    tipBeginner: "I panetti devono essere morbidi. Se li premi con un dito, tornano su lentamente.",
+    tipNerd: "Poke test: ritorno lento = fermentazione ottimale. Troppo rapido = sotto-lievitato. Nessun ritorno = over-proofed.",
+  },
+} as const;

@@ -857,7 +857,7 @@ export const SCIENCE_PT: CmsScience = {
     "linked-params": {
       title: "Parâmetros ligados",
       l1: "Uma regra de {brand}, não um modelo físico: os outros valores passam para a mesma posição do seu intervalo de estilo.",
-      l2: "Se levar a hidratação para o máximo do estilo, a força da farinha e as horas de fermentação também vão para o máximo dos seus intervalos; o P/L, se o alterar, vai no sentido contrário. A temperatura segue as horas: parte alta do intervalo no frigorífico, meio em fresco, parte baixa à temperatura ambiente. Os valores ficam sempre dentro dos intervalos do estilo. Não diz que sejam os melhores para a sua farinha ou a sua cozinha: é um atalho para manter a coerência. Vem ligado a partir do nível Avançado, só atua com os parâmetros avançados abertos e cada alteração desfaz-se com «Desfazer».",
+      l2: "Se levar a hidratação para o máximo do estilo, a força da farinha e as horas de fermentação também vão para o máximo dos seus intervalos; o P/L, se o alterar, vai no sentido contrário. A temperatura segue as horas: parte alta do intervalo na geladeira, meio em fresco, parte baixa à temperatura ambiente. Os valores ficam sempre dentro dos intervalos do estilo. Não diz que sejam os melhores para a sua farinha ou a sua cozinha: é um atalho para manter a coerência. Vem ligado a partir do nível Avançado, só atua com os parâmetros avançados abertos e cada alteração desfaz-se com «Desfazer».",
     },
     digestibility: {
       title: "Índice de digestibilidade",
@@ -946,4 +946,33 @@ export const SCIENCE_PT: CmsScience = {
     "manual": "manual de uso",
     "faq": "perguntas frequentes",
   },
+};
+
+/* G1a-WP-01 — flour notes (keys as FLOUR_NOTES_DEFAULTS). */
+export const FLOURS_PT: Record<string, { note: string }> = {
+  caputo_pizzeria: { note: "Tipo 00, o clássico da pizza napolitana. Adequada a fermentações curtas e médias." },
+  caputo_nuvola: { note: "Tipo 0, pensada para bordas altas e alveoladas como a canotto." },
+  petra_5037: { note: "Absorve muitíssima água: adequada a maturações longas e a uma hidratação alta. Usada na pizza romana em assadeira ao estilo Bonci." },
+  "5stagioni_rossa": { note: "Tipo 00 para pizza napolitana. Adequada a maturações longas na geladeira." },
+  dallagiovanna_manitoba_oro: { note: "Manitoba tipo 0, forte. Elástica e tenaz, para fermentações longas." },
+  manitoba_generica: { note: "Farinha de força para fermentações longas e hidratações altas. Pede autólise." },
+  "00_generica": { note: "Farinha fraca, adequada a fermentações curtas e massas simples." },
+  "0_generica": { note: "Farinha média, versátil para a maioria dos estilos." },
+  integrale_generica: { note: "Alveolagem rústica. Melhor misturada com farinha branca, de 30 a 50 %." },
+  semola_generica: { note: "Trigo duro: cor amarela e sabor característico. Misturada com trigo mole, de 20 a 30 %." },
+  caputo_cuoco: { note: "Tipo 00 profissional para a pizza napolitana clássica. Para maturações longas." },
+  petra_3_evolutiva: { note: "Moída em mó de pedra, sabor complexo. Para maturações longas." },
+  "5stagioni_5lune": { note: "Farinha de força alta, para massas exigentes e fermentações longas." },
+  mix_gluten_free: { note: "Mistura comercial sem glúten (arroz, milho, tapioca, xantana). Fermentação curta." },
+  farro_dicoccum: { note: "Farro antigo, sabor a avelã. Glúten fraco: misturada com trigo mole, de 30 a 50 %." },
+  farro_spelta: { note: "Sabor doce, glúten frágil. Misturada com a 00, de 40 a 60 %, para dar estrutura. Ótima para focaccias rústicas." },
+  kamut_khorasan: { note: "Grão antigo rico em proteína. Amarelo dourado, sabor amanteigado. Misturada com trigo mole, de 30 a 50 %." },
+  segale: { note: "As pentosanas tornam a massa pegajosa: no máximo 15–20 % da mistura. Sabor intenso e ácido, ideal com fermento natural." },
+  riso: { note: "Neutra, não forma glúten. Base das misturas sem glúten (40–50 %), com amidos como tapioca e milho e com hidrocoloides." },
+  mais: { note: "Não forma glúten, cor amarela. Dá crocância à superfície. No máximo 20–30 % com trigo mole, ou 40 % numa mistura sem glúten." },
+  grano_saraceno: { note: "Apesar do nome não é trigo e não forma glúten. Sabor intenso a terra e avelã. No máximo 15–25 % da mistura. Típico da tradição alpina." },
+  avena: { note: "Os betaglucanos tornam-na macia. No máximo 15–20 % com trigo mole. Sabor doce." },
+  teff: { note: "Cereal etíope que não forma glúten. Sabor a malte e chocolate. No máximo 20–30 % numa mistura sem glúten. Cara." },
+  ceci: { note: "Não forma glúten, rica em proteína. Tradicional na farinata da Ligúria. No máximo 10–15 % da massa de pizza, pelo sabor e pela crocância." },
+  tipo1_macinata_pietra: { note: "Semi-integral e rústica, sabor complexo. Um bom meio-termo entre a 00 e a integral." },
 };

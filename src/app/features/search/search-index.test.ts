@@ -291,3 +291,20 @@ describe("suggerimenti della ricerca", () => {
     expect(DEFAULT_SEARCH_SUGGESTIONS.every((id) => SEARCH_SUGGESTION_IDS.includes(id))).toBe(true);
   });
 });
+
+/* G1a-WP-01 (S04-A-01, S04-B-02, S04-B-07): le farine portano alla loro scheda
+ * e la nota si cerca solo nella lingua attiva. */
+describe("farine nella ricerca", () => {
+  it("ogni risultato farina porta a /learn/flour/<id>", () => {
+    const flours = IT.filter((e) => e.type === "flour");
+    expect(flours.length).toBe(FLOURS_DB.length);
+    for (const e of flours) expect(e.link).toBe(`/learn/flour/${e.id.slice("flour-".length)}`);
+    expect(ids(IT, "caputo")).toContain("flour-caputo_pizzeria");
+  });
+
+  it("la nota italiana non si trova più in inglese: «idratazione» non porta a Petra 5037", () => {
+    expect(ids(IT, "idratazione")).toContain("flour-petra_5037");
+    expect(ids(EN, "idratazione")).not.toContain("flour-petra_5037");
+    expect(ids(EN, "hydration")).toContain("flour-petra_5037");
+  });
+});

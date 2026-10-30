@@ -1,4 +1,5 @@
 import { getImpasto, mergeImpastoIntoDough } from "../data/impasto-library";
+import { METHOD_MESSAGES_IT } from "../data/method-messages";
 import { getInterpretationById, type Interpretation } from "../data/interpretation-library";
 import { getStyleReference, getVersionById, type StyleVersion } from "../data/style-versions";
 import { resolveTopping, getToppingForStyle } from "../data/topping-library";
@@ -265,25 +266,25 @@ export function recipeDifferences(from: GeneratedRecipe, to: GeneratedRecipe) {
   const add = (key: string, message: string, params: Record<string, number | string> = {}) => changes.push({ key, fallback: message, params });
   const fromTopping = from.style.default_topping_ref ? getToppingForStyle(from.style.default_topping_ref, from.style) : undefined;
   const toTopping = to.style.default_topping_ref ? getToppingForStyle(to.style.default_topping_ref, to.style) : undefined;
-  if (fromTopping?.id !== toTopping?.id) add("change.topping", "Condimento: {from} → {to}", {from:fromTopping?.id ?? "", to:toTopping?.id ?? ""});
+  if (fromTopping?.id !== toTopping?.id) add("change.topping", METHOD_MESSAGES_IT["change.topping"], {from:fromTopping?.id ?? "", to:toTopping?.id ?? ""});
   if (from.baker_pcts && to.baker_pcts) {
     for (const kind of ["salt", "fat", "sugar"] as const) {
       if (from.baker_pcts[kind] !== to.baker_pcts[kind]) add(`change.${kind}`, "{from}% → {to}%", { from: from.baker_pcts[kind], to: to.baker_pcts[kind] });
     }
   }
-  if (from.hydration_pct !== to.hydration_pct) add("change.hydration", "Idratazione: {from}% → {to}%", { from: from.hydration_pct, to: to.hydration_pct });
-  if (from.flour_w !== to.flour_w) add("change.flour", "Forza farina: W{from} → W{to}", { from: from.flour_w, to: to.flour_w });
-  if (from.flour_pl !== to.flour_pl) add("change.flourPL", "P/L farina: {from} → {to}", { from: from.flour_pl, to: to.flour_pl });
+  if (from.hydration_pct !== to.hydration_pct) add("change.hydration", METHOD_MESSAGES_IT["change.hydration"], { from: from.hydration_pct, to: to.hydration_pct });
+  if (from.flour_w !== to.flour_w) add("change.flour", METHOD_MESSAGES_IT["change.flour"], { from: from.flour_w, to: to.flour_w });
+  if (from.flour_pl !== to.flour_pl) add("change.flourPL", METHOD_MESSAGES_IT["change.flourPL"], { from: from.flour_pl, to: to.flour_pl });
   if (from.fermentation_hours !== to.fermentation_hours || from.fermentation_temp_c !== to.fermentation_temp_c) {
-    add("change.fermentation", "Fermentazione: {fromHours} a {fromTemp} → {toHours} a {toTemp}", {
+    add("change.fermentation", METHOD_MESSAGES_IT["change.fermentation"], {
       fromHours: from.fermentation_hours, toHours: to.fermentation_hours,
       fromTemp: from.fermentation_temp_c, toTemp: to.fermentation_temp_c });
   }
-  if (from.has_pre_ferment !== to.has_pre_ferment) add(to.has_pre_ferment ? "change.prefermentOn" : "change.prefermentOff", to.has_pre_ferment ? "Si aggiunge un prefermento" : "Si passa all’impasto diretto");
+  if (from.has_pre_ferment !== to.has_pre_ferment) add(to.has_pre_ferment ? "change.prefermentOn" : "change.prefermentOff", to.has_pre_ferment ? METHOD_MESSAGES_IT["change.prefermentOn"] : METHOD_MESSAGES_IT["change.prefermentOff"]);
   else if (to.has_pre_ferment && (from.pre_ferment_type !== to.pre_ferment_type || from.pre_ferment_flour_pct !== to.pre_ferment_flour_pct)) {
-    add("change.prefermentDetails", "Prefermento: {fromType} {from}% → {toType} {to}%", { fromType: from.pre_ferment_type ?? "", toType: to.pre_ferment_type ?? "", from: from.pre_ferment_flour_pct ?? 0, to: to.pre_ferment_flour_pct ?? 0 });
+    add("change.prefermentDetails", METHOD_MESSAGES_IT["change.prefermentDetails"], { fromType: from.pre_ferment_type ?? "", toType: to.pre_ferment_type ?? "", from: from.pre_ferment_flour_pct ?? 0, to: to.pre_ferment_flour_pct ?? 0 });
   }
-  if (from.oven_temp_c !== to.oven_temp_c || from.cook_time_sec !== to.cook_time_sec) add("change.cooking", "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s", { fromTemp: from.oven_temp_c, toTemp: to.oven_temp_c, fromSeconds: from.cook_time_sec, toSeconds: to.cook_time_sec });
+  if (from.oven_temp_c !== to.oven_temp_c || from.cook_time_sec !== to.cook_time_sec) add("change.cooking", METHOD_MESSAGES_IT["change.cooking"], { fromTemp: from.oven_temp_c, toTemp: to.oven_temp_c, fromSeconds: from.cook_time_sec, toSeconds: to.cook_time_sec });
   return changes;
 }
 

@@ -10,6 +10,7 @@ import {
   TROUBLESHOOTING_EN,
   GLOSSARY_TERMS_EN,
   SCIENCE_EN,
+  FLOURS_EN,
 } from "./domain-en";
 
 /**
@@ -1838,6 +1839,7 @@ export const EN_LOCALE: CmsContent = {
   troubleshootingI18n: TROUBLESHOOTING_EN as any,
   glossaryTerms: GLOSSARY_TERMS_EN as any,
   science: SCIENCE_EN,
+  flours: FLOURS_EN,
   /* FW-06 — punteggio spiegabile (D-E). */
   scoreExplainer: {
     scoreAria: "{label}: {score} out of 100",
