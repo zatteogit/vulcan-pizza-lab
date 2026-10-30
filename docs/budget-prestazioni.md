@@ -193,6 +193,29 @@ d'ingresso dei chip e l'etichetta della fase dentro le card (la dice l'h2 del
 gruppo). Risultato: 499,6 kB senza lingue (511 602 byte, margine di circa 400
 byte), 598,8 kB per utente, chunk giapponese 99,2 kB, CSS 74,3 kB.
 
+### 30/10/2026: il JS del solo CMS fuori dal conto pubblico
+
+La #160 (archivio foto del CMS, `/cms/foto`) ha portato il «per utente» da
+595,6 a 598,5 kB e, con G1b (#161), a 599,5 kB su 600. Dei +2,9 kB della #160,
+1,5 kB sono il chunk `photo-library`, che nessun percorso pubblico richiede:
+come già il CSS del CMS, ora `check:budget` lo misura a parte (`CMS_ONLY_JS`)
+e non lo somma a «senza lingue» e «per utente». Il resto è un rimescolamento
+dei chunk condivisi (`account-panel` separato, `localize` che ingloba moduli
+prima altrove) e circa 0,7 kB nel chunk d'ingresso (lettura della foto
+pubblicata). Dopo: 494,3 kB senza lingue, 598,0 kB per utente. Decisione di
+Matteo: «per js e cms fai come meglio credi».
+
+Due limiti noti della misura, da tenere presenti:
+
+- **Il «per utente» è sottostimato per le lingue diverse dall'italiano**: chi
+  usa una lingua straniera scarica anche il catalogo inglese di riserva, che
+  il conto non somma.
+- **L'italiano è sempre nel codice**: `CMS_DEFAULTS` (con `UI_MESSAGES_IT` e
+  i testi di dominio) è la base su cui si fondono le altre lingue, quindi
+  pesa su ogni utente come «codice». Il recupero strutturale vero è rendere
+  l'italiano una lingua caricata come le altre, con una base neutra: è un
+  lavoro a sé, da pianificare prima delle tranche B–D del catalogo.
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |
