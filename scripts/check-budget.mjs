@@ -17,12 +17,14 @@ const BUDGET = {
   /** Chunk JS più grande, gzip. Il 30/10/2026 79,8 kB (catalogo ja); i bundle lingua crescono con i condimenti tradotti. */
   maxJsChunkGz: 100 * KB,
   /** JS senza i cataloghi delle lingue (italiano compreso, dal 30/10/2026), gzip.
-   *  Il 30/10/2026 448,0 kB (D-059). */
-  jsWithoutLocalesGz: 500 * KB,
+   *  Il 30/10/2026 451,0 kB dopo la tranche A2 (D-059); limite abbassato da
+   *  500 a 465 kB col cricchetto, ~14 kB per le prossime tranche. */
+  jsWithoutLocalesGz: 465 * KB,
   /** JS che scarica al massimo un utente: codice + la lingua più pesante
    *  (i cataloghi si caricano solo per la lingua attiva, senza riserve).
-   *  Il 30/10/2026 551,1 kB (ja; in italiano 497,9). */
-  jsPerUserGz: 600 * KB,
+   *  Il 30/10/2026 557,3 kB dopo la tranche A2 (ja; in italiano 500,9); limite
+   *  abbassato da 600 a 570 kB col cricchetto. */
+  jsPerUserGz: 570 * KB,
   /** Foglio di stile unico, gzip. Oggi 60 kB. */
   cssGz: 75 * KB,
   /** Singolo video. P-5c (D-034): clip da 8 s a 480p; oggi il più grande è

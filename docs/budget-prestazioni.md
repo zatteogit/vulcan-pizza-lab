@@ -409,6 +409,15 @@ lingua). Proposta per Matteo, dopo le tranche: abbassarli col cricchetto.
 kB nel codice, a cominciare dai condimenti di `topping-library.ts`, circa
 17 kB), da pianificare con chi cura dati e server.
 
+### 30/10/2026: limiti JS abbassati a 465 / 570 kB
+
+Dopo il recupero strutturale (#170, l'italiano caricato come le altre lingue) e
+la tranche A2 del catalogo (#171) la build misura 451,0 kB senza lingue e
+557,3 kB per utente (ja). Col cricchetto i limiti scendono da 500 / 600 a
+**465 / 570 kB**: restano circa 13–14 kB per le prossime tranche, e il margine
+recuperato non si consuma senza che nessuno se ne accorga. Matteo: «fai quello
+che ritieni giusto».
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |
