@@ -184,11 +184,11 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
         prevention: "Fique perto da absorção declarada pelo moinho; se não souber, comece pela parte baixa da hidratação do estilo",
       },
       P02: {
-        symptom: "A massa rasga durante a abertura",
-        cause: "Glúten pouco desenvolvido ou ainda não relaxado, massa ainda fria da geladeira; às vezes uma farinha pouco extensível (P/L alto) ou uma massa que passou do ponto",
-        testRapido: "Estique devagar uma borda: ela rasga logo em vez de esticar?",
-        fixImmediate: "Cubra a bola de massa e deixe descansar em temperatura ambiente por 30–60 min; depois tente de novo",
-        prevention: "Respeite os tempos da receita, tire as bolas de massa da geladeira a tempo e use uma farinha com o P/L indicado pelo estilo",
+        symptom: "A massa rasga ou fura durante a abertura",
+        cause: "Glúten pouco desenvolvido ou ainda não relaxado, massa ainda fria da geladeira, centro esticado fino demais; às vezes uma farinha pouco extensível (P/L alto) ou uma massa que passou do ponto",
+        testRapido: "Estique devagar uma borda: ela rasga logo em vez de esticar, ou abre um buraco no centro enquanto a borda ainda está grossa?",
+        fixImmediate: "Se abriu um buraco, junte as bordas apertando para fechá-lo; depois cubra a bola de massa e deixe descansar em temperatura ambiente por 30–60 min antes de tentar de novo",
+        prevention: "Respeite os tempos da receita, tire as bolas de massa da geladeira a tempo, abra empurrando do centro para a borda e deixe o centro não muito fino e use uma farinha com o P/L indicado pelo estilo",
       },
       P03: {
         symptom: "A massa desaba ao tocar",
@@ -342,13 +342,6 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
         testRapido: "A bolinha achata antes do previsto e, se você aperta, a marca do dedo não volta?",
         fixImmediate: "Abra a massa logo, com pouca farinha na bancada; não tente bolear de novo",
         prevention: "Boleie as bolinhas com mais tensão e siga a hidratação e os tempos da receita; se a cozinha estiver quente, confira a massa antes",
-      },
-      P24: {
-        symptom: "Abre um buraco enquanto abro a massa",
-        cause: "Centro esticado demais, glúten pouco desenvolvido, massa ainda fria da geladeira ou passada do ponto",
-        testRapido: "O buraco abre no centro enquanto a borda ainda está grossa?",
-        fixImmediate: "Junte as bordas do buraco beliscando; se abrir de novo, cubra o disco e deixe descansar alguns minutos",
-        prevention: "Empurre a massa do centro para a borda e não afine demais o centro; tire as bolinhas da geladeira com antecedência",
       },
     },
     contextual: {

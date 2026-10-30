@@ -52,7 +52,7 @@ describe("stepTroubleContext", () => {
 
 describe("problemi della fase per la modalità cottura", () => {
   it("stesura della napoletana: strappi, buchi, ritiro, farina, panetto che si allarga, bordo, pala", () => {
-    expect(troubleOf("napoletana_stg", "shape")?.issueIds).toEqual(["P02", "P24", "P07", "P19", "P23", "P16", "P08", "P22"]);
+    expect(troubleOf("napoletana_stg", "shape")?.issueIds).toEqual(["P02", "P07", "P19", "P23", "P16", "P08", "P22"]);
   });
 
   /* G4b-WP-03 (S13-A-10): «si attacca alla pala» solo se la pizza va in forno con la pala. */

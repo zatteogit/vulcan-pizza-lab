@@ -35,12 +35,14 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     severity: 'warning',
   },
   {
-    id: 'P02', category: 'dough',
-    symptom: "L'impasto si strappa durante la stesura",
-    cause: "Glutine poco sviluppato o non ancora rilassato, impasto ancora freddo dal frigo; a volte una farina poco estensibile (P/L alto) o un impasto andato oltre",
-    testRapido: "Allunga piano un lembo: si strappa subito invece di allungarsi?",
-    fixImmediate: "Copri il panetto e lascialo riposare a temperatura ambiente 30–60 min, poi riprova",
-    prevention: "Rispetta i tempi della ricetta, togli i panetti dal frigo per tempo e usa una farina con il P/L indicato dallo stile",
+    /* Proposta a Matteo del 29/10: P24 «Si apre un buco mentre stendo» confluisce
+       qui; il problema si vede in stesura, quindi la fase è «Stesura». */
+    id: 'P02', category: 'shaping',
+    symptom: "L'impasto si strappa o si buca durante la stesura",
+    cause: "Glutine poco sviluppato o non ancora rilassato, impasto ancora freddo dal frigo, centro tirato troppo sottile; a volte una farina poco estensibile (P/L alto) o un impasto andato oltre",
+    testRapido: "Allunga piano un lembo: si strappa subito invece di allungarsi, o si apre un buco al centro mentre il bordo è ancora spesso?",
+    fixImmediate: "Se si è aperto un buco, pizzica i bordi per chiuderlo; poi copri il panetto e lascialo riposare a temperatura ambiente 30–60 min prima di riprovare",
+    prevention: "Rispetta i tempi della ricetta, togli i panetti dal frigo per tempo, allarga spingendo dal centro verso il bordo e lascia il centro non troppo sottile e usa una farina con il P/L indicato dallo stile",
     severity: 'warning',
   },
   {
@@ -126,14 +128,6 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     testRapido: "Il panetto si appiattisce prima del previsto e, se lo premi, il segno non torna su?",
     fixImmediate: "Stendilo subito con poca farina sul banco; non provare a ripirlarlo",
     prevention: "Pirla i panetti più tesi e segui idratazione e tempi della ricetta; se la cucina è calda, controlla l'impasto prima",
-  },
-  {
-    id: 'P24', category: 'shaping', severity: 'info',
-    symptom: 'Si apre un buco mentre stendo',
-    cause: "Centro tirato troppo sottile, glutine poco sviluppato, impasto ancora freddo di frigo o andato oltre",
-    testRapido: "Il buco si apre al centro mentre il bordo è ancora spesso?",
-    fixImmediate: "Ripara pizzicando i bordi del buco; se si riapre, copri il disco e lascialo riposare qualche minuto",
-    prevention: "Allarga spingendo dal centro verso il bordo e non assottigliare troppo il centro; togli i panetti dal frigo per tempo",
   },
   /* === CATEGORIA 4: Cottura === */
   {
@@ -270,7 +264,7 @@ const STEP_TROUBLE: Record<string, StepTroubleshooting> = {
   mix: { labelKey: 'mix', issueIds: ['P01'], initialIssueId: 'P01' },
   bulk: { labelKey: 'bulk', issueIds: ['P03', 'P04', 'P05', 'P06', 'P20', 'P21'], initialIssueId: 'P03' },
   proof: { labelKey: 'proof', issueIds: ['P03', 'P23', 'P04', 'P05', 'P06', 'P20', 'P21'], initialIssueId: 'P03' },
-  shape: { labelKey: 'shape', issueIds: ['P02', 'P24', 'P07', 'P19', 'P23', 'P16', 'P08', 'P22'], initialIssueId: 'P02' },
+  shape: { labelKey: 'shape', issueIds: ['P02', 'P07', 'P19', 'P23', 'P16', 'P08', 'P22'], initialIssueId: 'P02' },
 };
 
 /** FW-05 (S13-B-02): sotto questa temperatura la puntata è una maturazione in
@@ -279,7 +273,7 @@ export const COLD_RETARD_MAX_C = 8;
 
 /** FW-05 (S13-B-14): diagnosi che presumono una rete glutinica (W, P/L,
  *  glutine da rilassare): fuori bersaglio con un mix senza glutine. */
-const GLUTEN_DEPENDENT_ISSUES = new Set(['P02', 'P07', 'P16', 'P19', 'P24']);
+const GLUTEN_DEPENDENT_ISSUES = new Set(['P02', 'P07', 'P16', 'P19']);
 
 function withoutIssues(trouble: StepTroubleshooting, drop: (id: string) => boolean): StepTroubleshooting | undefined {
   const issueIds = trouble.issueIds.filter((id) => !drop(id));
@@ -343,14 +337,12 @@ export const ISSUE_GLOSSARY_TERMS: Record<string, readonly string[]> = {
   P21: ["q10"],
   P22: ["semola_rimacinata"],
   P23: ["ball_shaping", "hydration", "poke_test"],
-  P24: ["gluten_development"],
 };
 
 /** G4b-WP-03: «Perché?» delle voci senza soglie numeriche (pratica comune). */
 export const ISSUE_SCIENCE_NOTES: Record<string, string> = {
   P22: "troubleshooting-practice",
   P23: "troubleshooting-practice",
-  P24: "troubleshooting-practice",
 };
 
 const SEVERITY_RANK = { critical: 0, warning: 1, info: 2 } as const;

@@ -451,6 +451,10 @@ describe("cotture una alla volta (D-050)", () => {
     const six = recipe.timeline.find((s) => s.id === "bake")!;
     expect(one.rounds).toBeUndefined();
     expect(six.rounds).toBe(6);
+    // Proposta a Matteo del 29/10: anche una pizza sola ha i suoi secondi di
+    // cottura per il timer «Inforna»; il passo non diventa un giro.
+    expect(one.round_seconds).toBeGreaterThan(0);
+    expect(one.duration_minutes).toBe(Math.max(1, Math.ceil(one.round_seconds! / 60)));
     // Sui secondi veri, non sul minuto arrondato di una pizza (90 s × 6 = 9 min, non 2 × 6),
     // più il recupero del forno fra un giro e l'altro (FW-19, S09-A-14).
     const recovery = bakeRoundRecoverySec(makeConstraints().oven_type);

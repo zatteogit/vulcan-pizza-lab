@@ -195,8 +195,8 @@ describe("G4b-WP-03 problemi per fase", () => {
     expect(groupIssuesByPhase(ISSUES_DB.filter((i) => i.id === "P22")).map((g) => g.phase)).toEqual(["shaping"]);
   });
 
-  it("pala, panetto che si allarga e buchi in stesura: stesura, in sette lingue, senza soglie numeriche", () => {
-    for (const id of ["P22", "P23", "P24"]) {
+  it("pala e panetto che si allarga: stesura, in sette lingue, senza soglie numeriche", () => {
+    for (const id of ["P22", "P23"]) {
       expect(ISSUES_DB.find((i) => i.id === id)!.category).toBe("shaping");
       expect(getScienceNote(ISSUE_SCIENCE_NOTES[id])?.kind).toBe("editorial");
       expect(ISSUE_GLOSSARY_TERMS[id]?.length).toBeGreaterThan(0);
@@ -217,6 +217,14 @@ describe("G4b-WP-03 problemi per fase", () => {
     expect(getStepTroubleshooting({ id: "bake" }, { peel: true })!.issueIds[0]).toBe("P22");
     expect(getStepTroubleshooting({ id: "bake", variant: "fry" }, { peel: true })!.issueIds).not.toContain("P22");
     expect(getStepTroubleshooting({ id: "proof" })!.issueIds).toContain("P23");
-    expect(getStepTroubleshooting({ id: "shape" })!.issueIds).toEqual(expect.arrayContaining(["P23", "P24"]));
+    expect(getStepTroubleshooting({ id: "shape" })!.issueIds).toEqual(expect.arrayContaining(["P23", "P02"]));
+  });
+
+  it("«si apre un buco» è dentro P02, nella fase di stesura (proposta a Matteo del 29/10)", () => {
+    expect(ISSUES_DB.some((i) => i.id === "P24")).toBe(false);
+    const p02 = ISSUES_DB.find((i) => i.id === "P02")!;
+    expect(p02.category).toBe("shaping");
+    expect(p02.symptom).toMatch(/buca/);
+    for (const copy of ALL) expect(copy.issues?.P24).toBeUndefined();
   });
 });

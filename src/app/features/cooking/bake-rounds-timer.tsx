@@ -76,6 +76,12 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
   }, [cue, signal]);
   /* La frittura (pizza fritta, montanara) ha testi propri: niente forno. */
   const fry = variant === "fry";
+  /* Una pizza sola (proposta a Matteo del 29/10): «Inforna», senza «1 di 1». */
+  const single = rounds === 1;
+  /* Chiavi scritte per esteso: il controllo i18n le cerca nel codice. */
+  const label = fry
+    ? uiMessage(single ? "cooking.rounds.fry.labelSingle" : "cooking.rounds.fry.label")
+    : uiMessage(single ? "cooking.rounds.labelSingle" : "cooking.rounds.label");
 
   const status =
     st.key === "remaining"
@@ -85,10 +91,17 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
         : st.key === "rotate"
           ? uiMessage("cooking.rounds.rotate", [st.turnIndex ?? 1, st.turnCount ?? turns])
           : st.key === "allDone"
-            ? uiMessage(fry ? "cooking.rounds.fry.allDone" : "cooking.rounds.allDone", [rounds])
+            ? single
+              ? uiMessage(fry ? "cooking.rounds.fry.out" : "cooking.rounds.out")
+              : uiMessage(fry ? "cooking.rounds.fry.allDone" : "cooking.rounds.allDone", [rounds])
             : st.key === "out"
               ? uiMessage(fry ? "cooking.rounds.fry.out" : "cooking.rounds.out")
-              : uiMessage(fry ? "cooking.rounds.fry.ready" : "cooking.rounds.ready", [formatSeconds(roundSec, bcp47)]);
+              : uiMessage(
+                  fry
+                    ? single ? "cooking.rounds.fry.readySingle" : "cooking.rounds.fry.ready"
+                    : single ? "cooking.rounds.readySingle" : "cooking.rounds.ready",
+                  [formatSeconds(roundSec, bcp47)],
+                );
 
   /* Revisione ondata 2 (come PhaseCountdown, FW-13): il conto alla rovescia
      cambia ogni secondo e non sta in una regione live, altrimenti il lettore di
@@ -97,7 +110,9 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
      annuncia una volta, con la durata. */
   const announcement =
     st.key === "remaining"
-      ? uiMessage(fry ? "cooking.rounds.fry.started" : "cooking.rounds.started", [round, rounds, formatSeconds(roundSec, bcp47)])
+      ? single
+        ? uiMessage(fry ? "cooking.rounds.fry.startedSingle" : "cooking.rounds.startedSingle", [formatSeconds(roundSec, bcp47)])
+        : uiMessage(fry ? "cooking.rounds.fry.started" : "cooking.rounds.started", [round, rounds, formatSeconds(roundSec, bcp47)])
       : status;
   /* Dopo «gira» il tempo rimasto resta visibile: si sa quanto manca a «sforna». */
   const clock =
@@ -106,10 +121,12 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
       : null;
 
   return (
-    <section className="cook-rounds" data-phase={phase} aria-label={uiMessage(fry ? "cooking.rounds.fry.label" : "cooking.rounds.label")}>
-      <p className="cook-rounds__count type-numeric">
-        {uiMessage(fry ? "cooking.rounds.fry.progress" : "cooking.rounds.progress", [Math.min(Math.max(round, 1), rounds), rounds])}
-      </p>
+    <section className="cook-rounds" data-phase={phase} aria-label={label}>
+      {!single && (
+        <p className="cook-rounds__count type-numeric">
+          {uiMessage(fry ? "cooking.rounds.fry.progress" : "cooking.rounds.progress", [Math.min(Math.max(round, 1), rounds), rounds])}
+        </p>
+      )}
       <p ref={statusRef} tabIndex={-1} className="cook-rounds__status type-numeric">
         {turning && <RotateCw size={18} aria-hidden="true" className="cook-rounds__icon" />}
         {status}
@@ -133,7 +150,7 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
           className="cook-rounds__cta"
         >
           <Flame size={18} aria-hidden="true" />
-          {uiMessage(fry ? "cooking.rounds.fry.start" : "cooking.rounds.start", [nextRound, rounds])}
+          {single ? uiMessage(fry ? "cooking.rounds.fry.startSingle" : "cooking.rounds.startSingle") : uiMessage(fry ? "cooking.rounds.fry.start" : "cooking.rounds.start", [nextRound, rounds])}
         </CtaButton>
       )}
     </section>

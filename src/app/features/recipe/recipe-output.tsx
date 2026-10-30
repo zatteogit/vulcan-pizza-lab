@@ -381,9 +381,9 @@ export function RecipeOutput({
           endMs: (stepTimes[i]?.end ?? startTime).getTime(),
           flexible: FLEXIBLE_STEP_IDS.has(step.id),
           ...(isColdPhase(step.id, recipe.fermentation_temp_c) ? { cold: true } : {}),
-          ...(step.rounds && step.round_seconds
+          ...(step.round_seconds
             ? {
-                rounds: step.rounds,
+                rounds: step.rounds ?? 1,
                 roundSec: step.round_seconds,
                 ...(step.recovery_seconds ? { recoverySec: step.recovery_seconds } : {}),
                 ...(step.turns !== undefined ? { turns: step.turns } : {}),

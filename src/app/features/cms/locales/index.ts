@@ -100,9 +100,10 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *     pre-ferment-procedure.
  *     41 → G4b-WP-03: problemi P22–P24 (pala, panetto che si allarga, buchi in
  *     stesura), nota troubleshooting-practice, tolta la categoria «solver».
+ *  45 → P24 «Si apre un buco» unito a P02 (stesura), nelle sei lingue.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 44;
+export const LOCALE_BUNDLE_REV = 45;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

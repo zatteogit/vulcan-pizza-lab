@@ -185,12 +185,11 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         prevention: "Restez proche de l'absorption indiquée par le moulin ; si vous ne la connaissez pas, partez du bas de l'hydratation du style",
       },
       P02: {
-        symptom:
-          "La p\u00E2te se d\u00E9chire pendant l'\u00E9tirage",
-        cause: "Gluten peu développé ou pas encore détendu, pâte encore froide du réfrigérateur ; parfois une farine peu extensible (P/L élevé) ou une pâte trop fermentée",
-        testRapido: "Étirez doucement un bord : se déchire-t-il tout de suite au lieu de s'allonger ?",
-        fixImmediate: "Couvrez le pâton et laissez-le reposer à température ambiante 30–60 min, puis réessayez",
-        prevention: "Respectez les temps de la recette, sortez les pâtons du réfrigérateur à temps et utilisez une farine au P/L indiqué par le style",
+        symptom: "La pâte se déchire ou se troue pendant l'étirage",
+        cause: "Gluten peu développé ou pas encore détendu, pâte encore froide du réfrigérateur, centre étiré trop fin ; parfois une farine peu extensible (P/L élevé) ou une pâte trop fermentée",
+        testRapido: "Étirez doucement un bord : se déchire-t-il tout de suite au lieu de s'allonger, ou un trou s'ouvre-t-il au centre alors que le bord est encore épais ?",
+        fixImmediate: "Si un trou s'est ouvert, pincez ses bords pour le refermer ; puis couvrez le pâton et laissez-le reposer à température ambiante 30–60 min avant de réessayer",
+        prevention: "Respectez les temps de la recette, sortez les pâtons du réfrigérateur à temps, élargissez du centre vers le bord en gardant le centre pas trop fin et utilisez une farine au P/L indiqué par le style",
       },
       P03: {
         symptom: "La p\u00E2te s'affaisse quand on la touche",
@@ -344,13 +343,6 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         testRapido: "Le pâton s'aplatit-il plus tôt que prévu, et la marque du doigt reste-t-elle quand vous appuyez ?",
         fixImmediate: "Étalez-le tout de suite avec un peu de farine sur le plan de travail ; n'essayez pas de le bouler à nouveau",
         prevention: "Boulez les pâtons plus serrés et suivez l'hydratation et les temps de la recette ; si la cuisine est chaude, contrôlez la pâte plus tôt",
-      },
-      P24: {
-        symptom: "Un trou s'ouvre pendant que j'étale",
-        cause: "Centre trop étiré, gluten peu développé, pâte encore froide du réfrigérateur ou allée trop loin",
-        testRapido: "Le trou s'ouvre-t-il au centre alors que le bord est encore épais ?",
-        fixImmediate: "Pincez les bords du trou pour le refermer ; s'il se rouvre, couvrez le disque et laissez-le reposer quelques minutes",
-        prevention: "Poussez la pâte du centre vers le bord et n'amincissez pas trop le centre ; sortez les pâtons du réfrigérateur à temps",
       },
     },
     contextual: {
