@@ -25,8 +25,10 @@ const BUDGET = {
    *  Il 30/10/2026 557,3 kB dopo la tranche A2 (ja; in italiano 500,9); limite
    *  abbassato da 600 a 570 kB col cricchetto. */
   jsPerUserGz: 570 * KB,
-  /** Foglio di stile unico, gzip. Oggi 60 kB. */
-  cssGz: 75 * KB,
+  /** Foglio di stile unico, gzip. Il 30/10/2026 72,2 kB (senza le utility dei soli
+   *  strumenti), 72,4 kB con l'esito negativo marcato; limite abbassato da 75 a
+   *  74 kB col cricchetto. */
+  cssGz: 74 * KB,
   /** Singolo video. P-5c (D-034): clip da 8 s a 480p; oggi il più grande è
    *  0,65 MB (napoletana_stg.mp4). */
   maxVideo: 1 * MB,

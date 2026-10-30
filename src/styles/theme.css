@@ -8527,12 +8527,6 @@
     border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 40%, transparent);
   }
 
-  .needs-slot-list__badge--current {
-    flex-shrink: 0;
-    background: color-mix(in srgb, var(--overlay-text) 25%, transparent);
-    border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 40%, transparent);
-  }
-
   /* ── Time slot picker: desktop grid (>= sm) ── */
   .needs-slot-grid {
     display: none;
@@ -18831,7 +18825,6 @@
     color: var(--text-default);
     box-shadow: var(--elevation-profile-button);
     text-decoration: none;
-    transition: background var(--duration-moderate) var(--ease-standard), border-color var(--duration-moderate) var(--ease-standard), box-shadow var(--duration-moderate) var(--ease-standard);
     will-change: transform, width, height;
   }
 

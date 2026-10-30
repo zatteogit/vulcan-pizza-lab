@@ -90,10 +90,6 @@
     width: 100%;
   }
 
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-content {
-    max-width: var(--measure-6xl);
-  }
-
   [data-theme="editorial-fire"] [data-page="recipe"] .recipe-output-panel--ricetta {
     display: grid;
     grid-template-columns: minmax(0, 1.65fr) minmax(var(--measure-xs), 0.75fr);
