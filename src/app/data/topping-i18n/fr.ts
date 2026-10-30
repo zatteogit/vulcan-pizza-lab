@@ -280,6 +280,43 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       name: "Bufalina",
       description: "Tomate, mozzarella di bufala campana et basilic. La bufala rend beaucoup de petit-lait : égouttez-la et, dans les fours lents, ajoutez-la à la sortie du four.",
     },
+    // D-065 — tranche A2
+    pugliese: {
+      name: "Pugliese",
+      description: "Tomate, mozzarella, oignon et origan. L'oignon se pose cru et émincé très fin pour les cuissons longues, et confit à l'avance pour les fours rapides, où il n'aurait pas le temps de cuire.",
+    },
+    crudaiola: {
+      name: "Crudaiola",
+      description: "Base blanche au fior di latte cuite au four ; tomates cerises, roquette et copeaux de parmesan crus, ajoutés après la cuisson.",
+    },
+    tirolese: {
+      name: "Tirolese",
+      description: "Tomate et mozzarella au four, speck en tranches posé à la sortie : sur la pizza chaude, il s'attendrit sans se dessécher.",
+    },
+    bismarck: {
+      name: "Bismarck",
+      description: "Tomate, mozzarella, jambon cuit et un œuf au centre. Dans un four domestique, l'œuf entre dans les dernières minutes : le blanc prend et le jaune reste coulant.",
+    },
+    mimosa: {
+      name: "Mimosa",
+      description: "Base blanche de crème et de mozzarella, avec jambon cuit et maïs doux, le tout cuit au four.",
+    },
+    lucana: {
+      name: "Lucana",
+      description: "Fior di latte et saucisse lucanica au four, peperoni cruschi émiettés seulement à la sortie : au four, ils noircissent et deviennent amers.",
+    },
+    rossini: {
+      name: "Rossini",
+      description: "Le classique de Pesaro : tomate et mozzarella au four, puis œuf dur en tranches et mayonnaise, à froid. On la trouve aussi à la coupe.",
+    },
+    patate_lardo: {
+      name: "Pommes de terre, lardo et romarin",
+      description: "Pommes de terre en fines tranches et romarin au four ; le lardo en tranches se pose sur la pizza chaude à la sortie, où il devient translucide sans fondre.",
+    },
+    gamberetti_zucchine: {
+      name: "Crevettes et courgettes",
+      description: "Base blanche au fior di latte et aux courgettes ; les crevettes, sautées à la poêle à l'avance, s'ajoutent à la fin.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2519,6 +2556,202 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
         },
       },
     },
+    // D-065 — tranche A2
+    pugliese_napoletana: {
+      variant_name: "oignon confit",
+      ingredients: {
+        "0": {
+          name: "Tomates pelées écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Oignon blanc confit",
+          notes: "poids cru",
+        },
+        "3": {
+          name: "Origan séché",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    pugliese_romana: {
+      variant_name: "oignon cru",
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Oignon blanc émincé très fin",
+          notes: "cru, tranché le plus finement possible",
+        },
+        "3": {
+          name: "Origan séché",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    crudaiola_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Tomates cerises fraîches",
+          notes: "en quartiers, après la cuisson",
+        },
+        "2": {
+          name: "Sel fin pour les tomates",
+        },
+        "3": {
+          name: "Roquette",
+          notes: "après la cuisson",
+        },
+        "4": {
+          name: "Copeaux de Parmigiano Reggiano",
+          notes: "après la cuisson",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra",
+          notes: "moitié au four, moitié sur les crudités",
+        },
+      },
+    },
+    tirolese_classica: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Speck en tranches (porc, sel, épices)",
+          notes: "après la cuisson",
+        },
+      },
+    },
+    bismarck_classica: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jambon cuit en tranches (porc, sel, arômes)",
+        },
+        "3": {
+          name: "Œuf",
+          notes: "entier, à température ambiante",
+        },
+      },
+    },
+    mimosa_classica: {
+      ingredients: {
+        "0": {
+          name: "Crème liquide entière",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jambon cuit en dés (porc, sel, arômes)",
+        },
+        "3": {
+          name: "Maïs doux égoutté",
+        },
+      },
+    },
+    lucana_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Saucisse lucanica en petits morceaux (porc, sel, paprika doux, fenouil sauvage)",
+          notes: "sans boyau",
+        },
+        "2": {
+          name: "Peperoni cruschi (poivrons doux séchés, huile de tournesol)",
+          notes: "frits, après la cuisson",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    rossini_classica: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Œuf dur",
+          notes: "en tranches, après la cuisson",
+        },
+        "3": {
+          name: "Mayonnaise (huile de tournesol, œufs, vinaigre, jus de citron, sel)",
+          notes: "à froid ; certaines contiennent de la moutarde, vérifiez l'étiquette",
+        },
+      },
+    },
+    patate_lardo_romana: {
+      bake_note: "Les pommes de terre demandent quelques minutes de plus pour dorer.",
+      ingredients: {
+        "0": {
+          name: "Pommes de terre jaunes en fines tranches",
+        },
+        "1": {
+          name: "Romarin frais",
+          notes: "aiguilles",
+        },
+        "2": {
+          name: "Huile d'olive vierge extra",
+        },
+        "3": {
+          name: "Lardo en fines tranches (lard de dos de porc, sel, poivre, aromates)",
+          notes: "après la cuisson",
+        },
+        "4": {
+          name: "Fleur de sel",
+          notes: "en fin de cuisson",
+        },
+      },
+    },
+    gamberetti_zucchine_classica: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Courgettes en fines rondelles",
+        },
+        "2": {
+          name: "Crevettes décortiquées",
+          notes: "sautées, après la cuisson",
+        },
+        "3": {
+          name: "Ail et persil",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+          notes: "pour la poêle et en filet",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -3208,6 +3441,119 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       description: "Dès la sortie du four, répartissez la bufala en morceaux et le basilic.",
       tip_beginner: "Avec une cuisson longue, la bufala au four devient caoutchouteuse et laisse une mare de petit-lait : ajoutée à la sortie, elle reste fondante.",
       tip_nerd: "La bufala contient plus d'eau et plus de gras que le fior di latte : après quelques minutes de chaleur, le caillé se contracte et expulse le petit-lait, qui détrempe la base.",
+    },
+    // D-065 — tranche A2
+    stufare_cipolla_pugliese: {
+      title: "Faites confire l'oignon",
+      description: "Émincez finement l'oignon et faites-le confire 10-12 minutes à feu doux avec un filet d'huile et une pincée de sel, jusqu'à ce qu'il soit tendre et translucide. Laissez-le tiédir.",
+      tip_beginner: "En 60-90 secondes de four, l'oignon cru reste croquant et piquant : confit à l'avance, il arrive déjà tendre.",
+      tip_nerd: "Pour s'attendrir, l'oignon doit perdre de l'eau et ses parois cellulaires doivent céder, ce qui demande des minutes à 100 °C : la cuisson napolitaine est trop courte.",
+    },
+    spread_pugliese_nap: {
+      title: "Garniture Pugliese",
+      description: "Tomates pelées écrasées et fior di latte. Répartissez l'oignon confit et l'origan, puis un filet d'huile.",
+    },
+    spread_pugliese_rom: {
+      title: "Garniture Pugliese",
+      description: "Coulis et fior di latte. Répartissez l'oignon cru émincé et l'origan, puis un filet d'huile : avec une cuisson longue, l'oignon cuit sur la pizza.",
+      description_short_bake: "Coulis et fior di latte. Répartissez l'oignon et l'origan, puis un filet d'huile. Avec une cuisson aussi courte, l'oignon cru reste croquant : si vous le voulez tendre, faites-le d'abord confire 10 minutes à la poêle.",
+      tip_beginner: "Émincez-le le plus finement possible : les tranches épaisses restent crues au centre.",
+      tip_nerd: "L'oignon émincé perd son eau sous la chaleur de la voûte et colore sur les bords ; au-delà de 2-3 mm d'épaisseur, il n'a pas le temps de s'attendrir.",
+    },
+    condire_pomodorini_crudaiola: {
+      title: "Assaisonnez les tomates cerises",
+      description: "Coupez les tomates cerises en quartiers, assaisonnez-les avec le sel et un filet d'huile et laissez-les dans une passoire pendant la cuisson de la pizza, pour qu'elles perdent leur excès d'eau.",
+    },
+    spread_crudaiola: {
+      title: "Seulement le fior di latte au four",
+      description: "Répartissez le fior di latte sur la pâte avec un filet d'huile. Tomates cerises, roquette et parmesan ne vont pas au four.",
+    },
+    finish_crudaiola: {
+      title: "Les crudités à la sortie",
+      description: "Dès la sortie du four, répartissez les tomates cerises égouttées, la roquette et les copeaux de parmesan. Terminez avec le reste de l'huile.",
+      tip_beginner: "Attendez une minute avant de mettre la roquette : sur la mozzarella brûlante, elle flétrit aussitôt.",
+      tip_nerd: "Cuites, les tomates cerises et la roquette perdent de l'eau et des arômes volatils ; crues sur la pizza chaude, elles restent croquantes, et c'est ce contraste chaud-froid qui fait la crudaiola.",
+    },
+    spread_tirolese: {
+      title: "Tomate et mozzarella",
+      description: "Étalez le coulis et répartissez le fior di latte. Le speck ne va pas au four.",
+    },
+    finish_tirolese: {
+      title: "Le speck à la sortie",
+      description: "Dès la sortie du four, posez les tranches de speck sur la pizza chaude.",
+      tip_beginner: "Au four, le speck se dessèche et devient dur et salé : sur la pizza chaude, il reste tendre.",
+      tip_nerd: "Le speck est cru, salé et fumé, avec peu d'eau : la chaleur résiduelle suffit à rendre le gras translucide sans dessécher la tranche.",
+    },
+    spread_bismarck: {
+      title: "Garniture Bismarck",
+      description: "Coulis, fior di latte et jambon cuit ; laissez le centre libre. Enfournez sans l'œuf : dans les 4-5 dernières minutes, ouvrez le four, cassez l'œuf au centre et terminez la cuisson jusqu'à ce que le blanc ait pris.",
+      description_short_bake: "Coulis, fior di latte et jambon cuit, avec un creux au centre. Cassez l'œuf dans le creux juste avant d'enfourner : avec une cuisson aussi courte, il n'y a pas de moment pour l'ajouter ensuite.",
+      tip_beginner: "Cassez d'abord l'œuf dans une tasse : vous le faites glisser au centre sans crever le jaune.",
+      tip_nerd: "Le blanc commence à prendre vers 62 °C et devient ferme vers 80 °C, le jaune épaissit à partir d'environ 65 °C : en 10-12 minutes dans un four domestique, l'œuf devient dur ; en 4-5, le blanc prend et le jaune reste coulant.",
+    },
+    spread_mimosa: {
+      title: "Garniture Mimosa",
+      description: "Étalez la crème en une fine couche en laissant le bord libre. Répartissez le fior di latte, le jambon cuit et le maïs bien égoutté.",
+      tip_beginner: "Séchez le maïs sur du papier absorbant : le liquide de la boîte détrempe la base.",
+      tip_nerd: "La crème à la place de la tomate apporte du gras et peu d'eau : la base reste blanche et crémeuse, mais une couche épaisse ralentit la cuisson du centre.",
+    },
+    friggere_cruschi_lucana: {
+      title: "Faites frire les peperoni cruschi",
+      description: "Retirez le pédoncule et les graines. Plongez les poivrons dans l'huile à 160-170 °C pendant 3-5 secondes, jusqu'à ce qu'ils deviennent rouge foncé et croustillants, puis égouttez-les sur du papier. Si vous les achetez déjà frits, sautez cette étape.",
+      tip_beginner: "Quelques secondes suffisent : s'ils foncent trop, ils deviennent amers et il faut recommencer.",
+      tip_nerd: "Le crusco est un poivron séché, presque sans eau et riche en sucres : dans l'huile chaude, il croustille en un instant et, peu après, caramélise jusqu'à brûler.",
+    },
+    spread_lucana: {
+      title: "Fior di latte et saucisse",
+      description: "Répartissez le fior di latte et la saucisse en morceaux. Terminez par un filet d'huile. Les cruschi ne vont pas au four.",
+    },
+    finish_lucana: {
+      title: "Les cruschi à la sortie",
+      description: "Dès la sortie du four, émiettez les peperoni cruschi sur la pizza.",
+      tip_beginner: "Au four, les cruschi noircissent en un instant et deviennent amers : posez-les toujours sur la pizza déjà sortie.",
+      tip_nerd: "Ils sont déjà frits et secs : la chaleur de la pizza suffit à libérer leur parfum sans les recuire.",
+    },
+    rassodare_uova_rossini: {
+      title: "Faites durcir les œufs",
+      description: "Plongez les œufs dans l'eau déjà bouillante et faites-les cuire 9 minutes. Refroidissez-les dans l'eau froide, écalez-les et coupez-les en tranches.",
+    },
+    spread_rossini: {
+      title: "Tomate et mozzarella",
+      description: "Étalez le coulis et répartissez le fior di latte. L'œuf et la mayonnaise se posent à froid, après la cuisson.",
+    },
+    finish_rossini: {
+      title: "Œuf dur et mayonnaise à froid",
+      description: "Laissez tiédir la pizza deux minutes. Répartissez les tranches d'œuf dur et terminez avec la mayonnaise en petites noisettes.",
+      tip_beginner: "Sur la pizza brûlante, la mayonnaise fond et devient grasse : attendez qu'elle ne fume plus.",
+      tip_nerd: "La mayonnaise est une huile émulsionnée dans le jaune d'œuf : à la chaleur, les protéines du jaune coagulent et l'émulsion se rompt, libérant l'huile.",
+    },
+    patate_mandolina_lardo: {
+      title: "Tranchez et faites tremper les pommes de terre",
+      description: "Tranchez les pommes de terre à 1-2 mm à la mandoline, faites-les tremper 20 minutes dans l'eau froide, égouttez-les et séchez-les bien.",
+    },
+    spread_patate_lardo: {
+      title: "Pommes de terre et romarin au four",
+      description: "Disposez les pommes de terre en tranches qui se chevauchent et assaisonnez-les d'huile et de romarin. Le lardo ne va pas au four.",
+    },
+    finish_patate_lardo: {
+      title: "Le lardo à la sortie",
+      description: "Dès la sortie du four, posez les tranches de lardo sur les pommes de terre chaudes et terminez avec la fleur de sel.",
+      tip_beginner: "Le lardo est déjà salé : goûtez avant d'ajouter la fleur de sel.",
+      tip_nerd: "Le lardo est presque entièrement du gras : au four, il fond et frit ; sur les pommes de terre chaudes, il devient juste translucide et parfumé.",
+    },
+    saltare_gamberetti_zucchine: {
+      title: "Faites sauter les courgettes et les crevettes",
+      description: "Faites sauter les courgettes 3-4 minutes à la poêle avec la moitié de l'huile, jusqu'à ce qu'elles s'attendrissent, puis salez-les. Dans la même poêle, chauffez l'ail dans le reste de l'huile et faites sauter les crevettes 1-2 minutes, jusqu'à ce qu'elles deviennent roses. Éteignez le feu et ajoutez le persil.",
+      tip_beginner: "Ne faites pas trop cuire les crevettes : au bout de deux minutes, elles deviennent caoutchouteuses, et le four les dessécherait encore plus.",
+      tip_nerd: "Les protéines des crevettes se contractent dès 60 °C et expulsent l'eau : une cuisson courte à la poêle et un ajout à la sortie les gardent juteuses.",
+    },
+    spread_gamberetti_zucchine: {
+      title: "Fior di latte et courgettes",
+      description: "Répartissez le fior di latte et les courgettes sautées. Les crevettes s'ajoutent à la fin.",
+    },
+    finish_gamberetti_zucchine: {
+      title: "Les crevettes à la sortie",
+      description: "Dès la sortie du four, répartissez les crevettes avec leur jus à l'ail et au persil.",
     },
   },
 };

@@ -51,7 +51,7 @@ export function ingredientDietaryStatus(name: string, filter: "vegan" | "lactose
   if (/^(latte|bevanda) (di soia|di riso|di mandorla|d.avena)|^(formaggio|mozzarella) vegetale/.test(n)) return "compatible";
   const freshDairy = /crescenza|ricotta|mozzarella|fior di latte|stracciatella|burrata|crème fraîche|panna|\blatte\b|\bburro\b|\bfeta\b|\btuma\b|primosale|mix di quattro formaggi/;
   const agedDairy = /parmigiano|grana padano|pecorino|caciocavallo|gorgonzola|provolone|provola|fontina|brick cheese|cheddar|gouda/;
-  const animal = freshDairy.test(n) || agedDairy.test(n) || /\bstrutto\b|\buov[oa]\b|miele|prosciutto|salsiccia|salame|pepperoni|bacon|speck|porchetta|culatello|mortadella|cicoli|ciccioli|nduja|bresaola|\bmanzo\b|\bpollo\b|acciughe|alici|salmone|tonno|vongole|bottarga/.test(n);
+  const animal = freshDairy.test(n) || agedDairy.test(n) || /\bstrutto\b|\buov[oa]\b|miele|prosciutto|salsiccia|salame|pepperoni|bacon|speck|porchetta|culatello|mortadella|cicoli|ciccioli|nduja|bresaola|\bmanzo\b|\bpollo\b|acciughe|alici|salmone|tonno|vongole|bottarga|\blardo\b|gamberett/.test(n);
   if (filter === "vegan" && animal) return "incompatible";
   if (filter === "lactose_free") {
     if (/senza lattosio|delattosat|lactose[ -]?free/.test(n)) return "compatible";
@@ -59,7 +59,7 @@ export function ingredientDietaryStatus(name: string, filter: "vegan" | "lactose
     if (agedDairy.test(n) || /prosciutto cotto|salsiccia|salame|pepperoni|bacon|speck|mortadella|cicoli|ciccioli|nduja|pollo.*barbecue/.test(n)) return "unverified";
     if (animal) return "compatible";
   }
-  if (/^(acqua|sale|olio|olive oil|farina|lievito|zucchero|aglio|ananas|aneto|basilico|capperi|carciof|champignon|cipoll|composta di pomodoro|coriandolo|crema di zucca|crema di zucchine|fette di patate|fior di sale|friarielli|funghi|giardiniera|granella di pistacchio|jalapeños|melanzane|mentuccia|olive|origano|passata|patate|pelati|pepe|peperon|pere|polpa di pomodoro|pomodor|porcini|rosmarino|rucola|salamoia|salsa (densa di pomodoro|di pomodoro|marinara)|scarola|spinaci|zest|zucchin)/.test(n)) return "compatible";
+  if (/^(acqua|sale|olio|olive oil|farina|lievito|zucchero|aglio|ananas|aneto|basilico|capperi|carciof|champignon|cipoll|composta di pomodoro|coriandolo|crema di zucca|crema di zucchine|fette di patate|fior di sale|friarielli|funghi|giardiniera|granella di pistacchio|jalapeños|mais|melanzane|mentuccia|olive|origano|passata|patate|pelati|pepe|peperon|pere|polpa di pomodoro|pomodor|porcini|rosmarino|rucola|salamoia|salsa (densa di pomodoro|di pomodoro|marinara)|scarola|spinaci|zest|zucchin)/.test(n)) return "compatible";
   return "unverified";
 }
 

@@ -280,6 +280,43 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       name: "Bufalina",
       description: "Tomato, buffalo mozzarella from Campania and basil. Buffalo mozzarella releases a lot of whey: drain it and, in slow ovens, add it after baking.",
     },
+    // D-065 — tranche A2
+    pugliese: {
+      name: "Pugliese",
+      description: "Tomato, mozzarella, onion and oregano. The onion goes on raw and paper-thin for long bakes, and stewed beforehand for fast ovens, where it wouldn't have time to cook.",
+    },
+    crudaiola: {
+      name: "Crudaiola",
+      description: "A white base with fior di latte in the oven; cherry tomatoes, rocket and Parmigiano shavings go on raw, all after baking.",
+    },
+    tirolese: {
+      name: "Tirolese",
+      description: "Tomato and mozzarella in the oven, sliced speck added as the pizza comes out: on the hot pizza it softens without drying out.",
+    },
+    bismarck: {
+      name: "Bismarck",
+      description: "Tomato, mozzarella, cooked ham and an egg in the middle. In a home oven the egg goes in for the last few minutes: the white sets and the yolk stays soft.",
+    },
+    mimosa: {
+      name: "Mimosa",
+      description: "A white base of cream and mozzarella with cooked ham and sweetcorn, all baked together.",
+    },
+    lucana: {
+      name: "Lucana",
+      description: "Fior di latte and lucanica sausage in the oven; crumbled peperoni cruschi only once it's out: in the oven they blacken and turn bitter.",
+    },
+    rossini: {
+      name: "Rossini",
+      description: "Pesaro's classic: tomato and mozzarella in the oven, then sliced hard-boiled egg and mayonnaise, cold. You also find it by the slice.",
+    },
+    patate_lardo: {
+      name: "Potatoes, lardo and rosemary",
+      description: "Thinly sliced potatoes and rosemary in the oven; the sliced lardo goes on the hot pizza as it comes out, where it turns translucent without melting.",
+    },
+    gamberetti_zucchine: {
+      name: "Shrimp and courgettes",
+      description: "A white base with fior di latte and courgettes; the shrimp, sautéed beforehand, go on at the end.",
+    },
   },
 
   recipes: {
@@ -1389,6 +1426,95 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
         "3": { name: "Extra-virgin olive oil" },
       },
     },
+    // D-065 — tranche A2
+    pugliese_napoletana: {
+      variant_name: "stewed onion",
+      ingredients: {
+        "0": { name: "Hand-crushed peeled tomatoes (tomatoes, tomato juice)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Stewed white onion", notes: "raw weight" },
+        "3": { name: "Dried oregano" },
+        "4": { name: "Extra-virgin olive oil" },
+      },
+    },
+    pugliese_romana: {
+      variant_name: "raw onion",
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Paper-thin white onion", notes: "raw, sliced as thin as possible" },
+        "3": { name: "Dried oregano" },
+        "4": { name: "Extra-virgin olive oil" },
+      },
+    },
+    crudaiola_classica: {
+      ingredients: {
+        "0": { name: "Fior di latte" },
+        "1": { name: "Fresh cherry tomatoes", notes: "in wedges, after baking" },
+        "2": { name: "Fine salt for the tomatoes" },
+        "3": { name: "Rocket", notes: "after baking" },
+        "4": { name: "Parmigiano Reggiano shavings", notes: "after baking" },
+        "5": { name: "Extra-virgin olive oil", notes: "half in the oven, half on the fresh toppings" },
+      },
+    },
+    tirolese_classica: {
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Sliced speck (pork, salt, spices)", notes: "after baking" },
+      },
+    },
+    bismarck_classica: {
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Sliced cooked ham (pork, salt, flavourings)" },
+        "3": { name: "Egg", notes: "whole, at room temperature" },
+      },
+    },
+    mimosa_classica: {
+      ingredients: {
+        "0": { name: "Fresh cream" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Diced cooked ham (pork, salt, flavourings)" },
+        "3": { name: "Drained sweetcorn" },
+      },
+    },
+    lucana_classica: {
+      ingredients: {
+        "0": { name: "Fior di latte" },
+        "1": { name: "Lucanica sausage in small pieces (pork, salt, sweet paprika, wild fennel)", notes: "casing removed" },
+        "2": { name: "Peperoni cruschi (dried sweet peppers, sunflower oil)", notes: "fried, after baking" },
+        "3": { name: "Extra-virgin olive oil" },
+      },
+    },
+    rossini_classica: {
+      ingredients: {
+        "0": { name: "Tomato passata (tomatoes, salt)" },
+        "1": { name: "Fior di latte" },
+        "2": { name: "Hard-boiled egg", notes: "sliced, after baking" },
+        "3": { name: "Mayonnaise (sunflower oil, eggs, vinegar, lemon juice, salt)", notes: "cold; some contain mustard, check the label" },
+      },
+    },
+    patate_lardo_romana: {
+      bake_note: "The potatoes need a few extra minutes to brown.",
+      ingredients: {
+        "0": { name: "Thinly sliced yellow potatoes" },
+        "1": { name: "Fresh rosemary", notes: "needles" },
+        "2": { name: "Extra-virgin olive oil" },
+        "3": { name: "Thinly sliced lardo (pork back fat, salt, pepper, herbs)", notes: "after baking" },
+        "4": { name: "Fleur de sel", notes: "at the end of baking" },
+      },
+    },
+    gamberetti_zucchine_classica: {
+      ingredients: {
+        "0": { name: "Fior di latte" },
+        "1": { name: "Thinly sliced courgette rounds" },
+        "2": { name: "Peeled shrimp", notes: "sautéed, after baking" },
+        "3": { name: "Garlic and parsley" },
+        "4": { name: "Extra-virgin olive oil", notes: "for the pan and to finish" },
+      },
+    },
   },
 
   steps: {
@@ -2219,6 +2345,119 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       description: "As soon as the pizza comes out, scatter the buffalo mozzarella pieces and the basil.",
       tip_beginner: "In long bakes, buffalo mozzarella turns rubbery and leaves a pool of whey: added after baking, it stays soft.",
       tip_nerd: "Buffalo mozzarella has more water and more fat than fior di latte: after more than a few minutes of heat the curd contracts and expels whey, which soaks the base.",
+    },
+    // D-065 — tranche A2
+    stufare_cipolla_pugliese: {
+      title: "Stew the onion",
+      description: "Slice the onion thinly and stew it for 10-12 minutes over low heat with a drizzle of oil and a pinch of salt, until soft and translucent. Let it cool slightly.",
+      tip_beginner: "In 60-90 seconds in the oven raw onion stays crunchy and sharp: stewed beforehand, it arrives already soft.",
+      tip_nerd: "To soften, onion has to lose water and its cell walls have to give way, which takes minutes at 100 °C: the Neapolitan bake is too short.",
+    },
+    spread_pugliese_nap: {
+      title: "Pugliese topping",
+      description: "Crushed peeled tomatoes and fior di latte. Scatter the stewed onion and the oregano, and add a drizzle of oil.",
+    },
+    spread_pugliese_rom: {
+      title: "Pugliese topping",
+      description: "Passata and fior di latte. Scatter the paper-thin raw onion and the oregano, and add a drizzle of oil: in a long bake the onion cooks on the pizza.",
+      description_short_bake: "Passata and fior di latte. Scatter the onion and the oregano, and add a drizzle of oil. In a bake this short, raw onion stays crunchy: if you want it soft, stew it in a pan for 10 minutes first.",
+      tip_beginner: "Slice it as thin as you can: thick slices stay raw in the middle.",
+      tip_nerd: "The thin onion loses water under the heat from the oven roof and colours at the edges; anything thicker than 2-3 mm doesn't have time to soften.",
+    },
+    condire_pomodorini_crudaiola: {
+      title: "Season the cherry tomatoes",
+      description: "Cut the cherry tomatoes into wedges, season them with the salt and a drizzle of oil and leave them in a colander while the pizza bakes, so they lose their excess water.",
+    },
+    spread_crudaiola: {
+      title: "Only fior di latte in the oven",
+      description: "Spread the fior di latte over the dough with a drizzle of oil. Cherry tomatoes, rocket and Parmigiano don't go in the oven.",
+    },
+    finish_crudaiola: {
+      title: "Fresh toppings after baking",
+      description: "As soon as the pizza comes out, scatter the drained cherry tomatoes, the rocket and the Parmigiano shavings. Finish with the remaining oil.",
+      tip_beginner: "Wait a minute before adding the rocket: on piping-hot mozzarella it wilts straight away.",
+      tip_nerd: "Cooked, cherry tomatoes and rocket lose water and volatile aromas; raw on the hot pizza they stay crisp, and that hot-and-cold contrast is what makes a crudaiola.",
+    },
+    spread_tirolese: {
+      title: "Tomato and mozzarella",
+      description: "Spread the passata and scatter the fior di latte. The speck doesn't go in the oven.",
+    },
+    finish_tirolese: {
+      title: "Speck after baking",
+      description: "As soon as the pizza comes out, lay the speck slices on the hot pizza.",
+      tip_beginner: "In the oven speck dries out and turns hard and salty: on the hot pizza it stays soft.",
+      tip_nerd: "Speck is cured, salted and smoked, with little water: the residual heat is enough to turn the fat translucent without drying the slice.",
+    },
+    spread_bismarck: {
+      title: "Bismarck topping",
+      description: "Passata, fior di latte and cooked ham; leave the centre free. Bake without the egg: in the last 4-5 minutes, open the oven, crack the egg into the centre and finish baking until the white has set.",
+      description_short_bake: "Passata, fior di latte and cooked ham, with a hollow in the centre. Crack the egg into the hollow just before baking: in a bake this short there's no moment to add it later.",
+      tip_beginner: "Crack the egg into a cup first: you can slide it into the centre without breaking the yolk.",
+      tip_nerd: "Egg white starts to set around 62 °C and firms up towards 80 °C; the yolk thickens from about 65 °C. In 10-12 minutes in a home oven the egg turns hard; in 4-5 the white sets and the yolk stays soft.",
+    },
+    spread_mimosa: {
+      title: "Mimosa topping",
+      description: "Spread the cream in a thin layer, leaving the rim free. Scatter the fior di latte, the cooked ham and the well-drained sweetcorn.",
+      tip_beginner: "Dry the sweetcorn on kitchen paper: the liquid from the tin makes the base soggy.",
+      tip_nerd: "Cream instead of tomato brings fat and little water: the base stays white and creamy, but a thick layer slows down the cooking of the centre.",
+    },
+    friggere_cruschi_lucana: {
+      title: "Fry the peperoni cruschi",
+      description: "Remove the stalks and seeds. Dip the peppers in oil at 160-170 °C for 3-5 seconds, until they turn dark red and crisp, then drain them on paper. If you buy them already fried, skip this step.",
+      tip_beginner: "A few seconds is enough: if they get too dark they turn bitter and you need to start again.",
+      tip_nerd: "A crusco is a dried pepper, almost free of water and rich in sugars: in hot oil it crisps up in an instant and shortly after caramelises to the point of burning.",
+    },
+    spread_lucana: {
+      title: "Fior di latte and sausage",
+      description: "Scatter the fior di latte and the sausage pieces. Finish with a drizzle of oil. The cruschi don't go in the oven.",
+    },
+    finish_lucana: {
+      title: "Cruschi after baking",
+      description: "As soon as the pizza comes out, crumble the peperoni cruschi over it.",
+      tip_beginner: "In the oven cruschi blacken in an instant and turn bitter: they always go on the pizza once it's out.",
+      tip_nerd: "They're already fried and dry: the heat of the pizza is enough to release their aroma without cooking them again.",
+    },
+    rassodare_uova_rossini: {
+      title: "Hard-boil the eggs",
+      description: "Put the eggs into water that is already boiling and cook them for 9 minutes. Cool them in cold water, peel them and slice them.",
+    },
+    spread_rossini: {
+      title: "Tomato and mozzarella",
+      description: "Spread the passata and scatter the fior di latte. Egg and mayonnaise go on cold, after baking.",
+    },
+    finish_rossini: {
+      title: "Hard-boiled egg and mayonnaise, cold",
+      description: "Let the pizza cool for a couple of minutes. Scatter the hard-boiled egg slices and finish with small dollops of mayonnaise.",
+      tip_beginner: "On a piping-hot pizza mayonnaise melts and turns greasy: wait until it stops steaming.",
+      tip_nerd: "Mayonnaise is oil emulsified in egg yolk: with heat the yolk proteins coagulate and the emulsion breaks, releasing the oil.",
+    },
+    patate_mandolina_lardo: {
+      title: "Slice and soak the potatoes",
+      description: "Slice the potatoes 1-2 mm thick on a mandoline, soak them for 20 minutes in cold water, then drain and dry them well.",
+    },
+    spread_patate_lardo: {
+      title: "Potatoes and rosemary in the oven",
+      description: "Lay the potatoes in overlapping slices and dress them with the oil and rosemary. The lardo doesn't go in the oven.",
+    },
+    finish_patate_lardo: {
+      title: "Lardo after baking",
+      description: "As soon as the pizza comes out, lay the lardo slices over the hot potatoes and finish with the fleur de sel.",
+      tip_beginner: "Lardo is already salty: taste before adding the fleur de sel.",
+      tip_nerd: "Lardo is almost pure fat: in the oven it melts and fries; on hot potatoes it just turns translucent and fragrant.",
+    },
+    saltare_gamberetti_zucchine: {
+      title: "Sauté the courgettes and shrimp",
+      description: "Sauté the courgettes in a pan for 3-4 minutes with half the oil until they soften, then salt them. In the same pan, warm the garlic in the remaining oil and sauté the shrimp for 1-2 minutes, until they turn pink. Turn off the heat and add the parsley.",
+      tip_beginner: "Don't overcook the shrimp: after a couple of minutes they turn rubbery, and the oven would dry them out even more.",
+      tip_nerd: "Shrimp proteins already contract above 60 °C and squeeze out water: a short sauté and adding them after baking keep them juicy.",
+    },
+    spread_gamberetti_zucchine: {
+      title: "Fior di latte and courgettes",
+      description: "Scatter the fior di latte and the sautéed courgettes. The shrimp go on at the end.",
+    },
+    finish_gamberetti_zucchine: {
+      title: "Shrimp after baking",
+      description: "As soon as the pizza comes out, scatter the shrimp with their garlic and parsley juices.",
     },
   },
 };
