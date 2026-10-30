@@ -9,7 +9,7 @@ import { RECIPE_MATCH_ID } from "./recipe-match-card";
 import type { RecipePrimaryTab } from "./recipe-section-tabs";
 
 /* ═══ FW-10 (S07-B-05) — l'esito sopra la piega ═══
- * A 390 px il blocco «Così non è fattibile» finiva sotto la piega e sotto la
+ * A 390 px il blocco «Per ora non si può fare» finiva sotto la piega e sotto la
  * navbar: chi ha fretta vedeva titolo, ingredienti e «Stampa». Sotto il titolo
  * c'è ora un segnale breve, lo stesso delle card, e «Perché» porta al blocco
  * che spiega causa e rimedio. */

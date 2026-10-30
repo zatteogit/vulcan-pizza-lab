@@ -123,9 +123,15 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *  53 → FW-10, seguito: «Cambia forno» nell'avviso «Così non è fattibile»
  *       quando la causa è il forno (verdict.changeOven).
  *  54 → D-065 tranche A2: nove condimenti (toppingI18n) nelle sei lingue.
+ *  55 → scala unica degli esiti, tono gentile (Matteo, 30/10/2026): «Si può
+ *       fare» / «Si può fare, con qualche accortezza» / «Per ora non si può
+ *       fare» in verdictTitle, tiers.*.label, card.ready, card.toVerify, nuova
+ *       card.notForNow (forme brevi dei badge), ovenLimited, scoreTipBlocked,
+ *       supplyPurchaseEffect, dietChecked, ruleFeasibility,
+ *       startBlockedReason e titolo della nota non-feasible-ceiling.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 54;
+export const LOCALE_BUNDLE_REV = 55;
 
 /* 52 resta: l'italiano diventa un bundle lazy (30/10/2026) ma la forma dei
  * bundle e degli snapshot salvati non cambia; l'italiano non ha snapshot. */

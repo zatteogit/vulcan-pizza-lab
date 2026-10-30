@@ -7,7 +7,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import { canonicalRecipe } from "./kitchen-compatibility";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 
-/* FW-10, seguito: «Cambia forno» sta nell'avviso «Così non è fattibile» (pannello
+/* FW-10, seguito: «Cambia forno» sta nell'avviso «Per ora non si può fare» (pannello
  * dello stile e scheda della ricetta), solo se la causa principale è il forno.
  * È un link vero verso la ricerca del forno nel Profilo, vuota. */
 

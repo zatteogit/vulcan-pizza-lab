@@ -106,7 +106,7 @@ export const JA_LOCALE: CmsContent = {
     scoreTipOriginal: "あなたのキッチンでのスタイル基準。",
     scoreTipTailored: "提案された調整を反映したバージョン。",
     scoreTipGlobal: "スコアは作りやすさと忠実度だけで決まり、忠実度を超えることはありません。熟成・環境負荷・アレンジ度は参考情報です。規定への適合を認証するものではありません。",
-    scoreTipBlocked: "満たされていない条件があります。詳細を開いてください。",
+    scoreTipBlocked: "今はまだ作れません。理由は詳細でご確認ください。",
     pantrySelectionSummary: "選択：{n}・除外：{excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",
@@ -160,7 +160,7 @@ export const JA_LOCALE: CmsContent = {
     supplyUnspecified: "まだ決めていない",
     supplyAllowed: "はい",
     supplyForbidden: "いいえ",
-    supplyPurchaseEffect: "「いいえ」の場合、リストがすべてチェック済みで何かが足りないスタイルは作れません。",
+    supplyPurchaseEffect: "「いいえ」の場合、リストがすべてチェック済みで何かが足りないスタイルは、今はまだ作れません。",
 
     recipeAdaptationsIncluded: "変更点",
     recipeOptimizationChanges: "変更案",
@@ -283,7 +283,7 @@ export const JA_LOCALE: CmsContent = {
     flourUseStrong: "強い粉（長時間熟成向け）",
     flourUseMedium: "中程度の粉（「ピッツァ用」が多い）",
     flourUseWeak: "弱い粉（汎用・菓子用）",
-    verdictTitle: "このままでは作れません",
+    verdictTitle: "今はまだ作れません",
     verdictOvenTooCold: "焼成温度は{oven}に設定されています。この製法には少なくとも{min}が必要です。",
     verdictTimeWindow: "約{needed}かかりますが、使えるのは{available}です。選んだ時刻より後に仕上がります。",
     verdictFermentationTooShort: "発酵{hours}では、このスタイルの最低{min}に届きません。別の生地になります。",
@@ -490,11 +490,11 @@ export const JA_LOCALE: CmsContent = {
     "\u3059\u3079\u3066\u306E\u30D5\u30A1\u30DF\u30EA\u30FC",
   tiers: {
     perfect: {
-      label: "作れる",
+      label: "作れます",
       subtitle: "レシピの条件を満たしています",
     },
     good: {
-      label: "条件あり",
+      label: "少し気をつければ作れます",
       subtitle: "変更点と必要な道具を確認してください",
     },
     /* FW-20 · D-032: le fritte in una sezione a parte dei consigli. */
@@ -503,7 +503,7 @@ export const JA_LOCALE: CmsContent = {
       subtitle: "オーブン不要：生地を油で揚げる",
     },
     not_feasible: {
-      label: "この条件では作れない",
+      label: "今はまだ作れません",
       subtitle: "このレシピに不可欠な条件が不足しています",
     },
   },
@@ -839,7 +839,8 @@ export const JA_LOCALE: CmsContent = {
     "card.blendCheck": "粉を確認",
     "card.ingredientsMissing": "食材が不足",
     "card.yeastMissing": "イーストが必要",
-    "card.toVerify": "要確認",
+    "card.toVerify": "注意点あり",
+    "card.notForNow": "今は作れません",
     "card.authenticity": "本場から変化",
     // FW-10
     "card.hydrationBeginner": "難しい生地",
@@ -1635,7 +1636,7 @@ export const JA_LOCALE: CmsContent = {
     mixer: "こね方が変わります：時間、手順、水温。",
     surfaces: "焼成が変わります：ストーン、スチール、天板に応じて入れ方と作れるスタイルを選びます。",
     tools: "今はメモです：レシピは変わりません。",
-    dietChecked: "お知らせしますが、レシピは変えません：材料を確認し、合わないものがあればレシピは「作れない」になります。代わりのバージョンがあれば提案します。",
+    dietChecked: "お知らせしますが、レシピは変えません：材料を確認し、合わないものがあれば、そのレシピは今はまだ作れません。代わりのバージョンがあれば提案します。",
     dietReminder: "エンジンでは測れません：確認をお知らせしますが、レシピは変わりません。",
     allergens: "お知らせしますが、レシピは変えません：トッピングも含め、該当する材料を表示します。",
     pantry: "レシピが変わります：手持ちの材料からイーストと粉の強さを選びます。",
@@ -1798,7 +1799,7 @@ export const JA_LOCALE: CmsContent = {
     preCookConditionsTitle: "事前に確認",
     preCookTimes: "{start}開始・{end}完成",
     preCookFirstStepIn: "最初の工程は{in}に始まります。",
-    startBlockedReason: "このレシピは開始できません。{requirement}",
+    startBlockedReason: "このレシピは今はまだ開始できません。{requirement}",
     preCookAdapt: "\u81EA\u5206\u306E\u30AD\u30C3\u30C1\u30F3\u306B\u5408\u308F\u305B\u308B",
     preCookStart: "基準レシピを使う",
     matchTones: {
@@ -1856,7 +1857,7 @@ export const JA_LOCALE: CmsContent = {
     ovenSummary: "\u30AA\u30FC\u30D6\u30F3 {temp}",
     ovenOptimal: "\u30AA\u30FC\u30D6\u30F3\u6E29\u5EA6\u306F\u7406\u60F3\u7684",
     ovenLimited:
-      "\u53EF\u80FD\u3067\u3059\u304C\u6E29\u5EA6\u306E\u4E0A\u9650\u306B\u8FD1\u3044\u3067\u3059",
+      "作れますが、オーブンは上限に近い温度です",
     ovenNeedsAdaptation:
       "\u6E29\u5EA6\u306B\u5408\u308F\u305B\u305F\u8ABF\u6574\u304C\u5FC5\u8981",
     toppingNotesTitle: "\u30C8\u30C3\u30D4\u30F3\u30B0\u306E\u6CE8\u610F",
@@ -1972,7 +1973,7 @@ export const JA_LOCALE: CmsContent = {
     ruleTitle: "数値の決まり方",
     ruleAverage: "2つの基準の加重平均",
     ruleAuthenticity: "上限：忠実度",
-    ruleFeasibility: "作れないレシピの上限（アプリのルール）",
+    ruleFeasibility: "今はまだ作れない場合の上限（アプリのルール）",
     ruleResult: "スコア：上の値のうち最も低いもの",
     ceilingEditorial: "製品上の判断です：作れないレシピは、ほかの値が高くても{limit}未満にとどまります。",
     tieBreak: "製品上の判断です：数値が同じ場合、窯と時間の余裕がより大きいスタイルを一覧の先に表示します。数値自体は変わりません。",

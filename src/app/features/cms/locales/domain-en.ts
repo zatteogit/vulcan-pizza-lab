@@ -870,7 +870,7 @@ export const SCIENCE_EN: CmsScience = {
       l2: "Only authenticity and ease count in the «Fit with your kitchen» number: maturation, sustainability and experimentation are shown separately and do not move it. The weights do not come from a measurement: they are an app rule, the same for everyone. The score is then the lowest of the weighted average and authenticity.",
     },
     "non-feasible-ceiling": {
-      title: "Ceiling for unfeasible recipes",
+      title: "Ceiling when it’s not possible just yet",
       l1: "A recipe you cannot make stays in the low band: it is an app rule.",
       l2: "This way an unfeasible recipe never beats one you can make, even if the other dimensions are high.",
     },

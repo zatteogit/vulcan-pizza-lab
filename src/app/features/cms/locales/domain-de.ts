@@ -840,7 +840,7 @@ export const SCIENCE_DE: CmsScience = {
       l2: "In die Zahl «Passt zu deiner Küche» gehen nur Authentizität und Einfachheit ein: Reifung, Nachhaltigkeit und Experimentierfreude werden separat gezeigt und verändern sie nicht. Die Gewichte stammen nicht aus einer Messung: Sie sind eine Regel der App, für alle gleich. Die Wertung ist dann der niedrigere Wert aus gewichtetem Mittel und Authentizität.",
     },
     "non-feasible-ceiling": {
-      title: "Obergrenze für nicht machbare Rezepte",
+      title: "Obergrenze, wenn es noch nicht klappt",
       l1: "Ein Rezept, das du nicht machen kannst, bleibt im unteren Bereich: eine Regel der App.",
       l2: "So schlägt ein nicht machbares Rezept nie eines, das du machen kannst, auch wenn die anderen Dimensionen hoch sind.",
     },

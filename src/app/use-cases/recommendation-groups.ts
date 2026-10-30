@@ -11,7 +11,7 @@ import type { StyleRecommendation, UserConstraints } from "../domain/pizza-engin
  *  dispensa (stato `unverified`, mai `missing`).
  *  Non c'è «need.checkExclusions»: è la verifica di un rifiuto esplicito
  *  dell'utente (excluded_flours), che la dispensa vuota non rende ovvia e che
- *  deve restare visibile e tenere lo stile «Con condizioni». */
+ *  deve restare visibile e tenere lo stile in «Si può fare, con qualche accortezza». */
 export const PANTRY_CHECK_KEYS: ReadonlySet<string> = new Set([
   "need.checkFlour",
   "need.checkYeast",

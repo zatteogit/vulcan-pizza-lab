@@ -40,7 +40,7 @@ export const IT_LOCALE: CmsContent = {
     scoreTipOriginal: "Riferimento dello stile, sulla tua cucina.",
     scoreTipTailored: "Versione con gli adattamenti proposti.",
     scoreTipGlobal: "Il voto conta solo facilità e autenticità, e non supera l’autenticità. Maturazione, sostenibilità e sperimentazione sono informazioni a parte. Non attesta la conformità a un disciplinare.",
-    scoreTipBlocked: "Ci sono requisiti non rispettati: apri il dettaglio.",
+    scoreTipBlocked: "Per ora non si può fare: nel dettaglio trovi perché.",
     pantrySelectionSummary: "Selezionati: {n} · Esclusi: {excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",
@@ -94,7 +94,7 @@ export const IT_LOCALE: CmsContent = {
     supplyUnspecified: "Non ho deciso",
     supplyAllowed: "Sì",
     supplyForbidden: "No",
-    supplyPurchaseEffect: "Con «No», se la lista è completa e a uno stile manca qualcosa, lo stile non è fattibile.",
+    supplyPurchaseEffect: "Con «No», se la lista è completa e a uno stile manca qualcosa, per ora quello stile non si può fare.",
 
     recipeAdaptationsIncluded: "Cosa cambia",
     recipeOptimizationChanges: "Modifiche proposte",
@@ -216,7 +216,7 @@ export const IT_LOCALE: CmsContent = {
     flourUseStrong: "Farina forte, per lunghe maturazioni",
     flourUseMedium: "Farina di media forza, spesso «per pizza»",
     flourUseWeak: "Farina debole, generica o per dolci",
-    verdictTitle: "Così non è fattibile",
+    verdictTitle: "Per ora non si può fare",
     verdictOvenTooCold: "La cottura è impostata a {oven}; per questo metodo servono almeno {min}.",
     verdictTimeWindow: "Servono circa {needed}, ne hai {available}: sarebbe pronta dopo l'orario scelto.",
     verdictFermentationTooShort: "Lievitazione di {hours} contro un minimo di {min} per questo stile: sarebbe un altro impasto.",
@@ -328,11 +328,11 @@ export const IT_LOCALE: CmsContent = {
   },
   allFamiliesLabel: "Tutte le famiglie",
   tiers: {
-    perfect:      { label: "Fattibili",  subtitle: "requisiti della ricetta rispettati" },
-    good:         { label: "Con condizioni",        subtitle: "segui le modifiche e verifica ciò che serve" },
+    perfect:      { label: "Si può fare",  subtitle: "requisiti della ricetta rispettati" },
+    good:         { label: "Si può fare, con qualche accortezza", subtitle: "segui le modifiche e verifica ciò che serve" },
     /* FW-20 · D-032: le fritte in una sezione a parte dei consigli. */
     fried:        { label: "Fritte in pentola", subtitle: "senza forno: impasto fritto in olio" },
-    not_feasible: { label: "Non fattibili così",    subtitle: "manca una condizione essenziale per questa ricetta" },
+    not_feasible: { label: "Per ora non si può fare", subtitle: "manca una condizione essenziale per questa ricetta" },
   },
   scoreDimensions: {
     authenticity: {
@@ -391,7 +391,7 @@ export const IT_LOCALE: CmsContent = {
     preCookConditionsTitle: "Controlla prima",
     preCookTimes: "Inizi {start} · pronta {end}",
     preCookFirstStepIn: "Il primo passo inizia {in}.",
-    startBlockedReason: "Non si può iniziare. {requirement}",
+    startBlockedReason: "Per ora non si può iniziare. {requirement}",
     preCookAdapt: "Adattala alla mia cucina",
     preCookStart: "Usa il riferimento",
     matchTones: {
@@ -508,7 +508,7 @@ export const IT_LOCALE: CmsContent = {
     recipeAdapted: "Modificata per te",
     ovenSummary: "forno {temp}",
     ovenOptimal: "Temperatura forno ottimale",
-    ovenLimited: "Fattibile (temperatura limite)",
+    ovenLimited: "Si può fare, con il forno al limite",
     ovenNeedsAdaptation: "Richiede adattamento temperatura",
     toppingNotesTitle: "Accorgimenti condimento",
     toppingAmountsNote: "Le dosi sono per una pizza o unità. Gli ingredienti seguono l’ordine in cui aggiungerli.",
@@ -705,7 +705,7 @@ export const IT_LOCALE: CmsContent = {
     ...ALLERGEN_MESSAGES_IT,
 
 
-    "card.ready": "Fattibile",
+    "card.ready": "Si può fare",
     "range.hydrationBasis": "Idratazione — riferimento di catalogo: {catalogMin}–{catalogMax}%; metodo selezionato: {methodMin}–{methodMax}%.",
     "learn.theoryTitle": "Prima la teoria",
     "learn.compatiblePath": "Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta.",
@@ -752,7 +752,8 @@ export const IT_LOCALE: CmsContent = {
     "card.blendCheck": "Verifica le farine",
     "card.ingredientsMissing": "Da comprare",
     "card.yeastMissing": "Serve il lievito",
-    "card.toVerify": "Da verificare",
+    "card.toVerify": "Con accortezza",
+    "card.notForNow": "Per ora no",
     "card.authenticity": "Meno autentica",
     // FW-10
     "card.hydrationBeginner": "Impasto esigente",
@@ -1246,13 +1247,13 @@ export const IT_LOCALE: CmsContent = {
   },
   /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
   settingEffects: {
-    oven: "Cambia la ricetta: decide quali stili sono fattibili, temperatura e tempi di cottura e quanta acqua mettere nell’impasto.",
+    oven: "Cambia la ricetta: decide quali stili si possono fare, temperatura e tempi di cottura e quanta acqua mettere nell’impasto.",
     ovenHeat: "Cambia i passi di cottura: preriscaldo, ripiano e rotazioni.",
     skill: "Cambia la ricetta: decide quanta acqua al massimo ti proponiamo e se ti suggeriamo biga o poolish.",
     mixer: "Cambia il metodo di impasto: tempi, passaggi e temperatura dell’acqua.",
-    surfaces: "Cambia la cottura: con pietra, acciaio o teglia scegliamo come infornare e quali stili sono fattibili.",
+    surfaces: "Cambia la cottura: con pietra, acciaio o teglia scegliamo come infornare e quali stili si possono fare.",
     tools: "Per ora è un promemoria: non cambia la ricetta.",
-    dietChecked: "Ti avvisiamo, non modifichiamo la ricetta: controlliamo gli ingredienti e, se uno non va, la ricetta risulta non fattibile; quando c’è, ti proponiamo una versione alternativa.",
+    dietChecked: "Ti avvisiamo, non modifichiamo la ricetta: controlliamo gli ingredienti e, se uno non va, per ora la ricetta non si può fare; quando c’è, ti proponiamo una versione alternativa.",
     dietReminder: "Il motore non sa misurarli: ti ricordiamo di verificare, ma la ricetta resta uguale.",
     allergens: "Ti avvisiamo, non modifichiamo la ricetta: segnaliamo gli ingredienti che li contengono, condimenti compresi.",
     pantry: "Cambia la ricetta: scegliamo il lievito e la forza della farina partendo da quello che hai.",
@@ -1400,7 +1401,7 @@ export const IT_LOCALE: CmsContent = {
     ruleTitle: "Come si arriva al numero",
     ruleAverage: "Media pesata dei due criteri",
     ruleAuthenticity: "Tetto: autenticità",
-    ruleFeasibility: "Tetto per le ricette non fattibili (regola dell’app)",
+    ruleFeasibility: "Tetto se per ora non si può fare (regola dell’app)",
     ruleResult: "Punteggio: il più basso dei valori sopra",
     ceilingEditorial: "Scelta di prodotto: una ricetta che non puoi fare resta sotto {limit}, anche se gli altri valori sono alti.",
     tieBreak: "Scelta di prodotto: a pari numero, nelle liste viene prima lo stile che la tua cucina copre con più margine di forno e di tempo. Il numero non cambia.",

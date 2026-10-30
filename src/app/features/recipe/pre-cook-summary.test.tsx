@@ -95,7 +95,7 @@ describe("startBlockedText — ricetta non fattibile", () => {
     const primary = summarizeVerdict(napoletana.verdict).primary!;
     expect(primary.kind).toBe("oven_too_cold");
     const reason = startBlockedText(napoletana, cms, bcp47);
-    expect(reason).toBe(`Non si può iniziare. ${blockerText(primary, cms, bcp47)}`);
+    expect(reason).toBe(`Per ora non si può iniziare. ${blockerText(primary, cms, bcp47)}`);
     expect(reason).toMatch(/250\s?°C/);
   });
 

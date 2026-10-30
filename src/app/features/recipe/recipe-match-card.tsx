@@ -153,7 +153,7 @@ export function RecipeMatchCard({
    *  soffitto ma sono precondizioni per raggiungerlo → "ti serve X". */
   softNeeds?: string[];
   saved?: boolean;
-  /** Ricetta e vincoli per l'esito «Così non è fattibile»: quando c'è, il
+  /** Ricetta e vincoli per l'esito «Per ora non si può fare»: quando c'è, il
    *  blocco lo dice al posto del tono e del soffitto, una volta sola. */
   verdictRecipe?: GeneratedRecipe;
   verdictConstraints?: UserConstraints;
@@ -193,7 +193,7 @@ export function RecipeMatchCard({
         ? cms.cooking.ovenLimited
         : cms.cooking.ovenNeedsAdaptation;
   /* Con un forno che blocca la ricetta «Richiede adattamento» contraddiceva
-     «Così non è fattibile»: si dice il blocco, con minimo e ideale. */
+     «Per ora non si può fare»: si dice il blocco, con minimo e ideale. */
   const ovenLine = blockedOvenMin !== null
     ? uiMessage("verdict.ovenBlocked", [fmt.celsius(ovenTemp), fmt.celsius(blockedOvenMin), fmt.celsius(idealTemp)])
     : `${ovenStatus}: ${fmt.celsius(ovenTemp)}${ovenGap > 0 ? ` · ${cms.ui.statIdeal} ${fmt.celsius(idealTemp)}` : ""}`;
@@ -313,9 +313,11 @@ export function RecipeMatchCard({
      fuori dal Riferimento; gli avvisi del motore (W, idratazione, esperienza)
      non sono adattamenti: stanno in «Da tenere d'occhio». */
   const hasAdapted = mode !== "canonical" && (showChanges || hasRationale);
+  /* Scala unica degli esiti (decisione di Matteo, 30/10/2026), forma piena:
+     le stesse parole delle intestazioni dei gruppi (cms.tiers) e dell'avviso. */
   const statusLabel = notFeasible ? cms.ui.verdictTitle : presentationState === "check"
-      ? engineMsgTexts([{key:"card.toVerify",fallback:"Da verificare"}],cms,bcp47)[0]
-      : verdictRecipe ? engineMsgTexts([{key:"card.ready",fallback:"Fattibile"}], cms, bcp47)[0] : tone.title;
+      ? cms.tiers.good.label
+      : verdictRecipe ? cms.tiers.perfect.label : tone.title;
   // Un solo "movimento in avanti" verso su-misura: quando l'ottimizzatore è
   // disponibile, è LUI l'azione (subentra al vecchio "adatta alla cucina", che era
   // il midpoint ricalibrato — dominato dall'ottimo). Evita il doppio pulsante.

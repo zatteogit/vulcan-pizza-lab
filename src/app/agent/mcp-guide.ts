@@ -57,4 +57,6 @@ Show 3-5 styles with "Fit with your kitchen: N/100" (compatibility). If compatib
 
 ## Answer format
 One line with style, pieces and outcome; warnings; the ingredient table (two phases if there is a pre-ferment); the steps with durations. No long preamble.
+
+Say the outcome with the app's single scale, in the user's language, in a direct and kind tone (never scolding): ok → "You can make it"; warnings or has_caveats → "You can make it, with a little care", then the warnings; not_feasible → "Not possible just yet", then the reason and the alternatives. In Italian: "Si può fare", "Si può fare, con qualche accortezza", "Per ora non si può fare". The codes (ok, warnings, not_feasible, has_caveats) stay in the JSON; do not show them to the user.
 `;

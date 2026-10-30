@@ -842,7 +842,7 @@ export const SCIENCE_FR: CmsScience = {
       l2: "Dans le nombre « Compatibilité avec votre cuisine », seules l’authenticité et la facilité comptent : maturation, durabilité et expérimentation sont présentées à part et ne le modifient pas. Les poids ne viennent pas d’une mesure : c’est une règle de l’app, la même pour tous. Le score est ensuite la plus basse valeur entre la moyenne pondérée et l’authenticité.",
     },
     "non-feasible-ceiling": {
-      title: "Plafond des recettes non faisables",
+      title: "Plafond quand ce n’est pas encore possible",
       l1: "Une recette que vous ne pouvez pas faire reste dans la zone basse : c'est une règle de l'app.",
       l2: "Ainsi, une recette non réalisable ne dépasse jamais une recette faisable, même si les autres dimensions sont élevées.",
     },

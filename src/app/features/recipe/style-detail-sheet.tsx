@@ -571,8 +571,9 @@ function AuthorVersions({ style, constraints, onGenerate }: Pick<StyleDetailShee
             : undefined;
           const source = v.url ?? v.process_profile?.source_url;
           const hintId = `style-detail-version-${v.id}-hint`;
-          /* Stesso esito e stesse parole della match card del risultato che la
-             versione apre: «Fattibile», «Da verificare», «Così non è fattibile». */
+          /* Stesso esito della match card del risultato che la versione apre,
+             nella forma breve della scala unica (30/10/2026): «Si può fare»,
+             «Con accortezza», «Per ora no». */
           const state = recipe && recipePresentationState(recipe);
           const blocked = state === "blocked";
           const primary = recipe && blocked ? summarizeVerdict(recipe.verdict).primary : undefined;
@@ -588,8 +589,9 @@ function AuthorVersions({ style, constraints, onGenerate }: Pick<StyleDetailShee
                   {state && (
                     <span className="style-detail-techniques__what">
                       <Badge tone={blocked ? "error" : state === "ready" ? "success" : "muted"}>
-                        {blocked ? cms.ui.verdictTitle : engineMsgTexts([state === "ready"
-                          ? { key: "card.ready", fallback: "Fattibile" } : { key: "card.toVerify", fallback: "Da verificare" }], cms, bcp47)[0]}
+                        {engineMsgTexts([blocked ? { key: "card.notForNow", fallback: "Per ora no" }
+                          : state === "ready" ? { key: "card.ready", fallback: "Si può fare" }
+                          : { key: "card.toVerify", fallback: "Con accortezza" }], cms, bcp47)[0]}
                       </Badge>
                     </span>
                   )}
