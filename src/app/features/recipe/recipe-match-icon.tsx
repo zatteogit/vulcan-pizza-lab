@@ -7,3 +7,13 @@ export function RecipeMatchIcon({ score: _score, blocked = false, ...props }: Lu
   const Icon = blocked ? Ban : Gauge;
   return <Icon {...props} />;
 }
+
+/** Esito negativo marcato (nota di Matteo, 30/10/2026): il divieto grande e
+ *  pieno in testa al riquadro. Decorativo: l'esito lo dice il titolo accanto. */
+export function BlockedMark() {
+  return (
+    <span className="blocked-mark" aria-hidden="true">
+      <Ban size={28} strokeWidth={2.5} />
+    </span>
+  );
+}

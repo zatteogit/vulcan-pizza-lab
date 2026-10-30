@@ -1085,6 +1085,12 @@
   --status-blocking-bg: color-mix(in srgb, var(--status-blocking) 12%, transparent);
   --status-blocking-border: color-mix(in srgb, var(--status-blocking) 35%, transparent);
   --status-blocking-icon: var(--status-blocking);
+  /* Esito negativo marcato (nota di Matteo, 30/10/2026): fondo pieno al 16%
+     sopra la superficie (opaco: il contrasto non dipende da cosa sta sotto),
+     bordo pieno e contrassegno pieno con l'icona nel colore «on». */
+  --status-blocking-surface: color-mix(in srgb, var(--status-blocking) 16%, var(--surface-container-lowest));
+  --status-blocking-border-strong: var(--status-blocking);
+  --status-blocking-mark-fg: var(--destructive-foreground);
   --status-neutral-fg: var(--status-neutral);
   --status-neutral-bg: var(--surface-container-low);
   --status-neutral-border: var(--outline-variant);
@@ -9514,14 +9520,49 @@
   .match-score-group--expanded .match-score-details svg { transform: rotate(180deg); }
 
   /* Nota di Matteo (30/10): «così non è fattibile» si vede dal riquadro,
-     non solo dal titolo: bordo e fondo nel colore del blocco. */
+     non solo dal titolo. Seguito dello stesso giorno («molto più :(»): fondo
+     pieno e bordo pieno nel colore del blocco, contrassegno grande in testa e
+     titolo con più peso. Testo, link e testo muto restano AA sul fondo
+     (scripts/status-contrast.mjs). */
   .match-card--blocked {
-    border-color: color-mix(in srgb, var(--status-blocking) 40%, transparent);
-    background: linear-gradient(135deg, color-mix(in srgb, var(--status-blocking) 10%, var(--surface-container-low)), var(--surface-container-lowest));
+    border: var(--border-width-strong) solid var(--status-blocking-border-strong);
+    background: var(--status-blocking-surface);
   }
 
   .match-card--blocked .match-score-group {
-    color: var(--text-warning);
+    color: var(--status-blocking-fg);
+    border-inline-end-color: var(--status-blocking-border);
+  }
+
+  .match-card__blocked-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .match-card__blocked-title {
+    margin: 0;
+    min-width: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-7xl);
+    font-weight: var(--weight-extrabold);
+    line-height: var(--leading-snug);
+    color: var(--status-blocking-fg);
+    text-wrap: balance;
+  }
+
+  /* Contrassegno dell'esito negativo: il divieto pieno, grande. */
+  .blocked-mark {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-12);
+    height: var(--space-12);
+    border-radius: var(--radius-full);
+    background: var(--status-blocking-icon);
+    color: var(--status-blocking-mark-fg);
   }
 
   .match-score-value {
@@ -11645,29 +11686,32 @@
     gap: var(--space-2);
     margin: 0 0 var(--space-4);
     padding: var(--space-4);
-    border-inline-start: var(--space-1) solid var(--text-warning);
+    border: var(--border-width-strong) solid var(--status-blocking-border-strong);
+    background: var(--status-blocking-surface);
   }
 
   /* Dentro il blocco compatibilità: niente riquadro, il tono lo dà il blocco. */
   .recipe-verdict--embedded {
     margin: var(--space-2) 0 var(--space-1);
     padding: 0;
-    border-inline-start: none;
+    border: none;
+    background: none;
   }
 
   .recipe-verdict__header {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-  }
-
-  .recipe-verdict__icon {
-    flex: none;
-    color: var(--icon-warning);
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
   }
 
   .recipe-verdict__title {
     margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-7xl);
+    font-weight: var(--weight-extrabold);
+    line-height: var(--leading-snug);
+    color: var(--status-blocking-fg);
   }
 
   .recipe-verdict__reasons,
@@ -16427,6 +16471,35 @@
   /* ── Match reasons (VPL-C3) ── */
   .style-detail-match {
     margin-top: var(--space-4);
+  }
+
+  .style-detail-match__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  /* Esito negativo marcato, come la card della ricetta. */
+  .style-detail-match--blocked {
+    padding: var(--space-4);
+    border: var(--border-width-strong) solid var(--status-blocking-border-strong);
+    border-radius: var(--radius-xl);
+    background: var(--status-blocking-surface);
+  }
+
+  .style-detail-match--blocked .style-detail-match__head {
+    margin-bottom: var(--space-2);
+  }
+
+  .style-detail-match--blocked .style-detail-match__heading {
+    margin-bottom: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-7xl);
+    font-weight: var(--weight-extrabold);
+    letter-spacing: normal;
+    line-height: var(--leading-snug);
+    text-transform: none;
+    color: var(--status-blocking-fg);
   }
 
   .style-detail-match__heading {

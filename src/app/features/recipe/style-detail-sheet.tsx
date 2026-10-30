@@ -17,6 +17,7 @@ import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
 import { Droplets, Wheat, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle, Info, ExternalLink } from "lucide-react";
+import { BlockedMark } from "./recipe-match-icon";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -487,10 +488,13 @@ export function StyleDetailSheet({
 
           {/* ── VPL-C3: motivazioni di match articolate ── */}
           {rec && (
-            <div className="style-detail-match">
-              <h3 className="style-detail-match__heading">
-                {cms.tiers[rec.tier].label}
-              </h3>
+            <div className={`style-detail-match${notFeasible ? " style-detail-match--blocked" : ""}`}>
+              <header className="style-detail-match__head">
+                {notFeasible && <BlockedMark />}
+                <h3 className="style-detail-match__heading">
+                  {cms.tiers[rec.tier].label}
+                </h3>
+              </header>
               {constraints && !frying && (
                 <p className="style-detail-match__text">
                   {yourOvenName}

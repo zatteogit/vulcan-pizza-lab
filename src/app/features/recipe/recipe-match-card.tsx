@@ -1,4 +1,4 @@
-import { RecipeMatchIcon } from "./recipe-match-icon";
+import { BlockedMark, RecipeMatchIcon } from "./recipe-match-icon";
 import { RecipeConditionChips } from "./recipe-condition-chips";
 import { recipeCardSignals, recipePresentationState } from "./recipe-card-signals";
 import { RecipeChanges } from "./recipe-changes";
@@ -338,6 +338,14 @@ export function RecipeMatchCard({
       className={`match-card${notFeasible ? " match-card--blocked" : ""} ${className}`}
       /* U-10 (F29): il nome lo porta già l'aside che la contiene */
     >
+      {/* Esito negativo marcato (nota di Matteo, 30/10/2026): contrassegno e
+          titolo in testa al riquadro, al posto della riga accanto al punteggio. */}
+      {notFeasible && (
+        <header className="match-card__blocked-head">
+          <BlockedMark />
+          <p className="match-card__blocked-title">{statusLabel}</p>
+        </header>
+      )}
       <div className="match-card__main">
         <button
           ref={detailsToggleRef}
@@ -374,19 +382,21 @@ export function RecipeMatchCard({
         <div className="match-card__summary">
           <div className="match-card__copy">
             <div className="match-kicker">
-              <RecipeMatchIcon score={roundedScore} blocked={notFeasible}
+              <RecipeMatchIcon score={roundedScore}
                 size={14}
                 className={`match-kicker__icon ${tone.low || notFeasible ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
                 aria-hidden="true"
               />
               <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.0335207f")}</span>
             </div>
-            {/* Esito operativo accanto al punteggio. */}
-            <div className="match-verdict">
-              <span className="match-tone">
-                <span className="match-tone__text">{statusLabel}</span>
-              </span>
-            </div>
+            {/* Esito operativo accanto al punteggio (quello negativo sta in testa). */}
+            {!notFeasible && (
+              <div className="match-verdict">
+                <span className="match-tone">
+                  <span className="match-tone__text">{statusLabel}</span>
+                </span>
+              </div>
+            )}
 
           </div>
           <div className="match-card__context">
