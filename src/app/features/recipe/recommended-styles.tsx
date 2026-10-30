@@ -320,8 +320,8 @@ export function RecommendedStyles({
           type="text"
           value={styleQuery}
           onChange={(e) => setStyleQuery(e.target.value)}
-          placeholder={cms.filters.stylesSearchPlaceholder ?? uiMessage("features.recipe.recommended-styles.cerca-uno-stile-57efa702")}
-          aria-label={cms.filters.stylesSearchPlaceholder ?? uiMessage("features.recipe.recommended-styles.cerca-uno-stile-57efa702")}
+          placeholder={cms.filters.stylesSearchPlaceholder}
+          aria-label={cms.filters.stylesSearchPlaceholder}
           className="recommended-search__input"
         />
         {styleQuery && (
@@ -498,7 +498,7 @@ export function RecommendedStyles({
           headingLevel={3}
           live
           title={styleQuery.trim()
-            ? t(cms.filters.stylesSearchNoResults ?? 'Nessuno stile per "{query}"', { query: styleQuery.trim() })
+            ? t(cms.filters.stylesSearchNoResults, { query: styleQuery.trim() })
             : cms.misc.noStyleInFamily}
           reason={uiMessage("ui.stylesEmptyReason")}
           actions={[{

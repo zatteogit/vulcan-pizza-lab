@@ -13,6 +13,7 @@ import { useCms } from "../cms/cms-context";
 import { formatAtClock, formatRelative } from "../../i18n/format";
 import { uiMessage } from "../../i18n/ui-messages";
 import { motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
+import { sessionProgress } from "../../use-cases/cook-timing";
 
 export function ActiveCookWidget({
   canStartRecipe = false,
@@ -173,13 +174,8 @@ function getSessionMetrics(session: NonNullable<ReturnType<typeof useCookSession
   const finished = index >= total;
   const step = finished ? null : session.steps[index];
   const actionAt = step ? nextActionTime(step) : 0;
-  const firstStart = session.steps[0]?.startMs ?? session.createdAt;
-  const lastEnd = session.steps[total - 1]?.endMs ?? firstStart;
-  const timeProgress =
-    lastEnd > firstStart ? Math.min(1, Math.max(0, (Date.now() - firstStart) / (lastEnd - firstStart))) : 1;
-  const progress = finished
-    ? 1
-    : Math.max(total > 0 ? Math.min(index, total) / total : 1, timeProgress);
+  /* G4a-WP-02 (S10-B-23): la stessa regola della barra della vista. */
+  const progress = finished ? 1 : sessionProgress(session.steps, Date.now());
 
   return {
     actionAt,

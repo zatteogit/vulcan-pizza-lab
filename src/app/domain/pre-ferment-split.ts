@@ -65,6 +65,16 @@ export function computePreFermentSplit(args: {
  *  docs/ricerca/prefermenti-fonti-2026-10-24.md; stessi valori del CMS). */
 export const PRE_FERMENT_TEMP_C = { biga: [18, 20], poolish: [20, 22] } as const;
 
+/** Ore di maturazione del pre-fermento dalle fonti
+ *  (docs/ricerca/prefermenti-fonti-2026-10-24.md): biga circa 16 h a
+ *  18–20 °C, poolish 12–16 h a 20–22 °C (qui il centro, 14 h). Prima era il
+ *  40 % delle ore totali, uguale per i due (verifica di GPT, 24/10/2026).
+ *  G4b-WP-02: vive qui (non in pizza-engine) perché la guida la cita. */
+export const PRE_FERMENT_TARGET_HOURS = { biga: 16, poolish: 14 } as const;
+
+/** Riposo dell'autolisi in minuti (Calvel 1974, da King Arthur 2017: V). */
+export const AUTOLYSIS_REST_MIN = [20, 60] as const;
+
 /** FW-17 (S08-A-07): temperatura con cui il prefermento maturo entra
  *  nell'impasto finale (ipotesi del modello: punto medio di PRE_FERMENT_TEMP_C). */
 export function preFermentMaturationTempC(type: "biga" | "poolish"): number {

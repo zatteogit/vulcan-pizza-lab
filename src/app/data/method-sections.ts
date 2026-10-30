@@ -20,6 +20,7 @@ const GROUP_OF_NOTE: Readonly<Record<string, MethodGroupId>> = {
   "proof-split": "fermentation",
   "sourdough-starter-dose": "fermentation",
   "pre-ferment": "fermentation",
+  "pre-ferment-procedure": "fermentation",
   autolysis: "fermentation",
   "water-temp-rule": "dough",
   "water-activity": "dough",
@@ -44,6 +45,7 @@ const GROUP_OF_NOTE: Readonly<Record<string, MethodGroupId>> = {
   "ranking-tiebreak": "score",
   digestibility: "score",
   "troubleshooting-thresholds": "troubleshooting",
+  "troubleshooting-practice": "troubleshooting",
 };
 
 export interface MethodGroup {

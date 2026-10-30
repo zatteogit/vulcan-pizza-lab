@@ -22,6 +22,11 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
   /* FW-05 */
   techniqueLabel: "Technique",
   recipeContextLine: "Dans cette recette : {yeast} de levure pour {flour} de farine du pré-ferment ({pct}). Toute la levure de la pâte va dans le pré-ferment ; elle est dosée sur la durée totale de la recette, pas seulement sur celle du pré-ferment.",
+  /* G4b-WP-02 */
+  stepsLabel: "Comment faire",
+  exampleLabel: "Exemple avec {flour} de farine, pâte à {hydration}",
+  examplePreFerment: "{name} : {flour} de farine, {water} d'eau et la levure, environ {yeast} de sa farine",
+  exampleFinal: "Pâte finale : {flour} de farine, {water} d'eau et le sel",
   compLabels: [
     "Hydratation",
     "Levure fraîche (sur la farine du pré-ferment)",
@@ -43,6 +48,12 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
         "Fine et dorée ; couleur et taches dépendent du four et de la température",
       extensibility:
         "Élevée (estimation) : facile à étaler",
+      steps: [
+        "Mélangez farine et eau à parts égales avec la levure jusqu'à obtenir une pâte lisse et coulante.",
+        "Couvrez et laissez mûrir environ {poolishHours} à {poolishTemp} : il est prêt quand il est couvert de bulles et que le centre commence à s'affaisser.",
+        "Dans la pâte finale, délayez le poolish dans l'eau restante, puis ajoutez le reste de la farine.",
+        "N'ajoutez le sel et les matières grasses que maintenant, jamais dans le poolish.",
+      ],
       tips: [
         "Prêt quand la surface est couverte de bulles et que le centre commence à s'affaisser",
         "Plus de levure, moins d'heures : à 20–22 °C, 0,1 % pour 15–16 h, 0,3 % pour 10–12 h",
@@ -59,6 +70,12 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
       crustResult: "Croustillante ; la structure dépend de l'hydratation et du façonnage",
       extensibility:
         "Dépend de la farine et de l'hydratation (à vérifier)",
+      steps: [
+        "Mélangez farine, eau et levure très brièvement : la biga doit rester grumeleuse, pas lisse.",
+        "Couvrez et laissez mûrir environ {bigaHours} à {bigaTemp}.",
+        "Dans la pâte finale, émiettez-la dans l'eau restante, puis ajoutez le reste de la farine.",
+        "N'ajoutez le sel que maintenant, jamais dans la biga.",
+      ],
       tips: [
         "Prête quand elle a gonflé par endroits, sent le yaourt et pétille un peu ; si elle a un goût acide, elle est allée trop loin",
         "Biga longue : 24 h à 4–5 °C, puis 24 h à 18–20 °C",
@@ -80,6 +97,11 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
       extensibility:
         "\u00C9lev\u00E9e \u2014 p\u00E2te soyeuse et moins collante",
       idealStyles: "Tous les styles (technique universelle)",
+      steps: [
+        "Mélangez seulement la farine et l'eau, sans levure ni sel.",
+        "Laissez reposer {autolysisRest}.",
+        "Ajoutez ensuite la levure (ou le pré-ferment) et, en dernier, le sel.",
+      ],
       tips: [
         "Repos de 20–60 minutes ; levure et sel s'ajoutent ensuite",
         "Se combine avec la biga ou le poolish",
@@ -130,7 +152,6 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       fermentation: "Fermentation",
       shaping: "\u00C9talage",
       baking: "Cuisson",
-      solver: "Algorithme",
       false_positive: "Fausses alertes",
     },
     issues: {
@@ -309,6 +330,27 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         testRapido: "Même style, même dose de levure : la pousse change-t-elle beaucoup d'une fois à l'autre ?",
         fixImmediate: "Placez la pâte sur l'étagère du bas ou du milieu (la plus stable) et jugez le pâton à l'œil, pas seulement à la montre",
         prevention: "Mesurer la température du rayon utilisé et observer la pâte. Le sucre ne corrige pas les variations du réfrigérateur.",
+      },
+      P22: {
+        symptom: "La pizza colle à la pelle",
+        cause: "Pâte humide en contact direct avec la pelle, pizza garnie laissée sur la pelle, ou pelle sans farine ni semoule",
+        testRapido: "Secouez doucement la pelle avant d'enfourner : la pizza glisse-t-elle ?",
+        fixImmediate: "Soulevez le bord, soufflez dessous ou glissez un peu de semoule, puis secouez de nouveau avant d'enfourner",
+        prevention: "Farinez la pelle, garnissez rapidement la pizza directement dessus et enfournez aussitôt, sans la laisser attendre",
+      },
+      P23: {
+        symptom: "Le pâton s'étale et ne tient pas sa forme",
+        cause: "Plus d'eau que la farine ne peut en retenir, fermentation allée trop loin, cuisine chaude ou boulage trop lâche",
+        testRapido: "Le pâton s'aplatit-il plus tôt que prévu, et la marque du doigt reste-t-elle quand vous appuyez ?",
+        fixImmediate: "Étalez-le tout de suite avec un peu de farine sur le plan de travail ; n'essayez pas de le bouler à nouveau",
+        prevention: "Boulez les pâtons plus serrés et suivez l'hydratation et les temps de la recette ; si la cuisine est chaude, contrôlez la pâte plus tôt",
+      },
+      P24: {
+        symptom: "Un trou s'ouvre pendant que j'étale",
+        cause: "Centre trop étiré, gluten peu développé, pâte encore froide du réfrigérateur ou allée trop loin",
+        testRapido: "Le trou s'ouvre-t-il au centre alors que le bord est encore épais ?",
+        fixImmediate: "Pincez les bords du trou pour le refermer ; s'il se rouvre, couvrez le disque et laissez-le reposer quelques minutes",
+        prevention: "Poussez la pâte du centre vers le bord et n'amincissez pas trop le centre ; sortez les pâtons du réfrigérateur à temps",
       },
     },
     contextual: {
@@ -706,6 +748,11 @@ export const SCIENCE_FR: CmsScience = {
       l1: "Hydratation, heures et températures viennent de sources professionnelles concordantes.",
       l2: "La biga est un préferment ferme qui mûrit lentement au frais ; le poolish est liquide et mûrit plus vite. La croûte et la mie dépendent surtout du four, de l'hydratation et du façonnage, pas du seul préferment.",
     },
+    "pre-ferment-procedure": {
+      title: "Comment les préparer",
+      l1: "Les étapes sont un choix de {brand} ; les heures et les températures sont celles du moteur.",
+      l2: "Les sources lues donnent l'hydratation, les heures, les températures et les signes de maturité, pas la façon de pétrir. Une biga grumeleuse, un poolish lisse, le pré-ferment délayé dans l'eau restante et le sel seulement dans la pâte finale sont la pratique courante que {brand} a choisi d'indiquer : le sel ralentit les levures, c'est pourquoi il reste hors du pré-ferment.",
+    },
     autolysis: {
       title: "Autolyse",
       l1: "La farine et l'eau reposent sans levure ni sel avant le pétrissage.",
@@ -831,6 +878,11 @@ export const SCIENCE_FR: CmsScience = {
       title: "Seuils des problèmes",
       l1: "Les seuils chiffrés des problèmes sont indicatifs.",
       l2: "Ce sont des règles empiriques sans source publiée, qui ne tiennent pas compte du style : une pâte en plaque, par exemple, est bien plus hydratée qu'une napolitaine. Utilisez-les comme piste, pas comme diagnostic.",
+    },
+    "troubleshooting-practice": {
+      title: "Conseils pratiques",
+      l1: "Pelle, pâtons qui s'étalent et trous à l'étalage : les remèdes sont une pratique courante choisie par {brand}, pas des mesures.",
+      l2: "Nous n'avons pas de source publiée pour ces conseils et ils ne contiennent aucun seuil chiffré : ils disent quoi observer et quoi faire tout de suite. Si la recette indique des temps, une hydratation ou une farine, suivez-les.",
     },
     /* FW-19: piano temporale. */
     "comfort-tolerances": {

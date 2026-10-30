@@ -1,9 +1,11 @@
-import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C } from "../domain/fermentation-constants";
+import { FRIDGE_MAX_TEMP_C } from "../domain/fermentation-constants";
 import {
   ACTIVE_STEP_IDS,
   FLEXIBLE_STEP_IDS,
   countNightActives,
+  isColdPhase,
   isNightHour,
+  totalPlannedMinutes,
   type NightAction,
   type PlanStepInput,
 } from "./cook-timing";
@@ -62,13 +64,6 @@ export interface CookPlanOptions {
 }
 
 const ms = (value: number | Date) => (typeof value === "number" ? value : value.getTime());
-
-export function totalPlannedMinutes(
-  timeline: readonly PlanStepInput[],
-  stretch: Readonly<Record<number, number>> = {},
-): number {
-  return timeline.reduce((sum, step, i) => sum + step.duration_minutes + (stretch[i] ?? 0), 0);
-}
 
 /** L'inizio del passo i è incerto se viene subito dopo un'attesa biologica:
  *  l'incertezza riguarda quando l'attesa FINISCE (S09-A-10). */
@@ -174,18 +169,6 @@ export const COMFORT_TOLERANCES = {
   /** Durata minima di una fase per essere stirata. */
   minPhaseMin: 45,
 } as const;
-
-/** Temperatura a cui il motore fa davvero la fase: l'appretto è sempre ad
- *  almeno 18 °C (PROOF_MIN_TEMP_C), il prefermento a temperatura ambiente. */
-export function phaseTemperatureC(stepId: string, fermentTempC: number): number {
-  if (stepId === "proof") return Math.max(fermentTempC, PROOF_MIN_TEMP_C);
-  if (stepId === "preferment") return Math.max(fermentTempC, PROOF_MIN_TEMP_C);
-  return fermentTempC;
-}
-
-export function isColdPhase(stepId: string, fermentTempC: number): boolean {
-  return phaseTemperatureC(stepId, fermentTempC) <= COMFORT_TOLERANCES.coldMaxC;
-}
 
 /** Estensioni possibili per una fase, in passi da 30 minuti. */
 export function stretchOptions(durationMin: number, cold: boolean): number[] {

@@ -8,6 +8,14 @@ export interface CardSignal {
   tone: "warning" | "error";
   message: EngineMsg;
 }
+/** Avviso sul metodo di cottura → segnale della card (chiave, ripiego).
+ *  Lo usano anche le chip delle condizioni (G4a-WP-03: una sola tabella). */
+export const METHOD_SIGNALS: Record<string, [string, string]> = {
+  "gen.homeBakingMethod": ["need.invertedTray", "Teglia capovolta"],
+  "gen.notCoalOven": ["need.withoutCoal", "Senza carbone"],
+  "gen.notWoodOven": ["need.withoutWood", "Anche senza legna"],
+  "feas.ovenSuboptimal": ["need.adaptedBake", "Cottura adattata"],
+};
 const msg = (key: string, fallback: string, params?: EngineMsg["params"]): EngineMsg => ({ key, fallback, params });
 
 /** Card policy: at most two decision signals in Create, one in Explore.
@@ -38,16 +46,8 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   if (adaptations.some(a => SKILL_WARNING_KEYS.includes(a.key))) {
     add("water", msg("card.hydrationBeginner", "Impasto esigente"));
   }
-  const method = adaptations.find(a => ["gen.homeBakingMethod", "gen.notCoalOven", "gen.notWoodOven", "feas.ovenSuboptimal"].includes(a.key));
-  if (method) {
-    const keys: Record<string, [string, string]> = {
-      "gen.homeBakingMethod": ["need.invertedTray", "Teglia capovolta"],
-      "gen.notCoalOven": ["need.withoutCoal", "Senza carbone"],
-      "gen.notWoodOven": ["need.withoutWood", "Anche senza legna"],
-      "feas.ovenSuboptimal": ["need.adaptedBake", "Cottura adattata"],
-    };
-    add("oven", msg(...keys[method.key]));
-  }
+  const method = adaptations.find(a => METHOD_SIGNALS[a.key]);
+  if (method) add("oven", msg(...METHOD_SIGNALS[method.key]));
   if (!method && recipe.scores.authenticity < 60) add("check", msg("card.authenticity", "Meno autentica"));
   // Discovery cards introduce the style. Pantry/equipment prerequisites
   // remain inspectable in the detail and actionable in Create.

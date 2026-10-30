@@ -4,6 +4,8 @@
  * l'ottimizzatore della Timeline comoda resta nel chunk della ricetta.
  * Puro: niente React, CMS o browser. Test in cook-plan.test.ts. */
 
+import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C } from "../domain/fermentation-constants";
+
 /** Una fase del piano: basta l'id del passo e la sua durata nel motore. */
 export interface PlanStepInput {
   id: string;
@@ -23,6 +25,16 @@ export function isNightHour(hour: number): boolean {
 /** Attese lunghe e passive: l'impasto lavora da solo, l'orario della fine è
  *  una stima biologica. */
 export const FLEXIBLE_STEP_IDS: ReadonlySet<string> = new Set(["bulk", "proof", "preferment"]);
+
+/** Quale criterio di prontezza mostrare prima di chiudere un'attesa in
+ *  anticipo (cms.cooking.readyCriterion, S10-A-15). Una puntata in frigo
+ *  (`cold`, isColdPhase) non deve raddoppiare: il motore lo dice nel suo
+ *  consiglio («in frigo cresce lento»), e così il criterio («bulkCold»). */
+export type ReadyCriterionKey = "bulk" | "bulkCold" | "proof" | "preferment" | "default";
+export function readyCriterionKey(stepId: string, cold = false): ReadyCriterionKey {
+  if (stepId === "bulk") return cold ? "bulkCold" : "bulk";
+  return stepId === "proof" || stepId === "preferment" ? stepId : "default";
+}
 
 /** Passi che chiedono le mani (o di accendere il forno) a un'ora precisa. */
 export const ACTIVE_STEP_IDS: ReadonlySet<string> = new Set([
@@ -125,6 +137,16 @@ export function previewStartNow(steps: readonly SessionTiming[], index: number, 
   return { readyAtMs: sessionReadyAt(next), nightActions: sessionNightActions(next, nowMs) };
 }
 
+/** Orario di fine se il passo `index` finisse adesso: per chiedere conferma
+ *  prima di chiudere un'attesa in anticipo (S10-B-11). */
+export function previewCompleteNow(steps: readonly SessionTiming[], index: number, nowMs: number): {
+  readyAtMs: number;
+  nightActions: NightAction[];
+} {
+  const next = completeStepAt(steps, index, nowMs);
+  return { readyAtMs: sessionReadyAt(next), nightActions: sessionNightActions(next, nowMs) };
+}
+
 /** L'orario come lo legge l'utente, al minuto: con «ca.» arrotondato al
  *  quarto d'ora come formatClock (format.ts). */
 export function displayedClockMs(ms: number, approximate: boolean): number {
@@ -174,4 +196,56 @@ export function recipeFingerprint(parts: readonly (string | number | undefined)[
     h = Math.imul(h, 16777619);
   }
   return (h >>> 0).toString(36);
+}
+
+/* ── G4a-WP-02 (S10-B-23): un solo avanzamento per barra e widget ──
+ * La barra della vista contava i passi fatti, l'anello del widget il tempo:
+ * due percentuali per la stessa pizzata. Regola unica: la frazione del tempo
+ * del piano già trascorsa (una lievitazione di 9 ore pesa più di una piega),
+ * mai meno dei passi fatti sul totale, e 100 % solo quando sono tutti fatti. */
+const UNFINISHED_PROGRESS_CAP = 0.99;
+
+export function sessionProgress(steps: readonly SessionTiming[], nowMs: number): number {
+  const total = steps.length;
+  if (total === 0) return 0;
+  const done = steps.filter((s) => s.done).length;
+  if (done >= total) return 1;
+  const first = steps[0].startMs;
+  const last = steps[total - 1].endMs;
+  const time = last > first ? Math.min(1, Math.max(0, (nowMs - first) / (last - first))) : 0;
+  return Math.min(UNFINISHED_PROGRESS_CAP, Math.max(done / total, time));
+}
+
+/** G4a-WP-02 (S10-B-04): un passo attivo cronometrato è arrivato a zero.
+ *  Vale solo se il conto alla rovescia è partito davvero (inizio registrato),
+ *  come «in ritardo» nella vista; le attese finiscono con la loro notifica. */
+export function activeStepTimeUp(
+  step: SessionTiming & { flexible: boolean },
+  waiting: boolean,
+  nowMs: number,
+): boolean {
+  return !step.done && !step.flexible && !waiting && step.duration_minutes > 0
+    && step.actualStartMs !== undefined && nowMs >= step.endMs;
+}
+
+/* ── Durata e freddo (anche per l'anteprima del percorso in Impara) ── */
+
+export function totalPlannedMinutes(
+  timeline: readonly PlanStepInput[],
+  stretch: Readonly<Record<number, number>> = {},
+): number {
+  return timeline.reduce((sum, step, i) => sum + step.duration_minutes + (stretch[i] ?? 0), 0);
+}
+
+/** Temperatura a cui il motore fa davvero la fase: l'appretto è sempre ad
+ *  almeno 18 °C (PROOF_MIN_TEMP_C), il prefermento a temperatura ambiente. */
+export function phaseTemperatureC(stepId: string, fermentTempC: number): number {
+  if (stepId === "proof") return Math.max(fermentTempC, PROOF_MIN_TEMP_C);
+  if (stepId === "preferment") return Math.max(fermentTempC, PROOF_MIN_TEMP_C);
+  return fermentTempC;
+}
+
+/** Fase in frigo (≤ FRIDGE_MAX_TEMP_C, la soglia delle tolleranze «cold»). */
+export function isColdPhase(stepId: string, fermentTempC: number): boolean {
+  return phaseTemperatureC(stepId, fermentTempC) <= FRIDGE_MAX_TEMP_C;
 }

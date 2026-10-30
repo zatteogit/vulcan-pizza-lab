@@ -364,7 +364,6 @@
   --tracking-ultra: 0.12em;
   --tracking-display: 0.14em;
   --tracking-extreme: 0.18em;
-  --tracking-cooking-eyebrow: 0.16em;
   /* eyebrow header cooking-mode (fra ultra 0.12 e extreme 0.18) */
   /* brand name sotto il mark hero */
 
@@ -510,7 +509,6 @@
   /* ── Exact Dimension Primitives · fixed / relative / viewport ──
      Abstract scales for values that intentionally do not align with spacing,
      typography or measure t-shirt steps. Semantic ownership stays downstream. */
-  --dimension-fixed-003: 3px;
   --dimension-fixed-hairline: 0.5px;
   --dimension-fixed-neg-044: -44px;
   --dimension-fixed-016: 16px;
@@ -968,7 +966,6 @@
   /* contenitore mascotte + coriandoli schermata completamento */
   --cooking-done-body-measure: var(--dimension-fixed-380);
   /* max-width paragrafo corpo completamento */
-  --underline-offset-cooking-skip: var(--dimension-fixed-003);
   /* text-underline-offset bottone "ho finito prima" */
   --cook-widget-glow-height: var(--dimension-fixed-058);
   /* alone decorativo dietro icona widget attivo */
@@ -991,6 +988,10 @@
   --nav-dock-max-width: var(--dimension-fixed-352);
   --profile-close-size: var(--dimension-fixed-046);
   --nav-dock-target-min: var(--dimension-fixed-046);
+  --cooking-skip-target-min: var(--dimension-fixed-044);
+  /* G4a-WP-02 (S10-A-24, D-019/F21): azioni dell'header della pizzata ≥ 44 px
+     anche con il root a 14 px (--space-11 lì misura 39 px). */
+  --cooking-header-target-min: var(--dimension-fixed-044);
   /* FW-13 (S01-A-10/B-14): misure dei controlli flottanti della shell
      (profilo, widget pizzata), prima numeri dentro motion.animate. */
   --shell-action-size: var(--dimension-fixed-044);
@@ -1299,9 +1300,6 @@
   --glow-primary: var(--primary);
   --glow-secondary: var(--tertiary);
   --glow-warm: var(--warm-sienna);
-  --glow-primary-neural: var(--data-water-deep);
-  --glow-secondary-neural: var(--primary);
-  --glow-warm-neural: var(--tertiary);
   --logo-solid: var(--brand-mark-solid-color);
   --logo-grad-start: var(--brand-mark-gradient-start);
   --logo-grad-mid: var(--logo-solid);
@@ -2512,7 +2510,8 @@
   /* FW-13 (S14-A-16/B-17): a 390 px il maiuscolo spaziato spezzava le parole
      a metà («IDRATAZIO-NE»). Su schermi stretti: frase normale, sillabazione. */
   @media (max-width: 480px) {
-    .preferment-table__rowlabel {
+    .preferment-table__rowlabel,
+    .preferment-table__th {
       text-transform: none;
       letter-spacing: normal;
       hyphens: auto;
@@ -2725,6 +2724,10 @@
       align-items: start;
     }
     .glossary-group__header, .glossary-group__desc { grid-column: 1 / -1; }
+    /* S12-B-16: la card aperta prende tutta la riga, così la vicina non resta
+       corta accanto a un vuoto alto. Niente «dense»: l'ordine a vista resta
+       quello del DOM e della tastiera. */
+    .glossary-card--expanded { grid-column: 1 / -1; }
   }
 
   /* superficie bg/bordo via .surface-card (composto nel markup); raggio 2xl proprio */
@@ -2989,6 +2992,7 @@
      Deep link: la voce atterra sotto la testata (useHashTarget, block start).
      TermLink: il termine stesso è il pulsante, sottolineato a puntini. */
   .glossary-card,
+  .profile-section[id],
   .preferment-cards > [id],
   [id^="trouble-"]:not([id$="-toggle"]) {
     scroll-margin-block-start: var(--space-20);
@@ -3998,11 +4002,30 @@
     color: var(--text-muted);
     font-weight: var(--weight-semibold);
     margin-bottom: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-3);
   }
 
+  /* S11-B-13: «Cambia livello», target di almeno 24 px. */
+  .learn-path__change {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--interactive-target-min);
+    color: var(--primary);
+    text-transform: none;
+    letter-spacing: normal;
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-5);
+  }
+
+  /* Card con un solo link: il CTA si estende a tutta la card (::after), i
+     termini del glossario restano sopra e cliccabili. */
   .learn-path__card {
     display: block;
     position: relative;
+    isolation: isolate;
     overflow: hidden;
     border-radius: var(--radius-3xl);
     text-decoration: none;
@@ -4028,6 +4051,7 @@
     top: var(--space-4);
     right: var(--space-4);
     opacity: 0.15;
+    z-index: -1;
     transition: transform var(--duration-reveal);
   }
 
@@ -4036,8 +4060,6 @@
   }
 
   .learn-path__content {
-    position: relative;
-    z-index: 10;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -4070,6 +4092,33 @@
     margin-top: var(--space-8);
   }
 
+  /* S11-A-02: durata e attrezzatura, dal motore. */
+  .learn-path__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .learn-path__terms {
+    position: relative;
+    z-index: 1;
+    margin-top: var(--space-3);
+  }
+
+  .learn-path__terms,
+  .learn-path__terms :where(.term-links__label, .info-tip__trigger) {
+    color: inherit;
+  }
+
+  .learn-path__cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
   /* FW-09 (S11-A-07): con un vincolo che blocca, le vie d'uscita. */
   .learn-path__actions {
     display: flex;
@@ -4096,6 +4145,7 @@
     font-weight: var(--weight-bold);
     letter-spacing: var(--tracking-spread);
     text-transform: uppercase;
+    text-decoration: none;
     box-shadow: var(--shadow-md);
     transition: background-color var(--duration-slow), border-color var(--duration-slow), color var(--duration-slow), box-shadow var(--duration-slow), transform var(--duration-slow), opacity var(--duration-slow);
   }
@@ -10096,6 +10146,37 @@
     color: var(--text-muted);
   }
 
+  /* G4a-WP-03: «Prima di iniziare» con condizioni e orari. */
+  .ds-confirm__content:has(> .pre-cook-summary) {
+    align-self: stretch;
+  }
+
+  .pre-cook-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    text-align: start;
+  }
+
+  .pre-cook-summary__title {
+    color: var(--text-muted);
+  }
+
+  .pre-cook-summary__conditions {
+    margin: 0;
+    padding-inline-start: var(--space-5);
+    list-style: disc;
+  }
+
+  .pre-cook-summary__times {
+    font-weight: var(--weight-semibold);
+  }
+
+  .pre-cook-summary__note[data-tone="caution"] {
+    color: var(--status-caution-fg);
+  }
+
   .print-options {
     display: flex;
     flex-direction: column;
@@ -14339,16 +14420,62 @@
     font-family: inherit;
   }
 
+  .troubleshooting-guide__intro {
+    margin: calc(-1 * var(--space-2)) 0 0;
+    color: var(--text-muted);
+  }
+
   .troubleshooting-guide__chips {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1-5);
   }
 
+  /* G4b-WP-03 (S13-A-16): sotto 640 px i chip stanno su una riga che scorre. */
+  @media (max-width: 639px) {
+    .troubleshooting-guide__chips {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;
+      margin-inline: calc(-1 * var(--space-4));
+      padding: var(--space-0-5) var(--space-4);
+      scroll-padding-inline: var(--space-4);
+    }
+
+    .troubleshooting-guide__chips::-webkit-scrollbar { display: none; }
+
+    .troubleshooting-guide__chips > * {
+      flex: none;
+      scroll-snap-align: start;
+    }
+  }
+
   .troubleshooting-guide__list {
     display: flex;
     flex-direction: column;
+    gap: var(--gap-lg);
+  }
+
+  /* G4b-WP-03: un gruppo per fase, con il suo h2. */
+  .troubleshooting-group {
+    display: flex;
+    flex-direction: column;
     gap: var(--gap-xs);
+  }
+
+  .troubleshooting-group__title {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-2-5xl);
+    color: var(--text-default);
+  }
+
+  .troubleshooting-group__icon {
+    color: var(--primary);
+    flex: none;
   }
 
   /* FW-09 (S13-A-08, S13-B-08): stato vuoto, conteggio e cancella ricerca. */
@@ -14402,14 +14529,6 @@
     align-items: center;
     gap: var(--space-1-5);
     flex-wrap: wrap;
-  }
-
-  .troubleshooting-card__badge {
-    font-size: var(--font-size-sm);
-    color: var(--muted-foreground);
-    background: var(--surface-container);
-    padding: var(--space-px) var(--space-1-5);
-    border-radius: var(--radius-xs);
   }
 
   /* FW-12 (S13-A-15/B-10): severità a parole, il colore solo sul bordo
@@ -14606,16 +14725,6 @@
     font-size: var(--font-size-base);
   }
 
-  .preferment-guide-card__chevron {
-    display: flex; /* FW-12: span */
-    color: var(--muted-foreground);
-    flex-shrink: 0;
-  }
-
-  .preferment-guide-card__body {
-    overflow: hidden;
-  }
-
   .preferment-guide-card__content {
     padding-top: var(--space-4);
     padding-inline: var(--space-6);
@@ -14667,6 +14776,22 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
+  }
+
+  /* G4b-WP-02: «Come si fa», numeri della lista dal browser. */
+  .preferment-guide-card__how {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .preferment-guide-card__how > * {
+    margin: 0;
+  }
+
+  .preferment-guide-card__steps {
+    list-style: decimal;
   }
 
   .preferment-guide-card__tips-item {
@@ -14731,64 +14856,6 @@
 
   .preferment-guide-card__compare-toggle .ds-disclosure__summary {
     flex: 0 1 auto;
-  }
-
-  .preferment-guide-card__compare-panel {
-    overflow: hidden;
-  }
-
-  .preferment-guide-card__table-wrap {
-    overflow-x: auto;
-    border-radius: var(--radius-md);
-    border: var(--border-width-thin) solid var(--outline-variant);
-  }
-
-  .preferment-guide-card__table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: var(--font-size-md);
-  }
-
-  .preferment-guide-card__th {
-    padding-block: var(--space-2);
-    padding-inline: var(--space-2-5);
-    text-align: left;
-    font-size: var(--font-size-sm);
-    letter-spacing: var(--tracking-widest);
-    text-transform: uppercase;
-    font-weight: var(--weight-semibold);
-    border-bottom: var(--border-width-thin) solid var(--outline-variant);
-  }
-
-  .preferment-guide-card__th--biga {
-    color: var(--primary);
-  }
-
-  .preferment-guide-card__th--poolish {
-    color: var(--cta);
-  }
-
-  .preferment-guide-card__th--autolisi {
-    color: var(--tertiary);
-  }
-
-  .preferment-guide-card__td {
-    padding-block: var(--space-1-5);
-    padding-inline: var(--space-2-5);
-    color: var(--text-default);
-    border-bottom: var(--border-width-thin) solid var(--outline-variant);
-  }
-
-  .preferment-guide-card__td--label {
-    font-size: var(--font-size-sm);
-    letter-spacing: var(--tracking-caps);
-    text-transform: uppercase;
-    color: var(--muted-foreground);
-    font-weight: var(--weight-semibold);
-  }
-
-  .preferment-guide-card__table tbody tr:nth-child(odd) td {
-    background: var(--surface-container-low);
   }
 
   /* === PARAM BADGE === */
@@ -17239,7 +17306,9 @@
     inset: 0;
     display: flex;
     flex-direction: column;
-    z-index: 200;
+    /* G4b-WP-01: sotto i fogli del DS (--z-modal), così quelli aperti dalla
+       modalità cottura le stanno sopra; sopra widget e chrome di pagina. */
+    z-index: calc(var(--z-modal) - 1);
     background: var(--container-page);
     color: var(--text-default);
   }
@@ -17251,8 +17320,11 @@
     justify-content: space-between;
     flex-shrink: 0;
     padding-inline: var(--space-4);
-    padding-top: env(safe-area-inset-top, var(--space-0));
-    height: calc(var(--space-15) + env(safe-area-inset-top, var(--space-0)));
+    /* Altezza minima, non fissa: se occhiello o nome vanno a capo (schermi
+       stretti, lingue lunghe) l'header cresce invece di tagliarli. */
+    padding-top: calc(env(safe-area-inset-top, var(--space-0)) + var(--space-1));
+    padding-bottom: var(--space-1);
+    min-height: calc(var(--space-15) + env(safe-area-inset-top, var(--space-0)));
     border-bottom: var(--border-width-thin) solid var(--container-border-subtle);
   }
 
@@ -17264,20 +17336,29 @@
 
   .cooking-mode-header__identity {
     min-width: 0;
+    flex: 1;
   }
 
   .cooking-mode-header__eyebrow {
-    font-size: var(--font-size-xs);
-    letter-spacing: var(--tracking-cooking-eyebrow);
-    text-transform: uppercase;
+    margin: 0;
+    font-size: var(--font-size-sm); /* D-019: testo informativo ≥ 12 px */
+    /* G4a-WP-02: l'orario non va in maiuscolo («ca.»). Niente ellissi: con i
+       due interruttori l'occhiello può andare a capo, ma l'orario di «Pronta …»
+       resta intero (G4-R2). */
+    overflow-wrap: anywhere;
     color: var(--text-accent);
     font-weight: var(--weight-semibold);
   }
 
   .cooking-mode-header__title {
+    /* Al massimo due righe: i nomi lunghi («Pizza Fritta Tradizionale») si
+       leggono interi anche a 360 px. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    line-height: var(--leading-title);
     font-size: var(--font-size-2xl); /* FW-13: ≥ 14 px anche a 390 px */
     font-weight: var(--weight-semibold);
   }
@@ -17294,12 +17375,25 @@
     color: var(--text-muted);
   }
 
-  .cooking-mode-header__action {
+  /* Telefono: il contatore «n / m» lascia lo spazio a nome e orario; il
+     progresso lo dicono già la barra e l'annuncio «Passo n di m» (G4-R2). */
+  @media (max-width: 419.98px) {
+    .cooking-mode-header__counter {
+      display: none;
+    }
+
+    .cooking-mode-header__meta {
+      gap: var(--gap-xs);
+    }
+  }
+
+  /* Doppia classe: vince su .ds-iconbtn (IconButton bare del DS). */
+  .cooking-mode-header .cooking-mode-header__action {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--space-11);
-    height: var(--space-11);
+    width: max(var(--space-11), var(--cooking-header-target-min));
+    height: max(var(--space-11), var(--cooking-header-target-min));
     border-radius: var(--radius-ml);
     background: var(--container-bg);
     border: var(--border-width-thin) solid var(--container-border);
@@ -17314,6 +17408,28 @@
 
   .cooking-mode-header__action--close {
     color: var(--text-default);
+  }
+
+  /* Interruttori dell'header (schermo acceso, suono): acceso = accento,
+     spento = icona barrata (una sola icona per interruttore: budget JS). */
+  .cooking-mode-header .cooking-mode-header__action[aria-pressed="true"] {
+    color: var(--text-accent);
+    border-color: color-mix(in srgb, var(--text-accent) 40%, var(--container-border));
+  }
+
+  .cooking-mode-header .cooking-mode-header__action[aria-pressed] {
+    position: relative;
+  }
+
+  .cooking-mode-header .cooking-mode-header__action[aria-pressed="false"]::after {
+    content: "";
+    position: absolute;
+    inset-inline: 30%;
+    top: 50%;
+    height: var(--border-width-thick);
+    border-radius: var(--radius-full);
+    background: currentColor;
+    transform: rotate(-45deg);
   }
 
   /* ── Progress bar sottile ── */
@@ -17535,6 +17651,42 @@
     color: var(--text-default);
   }
 
+  /* G4b-WP-01 (S13-B-09): «Qualcosa non va?», azione secondaria della fase:
+     contorno sottile, non compete con il pulsante principale. */
+  .cooking-mode-step__trouble {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    min-height: var(--space-11);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-2);
+    border-radius: var(--radius-2xl);
+    background: transparent;
+    border: var(--border-width-thin) solid var(--outline-variant);
+    color: var(--text-default);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .cooking-mode-step__trouble-icon {
+    color: var(--text-subtle);
+    flex-shrink: 0;
+  }
+
+  .cooking-mode-step__trouble-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cooking-mode-step__trouble-eyebrow {
+    color: var(--text-subtle);
+  }
+
+  .cooking-mode-step__trouble-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+  }
+
   /* ── PhaseCountdown ── */
   .cooking-mode-phase {
     border-radius: var(--radius-2xl);
@@ -17595,11 +17747,6 @@
 
   .cooking-mode-phase--late .cooking-mode-phase__value {
     color: var(--status-caution-fg);
-  }
-
-  .cooking-mode-header__ready {
-    font-size: var(--font-size-sm);
-    color: var(--text-muted);
   }
 
   .cooking-mode-note {
@@ -17763,23 +17910,38 @@
     padding-bottom: env(safe-area-inset-bottom, var(--space-0));
   }
 
+  /* S10-B-11: bottone secondario vero (≥ 44 px), apre una conferma. */
   .cooking-mode-nav__skip {
     align-self: center;
-    padding-inline: var(--space-3);
-    padding-block: var(--space-1);
+    min-height: var(--cooking-skip-target-min);
+    padding-inline: var(--space-4);
     border-radius: var(--radius-full);
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
+    background: var(--container-page);
+    border: var(--border-width-thin) solid var(--outline-variant);
+    color: var(--text-default);
     font-size: var(--font-size-sm);
-    text-decoration: underline;
-    text-underline-offset: var(--underline-offset-cooking-skip);
+    font-weight: var(--weight-semibold);
     cursor: pointer;
     transition: transform var(--duration-normal) var(--ease-standard);
   }
 
   .cooking-mode-nav__skip:active {
     transform: scale(0.95);
+  }
+
+  /* S10-B-11: «Fatto: …» con «Annulla», sopra la navigazione. */
+  .cooking-mode-undo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(var(--space-36) + env(safe-area-inset-bottom, var(--space-0)));
+    z-index: 5;
+    width: min(var(--measure-snackbar), calc(100% - var(--space-8)));
+    justify-content: space-between;
+  }
+
+  .cooking-mode-undo--finished {
+    bottom: calc(var(--space-6) + env(safe-area-inset-bottom, var(--space-0)));
   }
 
   .cooking-mode-nav__row {
@@ -17858,6 +18020,11 @@
 
   .cook-actions--beside-profile {
     right: calc(var(--space-4) + var(--shell-action-size) + var(--space-2));
+  }
+
+  /* G4a-WP-02 (S10-B-25): sul Profilo il widget sta accanto alla X di chiusura. */
+  .cook-actions--beside-close {
+    right: calc(var(--space-4) + max(var(--space-12), var(--profile-close-size)) + var(--space-2));
   }
 
   .cook-actions--beside-profile.cook-actions--compact {
@@ -18190,7 +18357,7 @@
     width: var(--dimension-viewport-width-70);
     height: var(--dimension-viewport-height-70);
     border-radius: var(--radius-full);
-    background: radial-gradient(ellipse at center, var(--fire-glow-primary) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, var(--glow-primary) 0%, transparent 70%);
     opacity: calc(var(--fire-glow-opacity) * 0.4);
   }
 
@@ -18201,7 +18368,7 @@
     width: var(--dimension-viewport-width-60);
     height: var(--dimension-viewport-height-60);
     border-radius: var(--radius-full);
-    background: radial-gradient(ellipse at center, var(--fire-glow-secondary) 0%, transparent 65%);
+    background: radial-gradient(ellipse at center, var(--glow-secondary) 0%, transparent 65%);
     opacity: calc(var(--fire-glow-opacity) * 0.45);
   }
 
@@ -18212,7 +18379,7 @@
     width: var(--dimension-viewport-width-80);
     height: var(--dimension-viewport-height-50);
     border-radius: var(--radius-full);
-    background: radial-gradient(ellipse at center, var(--fire-glow-warm) 0%, transparent 60%);
+    background: radial-gradient(ellipse at center, var(--glow-warm) 0%, transparent 60%);
     opacity: calc(var(--fire-glow-opacity) * 0.3);
   }
 
@@ -20753,6 +20920,17 @@
     border: var(--border-width-thin) solid var(--container-border);
   }
 
+  /* G4a-WP-03: un'azione non disponibile («Inizia» su una ricetta non
+     fattibile) si vede spenta, non solo inerte. */
+  .ds-confirm__action:disabled {
+    background: var(--surface-container);
+    color: var(--text-muted);
+    border-color: var(--outline-variant);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+  }
+
   /* ═══ DS COMPONENT: Carousel ═══ */
   .ds-carousel__track {
     display: flex;
@@ -22242,12 +22420,9 @@ html {
 .recipe-share-dialog__actions > button { flex: 1 1 100%; min-height: var(--dimension-fixed-046); padding: var(--space-3) var(--space-4); line-height: var(--leading-normal); }
 .recipe-share-dialog__actions > button > svg { flex-shrink: 0; }
 .recipe-share-dialog__feedback { min-height: var(--space-6); margin-top: var(--space-3); color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
-.cooking-screen { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-3); margin-bottom: var(--space-5); padding: var(--space-3); border: var(--border-width-thin) solid var(--container-border-subtle); border-radius: var(--radius-lg); background: var(--container-bg); }
-.cooking-screen__label { display: flex; align-items: center; gap: var(--space-2); min-height: var(--dimension-fixed-046); color: var(--text-default); font-size: var(--font-size-sm); line-height: var(--leading-normal); cursor: pointer; }
-.cooking-screen__label > svg { flex-shrink: 0; }
-.cooking-screen__detail { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
-.cooking-screen__status { color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
-.cooking-screen__retry { min-height: var(--dimension-fixed-046); color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); cursor: pointer; text-decoration: underline; text-underline-offset: var(--space-1); background: transparent; border: 0; }
+/* G4a-WP-02 (S10-B-14): resta solo l'avviso quando lo schermo non può restare acceso. */
+.cooking-screen { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-3); margin: 0 0 var(--space-3); color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.cooking-screen__retry { min-height: var(--cooking-header-target-min); color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); cursor: pointer; text-decoration: underline; text-underline-offset: var(--space-1); background: transparent; border: 0; }
 
 /* ═══ FW-16 — ogni impostazione dichiara il suo effetto; niente promesse vuote ═══ */
 .setting-effect { margin-block: 0 var(--space-3); color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }

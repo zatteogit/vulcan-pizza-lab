@@ -286,6 +286,7 @@ export function GlossaryPage() {
                 key={term.id}
                 term={term}
                 headingLevel={2}
+                showCategoryIcon={activeCategory === "all"}
                 isExpanded={expandedTerm === term.id}
                 onToggle={() =>
                   setExpandedTerm(
@@ -306,6 +307,7 @@ export function GlossaryPage() {
 function TermCard({
   term,
   headingLevel,
+  showCategoryIcon = false,
   isExpanded,
   onToggle,
   onNavigateToTerm,
@@ -313,6 +315,9 @@ function TermCard({
   term: GlossaryTerm;
   /** FW-03 (S12-B-10): h3 sotto i gruppi (h2), h2 nella lista filtrata. */
   headingLevel: 2 | 3;
+  /** S12-B-16: l'icona della categoria sta nel titolo del gruppo; la card la
+      ripete solo nei risultati di ricerca piatti con categorie mescolate. */
+  showCategoryIcon?: boolean;
   isExpanded: boolean;
   onToggle: () => void;
   onNavigateToTerm?: (termId: string) => void;
@@ -327,7 +332,9 @@ function TermCard({
       as={motion.div}
       variant="card"
       id={`glossary-${term.id}`}
-      layout
+      /* S12-B-16: su desktop la card aperta passa a tutta riga; animare anche
+         la misura la schiaccerebbe (scala 0,5 → 1 sul testo). Si muove solo. */
+      layout="position"
       className={`glossary-card${isExpanded ? " glossary-card--expanded" : ""}`}
       transition={motionSpring.standard}
     >
@@ -342,9 +349,11 @@ function TermCard({
         triggerClassName="glossary-card__toggle"
         panelClassName="glossary-card__reveal"
         summary={<>
-          <span className="glossary-card__icon">
-            <TermIcon size={16} aria-hidden="true" className="glossary-card__emoji" />
-          </span>
+          {showCategoryIcon && (
+            <span className="glossary-card__icon">
+              <TermIcon size={16} aria-hidden="true" className="glossary-card__emoji" />
+            </span>
+          )}
           <span className="glossary-card__content">
             <span className="glossary-card__titlerow">
               <span className="glossary-card__name">

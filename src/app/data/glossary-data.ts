@@ -18,6 +18,7 @@ import {
   styleRangeFacts,
   yeastDoseFact,
   YEAST_SCENARIOS,
+  AUTOLYSIS_REST_MIN,
 } from "../domain/science/engine-facts";
 
 /** Termini raggruppati per categoria */
@@ -110,6 +111,12 @@ export function glossaryFactValues(locale = "it"): Record<string, string> {
   values.poolishFlourPct = formatPercent(poolish.flourPct, locale);
   values.flourPctMin = formatPercent(biga.flourPctRange[0], locale);
   values.flourPctMax = formatPercent(biga.flourPctRange[1], locale);
+  /* G4b-WP-02: ore e temperature dei passi «Come si fa». */
+  values.bigaHours = hours(biga.hours);
+  values.poolishHours = hours(poolish.hours);
+  values.bigaTemp = formatRange(biga.tempC[0], biga.tempC[1], locale, { unit: "celsius" });
+  values.poolishTemp = formatRange(poolish.tempC[0], poolish.tempC[1], locale, { unit: "celsius" });
+  values.autolysisRest = formatRange(AUTOLYSIS_REST_MIN[0], AUTOLYSIS_REST_MIN[1], locale, { unit: "minute" });
   factCache.set(locale, values);
   return values;
 }

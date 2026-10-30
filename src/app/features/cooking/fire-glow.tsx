@@ -23,26 +23,14 @@ function useDocumentTopAnchor() {
 /**
  * FireGlow — subtle animated gradient background simulating warm firelight.
  * Multiple radial gradients drift slowly to create a living surface.
- * Uses CSS custom properties for theme-aware colors.
+ * Colors come from the theme tokens (--glow-*) in theme.css.
  * Very lightweight: no blur, no filters, just opacity + translation.
  * Respects prefers-reduced-motion.
  */
-export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: number; variant?: 'warm' | 'neural' }) {
-  const baseOpacity = Math.min(0.35, intensity * 0.4);
-
+export function FireGlow({ intensity = 0.5 }: { intensity?: number }) {
   const animateDecorations = useDecorativeMotion();
   const anchorRef = useDocumentTopAnchor();
-
-  const glowPrimary = variant === 'neural' ? 'var(--glow-primary-neural)' : 'var(--glow-primary)';
-  const glowSecondary = variant === 'neural' ? 'var(--glow-secondary-neural)' : 'var(--glow-secondary)';
-  const glowWarm = variant === 'neural' ? 'var(--glow-warm-neural)' : 'var(--glow-warm)';
-
-  const toneVars = {
-    ['--fire-glow-primary' as any]: glowPrimary,
-    ['--fire-glow-secondary' as any]: glowSecondary,
-    ['--fire-glow-warm' as any]: glowWarm,
-    ['--fire-glow-opacity' as any]: baseOpacity,
-  };
+  const toneVars = { ['--fire-glow-opacity' as any]: Math.min(0.35, intensity * 0.4) };
 
   // When reduced motion is preferred, render a static warm wash instead
   if (!animateDecorations) {

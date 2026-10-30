@@ -5,7 +5,6 @@
 import {
 AlertTriangle,
 ChevronDown,ChevronUp,
-Cog,
 Droplet,
 Flame,
 FlaskConical,
@@ -30,12 +29,14 @@ import { Disclosure, EmptyState, FilterChip, IconButton, ModalSheet, Surface } f
 import {
 type TroubleshootingIssue,
 type StepTroubleshooting,
-CATEGORY_LABELS,
 getContextualWarnings,
 getLocalizedCategoryLabel,
 getLocalizedIssue,
+groupIssuesByPhase,
 ISSUE_GLOSSARY_TERMS,
-ISSUES_DB
+ISSUE_SCIENCE_NOTES,
+ISSUES_DB,
+TROUBLESHOOTING_PHASE_ORDER
 } from "../../data/troubleshooting-data";
 import { uiMessage } from "../../i18n/ui-messages";
 import type { StyleThresholds } from "../../domain/science/engine-facts";
@@ -56,7 +57,6 @@ const TROUBLESHOOTING_CATEGORY_ICONS: Record<string, LucideIcon> = {
   shaping: Hand,
   baking: Flame,
   frying: Droplet,
-  solver: Cog,
   false_positive: ShieldCheck,
 };
 
@@ -218,8 +218,8 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
     : ISSUES_DB;
   /* FW-13: conteggio per categoria come nel glossario; le categorie vuote non
      compaiono (un chip «0» non porta da nessuna parte; FW-09: niente
-     «Algoritmo» vuoto). */
-  const categories = Object.keys(CATEGORY_LABELS)
+     «Algoritmo» vuoto). G4b-WP-03: chip nell'ordine delle fasi. */
+  const categories = TROUBLESHOOTING_PHASE_ORDER
     .map((key) => [key, sourceIssues.filter((issue) => issue.category === key).length] as const)
     .filter(([, count]) => count > 0);
   /* FW-09 (S13-A-09, S13-B-08): accenti, flessioni («bruciata»), sinonimi
@@ -231,6 +231,10 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
     ? filterByQuery(inCategory, (issue) => [issue.symptom, issue.cause, issue.testRapido, issue.fixImmediate, issue.prevention, getLocalizedCategoryLabel(issue.category, cms)].join(" "), searchQuery, lexicon)
     : inCategory;
   const filtering = Boolean(searchQuery.trim() || activeCategory);
+  /* G4b-WP-03 (S13-A-16): nella pagina gruppi per fase, critici in alto; nel
+     foglio della fase l'ordine resta quello del passo, senza gruppi. */
+  const groups = contextIssueIds ? [{ phase: "", issues: filtered }] : groupIssuesByPhase(filtered);
+  let cardIndex = 0;
   const showAll = () => {
     setSearchQuery("");
     setActiveCategory(null);
@@ -239,12 +243,12 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
   return (
     <div data-region="section" className="troubleshooting-guide">
       {!contextIssueIds && <>
-        {/* Title */}
-        <div className="troubleshooting-guide__title-row">
-          <Wrench className="troubleshooting-guide__title-icon" />
-          <h1 className="troubleshooting-guide__title">
-            {uiMessage("features.recipe.troubleshooting-panel.guida-troubleshooting-ada8fe75")}</h1>
-        </div>
+        {/* G4b-WP-03 (S13-A-14): il titolo è quello della voce di Impara. */}
+        <header className="troubleshooting-guide__title-row">
+          <Wrench aria-hidden="true" className="troubleshooting-guide__title-icon" />
+          <h1 className="troubleshooting-guide__title">{cms.pages.learnTroubleshooting}</h1>
+        </header>
+        <p className="type-body troubleshooting-guide__intro">{cms.pages.learnTroubleshootingDesc}</p>
 
         {/* Search */}
         <div className="troubleshooting-guide__search">
@@ -270,26 +274,14 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
             : ""}
         </p>
 
-        {/* Category chips */}
-        <motion.div
-          className="troubleshooting-guide__chips"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.04 } },
-          }}
-        >
+        {/* Chip delle fasi: sotto 640 px una riga che scorre (G4b-WP-03), senza
+            animazione d'ingresso, che nella riga scorrevole tagliava i chip. */}
+        <div className="troubleshooting-guide__chips">
           <FilterChip
             active={!activeCategory}
             onClick={() => setActiveCategory(null)}
             radius="xl"
             count={sourceIssues.length}
-            variants={{
-              hidden: { opacity: 0, y: 8, scale: 0.95 },
-              visible: { opacity: 1, y: 0, scale: 1 },
-            }}
-            transition={motionSpring.crispDisclosure}
           >
             {uiMessage("features.recipe.troubleshooting-panel.tutti-d4ef129b")}</FilterChip>
           {categories.map(([key, count]) => {
@@ -301,18 +293,13 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
               onClick={() => setActiveCategory(key)}
               radius="xl"
               count={count}
-              variants={{
-                hidden: { opacity: 0, y: 8, scale: 0.95 },
-                visible: { opacity: 1, y: 0, scale: 1 },
-              }}
-              transition={motionSpring.crispDisclosure}
             >
               <Icon size={14} aria-hidden="true" className="glossary-chip__icon" />
               {getLocalizedCategoryLabel(key, cms)}
             </FilterChip>
             );
           })}
-        </motion.div>
+        </div>
 
       </>}
       {/* Issues list */}
@@ -333,24 +320,36 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
               className="troubleshooting-guide__empty-state"
             />
           )}
-          {filtered.map((issue, i) => (
-            <motion.div
-              key={issue.id}
-              id={`trouble-${issue.id}`}
-              layout
-              initial={{ opacity: 0, y: 10, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.97 }}
-              transition={{ ...motionSpring.crispControl,delay: i * motionDelay.profileIntroStep }}
-            >
-              <IssueCard
-                issue={issue}
-                headingLevel={contextIssueIds ? 3 : 2}
-                expanded={expandedId === issue.id}
-                onToggle={() => setExpandedId(expandedId === issue.id ? null : issue.id)}
-              />
-            </motion.div>
-          ))}
+          {groups.map(({ phase, issues }) => {
+            const cards = issues.map((issue) => (
+              <motion.div
+                key={issue.id}
+                id={`trouble-${issue.id}`}
+                layout
+                initial={{ opacity: 0, y: 10, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                transition={{ ...motionSpring.crispControl, delay: cardIndex++ * motionDelay.profileIntroStep }}
+              >
+                <IssueCard
+                  issue={issue}
+                  expanded={expandedId === issue.id}
+                  onToggle={() => setExpandedId(expandedId === issue.id ? null : issue.id)}
+                />
+              </motion.div>
+            ));
+            if (!phase) return cards;
+            const Icon = TROUBLESHOOTING_CATEGORY_ICONS[phase] ?? Info;
+            return (
+              <section key={phase} aria-labelledby={`trouble-phase-${phase}`} className="troubleshooting-group">
+                <h2 id={`trouble-phase-${phase}`} className="troubleshooting-group__title">
+                  <Icon size={18} aria-hidden="true" className="troubleshooting-group__icon" />
+                  {getLocalizedCategoryLabel(phase, cms)}
+                </h2>
+                {cards}
+              </section>
+            );
+          })}
         </div>
       </AnimatePresence>
     </div>
@@ -387,26 +386,26 @@ export function TroubleshootingSheet({ open, context, onClose }: {
 /* === ISSUE CARD === */
 function IssueCard({
   issue,
-  headingLevel,
   expanded,
   onToggle,
 }: {
   issue: TroubleshootingIssue;
-  /** FW-03: h2 nella pagina (sotto l'h1), h3 nel foglio della fase (sotto il titolo h2). */
-  headingLevel: 2 | 3;
   expanded: boolean;
   onToggle: () => void;
 }) {
   const { cms } = useCms();
-  const catLabel = getLocalizedCategoryLabel(issue.category, cms);
+  /* G4b-WP-03: le voci senza soglie (pala, panetto, buchi) dicono che sono
+     pratica comune, nota troubleshooting-practice. */
+  const noteId = hasNumericThreshold(issue) ? "troubleshooting-thresholds" : ISSUE_SCIENCE_NOTES[issue.id];
 
   return (
     <Surface as={motion.div} variant="card" className="troubleshooting-card">
       {/* FW-03: ds/Disclosure con heading, aria-controls e id per il deep link;
-          dentro il pulsante solo span (S13-B-11). */}
+          dentro il pulsante solo span (S13-B-11). h3 sotto l'h2 della fase
+          (pagina, G4b-WP-03) o del titolo del foglio. */}
       <Disclosure
         variant="inline"
-        headingLevel={headingLevel}
+        headingLevel={3}
         id={`trouble-${issue.id}-toggle`}
         open={expanded}
         onOpenChange={onToggle}
@@ -416,12 +415,10 @@ function IssueCard({
           <SeverityIcon severity={issue.severity} />
           <span className="troubleshooting-card__toggle-body">
             <span className="troubleshooting-card__meta-row">
-              {/* FW-12 (S13-A-15/B-10): la severità anche a parole. */}
+              {/* FW-12 (S13-A-15/B-10): la severità anche a parole. G4b-WP-03:
+                  niente etichetta della fase, la dice già l'h2 del gruppo. */}
               <span className="troubleshooting-card__severity" data-severity={issue.severity}>
                 {severityLabel(issue.severity)}
-              </span>
-              <span className="troubleshooting-card__badge">
-                {catLabel}
               </span>
             </span>
             <span className="troubleshooting-card__symptom">
@@ -446,9 +443,7 @@ function IssueCard({
               <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
               {/* FW-02 (S13-A-06): dove il consiglio dà una soglia numerica, il
                   «Perché?» dice che è una regola pratica, non tarata sullo stile. */}
-              {hasNumericThreshold(issue) && (
-                <WhyButton noteId="troubleshooting-thresholds" label={cms.science?.notes?.["troubleshooting-thresholds"]?.title} className="troubleshooting-card__why" />
-              )}
+              {noteId && <WhyButton noteId={noteId} label={cms.science?.notes?.[noteId]?.title} className="troubleshooting-card__why" />}
               <GlossaryTermLinks termIds={ISSUE_GLOSSARY_TERMS[issue.id] ?? []} />
             </div>
       </Disclosure>

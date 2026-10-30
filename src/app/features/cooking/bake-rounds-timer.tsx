@@ -13,6 +13,7 @@ import { CtaButton } from "../../components/ds/index";
 import { formatSeconds } from "../../i18n/format";
 import { uiMessage } from "../../i18n/ui-messages";
 import { useCms } from "../cms/cms-context";
+import { useCookSession } from "./cook-session";
 import { roundStatus, roundsCtaState, type RoundPhase } from "./bake-rounds-status";
 
 interface BakeRoundsTimerProps {
@@ -29,6 +30,7 @@ interface BakeRoundsTimerProps {
 
 export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, variant }: BakeRoundsTimerProps) {
   const { bcp47 } = useCms();
+  const { signal } = useCookSession();
   /** Giro in corso o appena finito (1-based); 0 = nessuno ancora. */
   const [round, setRound] = useState(0);
   const [startedAt, setStartedAt] = useState<number | null>(null);
@@ -62,6 +64,16 @@ export function BakeRoundsTimer({ rounds, roundSec, recoverySec, turns = 1, vari
   const nextRound = round + 1;
   const st = roundStatus({ phase, elapsedSec, roundSec, round, rounds, turns, variant });
   const turning = st.key === "turn" || st.key === "rotate";
+  /* G4a-WP-02 (S10-B-04): «gira» e «sforna» si sentono, non solo si leggono. */
+  const cue = phase === "baking" ? (turning ? `turn${st.turnIndex ?? 1}` : "baking") : phase;
+  const prevCue = useRef(cue);
+  useEffect(() => {
+    const before = prevCue.current;
+    prevCue.current = cue;
+    if (before === cue) return;
+    if (cue.startsWith("turn")) signal("turn");
+    else if (cue === "out" && before !== "idle") signal("end");
+  }, [cue, signal]);
   /* La frittura (pizza fritta, montanara) ha testi propri: niente forno. */
   const fry = variant === "fry";
 

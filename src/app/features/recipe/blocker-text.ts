@@ -5,7 +5,8 @@ import { engineMsgTexts } from "./engine-msg-text";
 
 /* FW-09 (S11-A-07, S11-B-04, S11-B-09): il motivo di un esito non fattibile,
  * in una frase, fuori dall'avviso della ricetta (per esempio in Impara). Stesse
- * chiavi e stessi numeri di recipe-verdict-notice. */
+ * chiavi e stessi numeri di recipe-verdict-notice, che la usa (G4a-WP-02:
+ * una sola copia, budget JS). */
 
 /** Il blocco da dire per primo: allergeni, poi diete, forno, tempi. */
 export function primaryBlocker(verdict: RecipeVerdict): RecipeBlocker | null {

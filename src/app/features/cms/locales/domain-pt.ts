@@ -22,6 +22,11 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
   /* FW-05 */
   techniqueLabel: "Técnica",
   recipeContextLine: "Nesta receita: {yeast} de fermento sobre {flour} de farinha do pré-fermento ({pct}). Todo o fermento da massa vai no pré-fermento e é dosado pelas horas totais da receita, não só pelas do pré-fermento.",
+  /* G4b-WP-02 */
+  stepsLabel: "Como se faz",
+  exampleLabel: "Exemplo com {flour} de farinha, massa a {hydration}",
+  examplePreFerment: "{name}: {flour} de farinha, {water} de água e o fermento, cerca de {yeast} da farinha dele",
+  exampleFinal: "Massa final: {flour} de farinha, {water} de água e o sal",
   compLabels: [
     "Hidratação",
     "Fermento fresco (sobre a farinha do pré-fermento)",
@@ -42,6 +47,12 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
       crustResult:
         "Fina e dourada; cor e manchas dependem do forno e da temperatura",
       extensibility: "Alta (estimativa): fácil de abrir",
+      steps: [
+        "Misture farinha e água em partes iguais com o fermento até formar uma massa mole e lisa.",
+        "Cubra e deixe maturar cerca de {poolishHours} a {poolishTemp}: está pronto quando está cheio de bolhas e o centro começa a ceder.",
+        "Na massa final, dissolva o poolish na água restante e depois junte o resto da farinha.",
+        "Junte sal e gorduras só agora, nunca no poolish.",
+      ],
       tips: [
         "Pronto quando a superfície está cheia de bolhas e o centro começa a ceder",
         "Mais fermento, menos horas: a 20–22 °C, 0,1% para 15–16 h, 0,3% para 10–12 h",
@@ -58,6 +69,12 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
       crustResult: "Crocante; a estrutura depende da hidratação e da abertura",
       extensibility:
         "Depende da farinha e da hidratação (a verificar)",
+      steps: [
+        "Misture farinha, água e fermento só por pouco tempo: a biga deve ficar grumosa, não lisa.",
+        "Cubra e deixe maturar cerca de {bigaHours} a {bigaTemp}.",
+        "Na massa final, desfaça-a na água restante e depois junte o resto da farinha.",
+        "Junte o sal só agora, nunca na biga.",
+      ],
       tips: [
         "Pronta quando está estufada em alguns pontos, cheira a iogurte e borbulha de leve; se tiver gosto azedo, passou do ponto",
         "Biga longa: 24 h a 4–5 °C, depois 24 h a 18–20 °C",
@@ -79,6 +96,11 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
       extensibility:
         "Alta \u2014 massa sedosa e menos pegajosa",
       idealStyles: "Todos os estilos (t\u00E9cnica universal)",
+      steps: [
+        "Misture só farinha e água, sem fermento nem sal.",
+        "Deixe descansar {autolysisRest}.",
+        "Depois junte o fermento (ou o pré-fermento) e, por último, o sal.",
+      ],
       tips: [
         "Descanso de 20–60 minutos; fermento e sal entram depois",
         "Combina com biga ou poolish",
@@ -129,7 +151,6 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
       fermentation: "Fermenta\u00E7\u00E3o",
       shaping: "Modelagem",
       baking: "Cozimento",
-      solver: "Algoritmo",
       false_positive: "Falsos alarmes",
     },
     issues: {
@@ -307,6 +328,27 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
         testRapido: "Mesmo estilo, mesma dose de fermento: a fermentação muda muito de uma vez para outra?",
         fixImmediate: "Coloque a massa na prateleira mais baixa/central (a mais estável) e avalie a bolinha a olho, não só pelo relógio",
         prevention: "Meça a temperatura na prateleira usada e observe a massa. O açúcar não corrige as oscilações do frigorífico.",
+      },
+      P22: {
+        symptom: "A pizza gruda na pá",
+        cause: "Massa úmida em contato direto com a pá, pizza recheada parada sobre a pá, ou pá sem farinha nem sêmola",
+        testRapido: "Sacuda a pá de leve antes de pôr no forno: a pizza desliza?",
+        fixImmediate: "Levante a borda, sopre por baixo ou polvilhe um pouco de sêmola e sacuda de novo antes de pôr no forno",
+        prevention: "Enfarinhe a pá, recheie a pizza rapidamente direto sobre ela e leve ao forno logo, sem deixá-la parada",
+      },
+      P23: {
+        symptom: "A bolinha se espalha e não mantém a forma",
+        cause: "Mais água do que a farinha consegue segurar, fermentação passada do ponto, cozinha quente ou bolinhas boleadas sem tensão",
+        testRapido: "A bolinha achata antes do previsto e, se você aperta, a marca do dedo não volta?",
+        fixImmediate: "Abra a massa logo, com pouca farinha na bancada; não tente bolear de novo",
+        prevention: "Boleie as bolinhas com mais tensão e siga a hidratação e os tempos da receita; se a cozinha estiver quente, confira a massa antes",
+      },
+      P24: {
+        symptom: "Abre um buraco enquanto abro a massa",
+        cause: "Centro esticado demais, glúten pouco desenvolvido, massa ainda fria da geladeira ou passada do ponto",
+        testRapido: "O buraco abre no centro enquanto a borda ainda está grossa?",
+        fixImmediate: "Junte as bordas do buraco beliscando; se abrir de novo, cubra o disco e deixe descansar alguns minutos",
+        prevention: "Empurre a massa do centro para a borda e não afine demais o centro; tire as bolinhas da geladeira com antecedência",
       },
     },
     contextual: {
@@ -703,6 +745,11 @@ export const SCIENCE_PT: CmsScience = {
       l1: "Hidratação, horas e temperaturas vêm de fontes do setor que concordam.",
       l2: "A biga é um pré-fermento firme que matura devagar no fresco; o poolish é líquido e matura mais rápido. Casca e miolo dependem sobretudo do forno, da hidratação e da abertura, não só do pré-fermento.",
     },
+    "pre-ferment-procedure": {
+      title: "Como se preparam",
+      l1: "Os passos são uma escolha do {brand}; horas e temperaturas são as do motor.",
+      l2: "As fontes lidas dão hidratação, horas, temperaturas e sinais de maturação, não o modo de misturar. Biga grumosa, poolish liso, pré-fermento dissolvido na água restante e sal só na massa final são a prática comum que o {brand} escolheu indicar: o sal freia as leveduras, por isso fica fora do pré-fermento.",
+    },
     autolysis: {
       title: "Autólise",
       l1: "Farinha e água descansam sem fermento nem sal antes da sova.",
@@ -828,6 +875,11 @@ export const SCIENCE_PT: CmsScience = {
       title: "Limites dos problemas",
       l1: "Os limites numéricos dos problemas são indicativos.",
       l2: "São regras práticas sem fonte publicada e não consideram o estilo: uma massa de assadeira, por exemplo, é muito mais hidratada que uma napolitana. Use-os como pista, não como diagnóstico.",
+    },
+    "troubleshooting-practice": {
+      title: "Dicas práticas",
+      l1: "Pá, bolinhas que se espalham e buracos ao abrir a massa: os remédios são prática comum escolhida pelo {brand}, não medições.",
+      l2: "Não temos uma fonte publicada para estas dicas e elas não trazem limites numéricos: dizem o que observar e o que fazer na hora. Se a receita indica tempos, hidratação ou farinha, valem esses.",
     },
     /* FW-19: piano temporale. */
     "comfort-tolerances": {

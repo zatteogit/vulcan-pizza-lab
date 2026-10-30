@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { computePreFermentSplit } from "./pre-ferment-split";
+import { computePreFermentSplit, PRE_FERMENT_FLOUR_PCT } from "./pre-ferment-split";
+import { preFermentExample } from "./science/engine-facts";
 
 /* Convenzioni canoniche (audit roleplay giu 2026 + audit lug 2026):
    biga = 40% farina @ 44% idro (fonti, audit n. 10) · poolish = 30% farina @ 100% idro.
@@ -74,5 +75,19 @@ describe("quota di farina scelta (D-043)", () => {
     expect(split.flourPct).toBe(30);
     expect(split.prefermentFlourG).toBe(300);
     expect(split.prefermentWaterG).toBe(132);
+  });
+});
+
+/* G4b-WP-02 (S14-B-07): l'esempio della guida su 1 kg di farina usa lo stesso
+ * scorporo delle ricette; prefermento + impasto finale = totali. */
+describe("preFermentExample", () => {
+  it.each(["biga", "poolish"] as const)("%s: farina e acqua si sommano ai totali", (kind) => {
+    const ex = preFermentExample(kind);
+    expect(ex.flourG).toBe(1000);
+    expect(ex.prefermentFlourG + ex.mainFlourG).toBe(ex.flourG);
+    expect(ex.prefermentWaterG + ex.mainWaterG).toBe(ex.waterG);
+    expect(ex.waterG).toBe((ex.flourG * ex.doughHydrationPct) / 100);
+    expect(ex.prefermentFlourG).toBe((ex.flourG * PRE_FERMENT_FLOUR_PCT[kind]) / 100);
+    expect(ex.mainWaterG).toBeGreaterThan(0);
   });
 });

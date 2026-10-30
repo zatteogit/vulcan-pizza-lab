@@ -9,6 +9,8 @@ import {
 import { getFoldingByStyle } from "../data/parametric-databases";
 import {
   ACTIVE_STEP_IDS,
+  activeStepTimeUp,
+  sessionProgress,
   COMFORT_TOLERANCES,
   FLEXIBLE_STEP_IDS,
   NIGHT_WINDOW,
@@ -369,5 +371,64 @@ describe("impronta della ricetta (S10-B-21)", () => {
     const parts = (c: UserConstraints) => recipe("napoletana_stg", c).timeline.flatMap((s) => [s.id, s.duration_minutes, s.description]);
     expect(recipeFingerprint(parts(P1))).toBe(recipeFingerprint(parts(P1)));
     expect(recipeFingerprint(parts(P1))).not.toBe(recipeFingerprint(parts({ ...P1, dough_balls: 6 })));
+  });
+});
+
+describe("un solo avanzamento per barra e widget (G4a-WP-02, S10-B-23)", () => {
+  const session = (): SessionTiming[] => {
+    const r = recipe("teglia_romana");
+    const plan = buildCookPlan(r.timeline, { startAt: at(26, 9) });
+    return plan.steps.map((s) => ({ id: s.id, duration_minutes: s.plannedMin, startMs: s.startMs, endMs: s.endMs, done: false }));
+  };
+
+  it("0 all'inizio, 1 solo quando tutti i passi sono fatti", () => {
+    const steps = session();
+    expect(sessionProgress(steps, steps[0].startMs)).toBe(0);
+    expect(sessionProgress(steps, steps[0].startMs - 3_600_000)).toBe(0);
+    expect(sessionProgress(steps, sessionReadyAt(steps) + 3_600_000)).toBeLessThan(1);
+    const all = steps.map((s) => ({ ...s, done: true }));
+    expect(sessionProgress(all, steps[0].startMs)).toBe(1);
+    expect(sessionProgress([], 0)).toBe(0);
+  });
+
+  it("cresce col tempo e con i passi fatti, mai sotto passi fatti sul totale", () => {
+    let steps = session();
+    let prev = -1;
+    const t0 = steps[0].startMs;
+    const end = sessionReadyAt(steps);
+    for (let now = t0; now <= end; now += 20 * 60_000) {
+      const p = sessionProgress(steps, now);
+      expect(p).toBeGreaterThanOrEqual(prev);
+      prev = p;
+    }
+    /* Ogni «Fatto» a orario non fa tornare indietro la barra. */
+    prev = -1;
+    steps = session();
+    for (let i = 0; i < steps.length; i++) {
+      const now = steps[i].endMs;
+      steps = completeStepAt(steps, i, now);
+      const p = sessionProgress(steps, now);
+      expect(p).toBeGreaterThanOrEqual(prev);
+      expect(p).toBeGreaterThanOrEqual((i + 1) / steps.length);
+      prev = p;
+    }
+    expect(prev).toBe(1);
+  });
+});
+
+describe("fine di un passo attivo cronometrato (G4a-WP-02, S10-B-04)", () => {
+  const step = { id: "bake", duration_minutes: 8, startMs: 0, endMs: 8 * 60_000, done: false, flexible: false };
+  it("solo se il conto alla rovescia è partito e arriva a zero", () => {
+    expect(activeStepTimeUp(step, false, 9 * 60_000)).toBe(false);
+    const started = { ...step, actualStartMs: 0 };
+    expect(activeStepTimeUp(started, false, 7 * 60_000)).toBe(false);
+    expect(activeStepTimeUp(started, false, 8 * 60_000)).toBe(true);
+  });
+  it("mai per attese, passi senza durata o già fatti", () => {
+    const started = { ...step, actualStartMs: 0 };
+    expect(activeStepTimeUp({ ...started, flexible: true }, true, 9 * 60_000)).toBe(false);
+    expect(activeStepTimeUp(started, true, 9 * 60_000)).toBe(false);
+    expect(activeStepTimeUp({ ...started, duration_minutes: 0 }, false, 9 * 60_000)).toBe(false);
+    expect(activeStepTimeUp({ ...started, done: true }, false, 9 * 60_000)).toBe(false);
   });
 });

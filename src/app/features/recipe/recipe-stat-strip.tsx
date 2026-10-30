@@ -50,7 +50,7 @@ export function RecipeStatStrip({
      ricetta di riferimento (preset attivo) — mai dal centro degli intervalli.
      Stesso formatter sui due lati. Forno/cottura no (sono il tuo forno). */
   const envOf = (tempC: number) =>
-    tempC < 10 ? (ui.fermentEnvFridge ?? "frigo") : (ui.fermentEnvAmbient ?? "ambiente");
+    tempC < 10 ? ui.fermentEnvFridge : ui.fermentEnvAmbient;
   const deltas = isPersonalized && reference ? compareToReference(recipe, reference) : [];
   const deltaOf = (param: string) => deltas.find((d) => d.param === param);
   const h = deltaOf("hydration");
@@ -91,7 +91,7 @@ export function RecipeStatStrip({
     { label: ui.statHydration, termId: "hydration", value: fmt.percent(recipe.hydration_pct), changed: hChanged },
     // D-060: l'intervallo dello stile; il valore puntuale solo quando si
     // confronta col riferimento (due intervalli uguali non direbbero nulla).
-    { label: ui.statFlourStrength ?? "Forza farina", termId: "w_alveograph", value: wChanged ? flourWValue(recipe.flour_w) : flourWValue(flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)), changed: wChanged },
+    { label: ui.statFlourStrength, termId: "w_alveograph", value: wChanged ? flourWValue(recipe.flour_w) : flourWValue(flourWText(recipe.flour_w, recipe.style.dough.flour_w_range)), changed: wChanged },
     {
       label: recipe.style.dough.unleavened ? ui.statRest : ui.statFermentation,
       value: fermentCell.value,

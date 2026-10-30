@@ -135,8 +135,8 @@ export function InterpretationSwitcher({
             type="button"
             onClick={() => setModalOpen(true)}
             aria-haspopup="dialog"
-            aria-label={cms.misc.inspirationSeeAll ?? uiMessage("features.recipe.interpretation-narrative-card.vedi-tutte-82e02261")}
-            title={cms.misc.inspirationSeeAll ?? uiMessage("features.recipe.interpretation-narrative-card.vedi-tutte-82e02261")}
+            aria-label={cms.misc.inspirationSeeAll}
+            title={cms.misc.inspirationSeeAll}
             className="interpretation-switcher__more"
           >
             {hiddenCount > 0 ? (
@@ -190,7 +190,7 @@ function InterpretationsModal({
                 id="inspiration-modal-title"
                 className="interpretation-modal__title"
               >
-                {cms.misc.inspirationModalTitle ?? uiMessage("features.recipe.interpretation-narrative-card.ispirazioni-d-autore-7d5d1844")}
+                {cms.misc.inspirationModalTitle}
               </h2>
               <button
                 type="button"
@@ -205,7 +205,7 @@ function InterpretationsModal({
             <div
               className="interpretation-modal__body"
               role="radiogroup"
-              aria-label={cms.misc.inspirationModalTitle ?? uiMessage("features.recipe.interpretation-narrative-card.ispirazioni-d-autore-7d5d1844")}
+              aria-label={cms.misc.inspirationModalTitle}
             >
               {interpretations.map((it) => (
                 <InterpretationNarrativeCard
@@ -226,7 +226,7 @@ function InterpretationsModal({
                 onClick={onClose}
                 className="interpretation-modal__link"
               >
-                {cms.misc.inspirationLearnLink ?? uiMessage("features.recipe.interpretation-narrative-card.scopri-di-piu-nella-sezione-impara-a541395d")} →
+                {cms.misc.inspirationLearnLink} →
               </Link>
             </div>
     </ModalSheet>
@@ -281,8 +281,8 @@ function InterpretationNarrativeCard({
       title={
         selectable
           ? selected
-            ? (cms.misc.inspirationSelected ?? uiMessage("features.recipe.interpretation-narrative-card.selezionata-8af6d724"))
-            : (cms.misc.inspirationSelect ?? uiMessage("features.recipe.interpretation-narrative-card.seleziona-e886c9e7"))
+            ? (cms.misc.inspirationSelected)
+            : (cms.misc.inspirationSelect)
           : undefined
       }
     >

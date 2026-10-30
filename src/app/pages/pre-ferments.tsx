@@ -8,9 +8,9 @@ import { CtaButton, Heading } from "../components/ds/index";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
 import {
-  localizedComparisonRows,
   fillPreFermentText,
   PreFermentCard,
+  PreFermentComparisonTable,
   PreFermentStyleList
 } from "../features/recipe/pre-ferment-guide";
 import { Flask } from "../features/cooking/step-illustrations";
@@ -99,6 +99,7 @@ export function PreFermentsPage() {
               <PreFermentCard
                 preFermentType={id}
                 showComparison={false}
+                showExample
                 headingLevel={2}
                 open={openIds.has(id)}
                 onOpenChange={(open) => setOpen(id, open)}
@@ -116,42 +117,7 @@ export function PreFermentsPage() {
           <Heading level="lg" className="preferment-section-title">
             {cms.misc.preFermentCompare}
           </Heading>
-          <div className="preferment-table">
-            <div className="preferment-table__scroll">
-              <table className="preferment-table__grid">
-                <thead>
-                  <tr>
-                    {/* Angolo vuoto: td, non un th senza nome (audit n. 30). */}
-                    <td className="preferment-table__th" />
-                    <th className="preferment-table__th preferment-table__th--biga">
-                      {uiMessage("pages.pre-ferments.biga-a0b1ee2e")}</th>
-                    <th className="preferment-table__th preferment-table__th--poolish">
-                      {uiMessage("pages.pre-ferments.poolish-4520b254")}</th>
-                    <th className="preferment-table__th preferment-table__th--autolisi">
-                      {uiMessage("pages.pre-ferments.autolisi-044fc990")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {localizedComparisonRows(cms.preFerment, bcp47).map((row) => (
-                    <tr key={row.label}>
-                      <td className="preferment-table__td preferment-table__rowlabel">
-                        {row.label}
-                      </td>
-                      <td className="preferment-table__td">
-                        {row.biga}
-                      </td>
-                      <td className="preferment-table__td">
-                        {row.poolish}
-                      </td>
-                      <td className="preferment-table__td">
-                        {row.autolisi}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <PreFermentComparisonTable pf={cms.preFerment} locale={bcp47} />
         </motion.div>
 
         {/* Decision guide */}

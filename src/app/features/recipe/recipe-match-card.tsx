@@ -207,9 +207,9 @@ export function RecipeMatchCard({
      richiesta: erano una schermata intera prima degli ingredienti. */
   const [expanded, setExpanded] = useState(initialExpanded);
   const detailsId = useId();
-  const detailsLabel = cms.cooking.matchDetails ?? uiMessage("features.recipe.recipe-match-card.dettagli-8f4ce7d9");
+  const detailsLabel = cms.cooking.matchDetails;
   const detailsActionLabel = expanded
-    ? cms.cooking.matchDetailsHide ?? uiMessage("features.recipe.recipe-match-card.nascondi-f6ef7782")
+    ? cms.cooking.matchDetailsHide
     : detailsLabel;
   const detailsToggleRef = useRef<HTMLButtonElement>(null);
   const ovenGap = idealTemp - ovenTemp;
@@ -303,7 +303,7 @@ export function RecipeMatchCard({
       headroomLine = {
         tone: "accent",
         text: atCeiling
-          ? t(cms.cooking.ceilingNeedsAtCeiling ?? "Per questa versione serve: {needs}.", {
+          ? t(cms.cooking.ceilingNeedsAtCeiling, {
               needs: needs.join(", "),
             })
           : t(cms.cooking.ceilingNeeds, { ceiling: ceilingRounded, needs: needs.join(", ") }),
@@ -495,7 +495,7 @@ export function RecipeMatchCard({
               className={`match-action-text match-action-text--personalize${onOptimize ? " match-action-text--secondary" : ""}`}
             >
               <WandSparkles size={18} aria-hidden="true" />
-              {cms.ui.personalize ?? uiMessage("features.recipe.recipe-match-card.personalizza-0beadff3")}
+              {cms.ui.personalize}
             </motion.button>
           )}
           {onCreate && (

@@ -1,4 +1,4 @@
-import { KeepScreenAwake } from "./keep-screen-awake";
+import { KeepScreenAwakeNotice, KeepScreenAwakeToggle, useKeepScreenAwake } from "./keep-screen-awake";
 import { CookRemindersRow } from "./cook-reminders-row";
 import { RecipeFeedbackForm } from "../recipe/recipe-feedback";
 /* ═══ COOKING MODE — vista della Pizzata attiva (v2, giugno 2026) ═══
@@ -17,12 +17,13 @@ ChevronLeft,
 ChevronRight,
 Clock,
 Lightbulb,
+LifeBuoy,
 Trash2,
 ChevronDown,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
-import { useCallback,useEffect,useMemo,useRef,useState } from "react";
+import { lazy,Suspense,useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
@@ -34,18 +35,22 @@ formatEta,
 formatStepClock,
 stepIsWaiting,
 useCookSession,
-type CookSessionStep
+type CookSessionStep,
+type CookUndoSnapshot
 } from "./cook-session";
 import {
   READY_CHANGE_ANNOUNCE_MS,
   TIMED_WAIT_STEP_IDS,
+  previewCompleteNow,
   previewStartNow,
+  readyCriterionKey,
   sessionNightActions,
+  sessionProgress,
   sessionReadyAt,
   startNowNeedsConfirm,
 } from "../../use-cases/cook-timing";
 import { BakeRoundsTimer } from "./bake-rounds-timer";
-import { ConfirmDialog, CtaButton } from "../../components/ds/index";
+import { ConfirmDialog, CtaButton, IconButton, Snackbar } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import type { EscapeLayerHandle } from "../../components/ds/escape-stack";
 import { cookingKeyAction, nextViewIndex } from "./cooking-keys";
@@ -58,7 +63,12 @@ import { GlossaryTermLinks } from "../glossary/term-link";
 import { GlossaryNavigationContext } from "../../components/shared/info-tip";
 import { stepGlossaryTerms } from "../glossary/step-terms";
 import { isOilPreheat, preheatText } from "./preheat-copy";
+/* Caricato al primo tocco: la modalità cottura non porta con sé il catalogo dei problemi. */
+const TroubleshootingSheet = lazy(() => import("../recipe/troubleshooting-panel").then((m) => ({ default: m.TroubleshootingSheet })));
 
+
+/** S10-B-11: quanto resta annullabile un completamento. */
+const UNDO_MS = 10_000;
 
 /* ── Countdown della fase ──
  * FW-19 (S10-B-05, S10-A-02): il countdown di un passo attivo parte da quando
@@ -163,8 +173,20 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
   );
 }
 
+/* G4a-WP-02 (S10-B-04, D-G4a-3): suono e vibrazione alla fine delle fasi,
+   attivi per default; l'interruttore sta nell'header, accanto allo schermo. */
+function CookAlertsToggle() {
+  const { alertsOn, setAlertsOn } = useCookSession();
+  return (
+    <IconButton variant="bare" radius="lg" className="cooking-mode-header__action" aria-pressed={alertsOn}
+      aria-label={uiMessage("cooking.alerts.label")} onClick={() => setAlertsOn(!alertsOn)}>
+      <BellRing size={18} aria-hidden="true" />
+    </IconButton>
+  );
+}
+
 export function CookingMode() {
-  const { session, completeStep, startStep, closeOverlay, endSession } = useCookSession();
+  const { session, completeStep, startStep, closeOverlay, endSession, snapshot, restore } = useCookSession();
   const { cms, bcp47 } = useCms();
   const steps = session?.steps ?? [];
   const total = steps.length;
@@ -174,6 +196,8 @@ export function CookingMode() {
   /* viewIndex: si può sfogliare avanti/indietro senza toccare lo stato della sessione */
   const [viewIndex, setViewIndex] = useState(activeIdx);
   const [finished, setFinished] = useState(allDone);
+  /* G4a-WP-02 (S10-B-14): un solo controller dello schermo acceso, spento a pizzata finita. */
+  const screen = useKeepScreenAwake(!finished);
   /* Conferma prima di buttare via una pizzata in corso: chiuderla è
      distruttivo (perdi timer e progresso), non un semplice "riduci". */
   const [confirmAbort, setConfirmAbort] = useState(false);
@@ -181,6 +205,30 @@ export function CookingMode() {
   const [confirmStart, setConfirmStart] = useState(false);
   /* FW-19 (S10-A-02): «È già in temperatura» salta l'attesa del forno: si chiede. */
   const [confirmHot, setConfirmHot] = useState(false);
+  /* S10-B-11: «L'impasto è già pronto?» chiude un'attesa di ore: si chiede. */
+  const [confirmSkip, setConfirmSkip] = useState(false);
+  /* G4b-WP-01 (S13-B-09): «Qualcosa non va?» della fase, aperto su questo indice. */
+  const [troubleAt, setTroubleAt] = useState<number | null>(null);
+  /* S10-B-11: ogni completamento si annulla per qualche secondo (un toast alla volta). */
+  const [undo, setUndo] = useState<{ snap: CookUndoSnapshot; index: number; title: string } | null>(null);
+  /* G4-R3 (WCAG 2.2.1): la scadenza si sospende finché focus o puntatore
+     sono sul toast, e riparte intera quando escono. */
+  const [undoFocus, setUndoFocus] = useState(false);
+  const [undoHover, setUndoHover] = useState(false);
+  useEffect(() => {
+    if (!undo) {
+      setUndoFocus(false);
+      setUndoHover(false);
+      return;
+    }
+    if (undoFocus || undoHover) return;
+    const id = setTimeout(() => {
+      /* Il toast sparisce: il focus non deve cadere su <body>. */
+      if (document.activeElement?.closest(".cooking-mode-undo")) dialogRef.current?.focus();
+      setUndo(null);
+    }, UNDO_MS);
+    return () => clearTimeout(id);
+  }, [undo, undoFocus, undoHover]);
 
   useEffect(() => {
     /* Se la sessione avanza da fuori (widget/notifiche), riallinea la vista */
@@ -232,6 +280,26 @@ export function CookingMode() {
   /* Un anticipo appena confermato (o senza effetti visibili) non si riannuncia: l'utente
      ha appena letto il nuovo orario. */
   const confirmedShift = useRef(false);
+
+  /* S10-B-11: fotografia (passi, orari, notifiche) PRIMA di completare, poi
+     il toast «Fatto: …» con «Annulla». */
+  const completeWithUndo = useCallback(() => {
+    const snap = snapshot();
+    completeStep(viewIndex);
+    advanceView();
+    if (snap && step) setUndo({ snap, index: viewIndex, title: step.title });
+  }, [snapshot, completeStep, viewIndex, advanceView, step]);
+
+  const undoComplete = useCallback(() => {
+    if (!undo) return;
+    confirmedShift.current = true;
+    restore(undo.snap);
+    setFinished(false);
+    setViewIndex(undo.index);
+    setUndo(null);
+    /* Il bottone sparisce: il focus resta nella vista. */
+    dialogRef.current?.focus();
+  }, [undo, restore]);
   const goNext = useCallback(() => {
     if (!session) return;
     if (isCurrent && early) {
@@ -248,26 +316,21 @@ export function CookingMode() {
       startStep(viewIndex);
     } else if (isCurrent && !waiting) {
       /* Fase attiva fatta, o attesa conclusa: completa e ri-ancora i tempi */
-      completeStep(viewIndex);
-      advanceView();
+      completeWithUndo();
     } else if (!isCurrent && viewIndex < total - 1) {
       setViewIndex(viewIndex + 1);
     } else if (allDone) {
       setFinished(true);
     }
-  }, [session, isCurrent, early, ovenToStart, waiting, viewIndex, total, allDone, completeStep, startStep, advanceView, readyApprox]);
+  }, [session, isCurrent, early, ovenToStart, waiting, viewIndex, total, allDone, completeWithUndo, startStep, readyApprox]);
 
-  /* "Ho finito prima": chiude l'attesa in anticipo, ri-ancorando il resto.
-     Per il forno chiede conferma: infornare a freddo rovina la pizza. */
+  /* «L'impasto è già pronto?» / «È già in temperatura»: chiudere un'attesa in
+     anticipo ri-ancora il resto, quindi chiede sempre conferma (S10-B-11). */
   const skipWait = useCallback(() => {
     if (!session || !isCurrent) return;
-    if (timedWait) {
-      setConfirmHot(true);
-      return;
-    }
-    completeStep(viewIndex);
-    advanceView();
-  }, [session, isCurrent, timedWait, viewIndex, completeStep, advanceView]);
+    if (timedWait) setConfirmHot(true);
+    else setConfirmSkip(true);
+  }, [session, isCurrent, timedWait]);
 
   /* FW-19 (S10-B-12): l'orario in cui si mangia, sempre visibile; se cambia
      di più di un quarto d'ora lo si annuncia. */
@@ -290,6 +353,11 @@ export function CookingMode() {
   /* FW-19 (S10-A-03): dopo un ri-ancoraggio, le azioni rimaste di notte. */
   const nightLeft = session ? sessionNightActions(session.steps, now) : [];
   const startPreview = confirmStart && session ? previewStartNow(session.steps, viewIndex, Date.now()) : null;
+  const skipPreview = confirmSkip && session ? previewCompleteNow(session.steps, viewIndex, Date.now()) : null;
+  /* Dopo il salto resta «ca.» solo se c'è ancora un'attesa flessibile. */
+  const skipApprox = !!session && session.steps.some((s, i) => i !== viewIndex && !s.done && s.flexible);
+  const troubleLabel = step?.trouble && cms.cooking.troubleStepLinks?.[step.trouble.labelKey];
+  const criterion = cms.cooking.readyCriterion[readyCriterionKey(step?.id ?? "", !!step?.cold)];
 
   const goPrev = useCallback(() => {
     if (finished) setFinished(false);
@@ -326,7 +394,8 @@ export function CookingMode() {
   }, [goPrev, finished, viewIndex, activeIdx, total, allDone]);
 
   const doneCount = useMemo(() => steps.filter((s) => s.done).length, [steps]);
-  const progressPct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+  /* G4a-WP-02 (S10-B-23): la stessa regola dell'anello del widget. */
+  const progressPct = finished ? 100 : Math.round(sessionProgress(steps, now) * 100);
 
   if (!session || !step) return null;
 
@@ -346,36 +415,43 @@ export function CookingMode() {
       {/* ── Header ── */}
       <div className="cooking-mode-header">
         <div className="cooking-mode-header__identity">
-          <div className="cooking-mode-header__eyebrow">
-
-          </div>
+          {/* G4a-WP-02 (S10-A-24, S10-B-23): l'occhiello dice quando si mangia. */}
+          <p className="type-numeric cooking-mode-header__eyebrow">
+            {finished
+              ? cms.cooking.done
+              : readyLabel
+                ? uiMessage("cooking.chip.readyAt", [readyLabel])
+                : cms.cooking.inProgress}
+          </p>
           <div className="cooking-mode-header__title">
             {session.styleName}
           </div>
-          {!finished && readyLabel && (
-            <p className="type-numeric cooking-mode-header__ready">
-              {uiMessage("cooking.chip.readyAt", [readyLabel])}
-            </p>
-          )}
         </div>
         <div className="cooking-mode-header__meta">
-          <span className="type-numeric cooking-mode-header__counter">
-            {Math.min(viewIndex + 1, total)} / {total}
-          </span>
-          {/* Interrompi: azione distruttiva, perciò chiede conferma. */}
+          {/* A pizzata finita resta solo «Concludi»: niente contatore n / n né cestino. */}
+          {!finished && (
+            <>
+              <span className="type-numeric cooking-mode-header__counter">
+                {Math.min(viewIndex + 1, total)} / {total}
+              </span>
+              <KeepScreenAwakeToggle control={screen} />
+              <CookAlertsToggle />
+              {/* Interrompi: azione distruttiva, perciò chiede conferma. */}
+              <button
+                type="button"
+                onClick={() => setConfirmAbort(true)}
+                className="cooking-mode-header__action"
+                aria-label={cms.cooking.interrupt}
+              >
+                <Trash2 size={17} aria-hidden="true" />
+              </button>
+            </>
+          )}
           <button
-            onClick={() => setConfirmAbort(true)}
-            className="cooking-mode-header__action"
-            aria-label={cms.cooking.interrupt}
-            title={cms.cooking.interrupt}
-          >
-            <Trash2 size={17} />
-          </button>
-          <button
+            type="button"
             onClick={closeOverlay}
             className="cooking-mode-header__action cooking-mode-header__action--close"
             aria-label={cms.cooking.minimize}
-            title={cms.cooking.minimizeHint}
           >
             {/* Audit n. 20: «riduci» è una freccia giù, non una X accanto al cestino. */}
             <ChevronDown size={20} aria-hidden="true" />
@@ -482,13 +558,65 @@ export function CookingMode() {
             label: preheatText(oil, "hotConfirm"),
             onClick: () => {
               setConfirmHot(false);
-              completeStep(viewIndex);
-              advanceView();
+              completeWithUndo();
             },
             variant: "secondary",
           },
         ]}
       />
+
+      {/* S10-B-11, S10-A-15: chiudere una lievitazione prima del tempo. */}
+      <ConfirmDialog
+        open={confirmSkip && !!skipPreview}
+        onDismiss={() => setConfirmSkip(false)}
+        ariaLabel={cms.cooking.finishedEarly}
+        icon={<Clock size={26} />}
+        position="absolute"
+        zIndex={10}
+        initialFocusAction={1}
+        title={cms.cooking.finishedEarly}
+        body={
+          skipPreview ? (
+            <>
+              {t(cms.cooking.skipConfirmBody, {
+                criterion,
+                newReady: formatStepClock(skipPreview.readyAtMs, skipApprox, bcp47),
+                plannedReady: readyLabel,
+              })}
+              {skipPreview.nightActions.length > 0 && (
+                <strong className="cooking-mode-confirm__night">
+                  {uiMessage("cooking.night.warning", [
+                    skipPreview.nightActions.length,
+                    formatAtClock(skipPreview.nightActions[0].atMs, bcp47, { nowMs: Date.now() }),
+                  ])}
+                </strong>
+              )}
+            </>
+          ) : null
+        }
+        actions={[
+          {
+            label: cms.cooking.skipConfirmYes,
+            onClick: () => {
+              setConfirmSkip(false);
+              confirmedShift.current = true;
+              completeWithUndo();
+            },
+            variant: "cta",
+          },
+          {
+            label: cms.cooking.skipConfirmNo,
+            onClick: () => setConfirmSkip(false),
+            variant: "secondary",
+          },
+        ]}
+      />
+
+      {step.trouble && troubleAt === viewIndex && !finished && (
+        <Suspense fallback={null}>
+          <TroubleshootingSheet open context={{ ...step.trouble, title: step.title }} onClose={() => setTroubleAt(null)} />
+        </Suspense>
+      )}
 
       {/* ── Progress ── */}
       <div
@@ -496,12 +624,12 @@ export function CookingMode() {
         role="progressbar"
         aria-label={uiMessage("cooking.a11y.progress-label")}
         aria-valuemin={0}
-        aria-valuemax={total}
-        aria-valuenow={finished ? total : doneCount}
+        aria-valuemax={100}
+        aria-valuenow={progressPct}
         aria-valuetext={uiMessage("cooking.a11y.progress-value", [finished ? total : doneCount, total])}
       >
         <motion.div
-          animate={{ width: `${finished ? 100 : progressPct}%` }}
+          animate={{ width: `${progressPct}%` }}
           transition={motionSpring.cookingPanel}
           className="cooking-mode-progress__fill"
         />
@@ -534,7 +662,7 @@ export function CookingMode() {
               {uiMessage("cooking.night.warning", [nightLeft.length, formatAtClock(nightLeft[0].atMs, bcp47, { nowMs: now })])}
             </p>
           )}
-          {!finished && <KeepScreenAwake />}
+          {!finished && <KeepScreenAwakeNotice control={screen} />}
           {!finished && <CookRemindersRow />}
           <AnimatePresence mode="wait">
             {finished ? (
@@ -680,6 +808,24 @@ export function CookingMode() {
                     </p>
                   </div>
                 )}
+
+                {/* G4b-WP-01 (S13-B-09): i problemi della fase senza uscire
+                    dalla pizzata; lo stesso foglio della scheda ricetta. */}
+                {troubleLabel && (
+                  <button
+                    type="button"
+                    aria-haspopup="dialog"
+                    aria-expanded={troubleAt === viewIndex}
+                    onClick={() => setTroubleAt(viewIndex)}
+                    className="cooking-mode-step__trouble"
+                  >
+                    <LifeBuoy size={18} aria-hidden="true" className="cooking-mode-step__trouble-icon" />
+                    <span className="cooking-mode-step__trouble-text">
+                      <span className="type-data-sm cooking-mode-step__trouble-eyebrow">{uiMessage("cooking.trouble.cta")}</span>
+                      <span className="cooking-mode-step__trouble-label">{troubleLabel}</span>
+                    </span>
+                  </button>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
@@ -690,9 +836,11 @@ export function CookingMode() {
       {!finished && (
         <div className="cooking-mode-nav">
           <div className="cooking-mode-nav__inner">
-            {/* "Ho finito prima": uscita discreta dall'attesa */}
+            {/* «L'impasto è già pronto?»: apre una conferma, mai un salto diretto. */}
             {waiting && (
               <button
+                type="button"
+                aria-haspopup="dialog"
                 onClick={skipWait}
                 className="cooking-mode-nav__skip"
               >
@@ -756,6 +904,20 @@ export function CookingMode() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* S10-B-11: annulla l'ultimo completamento (orari compresi). */}
+      {undo && (
+        <Snackbar
+          className={`cooking-mode-undo${finished ? " cooking-mode-undo--finished" : ""}`}
+          message={t(cms.cooking.stepDoneToast, { step: undo.title })}
+          action={cms.cooking.undo}
+          onAction={undoComplete}
+          onFocus={() => setUndoFocus(true)}
+          onBlur={() => setUndoFocus(false)}
+          onPointerEnter={() => setUndoHover(true)}
+          onPointerLeave={() => setUndoHover(false)}
+        />
       )}
     </motion.div>
   );

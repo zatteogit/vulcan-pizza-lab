@@ -22,6 +22,11 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
   /* FW-05 */
   techniqueLabel: "Technique",
   recipeContextLine: "In this recipe: {yeast} of yeast on {flour} of pre-ferment flour ({pct}). All the dough's yeast goes into the pre-ferment and is dosed on the recipe's total hours, not on the pre-ferment's hours alone.",
+  /* G4b-WP-02 */
+  stepsLabel: "How to make it",
+  exampleLabel: "Example with {flour} of flour, dough at {hydration}",
+  examplePreFerment: "{name}: {flour} of flour, {water} of water and the yeast, about {yeast} of its flour",
+  exampleFinal: "Final dough: {flour} of flour, {water} of water and the salt",
   compLabels: [
     "Hydration",
     "Fresh yeast (on the pre-ferment flour)",
@@ -42,6 +47,12 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
       crustResult:
         "Thin and golden; colour and spotting depend on oven and temperature",
       extensibility: "High (estimate): easy to stretch",
+      steps: [
+        "Mix equal parts flour and water with the yeast into a smooth batter.",
+        "Cover and leave to mature for about {poolishHours} at {poolishTemp}: it is ready when it is full of bubbles and the centre starts to sink.",
+        "In the final dough, dissolve the poolish in the remaining water, then add the rest of the flour.",
+        "Add salt and fats only now, never to the poolish.",
+      ],
       tips: [
         "Ready when the surface is full of bubbles and the centre starts to sink",
         "More yeast, fewer hours: at 20–22 °C, 0.1% for 15–16 h, 0.3% for 10–12 h",
@@ -57,6 +68,12 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
       flavor: "Aromatic, floral",
       crustResult: "Crisp; the structure depends on hydration and shaping",
       extensibility: "Depends on flour and hydration (to be verified)",
+      steps: [
+        "Mix flour, water and yeast only briefly: the biga should stay lumpy, not smooth.",
+        "Cover and leave to mature for about {bigaHours} at {bigaTemp}.",
+        "In the final dough, break it up in the remaining water, then add the rest of the flour.",
+        "Add the salt only now, never to the biga.",
+      ],
       tips: [
         "Ready when it is puffy in places, smells of yoghurt and fizzes slightly; if it tastes sour it has gone too far",
         "Long biga: 24 h at 4–5 °C, then 24 h at 18–20 °C",
@@ -76,6 +93,11 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
         "Variable \u2014 depends on subsequent process",
       extensibility: "High \u2014 silky, less sticky dough",
       idealStyles: "All styles (universal technique)",
+      steps: [
+        "Mix only flour and water, with no yeast or salt.",
+        "Leave to rest for {autolysisRest}.",
+        "Then add the yeast (or the pre-ferment) and, last of all, the salt.",
+      ],
       tips: [
         "Rest 20–60 minutes; add yeast and salt afterwards",
         "Combines with biga or poolish",
@@ -126,7 +148,6 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       fermentation: "Fermentation",
       shaping: "Shaping",
       baking: "Baking",
-      solver: "Algorithm",
       false_positive: "False alarms",
     },
     issues: {
@@ -303,6 +324,27 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         testRapido: "Same style, same yeast amount: does the rise change a lot from one time to the next?",
         fixImmediate: "Move the dough to the lowest/middle shelf (the most stable) and judge the dough ball by eye, not just by the clock",
         prevention: "Measure the temperature on the shelf used and observe dough development. Sugar does not correct fridge temperature swings.",
+      },
+      P22: {
+        symptom: "The pizza sticks to the peel",
+        cause: "Wet dough in direct contact with the peel, a topped pizza left sitting on the peel, or a peel with no flour or semolina",
+        testRapido: "Give the peel a gentle shake before launching: does the pizza slide?",
+        fixImmediate: "Lift the edge, blow underneath or dust in a little semolina, then shake again before launching",
+        prevention: "Flour the peel, top the pizza quickly right on the peel and launch it straight away, without letting it sit",
+      },
+      P23: {
+        symptom: "The dough ball spreads and won't hold its shape",
+        cause: "More water than the flour can hold, over-proofing, a warm kitchen or loosely shaped balls",
+        testRapido: "Does the ball flatten sooner than expected, and does a fingertip dent stay when you press it?",
+        fixImmediate: "Stretch it straight away with a little flour on the counter; don't try to re-ball it",
+        prevention: "Shape the balls tighter and follow the recipe's hydration and timings; if the kitchen is warm, check the dough earlier",
+      },
+      P24: {
+        symptom: "A hole opens while I'm stretching",
+        cause: "Centre stretched too thin, underdeveloped gluten, dough still cold from the fridge or over-proofed",
+        testRapido: "Does the hole open in the centre while the rim is still thick?",
+        fixImmediate: "Pinch the edges of the hole together; if it opens again, cover the disc and let it rest for a few minutes",
+        prevention: "Push outwards from the centre towards the rim and don't thin the centre too much; take the balls out of the fridge in good time",
       },
     },
     contextual: {
@@ -733,6 +775,11 @@ export const SCIENCE_EN: CmsScience = {
       l1: "Hydration, hours and temperatures come from consistent trade sources.",
       l2: "Biga is a stiff pre-ferment that matures slowly in the cool; poolish is liquid and matures faster. Crust and crumb depend mostly on oven, hydration and shaping, not on the pre-ferment alone.",
     },
+    "pre-ferment-procedure": {
+      title: "How they are made",
+      l1: "The steps are a {brand} choice; hours and temperatures are the engine's.",
+      l2: "The sources we read give hydration, hours, temperatures and signs of ripeness, not how to mix. A lumpy biga, a smooth poolish, the pre-ferment dissolved in the remaining water and salt only in the final dough are the common practice {brand} chose to show: salt slows the yeasts, so it stays out of the pre-ferment.",
+    },
     autolysis: {
       title: "Autolysis",
       l1: "Flour and water rest without yeast or salt before mixing.",
@@ -858,6 +905,11 @@ export const SCIENCE_EN: CmsScience = {
       title: "Troubleshooting thresholds",
       l1: "The numeric thresholds in troubleshooting are indicative.",
       l2: "They are rules of thumb without a published source and they ignore the style: a pan dough, for example, is much wetter than a Neapolitan. Use them as a hint, not a diagnosis.",
+    },
+    "troubleshooting-practice": {
+      title: "Practical tips",
+      l1: "Peel, spreading dough balls and holes while stretching: the remedies are common practice chosen by {brand}, not measurements.",
+      l2: "We have no published source for these tips and they contain no numeric thresholds: they say what to look at and what to do right away. Where the recipe gives times, hydration or flour, follow those.",
     },
     /* FW-19: piano temporale. */
     "comfort-tolerances": {

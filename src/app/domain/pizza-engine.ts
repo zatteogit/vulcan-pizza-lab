@@ -26,7 +26,7 @@ type ToppingRecipe
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, pantryIngredientReferences, type PantryFlourDetails } from "./pantry-ingredients";
 import { BRAND } from "../config/brand";
-import { maxPreFermentFlourPct, preFermentMaturationTempC, rule55Sum } from "./pre-ferment-split";
+import { maxPreFermentFlourPct, PRE_FERMENT_TARGET_HOURS, preFermentMaturationTempC, rule55Sum } from "./pre-ferment-split";
 import { roundForDisplay } from "./dose-rounding";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
 import { assessAllergens, allergenWarnings, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
@@ -1640,11 +1640,8 @@ export function pantryFlourMix(
   return best;
 }
 
-/** Ore di maturazione del pre-fermento dalle fonti
- *  (docs/ricerca/prefermenti-fonti-2026-10-24.md): biga circa 16 h a
- *  18–20 °C, poolish 12–16 h a 20–22 °C (qui il centro, 14 h). Prima era il
- *  40 % delle ore totali, uguale per i due (verifica di GPT, 24/10/2026). */
-export const PRE_FERMENT_TARGET_HOURS = { biga: 16, poolish: 14 } as const;
+/* Ore di maturazione del pre-fermento (PRE_FERMENT_TARGET_HOURS): in
+ * pre-ferment-split.ts, importate sopra (G4b-WP-02, le cita la guida). */
 
 /** Ore lasciate all'impasto finale (puntata e appretto) prima di allungare il
  *  pre-fermento verso le ore delle fonti. Parametro del modello, non una

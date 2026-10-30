@@ -225,6 +225,33 @@ describe.each(Object.entries(BUNDLES))("prefermenti e motore, %s", (locale, bund
     expect(pf.items.poolish.tips.map(fill).join(" ")).toContain(values.poolishFlourPct);
   });
 
+  /* G4b-WP-02 (S14-B-07): i passi «Come si fa» non scrivono numeri; ore,
+   * temperature e minuti arrivano dal motore. Il sale entra solo alla fine. */
+  it("i passi di biga, poolish e autolisi: segnaposto risolti, nessuna cifra, ore e temperature del motore", () => {
+    const counts = { biga: 4, poolish: 4, autolisi: 3 } as const;
+    for (const id of ["biga", "poolish", "autolisi"] as const) {
+      const steps = pf.items[id].steps;
+      expect(steps, id).toHaveLength(counts[id]);
+      expect(steps.filter((step) => literalDigits(step).length > 0), id).toEqual([]);
+      expect(steps.map(fill).filter((step) => /\{\w+\}/.test(step)), id).toEqual([]);
+    }
+    const joined = (id: "biga" | "poolish" | "autolisi") => pf.items[id].steps.map(fill).join(" ");
+    expect(joined("biga")).toContain(values.bigaHours);
+    expect(joined("biga")).toContain(values.bigaTemp);
+    expect(joined("poolish")).toContain(values.poolishHours);
+    expect(joined("poolish")).toContain(values.poolishTemp);
+    expect(joined("autolisi")).toContain(values.autolysisRest);
+    expect(values.bigaHours).toContain(formatNumber(preFermentFacts("biga").hours, locale));
+    for (const key of ["{flour}", "{hydration}"]) expect(pf.exampleLabel).toContain(key);
+    for (const key of ["{name}", "{flour}", "{water}", "{yeast}"]) expect(pf.examplePreFerment).toContain(key);
+    for (const key of ["{flour}", "{water}"]) expect(pf.exampleFinal).toContain(key);
+    // La tabella di confronto (una sola, guida e ricetta) legge ogni cella senza ripieghi.
+    expect(pf.compLabels).toHaveLength(6);
+    for (const key of ["hydration", "yeast", "duration", "temperature", "flavor", "extensibility"]) {
+      for (const id of ["biga", "poolish", "autolisi"] as const) expect(pf.compValues[key]?.[id], `${key}.${id}`).toBeTruthy();
+    }
+  });
+
   it("gli stili ideali di biga e poolish non sono testo del CMS (S14-A-01/B-13)", () => {
     expect(pf.items.biga.idealStyles).toBeUndefined();
     expect(pf.items.poolish.idealStyles).toBeUndefined();

@@ -27,6 +27,11 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
   /* FW-05 */
   techniqueLabel: "Tecnica",
   recipeContextLine: "In questa ricetta: {yeast} di lievito su {flour} di farina del prefermento ({pct}). Tutto il lievito dell'impasto va nel prefermento ed è dosato sulle ore totali della ricetta, non sulle sole ore del prefermento.",
+  /* G4b-WP-02 */
+  stepsLabel: "Come si fa",
+  exampleLabel: "Esempio con {flour} di farina, impasto al {hydration}",
+  examplePreFerment: "{name}: {flour} di farina, {water} d'acqua e il lievito, circa {yeast} della sua farina",
+  exampleFinal: "Impasto finale: {flour} di farina, {water} d'acqua e il sale",
   compLabels: [
     "Idratazione",
     "Lievito fresco (sulla farina del prefermento)",
@@ -45,6 +50,12 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
       flavor: "Leggermente acidulo, note di nocciola",
       crustResult: "Sottile e dorata; colore e macchie dipendono da forno e temperatura",
       extensibility: "Alta (stima): stesura facile",
+      steps: [
+        "Mescola farina e acqua in parti uguali con il lievito, fino a una pastella liscia.",
+        "Copri e lascia maturare circa {poolishHours} a {poolishTemp}: è pronto quando è pieno di bolle e il centro comincia a cedere.",
+        "Nell'impasto finale sciogli il poolish nell'acqua rimasta, poi aggiungi il resto della farina.",
+        "Aggiungi sale e grassi solo adesso, mai nel poolish.",
+      ],
       tips: [
         "Pronto quando la superficie è piena di bollicine e il centro comincia a cedere",
         "Più lievito, meno ore: a 20–22 °C 0,1% per 15–16 h, 0,3% per 10–12 h",
@@ -60,6 +71,12 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
       flavor: "Aromatico, floreale",
       crustResult: "Croccante; la struttura dipende da idratazione e stesura",
       extensibility: "Dipende da farina e idratazione (da verificare)",
+      steps: [
+        "Mescola farina, acqua e lievito per poco: la biga deve restare grumosa, non liscia.",
+        "Copri e lascia maturare circa {bigaHours} a {bigaTemp}.",
+        "Nell'impasto finale spezzala nell'acqua rimasta, poi aggiungi il resto della farina.",
+        "Aggiungi il sale solo adesso, mai nella biga.",
+      ],
       tips: [
         "Pronta quando è gonfia a tratti, profuma di yogurt e frizza appena; se sa di acido è andata oltre",
         "Biga lunga: 24 h a 4–5 °C, poi 24 h a 18–20 °C",
@@ -77,6 +94,11 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
       crustResult: "Variabile — dipende dal processo successivo",
       extensibility: "Alta — impasto setoso e meno appiccicoso",
       idealStyles: "Tutti gli stili (tecnica universale)",
+      steps: [
+        "Mescola solo farina e acqua, senza lievito né sale.",
+        "Lascia riposare {autolysisRest}.",
+        "Poi aggiungi il lievito (o il prefermento) e, alla fine, il sale.",
+      ],
       tips: [
         "Riposo di 20–60 minuti; lievito e sale si aggiungono dopo",
         "Si combina con biga o poolish",
@@ -102,7 +124,6 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
     fermentation: "Fermentazione",
     shaping: "Stesura",
     baking: "Cottura",
-    solver: "Algoritmo",
     false_positive: "Falsi allarmi",
   },
   /* FW-05 (S13-A-01/B-01, D-I): un solo testo italiano, in ISSUES_DB; prima
@@ -202,6 +223,11 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
       title: "Biga e poolish",
       l1: "Idratazione, ore e temperature vengono da fonti di settore concordi.",
       l2: "La biga è un prefermento asciutto che matura lentamente al fresco; il poolish è liquido e matura più in fretta. Crosta e alveolatura dipendono soprattutto da forno, idratazione e stesura, non dal solo prefermento.",
+    },
+    "pre-ferment-procedure": {
+      title: "Come si preparano",
+      l1: "I passi sono una scelta di {brand}; ore e temperature sono quelle del motore.",
+      l2: "Le fonti lette danno idratazione, ore, temperature e i segni di maturazione, non il modo di impastare. Biga grumosa, poolish liscio, prefermento sciolto nell'acqua rimasta e sale solo nell'impasto finale sono la pratica comune che {brand} ha scelto di indicare: il sale rallenta i lieviti, per questo resta fuori dal prefermento.",
     },
     autolysis: {
       title: "Autolisi",
@@ -328,6 +354,11 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
       title: "Soglie dei problemi",
       l1: "Le soglie numeriche dei problemi sono indicative.",
       l2: "Sono regole pratiche senza una fonte pubblicata e non tengono conto dello stile: un impasto in teglia, per esempio, è molto più idratato di una napoletana. Usale come spunto, non come diagnosi.",
+    },
+    "troubleshooting-practice": {
+      title: "Consigli pratici",
+      l1: "Pala, panetto che si allarga e buchi in stesura: i rimedi sono pratica comune scelta da {brand}, non misure.",
+      l2: "Per questi consigli non abbiamo una fonte pubblicata e non contengono soglie numeriche: dicono cosa guardare e cosa fare subito. Se la ricetta indica tempi, idratazione o farina, valgono quelli.",
     },
     /* FW-19: piano temporale. */
     "comfort-tolerances": {

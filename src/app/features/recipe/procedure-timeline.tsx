@@ -7,7 +7,8 @@ import { motion } from "motion/react";
 import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
-import { COLD_RETARD_MAX_C, getStepTroubleshooting } from "../../data/troubleshooting-data";
+import { getStepTroubleshooting } from "../../data/troubleshooting-data";
+import { stepTroubleContext } from "./step-trouble-context";
 import { resolveStepVisual } from "../cooking/step-visual";
 import { StepIllustration } from "../cooking/step-illustrations";
 import { procedureTimelineRows } from "./procedure-step-identity";
@@ -73,7 +74,7 @@ export function ProcedureTimeline({
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
-  const filled = recipe.timeline.some(step => resolveStepVisual(step) === "fill_internal");
+  const troubleContext = stepTroubleContext(recipe);
   // FW-19: le pieghe sono un passo; il consiglio della puntata non le ripete.
   const foldsInPlan = recipe.timeline.some((step) => step.id === "folds");
   // FW-07: il consiglio di cottura parla del forno della ricetta, passo per passo.
@@ -160,21 +161,14 @@ export function ProcedureTimeline({
               const localizedStep = localizeStep(displayStep, recipe, cms, fmt);
               const visual = resolveStepVisual(displayStep, { unleavened: !!recipe.style.dough.unleavened });
               const filling = visual === "fill_internal" || visual === "split_fill";
-              const assemblyTitle = filling ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle : cms.cooking.toppingTitle;
+              const assemblyTitle = filling ? cms.cooking.fillingTitle : cms.cooking.toppingTitle;
               const tipText = localizedStep.tip
                 ? isNerd
                   ? localizedStep.tip.nerd
                   : localizedStep.tip.beginner
                 : null;
               const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext(step), cms.parametricText);
-              /* FW-05: puntata in frigo (S13-B-02) e farina senza glutine, che a
-                 catalogo ha W 0 (S13-B-14), restringono le diagnosi della fase. */
-              const trouble = getStepTroubleshooting(step, {
-                unleavened: !!recipe.style.dough.unleavened,
-                filled,
-                coldRetard: recipe.fermentation_temp_c <= COLD_RETARD_MAX_C,
-                glutenFree: recipe.flour_w <= 0,
-              });
+              const trouble = getStepTroubleshooting(step, troubleContext);
               /* FW-19 (S09-A-11, S09-B-06): l'appretto mostra la sua durata
                  vera; gli ultimi minuti corrono mentre il forno scalda (il
                  passo dopo), e lo si dice qui invece che con un conto nel

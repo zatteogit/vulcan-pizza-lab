@@ -107,7 +107,7 @@ export interface CmsUiStrings {
   customizeParams: string;
   /** Redesign lug 2026: azione "Personalizza" sulla match card (apre il
    *  dialog parametri; sostituisce la leva "Regola a mano"). Opzionale. */
-  personalize?: string;
+  personalize: string;
   changeStyle: string;
   // Recipe output
   ingredients: string;
@@ -432,6 +432,12 @@ export interface CmsPreFerment {
   techniqueLabel: string;
   /** FW-05 (S14-A-02): dose della ricetta accanto ai valori della guida. */
   recipeContextLine: string;
+  /** G4b-WP-02 (S14-B-07): «Come si fa» e l'esempio su 1 kg di farina
+   *  ({flour}, {hydration}, {name}, {water}, {yeast}: valori del motore). */
+  stepsLabel: string;
+  exampleLabel: string;
+  examplePreFerment: string;
+  exampleFinal: string;
   compLabels: string[];
   items: Record<string, {
     origin: string;
@@ -445,6 +451,8 @@ export interface CmsPreFerment {
     /** FW-05 (S14-A-01): solo per l'autolisi; per biga e poolish gli stili
      *  vengono dal motore (process_type). */
     idealStyles?: string;
+    /** G4b-WP-02: 3-4 passi; ore e temperature come segnaposto del motore. */
+    steps: string[];
     tips: string[];
   }>;
   compValues: Record<string, { biga: string; poolish: string; autolisi: string }>;
@@ -881,7 +889,6 @@ export interface CmsContent {
     sectionsAria: string;
     toppingPrevAria: string;
     toppingNextAria: string;
-    notPersonalizedAria: string;
     tabRecipe: string;
     tabRecipeTailored: string;
     /** Etichetta stato ricetta non personalizzata (pill contesto + occhiello). */
@@ -889,6 +896,14 @@ export interface CmsContent {
     /** Dialog pre-cottura: la ricetta canonica non è ancora adattata. */
     preCookTitle: string;
     preCookBody: string;
+    /** G4a-WP-03: titolo della lista delle condizioni (le stesse della match card). */
+    preCookConditionsTitle: string;
+    /** {start}/{end}: orari con preposizione (format.atClock/aroundClock). */
+    preCookTimes: string;
+    /** {in}: tempo relativo (format.relativeIn). */
+    preCookFirstStepIn: string;
+    /** {requirement}: la causa principale del blocco (blockerText). */
+    startBlockedReason: string;
     preCookAdapt: string;
     preCookStart: string;
     /** Match card — tono relazionale per fascia di punteggio (≥90/75/60/40/resto). */
@@ -924,7 +939,7 @@ export interface CmsContent {
     toppingTitle: string;
     /** Etichetta sezione condimento per gli stili FARCITI (es. "Farcitura").
      *  Se assente, si usa toppingTitle. */
-    fillingTitle?: string;
+    fillingTitle: string;
     chooseTopping: string;
     learnMore: string;
     start: string;
@@ -942,11 +957,20 @@ export interface CmsContent {
     abortYes: string;
     abortNo: string;
     minimize: string;
-    minimizeHint: string;
     inProgress: string;
     done: string;
     finish: string;
+    /** S10-A-15: «L'impasto è già pronto?» (anche titolo della conferma). */
     finishedEarly: string;
+    /** S10-B-11: conferma prima di chiudere un'attesa in anticipo. */
+    skipConfirmBody: string;
+    skipConfirmYes: string;
+    skipConfirmNo: string;
+    /** Criterio di prontezza per fase (dai longDesc delle fasi). */
+    readyCriterion: { bulk: string; bulkCold: string; proof: string; preferment: string; default: string };
+    /** Toast dopo un completamento, con «Annulla». */
+    stepDoneToast: string;
+    undo: string;
     phaseDone: string;
     /** Giorno di oggi accanto a un orario («oggi»). */
     dayToday: string;
@@ -997,13 +1021,13 @@ export interface CmsContent {
     stepDetailsShow: string;
     /** Redesign lug 2026: toggle compatto sotto il numero del Match
      *  ("Dettagli ⌄" / "Nascondi ⌃"). Opzionali. */
-    matchDetails?: string;
-    matchDetailsHide?: string;
+    matchDetails: string;
+    matchDetailsHide: string;
     /** Redesign lug 2026: avviso all'uscita con modifiche non salvate
      *  (sostituisce la gestione bozze/parcheggio). {style} interpolato. */
-    unsavedTitle?: string;
-    unsavedBody?: string;
-    unsavedDiscard?: string;
+    unsavedTitle: string;
+    unsavedBody: string;
+    unsavedDiscard: string;
     /** "È andata lunga?" (audit lug 2026) — domanda per-fase che porta
      *  all'issue di troubleshooting più probabile (STEP_TROUBLE). Chiavi:
      *  preferment/mix/bulk/proof/shape/bake. Opzionale. */
@@ -1011,8 +1035,8 @@ export interface CmsContent {
     /** Nota sotto lo scorporo biga/poolish (prima hardcoded in italiano). */
     prefermentSaltNote?: string;
     /** Pannello F2 "Vulcan ha imparato dai tuoi tentativi" (prima hardcoded). */
-    learnedFromAttempts?: string;
-    applyCorrections?: string;
+    learnedFromAttempts: string;
+    applyCorrections: string;
     tipsCountOne: string;
     tipsCountMany: string;
     servingUnits: Record<string, { singular: string; plural: string }>;
@@ -1118,8 +1142,8 @@ export interface CmsContent {
     ovenPan: string;
     /** Ricerca testuale nella lista stili del Crea (audit lug 2026).
      *  Opzionali: i locale non ancora tradotti cadono sul default. */
-    stylesSearchPlaceholder?: string;
-    stylesSearchNoResults?: string;
+    stylesSearchPlaceholder: string;
+    stylesSearchNoResults: string;
   };
   /** Glossary page labels */
   glossary: {
@@ -1659,13 +1683,15 @@ export const CMS_DEFAULTS: CmsContent = {
     sectionsAria: "Sezioni della ricetta",
     toppingPrevAria: "Condimento precedente",
     toppingNextAria: "Condimento successivo",
-    notPersonalizedAria: "Ricetta non ancora personalizzata",
     tabRecipe: "Ricetta",
     tabRecipeTailored: "Ricetta su misura",
     recipeCanonical: "Riferimento",
     preCookTitle: "Prima di iniziare",
-    preCookBody:
-      "Stai consultando il riferimento. Prima di prepararlo, controlla le condizioni oppure adattalo alla tua cucina.",
+    preCookBody: "Stai per cucinare il riferimento così com'è, senza modifiche per la tua cucina.",
+    preCookConditionsTitle: "Controlla prima",
+    preCookTimes: "Inizi {start} · pronta {end}",
+    preCookFirstStepIn: "Il primo passo inizia {in}.",
+    startBlockedReason: "Non si può iniziare. {requirement}",
     preCookAdapt: "Adattala alla mia cucina",
     preCookStart: "Usa il riferimento",
     matchTones: {
@@ -1732,11 +1758,22 @@ export const CMS_DEFAULTS: CmsContent = {
     abortYes: "Sì, interrompi",
     abortNo: "Continua la pizzata",
     minimize: "Riduci — la pizzata continua in background",
-    minimizeHint: "Riduci: la pizzata continua",
     inProgress: "Pizzata in corso",
     done: "Pizza in tavola!",
     finish: "Concludi la pizzata",
-    finishedEarly: "Ho finito prima — salta l'attesa",
+    finishedEarly: "L'impasto è già pronto?",
+    skipConfirmBody: "Controlla prima: {criterion}. Se vai avanti adesso, la pizza sarà pronta {newReady} invece che {plannedReady}.",
+    skipConfirmYes: "Sì, vado avanti",
+    skipConfirmNo: "Aspetto ancora",
+    readyCriterion: {
+      bulk: "volume raddoppiato, superficie bombata e liscia",
+      bulkCold: "in frigo cresce poco, quindi conta il tempo di maturazione più del volume",
+      proof: "gonfio e bombato; premuto piano con un dito, il segno torna su lentamente",
+      preferment: "cresciuto e pieno di bolle, con un profumo leggermente acidulo o fruttato",
+      default: "volume cresciuto in modo evidente",
+    },
+    stepDoneToast: "Fatto: {step}",
+    undo: "Annulla",
     phaseDone: "Tempo completato",
     dayToday: "oggi",
     dayTomorrow: "domani",
@@ -1752,7 +1789,7 @@ export const CMS_DEFAULTS: CmsContent = {
     readyAt: "pronta {eta}",
     widgetStepReadyAt: "{title} · pronta {eta}",
     widgetStepDueIn: "{title} {eta}",
-    waitingReadyAt: "In attesa · pronta {eta}",
+    waitingReadyAt: "In attesa · impasto pronto {eta}",
     stepDoneBadge: "fatto",
     continueAction: "Continua",
     doneAction: "Fatto",
@@ -2592,17 +2629,17 @@ export const CMS_DEFAULTS: CmsContent = {
     exploreFilterRecipes: "Ricette iconiche",
     learnFilterSubtitle: "Le guide qui sotto sono generali e valgono anche per questo stile.",
     learnRemoveFilter: "Rimuovi filtro stile",
-    learnPathLabel: "Percorso didattico",
-    learnStartPath: "Inizia il percorso",
+    learnPathLabel: "Da provare",
+    learnStartPath: "Apri la ricetta",
     learnTermOfTheDay: "Termine del giorno — {category}",
     learnPath1Title: "La tua prima teglia",
-    learnPath1Copy: UI_MESSAGES_IT["pages.learn.path1.copy"],
-    learnPath2Title: UI_MESSAGES_IT["pages.learn.path2.title"],
-    learnPath2Copy: UI_MESSAGES_IT["pages.learn.path2.copy"],
+    learnPath1Copy: "Impara a lavorare un impasto in teglia: mescolare, fare le pieghe e seguire la lievitazione.",
+    learnPath2Title: "Prova il padellino",
+    learnPath2Copy: "Bordo soffice e base croccante: scopri come forma e materiale della teglia cambiano la cottura.",
     learnPath3Title: "La sfida del canotto",
-    learnPath3Copy: UI_MESSAGES_IT["pages.learn.path3.copy"],
-    learnPath4Title: UI_MESSAGES_IT["pages.learn.path4.title"],
-    learnPath4Copy: UI_MESSAGES_IT["pages.learn.path4.copy"],
+    learnPath3Copy: "Lavora un impasto molto idratato e cura la stesura per conservare il cornicione.",
+    learnPath4Title: "La teglia, livello esperto: freddo e maturazione",
+    learnPath4Copy: "Pieghe, freddo e maturazione: organizza una preparazione più lunga e osserva come cambia l’impasto.",
     preFermentsSubtitle: "Come usarli e quando inserirli nella preparazione.",
     preFermentsDescription: "Biga e poolish si preparano prima dell’impasto finale. La <strong>biga</strong> è un impasto asciutto, con il {bigaHydration} d’acqua; il <strong>poolish</strong> ha farina e acqua in parti uguali. L’<strong>autolisi</strong> è invece un riposo di farina e acqua, senza lievito né sale: non è un prefermento.",
     preFermentsChoiceTitle: "Quale scegliere?",
