@@ -48,7 +48,12 @@ try {
 }
 
 const gz = (file) => gzipSync(readFileSync(file)).length;
-const js = files.filter((f) => f.endsWith(".js")).map((f) => ({ f, size: gz(f) }));
+/* Chunk caricati solo dalle pagine del CMS (oggi l'archivio foto, /cms/foto):
+   nessun percorso pubblico li richiede, come il CSS del CMS qui sotto. Si
+   misurano a parte; un chunk nuovo del CMS va aggiunto qui, non ai limiti. */
+const CMS_ONLY_JS = /\/photo-library-[^/]+\.js$/;
+const cmsJs = files.filter((f) => CMS_ONLY_JS.test(f));
+const js = files.filter((f) => f.endsWith(".js") && !cmsJs.includes(f)).map((f) => ({ f, size: gz(f) }));
 const cmsCss = files.filter((f) => /photo-library-[^/]+\.css$/.test(f));
 const css = files.filter((f) => f.endsWith(".css") && !cmsCss.includes(f)).map((f) => ({ f, size: gz(f) }));
 const videos = files.filter((f) => /\.(mp4|webm|mov)$/i.test(f)).map((f) => ({ f, size: statSync(f).size }));
@@ -108,5 +113,7 @@ if (failed) {
 console.log("✓ budget di prestazioni rispettati");
 
 console.log(`CMS photo archive (loaded on demand): ${(sum(archiveImages.map(f => ({ size: statSync(f).size }))) / MB).toFixed(1)} MB; product image budget unchanged.`);
+
+console.log(`CMS-only JS, lazy: ${sum(cmsJs.map(f => ({ size: gz(f) })))} bytes gzip (not requested by public journeys).`);
 
 console.log(`CMS-only CSS, lazy: ${sum(cmsCss.map(f => ({ size: gz(f) })))} bytes gzip (not requested by public journeys).`);
