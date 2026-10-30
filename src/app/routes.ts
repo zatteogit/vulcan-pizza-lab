@@ -44,6 +44,9 @@ export const APP_ROUTES: AppRoute[] = [
   { path: "learn/metodo", Component: page(() => import("./pages/method"), "MethodPage") },
   { path: "profile", Component: page(() => import("./pages/profile"), "ProfilePage") },
 
+  // Shared media CMS is available in production; its API requires an editor session.
+  { path: "cms/foto", Component: page(() => import("./features/cms/photo-library"), "PhotoLibraryPage") },
+
   /* ═══ DETAIL ROUTES ═══ */
   { path: "recipe/:styleId", Component: page(() => import("./pages/recipe"), "RecipePage") },
 

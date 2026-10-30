@@ -265,6 +265,7 @@ export function CmsPage() {
         </div>
       </header>
 
+      <a className="p-4" href="/cms/foto">Archivio foto condiviso e versioni precedenti</a>
       {/* ═══ IMPORT PANEL ═══ */}
       <AnimatePresence>
         {showImport && (

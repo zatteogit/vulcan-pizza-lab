@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getPublishedPhoto, usePublishedMediaRevision } from "./published-media";
 import { getResponsiveImage, IMAGE_SIZES } from "./responsive-images";
 
 /* ═══ ImageWithFallback (VPL-A4) ═══
@@ -56,6 +57,10 @@ export function ImageWithFallback(props: ImageWithFallbackProps) {
     height,
     ...rest
   } = props;
+  usePublishedMediaRevision();
+  const published = getPublishedPhoto(src);
+  const effectiveSrc = published?.src ?? src;
+  useEffect(() => { setDidError(false); setLoaded(false); }, [effectiveSrc]);
   const responsive = srcSet ? undefined : getResponsiveImage(src);
   const resolvedLoading = loading ?? (priority ? "eager" : "lazy");
   /* fetchpriority in minuscolo: React 18.2 non conosce ancora fetchPriority. */
@@ -105,7 +110,7 @@ export function ImageWithFallback(props: ImageWithFallbackProps) {
             : undefined)
         }
         srcSet={srcSet ?? responsive?.srcSet}
-        src={src}
+        src={effectiveSrc}
         alt={alt}
         {...rest}
         onError={() => setDidError(true)}

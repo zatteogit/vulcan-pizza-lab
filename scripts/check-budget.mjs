@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createHash } from "node:crypto";
 /* ═══ P-5 — budget di prestazioni sulla build (dist/) ═══
  * Misure del 24/10/2026 e motivi in docs/budget-prestazioni.md. I limiti sono
  * un cricchetto: si abbassano quando si migliora, non si alzano per far
@@ -48,9 +49,23 @@ try {
 
 const gz = (file) => gzipSync(readFileSync(file)).length;
 const js = files.filter((f) => f.endsWith(".js")).map((f) => ({ f, size: gz(f) }));
-const css = files.filter((f) => f.endsWith(".css")).map((f) => ({ f, size: gz(f) }));
+const cmsCss = files.filter((f) => /photo-library-[^/]+\.css$/.test(f));
+const css = files.filter((f) => f.endsWith(".css") && !cmsCss.includes(f)).map((f) => ({ f, size: gz(f) }));
 const videos = files.filter((f) => /\.(mp4|webm|mov)$/i.test(f)).map((f) => ({ f, size: statSync(f).size }));
-const images = files.filter((f) => /\.(png|jpe?g|webp|avif|gif|svg)$/i.test(f)).map((f) => ({ f, size: statSync(f).size }));
+const archiveImages = files.filter((f) => f.includes("/media/photos/"));
+// Count the largest selectable responsive version per CMS slot. Immutable
+// historical copies do not all download in one public experience.
+const mediaCatalog = JSON.parse(readFileSync("public/media/catalog.json", "utf8"));
+const fallbackHashes = new Set(mediaCatalog.versions.filter(v => v.label === "Precedente")
+  .flatMap(v => [v.src, v.smallSrc]).map(url => basename(url, ".webp")));
+const images = files.filter(f => !archiveImages.includes(f) && /\.(png|jpe?g|webp|avif|gif|svg)$/i.test(f))
+  .filter(f => !fallbackHashes.has(createHash("sha256").update(readFileSync(f)).digest("hex")))
+  .map(f => ({ f, size: statSync(f).size }));
+for (const slot of Object.keys(mediaCatalog.active)) {
+  const largest = Math.max(...mediaCatalog.versions.filter(v => v.slot === slot)
+    .map(v => [...new Set([v.src, v.smallSrc])].reduce((n, url) => n + statSync(join(DIST, url)).size, 0)));
+  images.push({ f: `CMS:${slot}`, size: largest });
+}
 // Cataloghi caricati solo per la lingua attiva (features/cms/locales/<lingua>.ts):
 // un utente ne scarica uno, quindi non si sommano tra loro.
 const LOCALES = readdirSync("src/app/features/cms/locales")
@@ -91,3 +106,7 @@ if (failed) {
   process.exit(1);
 }
 console.log("✓ budget di prestazioni rispettati");
+
+console.log(`CMS photo archive (loaded on demand): ${(sum(archiveImages.map(f => ({ size: statSync(f).size }))) / MB).toFixed(1)} MB; product image budget unchanged.`);
+
+console.log(`CMS-only CSS, lazy: ${sum(cmsCss.map(f => ({ size: gz(f) })))} bytes gzip (not requested by public journeys).`);
