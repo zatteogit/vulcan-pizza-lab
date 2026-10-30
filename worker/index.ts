@@ -19,6 +19,8 @@
  * Cloudflare-runtime types don't affect `tsc`.
  */
 
+import { handleMediaRequest } from "../src/server/media/handler";
+import { mediaStore } from "./media-store";
 import { handleMcpBody } from "../src/app/agent/mcp-server";
 import { fetchAlexaCertChain, handleAlexaRequest } from "../src/server/alexa/handler";
 import { handleVoiceRequest } from "../src/server/voice/http";
@@ -405,6 +407,25 @@ export default {
       if (response) {
         const headers = withSecurityHeaders(new Headers(response.headers));
         return new Response(response.body, { status: response.status, headers });
+      }
+    }
+
+    if (url.pathname.startsWith("/api/media/")) {
+      if (!env.DB) return notFound();
+      try {
+        const response = await handleMediaRequest(request, {
+          store: mediaStore(env.DB),
+          async actor(original) {
+            await ensureAuthSchema(env.DB!);
+            const me = await handleAuthRequest(new Request(new URL("/api/auth/me", original.url), { headers: original.headers }), {
+              store: d1AuthStore(env.DB!), env, fetchJwks: fetchGoogleJwks,
+            });
+            return me?.ok ? await me.json() as { role: string } : null;
+          },
+        });
+        return withHeaders(response);
+      } catch {
+        return json({ error: "Libreria foto momentaneamente non disponibile." }, 503, {});
       }
     }
 

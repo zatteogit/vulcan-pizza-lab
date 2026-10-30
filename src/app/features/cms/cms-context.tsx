@@ -18,6 +18,7 @@ import {
   GLOSSARY_TERMS_DEFAULTS,
   SCIENCE_I18N_DEFAULTS,
 } from "./domain-i18n-defaults";
+import { refreshPublishedMedia, usePublishedMediaRevision } from "../../components/media/published-media";
 import { STYLE_PHOTOS } from "../../data/style-photos";
 import type {
   GlossaryMessages,
@@ -2926,6 +2927,8 @@ export function useCms() {
 }
 
 export function CmsProvider({ children }: { children: React.ReactNode }) {
+  const mediaRevision = usePublishedMediaRevision();
+  useEffect(() => { void refreshPublishedMedia(); }, []);
   const [overrides, setOverrides] = useState<Partial<CmsContent> | null>(loadCms);
   /* Bump quando un bundle locale arriva dal lazy-load: fa ricalcolare la base. */
   const [localeTick, setLocaleTick] = useState(0);
@@ -3004,7 +3007,7 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
 
   const rawCms = useMemo(
     () => deepMerge(fallbackBase, overrides) as CmsContent,
-    [fallbackBase, overrides],
+    [fallbackBase, overrides, mediaRevision],
   );
 
   /* Nome del prodotto risolto in un solo punto: ogni consumer legge il nome

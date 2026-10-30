@@ -4,6 +4,7 @@
  * principale viene riconosciuto e arricchito con srcset, width e height; gli URL
  * esterni o caricati dal CMS passano invariati. La tabella è generata da
  * scripts/build-responsive-images.py. */
+import { getPublishedPhoto } from "./published-media";
 import { RESPONSIVE_IMAGE_ENTRIES } from "./responsive-images.generated";
 
 export interface ResponsiveImageInfo {
@@ -36,6 +37,8 @@ const BY_SRC = new Map<string, ResponsiveImageInfo>(
 );
 
 export function getResponsiveImage(src: string | undefined): ResponsiveImageInfo | undefined {
+  const published = getPublishedPhoto(src);
+  if (published) return { srcSet: `${published.smallSrc} ${published.smallWidth}w, ${published.src} ${published.width}w`, width: published.width, height: published.height };
   return src ? BY_SRC.get(src) : undefined;
 }
 

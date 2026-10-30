@@ -29,7 +29,7 @@ not_found_handling = "single-page-application"
 # servito dagli asset: senza, /api/annotations e /api/config in produzione
 # finivano sul fallback SPA (200 con l'HTML) invece del 404 del Worker.
 # D-061: /api/voice (Siri) e /alexa (skill Alexa) sono rotte del Worker.
-run_worker_first = ["/mcp", "/api/voice", "/alexa", "/api/auth/*", "/api/annotations", "/api/config"]
+run_worker_first = ["/mcp", "/api/voice", "/alexa", "/api/auth/*", "/api/annotations", "/api/config", "/api/media/*"]
 
 # D-046: ruoli per impronta SHA-256 dell'email normalizzata (il repository è
 # pubblico: niente email in chiaro). GOOGLE_CLIENT_ID è pubblico per natura;

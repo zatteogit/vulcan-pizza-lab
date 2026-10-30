@@ -170,6 +170,15 @@ function collect(): Baseline & {
     const content = fs.readFileSync(absolute);
     if (content.byteLength === 0) continue;
     const hash = createHash("sha256").update(content).digest("hex");
+    // CMS photo archives intentionally retain a byte-identical fallback copy.
+    // Only a correctly content-addressed file referenced by the CMS manifest is exempt.
+    const relative = rel(absolute);
+    if (relative === `public/media/photos/${hash}.webp`) {
+      const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "public/media/catalog.json"), "utf8"));
+      const referenced = manifest.versions.some((v: { src: string; smallSrc: string }) =>
+        [v.src, v.smallSrc].includes(relative.slice("public".length)));
+      if (referenced) continue;
+    }
     const group = allByHash.get(hash) ?? [];
     group.push(rel(absolute));
     allByHash.set(hash, group);
