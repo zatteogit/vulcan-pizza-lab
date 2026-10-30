@@ -7,7 +7,7 @@ import { learningStyleForKitchen } from "../use-cases/learning-path";
 import { tailoredRecipeEntry, styleWithSelectedTopping } from "../use-cases/recipe-entry";
 import { recipeCardSignals, recipePresentationState } from "../features/recipe/recipe-card-signals";
 import { localizeStep } from "../features/recipe/recipe-output-format";
-import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { IT_LOCALE } from "../features/cms/locales/it";
 import { createFormatter } from "../features/cms/i18n";
 
 const kitchen: UserConstraints = { oven_type:"wood",oven_max_temp_c:485,available_hours:48,meal_deadline:false,dough_balls:2,skill_level:3,
@@ -119,7 +119,7 @@ describe("persona audit: mode, quantity, schedule and learning",()=>{
       expect(heat.parallel_activity?.duration_minutes,id).toBe(heat.duration_minutes);
       const fermentation=r.timeline.filter(s=>["preferment","folds","bulk","proof","preheat"].includes(s.id)).reduce((n,s)=>n+s.duration_minutes,0);
       expect(Math.abs(fermentation-r.fermentation_hours*60),id).toBeLessThanOrEqual(1);
-      const localized=localizeStep(heat,r,CMS_DEFAULTS,createFormatter(CMS_DEFAULTS.ui,"it-IT"));
+      const localized=localizeStep(heat,r,IT_LOCALE,createFormatter(IT_LOCALE.ui,"it-IT"));
       // FW-19 (S09-A-11): niente «contabilità del tempo» nel passo; per gli
       // impasti lievitati, una volta sola il segno di prontezza dei panetti.
       expect(localized.description).not.toMatch(/già inclusi|non aggiungerli/);

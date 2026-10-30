@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
  * citano numeri e regole del motore. Qui si verifica, in tutte e 7 le lingue,
  * che i testi interpolati contengano i valori del motore e che le voci coperte
  * non abbiano cifre scritte a mano (solo segnaposto da engine-facts). */
-import { CMS_DEFAULTS, type CmsContent } from "../../features/cms/cms-context";
+import { type CmsContent } from "../../features/cms/cms-context";
+import { IT_LOCALE } from "../../features/cms/locales/it";
 import { EN_LOCALE } from "../../features/cms/locales/en";
 import { DE_LOCALE } from "../../features/cms/locales/de";
 import { ES_LOCALE } from "../../features/cms/locales/es";
@@ -34,7 +35,7 @@ import {
 } from "./engine-facts";
 
 const BUNDLES: Record<string, CmsContent> = {
-  it: CMS_DEFAULTS,
+  it: IT_LOCALE,
   en: EN_LOCALE,
   de: DE_LOCALE,
   es: ES_LOCALE,
@@ -215,7 +216,7 @@ describe.each(Object.entries(BUNDLES))("Regola 55 e motore, %s", (locale, bundle
 
 describe.each(Object.entries(BUNDLES))("prefermenti e motore, %s", (locale, bundle) => {
   const values = glossaryFactValues(locale);
-  const pf = { ...CMS_DEFAULTS.preFerment, ...bundle.preFerment };
+  const pf = { ...IT_LOCALE.preFerment, ...bundle.preFerment };
   const fill = (text: string) => interpolate(text, values);
 
   it("idratazione e quota di farina vengono dal motore (S14-A-07, S14-B-14)", () => {

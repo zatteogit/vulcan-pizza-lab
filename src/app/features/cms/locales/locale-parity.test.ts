@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { CMS_DEFAULTS, type CmsContent } from "../cms-context";
+import { type CmsContent } from "../cms-context";
+import { IT_LOCALE } from "./it";
 import { STYLES_DB } from "../../../domain/styles-db";
 import { getVersions } from "../../../data/style-versions";
 import { getDoughBaseByStyle } from "../../../data/parametric-databases";
@@ -14,7 +15,7 @@ import { JA_LOCALE } from "./ja";
  * Il bundle di una lingua si fonde sopra inglese e italiano: una chiave
  * mancante non rompe nulla, ma mostra in silenzio un'altra lingua (prima
  * es/fr/pt ne avevano circa 300 e il glossario era vuoto in 5 lingue).
- * Qui ogni testo di CMS_DEFAULTS deve esistere in ogni bundle. Numeri e booleani
+ * Qui ogni testo di IT_LOCALE deve esistere in ogni bundle. Numeri e booleani
  * non sono testo; media e i cataloghi con test propri restano fuori. */
 
 const SKIP = /^(media|messages|toppingI18n|inspirationI18n|locale)\./;
@@ -42,7 +43,7 @@ function has(bundle: unknown, path: string): boolean {
   return true;
 }
 
-const REQUIRED = textLeaves(CMS_DEFAULTS).filter((path) => !SKIP.test(path));
+const REQUIRED = textLeaves(IT_LOCALE).filter((path) => !SKIP.test(path));
 
 const BUNDLES: Record<string, CmsContent> = {
   en: EN_LOCALE,
@@ -59,13 +60,39 @@ describe.each(Object.entries(BUNDLES))("bundle %s", (_locale, bundle) => {
   });
 });
 
+/* Budget D-059 (30/10/2026): la base di una lingua è il suo bundle, senza la
+ * riserva inglese. Regge solo se ogni bundle ha OGNI foglia dell'italiano,
+ * anche numeri, media e catalogo uiMessage, non soltanto i testi. */
+function allLeaves(value: unknown, path: string[] = [], out: string[][] = []): string[][] {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    for (const [key, child] of Object.entries(value)) allLeaves(child, [...path, key], out);
+  } else {
+    out.push(path);
+  }
+  return out;
+}
+function hasPath(bundle: unknown, path: string[]): boolean {
+  let node: unknown = bundle;
+  for (const segment of path) {
+    if (!node || typeof node !== "object" || !(segment in node)) return false;
+    node = (node as Record<string, unknown>)[segment];
+  }
+  return true;
+}
+describe.each(Object.entries(BUNDLES))("bundle %s, struttura completa", (_locale, bundle) => {
+  it("ha ogni foglia dell'italiano (basta da solo, senza riserva)", () => {
+    const missing = allLeaves(IT_LOCALE).filter((path) => !hasPath(bundle, path));
+    expect(missing.map((path) => path.join("."))).toEqual([]);
+  });
+});
+
 /* Ogni stile del catalogo ha descrizione e caratteristiche nel CMS: senza, la UI
  * ricade sul testo italiano di styles-db in tutte le lingue (14 stili su 28
- * erano così). Con le chiavi in CMS_DEFAULTS, il test sopra le esige ovunque. */
+ * erano così). Con le chiavi in IT_LOCALE, il test sopra le esige ovunque. */
 describe("stili nel CMS", () => {
   it("ogni stile ha descrizione e caratteristiche", () => {
     const missing = Object.keys(STYLES_DB).filter(
-      (id) => !CMS_DEFAULTS.styleDescriptions[id] || !CMS_DEFAULTS.styleChars[id],
+      (id) => !IT_LOCALE.styleDescriptions[id] || !IT_LOCALE.styleChars[id],
     );
     expect(missing).toEqual([]);
   });
@@ -109,7 +136,7 @@ const REFERENCE_TEXTS = (c: CmsContent) => ({
   ceilingCompromise: c.cooking?.ceilingCompromise,
   resetToOriginal: c.cooking?.resetToOriginal,
 });
-describe.each(Object.entries({ it: CMS_DEFAULTS, ...BUNDLES }))("FW-14 lessico del riferimento, %s", (_locale, bundle) => {
+describe.each(Object.entries({ it: IT_LOCALE, ...BUNDLES }))("FW-14 lessico del riferimento, %s", (_locale, bundle) => {
   it("nessun testo del riferimento dice «Originale»", () => {
     const texts = REFERENCE_TEXTS(bundle);
     for (const [key, text] of Object.entries(texts)) expect(text, key).toBeTruthy();
@@ -120,7 +147,7 @@ describe.each(Object.entries({ it: CMS_DEFAULTS, ...BUNDLES }))("FW-14 lessico d
 /* Revisione G2 (WCAG 2.5.3, nome contiene l'etichetta): il «Ripristina» del
  * Personalizza mostra recipeResetPreset ma si chiama resetToReference. */
 describe("il nome accessibile del reset contiene il testo visibile", () => {
-  for (const [id, locale] of Object.entries({ it: CMS_DEFAULTS, en: EN_LOCALE, de: DE_LOCALE, es: ES_LOCALE, fr: FR_LOCALE, pt: PT_LOCALE, ja: JA_LOCALE })) {
+  for (const [id, locale] of Object.entries({ it: IT_LOCALE, en: EN_LOCALE, de: DE_LOCALE, es: ES_LOCALE, fr: FR_LOCALE, pt: PT_LOCALE, ja: JA_LOCALE })) {
     it(id, () => {
       const visible = locale.ui.recipeResetPreset.toLocaleLowerCase();
       expect(String(locale.engineMessages?.["recipeSetup.resetToReference"]).toLocaleLowerCase()).toContain(visible);

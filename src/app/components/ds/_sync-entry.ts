@@ -7,6 +7,15 @@
  *
  * Cresce a onde — vedi docs/design-system-sync-gap.md.
  */
+import { primeLocaleBundle } from "../../features/cms/locales/index";
+import { IT_LOCALE } from "../../features/cms/locales/it";
+
+/* Budget D-059 (30/10/2026): i componenti dell'onda 2 rendono senza
+ * CmsProvider e leggevano l'italiano dal default del contesto, che era
+ * sempre nel codice. Ora l'italiano è un bundle lazy: qui lo si mette in
+ * cache, con il catalogo uiMessage, prima di ogni render. */
+primeLocaleBundle(IT_LOCALE);
+
 export * from "./index";
 
 /* ── Onda 1 — context-free, già pronti (bucket "B-free") ── */

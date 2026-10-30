@@ -33,6 +33,67 @@ function motionWithoutDragPlugin(): Plugin {
   };
 }
 
+/* Budget D-059 (30/10/2026): i testi, italiano compreso, sono bundle lazy
+   (src/app/features/cms/locales/<lingua>.ts) e main.tsx aspetta quello della
+   lingua di avvio prima del primo render. Per non aggiungere un giro di rete,
+   uno script in <head> sceglie la lingua con la stessa regola di
+   bootLocaleId() (locales/index.ts: stato salvato, altrimenti il browser) e
+   chiede con modulepreload i suoi chunk insieme a quello d'ingresso. Solo i
+   chunk della lingua di avvio: le altre non si scaricano. */
+function localePreloadPlugin(): Plugin {
+  let base = "/";
+  return {
+    name: "vulcan-locale-preload",
+    apply: "build",
+    configResolved(config) {
+      base = config.base;
+    },
+    transformIndexHtml: {
+      order: "post",
+      handler(html, ctx) {
+        const bundle = ctx.bundle;
+        if (!bundle) return html;
+        const chunkOf = (file: string) => {
+          const item = bundle[file];
+          return item?.type === "chunk" ? item : undefined;
+        };
+        const entry = Object.values(bundle).find((item) => item.type === "chunk" && item.isEntry);
+        if (!entry) return html;
+        const eager = new Set<string>();
+        const markEager = (file: string) => {
+          if (eager.has(file)) return;
+          eager.add(file);
+          chunkOf(file)?.imports.forEach(markEager);
+        };
+        markEager(entry.fileName);
+        const files: Record<string, string[]> = {};
+        for (const item of Object.values(bundle)) {
+          if (item.type !== "chunk" || !item.isDynamicEntry) continue;
+          const id = item.facadeModuleId?.replace(/\\/g, "/").match(/\/src\/app\/features\/cms\/locales\/([a-z]{2})\.ts$/)?.[1];
+          if (!id) continue;
+          const list: string[] = [];
+          const collect = (file: string) => {
+            if (eager.has(file) || list.includes(file)) return;
+            list.push(file);
+            chunkOf(file)?.imports.forEach(collect);
+          };
+          collect(item.fileName);
+          files[id] = list.map((file) => base + file);
+        }
+        if (!files.it) throw new Error("localePreloadPlugin: manca il chunk della lingua italiana");
+        const code = `(function(m){try{var id=null,raw=localStorage.getItem("vulcan_cms");if(raw){var s=raw.match(/"locale":\\{"id":"([a-z]{2})"/);id=s&&m[s[1]]?s[1]:"it"}else{var l=navigator.languages||[navigator.language];for(var i=0;i<l.length&&!id;i++){var c=String(l[i]).split("-")[0].toLowerCase();if(c==="it"||m[c])id=c}id=id||"en"}var f=m[id]||m.it;for(var j=0;j<f.length;j++){var k=document.createElement("link");k.rel="modulepreload";k.crossOrigin="";k.href=f[j];document.head.appendChild(k)}}catch(e){}})(${JSON.stringify(files)});`;
+        /* Prima del foglio di stile: uno script dopo un foglio di stile
+           aspetta che il CSS sia scaricato (su 4G lento il bundle partiva
+           1,7 s dopo). Non in cima a <head>: il meta charset deve restare nei
+           primi 1024 byte. */
+        const stylesheet = html.search(/<link rel="stylesheet"/);
+        if (stylesheet < 0) throw new Error("localePreloadPlugin: manca il foglio di stile in index.html");
+        return `${html.slice(0, stylesheet)}<script>${code}</script>\n    ${html.slice(stylesheet)}`;
+      },
+    },
+  };
+}
+
 function brandPlugin(): Plugin {
   const MANIFEST = "site.webmanifest";
   let outDir = path.resolve(__dirname, "dist");
@@ -191,7 +252,7 @@ function buildInfo(): { date: string; commit: string } {
 
 export default defineConfig(({ command }) => ({
   define: { __VULCAN_BUILD__: JSON.stringify(buildInfo()) },
-  plugins: [react(), tailwindcss(), saveAnnotationsPlugin(), brandPlugin(), motionWithoutDragPlugin()],
+  plugins: [react(), tailwindcss(), saveAnnotationsPlugin(), brandPlugin(), motionWithoutDragPlugin(), localePreloadPlugin()],
   resolve: {
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "./src") },
@@ -250,10 +311,9 @@ export default defineConfig(({ command }) => ({
           /* "motion" è un wrapper: senza framer-motion qui, i ~120 kB veri
              finivano nel chunk principale (audit bundle lug 2026). */
           if (/\/node_modules\/(motion|framer-motion|motion-dom|motion-utils)\//.test(file)) return "vendor-motion";
-          /* Catalogo UI italiano (lingua di riserva, sempre caricato): file a
-             sé accanto al chunk principale, che altrimenti supera i 100 kB. */
-          if (file.endsWith("/src/app/i18n/ui-messages.it.ts")) return "ui-messages-it";
-          /* Catalogo italiano (D-065): le traduzioni dei condimenti in un chunk
+          /* Il catalogo UI italiano non ha più un chunk proprio (budget D-059,
+             30/10/2026): entra nel bundle `it-…` con gli altri testi italiani.
+             Le traduzioni dei condimenti (D-065) hanno invece un chunk
              per lingua accanto al catalogo della lingua (si caricano insieme).
              Da sole il giapponese era a 98,5 kB sul tetto di 100 del chunk. */
           const toppings = file.match(/\/src\/app\/data\/topping-i18n\/([a-z]{2})\.ts$/);

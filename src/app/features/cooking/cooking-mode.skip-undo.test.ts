@@ -7,7 +7,7 @@ import {
   sessionReadyAt,
 } from "../../use-cases/cook-timing";
 import { applyCookSnapshot, takeCookSnapshot, type CookSessionStep } from "./cook-session";
-import { CMS_DEFAULTS } from "../cms/cms-context";
+import { IT_LOCALE } from "../cms/locales/it";
 import { STYLES_DB, type UserConstraints } from "../../domain/pizza-engine";
 import { isColdPhase } from "../../use-cases/cook-timing";
 import { learningPathRecipe } from "../../use-cases/learning-path";
@@ -74,11 +74,11 @@ describe("«L'impasto è già pronto?» — anteprima per la conferma", () => {
   it("ogni attesa flessibile ha il suo criterio di prontezza, in tutte le lingue di default", () => {
     for (const id of FLEXIBLE_STEP_IDS) {
       expect(readyCriterionKey(id)).toBe(id);
-      expect(CMS_DEFAULTS.cooking.readyCriterion[readyCriterionKey(id)]).toBeTruthy();
+      expect(IT_LOCALE.cooking.readyCriterion[readyCriterionKey(id)]).toBeTruthy();
     }
     expect(readyCriterionKey("rest")).toBe("default");
-    expect(CMS_DEFAULTS.cooking.finishedEarly).toBe("L'impasto è già pronto?");
-    expect(CMS_DEFAULTS.cooking.waitingReadyAt).toContain("impasto pronto {eta}");
+    expect(IT_LOCALE.cooking.finishedEarly).toBe("L'impasto è già pronto?");
+    expect(IT_LOCALE.cooking.waitingReadyAt).toContain("impasto pronto {eta}");
   });
 });
 
@@ -99,7 +99,7 @@ describe("«L'impasto è già pronto?» — puntata in frigo (S13-B-02)", () => 
     expect(bulk.tip?.beginner).toContain("cresce lento");
     const key = readyCriterionKey(bulk.id, cold);
     expect(key).toBe("bulkCold");
-    expect(CMS_DEFAULTS.cooking.readyCriterion[key]).not.toMatch(/raddoppi/);
+    expect(IT_LOCALE.cooking.readyCriterion[key]).not.toMatch(/raddoppi/);
   });
 
   it("solo la puntata cambia: appretto e prefermento freddi restano coi loro criteri", () => {

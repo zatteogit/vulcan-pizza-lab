@@ -6,7 +6,7 @@ import { ES_LOCALE } from "../features/cms/locales/es";
 import { FR_LOCALE } from "../features/cms/locales/fr";
 import { PT_LOCALE } from "../features/cms/locales/pt";
 import { JA_LOCALE } from "../features/cms/locales/ja";
-import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { IT_LOCALE } from "../features/cms/locales/it";
 
 /* I18N-1: ogni lingua ha il catalogo uiMessage completo, con gli stessi
    segnaposto dell'italiano. Una chiave nuova senza traduzione fa fallire. */
@@ -23,7 +23,7 @@ function textLeaves(value: unknown, prefix = ""): Record<string, string> {
 }
 
 describe("testi CMS dei percorsi Crea, Scopri e dispensa", () => {
-  const source = Object.entries(textLeaves(CMS_DEFAULTS)).filter(([key]) =>
+  const source = Object.entries(textLeaves(IT_LOCALE)).filter(([key]) =>
     /^(ui\.|skillLevels\.|tiers\.|scoreDimensions\.|hero\.onboarding|profile\.savedRecipesEmpty|engineMessages\.(need\.|card\.|change\.))/.test(key));
   for (const [lang, bundle] of Object.entries(LOCALES)) {
     it(`${lang}: testi espliciti e segnaposto coerenti, senza fallback italiano`, () => {

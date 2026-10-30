@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CMS_DEFAULTS } from "../cms/cms-context";
+import { IT_LOCALE } from "../cms/locales/it";
 import { EN_LOCALE } from "../cms/locales/en";
 import { DE_LOCALE } from "../cms/locales/de";
 import { ES_LOCALE } from "../cms/locales/es";
@@ -16,7 +16,7 @@ describe("ingredienti tradotti senza cambiare le identità salvate", () => {
     const lang = cms.locale.id;
     it(`${lang}: dispensa e avvisi usano le stesse etichette tradotte`, () => {
       const names = pantryIngredientNames(cms);
-      expect([...names.keys()]).toEqual([...pantryIngredientNames(CMS_DEFAULTS).keys()]);
+      expect([...names.keys()]).toEqual([...pantryIngredientNames(IT_LOCALE).keys()]);
       expect(names.get("olio_evo")).toBe(cms.ui.oilEvo);
       expect(names.get("burro")).toBe(cms.ui.fatButter);
       expect(names.get("strutto")).toBe(cms.ui.fatLard);
@@ -35,10 +35,10 @@ describe("ingredienti tradotti senza cambiare le identità salvate", () => {
     });
   }
   it("non conserva una lingua precedente al cambio di catalogo", () => {
-    const italian = pantryIngredientNames(CMS_DEFAULTS);
+    const italian = pantryIngredientNames(IT_LOCALE);
     const english = pantryIngredientNames(EN_LOCALE);
     expect(italian.get("acqua")).toBe("Acqua");
     expect(english.get("acqua")).toBe("Water");
-    expect(pantryIngredientNames(CMS_DEFAULTS).get("acqua")).toBe("Acqua");
+    expect(pantryIngredientNames(IT_LOCALE).get("acqua")).toBe("Acqua");
   });
 });

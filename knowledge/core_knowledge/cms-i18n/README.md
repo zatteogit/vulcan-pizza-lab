@@ -3,9 +3,9 @@
 
 ## Sommario
 
-Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazione, media, stringhe di dominio (glossario, troubleshooting, pre-fermenti, dietary), copy cucina/feedback e preferenze di formattazione in un unico schema tipizzato `CmsContent`. Il pattern è **override su default** (come `StylesOverrideContext`): `cms = deepMerge(CMS_DEFAULTS, overrides)` esposto da `useCms()`. La localizzazione è supportata da dizionari tipizzati all'interno di `src/app/i18n/`.
+Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazione, media, stringhe di dominio (glossario, troubleshooting, pre-fermenti, dietary), copy cucina/feedback e preferenze di formattazione in un unico schema tipizzato `CmsContent`. Il pattern è **override sul bundle della lingua attiva**: `cms = deepMerge(bundle, overrides)` esposto da `useCms()`. La localizzazione è supportata da dizionari tipizzati all'interno di `src/app/i18n/`.
 
-- **Default italiano**: `CMS_DEFAULTS` in `cms-context.tsx` (3266 righe, schema + default + registry campi CMS).
+- **Italiano** (dal 30/10/2026, budget D-059): `IT_LOCALE` in `locales/it.ts`, bundle lazy come le altre lingue (prima `CMS_DEFAULTS` in `cms-context.tsx`, sempre nel chunk d'ingresso). `main.tsx` carica il bundle della lingua di avvio (`bootLocaleId()`) prima del primo render; ogni bundle ha tutte le foglie dell'italiano (`locale-parity.test.ts`), niente riserva inglese. Fuori dal provider (test, design system) serve `primeLocaleBundle(IT_LOCALE)`; il server registra da sé `UI_MESSAGES_IT` (`agent/mcp-server.ts`).
 - **Altre lingue**: bundle completi in `locales/{en,es,de,fr,pt,ja}.ts` + dati dominio in `locales/domain-{lang}.ts`.
 - **Nuovo modulo i18n tipizzato**: i dizionari in `src/app/i18n/` forniscono le stringhe di interfaccia (`ui-messages.it.ts`) e dello showcase (`showcase-messages.it.ts`) con logiche di interpolazione sicure (`interpolate.ts`).
 - **Persistenza**: `localStorage` chiave `vulcan_cms` (oggetto JSON parziale, solo override).
@@ -48,15 +48,15 @@ Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazi
 ```mermaid
 flowchart TD
   subgraph defaults
-    IT[CMS_DEFAULTS — italiano hardcoded]
-    DOM[domain-i18n-defaults.ts — merge in CMS_DEFAULTS]
+    IT[locales/it.ts IT_LOCALE — bundle lazy, lingua sorgente]
+    DOM[domain-i18n-defaults.ts — dentro IT_LOCALE]
   end
   subgraph storage
     LS[localStorage vulcan_cms]
   end
   subgraph runtime
     LOAD[loadCms — prima visita: detectBrowserLocale]
-    MERGE[deepMerge CMS_DEFAULTS + overrides]
+    MERGE[deepMerge bundle della lingua + overrides]
     CMS[useCms — cms, update, switchLocale, bcp47]
     FMT[createFormatter — locale + unit system]
   end

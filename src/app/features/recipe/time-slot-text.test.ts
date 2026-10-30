@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { registerUiMessages } from "../../i18n/ui-messages";
 import { UI_MESSAGES_EN } from "../../i18n/ui-messages.en";
 import { generateTimeSlots, NO_PREFERENCE_SLOT, type EngineMsg } from "../../domain/pizza-engine";
-import { CMS_DEFAULTS } from "../cms/cms-context";
+import { IT_LOCALE } from "../cms/locales/it";
 import { EN_LOCALE } from "../cms/locales/en";
 import { DE_LOCALE } from "../cms/locales/de";
 import { engineMsgTexts } from "./engine-msg-text";
@@ -19,7 +19,7 @@ describe("timeSlotText (M-2)", () => {
 
   it("sottotitolo dinamico al quarto d'ora, non il testo fisso «4-6 ore»", () => {
     const tonight = slots.find((slot) => slot.id === "tonight")!;
-    expect(timeSlotText(tonight, CMS_DEFAULTS, "it-IT", NOW)).toEqual({
+    expect(timeSlotText(tonight, IT_LOCALE, "it-IT", NOW)).toEqual({
       label: "Stasera",
       sublabel: "3 h 30 min",
     });
@@ -28,7 +28,7 @@ describe("timeSlotText (M-2)", () => {
 
   it("i giorni oltre domani sono nella lingua attiva", () => {
     const dayAfter = slots.find((slot) => slot.id === "day_after_lunch")!;
-    expect(timeSlotText(dayAfter, CMS_DEFAULTS, "it-IT", NOW).label).toBe("Sabato a pranzo");
+    expect(timeSlotText(dayAfter, IT_LOCALE, "it-IT", NOW).label).toBe("Sabato a pranzo");
     expect(timeSlotText(dayAfter, EN_LOCALE, "en-GB", NOW).label).toBe("Saturday lunch");
     expect(timeSlotText(dayAfter, DE_LOCALE, "de-DE", NOW).label).toBe("Samstag mittags");
   });
@@ -42,13 +42,13 @@ describe("engineMsgTexts (M-5)", () => {
   const compensated = em("opt.hydrationOvenCompensated", "", { h: 63.7, base: 55, delta: 8.7 });
 
   it("decimali con la virgola in italiano e col punto in inglese", () => {
-    expect(engineMsgTexts([compensated], CMS_DEFAULTS, "it-IT")[0]).toContain("63,7%");
+    expect(engineMsgTexts([compensated], IT_LOCALE, "it-IT")[0]).toContain("63,7%");
     expect(engineMsgTexts([compensated], EN_LOCALE, "en-GB")[0]).toContain("63.7%");
   });
 
   it("le ore diventano durate e un parametro ripetuto si sostituisce ovunque", () => {
     const below = em("gen.timeBelowStyleWindow", "", { available: 3.75, fMin: 24 });
-    const text = engineMsgTexts([below], CMS_DEFAULTS, "it-IT")[0];
+    const text = engineMsgTexts([below], IT_LOCALE, "it-IT")[0];
     expect(text).toContain("Con 3 h 45 min");
     expect(text).not.toContain("{fMin}");
     expect(text.match(/24 h/g)).toHaveLength(2);
@@ -56,9 +56,9 @@ describe("engineMsgTexts (M-5)", () => {
 
   it("le temperature hanno l'unità una sola volta; {min} è una temperatura solo dove serve", () => {
     const cold = em("rec.ovenTooCold", "", { temp: 250, min: 400 });
-    expect(engineMsgTexts([cold], CMS_DEFAULTS, "it-IT")[0]).toMatch(/250\s?°C < min 400\s?°C$/);
+    expect(engineMsgTexts([cold], IT_LOCALE, "it-IT")[0]).toMatch(/250\s?°C < min 400\s?°C$/);
     const range = em("opt.hydrationOutOfStyleRange", "", { min: 58, max: 65 });
-    expect(engineMsgTexts([range], CMS_DEFAULTS, "it-IT")[0]).toContain("(58–65%)");
+    expect(engineMsgTexts([range], IT_LOCALE, "it-IT")[0]).toContain("(58–65%)");
   });
 
   it("le motivazioni dell'ottimizzatore non restano in italiano", () => {
@@ -75,13 +75,13 @@ describe("timeSlotWhen (S05-A-07)", () => {
 
   it("dice a che ora si mangia e fra quanto, nella lingua attiva", () => {
     const plain = (text: string) => text.replace(/\u00a0/g, " ");
-    expect(plain(timeSlotWhen(tonight, CMS_DEFAULTS, "it-IT"))).toBe("alle 20:00 · tra 4 h 45 min");
+    expect(plain(timeSlotWhen(tonight, IT_LOCALE, "it-IT"))).toBe("alle 20:00 · tra 4 h 45 min");
     expect(plain(timeSlotWhen(tonight, EN_LOCALE, "en-GB"))).toMatch(/^at 20:00 · in 4 hrs? 45 mins?$/);
     // Si va a capo solo attorno al «·».
-    expect(timeSlotWhen(tonight, CMS_DEFAULTS, "it-IT").split(" ")).toHaveLength(3);
+    expect(timeSlotWhen(tonight, IT_LOCALE, "it-IT").split(" ")).toHaveLength(3);
   });
 
   it("senza istante del pasto resta la sola durata", () => {
-    expect(timeSlotWhen(NO_PREFERENCE_SLOT, CMS_DEFAULTS, "it-IT")).toBe(CMS_DEFAULTS.ui.slotNoPreferenceSub);
+    expect(timeSlotWhen(NO_PREFERENCE_SLOT, IT_LOCALE, "it-IT")).toBe(IT_LOCALE.ui.slotNoPreferenceSub);
   });
 });

@@ -9,7 +9,7 @@ import {
   generateRecipe,
   type UserConstraints,
 } from "./pizza-engine";
-import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { IT_LOCALE } from "../features/cms/locales/it";
 import { AUTHENTICITY_FUEL_CAP, DEFAULT_UI_SCORE_WEIGHTS, explainScore } from "./recipe-score";
 import { compareByCompatibility, kitchenMargin } from "./kitchen-margin";
 import { defaultSmartLink, linkedActive, propagateLinked } from "../features/recipe/linked-params";
@@ -118,7 +118,7 @@ describe("D-032: le fritte stanno in una sezione a parte dei consigli", () => {
 
   it("i consigli di Crea usano recommendationSections e la sezione ha un titolo nel CMS", () => {
     expect(source("../features/recipe/recommended-styles.tsx")).toMatch(/recommendationSections\(/);
-    expect(CMS_DEFAULTS.tiers.fried?.label).toBeTruthy();
+    expect(IT_LOCALE.tiers.fried?.label).toBeTruthy();
   });
 });
 
@@ -147,7 +147,7 @@ describe("D-057: la compatibilità pesa solo facilità e autenticità", () => {
     expect(DEFAULT_UI_SCORE_WEIGHTS.authenticity).toBeGreaterThan(0);
     expect(DEFAULT_UI_SCORE_WEIGHTS.feasibility).toBeGreaterThan(0);
     for (const key of ["authenticity", "feasibility", "digestibility", "sustainability", "experimentation"] as const) {
-      expect(CMS_DEFAULTS.scoreDimensions[key].weight).toBe(DEFAULT_UI_SCORE_WEIGHTS[key]);
+      expect(IT_LOCALE.scoreDimensions[key].weight).toBe(DEFAULT_UI_SCORE_WEIGHTS[key]);
     }
   });
 
@@ -193,8 +193,8 @@ describe("D-062: spareggio per margine della cucina", () => {
   });
 
   it("lo spareggio è dichiarato nella spiegazione del punteggio, come scelta", () => {
-    expect(CMS_DEFAULTS.scoreExplainer.tieBreak).toMatch(/Scelta di prodotto/);
-    expect(CMS_DEFAULTS.science.notes["ranking-tiebreak"]?.l1).toMatch(/scelta di \{brand\}/);
+    expect(IT_LOCALE.scoreExplainer.tieBreak).toMatch(/Scelta di prodotto/);
+    expect(IT_LOCALE.science.notes["ranking-tiebreak"]?.l1).toMatch(/scelta di \{brand\}/);
   });
 });
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generateRecipe, optimizeRecipe, STYLES_DB, type UserConstraints } from "../domain/pizza-engine";
-import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { IT_LOCALE } from "../features/cms/locales/it";
 import { CHECKED_DIETS, REMINDER_DIETS, SETTING_EFFECTS, settingEffect, skillEffectFacts, type SettingId } from "./setting-effects";
 
 const kitchen: UserConstraints = {
@@ -31,7 +31,7 @@ const PROBES: Partial<Record<SettingId, () => [unknown, unknown]>> = {
 
 describe("FW-16 · effetti delle impostazioni", () => {
   it("ogni impostazione ha una frase nel CMS", () => {
-    for (const { id } of SETTING_EFFECTS) expect(CMS_DEFAULTS.settingEffects[id], id).toBeTruthy();
+    for (const { id } of SETTING_EFFECTS) expect(IT_LOCALE.settingEffects[id], id).toBeTruthy();
   });
 
   it("ogni controllo della cucina nel Profilo mostra il suo effetto", () => {
@@ -83,7 +83,7 @@ describe("FW-16 · effetti delle impostazioni", () => {
     expect(optimizeRecipe(teglia, { ...kitchen, skill_level: 1 }).recipe.hydration_pct).toBeLessThanOrEqual(68);
     expect(generateRecipe(teglia, { ...kitchen, skill_level: 1 }).hydration_pct).toBeGreaterThan(68);
     // Il testo non promette più «sempre dentro l'intervallo dello stile».
-    expect(CMS_DEFAULTS.profile.skillEffectRule).not.toMatch(/sempre dentro/);
+    expect(IT_LOCALE.profile.skillEffectRule).not.toMatch(/sempre dentro/);
   });
 
   /* FW-10: «Senza glutine» blocca ogni ricetta (glutenConflict o glutenUnsupported

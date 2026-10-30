@@ -3,7 +3,7 @@ import { STYLES_DB, generateRecipe, type UserConstraints } from "./pizza-engine"
 import { BASIL_BEFORE_BAKE_MAX_SEC, HIGH_HYDRATION_PCT } from "./science/engine-facts";
 import { toppingBakeLength } from "./step-thresholds";
 import { localizeStep } from "../features/recipe/recipe-output-format";
-import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { IT_LOCALE } from "../features/cms/locales/it";
 import { createFormatter } from "../features/cms/i18n";
 import { getScienceNote } from "../data/science-notes";
 
@@ -28,7 +28,7 @@ describe("G3-WP-03: passi senza condizioni che il motore sa risolvere", () => {
     expect(toppingBakeLength(BASIL_BEFORE_BAKE_MAX_SEC)).toBe("short");
     expect(toppingBakeLength(BASIL_BEFORE_BAKE_MAX_SEC + 1)).toBe("long");
     expect(getScienceNote("basil-timing")?.kind).toBe("editorial");
-    expect(CMS_DEFAULTS.science?.notes["basil-timing"]?.l1).toBeTruthy();
+    expect(IT_LOCALE.science?.notes["basil-timing"]?.l1).toBeTruthy();
   });
 
   it("Napoletana STG con forno elettrico ad alta temperatura (P3): basilico prima del forno", () => {
@@ -50,7 +50,7 @@ describe("G3-WP-03: passi senza condizioni che il motore sa risolvere", () => {
   it("il «Come si fa» dichiara la soglia, formattata nella lingua attiva", () => {
     const r = generateRecipe(STYLES_DB.napoletana_stg, P1_HOME);
     const s = r.timeline.find((x) => x.id === "spread_margherita_avpn")!;
-    const it = localizeStep(s, r, CMS_DEFAULTS, createFormatter(CMS_DEFAULTS.ui, "it-IT"));
+    const it = localizeStep(s, r, IT_LOCALE, createFormatter(IT_LOCALE.ui, "it-IT"));
     expect(it.tip?.nerd).toMatch(/Con cotture fino a 2 min/);
     expect(it.tip?.nerd).not.toMatch(/\{sec\}/);
   });
@@ -72,7 +72,7 @@ describe("G3-WP-03: passi senza condizioni che il motore sa risolvere", () => {
       for (const c of [ideal, P1_HOME, P3_EFFEUNO]) {
         const r = generateRecipe(style, c);
         for (const s of r.timeline) {
-          const loc = localizeStep(s, r, CMS_DEFAULTS);
+          const loc = localizeStep(s, r, IT_LOCALE);
           const text = [s.description, loc.description, loc.longDesc ?? "", loc.tip?.beginner ?? "", loc.tip?.nerd ?? ""].join(" ");
           expect(text, `${style.id} · ${s.id}`).not.toMatch(/se l'idratazione|se la cottura|se idratazione/i);
         }

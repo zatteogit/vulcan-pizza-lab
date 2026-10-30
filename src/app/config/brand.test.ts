@@ -17,7 +17,8 @@ import {
   registerShowcaseMessages,
   showcaseMessage,
 } from "../i18n/showcase-messages";
-import { CMS_DEFAULTS, type CmsContent, type LocaleId } from "../features/cms/cms-context";
+import { type CmsContent, type LocaleId } from "../features/cms/cms-context";
+import { IT_LOCALE } from "../features/cms/locales/it";
 import {
   LOCALE_BUNDLE_REV,
   LOCALE_META,
@@ -203,7 +204,7 @@ describe("risoluzione dei token", () => {
   });
 
   it("CMS e bundle di tutte le lingue non lasciano token irrisolti", async () => {
-    const bundles: [string, unknown][] = [["it", CMS_DEFAULTS]];
+    const bundles: [string, unknown][] = [["it", IT_LOCALE]];
     for (const meta of LOCALE_META) {
       if (meta.id === "it") continue;
       bundles.push([meta.id, await loadLocaleBundle(meta.id as LocaleId)]);

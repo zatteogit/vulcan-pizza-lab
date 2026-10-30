@@ -1,11 +1,12 @@
 import { withBrand } from "../config/brand";
-import { UI_MESSAGES_IT } from "./ui-messages.it";
 
 export type UiMessageValues = readonly (string | number)[];
 
-const catalogs: Record<string, Record<string, string>> = {
-  it: UI_MESSAGES_IT,
-};
+/* Budget D-059 (30/10/2026): nessun catalogo statico, nemmeno l'italiano.
+   Il CmsProvider registra quello della lingua attiva (dal bundle, caricato
+   da main.tsx prima del primo render); il server (agent/mcp-server.ts) e il
+   setup dei test registrano l'italiano da sé. */
+const catalogs: Record<string, Record<string, string>> = {};
 
 let activeLocale = "it";
 
@@ -34,8 +35,10 @@ export function getActiveUiLocale(): string {
 /**
  * Resolve a catalog key and interpolate positional `{0}` placeholders, then
  * the brand tokens `{brand}` / `{brandFull}` (see config/brand.ts).
- * Missing translations fall back to Italian; a missing source key remains
- * visibly diagnosable and is also rejected statically by the i18n guard.
+ * Missing translations fall back to Italian when its catalog is registered
+ * (every bundle is complete: ui-messages.catalogs.test.ts); a missing source
+ * key remains visibly diagnosable and is also rejected statically by the
+ * i18n guard.
  */
 export function uiMessage(
   key: string,
@@ -43,7 +46,7 @@ export function uiMessage(
   locale = activeLocale,
 ): string {
   const language = languageOf(locale);
-  const template = catalogs[language]?.[key] ?? UI_MESSAGES_IT[key];
+  const template = catalogs[language]?.[key] ?? catalogs.it?.[key];
   if (template === undefined) return `⟦${key}⟧`;
   return withBrand(
     template.replace(/\{(\d+)\}/g, (placeholder, index: string) => {

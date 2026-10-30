@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CMS_DEFAULTS } from "../cms/cms-context";
+import { IT_LOCALE } from "../cms/locales/it";
 import { EN_LOCALE } from "../cms/locales/en";
 import { DE_LOCALE } from "../cms/locales/de";
 import { FR_LOCALE } from "../cms/locales/fr";
@@ -75,7 +75,7 @@ describe("FW-04 TermLink e rimandi al glossario", () => {
 });
 
 describe("FW-04 voci del glossario in ogni lingua", () => {
-  const bundles = { it: CMS_DEFAULTS, en: EN_LOCALE, de: DE_LOCALE, fr: FR_LOCALE, es: ES_LOCALE, pt: PT_LOCALE, ja: JA_LOCALE };
+  const bundles = { it: IT_LOCALE, en: EN_LOCALE, de: DE_LOCALE, fr: FR_LOCALE, es: ES_LOCALE, pt: PT_LOCALE, ja: JA_LOCALE };
 
   it.each(Object.entries(bundles))("%s: le voci del procedimento (D-044) ci sono", (_lang, cms) => {
     for (const id of ["dough_division", "ball_shaping", "gluten_development", "folds", "poke_test", "cornicione",

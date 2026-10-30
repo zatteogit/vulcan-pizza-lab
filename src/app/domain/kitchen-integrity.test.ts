@@ -5,7 +5,7 @@ import { pantryIngredientReferences } from "./pantry-ingredients";
 import { getRecipesByAuthenticity, getToppingForStyle, scaleToppingAmounts, TOPPING_LIBRARY } from "../data/topping-library";
 import { dietaryRecipeAlternatives } from "./pizza-engine";
 import { daySuffix, displayStepTime } from "../features/recipe/recipe-output-format";
-import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { IT_LOCALE } from "../features/cms/locales/it";
 import { EN_LOCALE } from "../features/cms/locales/en";
 
 const kitchen:UserConstraints={oven_type:"home",oven_max_temp_c:300,available_hours:48,meal_deadline:true,skill_level:2,dough_balls:4,
@@ -99,7 +99,7 @@ describe("round 3: method and calendar integrity",()=>{
  });
  it("future starts, midnight and +3 days use today's calendar anchor in IT and EN",()=>{
   const reference=new Date(2026,9,26,23,55),start=new Date(2026,9,27,7,8);
-  for(const [lang,copy] of [["it-IT",CMS_DEFAULTS.cooking],["en-GB",EN_LOCALE.cooking]] as const){
+  for(const [lang,copy] of [["it-IT",IT_LOCALE.cooking],["en-GB",EN_LOCALE.cooking]] as const){
    for(const [date,suffix] of [[start,copy.dayTomorrow],[new Date(2026,9,28,16,3),copy.dayAfterTomorrow],[new Date(2026,9,29,0,8),copy.dayOffset.replace('{n}','3')]] as const){
     expect(daySuffix(reference,date,copy).trim()).toBe(suffix);
     expect(displayStepTime(true,date,reference,lang,copy)).toContain(suffix);

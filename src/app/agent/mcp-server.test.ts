@@ -1,5 +1,19 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { handleMcpBody, handleMcpMessage } from "./mcp-server";
+
+/* Budget D-059 (30/10/2026): l'app non ha più il catalogo uiMessage italiano
+   statico. Il server lo registra da sé: senza, gli orari e gli elenchi di
+   i18n/format.ts uscirebbero come chiavi grezze. Moduli nuovi, senza il setup
+   dei test che registra già l'italiano. */
+describe("server MCP senza il catalogo dell'app", () => {
+  it("registra il catalogo italiano per format.ts", async () => {
+    vi.resetModules();
+    const { uiMessage } = await import("../i18n/ui-messages");
+    expect(uiMessage("format.now")).toBe("⟦format.now⟧");
+    await import("./mcp-server");
+    expect(uiMessage("format.now")).toBe("ora");
+  });
+});
 
 /* D-049: il server MCP risponde come chiede il protocollo e i numeri sono
    quelli del motore. */

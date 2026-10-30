@@ -5,7 +5,7 @@ import { canonicalRecipeEntry, recipeFromEntry, buildGeneratedRecipe, optimizeSe
 import { getInterpretationById } from "../data/interpretation-library";
 import { TOPPING_LIBRARY } from "../data/topping-library";
 import { getSectionHeader, localizeStep } from "../features/recipe/recipe-output-format";
-import { CMS_DEFAULTS } from "../features/cms/cms-context";
+import { IT_LOCALE } from "../features/cms/locales/it";
 import { EN_LOCALE } from "../features/cms/locales/en";
 import { DE_LOCALE } from "../features/cms/locales/de";
 import { ES_LOCALE } from "../features/cms/locales/es";
@@ -21,7 +21,7 @@ function call(name:string,input:Record<string,unknown>) {
  if (!response || !("result" in response)) throw Error("No MCP response");
  const r=response.result as {isError?:boolean;structuredContent:any};expect(r.isError).not.toBe(true);return r.structuredContent;
 }
-const bundles=[CMS_DEFAULTS,EN_LOCALE,DE_LOCALE,ES_LOCALE,FR_LOCALE,PT_LOCALE,JA_LOCALE];
+const bundles=[IT_LOCALE,EN_LOCALE,DE_LOCALE,ES_LOCALE,FR_LOCALE,PT_LOCALE,JA_LOCALE];
 
 describe("second audit: explicit formulas and reference-specific processes",()=>{
  it("Barese declares the existing no-potato formula without changing its mass",()=>{
@@ -52,9 +52,9 @@ describe("second audit: explicit formulas and reference-specific processes",()=>
   expect(proof.duration_minutes+preheat.duration_minutes).toBe(210);
   expect(r.timeline.findIndex(s=>s.id==="shape")).toBeGreaterThan(r.timeline.findIndex(s=>s.id==="proof"));
   expect(proof.description).toContain("contenitore chiuso");
-  expect(localizeStep(proof,r,CMS_DEFAULTS).description).toContain("contenitore chiuso");
+  expect(localizeStep(proof,r,IT_LOCALE).description).toContain("contenitore chiuso");
   for(const b of bundles) expect(localizeStep(proof,r,b).title).toBe(b.timelineLabels.proof.title);
-  expect(localizeStep(r.timeline.find(s=>s.id==="shape")!,r,CMS_DEFAULTS).description).toContain("19°C");
+  expect(localizeStep(r.timeline.find(s=>s.id==="shape")!,r,IT_LOCALE).description).toContain("19°C");
   expect(r.timeline.find(s=>s.id==="shape")?.description).toContain("19°C");
   expect(fermentationPhases(36,false,"poolish",entry.style.method_profile)).toEqual({preferment:0,bulk:32.5,proof:3.5});
   expect(equivalentFermentationHours(36,4,"fresh",false,"poolish",entry.style.method_profile)).toBeLessThan(equivalentFermentationHours(36,4,"fresh",false));

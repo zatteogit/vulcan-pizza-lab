@@ -12,7 +12,7 @@ import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { Suspense, lazy, useCallback,useEffect,useId,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
-import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
+import { useCms, type CmsContent } from "../features/cms/cms-context";
 import { BottomSheet, Chip, ConfirmDialog, CtaButton, Disclosure, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
 import {
 createFormatter,
@@ -1364,13 +1364,14 @@ function LocaleConfirmModal({
   const { cms } = useCms();
   const srcProfile = cms.profile;
   /* Resolve the target locale's profile bundle for bilingual display.
-     Bundle lazy (audit lug 2026): se non è in cache lo si carica al volo —
-     nel frattempo la modale mostra il fallback IT per una frazione di secondo. */
+     Bundle lazy (audit lug 2026; l'italiano dal 30/10/2026, budget D-059):
+     se non è in cache lo si carica al volo — nel frattempo la modale mostra
+     solo la lingua attuale per una frazione di secondo. */
   const [tgtBundle, setTgtBundle] = useState<CmsContent | undefined>(() =>
-    target.id === "it" ? CMS_DEFAULTS : getCachedLocaleBundle(target.id),
+    getCachedLocaleBundle(target.id),
   );
   useEffect(() => {
-    if (target.id === "it" || tgtBundle) return;
+    if (tgtBundle) return;
     let cancelled = false;
     void loadLocaleBundle(target.id).then((bundle) => {
       if (!cancelled && bundle) setTgtBundle(bundle);
@@ -1379,7 +1380,7 @@ function LocaleConfirmModal({
       cancelled = true;
     };
   }, [target.id, tgtBundle]);
-  const tgtProfile = tgtBundle?.profile ?? CMS_DEFAULTS.profile;
+  const tgtProfile = tgtBundle?.profile ?? srcProfile;
 
   /* FW-13 (S17-B-16): una lingua non è un paese, niente bandiere. */
   const fromLabel = current.name;
