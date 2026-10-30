@@ -1150,7 +1150,10 @@ export const ES_LOCALE: CmsContent = {
     sheetFoldLabel: "Pliegues",
     sheetFoldInterval: "Cada {min} min",
     sheetGenerateBtn: "Generar receta",
-    sheetTechniquesLabel: "T\u00E9cnicas de autor compatibles",
+    sheetTechniquesLabel: "Versiones de autor",
+    sheetTechniqueFrom: "de {style}",
+    sheetTechniqueGenerate: "Generar con esta versión",
+    sheetTechniqueSource: "Fuente",
     mixBeginner:
       "{mixer} (~{time} min de amasado).",
     bulkBeginner:

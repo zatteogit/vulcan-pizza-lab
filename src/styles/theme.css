@@ -16317,39 +16317,69 @@
     overflow: hidden;
   }
 
-  /* ── Author variants (techniques) ── */
+  /* ── Versioni d'autore (G1b-WP-01): righe di lista con ds/Disclosure, non chip ── */
   .style-detail-techniques {
     margin-top: var(--space-4);
   }
 
   .style-detail-techniques__label {
-    font-size: var(--font-size-2xs);
-    letter-spacing: var(--tracking-ultra);
+    font: inherit;
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-caps);
     text-transform: uppercase;
     color: var(--text-muted);
-    /* FW-12 (S03-B-24): ora h3 (era span), stesso aspetto di prima. */
-    font-family: inherit;
-    font-weight: inherit;
-    line-height: inherit;
     margin: 0;
   }
 
-  .style-detail-techniques__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--gap-2xs);
-    margin-top: var(--space-2);
+  .style-detail-techniques__item {
+    border-bottom: var(--border-width-thin) solid var(--outline-variant);
   }
 
-  .style-detail-techniques__chip {
-    padding-inline: var(--space-2-5);
-    padding-block: var(--space-1);
-    border-radius: var(--radius-lg);
+  .style-detail-techniques__summary {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .style-detail-techniques__what,
+  .style-detail-techniques__from,
+  .style-detail-techniques__host,
+  .style-detail-techniques__hint {
     font-size: var(--font-size-sm);
-    font-weight: var(--weight-medium);
-    background: color-mix(in srgb, var(--primary) 8%, var(--surface-container));
+    font-weight: var(--weight-regular);
+    color: var(--text-muted);
+  }
+
+  /* La provenienza da un altro stile non deve passare per conformità. */
+  .style-detail-techniques__from {
+    color: var(--text-accent);
+  }
+
+  .style-detail-techniques__text {
     color: var(--text-default);
-    border: var(--space-px) solid color-mix(in srgb, var(--primary) 15%, var(--outline-variant));
+    line-height: var(--leading-cozy);
+    margin-bottom: var(--space-2);
+  }
+
+  .style-detail-techniques__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-sm);
+    padding-bottom: var(--space-3);
+  }
+
+  .style-detail-techniques__generate {
+    height: var(--space-10);
+    padding-inline: var(--space-4);
+  }
+
+  .style-detail-techniques__source {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-2xs);
+    min-height: var(--space-6);
+    color: var(--text-accent);
   }
 
   /* ── Data pills ── */
@@ -16516,7 +16546,8 @@
     margin: 0;
   }
 
-  .style-detail-cta:disabled {
+  .style-detail-cta:disabled,
+  .style-detail-techniques__generate:disabled {
     background: var(--surface-container);
     color: var(--text-muted);
     border: var(--border-width-thin) solid var(--outline-variant);

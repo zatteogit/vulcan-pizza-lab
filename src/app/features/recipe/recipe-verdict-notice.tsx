@@ -30,6 +30,7 @@ export function RecipeVerdictNotice({
   embedded = false,
   showRecipeBelow = true,
   details,
+  reasonId,
 }: {
   recipe: GeneratedRecipe;
   constraints: UserConstraints;
@@ -44,6 +45,9 @@ export function RecipeVerdictNotice({
   /** Livello 2 aggiuntivo (es. avvisi del pannello stile), dentro lo stesso
    *  «Perché e cosa servirebbe» delle cause secondarie. */
   details?: ReactNode;
+  /** id della causa principale, per l'aria-describedby delle azioni che il
+   *  blocco disabilita (G1b-WP-01: CTA del pannello stile). */
+  reasonId?: string;
 }) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
@@ -68,7 +72,7 @@ export function RecipeVerdictNotice({
 
   const body = (
     <>
-      <p className="type-body recipe-verdict__reason">{primaryText}</p>
+      <p id={reasonId} className="type-body recipe-verdict__reason">{primaryText}</p>
       {remedy?.kind === "later_time" && (
         <p className="type-body recipe-verdict__action">
           {t(cms.ui.verdictLaterTime, { hours: fmt.durationShort(remedy.hours) })}

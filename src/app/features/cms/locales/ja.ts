@@ -1208,7 +1208,10 @@ export const JA_LOCALE: CmsContent = {
     sheetFoldInterval: "{min}\u5206\u3054\u3068",
     sheetGenerateBtn: "\u30EC\u30B7\u30D4\u3092\u751F\u6210",
     sheetTechniquesLabel:
-      "\u5BFE\u5FDC\u3059\u308B\u8457\u540D\u6280\u6CD5",
+      "作り手のバージョン",
+    sheetTechniqueFrom: "{style}から",
+    sheetTechniqueGenerate: "このバージョンで生成",
+    sheetTechniqueSource: "出典",
     mixBeginner:
       "{mixer}\uFF08\u7D04{time}\u5206\u306E\u6DF7\u305C\uFF09\u3002",
     bulkBeginner:

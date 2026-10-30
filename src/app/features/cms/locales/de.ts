@@ -1134,7 +1134,10 @@ export const DE_LOCALE: CmsContent = {
     sheetFoldLabel: "Falten",
     sheetFoldInterval: "Alle {min} Min.",
     sheetGenerateBtn: "Rezept generieren",
-    sheetTechniquesLabel: "Kompatible Autortechniken",
+    sheetTechniquesLabel: "Autorenversionen",
+    sheetTechniqueFrom: "aus {style}",
+    sheetTechniqueGenerate: "Mit dieser Version generieren",
+    sheetTechniqueSource: "Quelle",
     mixBeginner: "{mixer} (~{time} Min. Kneten).",
     bulkBeginner:
       "F\u00FChre {count} Falten ({type}) alle {interval} Minuten durch, um die Struktur aufzubauen.",

@@ -14,7 +14,7 @@ import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
-import { Droplets, Wheat, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle, Info } from "lucide-react";
+import { Droplets, Wheat, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle, Info, ExternalLink } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -24,13 +24,14 @@ import { STYLE_VIDEOS, type StyleVideo } from "../../data/style-photos";
 import {
   PizzaStyle,
   PIZZA_FAMILIES,
+  STYLES_DB,
   doughThicknessGPerCm2,
   recommendStyles,
   formatOrigin,
   type UserConstraints,
 } from "../../domain/pizza-engine";
 import { getStyleDeviation, DEVIATION_CATEGORY_LABELS } from "../../domain/deviation-tags";
-import { getInterpretationsForStyle } from "../../data/interpretation-library";
+import { relatedAuthorVersions } from "../../data/interpretation-library";
 import {
   getBakingTimeByStyle,
   getDoughBaseByStyle,
@@ -54,7 +55,8 @@ interface StyleDetailSheetProps {
   style: PizzaStyle;
   /** VPL-C3 — vincoli utente per spiegare in modo articolato perché lo stile combacia. */
   constraints?: UserConstraints;
-  onGenerate: (toppingId?: string) => void;
+  /** G1b-WP-01: con interpretationId genera la versione d'autore scelta. */
+  onGenerate: (toppingId?: string, interpretationId?: string) => void;
   onDismiss: () => void;
 }
 
@@ -171,9 +173,11 @@ export function StyleDetailSheet({
   const dev = getStyleDeviation(style.id);
   const devCmsLabel = cms.deviationLabels[dev.category] ?? DEVIATION_CATEGORY_LABELS[dev.category].label;
   const devEmoji = DEVIATION_CATEGORY_LABELS[dev.category].emoji;
-  /* Audit motore 2026-05: ex getCompatibleVariants (AUTHOR_VARIANTS legacy) →
-     ora deriva dalla Interpretation library (unica fonte di verità). */
-  const compatVariants = getInterpretationsForStyle(style.id);
+  /* G1b-WP-01 (S03-A-14, S03-B-16): le versioni d'autore dalla Interpretation
+     library, con la provenienza (quelle di un altro stile dicono «da {stile}»). */
+  const authorVersions = relatedAuthorVersions(style.id);
+  /* La causa del blocco descrive le azioni che il blocco disabilita. */
+  const blockerId = `style-detail-blocker-${style.id}`;
   /* Budget D-059: solo le tabelle che la scheda mostra. getStyleParametrics
      portava nel bundle anche acqua e maturazione, che nessuna pagina legge. */
   const params = {
@@ -220,6 +224,7 @@ export function StyleDetailSheet({
     <CtaButton
       as={motion.button}
       disabled={rec?.tier === "not_feasible"}
+      aria-describedby={notFeasible ? blockerId : undefined}
       onClick={() => onGenerate()}
       whileHover={rec?.tier === "not_feasible" ? undefined : { scale: 1.01 }}
       className={`style-detail-cta style-detail-cta--${placement}`}
@@ -378,26 +383,61 @@ export function StyleDetailSheet({
                 transition={motionSpring.responsiveSoft}
                 className="style-detail-nerd__panel"
               >
-                {/* ── Author variants — compatible methods ── */}
-                {compatVariants.length > 0 && (
-                  <div className="style-detail-techniques">
+                {/* ── Versioni d'autore (G1b-WP-01): voci che si aprono su firma
+                    tecnica, storia e fonte, e si generano in Crea. ── */}
+                {authorVersions.length > 0 && (
+                  <section className="style-detail-techniques" aria-labelledby={`style-detail-techniques-${style.id}`}>
                     {/* FW-12 (S03-B-24): sezioni h3 sotto il titolo h2 del pannello. */}
-                    <h3 className="style-detail-techniques__label">
+                    <h3 id={`style-detail-techniques-${style.id}`} className="style-detail-techniques__label">
                       {pt.sheetTechniquesLabel}
                     </h3>
-                    <div className="style-detail-techniques__list">
-                      {compatVariants.map((v) => {
-                        /* Etichetta autore: maestro/pizzeria/ente, + firma tecnica. */
+                    <ul className="style-detail-techniques__list">
+                      {authorVersions.map(({ interpretation, relation }) => {
+                        const v = localizeInterpretation(interpretation, cms.inspirationI18n);
+                        /* Chi: maestro/pizzeria/ente; poi la firma e, se viene da un altro stile, da quale. */
                         const who = v.author ?? v.pizzeria ?? v.organization ?? "";
-                        const what = localizeInterpretation(v, cms.inspirationI18n).signature_name ?? "";
+                        const from = relation === "compatible"
+                          ? t(pt.sheetTechniqueFrom, { style: STYLES_DB[v.base_style_id]?.name ?? v.base_style_id })
+                          : undefined;
+                        const source = v.url ?? v.process_profile?.source_url;
+                        const hintId = `style-detail-version-${v.id}-hint`;
                         return (
-                          <span key={v.id} className="style-detail-techniques__chip">
-                            {v.emoji ? `${v.emoji} ` : ""}{who}{what ? ` — ${what}` : ""}
-                          </span>
+                          <li key={v.id} className="style-detail-techniques__item">
+                            <Disclosure variant="inline" summary={
+                              <span className="style-detail-techniques__summary">
+                                <span className="style-detail-techniques__who">
+                                  {v.emoji && <span aria-hidden="true">{v.emoji} </span>}{who}
+                                </span>
+                                {v.signature_name && <span className="style-detail-techniques__what">{v.signature_name}</span>}
+                                {from && <span className="style-detail-techniques__from">{from}</span>}
+                              </span>
+                            }>
+                              {v.technique_signature && <p className="style-detail-techniques__text">{v.technique_signature}</p>}
+                              <p className="style-detail-techniques__text">{v.story}</p>
+                              <p className="style-detail-techniques__actions">
+                                <CtaButton variant="secondary" radius="lg" elevated={false}
+                                  className="style-detail-techniques__generate"
+                                  disabled={notFeasible}
+                                  aria-describedby={notFeasible ? `${hintId} ${blockerId}` : undefined}
+                                  onClick={() => onGenerate(undefined, v.id)}>
+                                  <Sparkles size={14} aria-hidden="true" />
+                                  {pt.sheetTechniqueGenerate}
+                                </CtaButton>
+                                {notFeasible && <span id={hintId} className="style-detail-techniques__hint">{cms.ui.verdictTitle}</span>}
+                                {source && (
+                                  <a href={source} target="_blank" rel="noopener noreferrer" className="style-detail-techniques__source">
+                                    {pt.sheetTechniqueSource}
+                                    <span className="style-detail-techniques__host">{new URL(source).hostname.replace(/^www\./, "")}</span>
+                                    <ExternalLink size={13} aria-hidden="true" />
+                                  </a>
+                                )}
+                              </p>
+                            </Disclosure>
+                          </li>
                         );
                       })}
-                    </div>
-                  </div>
+                    </ul>
+                  </section>
                 )}
 
                 {/* ── Data pills — quick-glance parameters ── */}
@@ -518,7 +558,7 @@ export function StyleDetailSheet({
               )}
               <div className="style-detail-match__list">
                 {notFeasible && constraints && (
-                  <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false}
+                  <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false} reasonId={blockerId}
                     details={matchNotes.length > 0 ? <div className="style-detail-match__list">{matchNotes.map(noteRow)}</div> : undefined} />
                 )}
                 {constraints && <RecipeDietaryAlternatives recipe={rec.recipe} constraints={constraints} onSelect={id => onGenerate(id)} />}
