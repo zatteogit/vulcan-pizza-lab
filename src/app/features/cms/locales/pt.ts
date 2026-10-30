@@ -206,6 +206,9 @@ export const PT_LOCALE: CmsContent = {
     yeastEstimateNote: "É uma estimativa, não uma medida: marca, frescor do fermento e a temperatura real a alteram. Dose plausível: {low}–{high}.",
     yeastPersonalLegend: "Na sua cozinha as massas crescem",
     yeastPersonalHint: "Se sempre passam do ponto, escolha “mais rápido”: usaremos menos fermento em todas as receitas.",
+    /* B1 (D-068): dose del lievito presa dalla fonte. */
+    yeastSourceBody: "Dose tirada da fonte da versão: {pct} sobre a farinha, para {hours} a {temp}. Com os mesmos tempos o modelo estimaria {model}; a receita mantém a dose da fonte, porque os tempos da fonte funcionam com ela.",
+    yeastSourceNote: "Se você mudar as horas ou a temperatura, a dose do modelo volta. A correção da sua cozinha não muda a dose da fonte.",
     yeastSpeedMuchSlower: "Muito mais devagar",
     yeastSpeedSlower: "Mais devagar",
     yeastSpeedAsExpected: "Como previsto",
@@ -946,6 +949,10 @@ export const PT_LOCALE: CmsContent = {
     "timeline.shape.foldedLayers": "Abra uma folha bem fininha e dobre {folds} vezes como um livro, distribuindo o recheio entre as dobras.",
     // FW-17 (D-P)
     "preferment.sourdoughInstead": "A biga e o poolish fazem-se com fermento de padeiro: só com fermento natural a receita não os usa, porque o fermento natural já funciona como pré-fermento. Para os usar, adicione fermento de padeiro à sua despensa.",
+    // B1 (D-068): lievito della fonte convertito, «luogo caldo» senza gradi.
+    "yeast.sourceDryAsFresh": "A fonte usa fermento seco, {sourcePct}% sobre a farinha. Na sua despensa há fermento fresco: aqui a dose é {pct}%, convertida pelo {app} na proporção de 1 para 3 (1 g de fermento seco equivale a cerca de 3 g de fresco).",
+    "yeast.sourceFreshAsDry": "A fonte usa fermento fresco, {sourcePct}% sobre a farinha. Na sua despensa há fermento seco: aqui a dose é {pct}%, convertida pelo {app} na proporção de 1 para 3 (1 g de fermento seco equivale a cerca de 3 g de fresco).",
+    "fermentation.warmPlace": "A fonte diz “em um lugar quente”, sem graus: o {app} calcula a {temp}, e qualquer ponto entre {tempMin} e {tempMax} funciona. Espere a massa dobrar de volume, não o relógio.",
     "diet.singleBase": "Uma base com toda a massa: cebola por cima, sem segundo disco nem fecho.",
     "topping.geometry": "Área {area} cm² · referência {reference} cm² · quantidades ×{scale}.",
     "auth.layoutChanged": "Formato diferente da referência: esta versão altera a estrutura da receita",

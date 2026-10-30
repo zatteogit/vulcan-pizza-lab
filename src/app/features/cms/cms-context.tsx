@@ -166,6 +166,9 @@ export interface CmsUiStrings {
   yeastEstimateNote: string;
   yeastPersonalLegend: string;
   yeastPersonalHint: string;
+  /** B1 (D-068): dose del lievito presa dalla fonte della versione d'autore. */
+  yeastSourceBody: string;
+  yeastSourceNote: string;
   yeastSpeedMuchSlower: string;
   yeastSpeedSlower: string;
   yeastSpeedAsExpected: string;

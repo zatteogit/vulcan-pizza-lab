@@ -55,7 +55,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.4.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.5.0" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -323,6 +323,10 @@ function recipeData(recipe: GeneratedRecipe) {
     fat_type: recipe.style.dough.fat_type ?? null,
     layout: getLayoutSpec(recipe.style),
     method_changes: recipe.method_changes ?? [],
+    // B1 (D-068): dose del lievito presa dalla fonte della versione d'autore
+    // (null = dose del modello) e scelte di Vulcan sulla fonte, dichiarate.
+    yeast_source: recipe.yeast_source ?? null,
+    source_notes: (recipe.source_notes ?? []).map(m => ({ key: m.key, text: msg(m), params: m.params ?? {} })),
     topping_geometry: recipe.topping_geometry,
     schedule: { model: "sequential_single_operator", overlap_policy: "only_declared_passive_activity", bake_capacity: 1, total_minutes: recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0), digestibility_is_heuristic: true },
     steps: recipe.timeline.map((step) => ({

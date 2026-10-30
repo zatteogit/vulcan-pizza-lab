@@ -804,18 +804,28 @@ export function getVersionById(versionId: string): StyleVersion | null {
  *   - provisional: regola precedente tenuta finché i parametri cadono negli
  *     intervalli dello stile, altrimenti la versione che ci cade (o il centro
  *     degli intervalli se nessuna ci cade). Da confermare da Matteo stile per
- *     stile (docs/fonti-dati.md §5.1). */
-export type StyleReferenceBasis = "disciplinare" | "provisional";
+ *     stile (docs/fonti-dati.md §5.1);
+ *   - fonte (tranche B1, D-055 e D-068): uno stile senza disciplinare prende
+ *     come riferimento una sua versione d'autore, cioè la ricetta di una
+ *     fonte letta (per la teglia casalinga in giornata Benedetta Rossi,
+ *     provvisorio: decisione 3 di Matteo del 30/10/2026). La versione è nata
+ *     sullo stile, non è un disciplinare ed è offerta dallo stile (test in
+ *     recipe-entry.test.ts). */
+export type StyleReferenceBasis = "disciplinare" | "provisional" | "fonte";
 export interface StyleReference {
   /** Versione di riferimento; null = centro degli intervalli dello stile. */
   referenceVersionId: string | null;
-  /** Disciplinare di riferimento (interpretation-library): prevale sulla versione. */
+  /** Disciplinare o versione d'autore di riferimento (interpretation-library):
+   *  prevale sulla versione. */
   referenceInterpretationId?: string;
   basis: StyleReferenceBasis;
 }
 
 const disciplinare = (id: string): StyleReference => ({ referenceVersionId: null, referenceInterpretationId: id, basis: "disciplinare" });
 const provisional = (id: string | null): StyleReference => ({ referenceVersionId: id, basis: "provisional" });
+/** B1: riferimento = una versione d'autore dello stile (base «fonte»). */
+export const sourceReference = (interpretationId: string): StyleReference =>
+  ({ referenceVersionId: null, referenceInterpretationId: interpretationId, basis: "fonte" });
 
 const STYLE_REFERENCES: Record<string, StyleReference> = {
   napoletana_stg: disciplinare("avpn_disciplinare"),

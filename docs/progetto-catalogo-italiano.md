@@ -753,3 +753,80 @@ Dettagli e link in `docs/ricerca/confraternita-2026-10-30.md`.
   forno). Sale «1 cucchiaino» sia nell'elenco sia nel procedimento: nessun
   «pizzico», quindi 6 g. Lievito secco 7 g. 25 min a 210 °C statico (200 °C
   ventilato) + 5 con la mozzarella.
+
+### 9.10 Stato di B1 (30/10/2026)
+
+**Fatto, senza dati nuovi** (ramo `tranche-b1`, decisione D-068 in
+`docs/autorialita.md`). Nessuna voce della libreria usa ancora i campi nuovi:
+le versioni arrivano con la B2.
+
+- **Lievito della fonte (M1).** `Interpretation.source_yeast = { type, pct }`
+  (`data/interpretation-library.ts`); `GenerateRecipeOptions.sourceYeast`
+  con anche le ore e la temperatura della fonte (`domain/source-yeast.ts`).
+  **Scelta del modo meno invasivo:** nel motore ore e temperatura sono un
+  dato d'ingresso e la dose un risultato; timeline, fasi, pieghe e punteggi
+  del tempo non dipendono dalla dose. Si sostituisce quindi solo la dose,
+  finché ore e temperatura della ricetta sono quelle della versione
+  (`parameter_overrides`): se l'utente le cambia in Crea o via MCP torna la
+  dose del modello. Niente correzione personale sulla dose della fonte.
+  Dispensa: il tipo della fonte se c'è (o se la dispensa non è detta); se
+  manca e c'è l'altro lievito di birra, conversione col rapporto del motore
+  (`YEAST_DRY_RATIO`, 1:3) dichiarata nella nota `yeast.sourceDryAsFresh` /
+  `yeast.sourceFreshAsDry`; col solo lievito madre resta il tipo della fonte
+  e la ricetta chiede di procurarlo («Serve lievito»). La ricetta porta
+  `yeast_source` (tipo e dose della fonte e usati, `converted`, `model_pct`
+  = stima del modello per le stesse ore) e `source_notes`; il «Perché?» del
+  lievito dice «dose presa dalla fonte… il modello stimerebbe…», le note
+  stanno sopra la nota di riferimento della ricetta. Una funzione sola
+  (`interpretationEngineOptions` in `use-cases/recipe-entry.ts`) serve la
+  scheda dello stile, Crea e l'MCP, così coincidono.
+- **Tipo `autore`.** Persona che non fa il pizzaiolo (blog, TV, libro), con
+  l'avviso «Ispirata a…» (`INSPIRED_BY_TYPES`) e le regole di fonte del §3:
+  `url` della fonte, `source_status` verificato o plausibile (test).
+- **Riferimento da una versione d'autore (D-055).** Base `fonte` in
+  `STYLE_REFERENCES` (`sourceReference(id)` in `data/style-versions.ts`): la
+  versione deve essere nata sullo stile, non un disciplinare, e offerta dallo
+  stile (test). L'etichetta della ricetta resta «Ispirata a Benedetta Rossi».
+- **«Luogo caldo» (decisione 7).** `parameter_overrides.warm_place: true`:
+  il calcolo usa `WARM_PLACE` (26 °C, finestra 24–28 °C,
+  `domain/fermentation-constants.ts`) e la ricetta dichiara la scelta di
+  Vulcan con la nota `fermentation.warmPlace` («aspetta che l'impasto
+  raddoppi»). La temperatura degli override passa da `4 | 12 | 22` a un
+  numero fra 1 e 30 °C (test): vale anche per gli **8 °C** di Dekracap (B5),
+  senza spostare `FRIDGE_MAX_TEMP_C` (6 °C). `StyleVersion.params` resta
+  `4 | 12 | 22`.
+- **MCP 1.5.0.** `generate_recipe` restituisce `yeast_source` (null = dose del
+  modello) e `source_notes` (chiave, testo italiano, parametri); la guida
+  (`agent/mcp-guide.ts`) spiega come presentarli. La voce legge gli
+  ingredienti e non cambia.
+- **Testi.** 2 chiavi UI e 3 messaggi del motore in 7 lingue;
+  `LOCALE_BUNDLE_REV` 55.
+
+**Non regressione.** `use-cases/preset-numbers.regression.test.ts` fotografa
+prima delle modifiche (commit a parte) i numeri chiave di Riferimento,
+versioni e versioni d'autore di tutti gli stili su tre cucine (246 ricette):
+identici dopo. Golden del motore, `recipe-entry.test` e
+`mcp-kitchen-parity.test` invariati. Test nuovi: `domain/source-yeast.test.ts`,
+`use-cases/source-yeast-entry.test.ts`, guardia D-068 in
+`domain/decision-guards.test.ts`, regole dei dati in
+`data/interpretation-library.test.ts`.
+
+**Budget** (gzip): codice senza lingue 451,0 → 452,1 kB (limite 465); per
+utente in giapponese 557,3 → 558,7 kB (limite 570); catalogo `ja` +0,3 kB.
+
+**Per la B2.**
+- Benedetta: `type: "autore"`, `source_yeast: { type: "dry", pct: 1.4 }`,
+  `parameter_overrides: { fermentation_hours: …, warm_place: true, … }`,
+  `source_status`, `url` della pagina Paneangeli; riferimento dello stile con
+  `sourceReference("…")`. Le ore della versione (2 h al caldo + 10 minuti in
+  teglia) devono stare nella forbice dello stile, altrimenti
+  `isBlockedByStyle` la nasconde.
+- La scelta rapida della temperatura in Crea mostra 26 °C come «manuale», in
+  sola lettura (G2-WP-02): da guardare nel browser con la versione vera.
+- Con la base `fonte` l'etichetta del riferimento è «Ispirata a…» e non
+  «Riferimento»: da confermare con Matteo vedendo la scheda.
+- Benedetta usa 1,4 % di secco: il punteggio di digeribilità penalizza solo
+  sopra l'1,5 % (`dig.highYeastDosage`); Paoletta (2,5 % di fresco, B4) lo
+  avrà.
+- Per gli 8 °C di Dekracap (B5) il passo «in frigo» va segnato nel profilo
+  delle fasi (M3), non spostando la soglia.

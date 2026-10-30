@@ -1,6 +1,6 @@
 import { getImpasto, mergeImpastoIntoDough } from "../data/impasto-library";
 import { METHOD_MESSAGES_IT } from "../data/method-messages";
-import { getInterpretationById, type Interpretation } from "../data/interpretation-library";
+import { getInterpretationById, interpretationFermentTempC, type Interpretation } from "../data/interpretation-library";
 import { getStyleReference, getVersionById, type StyleVersion } from "../data/style-versions";
 import { resolveTopping, getToppingForStyle } from "../data/topping-library";
 import { defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
@@ -69,10 +69,30 @@ export function defaultPL(style: PizzaStyle): number {
   return Math.round(((style.dough.flour_pl_range[0] + style.dough.flour_pl_range[1]) / 2) * 100) / 100;
 }
 
-/** Il disciplinare di riferimento dello stile (STG/AVPN, IGP, APITER), dai dati. */
+/** Il disciplinare (STG/AVPN, IGP, APITER) o la versione d'autore (base
+ *  «fonte», B1) di riferimento dello stile, dai dati. */
 export function canonicalInterpretation(style: PizzaStyle): Interpretation | null {
   const id = getStyleReference(style.id).referenceInterpretationId;
   return id ? getInterpretationById(id) ?? null : null;
+}
+
+/** B1 (D-068): ciò che una versione d'autore dice al motore oltre ai
+ *  parametri: il lievito della fonte (con le ore e la temperatura per cui la
+ *  fonte lo scrive) e il «luogo caldo» senza gradi. Una sola funzione per
+ *  l'apertura del preset e per la ricetta di Crea, così le due coincidono
+ *  (test di authorVersionRecipe). Il motore usa la dose della fonte solo
+ *  finché ore e temperatura della ricetta sono queste. */
+export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace"> {
+  if (!interpretation) return {};
+  const o = interpretation.parameter_overrides;
+  const tempC = interpretationFermentTempC(interpretation);
+  const y = interpretation.source_yeast;
+  return {
+    ...(y && o?.fermentation_hours !== undefined && tempC !== undefined
+      ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours, temp_c: tempC } }
+      : {}),
+    ...(o?.warm_place ? { warmPlace: true } : {}),
+  };
 }
 
 /** La ricetta originale sulla cucina dell'utente, con gli stessi parametri
@@ -107,7 +127,7 @@ export function canonicalRecipeEntry(style: PizzaStyle, scoreWeights?: ScoreWeig
       o?.flour_w ?? v?.flour_w ?? Math.round((dough.flour_w_range[0] + dough.flour_w_range[1]) / 2),
     customFlourPL: o?.flour_pl ?? v?.flour_pl ?? defaultPL({ ...style, dough }),
     customFermentationHours: hours,
-    customFermentationTempC: o?.fermentation_temp_c ?? v?.fermentation_temp_c ?? defaultFermentTempC(style, hours),
+    customFermentationTempC: (interp ? interpretationFermentTempC(interp) : undefined) ?? v?.fermentation_temp_c ?? defaultFermentTempC(style, hours),
     usePreFerment: o?.use_pre_ferment ?? v?.use_pre_ferment ?? (impasto?.requires_pre_ferment ?? style.requires_pre_ferment),
     customSalt: dough.salt_pct,
     // Come la scheda: teglia dello stile e mix di farine dello stile.
@@ -136,6 +156,7 @@ export function canonicalRecipeEntry(style: PizzaStyle, scoreWeights?: ScoreWeig
           fermentation_hours: o.fermentation_hours,
         }
       : undefined,
+    ...interpretationEngineOptions(interp),
   };
   return { style: styleWithMethodProfile(styleWithSelectedTopping(style, topping), interp), version, interpretation: interp, topping, options };
 }
@@ -218,6 +239,7 @@ export function buildGeneratedRecipe({
     interpretationCenter,
     customFlourBlend: blendAtW(customFlourBlend, customFlourW),
     preFerment: preFermentChoice,
+    ...interpretationEngineOptions(activeInterpretation),
   };
   // ENG-6: finché l'idratazione è quella scelta dall'ottimizzatore, la ricetta
   // si ricostruisce come l'ha valutata lui: base + compensazione del forno,

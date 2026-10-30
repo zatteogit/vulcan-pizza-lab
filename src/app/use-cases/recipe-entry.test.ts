@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { STYLES_DB, recommendStyles, type UserConstraints } from "../domain/pizza-engine";
 import { authorVersionRecipe, buildGeneratedRecipe, canonicalRecipe, canonicalRecipeEntry, getCanonicalVersion, presetOvenTemp, recipePresetState, tailoredRecipeEntry } from "./recipe-entry";
 import { getInterpretationById, getInterpretationsForStyle } from "../data/interpretation-library";
-import { getStyleReference, getVersions } from "../data/style-versions";
+import { getStyleReference, getVersions, sourceReference } from "../data/style-versions";
 
 const weights = { authenticity: .3, feasibility: .25, digestibility: .2, sustainability: .15, experimentation: .1 };
 const base: UserConstraints = { oven_type: "home", oven_max_temp_c: 250, oven_capacity_temp_c: 250, skill_level: 2,
@@ -146,10 +146,23 @@ describe("FW-14 · riferimento dello stile", () => {
    const ref=getStyleReference(style.id);
    if(ref.referenceVersionId) expect(getVersions(style.id).map(v=>v.id),style.id).toContain(ref.referenceVersionId);
    if(ref.basis==="disciplinare") expect(canonicalRecipeEntry(style).interpretation?.type,style.id).toBe("disciplinare");
+   else if(ref.basis==="fonte") {
+    // B1 (D-055, D-068): una versione d'autore nata sullo stile e offerta da lui.
+    const it=canonicalRecipeEntry(style).interpretation;
+    expect(it?.type,style.id).not.toBe("disciplinare");
+    expect(it?.base_style_id,style.id).toBe(style.id);
+    expect(getInterpretationsForStyle(style.id).map(i=>i.id),style.id).toContain(it?.id);
+   }
    else expect(canonicalRecipeEntry(style).interpretation,style.id).toBeNull();
   }
   expect(canonicalRecipeEntry(STYLES_DB.teglia_romana).interpretation?.id).toBe("apiter_teglia");
   expect(getCanonicalVersion("teglia_romana")).toBeNull();
+ });
+ it("B1: base «fonte», il riferimento è una versione d'autore, non una versione né il centro", () => {
+  expect(sourceReference("bonci_pizzarium")).toEqual({referenceVersionId:null,referenceInterpretationId:"bonci_pizzarium",basis:"fonte"});
+  // Come per i disciplinari, la ricetta di riferimento è quella della versione.
+  const bonci=getInterpretationById("bonci_pizzarium")!;
+  expect(canonicalRecipeEntry(STYLES_DB.teglia_romana,weights,bonci).options.customHydration).toBe(bonci.parameter_overrides?.hydration_pct);
  });
 });
 

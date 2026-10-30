@@ -209,6 +209,9 @@ export const ES_LOCALE: CmsContent = {
     yeastEstimateNote: "Es una estimación, no una medida: la marca, la frescura de la levadura y la temperatura real la mueven. Dosis plausible: {low}–{high}.",
     yeastPersonalLegend: "En tu cocina las masas levan",
     yeastPersonalHint: "Si siempre se te pasan, elige «más rápido»: usaremos menos levadura en todas las recetas.",
+    /* B1 (D-068): dose del lievito presa dalla fonte. */
+    yeastSourceBody: "Dosis tomada de la fuente de la versión: {pct} sobre la harina, para {hours} a {temp}. Con los mismos tiempos el modelo estimaría {model}; la receta mantiene la dosis de la fuente, porque sus tiempos funcionan con ella.",
+    yeastSourceNote: "Si cambias las horas o la temperatura, vuelve la dosis del modelo. La corrección de tu cocina no cambia la dosis de la fuente.",
     yeastSpeedMuchSlower: "Mucho más lento",
     yeastSpeedSlower: "Más lento",
     yeastSpeedAsExpected: "Como se espera",
@@ -948,6 +951,10 @@ export const ES_LOCALE: CmsContent = {
     "timeline.shape.foldedLayers": "Estira una lámina finísima y dóblala {folds} veces como un libro, repartiendo el relleno entre los pliegues.",
     // FW-17 (D-P)
     "preferment.sourdoughInstead": "La biga y el poolish se hacen con levadura de panadería: con solo masa madre la receta no los usa, porque la masa madre ya hace de prefermento. Para usarlos, añade levadura de panadería a tu despensa.",
+    // B1 (D-068): lievito della fonte convertito, «luogo caldo» senza gradi.
+    "yeast.sourceDryAsFresh": "La fuente usa levadura seca, {sourcePct}% sobre la harina. En tu despensa hay levadura fresca: aquí la dosis es {pct}%, convertida por {app} con la proporción 1 a 3 (1 g de levadura seca equivale a unos 3 g de fresca).",
+    "yeast.sourceFreshAsDry": "La fuente usa levadura fresca, {sourcePct}% sobre la harina. En tu despensa hay levadura seca: aquí la dosis es {pct}%, convertida por {app} con la proporción 1 a 3 (1 g de levadura seca equivale a unos 3 g de fresca).",
+    "fermentation.warmPlace": "La fuente dice «en un lugar cálido», sin grados: {app} calcula a {temp}, y vale cualquier punto entre {tempMin} y {tempMax}. Espera a que la masa doble su volumen, no a la hora del reloj.",
     "diet.singleBase": "Una base con toda la masa: cebolla encima, sin segundo disco ni cierre.",
     "topping.geometry": "Superficie {area} cm² · referencia {reference} cm² · cantidades ×{scale}.",
     "auth.layoutChanged": "Formato distinto de la referencia: la variante cambia la estructura de la receta",

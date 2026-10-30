@@ -247,6 +247,9 @@ export const JA_LOCALE: CmsContent = {
     yeastEstimateNote: "これは推定で、測定値ではありません。イーストの銘柄や鮮度、実際の温度で変わります。目安の範囲：{low}〜{high}。",
     yeastPersonalLegend: "あなたのキッチンでの生地の発酵は",
     yeastPersonalHint: "いつも発酵しすぎるなら「速い」を選んでください。すべてのレシピでイーストを減らします。",
+    /* B1 (D-068): dose del lievito presa dalla fonte. */
+    yeastSourceBody: "このバージョンの出典の量です：粉に対して{pct}、{temp}で{hours}。同じ時間なら、モデルの推定は{model}です。出典の時間はこの量で合うため、レシピは出典の量を使います。",
+    yeastSourceNote: "時間や温度を変えると、モデルの量に戻ります。キッチンの補正は出典の量には適用されません。",
     yeastSpeedMuchSlower: "かなり遅い",
     yeastSpeedSlower: "遅い",
     yeastSpeedAsExpected: "想定どおり",
@@ -1004,6 +1007,10 @@ export const JA_LOCALE: CmsContent = {
     "timeline.shape.foldedLayers": "生地を極薄に伸ばし、本のように{folds}回折りたたみながら、層の間に具を広げます。",
     // FW-17 (D-P)
     "preferment.sourdoughInstead": "ビガとポーリッシュはパン酵母で作ります。サワー種だけの場合、サワー種自体が中種の役割を果たすため、レシピでは使いません。使う場合は、パントリーにパン酵母を追加してください。",
+    // B1 (D-068): lievito della fonte convertito, «luogo caldo» senza gradi.
+    "yeast.sourceDryAsFresh": "出典ではドライイーストを粉に対して{sourcePct}%使います。パントリーにあるのは生イーストなので、ここでは{pct}%です。{app}が1対3の比率で換算しました（ドライイースト1 gは生イースト約3 gに相当）。",
+    "yeast.sourceFreshAsDry": "出典では生イーストを粉に対して{sourcePct}%使います。パントリーにあるのはドライイーストなので、ここでは{pct}%です。{app}が1対3の比率で換算しました（ドライイースト1 gは生イースト約3 gに相当）。",
+    "fermentation.warmPlace": "出典には「暖かい場所で」とだけあり、温度の指定はありません。{app}は{temp}で計算しており、{tempMin}〜{tempMax}なら問題ありません。時計ではなく、生地が2倍に膨らむのを待ってください。",
     "diet.singleBase": "生地をすべて使って1枚の土台にし、上に玉ねぎをのせる。2枚目の生地や縁を閉じる工程はない。",
     "topping.geometry": "面積 {area} cm² · 基準 {reference} cm² · 分量 ×{scale}。",
     "auth.layoutChanged": "基準とは異なる形です。このバージョンでは構造も変わります",

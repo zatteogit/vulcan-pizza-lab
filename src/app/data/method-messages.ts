@@ -20,6 +20,10 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   "timeline.preheat.includesProofOil": "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
   // FW-17 (D-P): niente biga o poolish col solo lievito madre.
   "preferment.sourdoughInstead": "Biga e poolish si fanno con il lievito di birra: con il solo lievito madre la ricetta non li usa, perché il lievito madre fa già da prefermento. Per averli, aggiungi un lievito di birra alla dispensa.",
+  // B1 (D-068): lievito della fonte convertito per la dispensa, «luogo caldo» senza gradi.
+  "yeast.sourceDryAsFresh": "La fonte usa lievito secco, {sourcePct}% sulla farina. In dispensa hai lievito fresco: qui la dose è {pct}%, convertita da {app} col rapporto 1 a 3 (1 g di secco vale circa 3 g di fresco).",
+  "yeast.sourceFreshAsDry": "La fonte usa lievito fresco, {sourcePct}% sulla farina. In dispensa hai lievito secco: qui la dose è {pct}%, convertita da {app} col rapporto 1 a 3 (1 g di secco vale circa 3 g di fresco).",
+  "fermentation.warmPlace": "La fonte dice «in un luogo caldo», senza gradi: {app} calcola a {temp}, e va bene fra {tempMin} e {tempMax}. Aspetta che l'impasto raddoppi, non l'ora sull'orologio.",
   "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
   "topping.geometry": "Superficie {area} cm² · riferimento {reference} cm² · dosi ×{scale}.",
   "auth.layoutChanged": "Formato diverso dal riferimento: la variante modifica la struttura della ricetta",

@@ -10,6 +10,20 @@ import { WhyButton } from "../science/why-button";
  * registro; qui restano solo le differenze di questa ricetta e i link. */
 export function RecipeReferenceNote({ recipe, oven }: { recipe: GeneratedRecipe; oven?: OvenType }) {
   const { cms, bcp47 } = useCms();
+  /* B1 (D-068): le scelte di Vulcan sulla fonte (lievito convertito per la
+     dispensa, «luogo caldo» senza gradi) si dichiarano sopra la nota. */
+  const notes = recipe.source_notes;
+  if (!notes?.length) return <ReferenceNoteBody recipe={recipe} oven={oven} />;
+  return (
+    <>
+      <aside className="recipe-reference-note">{engineMsgTexts(notes, cms, bcp47).map((note, i) => <p key={i}>{note}</p>)}</aside>
+      <ReferenceNoteBody recipe={recipe} oven={oven} />
+    </>
+  );
+}
+
+function ReferenceNoteBody({ recipe, oven }: { recipe: GeneratedRecipe; oven?: OvenType }) {
+  const { cms, bcp47 } = useCms();
   if (recipe.method_changes?.length) return <aside className="recipe-reference-note">{engineMsgTexts(recipe.method_changes,cms,bcp47).map((note,i)=><p key={i}>{note}</p>)}</aside>;
   if (recipe.style.formula_variant) return <aside className="recipe-reference-note"><p>{engineMsgTexts([recipe.style.formula_variant], cms, bcp47)[0]}</p></aside>;
   if (recipe.style.id !== "napoletana_stg") return null;
