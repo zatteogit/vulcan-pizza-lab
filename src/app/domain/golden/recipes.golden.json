@@ -868,5 +868,35 @@
     "oven_c": 245,
     "cook_s": 840,
     "timeline_min": 618
+  },
+  "teglia_in_giornata/ideal": {
+    "flour_g": 2029,
+    "water_g": 1593,
+    "salt_g": 24,
+    "yeast_g": 3.6,
+    "fat_g": 187,
+    "sugar_g": 32,
+    "hydration_pct": 78.5,
+    "ball_weight_g": 967,
+    "fermentation_h": 7,
+    "fermentation_c": 22,
+    "oven_c": 210,
+    "cook_s": 1800,
+    "timeline_min": 622
+  },
+  "teglia_in_giornata/home": {
+    "flour_g": 2029,
+    "water_g": 1593,
+    "salt_g": 24,
+    "yeast_g": 3.6,
+    "fat_g": 187,
+    "sugar_g": 32,
+    "hydration_pct": 78.5,
+    "ball_weight_g": 967,
+    "fermentation_h": 7,
+    "fermentation_c": 22,
+    "oven_c": 210,
+    "cook_s": 1800,
+    "timeline_min": 622
   }
 }
