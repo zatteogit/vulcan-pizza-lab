@@ -162,7 +162,7 @@ Catalogo interattivo completo, accessibile a `/design-system` (standalone) e via
 
 | File               | Righe | Funzione                                                                             |
 | ------------------ | ----- | ------------------------------------------------------------------------------------ |
-| `cms-context.tsx`  | 1273  | CmsProvider, useCms(), CMS_DEFAULTS, CMS_SECTIONS, schema completo                   |
+| `cms-context.tsx`  | 1273  | CmsProvider, useCms(), CMS_SECTIONS, schema completo (l'italiano è in `locales/it.ts`) |
 | `i18n.ts`          | 61    | t() template helper, createFormatter() con cookTime/fermentTime/clockTime/tempSuffix |
 | `locales/index.ts` | 53    | Registry LOCALE_BUNDLES, LOCALE_META, LOCALE_BCP47                                   |
 | `locales/en.ts`    | 321   | Bundle inglese completo                                                              |
@@ -497,8 +497,7 @@ Il CMS e basato su un **React Context** (`CmsProvider`) che avvolge l'intera app
 
 ```
 CmsProvider (app-shell.tsx)
-  +-- CMS_DEFAULTS: CmsContent         hardcoded in cms-context.tsx (italiano)
-  +-- LOCALE_BUNDLES: Record<LocaleId>  bundle lingue in cms/locales/
+  +-- LOCALE_BUNDLES: Record<LocaleId>  bundle completi in cms/locales/, italiano compreso (it.ts, caricato come gli altri)
   +-- overrides: Partial<CmsContent>    persistiti in localStorage
   +-- switchLocale(id)                  carica bundle + sovrascrive
 ```
@@ -544,7 +543,7 @@ const {
 
 | Codice | Lingua     | BCP 47 | Bundle                   |
 | ------ | ---------- | ------ | ------------------------ |
-| `it`   | Italiano   | it-IT  | CMS_DEFAULTS (hardcoded) |
+| `it`   | Italiano   | it-IT  | `locales/it.ts`          |
 | `en`   | English    | en-GB  | `locales/en.ts`          |
 | `es`   | Espanol    | es-ES  | `locales/es.ts`          |
 | `de`   | Deutsch    | de-DE  | `locales/de.ts`          |
