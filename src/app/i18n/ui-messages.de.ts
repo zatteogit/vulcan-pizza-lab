@@ -493,6 +493,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "recipe.referenceLabel.onYourOven": "Referenz für deinen Ofen",
   "recipe.referenceLabel.disciplinare": "Regelwerk {0}",
   "recipe.referenceLabel.inspired": "Inspiriert von {0}",
+  "recipe.referenceLabel.authorAdapt": "Das ist die Version des Autors, so wie er sie beschreibt. Mit „{0}“ passt du sie an deine Küche an, dann ist sie „{1}“.",
   "pages.explore.primaryFamily": "Hauptfamilie: {0}",
   "pages.profile.maxTemp": "bis ~{0}",
   "pages.profile.skillLevel": "Stufe {0}",

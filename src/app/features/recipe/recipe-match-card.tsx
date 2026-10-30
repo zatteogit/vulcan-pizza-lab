@@ -155,6 +155,7 @@ export function RecipeMatchCard({
   mealDeadline = false,
   resetKey,
   initialExpanded = false,
+  authorVersion = false,
   className = "",
 }: {
   scores: RecipeScores;
@@ -198,6 +199,9 @@ export function RecipeMatchCard({
   resetKey?: string;
   /** Dettagli già aperti al primo render (test di render statico). */
   initialExpanded?: boolean;
+  /** G1b: è attiva una versione d'autore «Ispirata a…» non ancora su misura:
+   *  una nota sobria dice che si adatta alla cucina con l'azione qui sotto. */
+  authorVersion?: boolean;
   className?: string;
 }) {
   const { cms, bcp47 } = useCms();
@@ -461,7 +465,9 @@ export function RecipeMatchCard({
                 {headroomLine.text}
               </p>
             )}
-
+            {authorVersion && <p className="match-notice match-notice--muted">
+              {uiMessage("recipe.referenceLabel.authorAdapt", [onOptimize ? tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe : cms.ui.personalize, cms.ui.scoreBasisTailored])}
+            </p>}
           </div>
         </div>
         <div className="match-actions">

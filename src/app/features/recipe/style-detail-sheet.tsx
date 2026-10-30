@@ -8,7 +8,9 @@ import { ScoreExplainer } from "./score-explainer";
 import { RecipeChanges } from "./recipe-changes";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { RecipeDietaryAlternatives } from "./recipe-dietary-notice";
-import { canonicalRecipe } from "../../use-cases/recipe-entry";
+import { authorVersionRecipe, canonicalRecipe } from "../../use-cases/recipe-entry";
+import { blockerText } from "./blocker-text";
+import { recipePresentationState } from "./recipe-card-signals";
 import { summarizeVerdict } from "../../domain/verdict-summary";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
@@ -43,7 +45,7 @@ import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, placeNameLocalizer, t } from "../cms/i18n";
-import { CtaButton, Disclosure, IconButton } from "../../components/ds/index";
+import { Badge, CtaButton, Disclosure, IconButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -173,9 +175,6 @@ export function StyleDetailSheet({
   const dev = getStyleDeviation(style.id);
   const devCmsLabel = cms.deviationLabels[dev.category] ?? DEVIATION_CATEGORY_LABELS[dev.category].label;
   const devEmoji = DEVIATION_CATEGORY_LABELS[dev.category].emoji;
-  /* G1b-WP-01 (S03-A-14, S03-B-16): le versioni d'autore dalla Interpretation
-     library, con la provenienza (quelle di un altro stile dicono «da {stile}»). */
-  const authorVersions = relatedAuthorVersions(style.id);
   /* La causa del blocco descrive le azioni che il blocco disabilita. */
   const blockerId = `style-detail-blocker-${style.id}`;
   /* Budget D-059: solo le tabelle che la scheda mostra. getStyleParametrics
@@ -379,62 +378,8 @@ export function StyleDetailSheet({
                 transition={motionSpring.responsiveSoft}
                 className="style-detail-nerd__panel"
               >
-                {/* ── Versioni d'autore (G1b-WP-01): voci che si aprono su firma
-                    tecnica, storia e fonte, e si generano in Crea. ── */}
-                {authorVersions.length > 0 && (
-                  <section className="style-detail-techniques" aria-labelledby={`style-detail-techniques-${style.id}`}>
-                    {/* FW-12 (S03-B-24): sezioni h3 sotto il titolo h2 del pannello. */}
-                    <h3 id={`style-detail-techniques-${style.id}`} className="style-detail-techniques__label">
-                      {pt.sheetTechniquesLabel}
-                    </h3>
-                    <ul className="style-detail-techniques__list">
-                      {authorVersions.map(({ interpretation, relation }) => {
-                        const v = localizeInterpretation(interpretation, cms.inspirationI18n);
-                        /* Chi: maestro/pizzeria/ente; poi la firma e, se viene da un altro stile, da quale. */
-                        const who = v.author ?? v.pizzeria ?? v.organization ?? "";
-                        const from = relation === "compatible"
-                          ? t(pt.sheetTechniqueFrom, { style: STYLES_DB[v.base_style_id]?.name ?? v.base_style_id })
-                          : undefined;
-                        const source = v.url ?? v.process_profile?.source_url;
-                        const hintId = `style-detail-version-${v.id}-hint`;
-                        return (
-                          <li key={v.id} className="style-detail-techniques__item">
-                            <Disclosure variant="inline" summary={
-                              <span className="style-detail-techniques__summary">
-                                <span className="style-detail-techniques__who">
-                                  {v.emoji && <span aria-hidden="true">{v.emoji} </span>}{who}
-                                </span>
-                                {v.signature_name && <span className="style-detail-techniques__what">{v.signature_name}</span>}
-                                {from && <span className="style-detail-techniques__from">{from}</span>}
-                              </span>
-                            }>
-                              {v.technique_signature && <p className="style-detail-techniques__text">{v.technique_signature}</p>}
-                              <p className="style-detail-techniques__text">{v.story}</p>
-                              <p className="style-detail-techniques__actions">
-                                <CtaButton variant="secondary" radius="lg" elevated={false}
-                                  className="style-detail-techniques__generate"
-                                  disabled={notFeasible}
-                                  aria-describedby={notFeasible ? `${hintId} ${blockerId}` : undefined}
-                                  onClick={() => onGenerate(undefined, v.id)}>
-                                  <Sparkles size={14} aria-hidden="true" />
-                                  {pt.sheetTechniqueGenerate}
-                                </CtaButton>
-                                {notFeasible && <span id={hintId} className="style-detail-techniques__hint">{cms.ui.verdictTitle}</span>}
-                                {source && (
-                                  <a href={source} target="_blank" rel="noopener noreferrer" className="style-detail-techniques__source">
-                                    {pt.sheetTechniqueSource}
-                                    <span className="style-detail-techniques__host">{new URL(source).hostname.replace(/^www\./, "")}</span>
-                                    <ExternalLink size={13} aria-hidden="true" />
-                                  </a>
-                                )}
-                              </p>
-                            </Disclosure>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </section>
-                )}
+                {/* G1b: versioni d'autore; il verdetto di ognuna si calcola solo qui. */}
+                <AuthorVersions style={style} constraints={constraints} onGenerate={onGenerate} />
 
                 {/* ── Data pills — quick-glance parameters ── */}
                 <div className="style-detail-pills">
@@ -597,6 +542,86 @@ export function StyleDetailSheet({
   );
 
   return createPortal(sheet, document.body);
+}
+
+/* ── Versioni d'autore (G1b-WP-01): voci che si aprono su firma tecnica,
+   storia e fonte, e si generano in Crea. Ognuna dice se è fattibile con la
+   cucina dell'utente: il verdetto è quello della ricetta che apre in Crea
+   (authorVersionRecipe), calcolato solo quando il blocco è visibile. ── */
+function AuthorVersions({ style, constraints, onGenerate }: Pick<StyleDetailSheetProps, "style" | "constraints" | "onGenerate">) {
+  const { cms, bcp47 } = useCms();
+  const pt = cms.parametricTips;
+  const versions = React.useMemo(() => relatedAuthorVersions(style.id).map((entry) => ({ ...entry,
+    recipe: constraints && authorVersionRecipe(style, entry.interpretation, constraints, scoreWeightsFromCms(cms)) })),
+  [style, constraints, cms]);
+  if (!versions.length) return null;
+  return (
+    <section className="style-detail-techniques" aria-labelledby={`style-detail-techniques-${style.id}`}>
+      {/* FW-12 (S03-B-24): sezioni h3 sotto il titolo h2 del pannello. */}
+      <h3 id={`style-detail-techniques-${style.id}`} className="style-detail-techniques__label">
+        {pt.sheetTechniquesLabel}
+      </h3>
+      <ul className="style-detail-techniques__list">
+        {versions.map(({ interpretation, relation, recipe }) => {
+          const v = localizeInterpretation(interpretation, cms.inspirationI18n);
+          /* Chi: maestro/pizzeria/ente; poi la firma e, se viene da un altro stile, da quale. */
+          const who = v.author ?? v.pizzeria ?? v.organization ?? "";
+          const from = relation === "compatible"
+            ? t(pt.sheetTechniqueFrom, { style: STYLES_DB[v.base_style_id]?.name ?? v.base_style_id })
+            : undefined;
+          const source = v.url ?? v.process_profile?.source_url;
+          const hintId = `style-detail-version-${v.id}-hint`;
+          /* Stesso esito e stesse parole della match card del risultato che la
+             versione apre: «Fattibile», «Da verificare», «Così non è fattibile». */
+          const state = recipe && recipePresentationState(recipe);
+          const blocked = state === "blocked";
+          const primary = recipe && blocked ? summarizeVerdict(recipe.verdict).primary : undefined;
+          return (
+            <li key={v.id} className="style-detail-techniques__item">
+              <Disclosure variant="inline" summary={
+                <span className="style-detail-techniques__summary">
+                  <span className="style-detail-techniques__who">
+                    {v.emoji && <span aria-hidden="true">{v.emoji} </span>}{who}
+                  </span>
+                  {v.signature_name && <span className="style-detail-techniques__what">{v.signature_name}</span>}
+                  {from && <span className="style-detail-techniques__from">{from}</span>}
+                  {state && (
+                    <span className="style-detail-techniques__what">
+                      <Badge tone={blocked ? "error" : state === "ready" ? "success" : "muted"}>
+                        {blocked ? cms.ui.verdictTitle : engineMsgTexts([state === "ready"
+                          ? { key: "card.ready", fallback: "Fattibile" } : { key: "card.toVerify", fallback: "Da verificare" }], cms, bcp47)[0]}
+                      </Badge>
+                    </span>
+                  )}
+                </span>
+              }>
+                {v.technique_signature && <p className="style-detail-techniques__text">{v.technique_signature}</p>}
+                <p className="style-detail-techniques__text">{v.story}</p>
+                <p className="style-detail-techniques__actions">
+                  <CtaButton variant="secondary" radius="lg" elevated={false}
+                    className="style-detail-techniques__generate"
+                    disabled={blocked}
+                    aria-describedby={primary ? hintId : undefined}
+                    onClick={() => onGenerate(undefined, v.id)}>
+                    <Sparkles size={14} aria-hidden="true" />
+                    {pt.sheetTechniqueGenerate}
+                  </CtaButton>
+                  {primary && <span id={hintId} className="style-detail-techniques__hint">{blockerText(primary, cms, bcp47)}</span>}
+                  {source && (
+                    <a href={source} target="_blank" rel="noopener noreferrer" className="style-detail-techniques__source">
+                      {pt.sheetTechniqueSource}
+                      <span className="style-detail-techniques__host">{new URL(source).hostname.replace(/^www\./, "")}</span>
+                      <ExternalLink size={13} aria-hidden="true" />
+                    </a>
+                  )}
+                </p>
+              </Disclosure>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
 }
 
 function ParamRow({ label, value, sub }: { label: string; value: string; sub: string }) {
