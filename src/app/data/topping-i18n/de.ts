@@ -209,11 +209,11 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     sardenaira: {
       name: "Sardenaira",
-      description: "Die belegte Focaccia aus Sanremo: Tomaten-Zwiebel-Soße, Sardellen, Taggiasca-Oliven, Kapern und Knoblauch.",
+      description: "Die belegte Focaccia aus Sanremo: Tomate, Salzsardellen, Taggiasca-Oliven, Kapern, ungeschälter Knoblauch und Oregano. In der De.Co.-Version gibt es keine Zwiebel; die kommt in Hausrezepten und in der Pissalandrea vor.",
     },
     sfincione_bianco: {
-      name: "Sfincione bianco (aus Bagheria)",
-      description: "Die Variante aus Bagheria ohne Tomate: Tuma, Sardellen, geschmorte Zwiebeln, Caciocavallo und geröstete Brotkrumen.",
+      name: "Sfincione bianco aus Bagheria",
+      description: "Der Sfincione aus Bagheria, ohne Tomate: Tuma, Schafsricotta, Sardellen, geschmorte Zwiebeln und geröstete Brotkrumen mit Caciocavallo. Nicht zu verwechseln mit dem „Sfincione in bianco“ aus Palermo, der nur Öl, Rosmarin und Salz bekommt.",
     },
     gorgonzola_pere: {
       name: "Gorgonzola und Birne",
@@ -1740,7 +1740,8 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       variant_name: "De.Co. aus Sanremo",
       ingredients: {
         "0": {
-          name: "Dicke, mit Zwiebel gekochte Tomatensoße (Tomaten, Zwiebel, Öl)",
+          name: "Frische Tomaten in Stücken oder Tomatenfruchtfleisch",
+          notes: "roh und gut abgetropft; keine Zwiebel",
         },
         "1": {
           name: "Entsalzte Salzsardellen",
@@ -1773,15 +1774,19 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
           notes: "in den Teig gedrückt",
         },
         "2": {
-          name: "Langsam geschmorte weiße Zwiebeln",
+          name: "Schafsricotta",
+          notes: "löffelweise auf die Tuma",
         },
         "3": {
-          name: "Geriebener gereifter Caciocavallo",
+          name: "Langsam geschmorte weiße Zwiebeln",
         },
         "4": {
-          name: "Mit Oregano geröstete Brotkrumen",
+          name: "Geriebener gereifter Caciocavallo",
         },
         "5": {
+          name: "Mit Oregano geröstete Brotkrumen",
+        },
+        "6": {
           name: "Schwarzer Pfeffer und natives Olivenöl extra",
         },
       },
@@ -2953,7 +2958,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     spread_sardenaira: {
       title: "Sardenaira belegen",
-      description: "Verteile die dicke Tomaten-Zwiebel-Soße auf dem hohen, weichen Teig. Sardellen und ungeschälte Knoblauchzehen hineindrücken. Taggiasca-Oliven, Kapern und Oregano verteilen; reichlich natives Olivenöl extra. Langsam im Blech backen. Keine Pizza: eine belegte Focaccia.",
+      description: "Verteile die rohe Tomate auf dem hohen, weichen Teig. Sardellen und ungeschälte Knoblauchzehen hineindrücken. Taggiasca-Oliven, Kapern und Oregano verteilen; reichlich natives Olivenöl extra. Langsam im Blech backen. Keine Pizza: eine belegte Focaccia.",
     },
     bagherese_prep: {
       title: "Geschmorte Zwiebeln und geröstete Brotkrumen",
@@ -2961,7 +2966,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     spread_sfincione_bianco: {
       title: "Sfincione bianco ohne Tomate",
-      description: "Keine Tomate. Drücke die Tuma-Scheiben und die aufgelösten Sardellen in den Teig. Mit den geschmorten Zwiebeln, dem geriebenen Caciocavallo und den gerösteten Brotkrumen bedecken. Pfeffer und Öl. Die Variante aus Bagheria.",
+      description: "Keine Tomate. Drücke die Tuma-Scheiben und die aufgelösten Sardellen in den Teig und verteile dann die Ricotta löffelweise darauf. Mit den geschmorten Zwiebeln, dem geriebenen Caciocavallo und den gerösteten Brotkrumen bedecken. Pfeffer und Öl.",
     },
     recco_nduja_fill: {
       title: "Crescenza und 'Nduja zwischen den Teigblättern",

@@ -301,7 +301,7 @@ Lo Sfincione Palermitano rappresenta la quintessenza della tradizione panificato
 | Varianti della Pizza (Impasto e Formato) | Gusti / Condimenti (Topping e Ingredienti) |
 | :--- | :--- |
 | **Sfincione Tradizionale**: Teglia rettangolare oliata, impasto soffice spugnoso da $500\text{ g}$ cotto a $220^\circ\text{C}$. | **Sfincione Palermitano**: Salsa densa di pomodoro e cipolle rosse stufate, acciughe, caciocavallo ragusano, pangrattato tostato. |
-| **Sfincione Bianco**: Variante bianca priva di pomodoro. | **Sfincione di Bagheria**: Ricotta vaccina o caciocavallo, acciughe, cipolle stufate, mollica di pane tostato all'olio EVO. |
+| **Sfincione in bianco**: impasto dello sfincione con solo olio, rosmarino e sale (ricetta iconica `sfincione_bianca`). | **Sfincione bianco di Bagheria** (`sfincione_bianco`): senza pomodoro; tuma (o primosale), ricotta di pecora, acciughe, cipolle stufate, mollica tostata con caciocavallo (D-065, fonti in `progetto-catalogo-italiano.md` §4.1). |
 
 ### 12. Pala Romana (pala_romana)
 

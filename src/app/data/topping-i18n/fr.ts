@@ -209,11 +209,11 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     sardenaira: {
       name: "Sardenaira",
-      description: "La focaccia garnie de Sanremo : sauce tomate et oignon, anchois, olives taggiasche, câpres et ail.",
+      description: "La focaccia garnie de Sanremo : tomate, anchois au sel, olives taggiasche, câpres, ail en chemise et origan. La version De.Co. n'a pas d'oignon : on le trouve dans les versions maison et dans la pissalandrea.",
     },
     sfincione_bianco: {
-      name: "Sfincione bianco (de Bagheria)",
-      description: "La variante de Bagheria sans tomate : tuma, anchois, oignons confits, caciocavallo et mie de pain grillée.",
+      name: "Sfincione bianco de Bagheria",
+      description: "Le sfincione de Bagheria, sans tomate : tuma, ricotta de brebis, anchois, oignons confits et mie de pain grillée au caciocavallo. Ce n'est pas le « sfincione in bianco » de Palerme, garni seulement d'huile, de romarin et de sel.",
     },
     gorgonzola_pere: {
       name: "Gorgonzola et poire",
@@ -1740,7 +1740,8 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       variant_name: "De.Co. de Sanremo",
       ingredients: {
         "0": {
-          name: "Sauce tomate épaisse cuite avec de l'oignon (tomate, oignon, huile)",
+          name: "Tomates fraîches en morceaux ou pulpe de tomate",
+          notes: "crues et bien égouttées ; pas d'oignon",
         },
         "1": {
           name: "Anchois au sel dessalés",
@@ -1773,15 +1774,19 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
           notes: "enfoncée dans la pâte",
         },
         "2": {
-          name: "Oignons blancs confits lentement",
+          name: "Ricotta de brebis",
+          notes: "à la cuillère sur la tuma",
         },
         "3": {
-          name: "Caciocavallo affiné râpé",
+          name: "Oignons blancs confits lentement",
         },
         "4": {
-          name: "Mie de pain grillée à l'origan",
+          name: "Caciocavallo affiné râpé",
         },
         "5": {
+          name: "Mie de pain grillée à l'origan",
+        },
+        "6": {
           name: "Poivre noir et huile d'olive vierge extra",
         },
       },
@@ -2953,7 +2958,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     spread_sardenaira: {
       title: "Garnir la Sardenaira",
-      description: "Étalez la sauce épaisse tomate-oignon sur la pâte haute et moelleuse. Enfoncez les anchois et les gousses d'ail en chemise. Répartissez les olives taggiasche, les câpres et l'origan ; huile d'olive vierge extra en abondance. Cuisson lente en plaque. Ce n'est pas une pizza : c'est une focaccia garnie.",
+      description: "Étalez la tomate crue sur la pâte haute et moelleuse. Enfoncez les anchois et les gousses d'ail en chemise. Répartissez les olives taggiasche, les câpres et l'origan ; huile d'olive vierge extra en abondance. Faites cuire lentement en plaque. Ce n'est pas une pizza : c'est une focaccia garnie.",
     },
     bagherese_prep: {
       title: "Oignons confits et mie grillée",
@@ -2961,7 +2966,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     spread_sfincione_bianco: {
       title: "Sfincione bianco sans tomate",
-      description: "Pas de tomate. Enfoncez dans la pâte les tranches de tuma et les anchois fondus. Couvrez avec les oignons confits, le caciocavallo râpé et la mie grillée. Poivre et huile. La variante de Bagheria.",
+      description: "Pas de tomate. Enfoncez dans la pâte les tranches de tuma et les anchois fondus, puis déposez la ricotta à la cuillère. Couvrez avec les oignons confits, le caciocavallo râpé et la mie grillée. Poivre et huile.",
     },
     recco_nduja_fill: {
       title: "Crescenza et 'nduja entre les feuilles de pâte",

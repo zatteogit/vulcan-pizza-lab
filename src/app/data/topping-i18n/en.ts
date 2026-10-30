@@ -209,11 +209,11 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     },
     sardenaira: {
       name: "Sardenaira",
-      description: "Sanremo's topped focaccia: tomato and onion sauce, anchovies, Taggiasca olives, capers and garlic.",
+      description: "Sanremo's topped focaccia: tomato, salted anchovies, Taggiasca olives, capers, unpeeled garlic and oregano. The De.Co. version has no onion, which turns up in home versions and in pissalandrea.",
     },
     sfincione_bianco: {
-      name: "White sfincione (Bagheria-style)",
-      description: "The tomato-free Bagheria variant: tuma, anchovies, stewed onions, caciocavallo and toasted breadcrumbs.",
+      name: "Sfincione bianco from Bagheria",
+      description: "The sfincione of Bagheria, with no tomato: tuma, sheep's-milk ricotta, anchovies, stewed onions and toasted breadcrumbs with caciocavallo. It isn't Palermo's “sfincione in bianco”, topped only with oil, rosemary and salt.",
     },
     gorgonzola_pere: {
       name: "Gorgonzola and Pear",
@@ -993,7 +993,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     sardenaira_sanremo: {
       variant_name: "De.Co. di Sanremo",
       ingredients: {
-        "0": { name: "Thick tomato sauce cooked with onion (tomatoes, onion, oil)" },
+        "0": { name: "Fresh tomatoes in pieces or tomato pulp", notes: "raw and well drained; no onion" },
         "1": { name: "Salted anchovies, desalted" },
         "2": { name: "Crushed unpeeled garlic cloves" },
         "3": { name: "Taggiasca olives in brine" },
@@ -1007,10 +1007,11 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       ingredients: {
         "0": { name: "Salted anchovies melted in extra-virgin olive oil" },
         "1": { name: "Fresh tuma (or primosale), sliced", notes: "pressed into the dough" },
-        "2": { name: "Slow-stewed white onions" },
-        "3": { name: "Grated aged caciocavallo" },
-        "4": { name: "Breadcrumbs toasted with oregano" },
-        "5": { name: "Black pepper and extra-virgin olive oil" },
+        "2": { name: "Sheep's-milk ricotta", notes: "in spoonfuls over the tuma" },
+        "3": { name: "Slow-stewed white onions" },
+        "4": { name: "Grated aged caciocavallo" },
+        "5": { name: "Breadcrumbs toasted with oregano" },
+        "6": { name: "Black pepper and extra-virgin olive oil" },
       },
     },
     recco_nduja: {
@@ -1945,7 +1946,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_sardenaira: {
       title: "Top the Sardenaira",
       description:
-        "Spread the thick tomato and onion sauce over the tall, soft dough. Press in the anchovies and unpeeled garlic cloves. Scatter Taggiasca olives, capers and oregano; plenty of extra-virgin olive oil. Slow bake in a tray. It's not a pizza: it's a topped focaccia.",
+        "Spread the raw tomato over the tall, soft dough. Press in the anchovies and unpeeled garlic cloves. Scatter Taggiasca olives, capers and oregano; plenty of extra-virgin olive oil. Bake slowly in a tray. It's not a pizza: it's a topped focaccia.",
     },
     bagherese_prep: {
       title: "Stewed onions and toasted breadcrumbs",
@@ -1955,7 +1956,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_sfincione_bianco: {
       title: "White sfincione without tomato",
       description:
-        "No tomato. Press the slices of tuma and the melted anchovies into the dough. Cover with the stewed onions, grated caciocavallo and toasted breadcrumbs. Pepper and oil. The Bagheria variant.",
+        "No tomato. Press the slices of tuma and the melted anchovies into the dough, then add the ricotta in spoonfuls. Cover with the stewed onions, grated caciocavallo and toasted breadcrumbs. Pepper and oil.",
     },
     recco_nduja_fill: {
       title: "Crescenza and 'nduja between the sheets",

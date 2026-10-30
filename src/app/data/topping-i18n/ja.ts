@@ -209,11 +209,11 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     },
     sardenaira: {
       name: "Sardenaira",
-      description: "サンレモの具のせフォカッチャ：トマトと玉ねぎのソース、アンチョビ、タジャスカオリーブ、ケッパー、にんにく。",
+      description: "サンレモの具のせフォカッチャ：トマト、塩漬けアンチョビ、タジャスカオリーブ、ケッパー、皮付きにんにく、オレガノ。De.Co.版には玉ねぎは入りません。玉ねぎが入るのは家庭のレシピとピッサランドレアです。",
     },
     sfincione_bianco: {
-      name: "白いSfincione（Bagheria風）",
-      description: "トマトを使わないBagheriaのバリエーション：トゥーマ、アンチョビ、蒸し煮玉ねぎ、カチョカヴァッロ、炒ったパン粉。",
+      name: "BagheriaのSfincione bianco",
+      description: "トマトを使わないBagheriaのスフィンチョーネ：トゥーマ、羊乳のリコッタ、アンチョビ、蒸し煮玉ねぎ、カチョカヴァッロを混ぜて炒ったパンくず。オイル、ローズマリー、塩だけのパレルモの「sfincione in bianco」とは別物です。",
     },
     gorgonzola_pere: {
       name: "ゴルゴンゾーラと洋梨",
@@ -1740,7 +1740,8 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
       variant_name: "De.Co. di Sanremo",
       ingredients: {
         "0": {
-          name: "玉ねぎと煮込んだ濃厚なトマトソース（トマト、玉ねぎ、オリーブオイル）",
+          name: "角切りの生トマトまたはトマトパルプ",
+          notes: "加熱せず、よく水気を切る。玉ねぎは入れない",
         },
         "1": {
           name: "塩抜きした塩漬けアンチョビ",
@@ -1773,15 +1774,19 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
           notes: "生地に押し込む",
         },
         "2": {
-          name: "じっくり蒸し煮にした白玉ねぎ",
+          name: "羊乳のリコッタ",
+          notes: "トゥーマの上にスプーンで落とす",
         },
         "3": {
-          name: "すりおろした熟成カチョカヴァッロ",
+          name: "じっくり蒸し煮にした白玉ねぎ",
         },
         "4": {
-          name: "オレガノ風味の炒ったパンくず",
+          name: "すりおろした熟成カチョカヴァッロ",
         },
         "5": {
+          name: "オレガノ風味の炒ったパンくず",
+        },
+        "6": {
           name: "黒こしょうとエキストラバージンオリーブオイル",
         },
       },
@@ -2953,7 +2958,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     },
     spread_sardenaira: {
       title: "Sardenairaに具をのせる",
-      description: "厚くふんわりした生地に、トマトと玉ねぎの濃厚なソースを広げます。アンチョビと皮付きにんにくを押し込みます。タジャスカオリーブ、ケッパー、オレガノを散らし、エキストラバージンオリーブオイルをたっぷり。天板でじっくり焼きます。ピザではなく、具をのせたフォカッチャです。",
+      description: "厚くふんわりした生地に、加熱していないトマトを広げます。アンチョビと皮付きにんにくを押し込みます。タジャスカオリーブ、ケッパー、オレガノを散らし、エキストラバージンオリーブオイルをたっぷり。天板でじっくり焼きます。ピザではなく、具をのせたフォカッチャです。",
     },
     bagherese_prep: {
       title: "蒸し煮玉ねぎと炒ったパンくず",
@@ -2961,7 +2966,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     },
     spread_sfincione_bianco: {
       title: "トマトなしの白いSfincione",
-      description: "トマトは使いません。トゥーマのスライスと溶かしたアンチョビを生地に押し込みます。蒸し煮玉ねぎ、すりおろしたカチョカヴァッロ、炒ったパンくずで覆います。黒こしょうとオリーブオイル。Bagheriaのバリエーションです。",
+      description: "トマトは使いません。トゥーマのスライスと溶かしたアンチョビを生地に押し込み、リコッタをスプーンで落とします。蒸し煮玉ねぎ、すりおろしたカチョカヴァッロ、炒ったパンくずで覆います。黒こしょうとオリーブオイル。",
     },
     recco_nduja_fill: {
       title: "生地の間にCrescenzaと'Nduja",

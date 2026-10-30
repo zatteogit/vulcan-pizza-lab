@@ -658,7 +658,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
   sardenaira: {
     id: "sardenaira",
     name: "Sardenaira",
-    description: "La focaccia condita di Sanremo: salsa di pomodoro e cipolla, acciughe, olive taggiasche, capperi e aglio.",
+    description: "La focaccia condita di Sanremo: pomodoro, acciughe sotto sale, olive taggiasche, capperi, aglio in camicia e origano. Nella versione De.Co. non c'è cipolla, che compare nelle versioni di casa e nella pissalandrea.",
     emoji: "🍅",
     thumbnail: thumbnailSardenaira,
     flavor_profile: "salty_savory",
@@ -666,8 +666,8 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
   },
   sfincione_bianco: {
     id: "sfincione_bianco",
-    name: "Sfincione bianco (bagherese)",
-    description: "La variante di Bagheria senza pomodoro: tuma, acciughe, cipolle stufate, caciocavallo e mollica tostata.",
+    name: "Sfincione bianco di Bagheria",
+    description: "Lo sfincione di Bagheria, senza pomodoro: tuma, ricotta di pecora, acciughe, cipolle stufate e mollica tostata con caciocavallo. Non è lo «sfincione in bianco» palermitano, condito solo con olio, rosmarino e sale.",
     emoji: "🧅",
     thumbnail: thumbnailSfincioneBianco,
     flavor_profile: "salty_savory",
@@ -2951,7 +2951,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     /* La De.Co. è della sardenaira, non della focaccia genovese che la ospita. */
     authenticity_by_style: { focaccia_genovese: "natural" },
     ingredients: [
-      { name: "Salsa densa di pomodoro cotta con cipolla (pomodoro, cipolla, olio)",  components: ["pomodoro", "cipolla", "olio"],amount: { value: 150, unit: "g" }, section: "base" },
+      { name: "Pomodori freschi a pezzi o polpa di pomodoro", components: ["pomodoro"], amount: { value: 150, unit: "g" }, notes: "a crudo, ben sgocciolati; niente cipolla", section: "base" },
       { name: "Acciughe salate dissalate", amount: { value: 25, unit: "g" }, section: "base" },
       { name: "Aglio in camicia schiacciato", amount: { value: 3, unit: "pcs" }, section: "base" },
       { name: "Olive taggiasche in salamoia", amount: { value: 40, unit: "g" }, section: "superficie" },
@@ -2962,7 +2962,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_sardenaira",
       title: "Condisci la Sardenaira",
-      description: "Stendi la salsa densa di pomodoro e cipolla sull'impasto alto e soffice. Affonda le acciughe e gli spicchi d'aglio in camicia. Distribuisci olive taggiasche, capperi e origano; abbondante olio EVO. Cottura lenta in teglia. Non è una pizza: è una focaccia condita.",
+      description: "Distribuisci il pomodoro a crudo sull'impasto alto e soffice. Affonda le acciughe e gli spicchi d'aglio in camicia. Distribuisci olive taggiasche, capperi e origano; abbondante olio EVO. Cuoci lentamente in teglia. Non è una pizza: è una focaccia condita.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,
@@ -2977,6 +2977,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ingredients: [
       { name: "Acciughe salate sciolte in olio EVO", amount: { value: 25, unit: "g" }, section: "base" },
       { name: "Tuma fresca (o primosale) a fette", amount: { value: 120, unit: "g" }, notes: "affondata nell'impasto", section: "base" },
+      { name: "Ricotta di pecora", amount: { value: 120, unit: "g" }, notes: "a cucchiaiate sulla tuma", section: "base" },
       { name: "Cipolle bianche stufate lentamente", amount: { value: 100, unit: "g" }, section: "base" },
       { name: "Caciocavallo stagionato grattugiato", amount: { value: 40, unit: "g" }, section: "superficie" },
       { name: "Mollica di pane tostata all'origano", amount: { value: 40, unit: "g" }, section: "superficie" },
@@ -2992,7 +2993,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_sfincione_bianco",
       title: "Sfincione bianco senza pomodoro",
-      description: "Niente pomodoro. Affonda nell'impasto le fette di tuma e le acciughe sciolte. Copri con le cipolle stufate, il caciocavallo grattugiato e la mollica tostata. Pepe e olio. La variante di Bagheria.",
+      description: "Niente pomodoro. Affonda nell'impasto le fette di tuma e le acciughe sciolte, poi distribuisci la ricotta a cucchiaiate. Copri con le cipolle stufate, il caciocavallo grattugiato e la mollica tostata. Pepe e olio.",
       insert_at: "after_shape",
       duration_minutes: 6,
       replaces_generic: true,

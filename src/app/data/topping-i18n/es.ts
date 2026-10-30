@@ -209,11 +209,11 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     sardenaira: {
       name: "Sardenaira",
-      description: "La focaccia aliñada de Sanremo: salsa de tomate y cebolla, anchoas, aceitunas taggiasche, alcaparras y ajo.",
+      description: "La focaccia aliñada de Sanremo: tomate, anchoas en salazón, aceitunas taggiasche, alcaparras, ajo con piel y orégano. La versión De.Co. no lleva cebolla, que aparece en las versiones caseras y en la pissalandrea.",
     },
     sfincione_bianco: {
-      name: "Sfincione bianco (bagherese)",
-      description: "La variante de Bagheria sin tomate: tuma, anchoas, cebolla pochada, caciocavallo y miga tostada.",
+      name: "Sfincione bianco de Bagheria",
+      description: "El sfincione de Bagheria, sin tomate: tuma, ricota de oveja, anchoas, cebolla pochada y miga tostada con caciocavallo. No es el «sfincione in bianco» de Palermo, que solo lleva aceite, romero y sal.",
     },
     gorgonzola_pere: {
       name: "Gorgonzola y Pera",
@@ -1740,7 +1740,8 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       variant_name: "De.Co. de Sanremo",
       ingredients: {
         "0": {
-          name: "Salsa espesa de tomate cocinada con cebolla (tomate, cebolla, aceite)",
+          name: "Tomate fresco en trozos o pulpa de tomate",
+          notes: "en crudo y bien escurrido; sin cebolla",
         },
         "1": {
           name: "Anchoas en salazón desaladas",
@@ -1773,15 +1774,19 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
           notes: "hundida en la masa",
         },
         "2": {
-          name: "Cebollas blancas pochadas a fuego lento",
+          name: "Ricota de oveja",
+          notes: "a cucharadas sobre la tuma",
         },
         "3": {
-          name: "Caciocavallo curado rallado",
+          name: "Cebollas blancas pochadas a fuego lento",
         },
         "4": {
-          name: "Miga de pan tostada con orégano",
+          name: "Caciocavallo curado rallado",
         },
         "5": {
+          name: "Miga de pan tostada con orégano",
+        },
+        "6": {
           name: "Pimienta negra y AOVE",
         },
       },
@@ -2953,7 +2958,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     spread_sardenaira: {
       title: "Aliñar la Sardenaira",
-      description: "Extiende la salsa espesa de tomate y cebolla sobre la masa alta y esponjosa. Hunde las anchoas y los dientes de ajo con piel. Reparte las aceitunas taggiasche, las alcaparras y el orégano; AOVE abundante. Cocción lenta en bandeja. No es una pizza: es una focaccia aliñada.",
+      description: "Extiende el tomate en crudo sobre la masa alta y esponjosa. Hunde las anchoas y los dientes de ajo con piel. Reparte las aceitunas taggiasche, las alcaparras y el orégano; AOVE abundante. Hornea despacio en bandeja. No es una pizza: es una focaccia aliñada.",
     },
     bagherese_prep: {
       title: "Cebollas pochadas y miga tostada",
@@ -2961,7 +2966,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     spread_sfincione_bianco: {
       title: "Sfincione bianco sin tomate",
-      description: "Sin tomate. Hunde en la masa las lonchas de tuma y las anchoas deshechas. Cubre con las cebollas pochadas, el caciocavallo rallado y la miga tostada. Pimienta y aceite. La variante de Bagheria.",
+      description: "Sin tomate. Hunde en la masa las lonchas de tuma y las anchoas deshechas, y luego reparte la ricota a cucharadas. Cubre con las cebollas pochadas, el caciocavallo rallado y la miga tostada. Pimienta y aceite.",
     },
     recco_nduja_fill: {
       title: "Crescenza y 'nduja entre las láminas",
