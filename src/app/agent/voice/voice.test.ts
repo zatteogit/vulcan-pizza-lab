@@ -215,7 +215,7 @@ describe("risposte", () => {
 
   it("avvertenze in breve; le verifiche di dispensa non lo sono (D-060)", () => {
     const answer = siri("ricetta teglia romana");
-    expect(answer.speech).toContain("Attenzione: serve una teglia");
+    expect(answer.speech).toContain("Con qualche accortezza: serve una teglia");
     expect(answer.speech).not.toMatch(/Se hai/);
   });
 

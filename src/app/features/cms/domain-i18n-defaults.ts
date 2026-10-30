@@ -326,7 +326,7 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
       l2: "Nel numero «Compatibilità con la tua cucina» contano solo l’autenticità e la facilità: maturazione, sostenibilità e sperimentazione si mostrano a parte e non lo spostano. I pesi non vengono da una misura: sono una regola dell’app, uguale per tutti. Il punteggio è poi il più basso fra la media pesata e l’autenticità.",
     },
     "non-feasible-ceiling": {
-      title: "Tetto per le ricette non fattibili",
+      title: "Tetto se per ora non si può fare",
       l1: "Una ricetta che non puoi fare resta nella fascia bassa: è una regola dell'app.",
       l2: "Così una ricetta non eseguibile non supera mai una che puoi fare, anche se le altre dimensioni sono alte.",
     },

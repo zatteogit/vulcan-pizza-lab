@@ -1,7 +1,8 @@
 # Voce e testi di Vulcan
 
-Revisione del 27 ottobre 2026. Vale per le schermate di Scopri, Crea, Impara,
-profilo e ricetta, incluse le versioni stampabili e le traduzioni.
+Revisione del 27 ottobre 2026, aggiornata il 30 ottobre (scala degli esiti).
+Vale per le schermate di Scopri, Crea, Impara, profilo e ricetta, incluse le
+versioni stampabili e le traduzioni.
 
 ## Voce
 
@@ -139,6 +140,55 @@ lo aggiunge qui e, se è tecnico, al glossario.
 - FW-11 (D-J). Nel sistema imperiale le dosi sotto i 10 g (lievito, sale,
   zucchero) restano in grammi: in once a due decimali l'errore arriva al
   ±50 %. È una scelta di Vulcan, detta all'utente nel Profilo.
+
+### Scala degli esiti (lessico controllato, decisione di Matteo del 30/10/2026)
+
+L'esito di una ricetta per la cucina dell'utente si dice con **una scala
+sola**, quella del risultato, in tono diretto e gentile: niente «Così non è
+fattibile», «Non fattibili così», «Con condizioni», «Da verificare» o
+«Attenzione:» come esito. Chi legge deve sentirsi accompagnato, non
+rimproverato: «per ora» dice che cambiando forno, tempo o dispensa la
+ricetta si sblocca.
+
+| Esito del motore | Forma piena | Forma breve (badge, pill) |
+|---|---|---|
+| `ok` (anche `warnings` con le sole verifiche di dispensa, D-060) | **Si può fare** | **Si può fare** |
+| `warnings` · `has_caveats` | **Si può fare, con qualche accortezza** | **Con accortezza** |
+| `not_feasible` | **Per ora non si può fare** | **Per ora no** |
+
+- **Dove si usa la forma piena**: titolo dell'avviso (`cms.ui.verdictTitle`,
+  `RecipeVerdictNotice`), stato della match card (`statusLabel`),
+  intestazione del pannello stile e dei gruppi degli elenchi di stili
+  (`cms.tiers.<tier>.label`), frasi che annunciano l'esito (aria-label della
+  pill «Per ora non si può fare con la tua cucina», voce Siri/Alexa per
+  l'esito negativo, guida MCP). Dove l'esito è già scritto subito sopra
+  (introduzione dei dettagli della match card) non si ripete: si dice che
+  cosa c'è sotto («Qui sotto trovi le accortezze da seguire…»). La voce, dopo una ricetta
+  letta per intero, introduce le avvertenze con «Con qualche accortezza:»:
+  la ricetta detta è già il «si può fare» e la risposta resta entro le 70
+  parole.
+- **Forma breve** solo dove lo spazio è stretto: badge delle versioni
+  d'autore nel pannello stile (`engineMessages` `card.ready`,
+  `card.toVerify`, `card.notForNow`).
+- **Gruppi**: l'intestazione resta al singolare impersonale, uguale
+  all'esito del singolo stile. La stessa chiave (`cms.tiers`) intitola il
+  gruppo in Crea e il riquadro del pannello di uno stile, e la match card la
+  riusa: una frase sola per esito, in tutte le schermate.
+- **Nelle frasi** si declina la stessa scala («per ora quello stile non si può
+  fare», «per ora nessuna ricetta si può fare»), senza tornare a «fattibile».
+  I codici macchina (`not_feasible`, `has_caveats`, campi JSON dell'MCP) non
+  cambiano e non si mostrano.
+- **Le altre lingue** dicono la stessa cosa con la loro voce, non parola per
+  parola:
+
+  | Lingua | Si può fare | Con qualche accortezza | Per ora non si può fare | Brevi |
+  |---|---|---|---|---|
+  | en (GB) | You can make it | You can make it, with a little care | Not possible just yet | You can make it · With care · Not just yet |
+  | de (du) | Das klappt | Das klappt, mit etwas Sorgfalt | Im Moment klappt es noch nicht | Das klappt · Mit Sorgfalt · Noch nicht |
+  | fr (vous) | C’est possible | C’est possible, avec quelques précautions | Pour l’instant, ce n’est pas possible | C’est possible · Avec précautions · Pas pour l’instant |
+  | es (tú) | Se puede hacer | Se puede hacer, con un poco de cuidado | Por ahora no se puede hacer | Se puede hacer · Con cuidado · Por ahora no |
+  | pt-BR (você) | Dá para fazer | Dá para fazer, com alguns cuidados | Por enquanto não dá para fazer | Dá para fazer · Com cuidado · Por enquanto não |
+  | ja (です・ます) | 作れます | 少し気をつければ作れます | 今はまだ作れません | 作れます · 注意点あり · 今は作れません |
 
 ## Contenuti e traduzioni
 

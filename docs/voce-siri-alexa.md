@@ -49,10 +49,13 @@ calcola niente: capisce la domanda e mette i numeri in frasi brevi.
   farina come fascia a parole (D-060), pre-impasto, lievitazione, forno (o
   frittura) e tempo totale; il procedimento resta nell'app, con il link.
   Senza numero di pezzi usa quello predefinito dell'app per lo stile.
-  Se la ricetta non è fattibile lo dice, spiega il motivo e propone le
+  Se la ricetta non è fattibile lo dice con la scala dell'app («per ora,
+  con questa cucina, non si può fare»), spiega il motivo e propone le
   alternative di `recommend_styles`, come chiede la guida MCP. Le avvertenze
-  vere (teglia, forno sotto l'ideale…) si ripetono in breve; le verifiche di
-  dispensa («Se hai farina…») no, come nell'app (D-060).
+  vere (teglia, forno sotto l'ideale…) si ripetono in breve dopo «Con
+  qualche accortezza:» (la ricetta letta dice già che si può fare; la forma
+  corta tiene la risposta entro le 70 parole); le verifiche di dispensa
+  («Se hai farina…») no, come nell'app (D-060).
 - **Glossario**: «cos'è la biga», «cosa vuol dire autolisi»: le prime frasi
   della definizione, con simboli e unità detti a parole.
 - **Aiuto** e risposta di riserva quando non capisce.

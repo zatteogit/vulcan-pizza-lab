@@ -14,7 +14,7 @@ import { blockerText } from "./blocker-text";
 import { uiMessage } from "../../i18n/ui-messages";
 import { ovenSetupLink } from "../profile/oven-setup-link";
 
-/* ═══ M-10 — «Così non è fattibile» ═══
+/* ═══ M-10 — «Per ora non si può fare» ═══
  * Quando il motore dichiara la ricetta non fattibile, lo diciamo in cima, con
  * i motivi e le vie d'uscita: un orario più avanti e stili che con gli stessi
  * vincoli funzionano. La ricetta più vicina resta sotto, senza fingere che sia

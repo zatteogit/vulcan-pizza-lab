@@ -834,7 +834,7 @@ export const SCIENCE_ES: CmsScience = {
       l2: "En el número «Compatibilidad con tu cocina» solo cuentan la autenticidad y la facilidad: maduración, sostenibilidad y experimentación se muestran aparte y no lo mueven. Los pesos no vienen de una medida: son una regla de la app, igual para todos. La puntuación es luego el valor más bajo entre la media ponderada y la autenticidad.",
     },
     "non-feasible-ceiling": {
-      title: "Techo para recetas no factibles",
+      title: "Techo cuando por ahora no se puede hacer",
       l1: "Una receta que no puedes hacer se queda en la franja baja: es una regla de la app.",
       l2: "Así una receta no realizable nunca supera a una que sí puedes hacer, aunque las demás dimensiones sean altas.",
     },

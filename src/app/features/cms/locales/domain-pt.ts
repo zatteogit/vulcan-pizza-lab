@@ -840,7 +840,7 @@ export const SCIENCE_PT: CmsScience = {
       l2: "No número «Compatibilidade com a sua cozinha» contam só a autenticidade e a facilidade: maturação, sustentabilidade e experimentação aparecem à parte e não o alteram. Os pesos não vêm de uma medida: são uma regra do app, igual para todos. A pontuação é então o menor valor entre a média ponderada e a autenticidade.",
     },
     "non-feasible-ceiling": {
-      title: "Teto para receitas inviáveis",
+      title: "Teto quando por enquanto não dá para fazer",
       l1: "Uma receita que você não pode fazer fica na faixa baixa: é uma regra do app.",
       l2: "Assim uma receita inviável nunca supera uma que você pode fazer, mesmo que as outras dimensões sejam altas.",
     },
