@@ -264,6 +264,96 @@ giapponese) e circa 1 kB in ciascun catalogo straniero. Dopo: 495,1 kB senza
 lingue, 598,2 kB per utente. Le chiavi scritte a mano (`recipe.schedule.…`)
 restano leggibili: la regola vale solo per quelle generate.
 
+## L'italiano come le altre lingue (30/10/2026)
+
+Main a 2ad2a2b: **495,4 kB senza lingue, 598,5 kB per utente** (ja), chunk più
+grande `index` 95,1 kB. La prossima tranche del catalogo (9 condimenti, circa
+3,9 kB di italiano e 3,5 kB di giapponese) non entra. Misure gzip sulla build,
+attribuite ai sorgenti con le source map (`dist/assets/*.map`): per ogni
+sorgente, quanto cresce il gzip del chunk con i suoi byte.
+
+### Mappa: dove nasce e come si fonde il testo
+
+- **Italiano = la base di tutto.** `CMS_DEFAULTS` (`cms-context.tsx`) è un
+  `CmsContent` completo in italiano: ci entrano `UI_MESSAGES_IT` (`messages`),
+  i testi di dominio di `domain-i18n-defaults.ts` (prefermenti, problemi,
+  glossario, scienza, farine; problemi e glossario derivati da `ISSUES_DB` e
+  `GLOSSARY_TERMS`), i messaggi del motore (`METHOD_MESSAGES_IT`,
+  `STEP_COPY_IT`, condivisi col motore), diete e allergeni, descrizioni degli
+  stili derivate da `STYLES_DB`.
+- **Le altre lingue** sono `locales/<id>.ts` (+ `domain-<id>.ts`,
+  `ui-messages.<id>.ts`, `topping-i18n/<id>.ts` nel chunk `<id>-toppings`,
+  `inspiration-i18n/<id>.ts`), caricate con `import()` da `locales/index.ts`.
+- **Fusione** (`CmsProvider`): `cms = deepMerge(base, overrides)` con
+  `base = italiano ← inglese ← lingua attiva` (`fallbackBaseFor`). Per le lingue
+  straniere `overrides` è lo snapshot dell'intero bundle in `localStorage`
+  (`vulcan_cms`, revisione `LOCALE_BUNDLE_REV`), che evita il lampo
+  dell'italiano dalla seconda visita; alla **prima** visita si vede l'italiano
+  finché il bundle non arriva. `uiMessage()` ricade sul catalogo italiano
+  statico.
+- **Chi legge l'italiano direttamente**: il valore di default del contesto e
+  `update`/`isModified` del provider; `profile.tsx` (dialog del cambio lingua);
+  `cms.tsx` (solo con `TOOLS_ENABLED`, non in produzione); 21 file di test. Il
+  server (MCP `/mcp`, voce `/api/voice`, Alexa) **non** legge `CMS_DEFAULTS`:
+  usa i testi italiani del motore e dei dati, `GLOSSARY_TERMS_DEFAULTS` e le
+  `domain-<id>.ts`, e `i18n/format.ts` (via `glossary-data.ts`) chiama
+  `uiMessage()`, che oggi trova l'italiano solo perché il catalogo è statico.
+- **Completezza**: i test di parità (`locale-parity`, `ui-messages.catalogs`,
+  `topping-i18n`, `inspiration-i18n`) esigono ogni testo italiano in ogni
+  lingua. Verificato foglia per foglia (anche numeri, media e `messages`):
+  **ogni bundle straniero ha tutte le foglie dell'italiano, e de/es/fr/pt/ja
+  hanno tutte quelle dell'inglese.** La base italiana e la riserva inglese non
+  aggiungono nulla a nessuna lingua: sono solo byte.
+- **La riserva inglese si scarica davvero**: il provider carica `en` (che
+  importa `en-toppings`) per ogni lingua non italiana, 89,1 kB, e il conto non
+  li somma.
+
+### Quanto pesa
+
+| Pezzo | kB gzip | Dove |
+|---|---|---|
+| `CMS_DEFAULTS` e provider (`cms-context.tsx`) | 25,3 | chunk d'ingresso |
+| `UI_MESSAGES_IT` | 16,8 | `ui-messages-it`, contato come codice |
+| `domain-i18n-defaults.ts` | 8,9 | chunk d'ingresso |
+| Testi italiani nei dati: condimenti (circa 17 dei 29,1 di `topping-library`), `glossary-copy` 5,4, `method-messages` 5,4, `troubleshooting-data` 4,7, `glossary-terms` 3,4, allergeni 2,5, `styles-db` | ~45 | chunk d'ingresso, `topping-library` |
+| Riserva inglese (`en` + `en-toppings`) | 89,1 | scaricata da de/es/fr/pt/ja, non contata |
+
+Per lingua (catalogo + condimenti): ja 103,1 · de 97,4 · fr 96,8 · es 93,3 ·
+pt 92,9 · en 89,1 kB. Quello che scarica davvero un utente oggi (codice +
+lingua + riserva): **ja 687,6**, de 681,9, fr 681,3, es 677,8, pt 677,4, en
+584,5, it 495,4 kB. Il conto ne mostra 598,5.
+
+### Piano
+
+1. **Riserva inglese solo se serve (non serve).** La base di una lingua è il
+   suo bundle: niente `en` per de/es/fr/pt/ja. Rischio minimo (i bundle sono
+   completi, il test lo esige); −89,1 kB reali per cinque lingue su sette.
+2. **Italiano caricato come le altre lingue.** `CMS_DEFAULTS` diventa
+   `locales/it.ts` (`IT_LOCALE`, chunk `it-…` con `UI_MESSAGES_IT` e
+   `domain-i18n-defaults`); la struttura comune è il tipo `CmsContent` più i
+   test di parità, che diventano «ogni foglia dell'italiano in ogni lingua».
+   Il primo render aspetta il bundle della lingua di avvio (lo splash di
+   `index.html` resta qualche millisecondo in più); uno script in `<head>`
+   precarica con `modulepreload` il bundle della lingua di avvio insieme al
+   chunk d'ingresso, così l'italiano non aggiunge un giro di rete. Il server
+   registra da sé il catalogo italiano (`format.ts`). Atteso: circa −45 kB
+   senza lingue; la lingua più pesante resta ja.
+3. **Conto onesto** in `check-budget.mjs`: l'italiano è una lingua (`it-…`);
+   per ogni lingua si sommano i chunk di lingua che il suo bundle importa; il
+   controllo fallisce se un chunk di codice importa staticamente un chunk di
+   lingua (vorrebbe dire che quella lingua la scaricano tutti).
+4. **Dopo, a parte**: i testi italiani dei dati (condimenti, glossario,
+   problemi, messaggi del motore) come catalogo `it` per chiave, con i dati
+   ridotti alla struttura. È il passo che toglie il doppio peso di ogni
+   condimento nuovo, ma tocca il motore e il server (che oggi produce i passi
+   in italiano): va pianificato con chi cura dati e server.
+
+Rischi: un bundle incompleto mostrerebbe un campo vuoto invece dell'italiano
+(oggi lo impediscono i test di parità, che si rafforzano); il primo avvio
+dipende da una richiesta in più se il precaricamento non parte (lo splash
+copre l'attesa, nessun testo vuoto o chiave grezza); gli snapshot salvati
+restano validi (forma dei bundle invariata).
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |
