@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CMS_DEFAULTS } from "../cms/cms-context";
+import { IT_LOCALE } from "../cms/locales/it";
 import { DE_LOCALE } from "../cms/locales/de";
 import { EN_LOCALE } from "../cms/locales/en";
 import { ES_LOCALE } from "../cms/locales/es";
@@ -22,7 +22,7 @@ const SAMPLE: Record<string, string> = { allergen: "glutine", range: "260–310"
 // Chiavi passate a msg("…") e quelle della tabella dei metodi di cottura (["need.…", "…"]).
 const KEYS = [...new Set([...source.matchAll(/(?:msg\(\s*|\[\s*)"((?:card|need|diet|allergen)\.[\w.]+)"/g)].map((m) => m[1]))];
 
-const LOCALES = { it: CMS_DEFAULTS, en: EN_LOCALE, de: DE_LOCALE, fr: FR_LOCALE, es: ES_LOCALE, pt: PT_LOCALE, ja: JA_LOCALE };
+const LOCALES = { it: IT_LOCALE, en: EN_LOCALE, de: DE_LOCALE, fr: FR_LOCALE, es: ES_LOCALE, pt: PT_LOCALE, ja: JA_LOCALE };
 
 describe("pill delle card: testi corti in tutte le lingue", () => {
   it("le chiavi dei segnali sono state trovate", () => {

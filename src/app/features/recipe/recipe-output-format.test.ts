@@ -3,7 +3,7 @@ import { localizeStep, flourStrength, displayStepTime, addMinutes, fmtDuration, 
 import { preFermentMaturationTempC } from "../../domain/pre-ferment-split";
 import { buildRecipePhases, yeastDilution } from "../../domain/recipe-phases";
 import { generateRecipe, STYLES_DB, type UserConstraints } from "../../domain/pizza-engine";
-import { CMS_DEFAULTS } from "../cms/cms-context";
+import { IT_LOCALE } from "../cms/locales/it";
 import { createFormatter } from "../cms/i18n";
 import { getToppingForStyle } from "../../data/topping-library";
 import { engineMsgTexts } from "./engine-msg-text";
@@ -65,7 +65,7 @@ describe('orari e dosi: secondo collaudo',()=>{
 });
 
 describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09-A-01; FW-07)", () => {
-  const pt = CMS_DEFAULTS.parametricTips;
+  const pt = IT_LOCALE.parametricTips;
   const home = { ovenTempC: 250, cookSec: 360, ovenTempLabel: "250 °C", referenceTempLabel: "485 °C", ovenType: "home" as const };
   const wood = { ovenTempC: 485, cookSec: 75, ovenTempLabel: "485 °C", referenceTempLabel: "485 °C", ovenType: "wood" as const };
 
@@ -151,29 +151,29 @@ describe("stepQuantities (FW-17)", () => {
     has_mixer: false, has_pizza_stone: false, has_pizza_steel: false, has_baking_pan: true,
     dietary_filters: [], kitchen_temp_c: 21, pantry_flours: [], pantry_yeasts: [], mixer_type: "hands", surfaces: [],
   };
-  const fmt = createFormatter(CMS_DEFAULTS.ui, "it-IT");
+  const fmt = createFormatter(IT_LOCALE.ui, "it-IT");
   const labels = (rows: { label: string }[]) => rows.map((r) => r.label);
 
   it("S08-A-02: con la biga l'impasto parte dal prefermento e include lo zucchero", () => {
     const recipe = generateRecipe(STYLES_DB.new_york, k, { usePreFerment: true, preFerment: { type: "biga", flourPct: 50 } });
-    const mix = stepQuantities("mix", recipe, CMS_DEFAULTS, fmt);
+    const mix = stepQuantities("mix", recipe, IT_LOCALE, fmt);
     expect(mix[0].label).toBe("Biga");
-    expect(labels(mix)).toContain(CMS_DEFAULTS.ui.sugar);
-    expect(labels(mix)).not.toContain(CMS_DEFAULTS.yeastLabels.fresh);
+    expect(labels(mix)).toContain(IT_LOCALE.ui.sugar);
+    expect(labels(mix)).not.toContain(IT_LOCALE.yeastLabels.fresh);
   });
 
   it("S10-B-09 / S10-A-21: temperatura dell'acqua nell'impasto e aiuto per le microdosi", () => {
     const recipe = generateRecipe(STYLES_DB.napoletana_stg, k);
-    const mix = stepQuantities("mix", recipe, CMS_DEFAULTS, fmt);
+    const mix = stepQuantities("mix", recipe, IT_LOCALE, fmt);
     expect(labels(mix)).toContain("Temperatura dell'acqua");
     expect(recipe.yeast_g).toBeLessThan(1);
-    expect(mix.find((q) => q.label === CMS_DEFAULTS.yeastLabels.fresh)?.hint).toMatch(/Sciogli/);
+    expect(mix.find((q) => q.label === IT_LOCALE.yeastLabels.fresh)?.hint).toMatch(/Sciogli/);
   });
 
   it("S10-A-06: il passo della salamoia riporta le dosi del condimento", () => {
     const recipe = generateRecipe(STYLES_DB.focaccia_genovese, k);
     const topping = getToppingForStyle("focaccia_genovese_classica", STYLES_DB.focaccia_genovese)!;
-    const rows = stepQuantities("spread_salamoia_genovese", recipe, CMS_DEFAULTS, fmt, topping);
+    const rows = stepQuantities("spread_salamoia_genovese", recipe, IT_LOCALE, fmt, topping);
     expect(labels(rows)).toEqual(expect.arrayContaining(["Acqua", "Sale fino"]));
     expect(rows.find((r) => r.label === "Acqua")?.value).toMatch(/in tutto/);
   });
@@ -238,7 +238,7 @@ describe("Regola 55: numero e spiegazione coincidono (FW-17)", () => {
     has_mixer: false, has_pizza_stone: false, has_pizza_steel: false, has_baking_pan: true,
     dietary_filters: [], kitchen_temp_c: 20, pantry_flours: [], pantry_yeasts: [], mixer_type: "hands", surfaces: [],
   };
-  const fmt = createFormatter(CMS_DEFAULTS.ui, "it-IT");
+  const fmt = createFormatter(IT_LOCALE.ui, "it-IT");
   const SECTION = (import.meta.glob("./ingredients-section.tsx", { query: "?raw", import: "default", eager: true }) as Record<string, string>)["./ingredients-section.tsx"];
 
   it("canotto con biga, cucina a 20 °C: cucina + farina + acqua + biga = 4 × DDT, e il testo lo dice", () => {
@@ -247,7 +247,7 @@ describe("Regola 55: numero e spiegazione coincidono (FW-17)", () => {
     const ddt = recipe.science.desired_dough_temp_c;
     expect(recipe.science.friction_factor).toBe(0);
     expect(20 + 20 + recipe.water_temp_c! + 19).toBeCloseTo(4 * ddt, 1);
-    const text = rule55DescriptionText(recipe, CMS_DEFAULTS, fmt);
+    const text = rule55DescriptionText(recipe, IT_LOCALE, fmt);
     expect(text).toContain(fmt.celsius(4 * ddt));
     expect(text).toContain("Biga");
     expect(text).toContain(fmt.celsius(19));
@@ -268,7 +268,7 @@ describe("Regola 55: numero e spiegazione coincidono (FW-17)", () => {
           : 0;
         const sum = (recipe.has_pre_ferment ? 4 : 3) * ddt - friction;
         expect(20 + 20 + recipe.water_temp_c + pref).toBeCloseTo(sum, 1);
-        expect(rule55DescriptionText(recipe, CMS_DEFAULTS, fmt)).toContain(fmt.celsius(sum));
+        expect(rule55DescriptionText(recipe, IT_LOCALE, fmt)).toContain(fmt.celsius(sum));
         checked++;
       }
     }
@@ -282,7 +282,7 @@ describe("Regola 55: numero e spiegazione coincidono (FW-17)", () => {
 
   it("la stringa a quattro termini esiste in tutte le lingue con gli stessi segnaposto", async () => {
     const locales = await Promise.all(["en", "fr", "de", "es", "pt", "ja"].map((l) => import(`../cms/locales/${l}.ts`)));
-    const texts = [CMS_DEFAULTS.cooking.rule55DescriptionPreferment, ...locales.map((m) => (Object.values(m).find((v) => (v as { cooking?: unknown })?.cooking) as { cooking: { rule55DescriptionPreferment: string } }).cooking.rule55DescriptionPreferment)];
+    const texts = [IT_LOCALE.cooking.rule55DescriptionPreferment, ...locales.map((m) => (Object.values(m).find((v) => (v as { cooking?: unknown })?.cooking) as { cooking: { rule55DescriptionPreferment: string } }).cooking.rule55DescriptionPreferment)];
     for (const text of texts) {
       for (const ph of ["{sum}", "{ddt}", "{friction}", "{preferment}", "{prefTemp}"]) expect(text).toContain(ph);
     }
@@ -291,7 +291,7 @@ describe("Regola 55: numero e spiegazione coincidono (FW-17)", () => {
 
 /* ═══ FW-17 (D-O, revisione) — la diluizione dice entrambe le pesate ═══ */
 describe("diluzione del lievito: incertezza onesta (FW-17)", () => {
-  const fmt = createFormatter(CMS_DEFAULTS.ui, "it-IT");
+  const fmt = createFormatter(IT_LOCALE.ui, "it-IT");
   it("0,1 g: nomina lievito e soluzione e dà ±20 %, non «solo un decimo»", () => {
     const why = yeastDilutionText(yeastDilution(0.1, "fresh", 300)!, fmt).body[2];
     expect(why).toContain("5 g di lievito");
@@ -313,7 +313,7 @@ describe("piano temporale: testi dei passi (FW-19)", () => {
   it("i giri di cottura in secondi veri e il recupero del forno, senza arrotondare a «6 minuti»", () => {
     const r = generateRecipe(STYLES_DB.napoletana_stg, c);
     const bake = r.timeline.find((s) => s.id === "bake")!;
-    const [rounds, recovery] = engineMsgTexts(bake.msg!.description!.filter((m) => m.key.startsWith("timeline.bake.r")), CMS_DEFAULTS, "it-IT").map(plain);
+    const [rounds, recovery] = engineMsgTexts(bake.msg!.description!.filter((m) => m.key.startsWith("timeline.bake.r")), IT_LOCALE, "it-IT").map(plain);
     expect(bake.round_seconds! % 60).not.toBe(0);
     expect(rounds).toContain(`${Math.floor(bake.round_seconds! / 60)} min ${bake.round_seconds! % 60} s`);
     expect(recovery).toContain("5 min");
@@ -321,17 +321,17 @@ describe("piano temporale: testi dei passi (FW-19)", () => {
   it("il preriscaldo non fa conti col tempo e ripete il segno di prontezza", () => {
     const r = generateRecipe(STYLES_DB.napoletana_stg, c);
     const heat = r.timeline.find((s) => s.id === "preheat")!;
-    const text = localizeStep(heat, r, CMS_DEFAULTS).description;
+    const text = localizeStep(heat, r, IT_LOCALE).description;
     expect(text).not.toMatch(/già inclusi|non aggiungerli/);
     expect(text).toMatch(/premuto con un dito/);
   });
   it("le pieghe dicono numero e intervallo del passo; la puntata in frigo non chiede più 1–2 h di acclimatamento", () => {
     const r = generateRecipe(STYLES_DB.teglia_romana, c);
     const folds = r.timeline.find((s) => s.id === "folds")!;
-    expect(plain(localizeStep(folds, r, CMS_DEFAULTS, createFormatter(CMS_DEFAULTS.ui, "it-IT")).description)).toMatch(/3 giri di pieghe, uno ogni 45 min/);
+    expect(plain(localizeStep(folds, r, IT_LOCALE, createFormatter(IT_LOCALE.ui, "it-IT")).description)).toMatch(/3 giri di pieghe, uno ogni 45 min/);
     const bulk = r.timeline.find((s) => s.id === "bulk")!;
-    const longDesc = localizeStep(bulk, r, CMS_DEFAULTS).longDesc ?? "";
+    const longDesc = localizeStep(bulk, r, IT_LOCALE).longDesc ?? "";
     expect(longDesc).not.toMatch(/acclimatare 1-2 ore/);
-    expect(getParametricTip("bulk", "teglia_romana", false, CMS_DEFAULTS.parametricTips, { ovenTempC: 250, cookSec: 600, ovenTempLabel: "250 °C", referenceTempLabel: "300 °C", foldsInPlan: true }, CMS_DEFAULTS.parametricText)).toBeNull();
+    expect(getParametricTip("bulk", "teglia_romana", false, IT_LOCALE.parametricTips, { ovenTempC: 250, cookSec: 600, ovenTempLabel: "250 °C", referenceTempLabel: "300 °C", foldsInPlan: true }, IT_LOCALE.parametricText)).toBeNull();
   });
 });

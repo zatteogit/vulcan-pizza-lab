@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { CMS_DEFAULTS, type CmsContent } from "./cms-context";
+import { type CmsContent } from "./cms-context";
+import { IT_LOCALE } from "./locales/it";
 import { ES_LOCALE } from "./locales/es";
 import { FR_LOCALE } from "./locales/fr";
 import { PT_LOCALE } from "./locales/pt";
@@ -103,7 +104,7 @@ describe("voce verbale dei passi: imperativo, mai infinito (D-G3-01)", () => {
   });
 
   it("catalogo italiano: descrizioni, «Come si fa» e consigli dei passi", () => {
-    const offenders = stepTexts(CMS_DEFAULTS)
+    const offenders = stepTexts(IT_LOCALE)
       .map((l) => ({ ...l, words: italianInfinitives(l.text) }))
       .filter((l) => l.words.length > 0)
       .map((l) => `${l.path}: ${l.words.join(", ")}`);

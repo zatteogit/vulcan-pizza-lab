@@ -57,9 +57,11 @@ Aggiunti 5 componenti context-free fuori da `ds/`, via entry barrel dedicato.
 
 ## Onda 2 — app-coupled (2026-06-23)
 Aggiunti 4 componenti che usano `useCms` → 19 totali. Approccio chiave:
-- **Nessun provider necessario.** `useCms()` ha un default context (cms-context.tsx ~L2335)
-  che fornisce `CMS_DEFAULTS` completo → i componenti renderizzano gli st_string i18n senza
-  `CmsProvider`. (CmsProvider chiamerebbe `loadCms()`→localStorage, rischioso headless.)
+- **Nessun provider necessario.** Fuori dal `CmsProvider`, `useCms()` legge il bundle lingua
+  in cache: dal 30/10/2026 (budget D-059) l'italiano è un bundle lazy (`locales/it.ts`) e
+  `_sync-entry.ts` lo mette in cache con `primeLocaleBundle(IT_LOCALE)` prima di ogni render
+  → i componenti renderizzano gli st_string i18n senza `CmsProvider`. (CmsProvider
+  chiamerebbe `readSavedCms()`→localStorage, rischioso headless.)
   `cfg.provider` resta unset.
 - **Aggiunti**: InfoTip, RecipeSectionTabs, RecipeStatStrip, RecipeMatchCard.
 - **Dati di dominio nelle preview = fixture statica.** RecipeStatStrip/RecipeMatchCard vogliono

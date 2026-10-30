@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { SIGNATURE_RECIPES, signatureRecipeLink } from "../../data/signature-recipes";
-import { CMS_DEFAULTS, type CmsContent } from "../cms/cms-context";
+import { type CmsContent } from "../cms/cms-context";
+import { IT_LOCALE } from "../cms/locales/it";
 import { DEFAULT_SEARCH_SUGGESTIONS, SEARCH_SUGGESTION_IDS, parseEdition } from "../../config/edition";
 import { editionOvenModels } from "../../data/oven-models";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../../data/glossary-data";
@@ -29,9 +30,9 @@ import { editDistance, filterByQuery } from "./text-match";
 /* U-5 — la ricerca trova i testi della lingua attiva, ignora accenti e
  * maiuscole, vuole tutte le parole e mette prima i titoli che corrispondono. */
 
-const IT = buildSearchIndex(CMS_DEFAULTS);
-const EN = buildSearchIndex({ ...CMS_DEFAULTS, ...EN_LOCALE } as CmsContent);
-const JA = buildSearchIndex({ ...CMS_DEFAULTS, ...JA_LOCALE } as CmsContent);
+const IT = buildSearchIndex(IT_LOCALE);
+const EN = buildSearchIndex({ ...IT_LOCALE, ...EN_LOCALE } as CmsContent);
+const JA = buildSearchIndex({ ...IT_LOCALE, ...JA_LOCALE } as CmsContent);
 
 const ids = (index: typeof IT, q: string) => searchIndex(index, q).map((r) => r.id);
 
@@ -151,8 +152,8 @@ describe("ricette iconiche dalla ricerca", () => {
 /* FW-09 (S04-A-02, S04-B-04, S04-B-05, S04-A-03, S04-A-10, S13-A-09): le
  * query dei finding. Prima tutte davano 0 risultati. */
 describe("ricerca con le parole dell'utente (FW-09)", () => {
-  const LX = searchLexicon(CMS_DEFAULTS.pages);
-  const ENC = { ...CMS_DEFAULTS, ...EN_LOCALE } as CmsContent;
+  const LX = searchLexicon(IT_LOCALE.pages);
+  const ENC = { ...IT_LOCALE, ...EN_LOCALE } as CmsContent;
   const LXE = searchLexicon(ENC.pages);
   const find = (q: string) => searchIndex(IT, q, LX).map((r) => r.id);
 
@@ -218,13 +219,13 @@ describe("ricerca con le parole dell'utente (FW-09)", () => {
 describe("ricerca senza glutine (sicurezza alimentare)", () => {
   const GLUTEN_FREE = new Set(FLOURS_DB.filter((f) => f.category === "gluten_free").map((f) => `flour-${f.id}`));
   const LOCALES: [string, CmsContent, string[]][] = [
-    ["it", CMS_DEFAULTS, ["celiachia", "celiaco", "senza glutine"]],
-    ["en", { ...CMS_DEFAULTS, ...EN_LOCALE } as CmsContent, ["coeliac", "celiac disease", "gluten free", "gluten-free"]],
-    ["de", { ...CMS_DEFAULTS, ...DE_LOCALE } as CmsContent, ["zöliakie", "glutenfrei", "ohne gluten"]],
-    ["fr", { ...CMS_DEFAULTS, ...FR_LOCALE } as CmsContent, ["maladie cœliaque", "coeliaque", "sans gluten"]],
-    ["es", { ...CMS_DEFAULTS, ...ES_LOCALE } as CmsContent, ["celiaquía", "celíaco", "sin gluten"]],
-    ["pt", { ...CMS_DEFAULTS, ...PT_LOCALE } as CmsContent, ["doença celíaca", "celíaco", "sem glúten"]],
-    ["ja", { ...CMS_DEFAULTS, ...JA_LOCALE } as CmsContent, ["セリアック病", "グルテンフリー"]],
+    ["it", IT_LOCALE, ["celiachia", "celiaco", "senza glutine"]],
+    ["en", { ...IT_LOCALE, ...EN_LOCALE } as CmsContent, ["coeliac", "celiac disease", "gluten free", "gluten-free"]],
+    ["de", { ...IT_LOCALE, ...DE_LOCALE } as CmsContent, ["zöliakie", "glutenfrei", "ohne gluten"]],
+    ["fr", { ...IT_LOCALE, ...FR_LOCALE } as CmsContent, ["maladie cœliaque", "coeliaque", "sans gluten"]],
+    ["es", { ...IT_LOCALE, ...ES_LOCALE } as CmsContent, ["celiaquía", "celíaco", "sin gluten"]],
+    ["pt", { ...IT_LOCALE, ...PT_LOCALE } as CmsContent, ["doença celíaca", "celíaco", "sem glúten"]],
+    ["ja", { ...IT_LOCALE, ...JA_LOCALE } as CmsContent, ["セリアック病", "グルテンフリー"]],
   ];
 
   for (const [locale, cms, queries] of LOCALES) {
@@ -249,11 +250,11 @@ describe("ricerca senza glutine (sicurezza alimentare)", () => {
   /* Le espressioni di più parole del dizionario valgono come frase: «senza» e
      «glutine» sparsi in un testo non bastano per «celiachia». */
   const SCATTERED: [string, CmsContent, string, string, string][] = [
-    ["it", CMS_DEFAULTS, "celiachia", "Stendi senza strappare: il glutine regge", "Farina senza glutine"],
-    ["de", { ...CMS_DEFAULTS, ...DE_LOCALE } as CmsContent, "zöliakie", "Ohne Eile ziehen, das Gluten hält", "Mehl ohne Gluten"],
-    ["fr", { ...CMS_DEFAULTS, ...FR_LOCALE } as CmsContent, "coeliaque", "Étirez sans forcer : le gluten tient", "Farine sans gluten"],
-    ["es", { ...CMS_DEFAULTS, ...ES_LOCALE } as CmsContent, "celiaquía", "Estira sin forzar: el gluten aguanta", "Harina sin gluten"],
-    ["pt", { ...CMS_DEFAULTS, ...PT_LOCALE } as CmsContent, "celíaco", "Abra sem forçar: o glúten aguenta", "Farinha sem glúten"],
+    ["it", IT_LOCALE, "celiachia", "Stendi senza strappare: il glutine regge", "Farina senza glutine"],
+    ["de", { ...IT_LOCALE, ...DE_LOCALE } as CmsContent, "zöliakie", "Ohne Eile ziehen, das Gluten hält", "Mehl ohne Gluten"],
+    ["fr", { ...IT_LOCALE, ...FR_LOCALE } as CmsContent, "coeliaque", "Étirez sans forcer : le gluten tient", "Farine sans gluten"],
+    ["es", { ...IT_LOCALE, ...ES_LOCALE } as CmsContent, "celiaquía", "Estira sin forzar: el gluten aguanta", "Harina sin gluten"],
+    ["pt", { ...IT_LOCALE, ...PT_LOCALE } as CmsContent, "celíaco", "Abra sem forçar: o glúten aguenta", "Farinha sem glúten"],
   ];
   for (const [locale, cms, query, scattered, phrase] of SCATTERED) {
     it(`${locale}: le parole della frase sparse nel testo non bastano`, () => {
@@ -264,7 +265,7 @@ describe("ricerca senza glutine (sicurezza alimentare)", () => {
   }
 
   it("la parola generica resta una ricerca a sé: «glutine» trova anche il farro", () => {
-    const LX = searchLexicon(CMS_DEFAULTS.pages);
+    const LX = searchLexicon(IT_LOCALE.pages);
     expect(searchIndex(IT, "glutine", LX).map((r) => r.id)).toContain("flour-farro_spelta");
   });
 });
@@ -277,9 +278,9 @@ describe("suggerimenti della ricerca", () => {
 
   it("ogni suggerimento dà risultati in tutte e 7 le lingue", () => {
     const indexes: [string, CmsContent, Record<string, string>][] = [
-      ["it", CMS_DEFAULTS, UI_MESSAGES_IT],
+      ["it", IT_LOCALE, UI_MESSAGES_IT],
       ...Object.entries(LOCALES).map(([lang, bundle]) =>
-        [lang, { ...CMS_DEFAULTS, ...bundle } as CmsContent, bundle.messages ?? {}] as [string, CmsContent, Record<string, string>]),
+        [lang, { ...IT_LOCALE, ...bundle } as CmsContent, bundle.messages ?? {}] as [string, CmsContent, Record<string, string>]),
     ];
     for (const [lang, cms, messages] of indexes) {
       const index = buildSearchIndex(cms);
@@ -320,9 +321,9 @@ describe("farine nella ricerca", () => {
  * al file (it, en, ja), con il dizionario della lingua. */
 describe("G1a-WP-02 — forni, guide, ordine, estratto", () => {
   const LOCALES: [string, CmsContent][] = [
-    ["it", CMS_DEFAULTS],
-    ["en", { ...CMS_DEFAULTS, ...EN_LOCALE } as CmsContent],
-    ["ja", { ...CMS_DEFAULTS, ...JA_LOCALE } as CmsContent],
+    ["it", IT_LOCALE],
+    ["en", { ...IT_LOCALE, ...EN_LOCALE } as CmsContent],
+    ["ja", { ...IT_LOCALE, ...JA_LOCALE } as CmsContent],
   ];
   const search = (cms: CmsContent, q: string, index = buildSearchIndex(cms)) =>
     searchIndex(index, q, searchLexicon(cms.pages));
@@ -334,14 +335,14 @@ describe("G1a-WP-02 — forni, guide, ordine, estratto", () => {
   });
 
   it("edizione demo: «aurora» trova i 3 forni del partner e «ooni» nessun forno", () => {
-    const index = buildSearchIndex(CMS_DEFAULTS, editionOvenModels(parseEdition(DEMO_EDITION)));
-    expect(search(CMS_DEFAULTS, "aurora", index).filter((r) => r.type === "oven")).toHaveLength(3);
-    expect(search(CMS_DEFAULTS, "ooni", index).filter((r) => r.type === "oven")).toHaveLength(0);
+    const index = buildSearchIndex(IT_LOCALE, editionOvenModels(parseEdition(DEMO_EDITION)));
+    expect(search(IT_LOCALE, "aurora", index).filter((r) => r.type === "oven")).toHaveLength(3);
+    expect(search(IT_LOCALE, "ooni", index).filter((r) => r.type === "oven")).toHaveLength(0);
   });
 
   it("le pagine e i percorsi di Impara sono guide: «fermentazione» ne trova almeno una", () => {
-    expect(search(CMS_DEFAULTS, "fermentazione").some((r) => r.type === "guide")).toBe(true);
-    const links = buildSearchIndex(CMS_DEFAULTS).filter((e) => e.type === "guide").map((e) => e.link);
+    expect(search(IT_LOCALE, "fermentazione").some((r) => r.type === "guide")).toBe(true);
+    const links = buildSearchIndex(IT_LOCALE).filter((e) => e.type === "guide").map((e) => e.link);
     for (const link of ["/learn/glossary", "/learn/troubleshooting", "/learn/pre-ferments", "/learn/metodo", "/learn"]) {
       expect(links).toContain(link);
     }
@@ -359,7 +360,7 @@ describe("G1a-WP-02 — forni, guide, ordine, estratto", () => {
      gli stili): l'estratto si prova con «impasto appiccicoso» → Segale, l'altro
      esempio di S04-B-07, e con l'ora di maturazione della biga. */
   it("«impasto appiccicoso»: la segale mostra l'estratto della nota con la parola trovata", () => {
-    const segale = search(CMS_DEFAULTS, "impasto appiccicoso").find((r) => r.id === "flour-segale");
+    const segale = search(IT_LOCALE, "impasto appiccicoso").find((r) => r.id === "flour-segale");
     expect(segale?.snippet?.toLowerCase()).toContain("appiccicoso");
     expect(segale!.snippet!.length).toBeLessThanOrEqual(120);
   });

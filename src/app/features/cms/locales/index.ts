@@ -1,16 +1,24 @@
 import type { CmsContent, LocaleId } from "../cms-context";
+import { registerUiMessages } from "../../../i18n/ui-messages";
 
 /* ═══ LOCALE REGISTRY ═══
  * Each locale is a full CmsContent bundle, loaded ON DEMAND (audit lug 2026:
  * i 6 bundle non-IT pesavano ~440 kB di sorgente nel chunk principale — un
- * utente italiano scaricava anche il giapponese a ogni avvio).
+ * utente italiano scaricava anche il giapponese a ogni avvio). Dal 30/10/2026
+ * (budget D-059) anche l'italiano: chi usa un'altra lingua non lo scarica, e
+ * ogni bundle basta a sé stesso (locale-parity.test.ts). main.tsx carica il
+ * bundle della lingua di avvio prima del primo render, e lo script in <head>
+ * (vite.config.ts, localePreloadPlugin) lo precarica insieme al chunk
+ * d'ingresso: la scelta della lingua sta in bootLocaleId() e lì va tenuta
+ * allineata.
  * To add a new language:
  *   1. Create a new file (e.g. ja.ts) exporting JA_LOCALE: CmsContent
  *   2. Add its loader here and its entry in LOCALE_META
  *   3. The CMS language selector will auto-detect the new entry
  */
 
-const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
+const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
+  it: () => import("./it").then((m) => m.IT_LOCALE),
   en: () => import("./en").then((m) => m.EN_LOCALE),
   es: () => import("./es").then((m) => m.ES_LOCALE),
   de: () => import("./de").then((m) => m.DE_LOCALE),
@@ -118,6 +126,9 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  * questa revisione in poi contengono i token, non il nome. */
 export const LOCALE_BUNDLE_REV = 53;
 
+/* 52 resta: l'italiano diventa un bundle lazy (30/10/2026) ma la forma dei
+ * bundle e degli snapshot salvati non cambia; l'italiano non ha snapshot. */
+
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */
 export function isStaleLocaleSnapshot(
@@ -133,17 +144,30 @@ export function isStaleLocaleSnapshot(
 const loadedBundles: Partial<Record<LocaleId, CmsContent>> = {};
 
 export function isKnownLocale(code: string): code is LocaleId {
-  return code === "it" || code in LOCALE_LOADERS;
+  return Object.prototype.hasOwnProperty.call(LOCALE_LOADERS, code);
 }
 
 export function getCachedLocaleBundle(id: LocaleId): CmsContent | undefined {
   return loadedBundles[id];
 }
 
+/** Un bundle già in cache, l'italiano se c'è: la base finché arriva quello
+ *  della lingua chiesta (c'è sempre almeno il bundle di avvio). */
+export function getAnyCachedLocaleBundle(): CmsContent | undefined {
+  return loadedBundles.it ?? Object.values(loadedBundles)[0];
+}
+
+/** Mette in cache un bundle già importato, con il suo catalogo uiMessage,
+ *  per chi rende componenti senza CmsProvider né main.tsx: il setup dei test
+ *  e il bundle del design system (components/ds/_sync-entry.ts). */
+export function primeLocaleBundle(bundle: CmsContent): void {
+  loadedBundles[bundle.locale.id] = bundle;
+  registerUiMessages(bundle.locale.id, bundle.messages);
+}
+
 export async function loadLocaleBundle(
   id: LocaleId,
 ): Promise<CmsContent | undefined> {
-  if (id === "it") return undefined; /* IT = CMS_DEFAULTS, mai un bundle */
   const cached = loadedBundles[id];
   if (cached) return cached;
   const loader = LOCALE_LOADERS[id];
@@ -151,6 +175,63 @@ export async function loadLocaleBundle(
   const bundle = await loader();
   loadedBundles[id] = bundle;
   return bundle;
+}
+
+/* ═══ LINGUA DI AVVIO ═══
+ * Stato del CMS salvato nel browser: lo snapshot del bundle per le lingue
+ * straniere, le sole modifiche per l'italiano. Chiave tecnica: il prefisso
+ * vulcan_ resta. */
+export const CMS_STORAGE_KEY = "vulcan_cms";
+
+/* Lo snapshot letto da bootLocaleId() serve subito dopo al provider: lo si
+   tiene per una lettura, invece di analizzare due volte centinaia di kB. */
+let savedAtBoot: { value: Partial<CmsContent> | null } | null = null;
+
+export function readSavedCms(): Partial<CmsContent> | null {
+  if (savedAtBoot) {
+    const { value } = savedAtBoot;
+    savedAtBoot = null;
+    return value;
+  }
+  try {
+    const raw = localStorage.getItem(CMS_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed === "object" && parsed !== null) return parsed;
+    }
+  } catch { /* storage restricted */ }
+  return null;
+}
+
+/** Detect best locale from browser language, with fallback to English (not Italian).
+ * Returns null if Italian is detected (since Italian is the default). */
+export function detectBrowserLocale(): LocaleId | null {
+  try {
+    const langs = navigator.languages ?? [navigator.language];
+    for (const lang of langs) {
+      const code = lang.split("-")[0].toLowerCase();
+      if (code === "it") return null; /* Italian = default, no override needed */
+      if (isKnownLocale(code)) return code;
+    }
+    /* No match found — fallback to English */
+    return "en";
+  } catch {
+    return "en";
+  }
+}
+
+/** La lingua con cui parte l'app: quella dello stato salvato (senza lingua =
+ *  italiano con modifiche), altrimenti quella del browser. Lo script di
+ *  precaricamento in <head> ripete questa regola. */
+export function bootLocaleId(): LocaleId {
+  savedAtBoot = null;
+  const saved = readSavedCms();
+  savedAtBoot = { value: saved };
+  if (saved) {
+    const id = saved.locale?.id;
+    return id && isKnownLocale(id) ? id : "it";
+  }
+  return detectBrowserLocale() ?? "it";
 }
 
 /** Metadata for the locale selector UI */

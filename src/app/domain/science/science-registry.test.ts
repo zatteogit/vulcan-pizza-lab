@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { SCIENCE_NOTES, resolveScienceNote, notesForGlossaryTerm } from "../../data/science-notes";
 import { SCIENCE_SOURCES, getScienceSource } from "../../data/science-sources";
 import { GLOSSARY_TERMS } from "../../data/glossary-data";
-import { CMS_DEFAULTS, type CmsContent } from "../../features/cms/cms-context";
+import { type CmsContent } from "../../features/cms/cms-context";
+import { IT_LOCALE } from "../../features/cms/locales/it";
 import { EN_LOCALE } from "../../features/cms/locales/en";
 import { DE_LOCALE } from "../../features/cms/locales/de";
 import { ES_LOCALE } from "../../features/cms/locales/es";
@@ -30,7 +31,7 @@ import {
 const KEBAB = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const BUNDLES: Record<string, CmsContent> = {
-  it: CMS_DEFAULTS,
+  it: IT_LOCALE,
   en: EN_LOCALE,
   de: DE_LOCALE,
   es: ES_LOCALE,

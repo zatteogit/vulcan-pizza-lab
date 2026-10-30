@@ -5,7 +5,7 @@ import { STYLES_DB, type UserConstraints } from "../../domain/pizza-engine";
 import { canonicalRecipe } from "../../use-cases/recipe-entry";
 import { buildCookPlan } from "../../use-cases/cook-plan";
 import { formatAtClock, formatRelative } from "../../i18n/format";
-import { CMS_DEFAULTS } from "../cms/cms-context";
+import { IT_LOCALE } from "../cms/locales/it";
 import { engineMsgTexts } from "./engine-msg-text";
 import { recipeCardSignals } from "./recipe-card-signals";
 import { blockerText } from "./blocker-text";
@@ -16,7 +16,7 @@ import { PreCookSummary, startBlockedText } from "./pre-cook-summary";
  * condizioni (le stesse della match card), quando si comincia e quando si
  * mangia (il piano), e perché una ricetta non fattibile non parte. */
 
-const cms = CMS_DEFAULTS;
+const cms = IT_LOCALE;
 const bcp47 = "it-IT";
 // P1: forno di casa a 250 °C, nessuna attrezzatura dichiarata.
 const p1: UserConstraints = {

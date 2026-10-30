@@ -23,6 +23,7 @@ describe("uiMessage", () => {
   it("ricade sul catalogo italiano quando una traduzione manca", () => {
     const [key, italian] = Object.entries(UI_MESSAGES_IT)[0] ?? [];
     expect(key).toBeTruthy();
+    registerUiMessages("it", UI_MESSAGES_IT);
     setActiveUiLocale("fr-FR");
 
     expect(uiMessage(key!)).toBe(italian);

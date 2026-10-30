@@ -263,9 +263,10 @@ export function normalizeMeasureUnitSuffixes(text: string): string {
  * (optimizeComfort, con le tolleranze dichiarate e la regola D-Q). */
 
 /** Vista Semplice: la forza farina in parole, non in sigle (audit roleplay). */
-/** Il CMS è sempre fuso sui default italiani (deepMerge su CMS_DEFAULTS): le
- *  chiavi che hanno un default non portano più una copia italiana qui
- *  (G4b-WP-03, budget). `fallback` resta per i testi dinamici del motore. */
+/** Ogni bundle lingua ha tutte le chiavi dell'italiano (locales/it.ts,
+ *  locale-parity.test.ts): le chiavi che hanno un default non portano più una
+ *  copia italiana qui (G4b-WP-03, budget). `fallback` resta per i testi
+ *  dinamici del motore. */
 export function engineMessage(cms: CmsContent | undefined, key: string, fallback?: string): string {
   return cms?.engineMessages?.[key] ?? fallback ?? key;
 }

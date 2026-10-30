@@ -28,7 +28,6 @@ import { useDarkMode } from "../hooks/use-dark-mode";
 import {
   useCms,
   CMS_SECTIONS,
-  CMS_DEFAULTS,
   getByPath,
   type CmsSectionDef,
   type CmsFieldDef,
@@ -646,6 +645,8 @@ function SectionEditor({
   compositeSum?: number;
   recSum?: number;
 }) {
+  /* Default di ogni campo: il bundle della lingua attiva (budget D-059). */
+  const { defaults } = useCms();
   /* Group fields by their first dot-segment after section prefix, or by explicit grouping */
   const groups = useMemo(() => {
     const map = new Map<string, CmsFieldDef[]>();
@@ -735,7 +736,7 @@ function SectionEditor({
               key={field.path}
               field={field}
               value={getByPath(cms, field.path)}
-              defaultValue={getByPath(CMS_DEFAULTS, field.path)}
+              defaultValue={getByPath(defaults, field.path)}
               modified={isModified(field.path)}
               onUpdate={(v) => onUpdate(field.path, v)}
               onReset={() => onReset(field.path)}

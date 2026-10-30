@@ -540,7 +540,7 @@ Il CMS e basato su un **React Context** (`CmsProvider`) che avvolge l'intera app
 
 ```
 CmsProvider (in RootLayout)
-  +-- CMS_DEFAULTS: CmsContent         Default italiani hardcoded
+  +-- bundle della lingua attiva       locales/<id>.ts, italiano compreso (lazy, D-059)
   +-- LOCALE_BUNDLES: Record<LocaleId>  Bundle per le altre 6 lingue
   +-- overrides: Partial<CmsContent>    Override utente (persistiti in localStorage)
   +-- switchLocale(id)                  Cambia lingua runtime
@@ -585,7 +585,7 @@ const {
 
 | Codice | Lingua     | BCP 47 | Sorgente                             |
 | ------ | ---------- | ------ | ------------------------------------ |
-| `it`   | Italiano   | it-IT  | CMS_DEFAULTS (hardcoded, ~500 campi) |
+| `it`   | Italiano   | it-IT  | `locales/it.ts` (lingua sorgente)    |
 | `en`   | English    | en-GB  | `locales/en.ts` (321 righe)          |
 | `es`   | Espanol    | es-ES  | `locales/es.ts` (246 righe)          |
 | `de`   | Deutsch    | de-DE  | `locales/de.ts` (243 righe)          |

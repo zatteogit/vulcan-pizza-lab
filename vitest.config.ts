@@ -8,5 +8,7 @@ export default defineConfig({
     // worker/: le rotte del Worker (D-061), fuori dal tsconfig dell'app.
     include: ["src/**/*.test.{ts,tsx}", "worker/**/*.test.ts"],
     exclude: ["**/node_modules/**", "**/dist/**", ".claude/**"],
+    // L'italiano in cache come in app dopo l'avvio (budget D-059).
+    setupFiles: ["src/test-setup.ts"],
   },
 });

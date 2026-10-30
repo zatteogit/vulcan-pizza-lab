@@ -9,6 +9,14 @@
 
 import { MCP_INSTRUCTIONS } from "./mcp-guide";
 import { MCP_SERVER_INFO, MCP_TOOLS, ToolInputError } from "./mcp-tools";
+import { registerUiMessages } from "../i18n/ui-messages";
+import { UI_MESSAGES_IT } from "../i18n/ui-messages.it";
+
+/* Budget D-059 (30/10/2026): nell'app il catalogo uiMessage italiano arriva
+ * con il bundle della lingua; il server (MCP, e la voce che passa da qui)
+ * lo registra da sé, perché i18n/format.ts lo usa per orari, elenchi e
+ * combustibili. */
+registerUiMessages("it", UI_MESSAGES_IT);
 
 export const MCP_PROTOCOL_VERSION = "2025-06-18";
 const SUPPORTED_VERSIONS = new Set(["2025-06-18", "2025-03-26", "2024-11-05"]);

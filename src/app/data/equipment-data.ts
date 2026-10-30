@@ -12,7 +12,7 @@ type MixerLevel = "domestic" | "semi_pro" | "professional";
 interface MixerOption {
   id: MixerType;
   /** Nome e descrizione arrivano dal CMS (getLocalizedMixerOptions): i dati
-   *  non ne tengono una copia italiana (stesso testo di CMS_DEFAULTS). */
+   *  non ne tengono una copia italiana (stesso testo di locales/it.ts). */
   label: string;
   description: string;
   emoji: string;
