@@ -2834,12 +2834,6 @@
     }
   }
 
-  .glossary-card__chevron {
-    flex-shrink: 0;
-    margin-top: var(--space-1);
-    color: var(--text-muted);
-  }
-
   .glossary-card__reveal {
     overflow: hidden;
   }
@@ -3534,7 +3528,6 @@
   .explore-card:hover .explore-card__image {
     transform: scale(1.05);
   }
-
 
   .explore-card__match {
     position: absolute;
@@ -4661,10 +4654,6 @@
     outline: none;
   }
 
-  .home-step__frame {
-    position: relative;
-  }
-
   .home-step__container {
     position: relative;
     width: 100%;
@@ -4718,22 +4707,7 @@
     }
   }
 
-  .home-step__back {
-    position: sticky;
-    top: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0)));
-    z-index: 60;
-    transition: transform var(--duration-fast) var(--ease-standard);
-    color: var(--text-default);
-    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-bg) 85%, transparent));
-    border: var(--border-width-thin) solid var(--container-border);
-    box-shadow: var(--shadow-float);
-    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
-    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
-  }
 
-  .home-step__back:active {
-    transform: scale(0.95);
-  }
 
   .home-step__needs {
     margin-top: var(--space-4);
@@ -4868,16 +4842,7 @@
     gap: var(--space-2-5);
   }
 
-  .home-dietary-warnings__header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
 
-  .home-dietary-warnings__icon {
-    display: inline-flex;
-    color: var(--primary);
-  }
 
   .home-dietary-warnings__title {
     font-size: var(--font-size-sm);
@@ -4908,12 +4873,6 @@
   .home-dietary-warning--info {
     background: color-mix(in srgb, var(--severity-info) 6%, transparent);
     border: var(--border-width-thin) solid color-mix(in srgb, var(--severity-info) 12%, transparent);
-  }
-
-  .home-dietary-warning__icon {
-    display: inline-flex;
-    flex-shrink: 0;
-    margin-top: var(--space-px);
   }
 
   .home-dietary-variant__action {
@@ -8661,7 +8620,6 @@
     opacity: 0.1;
   }
 
-
   .needs-slot-grid__icon-wrap {
     width: var(--space-12);
     height: var(--space-12);
@@ -10376,17 +10334,6 @@
     color: var(--text-muted);
   }
 
-  .ingredients-servings__estimate {
-    margin-left: auto;
-    padding-inline: var(--space-2);
-    padding-block: var(--space-0-5);
-    border-radius: var(--radius-md);
-    font-weight: var(--weight-medium);
-    color: var(--text-muted);
-    background: var(--container-bg-low);
-    border: var(--border-width-thin) solid var(--container-border);
-  }
-
   .ingredients-servings .ds-stepper {
     gap: 0;
     border-radius: var(--radius-full);
@@ -11953,14 +11900,6 @@
     gap: var(--space-0-5);
   }
 
-  .bits-ing-row__amount-note {
-    color: var(--text-muted);
-    font-size: var(--font-size-2xs);
-    font-weight: var(--weight-semibold);
-    line-height: var(--leading-none);
-    letter-spacing: var(--tracking-caps);
-    text-transform: uppercase;
-  }
 
   /* ── GlossaryWLink ── */
   /* Parola nel testo: l'area di tocco cresce con uno pseudo-elemento,
@@ -12843,12 +12782,6 @@
     filter: drop-shadow(0 0 var(--space-1-5) color-mix(in srgb, var(--cta) 40%, transparent));
   }
 
-  .stat-strip__value-trend {
-    display: inline-flex;
-    flex-shrink: 0;
-    align-self: center;
-    color: var(--cta);
-  }
 
   @media (max-width: 479px) {
 
@@ -14559,15 +14492,7 @@
     margin-top: var(--space-1);
   }
 
-  .troubleshooting-card__chevron {
-    flex-shrink: 0;
-    color: var(--muted-foreground);
-  }
 
-  .troubleshooting-card__chevron-icon {
-    width: var(--space-4);
-    height: var(--space-4);
-  }
 
   .troubleshooting-card__detail {
     overflow: hidden;
@@ -14652,15 +14577,6 @@
   .preferment-guide-card {
     /* superficie (bg/bordo/raggio) via .surface-card, composto nel markup */
     overflow: hidden;
-  }
-
-  /* FW-12 (S14-B-11): il titolo h2 avvolge il bottone, senza stile proprio. */
-  .preferment-guide-card__heading {
-    margin: 0;
-    font: inherit;
-    letter-spacing: inherit;
-    word-spacing: inherit;
-    color: inherit;
   }
 
   .preferment-guide-card__header {
@@ -19035,13 +18951,16 @@
     cursor: pointer;
   }
 
+  /* G1a-WP-02 (S04-B-16): sfumatura a destra, l'ultimo chip si legge a fine scorrimento. */
   .search-page__chips {
     display: flex;
     gap: var(--gap-xs);
     margin-inline: calc(var(--space-4) * -1);
-    padding-inline: var(--space-4);
+    padding-inline: var(--space-4) var(--space-8);
     padding-block: var(--space-3);
     overflow-x: auto;
+    -webkit-mask-image: linear-gradient(to left, transparent, var(--color-black) var(--space-8));
+    mask-image: linear-gradient(to left, transparent, var(--color-black) var(--space-8));
   }
 
   .search-page__chip {
@@ -19172,6 +19091,11 @@
   .search-page__title {
     font-size: var(--font-size-base);
     font-weight: var(--weight-medium);
+  }
+
+  .search-page__snippet {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
   }
 
   .search-page__subtitle {

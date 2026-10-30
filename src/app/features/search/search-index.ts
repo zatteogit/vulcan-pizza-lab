@@ -19,10 +19,12 @@ import {
   type SearchLexicon,
 } from "./text-match";
 import { uiMessage } from "../../i18n/ui-messages";
-import { formatNumber, formatPercent } from "../../i18n/format";
+import { formatNumber, formatOvenFuel, formatPercent, formatTemp } from "../../i18n/format";
+import { OVEN_MODELS, type OvenModel } from "../../data/oven-models";
+import { METHOD_PATH } from "../method/method-link";
 import type { CmsContent } from "../cms/cms-context";
 import { placeNameLocalizer } from "../cms/i18n";
-import { PRE_FERMENT_IDS, preFermentName, preFermentStyleLinks } from "../recipe/pre-ferment-guide";
+import { PRE_FERMENT_IDS, fillPreFermentText, preFermentName, preFermentStyleLinks } from "../recipe/pre-ferment-guide";
 import { STYLE_PHOTOS } from "../recipe/recommended-styles";
 
 /* ═══ U-5 — indice della ricerca a tutta pagina ═══
@@ -34,16 +36,18 @@ import { STYLE_PHOTOS } from "../recipe/recommended-styles";
  *  - più parole vanno trovate tutte, in qualunque ordine;
  *  - i risultati sono ordinati per pertinenza, non per posizione nel database. */
 
-export type ResultType = "style" | "recipe" | "topping" | "flour" | "glossary" | "guide" | "problem";
+export type ResultType = "style" | "recipe" | "topping" | "flour" | "oven" | "glossary" | "guide" | "problem";
 
-/** Ordine dei gruppi a parità di pertinenza. */
+/** Ordine dei gruppi a parità di pertinenza. G1a-WP-02 (S04-A-09): i
+ *  contenuti che spiegano (glossario, guide) prima di farine e forni. */
 export const GROUP_ORDER: readonly ResultType[] = [
   "style",
   "recipe",
   "topping",
-  "flour",
   "glossary",
   "guide",
+  "flour",
+  "oven",
   "problem",
 ];
 
@@ -59,6 +63,9 @@ export interface SearchResult {
   score: number;
   /** FW-09: trovato solo tollerando un refuso. */
   fuzzy?: boolean;
+  /** G1a-WP-02 (S04-B-07): la parola trovata in un testo che non si vede,
+   *  con il suo contesto (circa 80 caratteri). */
+  snippet?: string;
 }
 
 interface SearchEntry extends Omit<SearchResult, "score"> {
@@ -67,6 +74,9 @@ interface SearchEntry extends Omit<SearchResult, "score"> {
   haystack: string;
   /** FW-09 (S04-A-10): simboli del glossario («W», «P/L» → w, p, l, p/l). */
   symbols?: string[];
+  /** G1a-WP-02: il testo leggibile che non si vede (descrizione, nota), nella
+   *  lingua attiva e non normalizzato, per l'estratto. */
+  extraRaw?: string;
 }
 
 /* FW-09: normalizzazione, sinonimi, flessioni e refusi in ./text-match
@@ -80,17 +90,19 @@ function clip(text: string, max: number): string {
 function entry(
   base: Omit<SearchEntry, "foldedTitle" | "haystack">,
   extra: string,
+  extraRaw?: string,
 ): SearchEntry {
   return {
     ...base,
     foldedTitle: fold(base.title),
     haystack: fold(`${base.title} ${base.subtitle} ${extra}`),
+    ...(extraRaw ? { extraRaw } : {}),
   };
 }
 
 /** Costruisce l'indice per la lingua attiva. Si ricalcola solo quando cambia
  *  il CMS (memo nella vista). */
-export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
+export function buildSearchIndex(cms: CmsContent, ovens: readonly OvenModel[] = OVEN_MODELS): SearchEntry[] {
   const out: SearchEntry[] = [];
   const pages = cms.pages;
 
@@ -116,6 +128,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
         /* FW-11 (S04-A-14): il nome italiano della famiglia resta indicizzato
            in ogni lingua, come i nomi propri («napoletana» trova gli stili anche in en). */
         `${familyName} ${style.id.replace(/_/g, " ")} ${PIZZA_FAMILIES[style.family as keyof typeof PIZZA_FAMILIES]?.name ?? ""} ${formatOrigin(style.origin)} ${formatOrigin(style.origin, placeNameLocalizer(cms))} ${cms.styleDescriptions?.[style.id] ?? ""} ${cms.styleChars?.[style.id] ?? ""} ${styleOvenWords(style.id, cms)}`,
+        cms.styleDescriptions?.[style.id],
       ),
     );
   }
@@ -137,6 +150,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           photo: rec.photo || STYLE_PHOTOS[rec.style_id],
         },
         `${rec.description} ${raw.name} ${concept?.name ?? ""} ${(rec.occasion_tags ?? []).join(" ")}`,
+        rec.description,
       ),
     );
   }
@@ -156,6 +170,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
         },
         /* Il nome italiano resta cercabile: è quello scritto sui menu. */
         `${concept.description} ${TOPPING_CONCEPTS[id].name} ${id.replace(/_/g, " ")} ${(concept.occasions ?? []).join(" ")}`,
+        concept.description,
       ),
     );
   }
@@ -191,6 +206,26 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
         },
         /* La nota nella lingua attiva (prima l'italiano di flour-database in ogni lingua, S04-B-07). */
         `${flour.producer} ${flour.category.replace(/_/g, " ")} ${cms.flours?.[flour.id]?.note ?? ""}`,
+        cms.flours?.[flour.id]?.note,
+      ),
+    );
+  }
+
+  /* G1a-WP-02 (S04-A-12, D-G1a-02): i forni del catalogo dell'edizione
+     (OVEN_MODELS è già filtrato). Il risultato apre la ricerca del forno nel
+     Profilo, già compilata: il forno cambia solo con un tocco. */
+  for (const oven of ovens) {
+    const name = `${oven.brand} ${oven.model}`;
+    out.push(
+      entry(
+        {
+          id: `oven-${oven.id}`,
+          type: "oven",
+          title: name,
+          subtitle: `${formatOvenFuel(oven.fuel)} · ${uiMessage("features.profile.oven-model-search.upTo", [formatTemp(oven.maxTempC, cms.locale.id)])}`,
+          link: `/profile?tab=setup&ovenQuery=${encodeURIComponent(name)}`,
+        },
+        cms.ovenPresets?.[oven.ovenType]?.name ?? "",
       ),
     );
   }
@@ -208,6 +243,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
         link: `/learn/glossary#${term.id}`,
       },
       `${term.definition} ${raw.name} ${term.id.replace(/_/g, " ")}`,
+      term.definition,
     );
     if (term.symbol) {
       const symbol = fold(term.symbol);
@@ -216,9 +252,28 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
     out.push(glossaryEntry);
   }
 
+  /* G1a-WP-02 (S04-B-14): le pagine di Impara e i suoi percorsi sono guide,
+     non solo i prefermenti. Stesse etichette delle SECTIONS di learn.tsx. */
+  const guidePages: [string, string, string, string][] = [
+    ["glossary", pages.learnGlossary, pages.learnGlossaryDesc, "/learn/glossary"],
+    ["troubleshooting", pages.learnTroubleshooting, pages.learnTroubleshootingDesc, "/learn/troubleshooting"],
+    ["pre-ferments", pages.learnPreFerments, pages.learnPreFermentsDesc, "/learn/pre-ferments"],
+    ["method", uiMessage("pages.method.title"), uiMessage("pages.learn.methodDesc"), METHOD_PATH],
+    ["path-1", pages.learnPath1Title, pages.learnPath1Copy, "/learn"],
+    ["path-2", pages.learnPath2Title, pages.learnPath2Copy, "/learn"],
+    ["path-3", pages.learnPath3Title, pages.learnPath3Copy, "/learn"],
+    ["path-4", pages.learnPath4Title, pages.learnPath4Copy, "/learn"],
+  ];
+  for (const [id, title, subtitle, link] of guidePages) {
+    out.push(entry({ id: `guide-${id}`, type: "guide", title, subtitle, link }, pages.navLearn));
+  }
+
   for (const id of PRE_FERMENT_IDS) {
     const item = cms.preFerment.items[id];
-    const description = item?.description ?? "";
+    /* I numeri del motore nei testi della guida ({bigaHydration}…), come nella pagina. */
+    const description = fillPreFermentText(item?.description ?? "", cms.locale.id);
+    const fermentation = fillPreFermentText(item?.fermentationType ?? "", cms.locale.id);
+    const styles = id === "autolisi" ? item?.idealStyles ?? "" : preFermentStyleLinks(id).map((link) => link.name).join(", ");
     out.push(
       entry(
         {
@@ -228,7 +283,8 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           subtitle: clip(description, 100),
           link: `/learn/pre-ferments#pf-${id}`,
         },
-        `${description} ${id === "autolisi" ? item?.idealStyles ?? "" : preFermentStyleLinks(id).map((link) => link.name).join(" ")} ${cms.pages.learnPreFerments}`,
+        `${description} ${cms.preFerment.detailFermentation} ${fermentation} ${styles} ${cms.pages.learnPreFerments}`,
+        `${description} ${cms.preFerment.detailFermentation}: ${fermentation} ${cms.preFerment.detailIdealStyles}: ${styles}`,
       ),
     );
   }
@@ -244,6 +300,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           subtitle: clip(issue.cause, 100),
           link: `/learn/troubleshooting?issue=${encodeURIComponent(issue.id)}`,
         },
+        `${issue.cause} ${issue.fixImmediate} ${issue.prevention}`,
         `${issue.cause} ${issue.fixImmediate} ${issue.prevention}`,
       ),
     );
@@ -266,8 +323,12 @@ export { searchLexicon, type SearchLexicon } from "./text-match";
  *  pertinenza (a parità, l'ordine del database). */
 export function searchIndex(index: readonly SearchEntry[], query: string, lexicon: SearchLexicon = EMPTY_LEXICON): SearchResult[] {
   const strip = (e: SearchEntry, score: number): SearchResult => {
-    const { foldedTitle: _t, haystack: _h, symbols: _s, ...result } = e;
-    return { ...result, score };
+    const { foldedTitle: _t, haystack: _h, symbols: _s, extraRaw, ...result } = e;
+    /* G1a-WP-02 (S04-B-07): trovato solo nel testo nascosto → l'estratto. */
+    const snippet = score === 0 && extraRaw && highlightRanges(e.title, query).length === 0 && highlightRanges(e.subtitle, query).length === 0
+      ? snippetAround(extraRaw, query)
+      : undefined;
+    return snippet ? { ...result, score, snippet } : { ...result, score };
   };
   /* Una lettera: solo i simboli del glossario, esatti («W», «P», «L»). */
   if (isShortQuery(query)) {
@@ -305,6 +366,18 @@ export function searchIndex(index: readonly SearchEntry[], query: string, lexico
     const inTitle = variants.some((tokens) => tokens.some((t) => fuzzyMatches(titleWords, t)));
     return { ...result, score: inTitle ? 1 : 0, fuzzy: true };
   }).sort((a, b) => b.score - a.score);
+}
+
+/** Circa 80 caratteri attorno alla prima parola cercata, tagliati sulle
+ *  parole, con «…» ai bordi. */
+export function snippetAround(text: string, query: string, radius = 40): string | undefined {
+  const first = highlightRanges(text, query)[0];
+  if (!first) return undefined;
+  let start = Math.max(0, first[0] - radius);
+  let end = Math.min(text.length, first[1] + radius);
+  if (start > 0) start = text.indexOf(" ", start) + 1 || start;
+  if (end < text.length) end = text.lastIndexOf(" ", end) > first[1] ? text.lastIndexOf(" ", end) : end;
+  return `${start > 0 ? "…" : ""}${text.slice(start, end).trim()}${end < text.length ? "…" : ""}`;
 }
 
 /** Parole del forno con cui si cerca uno stile («forno di casa», «legna»). */

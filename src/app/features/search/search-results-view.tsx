@@ -4,6 +4,7 @@ import {
   ChefHat,
   CircleDot,
   CornerDownLeft,
+  Flame,
   Pizza,
   Search,
   UtensilsCrossed,
@@ -56,6 +57,7 @@ const TYPE_ICONS: Record<ResultType, typeof Search> = {
   recipe: UtensilsCrossed,
   topping: Pizza,
   flour: CircleDot,
+  oven: Flame,
   glossary: BookOpen,
   guide: Wheat,
   problem: AlertTriangle,
@@ -83,6 +85,7 @@ function categoryLabels(pages: CmsContent["pages"]): Record<ResultType, string> 
     recipe: uiMessage("components.shared.search-overlay.ricette-c46b30c8"),
     topping: uiMessage("components.shared.search-overlay.condimenti-fc3218d7"),
     flour: pages.searchCatFlours,
+    oven: pages.searchCatOvens,
     glossary: pages.searchCatGlossary,
     guide: pages.searchCatGuides,
     problem: pages.searchCatProblems,
@@ -226,7 +229,8 @@ export function SearchResultsView({
       {fuzzy && <p className="type-body search-page__hint">{uiMessage("features.search.fuzzyNote")}</p>}
 
       {hasQuery && all.length > 0 && (
-        <nav className="search-page__chips hide-scrollbar" aria-label={uiMessage("features.search.filters")}>
+        /* G1a-WP-02 (S04-B-16): pulsanti di filtro, non un landmark di navigazione. */
+        <div role="group" data-region="search-filters" className="search-page__chips hide-scrollbar" aria-label={uiMessage("features.search.filters")}>
           <button
             type="button"
             aria-pressed={effectiveFilter === "all"}
@@ -254,7 +258,7 @@ export function SearchResultsView({
               </button>
             );
           })}
-        </nav>
+        </div>
       )}
 
       {/* FW-09 (S04-A-11, S04-B-10): senza risultati, il motivo e dove andare. */}
@@ -318,6 +322,11 @@ export function SearchResultsView({
                           {item.subtitle && (
                             <small className="search-page__subtitle">
                               <Highlight text={item.subtitle} query={query} />
+                            </small>
+                          )}
+                          {item.snippet && (
+                            <small className="search-page__snippet">
+                              <Highlight text={item.snippet} query={query} />
                             </small>
                           )}
                           {(() => {

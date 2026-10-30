@@ -289,3 +289,20 @@ export function formatCalendarDate(isoDate: string, locale: string): string {
 export function formatShortList(items: readonly string[], locale?: string): string {
   return items.join(uiMessage("format.listSeparator", [], locale));
 }
+
+/** Combustibile di un modello di forno («Legna», «Gas»…): la ricerca del forno
+ *  nel Profilo e i risultati «Forni» della ricerca (G1a-WP-02) usano la stessa
+ *  etichetta. Qui e non in un modulo a sé: entrambi la trovano nel chunk
+ *  principale, senza un chunk minuscolo condiviso. */
+export function formatOvenFuel(fuel: "wood" | "gas" | "electric" | "pellet"): string {
+  switch (fuel) {
+    case "wood":
+      return uiMessage("features.profile.oven-model-search.fuelWood");
+    case "gas":
+      return uiMessage("features.profile.oven-model-search.fuelGas");
+    case "pellet":
+      return uiMessage("features.profile.oven-model-search.fuelPellet");
+    default:
+      return uiMessage("features.profile.oven-model-search.fuelElectric");
+  }
+}

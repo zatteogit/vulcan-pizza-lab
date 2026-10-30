@@ -229,6 +229,22 @@ appretto e del preriscaldo con appretto, che motore e CMS avevano in due copie
 «Prima → Ora» di `recipe-entry.ts` e i ripieghi italiani di `blocker-text.ts`.
 Risultato: 494,7 kB senza lingue, 599,6 kB per utente, CSS 74,8 kB invariato.
 
+### G1a-WP-02, ricerca: forni, guide, estratto (30/10/2026)
+Forni e pagine di Impara nell'indice, estratto e sfumatura dei filtri valgono
+circa 0,8 kB senza lingue (600,4 kB per utente). Recuperati senza alzare i
+limiti: i testi delle fasce del punteggio (`cooking.matchTones`) stanno solo
+nel CMS, senza le 15 chiavi uiMessage gemelle in 7 lingue né i ripieghi
+italiani di `recipe-match-card.tsx` (i due chiamanti passano sempre il CMS; in
+portoghese il riferimento della fascia «t90» puntava a una chiave che non
+esisteva, ora c'è il testo); i consigli di olio e frittura in una sola copia
+per motore e CMS; `formatOvenFuel` in `format.ts` invece di un chunk minuscolo
+condiviso. CSS: tolte 13 regole morte (`glossary-card__chevron`,
+`home-step__frame`, `home-step__back`, `home-dietary-warning(s)__*`,
+`ingredients-servings__estimate`, `bits-ing-row__amount-note`,
+`stat-strip__value-trend`, `troubleshooting-card__chevron*`,
+`preferment-guide-card__heading`, `match-info-toggle`). Risultato: 493,8 kB
+senza lingue, 597,6 kB per utente, CSS 74,6 kB.
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

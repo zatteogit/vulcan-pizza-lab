@@ -3731,8 +3731,8 @@ function generateTimeline(
       icon: "flame",
       timing_label: `${preheatMinutes} min`,
       tip: {
-        beginner: "Sotto i 170°C la pizza assorbe olio e diventa unta; sopra i 190°C si colora fuori e resta cruda dentro.",
-        nerd: "Tra 180 e 190°C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
+        beginner: METHOD_MESSAGES_IT["timeline.heatOil.tipBeginner"],
+        nerd: METHOD_MESSAGES_IT["timeline.heatOil.tipNerd"],
       },
     });
   } else steps.push({
@@ -3941,8 +3941,8 @@ function generateTimeline(
         icon: "flame",
         timing_label: formatCookTime(effectiveCookSec),
         tip: {
-          beginner: "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
-          nerd: "Il vapore interno gonfia il disco nei primi secondi; girandola a metà, crosta e ripieno cuociono in modo uniforme.",
+          beginner: METHOD_MESSAGES_IT["timeline.fry.tipBeginner"],
+          nerd: METHOD_MESSAGES_IT["timeline.fry.tipNerd"],
         },
       });
     } else steps.push(

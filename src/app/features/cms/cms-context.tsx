@@ -715,6 +715,8 @@ interface CmsPages {
   searchPlaceholder: string;
   searchCatStyles: string;
   searchCatFlours: string;
+  /** G1a-WP-02: gruppo «Forni» della ricerca. */
+  searchCatOvens: string;
   searchCatGlossary: string;
   searchCatProblems: string;
   searchCatGuides: string;
@@ -1703,29 +1705,29 @@ export const CMS_DEFAULTS: CmsContent = {
     preCookStart: "Usa il riferimento",
     matchTones: {
       t90: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.la-canonica-e-la-tua-cucina-parlano-gia-la-37bbb4fd"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a"],
+        title: "Ottima compatibilità",
+        canonical: "Un buon punto di partenza per la tua cucina. Controlla le condizioni indicate.",
+        adapted: "Controlla gli ingredienti e l’attrezzatura richiesti da questa versione.",
       },
       t75: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.ottima-intesa-55470040"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6"],
+        title: "Buona compatibilità",
+        canonical: "Verifica le condizioni indicate prima di iniziare.",
+        adapted: "Controlla le modifiche e i requisiti di questa versione.",
       },
       t60: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.la-ricetta-funziona-ma-chiede-un-minimo-di-7c183f59"],
+        title: "Da valutare",
+        canonical: "Controlla dove la ricetta si discosta dalle condizioni della tua cucina.",
+        adapted: "Questa versione richiede attenzione: leggi i requisiti e le modifiche.",
       },
       t40: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.per-le-cose-buone-ci-vuole-tempo-e6addc9c"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.la-ricetta-e-seria-meglio-adattarla-al-tuo-551e300f"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050"],
+        title: "Compatibilità limitata",
+        canonical: "Valuta le modifiche necessarie o scegli uno stile più vicino alla tua cucina.",
+        adapted: "Restano differenze importanti rispetto al riferimento: consulta il dettaglio.",
       },
       t0: {
-        title: UI_MESSAGES_IT["features.recipe.recipe-match-card.cuore-spezzato-42157bb9"],
-        canonical: UI_MESSAGES_IT["features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75"],
-        adapted: UI_MESSAGES_IT["features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf"],
+        title: "Da rivedere",
+        canonical: "Leggi il motivo del punteggio basso prima di scegliere come procedere.",
+        adapted: "Le modifiche non risolvono tutti i limiti. Controlla il dettaglio e le alternative.",
       },
     },
     ceilingUnviableOven:
@@ -2139,12 +2141,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.preheat.tipNerd": "La massa termica della superficie domina il primo minuto di cottura: {minutes} min di soak assicurano che pietra/acciaio siano saturi, non solo l'aria del forno.",
     "timeline.heatOil.title": "Olio a temperatura",
     "timeline.heatOil.desc": "Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a {temp} e controllalo con un termometro. Intanto i panetti finiscono l'appretto.",
-    "timeline.heatOil.tipBeginner": "Sotto i 170 °C la pizza assorbe olio e diventa unta; sopra i 190 °C si colora fuori e resta cruda dentro.",
-    "timeline.heatOil.tipNerd": "Tra 180 e 190 °C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
     "timeline.fry.title": "Frittura",
     "timeline.fry.desc": "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
-    "timeline.fry.tipBeginner": "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
-    "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girandola a metà, crosta e ripieno cuociono in modo uniforme.",
     "timeline.mix.title": "Impasto",
     ...METHOD_MESSAGES_IT,
     "timeline.divide.title": "Staglio",
@@ -2592,6 +2590,7 @@ export const CMS_DEFAULTS: CmsContent = {
     searchPlaceholder: "Cerca stile, ricetta, condimento, farina, termine, problema…",
     searchCatStyles: "Stili",
     searchCatFlours: "Farine",
+    searchCatOvens: "Forni",
     searchCatGlossary: "Glossario",
     searchCatProblems: "Problemi",
     searchCatGuides: "Guide",

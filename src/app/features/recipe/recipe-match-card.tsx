@@ -38,61 +38,25 @@ interface MatchTonesCopy {
   t0: MatchToneCopy;
 }
 
-/* Fallback italiani — usati solo se il chiamante non passa il copy CMS. */
-const TONE_FALLBACKS: Record<
-  keyof MatchTonesCopy,
-  MatchToneCopy & { low: boolean; icon: MatchIconKey }
-> = {
-  t90: {
-    get title() { return uiMessage("features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"); },
-    get canonical() { return uiMessage("features.recipe.recipe-match-card.la-canonica-e-la-tua-cucina-parlano-gia-la-37bbb4fd"); },
-    get adapted() { return uiMessage("features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a"); },
-    low: false,
-    icon: "handshake",
-  },
-  t75: {
-    get title() { return uiMessage("features.recipe.recipe-match-card.ottima-intesa-55470040"); },
-    get canonical() { return uiMessage("features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12"); },
-    get adapted() { return uiMessage("features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6"); },
-    low: false,
-    icon: "heart",
-  },
-  t60: {
-    get title() { return uiMessage("features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af"); },
-    get canonical() { return uiMessage("features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69"); },
-    get adapted() { return uiMessage("features.recipe.recipe-match-card.la-ricetta-funziona-ma-chiede-un-minimo-di-7c183f59"); },
-    low: false,
-    icon: "pulse",
-  },
-  t40: {
-    get title() { return uiMessage("features.recipe.recipe-match-card.per-le-cose-buone-ci-vuole-tempo-e6addc9c"); },
-    get canonical() { return uiMessage("features.recipe.recipe-match-card.la-ricetta-e-seria-meglio-adattarla-al-tuo-551e300f"); },
-    get adapted() { return uiMessage("features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050"); },
-    low: true,
-    icon: "crack",
-  },
-  t0: {
-    get title() { return uiMessage("features.recipe.recipe-match-card.cuore-spezzato-42157bb9"); },
-    get canonical() { return uiMessage("features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75"); },
-    get adapted() { return uiMessage("features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf"); },
-    low: true,
-    icon: "off",
-  },
+/* Fascia → tono e icona. I testi sono sempre quelli del CMS
+   (cms.cooking.matchTones, con i default italiani): G1a, budget, niente più
+   una seconda copia italiana qui. */
+const TONE_STYLE: Record<keyof MatchTonesCopy, { low: boolean; icon: MatchIconKey }> = {
+  t90: { low: false, icon: "handshake" },
+  t75: { low: false, icon: "heart" },
+  t60: { low: false, icon: "pulse" },
+  t40: { low: true, icon: "crack" },
+  t0: { low: true, icon: "off" },
 };
 
-export function matchTone(score: number, mode: RecipeMatchMode, tones?: MatchTonesCopy) {
+export function matchTone(score: number, mode: RecipeMatchMode, tones: MatchTonesCopy) {
   const band: keyof MatchTonesCopy =
     score >= 90 ? "t90" : score >= 75 ? "t75" : score >= 60 ? "t60" : score >= 40 ? "t40" : "t0";
-  const fallback = TONE_FALLBACKS[band];
-  const copy = tones?.[band];
+  const copy = tones[band];
   return {
-    title: copy?.title ?? fallback.title,
-    body:
-      mode === "canonical"
-        ? (copy?.canonical ?? fallback.canonical)
-        : (copy?.adapted ?? fallback.adapted),
-    low: fallback.low,
-    icon: fallback.icon,
+    title: copy.title,
+    body: mode === "canonical" ? copy.canonical : copy.adapted,
+    ...TONE_STYLE[band],
   };
 }
 

@@ -1,6 +1,11 @@
 /** Italian source copy shared by the engine and CMS: a method instruction must
  * not drift between the MCP fallback and the localized UI. */
 export const METHOD_MESSAGES_IT: Record<string, string> = {
+  // G1a (budget): consigli dell'olio e della frittura, una sola copia per motore e CMS.
+  "timeline.heatOil.tipBeginner": "Sotto i 170 °C la pizza assorbe olio e diventa unta; sopra i 190 °C si colora fuori e resta cruda dentro.",
+  "timeline.heatOil.tipNerd": "Tra 180 e 190 °C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
+  "timeline.fry.tipBeginner": "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
+  "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girandola a metà, crosta e ripieno cuociono in modo uniforme.",
   // G1a (budget): «Prima → Ora» di recipe-entry.ts, una sola copia per motore e CMS.
   "change.topping": "Condimento: {from} → {to}",
   "change.hydration": "Idratazione: {from}% → {to}%",

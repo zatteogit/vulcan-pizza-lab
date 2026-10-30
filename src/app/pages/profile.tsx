@@ -1851,6 +1851,7 @@ export function ProfilePage() {
             onClear={() => setOvenModelId(null)}
             currentTempC={ovenTemp}
             onRestore={(model: OvenModel) => setOvenTemp(model.maxTempC)}
+            initialQuery={searchParams.get("ovenQuery") ?? undefined}
           />
           <div className="profile-oven-list" role="radiogroup" aria-label={p.ovenTitle}>
             {OVEN_PRESETS.map((preset) => {
