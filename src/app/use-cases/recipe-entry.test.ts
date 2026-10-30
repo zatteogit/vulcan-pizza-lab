@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { STYLES_DB, recommendStyles, type UserConstraints } from "../domain/pizza-engine";
-import { buildGeneratedRecipe, canonicalRecipe, canonicalRecipeEntry, getCanonicalVersion, tailoredRecipeEntry } from "./recipe-entry";
+import { authorVersionRecipe, buildGeneratedRecipe, canonicalRecipe, canonicalRecipeEntry, getCanonicalVersion, presetOvenTemp, recipePresetState, tailoredRecipeEntry } from "./recipe-entry";
+import { getInterpretationById, getInterpretationsForStyle } from "../data/interpretation-library";
 import { getStyleReference, getVersions } from "../data/style-versions";
 
 const weights = { authenticity: .3, feasibility: .25, digestibility: .2, sustainability: .15, experimentation: .1 };
@@ -149,5 +150,35 @@ describe("FW-14 · riferimento dello stile", () => {
   }
   expect(canonicalRecipeEntry(STYLES_DB.teglia_romana).interpretation?.id).toBe("apiter_teglia");
   expect(getCanonicalVersion("teglia_romana")).toBeNull();
+ });
+});
+
+/* G1b: il verdetto di ogni versione d'autore nel pannello stile è quello della
+ * ricetta che «Genera con questa versione» apre in Crea (stato del preset,
+ * forno di presetOvenTemp, buildGeneratedRecipe come useRecipeState). */
+describe("authorVersionRecipe", () => {
+ const p3: UserConstraints = {...base, oven_type:"electric_high", oven_max_temp_c:509, oven_capacity_temp_c:509, skill_level:3};
+ it("coincide con la ricetta che Crea costruisce dal preset della versione", () => {
+  for(const constraints of [...kitchens, p3]) for(const style of Object.values(STYLES_DB)) for(const it of getInterpretationsForStyle(style.id)) {
+   const p=recipePresetState(style,null,it);
+   const opened=buildGeneratedRecipe({style,scoreWeights:weights,constraints:{...constraints,oven_max_temp_c:presetOvenTemp(style,constraints)},
+    customHydration:p.hydration,customFlourW:p.flourW,customFlourPL:p.flourPL,customSalt:p.salt,
+    customFermentHours:p.fermentHours,customFermentTemp:p.fermentTemp,usePreFerment:p.usePreFerment,
+    preFermentChoice:{},panConfig:p.panConfig,activeVersion:null,activeInterpretationId:it.id,
+    selectedToppingConcept:p.toppingConcept,customFlourBlend:p.flourBlend});
+   expect(authorVersionRecipe(style,it,constraints,weights),`${style.id} · ${it.id}`).toEqual(opened);
+  }
+ });
+ it("sulla STG: col forno di casa la versione AVPN è bloccata, con l'Effeuno no", () => {
+  const avpn=getInterpretationById("avpn_disciplinare")!;
+  expect(authorVersionRecipe(STYLES_DB.napoletana_stg,avpn,base).verdict.outcome).toBe("not_feasible");
+  expect(authorVersionRecipe(STYLES_DB.napoletana_stg,avpn,p3).verdict.outcome).not.toBe("not_feasible");
+ });
+ it("una versione può essere bloccata dove lo stile no: Bonci (48 h) col pasto fra 28 h, la teglia su misura sì", () => {
+  const bonci=getInterpretationById("bonci_pizzarium")!;
+  const teglia=STYLES_DB.teglia_romana;
+  expect(authorVersionRecipe(teglia,bonci,{...base,meal_deadline:true,available_hours:28}).verdict.outcome).toBe("not_feasible");
+  expect(authorVersionRecipe(teglia,bonci,{...base,meal_deadline:true,available_hours:96}).verdict.outcome).not.toBe("not_feasible");
+  expect(tailoredRecipeEntry(teglia,{...base,meal_deadline:true,available_hours:28},weights).recipe.verdict.outcome).not.toBe("not_feasible");
  });
 });

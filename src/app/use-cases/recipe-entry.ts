@@ -143,6 +143,19 @@ export function recipeFromEntry(entry: ReturnType<typeof canonicalRecipeEntry>, 
   return generateRecipe(entry.style, constraints, { ...entry.options, scoreWeights });
 }
 
+/** Forno con cui Crea apre un preset (versione, firma, Riferimento): il massimo
+ *  della cucina, senza superare l'ideale dello stile. */
+export const presetOvenTemp = (style: PizzaStyle, c: UserConstraints) =>
+  Math.min(style.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c);
+
+/** G1b: la ricetta che «Genera con questa versione» apre in Crea (preset della
+ *  versione d'autore sul forno di presetOvenTemp). Il suo verdetto dice nel
+ *  pannello stile se la versione è fattibile con la cucina dell'utente. */
+export function authorVersionRecipe(style: PizzaStyle, interpretation: Interpretation, constraints: UserConstraints, scoreWeights?: ScoreWeightsOverride): GeneratedRecipe {
+  return recipeFromEntry(canonicalRecipeEntry(style, scoreWeights, interpretation),
+    { ...constraints, oven_max_temp_c: presetOvenTemp(style, constraints) });
+}
+
 export function canonicalRecipe(style: PizzaStyle, constraints: UserConstraints, scoreWeights?: ScoreWeightsOverride): GeneratedRecipe {
   const entry = canonicalRecipeEntry(style, scoreWeights);
   return recipeFromEntry(entry, constraints);

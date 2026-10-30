@@ -493,6 +493,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "recipe.referenceLabel.onYourOven": "あなたのオーブンでの基準",
   "recipe.referenceLabel.disciplinare": "{0} 規定",
   "recipe.referenceLabel.inspired": "{0}に着想を得たレシピ",
+  "recipe.referenceLabel.authorAdapt": "作り手の説明どおりのバージョンです。「{0}」であなたのキッチンに合わせると「{1}」になります。",
   "pages.explore.primaryFamily": "主な系統：{0}",
   "pages.profile.maxTemp": "最高約{0}",
   "pages.profile.skillLevel": "レベル {0}",

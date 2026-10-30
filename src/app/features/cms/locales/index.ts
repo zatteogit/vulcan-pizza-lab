@@ -105,9 +105,11 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       compatibili», più sheetTechniqueFrom/Generate/Source.
  *  47 → D-065 A2: Sardenaira De.Co. senza cipolla, sfincione bianco di
  *       Bagheria con la ricotta (toppingI18n) nelle sei lingue.
+ *  48 → G1b, seguito: recipe.referenceLabel.authorAdapt (la versione d’autore
+ *       si adatta con l’azione della match card e diventa «Su misura»).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 47;
+export const LOCALE_BUNDLE_REV = 48;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

@@ -2,7 +2,7 @@ import { encodePan } from "../features/recipe/pan-url";
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
 import { referenceEyebrow } from "../features/recipe/reference-label";
-import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
+import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified, presetOvenTemp } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { Bookmark, ChevronRight, Heart, Sparkles } from "lucide-react";
 import {
@@ -670,7 +670,7 @@ export function HomePage() {
     }, constraints.available_hours, engineConstraints);
     setSetupNotice(null);
     setSelectedFlourId(null);
-    setConstraints(c => ({...c, oven_max_temp_c: Math.min(selectedStyle.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c)}));
+    setConstraints(c => ({...c, oven_max_temp_c: presetOvenTemp(selectedStyle, c)}));
   }, [selectedStyle, resetForStyle, constraints.available_hours, engineConstraints, activeVersion, activeInterpretationId]);
 
   const resetCreateBaseRecipe = useCallback(() => {
@@ -687,7 +687,7 @@ export function HomePage() {
       setSelectedFlourId(null);
       setRecipeName("");
       selectVersion(version);
-      if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: Math.min(selectedStyle.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c)}));
+      if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: presetOvenTemp(selectedStyle, c)}));
     },
     [selectVersion, selectedStyle],
   );
@@ -702,7 +702,7 @@ export function HomePage() {
       setSelectedFlourId(null);
       setRecipeName("");
       applyInterpretationToState(interpretation);
-      if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: Math.min(selectedStyle.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c)}));
+      if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: presetOvenTemp(selectedStyle, c)}));
     },
     [applyInterpretationToState, resetCreateBaseRecipe, selectedStyle],
   );
@@ -1534,6 +1534,7 @@ export function HomePage() {
                   resetKey={`${selectedStyle.id}:${activeInterpretationId ?? activeVersion?.id ?? "base"}`}
                   verdictRecipe={recipe}
                   verdictConstraints={constraints}
+                  authorVersion={!!createOrigin && createOrigin.type !== "disciplinare" && !createDirty && !resolvedRecipeName}
                   mealDeadline={!!selectedTimeSlot && selectedTimeSlot !== "no_preference"}
                 />
                 </aside>
