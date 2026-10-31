@@ -7,6 +7,7 @@ import { ES_LOCALE } from "../cms/locales/es";
 import { PT_LOCALE } from "../cms/locales/pt";
 import { JA_LOCALE } from "../cms/locales/ja";
 import { GLOSSARY_TERMS, getLocalizedTerm, getTermById } from "../../data/glossary-data";
+import { GLOSSARY_TEXT } from "../../data/glossary-terms";
 import { ISSUE_GLOSSARY_TERMS, ISSUES_DB } from "../../data/troubleshooting-data";
 import { getScienceNote } from "../../data/science-notes";
 import { ALL_STEP_TERM_IDS, stepGlossaryTerms } from "./step-terms";
@@ -83,6 +84,20 @@ describe("FW-04 voci del glossario in ogni lingua", () => {
       const loc = cms.glossaryTerms.terms[id];
       expect(loc?.name, id).toBeTruthy();
       expect(loc?.definition, id).toBeTruthy();
+    }
+  });
+
+  /* Budget D-059 (31/10/2026): nei dati i testi sono il segnaposto
+   * GLOSSARY_TEXT; ogni catalogo, italiano compreso, deve averli tutti. */
+  it.each(Object.entries(bundles))("%s: ogni testo dei dati è nel catalogo e nessun segnaposto arriva al lettore", (_lang, cms) => {
+    for (const raw of GLOSSARY_TERMS) {
+      const loc = cms.glossaryTerms.terms[raw.id];
+      for (const field of ["plainDefinition", "definition", "whyImportant"] as const) {
+        if (raw[field] === undefined) continue;
+        expect(raw[field], `${raw.id}.${field} nei dati`).toBe(GLOSSARY_TEXT);
+        expect(loc?.[field], `${raw.id}.${field}`).toBeTruthy();
+      }
+      expect(JSON.stringify(getLocalizedTerm(raw, cms)), raw.id).not.toContain(GLOSSARY_TEXT);
     }
   });
 

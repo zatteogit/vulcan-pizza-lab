@@ -643,6 +643,26 @@ Anche l'italiano scende: il chunk condiviso `troubleshooting-data` è
 sparito (era importato dal bundle `it` e dal codice; ora è codice puro e si
 fonde col resto).
 
+### Fase 3: glossario
+
+Definizioni semplici, definizioni e «perché» delle 44 voci sono scritti in
+`GLOSSARY_TEXT_IT` (`domain-i18n-defaults.ts`, bundle `it`, con il nome del
+prodotto come token); `data/glossary-copy.ts` non c'è più. Nei dati
+(`glossary-terms.ts`) restano nome (lo usano Siri e Alexa per riconoscere la
+voce), simbolo, unità, formula, fasce e collegamenti, e al posto dei testi il
+segnaposto `GLOSSARY_TEXT`, che tiene la presenza del campo e l'ordine delle
+chiavi della risposta MCP `glossary`. `getLocalizedTerm()` prende i testi
+solo dal catalogo; il server MCP usa già il catalogo italiano
+(`GLOSSARY_TERMS_DEFAULTS`), quindi non cambia nulla. Test: ogni catalogo,
+italiano compreso, ha ogni testo che i dati segnano, e nessun segnaposto
+arriva al lettore.
+
+| Misura (gzip) | fase 2 | fase 3 | differenza |
+|---|---|---|---|
+| JS senza lingue | 435,8 kB | **429,4 kB** | −6,4 |
+| JS per utente, ja | 544,9 kB | **538,4 kB** | −6,5 |
+| it | 509,2 kB | 508,2 kB | −1,0 |
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

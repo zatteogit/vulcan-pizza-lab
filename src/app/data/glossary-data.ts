@@ -155,7 +155,10 @@ export function localizeRangeText(text: string, locale: string): string {
 
 /* === i18n: LOCALIZED GETTERS === */
 
-/** Return localized term content (falls back to Italian hardcoded) */
+/** Il termine con i testi della lingua attiva. Budget D-059 (31/10/2026):
+ *  definizioni e «perché» stanno solo nel catalogo (anche l'italiano, nel
+ *  bundle `it`; ogni bundle li ha tutti, term-link.test.ts); nei dati c'è il
+ *  segnaposto GLOSSARY_TEXT, che non arriva mai al lettore. */
 export function getLocalizedTerm(term: GlossaryTerm, cms?: GlossaryMessageSource): GlossaryTerm {
   const loc = cms?.glossaryTerms?.terms?.[term.id];
   const locale = cms?.locale?.id ?? "it";
@@ -165,14 +168,15 @@ export function getLocalizedTerm(term: GlossaryTerm, cms?: GlossaryMessageSource
       // la chiave della fascia (scala della W) viene dai dati, non dal testo
       ? loc.ranges.map((range, i) => ({ ...range, key: term.ranges?.[i]?.key }))
       : term.ranges);
-  const whyImportant = loc?.whyImportant ?? term.whyImportant;
+  const text = (own: string | undefined, localized: string | undefined) => (own === undefined ? undefined : localized ?? "");
+  const whyImportant = text(term.whyImportant, loc?.whyImportant);
   const formula = loc?.formula ?? term.formula;
-  const plainDefinition = loc?.plainDefinition ?? term.plainDefinition;
+  const plainDefinition = text(term.plainDefinition, loc?.plainDefinition);
   return {
     ...term,
     name: loc?.name ?? term.name,
     ...(plainDefinition !== undefined ? { plainDefinition: fill(plainDefinition, values) } : {}),
-    definition: fill(loc?.definition ?? term.definition, values),
+    definition: fill(loc?.definition ?? "", values),
     ...(whyImportant !== undefined ? { whyImportant: fill(whyImportant, values) } : {}),
     ...(formula !== undefined ? { formula: fill(formula, values) } : {}),
     ...(ranges ? {
