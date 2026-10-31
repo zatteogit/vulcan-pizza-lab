@@ -557,9 +557,10 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
    * 2,12 %, olio 1,69 % (impasto `dekracap_48h`). Puntata in frigo con
    * l'impasto a 8 °C (Dekracap, 23/9/2014 e 19/3/2017: `fridge`), staglio a
    * circa 24 h e di nuovo in frigo, fuori da 2 h a mezz'ora prima, forno al
-   * massimo. Scelte di Vulcan (§9.13): W 375, centro della forbice della fonte
-   * e dentro quella dello stile (300–380); 2 h fuori dal frigo, il limite alto
-   * della fonte; minuti di cottura del motore (la fonte non li dice). */
+   * massimo. Decise da Matteo (D-071): W 380, il più vicino al «meglio circa
+   * 400» della fonte dentro la forbice dello stile (300–380, che non cambia);
+   * 2 h fuori dal frigo, il limite alto della fonte. Scelta di Vulcan: minuti
+   * di cottura del motore (la fonte non li dice). */
   dekracap: {
     id: "dekracap",
     process_profile: {
@@ -572,7 +573,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     base_style_id: "teglia_romana",
     parameter_overrides: {
       hydration_pct: 84.7,
-      flour_w: 375,
+      flour_w: 380,
       fermentation_hours: 48,
       fermentation_temp_c: 8,
       fridge: true,

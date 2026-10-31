@@ -33,7 +33,7 @@ const home: UserConstraints = { oven_type: "home", oven_max_temp_c: 250, oven_ca
 const SOURCE = { flour: 350, water: 296, yeastFresh: 1, salt: 7.5, oil: 6, total: 660 };
 
 describe("la versione sta negli intervalli della teglia romana", () => {
-  it("84,7 %, 48 h e W 375 (forbice della fonte 350–400, dello stile 300–380): offerta, non bloccata", () => {
+  it("84,7 %, 48 h e W 380 (forbice della fonte 350–400, dello stile 300–380; decisione di Matteo): offerta, non bloccata", () => {
     const o = dekracap.parameter_overrides!;
     const d = style.dough;
     expect(o.hydration_pct!).toBeGreaterThanOrEqual(d.hydration_pct_range[0]);
@@ -65,7 +65,7 @@ describe("teglia 30×40, forno di casa: le dosi della fonte", () => {
     expect(Math.abs(r.yeast_g - SOURCE.yeastFresh)).toBeLessThanOrEqual(0.15);
     expect(r.yeast_source).toMatchObject({ source_type: "fresh", source_pct: 0.254, type: "fresh", converted: false });
     expect(r.baker_pcts).toMatchObject({ salt: 2.12, fat: 1.69 });
-    expect([r.hydration_pct, r.flour_w, r.fermentation_hours, r.fermentation_temp_c]).toEqual([84.7, 375, 48, 8]);
+    expect([r.hydration_pct, r.flour_w, r.fermentation_hours, r.fermentation_temp_c]).toEqual([84.7, 380, 48, 8]);
   });
   it("forno al massimo di casa, minuti del motore (la fonte non li dice)", () => {
     expect(r.oven_temp_c).toBe(250);
