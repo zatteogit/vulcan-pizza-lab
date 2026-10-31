@@ -966,6 +966,8 @@ export const FR_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "La source ne dit pas combien de temps dure chaque phase : là où elle ne le dit pas, les heures sont une estimation de {app} à partir des horaires de la recette. Attendez que la pâte double de volume, pas l'heure indiquée par la montre.",
     "timeline.bake.lowThenHigh": "Four statique : enfournez en bas, puis montez la plaque en haut pour finir la cuisson, comme le dit la source.",
     "timeline.shape.unoiledPan": "Renversez la pâte sur le plan saupoudré de semoule, appuyez du bout des doigts et étirez-la sans chasser l'air. Posez-la dans la plaque non huilée, saupoudrée de semoule, et finissez de l'étaler.",
+    "fermentation.sourceFridge": "La source veut la pâte au frigo à {temp}, dans la zone la moins froide : la dose de levure est prévue pour cette température. Dans un frigo plus froid, la pâte lève plus lentement.",
+    "source.dekracapProcess": "Ce que fait la source : après presque une heure de repos, trois séries de plis à 15 minutes d'intervalle ; division après environ 24 heures, puis retour au frigo ; sortie du frigo entre 2 heures et une demi-heure avant la cuisson ; étalage sur la semoule et cuisson aussitôt. Le planning de {app} utilise les plis du style et divise la pâte à la sortie du frigo ; le total des heures est le même.",
     "diet.singleBase": "Une seule base avec toute la pâte : oignons dessus, sans second disque ni fermeture.",
     "topping.geometry": "Surface {area} cm² · référence {reference} cm² · quantités ×{scale}.",
     "auth.layoutChanged": "Format différent de la référence : cette variante change la structure",

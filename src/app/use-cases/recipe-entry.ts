@@ -99,15 +99,23 @@ export function sourceReferenceCenter(style: PizzaStyle): AuthenticityCenter | u
  *  finché ore, temperatura e pre-fermento della ricetta sono questi (D-070,
  *  decisione 3 di Matteo: tolto, aggiunto o cambiato il pre-fermento torna il
  *  modello). */
-export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace" | "convertedDoses"> {
+export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace" | "convertedDoses" | "sourceProcess"> {
   if (!interpretation) return {};
   const o = interpretation.parameter_overrides;
   const tempC = interpretationFermentTempC(interpretation);
   const y = interpretation.source_yeast;
+  const timed = o?.fermentation_hours !== undefined && tempC !== undefined;
   return {
-    ...(y && o?.fermentation_hours !== undefined && tempC !== undefined
-      ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours, temp_c: tempC,
+    ...(y && timed
+      ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours!, temp_c: tempC!,
           pre_ferment: interpretationUsesPreFerment(interpretation) } }
+      : {}),
+    // B5: frigo della fonte e note sul processo, con le ore e la temperatura
+    // della versione (come il lievito della fonte).
+    ...(timed && (o?.fridge || interpretation.source_notes?.length)
+      ? { sourceProcess: { hours: o.fermentation_hours!, temp_c: tempC!,
+          ...(o?.fridge ? { fridge: true } : {}),
+          ...(interpretation.source_notes?.length ? { notes: interpretation.source_notes } : {}) } }
       : {}),
     ...(o?.warm_place ? { warmPlace: true } : {}),
     ...(interpretation.converted_doses ? { convertedDoses: true } : {}),

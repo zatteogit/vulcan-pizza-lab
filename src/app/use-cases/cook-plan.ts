@@ -214,6 +214,8 @@ export function optimizeComfort(
   startTime: Date,
   fermentTempC: number,
   now: Date = new Date(),
+  /** B5: la fonte mette la puntata in frigo sopra i 6 °C (`fermentation_in_fridge`). */
+  sourceFridge = false,
 ): ComfortPlan | null {
   const baseNight = countNightActives(timeline, startTime.getTime());
   if (baseNight === 0) return null;
@@ -224,7 +226,7 @@ export function optimizeComfort(
     .map(({ i }) => i);
   if (flexIdx.length === 0) return null;
   const coldByIndex: Record<number, boolean> = Object.fromEntries(
-    flexIdx.map((i) => [i, isColdPhase(timeline[i].id, fermentTempC)]),
+    flexIdx.map((i) => [i, isColdPhase(timeline[i].id, fermentTempC, sourceFridge)]),
   );
 
   /* Cartesiano sui (pochi) passi flessibili */

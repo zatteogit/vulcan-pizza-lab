@@ -966,6 +966,8 @@ export const ES_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "La fuente no dice cuánto dura cada fase: donde falta, las horas son una estimación de {app} a partir de los horarios de la receta. Espera a que la masa doble su volumen, no a la hora del reloj.",
     "timeline.bake.lowThenHigh": "Horno estático: hornea en la parte baja y luego sube la bandeja a la parte alta para terminar la cocción, como dice la fuente.",
     "timeline.shape.unoiledPan": "Vuelca la masa sobre la mesa espolvoreada con sémola, presiónala con la punta de los dedos y estírala sin sacarle el aire. Ponla en la bandeja sin engrasar, con un velo de sémola, y termina de estirarla.",
+    "fermentation.sourceFridge": "La fuente quiere la masa en la nevera a {temp}, en la zona menos fría: la dosis de levadura es para esa temperatura. En una nevera más fría la masa crece más despacio.",
+    "source.dekracapProcess": "Lo que hace la fuente: tras casi una hora de reposo, tres tandas de pliegues con 15 minutos entre una y otra; división a las 24 horas aproximadamente y de nuevo a la nevera; fuera de la nevera entre 2 horas y media hora antes de hornear; estirado sobre sémola y horneado enseguida. El plan de {app} usa los pliegues del estilo y divide la masa al sacarla de la nevera; las horas totales son las mismas.",
     "diet.singleBase": "Una base con toda la masa: cebolla encima, sin segundo disco ni cierre.",
     "topping.geometry": "Superficie {area} cm² · referencia {reference} cm² · cantidades ×{scale}.",
     "auth.layoutChanged": "Formato distinto de la referencia: la variante cambia la estructura de la receta",

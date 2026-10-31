@@ -81,6 +81,12 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
       story: "Adriano Continisio writes about home-made bread and pizza on his blog “Profumo di lievito”. His crispy tray pizza, from 2009, is made in a day: pre-dough early in the morning, dough pieces at around 16:00 and baking in a home oven at 250 °C.",
       badge: "Profumo di lievito",
     },
+    dekracap: {
+      signature_name: "Inspired by Dekracap’s 48-hour no-knead tray pizza",
+      technique_signature: "Strong flour (W 350–400), water at 85% and very little fresh yeast. Stirred without kneading, folded, then 48 hours in the fridge at 8 °C, divided halfway. Blue-steel or sheet-iron tray, no non-stick and no aluminium.",
+      story: "Dekracap is a member of the La Confraternita della Pizza forum. Dekracap’s recipe opens the “WeekEnd della Pizza in Teglia No Knead”: Notturno Italiano published it in the first post, on 6/10/2014 (edited on 14/10/2015). The original has been deleted and can be read in the Wayback Machine copy. In the fridge the author counts dry yeast the same as fresh; here the conversion uses 1 to 3.",
+      badge: "Confraternita della Pizza",
+    },
     da_michele_napoli: {
       signature_name: "Margherita and Marinara, and little else",
       technique_signature: "A bare-bones menu: for decades only Margherita and Marinara, four pizzas today. Wood-fired oven, no frills.",

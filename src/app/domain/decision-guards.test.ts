@@ -14,6 +14,7 @@ import { IT_LOCALE } from "../features/cms/locales/it";
 import { AUTHENTICITY_FUEL_CAP, DEFAULT_UI_SCORE_WEIGHTS, explainScore } from "./recipe-score";
 import { compareByCompatibility, kitchenMargin } from "./kitchen-margin";
 import { YEAST_DRY_RATIO } from "./fermentation-model";
+import { FRIDGE_MAX_TEMP_C } from "./fermentation-constants";
 import { defaultSmartLink, linkedActive, propagateLinked } from "../features/recipe/linked-params";
 
 /* Guardie delle decisioni di Matteo (docs/autorialita.md). Una PR le aveva
@@ -329,5 +330,25 @@ describe("D-070: il tetto per livello non esce dallo stile", () => {
   });
   it("teglia romana per chi comincia: 75 %, non 68", () => {
     expect(optimizeRecipe(STYLES_DB.teglia_romana, homeKitchen).recipe.hydration_pct).toBe(75);
+  });
+});
+
+/* D-070 (tranche B5, 31/10/2026; docs/autorialita.md): gli 8 °C di Dekracap
+ * entrano negli override senza spostare la soglia del frigo
+ * (FRIDGE_MAX_TEMP_C resta 6 °C, §9.4 M5): fra 7 e 8 °C l'impasto è «in
+ * frigo» solo quando la ricetta segue una fonte che ce lo mette, con le ore e
+ * la temperatura della fonte. */
+describe("D-070: frigo a 8 °C solo con la fonte", () => {
+  const options = { customFermentationHours: 48, customFermentationTempC: 8, usePreFerment: false };
+  it("senza fonte 8 °C è «fresco, non in frigo»; con la fonte è frigo, dichiarato", () => {
+    expect(FRIDGE_MAX_TEMP_C).toBe(6);
+    const plain = generateRecipe(STYLES_DB.teglia_romana, homeKitchen, options);
+    expect(plain.fermentation_in_fridge).toBeUndefined();
+    const fridge = generateRecipe(STYLES_DB.teglia_romana, homeKitchen, { ...options, sourceProcess: { hours: 48, temp_c: 8, fridge: true } });
+    expect(fridge.fermentation_in_fridge).toBe(true);
+    expect(fridge.source_notes?.map((n) => n.key)).toEqual(["fermentation.sourceFridge"]);
+    // Le dosi non cambiano: il frigo della fonte cambia i testi, non i numeri.
+    expect([fridge.flour_g, fridge.water_g, fridge.yeast_g, fridge.timeline.map((s) => s.duration_minutes)])
+      .toEqual([plain.flour_g, plain.water_g, plain.yeast_g, plain.timeline.map((s) => s.duration_minutes)]);
   });
 });

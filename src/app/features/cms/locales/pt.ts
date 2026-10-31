@@ -964,6 +964,8 @@ export const PT_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "A fonte não diz quanto dura cada fase: onde falta, as horas são uma estimativa do {app} a partir dos horários da receita. Espere a massa dobrar de volume, não o relógio.",
     "timeline.bake.lowThenHigh": "Forno estático: asse na parte de baixo e depois passe a assadeira para a parte de cima para terminar, como diz a fonte.",
     "timeline.shape.unoiledPan": "Vire a massa na bancada polvilhada com sêmola, pressione com a ponta dos dedos e abra sem tirar o ar. Coloque na assadeira sem untar, polvilhada com sêmola, e termine de abrir.",
+    "fermentation.sourceFridge": "A fonte quer a massa na geladeira a {temp}, na parte menos fria: a dose de fermento é para essa temperatura. Em uma geladeira mais fria a massa cresce mais devagar.",
+    "source.dekracapProcess": "O que a fonte faz: depois de quase uma hora de descanso, três voltas de dobras com 15 minutos entre uma e outra; divisão depois de cerca de 24 horas e de volta à geladeira; fora da geladeira entre 2 horas e meia hora antes de assar; abertura sobre semolina e forno em seguida. O cronograma do {app} usa as dobras do estilo e divide a massa quando ela sai da geladeira; o total de horas é o mesmo.",
     "diet.singleBase": "Uma base com toda a massa: cebola por cima, sem segundo disco nem fecho.",
     "topping.geometry": "Área {area} cm² · referência {reference} cm² · quantidades ×{scale}.",
     "auth.layoutChanged": "Formato diferente da referência: esta versão altera a estrutura da receita",

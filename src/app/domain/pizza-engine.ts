@@ -14,9 +14,10 @@ mergeImpastoIntoDough,
 type ImpastoRecipe,
 } from "../data/impasto-library";
 import { getBakingTimeByStyle, getFoldingByStyle, getToppingByStyle } from "../data/parametric-databases";
-import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C, WARM_PLACE } from "./fermentation-constants";
+import { isFridgeTempC, PROOF_MIN_TEMP_C, WARM_PLACE } from "./fermentation-constants";
 export { PROOF_MIN_TEMP_C };
 import { sourceYeastUse, type SourceYeast, type SourceYeastUse } from "./source-yeast";
+import { sourceProcessUse, type SourceProcess } from "./source-process";
 import { isHeatProfileCompatible } from "../data/equipment-data";
 import {
 getToppingForStyle,
@@ -625,6 +626,10 @@ export interface GeneratedRecipe {
   /** B1 (D-068): scelte di Vulcan sulla fonte, dichiarate nella ricetta
    *  (lievito convertito per la dispensa, «luogo caldo» senza gradi). */
   source_notes?: EngineMsg[];
+  /** B5: la puntata è in frigo anche sopra FRIDGE_MAX_TEMP_C, fino a
+   *  SOURCE_FRIDGE_MAX_C, perché la fonte della versione ce la mette
+   *  (Dekracap, 8 °C). Presente solo allora: le altre ricette sono identiche. */
+  fermentation_in_fridge?: true;
   hydration_pct: number;
   baker_pcts?: { salt: number; fat: number; sugar: number };
   flour_w: number;
@@ -2003,6 +2008,10 @@ export interface GenerateRecipeOptions {
   /** B2 (D-066) — la fonte misura in millilitri, cucchiaini o bustine: la
    *  ricetta dichiara che i grammi sono una conversione di Vulcan. */
   convertedDoses?: boolean;
+  /** B5 — processo della fonte (domain/source-process.ts): l'impasto in frigo
+   *  sopra la soglia di Vulcan e le note su ciò che la tabella di marcia non
+   *  dice, solo con le ore e la temperatura della fonte. */
+  sourceProcess?: SourceProcess;
 }
 
 export type PreFermentType = "biga" | "poolish";
@@ -2050,6 +2059,7 @@ export function generateRecipe(
     sourceYeast,
     warmPlace,
     convertedDoses,
+    sourceProcess,
   } = options;
   const doughBalls = constraints.dough_balls;
 
@@ -2199,6 +2209,8 @@ export function generateRecipe(
     yeast: "fresh" | "dry" | "sourdough",
     /** Solo per scegliere il testo dell'impasto a mano: non cambia i tempi. */
     doughHydration?: number,
+    /** B5: puntata in frigo per la fonte; cambia i testi, non i tempi. */
+    sourceFridge = false,
   ) =>
     generateTimeline(
       style,
@@ -2213,6 +2225,7 @@ export function generateRecipe(
       preFermentType,
       constraints.dough_balls,
       doughHydration,
+      sourceFridge,
     );
 
   let fermentationHours =
@@ -2489,7 +2502,10 @@ export function generateRecipe(
   };
   // Il globale si finalizza dopo il verdetto operativo, con la politica unica.
   // Timeline finale (topping e attrezzatura risolti sopra, prima del clamp).
-  const timeline = buildTimeline(fermentationHours, fermentationTempC, yeastType, hydration);
+  // B5: processo della fonte, solo con le sue ore e la sua temperatura.
+  const sourceProcessApplied = sourceProcess ? sourceProcessUse(sourceProcess, fermentationHours, fermentationTempC) : null;
+  const sourceFridge = sourceProcessApplied?.fridge ?? false;
+  const timeline = buildTimeline(fermentationHours, fermentationTempC, yeastType, hydration, sourceFridge);
   // ENG-4: se anche con la fermentazione minima (o con le ore scelte) la timeline
   // non sta nella finestra fino al pasto, lo diciamo: la UI mostra l'avviso.
   const timelineMinutes = timeline.reduce((sum, step) => sum + step.duration_minutes, 0);
@@ -2913,6 +2929,12 @@ export function generateRecipe(
         ...(sourcePhaseList.some((phase) => phase?.hours_assumed)
           ? [em("fermentation.hoursAssumed", METHOD_MESSAGES_IT["fermentation.hoursAssumed"], { app: BRAND.name })]
           : []),
+        // B5: frigo della fonte sopra la soglia di Vulcan, e ciò che la
+        // tabella di marcia non dice (con le ore e la temperatura della fonte).
+        ...(sourceFridge
+          ? [em("fermentation.sourceFridge", METHOD_MESSAGES_IT["fermentation.sourceFridge"], { temp: fermentationTempC })]
+          : []),
+        ...(sourceProcessApplied?.notes ?? []),
         // B2 (seguito): ciò che la fonte del condimento non dice (salsa «condita»).
         ...(defaultTopping?.source_note ? [defaultTopping.source_note] : []),
       ];
@@ -2946,6 +2968,7 @@ export function generateRecipe(
     fermentation_hours: fermentationHours,
     fermentation_temp_c: fermentationTempC,
     ...(sourcePhases ? { declared_phases: sourcePhases } : {}),
+    ...(sourceFridge ? { fermentation_in_fridge: true as const } : {}),
     has_pre_ferment: hasPreFerment,
     pre_ferment_type: hasPreFerment ? preFermentType : undefined,
     // FW-17 (S08-A-03): un poolish non può contenere più acqua della ricetta.
@@ -3657,6 +3680,8 @@ function generateTimeline(
   bakeRounds = 1,
   /** G3-WP-03: idratazione della ricetta, per il testo dell'impasto a mano. */
   hydration?: number,
+  /** B5: la fonte mette la puntata in frigo anche sopra FRIDGE_MAX_TEMP_C. */
+  sourceFridge = false,
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
   const phases = fermentationPhases(fermentHours, hasPreFerment, preFermentType, style.method_profile, fermentTemp);
@@ -3810,11 +3835,13 @@ function generateTimeline(
   // FW-19 (S10-B-10, S09-A-07): le pieghe che il testo chiede sono un passo,
   // a temperatura ambiente. Dopo l'ultimo giro: in frigo solo se la puntata è
   // davvero in frigo (≤ FRIDGE_MAX_TEMP_C, come bulk_cold e le tolleranze
-  // della Timeline comoda); fra 7 e 17 °C (cantina, «fresco») il contenitore
-  // torna a quella temperatura, perché la dose di lievito è calcolata lì.
+  // della Timeline comoda, o fino a 8 °C se la fonte ce la mette: B5); fra 7
+  // e 17 °C (cantina, «fresco») il contenitore torna a quella temperatura,
+  // perché la dose di lievito è calcolata lì.
+  const inFridge = isFridgeTempC(fermentTemp, sourceFridge);
   if (foldPlan && foldMinutes > 0) {
     const foldsKey =
-      fermentTemp <= FRIDGE_MAX_TEMP_C
+      inFridge
         ? "timeline.folds.descCold"
         : fermentTemp < PROOF_MIN_TEMP_C
           ? "timeline.folds.descCool"
@@ -3858,7 +3885,7 @@ function generateTimeline(
       ...(declared ? { temp_c: declared.bulk.temp_c } : {}),
       tip: isUnleavened
         ? restTip
-        : fermentTemp <= 6
+        : inFridge
           ? {
               beginner:
                 "In frigo l'impasto cresce lento ma guadagna sapore. Copri bene con pellicola a contatto.",

@@ -12,6 +12,20 @@ export const PROOF_MIN_TEMP_C = 18;
  *  è calcolata per quella temperatura. */
 export const FRIDGE_MAX_TEMP_C = 6;
 
+/** Tranche B5: una fonte può scrivere un frigo più caldo della soglia, fino a
+ *  8 °C (Dekracap: l'impasto a 8 °C, nella zona meno fredda del frigo). Solo
+ *  quando la ricetta segue quella fonte (`fermentation_in_fridge`) la fase fra
+ *  7 e 8 °C è «in frigo»; senza, resta la soglia di 6 °C e i numeri degli
+ *  stili non cambiano. Coincide con COLD_RETARD_MAX_C dei problemi
+ *  (data/troubleshooting-data.ts). */
+export const SOURCE_FRIDGE_MAX_C = 8;
+
+/** L'impasto a questa temperatura sta in frigo: fino a FRIDGE_MAX_TEMP_C
+ *  sempre, fino a SOURCE_FRIDGE_MAX_C se la fonte lo mette in frigo. */
+export function isFridgeTempC(tempC: number, sourceFridge = false): boolean {
+  return tempC <= FRIDGE_MAX_TEMP_C || (sourceFridge && tempC <= SOURCE_FRIDGE_MAX_C);
+}
+
 /** Tranche B1 (D-068, decisione 7 di Matteo del 30/10/2026): una fonte che
  *  dice «in un luogo caldo» senza gradi (Benedetta Rossi, Paoletta). Il motore
  *  calcola a `calcC`; la finestra `windowC` vale con il criterio «al

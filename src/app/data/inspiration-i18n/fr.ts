@@ -81,6 +81,12 @@ export const INSPIRATION_I18N_FR: InspirationTranslation = {
       story: "Adriano Continisio écrit sur le pain et la pizza faits maison sur son blog « Profumo di lievito ». Sa pizza en plaque croustillante, de 2009, se fait dans la journée : pré-pâte tôt le matin, pâtons vers 16 h et cuisson au four domestique à 250 °C.",
       badge: "Profumo di lievito",
     },
+    dekracap: {
+      signature_name: "Inspirée de la pizza en plaque sans pétrissage en 48 heures de Dekracap",
+      technique_signature: "Farine de force (W 350–400), eau à 85% et très peu de levure fraîche. La pâte est mélangée sans pétrir, pliée, puis reste 48 heures au frigo à 8 °C, avec la division à mi-parcours. Plaque en acier bleu ou en tôle, ni antiadhésif ni aluminium.",
+      story: "Dekracap est membre du forum La Confraternita della Pizza. Sa recette ouvre le « WeekEnd della Pizza in Teglia No Knead » : Notturno Italiano la publie dans le premier message, le 6/10/2014 (modifié le 14/10/2015). L'original a été supprimé ; il se lit dans la copie de la Wayback Machine. Au frigo, l'auteur compte la levure sèche comme la fraîche ; ici, la conversion utilise 1 pour 3.",
+      badge: "Confraternita della Pizza",
+    },
     da_michele_napoli: {
       signature_name: "Margherita et Marinara, et pas grand-chose d’autre",
       technique_signature: "Carte réduite à l’essentiel : pendant des décennies, seulement Margherita et Marinara, aujourd’hui quatre pizzas. Four à bois et pas de fioritures.",

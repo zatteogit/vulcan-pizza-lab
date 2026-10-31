@@ -49,7 +49,8 @@ describe("D-070 · mai fuori stile", () => {
         checked += 2 + getVersions(style.id).length + getInterpretationsForStyle(style.id).length;
       }
     }
-    expect(checked).toBe(1380);
+    // 1.380 ricette con la regola (04/11), più le 12 della versione di Dekracap (B5).
+    expect(checked).toBe(1392);
   });
 
   it("per chi comincia: al minimo dello stile, con «Impasto esigente» e senza invito a scendere", () => {

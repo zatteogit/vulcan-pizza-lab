@@ -81,6 +81,12 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
       story: "アドリアーノ・コンティニーシオはブログ「Profumo di lievito」で、家で焼くパンとピッツァについて書いています。2009年のカリッと焼く天板ピッツァは1日で完成します。早朝に前生地、16時ごろに分割、家庭用オーブンを250 °Cで焼成。",
       badge: "Profumo di lievito",
     },
+    dekracap: {
+      signature_name: "Dekracapの48時間ノーニード天板ピザに着想を得て",
+      technique_signature: "強い粉（W 350–400）、水分85%、生イーストはごくわずか。こねずに混ぜて折りたたみ、8 °Cの冷蔵庫で48時間。途中で分割します。天板はブルースチールか鉄板で、フッ素加工やアルミは使いません。",
+      story: "Dekracapはフォーラム「La Confraternita della Pizza」のメンバーです。そのレシピは「WeekEnd della Pizza in Teglia No Knead」の最初の投稿で、2014年10月6日にNotturno Italianoが公開しました（2015年10月14日に修正）。元の投稿は削除されていて、Wayback Machineの保存版で読めます。冷蔵庫ではドライイーストを生イーストと同じに数えると作者は書いていますが、ここでは1対3で換算します。",
+      badge: "Confraternita della Pizza",
+    },
     da_michele_napoli: {
       signature_name: "マルゲリータとマリナーラ、ほぼそれだけ",
       technique_signature: "メニューは最小限。何十年もマルゲリータとマリナーラだけで、現在は4種類。薪窯で、飾り気なし。",

@@ -4,7 +4,7 @@
  * l'ottimizzatore della Timeline comoda resta nel chunk della ricetta.
  * Puro: niente React, CMS o browser. Test in cook-plan.test.ts. */
 
-import { FRIDGE_MAX_TEMP_C, PROOF_MIN_TEMP_C } from "../domain/fermentation-constants";
+import { isFridgeTempC, PROOF_MIN_TEMP_C } from "../domain/fermentation-constants";
 
 /** Una fase del piano: basta l'id del passo e la sua durata nel motore. */
 export interface PlanStepInput {
@@ -245,7 +245,9 @@ export function phaseTemperatureC(stepId: string, fermentTempC: number): number 
   return fermentTempC;
 }
 
-/** Fase in frigo (≤ FRIDGE_MAX_TEMP_C, la soglia delle tolleranze «cold»). */
-export function isColdPhase(stepId: string, fermentTempC: number): boolean {
-  return phaseTemperatureC(stepId, fermentTempC) <= FRIDGE_MAX_TEMP_C;
+/** Fase in frigo (≤ FRIDGE_MAX_TEMP_C, la soglia delle tolleranze «cold»;
+ *  B5: fino a 8 °C se la fonte mette l'impasto in frigo, `sourceFridge` =
+ *  `recipe.fermentation_in_fridge`). L'appretto resta fuori dal frigo. */
+export function isColdPhase(stepId: string, fermentTempC: number, sourceFridge = false): boolean {
+  return isFridgeTempC(phaseTemperatureC(stepId, fermentTempC), sourceFridge);
 }
