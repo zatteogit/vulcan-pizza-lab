@@ -1,5 +1,6 @@
 import type { CmsContent, LocaleId } from "../cms-context";
 import { registerUiMessages } from "../../../i18n/ui-messages";
+import { registerToppingTexts } from "../../../data/topping-i18n/registry";
 
 /* ═══ LOCALE REGISTRY ═══
  * Each locale is a full CmsContent bundle, loaded ON DEMAND (audit lug 2026:
@@ -180,12 +181,14 @@ export function getAnyCachedLocaleBundle(): CmsContent | undefined {
   return loadedBundles.it ?? Object.values(loadedBundles)[0];
 }
 
-/** Mette in cache un bundle già importato, con il suo catalogo uiMessage,
+/** Mette in cache un bundle già importato, con il suo catalogo uiMessage e i
+ *  testi dei condimenti,
  *  per chi rende componenti senza CmsProvider né main.tsx: il setup dei test
  *  e il bundle del design system (components/ds/_sync-entry.ts). */
 export function primeLocaleBundle(bundle: CmsContent): void {
   loadedBundles[bundle.locale.id] = bundle;
   registerUiMessages(bundle.locale.id, bundle.messages);
+  registerToppingTexts(bundle.locale.id, bundle.toppingI18n);
 }
 
 export async function loadLocaleBundle(

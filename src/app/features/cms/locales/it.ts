@@ -7,6 +7,7 @@ import { DIETARY_MESSAGES_IT } from "../../../data/dietary-data";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import { UI_MESSAGES_IT } from "../../../i18n/ui-messages.it";
+import { TOPPING_I18N_IT } from "../../../data/topping-i18n/it";
 import {
   PRE_FERMENT_DEFAULTS,
   TROUBLESHOOTING_I18N_DEFAULTS,
@@ -36,6 +37,8 @@ export const IT_LOCALE: CmsContent = {
     name: "Italiano",
   },
   messages: UI_MESSAGES_IT,
+  /* Budget D-059 (31/10/2026): i testi dei condimenti, come nelle altre lingue. */
+  toppingI18n: TOPPING_I18N_IT,
   ui: {
     scoreTipOriginal: "Riferimento dello stile, sulla tua cucina.",
     scoreTipTailored: "Versione con gli adattamenti proposti.",

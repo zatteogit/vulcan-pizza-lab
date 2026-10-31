@@ -561,6 +561,68 @@ prossime foto del catalogo (circa 23 condimenti nuovi a 240 kB tra grande e
 piccola). Un condimento nuovo con originale va messo in
 `design-assets/originali/toppings/` e prende da solo la 75 e la 320.
 
+## I testi italiani dei dati come le altre lingue (31/10/2026, ramo `dati-italiano`)
+
+Il passo 4 del piano del 30/10. Main a 33a0b81: **456,5 kB senza lingue,
+565,5 kB per utente** (ja), it 508,0 kB (misure di questa build; la
+descrizione del compito citava 458,6 / 568,3). Le altre lingue avevano già i
+testi dei dati nei loro cataloghi, sovrapposti all'italiano scritto nel
+codice: chi usa l'app in un'altra lingua scaricava l'italiano per niente, e
+ogni testo nuovo pesava due volte.
+
+**Come si verifica che nulla cambi.** Per ogni fase: `verify`, `lint`, build
+e `check:budget` verdi; un'istantanea di tutte le risposte del server
+(`tools/list`, `list_styles`, `get_guide`, `list_pantry_items`, glossario in
+it/en/ja per ogni voce, `recommend_styles`, `get_style` e `generate_recipe`
+per ogni stile in due cucine e due modi e per ogni condimento, la timeline del
+motore per ogni coppia stile × condimento, Siri e Alexa su otto domande)
+identica **byte per byte** a main; il testo di 30 pagine (anche quello dei
+pannelli chiusi) e della modalità cottura in it, en-GB e ja, con l'orologio
+fermo, identico a quello della build di main; nessun errore in console,
+nessuna chiave grezza.
+
+### Fase 1: condimenti
+
+`topping-library.ts` tiene struttura, dosi e i nomi che fanno da chiave (i
+nomi degli ingredienti danno gli id di dispensa, allergeni e diete; il nome
+italiano del concetto resta cercabile, «è quello scritto sui menu»). Le
+descrizioni dei concetti, i nomi delle varianti, le note degli ingredienti e
+della cottura, titoli, testi, varianti per le cotture brevi e consigli dei
+184 passi vanno in `topping-i18n/it.ts` (chunk `it-toppings`, nel bundle `it`
+come gli altri `<lingua>-toppings`).
+
+- **Segnaposto.** Nei letterali il testo è `T` (il consiglio `TIP`): dice
+  quali testi esistono (la variante per le cotture brevi, il consiglio, la
+  nota di cottura), tiene i tipi invariati e l'ordine delle chiavi delle
+  risposte MCP (le note degli ingredienti escono con lo spread). Al
+  caricamento la libreria li trasforma in getter sul catalogo.
+- **Registro** (`topping-i18n/registry.ts`), come il catalogo uiMessage: il
+  `CmsProvider` registra i testi della lingua attiva (`cms.toppingI18n`)
+  prima di rendere i figli, `primeLocaleBundle()` quelli del bundle (test,
+  design system), il server (`agent/mcp-server.ts`, da cui passano anche
+  Siri e Alexa) l'italiano. Il motore non cambia: legge `step.title` come
+  prima e trova l'italiano sul server, la lingua attiva nel browser (dove le
+  funzioni di `localize.ts` lo traducevano comunque per id: ora sono
+  idempotenti).
+- **Test** (`topping-i18n.test.ts`): ogni segnaposto ha il suo testo in ogni
+  lingua, italiano compreso (anche variante breve e consigli, prima non
+  controllati); nessun testo semplice resta nei dati; con l'italiano
+  registrato nessun segnaposto arriva al lettore; id dei passi unici.
+
+| Misura (gzip) | main 33a0b81 | fase 1 | differenza |
+|---|---|---|---|
+| JS senza lingue | 456,5 kB | **439,9 kB** | −16,6 |
+| JS per utente, ja | 565,5 kB | **548,9 kB** | −16,6 |
+| de / fr / es / pt / en | 559,5 / 558,9 / 555,2 / 554,9 / 550,9 | 542,9 / 542,3 / 538,6 / 538,3 / 534,3 | −16,6 |
+| it | 508,0 kB (lingua 51,5) | 510,1 kB (lingua 70,2) | +2,1 |
+
+L'italiano paga circa 2 kB (il catalogo per id, gzip separato dal codice);
+chi parte in italiano riceve `it-toppings` nel `modulepreload` della lingua
+di avvio insieme a `it` (`localePreloadPlugin`), quindi nessun giro di rete
+in più. Chi aggiunge un condimento ora scrive la struttura con `T`/`TIP` nella
+libreria e i testi in `it.ts` come nelle altre sei lingue: il test indica
+ogni testo mancante.
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

@@ -22,6 +22,7 @@ import {
   setActiveUiLocale,
 } from "../../i18n/ui-messages";
 import { resolveBrandTokens } from "../../config/brand";
+import { registerToppingTexts } from "../../data/topping-i18n/registry";
 
 /* ═══ VULCAN CMS CONTEXT ═══
  * Centralized content management for all user-facing text, config, weights, and media.
@@ -1607,6 +1608,9 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
      anche i consumer context-free vedono subito la locale. */
   registerUiMessages(cms.locale.id, cms.messages);
   setActiveUiLocale(cms.locale.id);
+  /* Budget D-059 (31/10/2026): anche i testi dei condimenti, che la libreria
+     legge da qui (topping-i18n/registry.ts). */
+  registerToppingTexts(cms.locale.id, cms.toppingI18n);
 
   /* Modifiche = differenze dalla lingua attiva, non dall'italiano: prima ogni
      utente non italiano vedeva «CMS attivo — 1769 campi modificati» e
