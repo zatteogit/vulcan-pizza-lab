@@ -3,7 +3,7 @@ import { METHOD_MESSAGES_IT } from "../data/method-messages";
 import { getInterpretationById, interpretationFermentTempC, type Interpretation } from "../data/interpretation-library";
 import { getStyleReference, getVersionById, type StyleVersion } from "../data/style-versions";
 import { resolveTopping, getToppingForStyle } from "../data/topping-library";
-import { defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
+import { STYLES_DB, defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
   type GeneratedRecipe, type GenerateRecipeOptions, type PanConfig, type PizzaStyle,
   type PreFermentChoice, type ScoreWeightsOverride, type UserConstraints, type VersionRangeOverrides,
   type AuthenticityCenter,
@@ -96,7 +96,9 @@ export function sourceReferenceCenter(style: PizzaStyle): AuthenticityCenter | u
  *  fonte lo scrive) e il «luogo caldo» senza gradi. Una sola funzione per
  *  l'apertura del preset e per la ricetta di Crea, così le due coincidono
  *  (test di authorVersionRecipe). Il motore usa la dose della fonte solo
- *  finché ore e temperatura della ricetta sono queste. */
+ *  finché ore, temperatura e pre-fermento della ricetta sono questi (D-070,
+ *  decisione 3 di Matteo: tolto, aggiunto o cambiato il pre-fermento torna il
+ *  modello). */
 export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace" | "convertedDoses"> {
   if (!interpretation) return {};
   const o = interpretation.parameter_overrides;
@@ -104,11 +106,20 @@ export function interpretationEngineOptions(interpretation: Interpretation | nul
   const y = interpretation.source_yeast;
   return {
     ...(y && o?.fermentation_hours !== undefined && tempC !== undefined
-      ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours, temp_c: tempC } }
+      ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours, temp_c: tempC,
+          pre_ferment: interpretationUsesPreFerment(interpretation) } }
       : {}),
     ...(o?.warm_place ? { warmPlace: true } : {}),
     ...(interpretation.converted_doses ? { convertedDoses: true } : {}),
   };
+}
+
+/** Il pre-fermento della versione, come lo apre canonicalRecipeEntry: quello
+ *  scritto nella versione, altrimenti quello dell'impasto o dello stile. */
+function interpretationUsesPreFerment(interpretation: Interpretation): boolean {
+  const o = interpretation.parameter_overrides;
+  const impasto = o?.impasto_ref ? getImpasto(o.impasto_ref) : undefined;
+  return o?.use_pre_ferment ?? impasto?.requires_pre_ferment ?? STYLES_DB[interpretation.base_style_id]?.requires_pre_ferment ?? false;
 }
 
 /** La ricetta originale sulla cucina dell'utente, con gli stessi parametri

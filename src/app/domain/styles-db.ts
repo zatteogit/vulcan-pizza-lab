@@ -1651,7 +1651,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     key_characteristics: [
       "Pronta in giornata",
       "Idratazione intorno all'80%",
-      "Teglia di casa ben unta",
+      // B3: vale per tutte le versioni (Benedetta unge, Adriano usa la semola).
+      "Teglia di casa, unta o con la semola",
       "Forno di casa",
     ],
     hydration_category: "high",

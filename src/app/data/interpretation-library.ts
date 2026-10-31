@@ -488,7 +488,10 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
    * impasto verso le 10); «Lasciamo raddoppiare a 28°» nei contenitori, senza
    * durata: 1 h 30, stima di Vulcan. Teglie non unte con un velo di semola,
    * 250 °C nella parte bassa per 10 minuti, poi mozzarella e olio in alto per
-   * 4–5 (870 s). Sale, olio e zucchero dall'impasto `adriano_continisio`. */
+   * 4–5 (870 s). Sale, olio e zucchero dall'impasto `adriano_continisio`.
+   * Nessun condimento proprio (decisione 2 di Matteo, 31/10/2026): l'utente
+   * sceglie dalla lista dello stile; il passo della margherita di Benedetta
+   * va dopo la stesura, perché qui non c'è appretto in teglia. */
   adriano_continisio: {
     id: "adriano_continisio",
     process_profile: {
@@ -505,7 +508,6 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     author: "Adriano Continisio",
     year_codified: 2009,
     base_style_id: "teglia_in_giornata",
-    base_topping_concept_id: "margherita_teglia_croccante",
     parameter_overrides: {
       hydration_pct: 80,
       flour_w: 250,
@@ -572,6 +574,19 @@ export function getInterpretationsForStyle(styleId: string): Interpretation[] {
     (i) => (i.base_style_id === styleId || i.compatible_style_ids?.includes(styleId))
       && !(style && isBlockedByStyle(i, style)),
   );
+}
+
+/** B3 (decisione 5 di Matteo, 31/10/2026): una versione dello stile con la
+ *  fonte verificata mostra che la sua farina regge la sua idratazione. Vero se
+ *  una di queste ha idratazione almeno pari e W al massimo pari: allora i
+ *  suggerimenti W↔idratazione di Crea non dicono il contrario (Adriano
+ *  Continisio, 80 % con W 250, contro «W consigliato ≥ 300»). */
+export function verifiedSourceBacksHydrationW(styleId: string, hydration: number, flourW: number): boolean {
+  return getInterpretationsForStyle(styleId).some((i) => {
+    const o = i.parameter_overrides;
+    return i.source_status === "verified" && o?.hydration_pct !== undefined && o.flour_w !== undefined
+      && hydration <= o.hydration_pct + 1e-6 && flourW >= o.flour_w - 1e-6;
+  });
 }
 
 /** G1b-WP-01 (S03-A-14): le versioni d'autore del pannello stile, con la

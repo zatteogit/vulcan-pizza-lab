@@ -275,10 +275,29 @@ describe("D-068: lievito della fonte e «luogo caldo»", () => {
   });
 });
 
-/* D-070 (tranche B3, scelta dell'agente da confermare): una versione d'autore
- * può dichiarare le sue fasi (ore e temperatura ciascuna) e la sua cottura.
- * Le fasi valgono solo con le ore, la temperatura della puntata e il
- * pre-fermento della fonte; cambiati quelli, il motore torna alle quote. */
+/* D-070 (tranche B3, decisioni di Matteo del 30/10/2026): una versione
+ * d'autore può dichiarare le sue fasi (ore e temperatura ciascuna) e la sua
+ * cottura. Le fasi valgono solo con le ore, la temperatura della puntata e il
+ * pre-fermento della fonte; cambiati quelli, il motore torna alle quote.
+ * Decisione 3: anche la dose di lievito della fonte (D-068) cade se il
+ * pre-fermento si toglie, si aggiunge o cambia tipo o quota. */
+describe("D-070: dose della fonte solo col pre-fermento della fonte", () => {
+  const sourceYeast = { type: "fresh" as const, pct: 0.5, hours: 10.5, temp_c: 22, pre_ferment: true };
+  const options = { customFermentationHours: 10.5, customFermentationTempC: 22, usePreFerment: true, sourceYeast };
+  it("col pre-fermento della fonte la dose è quella scritta", () => {
+    expect(generateRecipe(STYLES_DB.teglia_in_giornata, homeKitchen, options).yeast_source?.source_pct).toBe(0.5);
+  });
+  it("tolto o cambiato il pre-fermento torna la dose del modello", () => {
+    for (const change of [{ usePreFerment: false }, { preFerment: { type: "biga" as const } }, { preFerment: { flourPct: 25 } }]) {
+      expect(generateRecipe(STYLES_DB.teglia_in_giornata, homeKitchen, { ...options, ...change }).yeast_source, JSON.stringify(change)).toBeUndefined();
+    }
+    // Una fonte senza pre-fermento: aggiungerlo fa cadere la dose.
+    const direct = { ...options, usePreFerment: false, sourceYeast: { ...sourceYeast, pre_ferment: false } };
+    expect(generateRecipe(STYLES_DB.teglia_in_giornata, homeKitchen, direct).yeast_source?.source_pct).toBe(0.5);
+    expect(generateRecipe(STYLES_DB.teglia_in_giornata, homeKitchen, { ...direct, usePreFerment: true }).yeast_source).toBeUndefined();
+  });
+});
+
 describe("D-070: fasi esplicite solo con i tempi della fonte", () => {
   const profile = { id: "guardia", source_url: "https://example.org",
     phases: { preferment: { hours: 3, temp_c: 20 }, bulk: { hours: 6, temp_c: 22 }, proof: { hours: 1.5, temp_c: 28 } } };

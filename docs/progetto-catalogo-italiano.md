@@ -1069,8 +1069,8 @@ utente in giapponese 561,3 → 562,5 kB (limite 570); CSS invariato (72,4 kB).
 
 ### 9.12 Stato di B3 (31/10/2026)
 
-**Fatto** (ramo `tranche-b3`, decisione D-070 in `docs/autorialita.md`, da
-confermare). Fonte riletta il 31/10/2026: il raddoppio a 28 °C avviene **nei
+**Fatto** (ramo `tranche-b3`, poi `b3-final` con le decisioni di Matteo del
+30/10, in fondo; D-070 in `docs/autorialita.md`). Fonte riletta il 31/10/2026: il raddoppio a 28 °C avviene **nei
 contenitori**, poi i pezzi si stendono su semola e vanno nelle teglie non
 unte (non c'è appretto in teglia); per una pizza alta l'autore consiglia
 invece le teglie unte e il raddoppio in teglia (variante, non usata).
@@ -1099,8 +1099,11 @@ phases: {
   la temperatura della ricetta è quella della puntata e il pre-fermento c'è
   come nella fonte (`declaredPhases`). Cambiati questi in Crea o nell'MCP,
   tornano le quote del modello (D-050), come il lievito della fonte (D-068).
-  Spegnendo solo il pre-fermento la dose della fonte resta (D-068 guarda ore e
-  temperatura): da decidere (sotto).
+  Il pre-fermento è «come nella fonte» se c'è (o manca) come nella versione e
+  ha il tipo e la quota della versione: tolto, aggiunto o cambiato di tipo o
+  quota, cadono le fasi **e** la dose di lievito della fonte (decisione 3 di
+  Matteo, estensione di D-068: `SourceYeast.pre_ferment`, guardia in
+  decision-guards.test.ts).
 - **Coerenza.** Timeline con le durate della fonte e `temp_c` su ogni fase
   (testi «a 20 °C», «a 22 °C», «a 28 °C» in UI e MCP; nuovo testo d'appretto
   `timelineLabels.proof_declared`, perché quello standard dice «a temperatura
@@ -1126,10 +1129,16 @@ croccante»). `unoiled_pan`: stesura su semola nella teglia non unta.
 Tipo `autore`, fonte **verificata**, `source_yeast` fresco 0,5 %. Sale 2 % e
 olio 5 % senza zucchero dall'impasto `adriano_continisio` della
 `IMPASTO_LIBRARY` (`impasto_ref`, §9.11). Malto facoltativo non usato (B4).
-Condimento proprio, `margherita_teglia_croccante`: pomodoro salato dopo la
-stesura, mozzarella e olio dopo 10 minuti; la fonte non dà dosi, i grammi
-sono di Vulcan (circa 0,2 g/cm², nota `topping.vulcanDoses`). La margherita
-dello stile resta quella di Benedetta.
+Nessun condimento proprio (decisione 2 di Matteo): l'utente sceglie dalla
+lista dello stile, oggi la margherita di Benedetta. Quella margherita mette la
+salsa prima dell'appretto in teglia, che Adriano non fa (l'appretto è nei
+contenitori): correzione generale nel motore, un passo del condimento
+`before_proof` va **dopo la stesura** quando la ricetta non fa l'appretto in
+teglia, con il testo `description_no_pan_proof` («…e inforna subito», 7
+lingue; test che ogni condimento `before_proof` di uno stile con una versione
+a panetti ce l'abbia). La nota della salsa «condita» (`topping.sauceSeasoning`)
+ora nomina la sua fonte («La margherita viene dalla ricetta di Benedetta
+Rossi…»), perché con Adriano «la fonte» sarebbe stata lui.
 
 Fasi: preimpasto 3 h a 20 °C (fonte); puntata 6 h a 22 °C («a temperatura
 ambiente» fino alle 16 con l'impasto verso le 10: lettura di Vulcan,
@@ -1171,28 +1180,37 @@ Invariata: parte dal riferimento (Benedetta) entro le tolleranze; per tutti i
 livelli resta nello stile (77 %, W 280, 6 h a 22 °C col forno di casa; test).
 «Ottimizza per me» partendo da Adriano segue la regola generale: per il
 principiante il tetto di livello porta l'acqua al 68 % (fuori dai 75–82 %
-dello stile), 12 h senza preimpasto.
+dello stile), 12 h senza preimpasto. **Non cambiato** (punto 4 qui sotto): la
+regola generale sposterebbe proposte di stili esistenti.
 
 #### MCP e voce
 
 MCP 1.6.0: `generate_recipe` con `interpretation_id: "adriano_continisio"`
 restituisce `declared_phases` (null = quote del modello), `temp_c` sui passi
 delle fasi, cottura 250 °C × 870 s, `pre_ferment` 50 % con `maturation_minutes`
-180, il condimento della versione e le note; la guida (`agent/mcp-guide.ts`)
+180, la margherita dello stile (dopo la stesura) e le note; la guida (`agent/mcp-guide.ts`)
 spiega come presentarle. La voce legge la proposta per lo stile, non le
 versioni: invariata.
 
 #### Cosa vede l'utente (prova nel browser, `vite preview`, forno di casa 250 °C)
 
 - **`/recipe/teglia_in_giornata`, versione Adriano** (it ed en-GB, 390 e
-  1280 px): «Ispirata a Adriano Continisio», tre note (22 °C «ambiente», ore
-  stimate, dosi del condimento), 80 %, W 250–330, 10 h 30 ambiente, forno
+  1280 px): «Ispirata ad Adriano Continisio» (dopo le decisioni di Matteo;
+  prima «Ispirata a…»), tre note (22 °C «ambiente», ore stimate, la
+  margherita dalla ricetta di Benedetta Rossi), caratteristica «Teglia di
+  casa, unta o con la semola», 80 %, W 250–330, 10 h 30 ambiente, forno
   250 °C, 89/100 con «Impasto esigente»; teglia 30×35 da 562 g; poolish
   150 + 150 g con tutto il lievito per una teglia. Procedimento: prefermento
   3 h, impasto, puntata 6 h a 22 °C, staglio, appretto 1 h 30 a 28 °C (gli
   ultimi 30 minuti col preriscaldo a 250 °C), stesura su semola nella teglia
-  non unta, pomodoro poi mozzarella dopo 10 minuti, cottura «parte bassa, poi
-  parte alta».
+  non unta, salsa «…e inforna subito» con la mozzarella negli ultimi 5
+  minuti, cottura «parte bassa, poi parte alta» (`b3-final`, it ed en-GB a
+  390 px).
+- **Crea, `b3-final`** (principiante, poi livello 3): «Genera con questa
+  versione» apre «Ispirata ad Adriano Continisio» a 250 °C, 89/100; in
+  «Personalizza» col livello 3, 80 % e W 250 senza «W consigliato ≥ 300».
+  Per chi comincia la card non offre «Adatta alla mia cucina» (nessun margine
+  sopra 89), quindi il 68 % del punto 4 non si vede da qui.
 - **Crea**: la card su misura resta 97; nel pannello, con i dettagli tecnici,
   «Versioni d'autore: Benedetta Rossi … Adriano Continisio, Ispirata alla
   pizza in teglia croccante…, Con accortezza», tecnica, storia e fonte;
@@ -1204,20 +1222,40 @@ versioni: invariata.
 (limite 570); CSS 72,6 kB invariato (limite 74). `LOCALE_BUNDLE_REV` 59.
 Margine per la B4: 7,6 kB di codice e 3,7 kB per utente.
 
-#### Da decidere con Matteo
+#### Decisioni di Matteo (30/10) e cosa è cambiato (`b3-final`)
 
-1. Le durate che la fonte non dice: puntata 6 h a 22 °C e appretto 1 h 30
-   (dichiarate come stime). In alternativa un intervallo («al raddoppio,
-   1–2 h») che oggi il motore non sa esprimere.
-2. Il condimento di Adriano con dosi di Vulcan (0,2 g/cm²), o la margherita di
-   Benedetta (che però mette la salsa prima di un appretto in teglia che qui
-   non c'è).
-3. Spegnere il preimpasto lascia la dose della fonte (D-068 guarda solo ore e
-   temperatura): estendere la regola al pre-fermento?
-4. «Ottimizza per me» dalla versione di Adriano per chi comincia scende al
-   68 % (regola generale del tetto di livello): vincolarla allo stile come la
-   proposta su misura?
-5. Testi dello stile che valgono solo per Benedetta e si vedono anche con
-   Adriano: caratteristica «Teglia di casa ben unta», suggerimento «W
-   consigliato ≥ 300» con l'80 % (Adriano usa W 250). E l'etichetta
-   «Ispirata a Adriano…» (il modello del testo non fa «ad» davanti a vocale).
+1. **Durate stimate** (puntata 6 h a 22 °C, appretto 1 h 30 a 28 °C),
+   dichiarate: approvate, invariate.
+2. **Nessun condimento proprio per Adriano**: tolti
+   `margherita_teglia_croccante` (con le traduzioni e la nota
+   `topping.vulcanDoses`) e il collegamento della versione. Il procedimento
+   con la margherita dello stile: stesura su semola nella teglia non unta,
+   salsa «…e inforna subito», cottura dal basso all'alto, mozzarella negli
+   ultimi 5 minuti (sopra, «Versione»).
+3. **Lievito della fonte legato al pre-fermento**: tolto, aggiunto o cambiato
+   (tipo o quota) torna la dose del modello, come per ore e temperatura (test
+   in `teglia-in-giornata-adriano.test.ts` e guardia D-070).
+4. **«Ottimizza per me» sempre dentro lo stile: non applicato, da decidere.**
+   La regola generale (il tetto d'idratazione per livello non scende sotto il
+   minimo dello stile) cambia proposte di stili esistenti. Misura su 30 stili
+   × 4 livelli × 3 cucine (casa 24 h, casa 72 h, legna), proposta su misura e
+   «Ottimizza per me» dal riferimento, da ogni versione e da ogni versione
+   d'autore (1.380 ricette): **114 cambiano**, 111 in 8 stili esistenti
+   (teglia romana 30, pala romana 18, pinsa 15, baciata 15, spaccata 15,
+   Detroit 9, focaccia barese 6, canotto 3) e le 3 di Adriano; 108 per chi
+   comincia e 6 per il livello 2 (versioni con intervalli propri: `teglia_alta`,
+   `spaccata_bonci`). Esempi, forno di casa, livello 1: teglia romana su
+   misura 67,9 → 74,9 %, pala romana 68 → 75 %, pinsa 68 → 72 %, baciata e
+   spaccata 67,7 → 74,7 %, Detroit e focaccia barese 68 → 70 %; Adriano 68 →
+   75 % (ma resta senza preimpasto, 12 h). Le alternative: (a) la regola
+   generale con questi cambi dichiarati; (b) solo per le versioni d'autore
+   (tipo `autore`), che però non è una regola generale; (c) lasciare il tetto
+   com'è e dire nella proposta che esce dallo stile.
+5. **Testi veri per ogni versione**: caratteristica «Teglia di casa, unta o
+   con la semola» (7 lingue); i due suggerimenti W↔idratazione di Crea
+   («W consigliato ≥ …», «idratazione massima ~…») non compaiono se una
+   versione dello stile con la fonte verificata ha almeno quell'acqua con al
+   massimo quella W (`verifiedSourceBacksHydrationW`: Adriano, 80 % con
+   W 250); etichetta «Ispirata ad Adriano Continisio» e «Riferimento, ispirata
+   ad …» davanti a vocale (regola generale `startsWithVowel`; in francese
+   «Inspirée d’…», le altre lingue non cambiano).

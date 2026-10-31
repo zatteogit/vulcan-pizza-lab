@@ -156,7 +156,7 @@ interface ToppingPrepStep {
 
 /** Punto della timeline dove inserire uno step di assemblaggio. */
 export type TimelineInsertPoint =
-  | "before_proof"       // dopo la stesura in teglia, prima dell'appretto
+  | "before_proof"       // dopo la stesura in teglia, prima dell'appretto (senza appretto in teglia: dopo la stesura, B3)
   | "after_shape"        // dopo stesura, prima della cottura
   | "after_stack"        // tra sovrapposizione e cottura (per layout stacked)
   | "after_fill_internal" // dopo ripieno+sigillatura (per closed_stuffed)
@@ -174,6 +174,11 @@ export interface ToppingAssemblyStep {
    *  cottura effettiva); `description` vale per quelle lunghe. Il motore ne
    *  sceglie uno solo (assemblyStepDescription), niente «se la cottura…». */
   description_short_bake?: string;
+  /** B3 (decisione 2 di Matteo, 31/10/2026): testo per quando la ricetta non
+   *  fa l'appretto in teglia (una versione d'autore che lo fa a panetti, come
+   *  Adriano Continisio). Il motore sposta allora un passo `before_proof` dopo
+   *  la stesura e usa questo testo, senza «lascialo lievitare in teglia». */
+  description_no_pan_proof?: string;
   insert_at: TimelineInsertPoint;
   duration_minutes: number;
   /** Se true, sostituisce lo step generico (es. "Farcitura" generica) al posto di aggiungersi. */
@@ -1065,7 +1070,9 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "margherita_teglia_in_giornata",
     concept_ref: "margherita",
     preferred_for_styles: ["teglia_in_giornata"],
-    source_note: { key: "topping.sauceSeasoning", fallback: METHOD_MESSAGES_IT["topping.sauceSeasoning"], params: { app: BRAND.name } },
+    // B3: la nota nomina la fonte del condimento, perché si vede anche con le
+    // versioni d'autore dello stile che non hanno una margherita propria.
+    source_note: { key: "topping.sauceSeasoning", fallback: METHOD_MESSAGES_IT["topping.sauceSeasoning"], params: { app: BRAND.name, author: "Benedetta Rossi" } },
     ingredients: [
       { name: "Salsa di pomodoro condita (pomodoro, olio, sale)", components: ["pomodoro", "olio", "sale"], amount: { value: 300, unit: "g" }, notes: "tiepida" },
       { name: "Mozzarella a dadini", amount: { value: 250, unit: "g" }, notes: "negli ultimi 5 minuti di cottura" },
@@ -1074,34 +1081,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       id: "spread_margherita_teglia_in_giornata",
       title: "Salsa ora, mozzarella a fine cottura",
       description: "Distribuisci la salsa tiepida sull'impasto appena steso, fino ai bordi, e lascialo lievitare in teglia. Inforna; negli ultimi 5 minuti di cottura apri il forno, distribuisci la mozzarella a dadini e finisci la cottura.",
+      description_no_pan_proof: "Distribuisci la salsa tiepida sull'impasto appena steso nella teglia, fino ai bordi, e inforna subito. Negli ultimi 5 minuti di cottura apri il forno, distribuisci la mozzarella a dadini e finisci la cottura.",
       insert_at: "before_proof",
-      duration_minutes: 3,
-      replaces_generic: true,
-    }],
-  },
-
-  /* Tranche B3: la margherita della versione di Adriano Continisio (stesso
-   * stile). La fonte dice «pomodoro e sale», 10 minuti in basso a 250 °C, poi
-   * mozzarella e un filo d'olio in alto per 4–5 minuti; nessuna dose: i grammi
-   * sono di Vulcan (nota `topping.vulcanDoses`), per la teglia 35×35 dello
-   * stile, circa 0,2 g/cm² di pomodoro e di mozzarella. Si condisce dopo la
-   * stesura nella teglia non unta: non c'è appretto in teglia. Niente
-   * `preferred_for_styles`: la margherita dello stile resta quella di
-   * Benedetta, questa la porta la versione (base_topping_concept_id). */
-  margherita_teglia_croccante: {
-    id: "margherita_teglia_croccante",
-    concept_ref: "margherita",
-    source_note: { key: "topping.vulcanDoses", fallback: METHOD_MESSAGES_IT["topping.vulcanDoses"], params: { app: BRAND.name } },
-    ingredients: [
-      { name: "Pomodoro con un pizzico di sale", components: ["pomodoro", "sale"], amount: { value: 250, unit: "g" } },
-      { name: "Mozzarella", amount: { value: 250, unit: "g" }, notes: "dopo 10 minuti di cottura" },
-      { name: "Olio extravergine", amount: { value: 10, unit: "ml" }, notes: "a filo, con la mozzarella" },
-    ],
-    assembly_steps: [{
-      id: "spread_margherita_teglia_croccante",
-      title: "Pomodoro ora, mozzarella dopo 10 minuti",
-      description: "Distribuisci il pomodoro salato fino ai bordi e inforna nella parte bassa del forno. Dopo 10 minuti distribuisci la mozzarella, aggiungi un filo d'olio e finisci la cottura nella parte alta per 4–5 minuti, senza bruciare la mozzarella.",
-      insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
     }],

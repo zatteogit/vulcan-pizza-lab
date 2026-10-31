@@ -366,13 +366,6 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
         "1": { name: "Mozzarella en dés", notes: "dans les 5 dernières minutes de cuisson" },
       },
     },
-    margherita_teglia_croccante: {
-      ingredients: {
-        "0": { name: "Tomate avec une pincée de sel" },
-        "1": { name: "Mozzarella", notes: "après 10 minutes de cuisson" },
-        "2": { name: "Huile d'olive vierge extra", notes: "un filet, avec la mozzarella" },
-      },
-    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2783,10 +2776,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "La sauce maintenant, la mozzarella à la fin",
       description: "Étalez la sauce tiède sur la pâte tout juste étalée, jusqu'aux bords, et laissez-la lever dans la plaque. Enfournez ; dans les 5 dernières minutes de cuisson, ouvrez le four, répartissez la mozzarella en dés et terminez la cuisson.",
-    },
-    spread_margherita_teglia_croccante: {
-      title: "La tomate maintenant, la mozzarella après 10 minutes",
-      description: "Étalez la tomate salée jusqu'aux bords et enfournez dans le bas du four. Après 10 minutes, répartissez la mozzarella, ajoutez un filet d'huile et terminez la cuisson en haut du four pendant 4 à 5 minutes, sans brûler la mozzarella.",
+      description_no_pan_proof: "Étalez la sauce tiède sur la pâte tout juste étalée dans la plaque, jusqu'aux bords, et enfournez aussitôt. Dans les 5 dernières minutes de cuisson, ouvrez le four, répartissez la mozzarella en dés et terminez la cuisson.",
     },
     spread_margherita_us: {
       title: "Garniture Margherita américaine",

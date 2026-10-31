@@ -19,7 +19,7 @@ export function localizeToppingConcept<T extends Pick<ToppingConcept, "name" | "
 export function localizeToppingRecipe(recipe: ToppingRecipe, tr?: ToppingTranslation): ToppingRecipe {
   if (!tr) return recipe;
   const t = tr.recipes[recipe.id];
-  const step = <S extends { id: string; title: string; description: string; description_short_bake?: string; tip?: { beginner: string; nerd: string } }>(s: S): S => {
+  const step = <S extends { id: string; title: string; description: string; description_short_bake?: string; description_no_pan_proof?: string; tip?: { beginner: string; nerd: string } }>(s: S): S => {
     const st = tr.steps[s.id];
     if (!st) return s;
     return {
@@ -28,6 +28,9 @@ export function localizeToppingRecipe(recipe: ToppingRecipe, tr?: ToppingTransla
       description: st.description ?? s.description,
       ...(s.description_short_bake
         ? { description_short_bake: st.description_short_bake ?? s.description_short_bake }
+        : {}),
+      ...(s.description_no_pan_proof
+        ? { description_no_pan_proof: st.description_no_pan_proof ?? s.description_no_pan_proof }
         : {}),
       tip: s.tip ? { beginner: st.tip_beginner ?? s.tip.beginner, nerd: st.tip_nerd ?? s.tip.nerd } : s.tip,
     };
@@ -55,10 +58,13 @@ export function localizeToppingStepText(
   tr?: ToppingTranslation,
   /** G3-WP-03: variante scelta dal motore (step.bake_length). */
   bake?: ToppingBakeLength,
+  /** B3: passo spostato dopo la stesura, senza appretto in teglia. */
+  variant?: "no_pan_proof",
 ): { title?: string; description?: string; tipBeginner?: string; tipNerd?: string } | null {
   const st = tr?.steps[stepId];
   if (!st) return null;
-  const description = bake === "short" && st.description_short_bake ? st.description_short_bake : st.description;
+  const description = variant === "no_pan_proof" && st.description_no_pan_proof ? st.description_no_pan_proof
+    : bake === "short" && st.description_short_bake ? st.description_short_bake : st.description;
   return { title: st.title, description, tipBeginner: st.tip_beginner, tipNerd: st.tip_nerd };
 }
 

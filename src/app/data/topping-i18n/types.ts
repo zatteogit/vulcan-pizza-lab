@@ -9,6 +9,8 @@ export interface ToppingStepTranslation {
   description?: string;
   /** G3-WP-03: testo per le cotture brevi (vedi ToppingAssemblyStep). */
   description_short_bake?: string;
+  /** B3: testo senza appretto in teglia (vedi ToppingAssemblyStep). */
+  description_no_pan_proof?: string;
   tip_beginner?: string;
   tip_nerd?: string;
 }

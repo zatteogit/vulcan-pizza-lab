@@ -40,8 +40,11 @@ export function assemblyStepBake(
 
 /** Il testo del passo per quella variante: un solo comando. */
 export function assemblyStepDescription(
-  step: { description: string; description_short_bake?: string },
+  step: { description: string; description_short_bake?: string; description_no_pan_proof?: string },
   bake: ToppingBakeLength | undefined,
+  /** B3: passo «prima dell'appretto» spostato dopo la stesura (TimelineStep.topping_variant). */
+  variant?: "no_pan_proof",
 ): string {
+  if (variant === "no_pan_proof" && step.description_no_pan_proof) return step.description_no_pan_proof;
   return bake === "short" && step.description_short_bake ? step.description_short_bake : step.description;
 }

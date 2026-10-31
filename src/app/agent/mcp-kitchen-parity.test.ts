@@ -53,7 +53,7 @@ describe("MCP kitchen → browser recipe parity", () => {
         expect(result.isError,signature.id).toBe(false);
         sameRecipe(result.structuredContent,recipeFromEntry(canonicalRecipeEntry(style,weights,signature),kitchen),signature.id);
         sameRecipe(call("generate_recipe",{...args,style_id:style.id,interpretation_id:signature.id,recipe_mode:"adapted"}).structuredContent,
-          // Come Crea: lo stile col condimento della versione (B3: Adriano ha il suo).
+          // Come Crea: lo stile col condimento della versione, se ne ha uno.
           optimizeSelectedRecipe(canonicalRecipeEntry(style,weights,signature).style,kitchen,weights,canonicalRecipeEntry(style,weights,signature).options.panConfig,null,signature.id).recipe,`${signature.id}/adapted`);
       }
     }

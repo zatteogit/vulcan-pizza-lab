@@ -494,6 +494,8 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "recipe.referenceLabel.disciplinare": "{0} 規定",
   "recipe.referenceLabel.inspired": "{0}に着想を得たレシピ",
   "recipe.referenceLabel.sourceReference": "基準・{0}にインスパイア",
+  "recipe.referenceLabel.inspiredVowel": "{0}に着想を得たレシピ",
+  "recipe.referenceLabel.sourceReferenceVowel": "基準・{0}にインスパイア",
   "recipe.referenceLabel.authorAdapt": "作り手の説明どおりのバージョンです。「{0}」であなたのキッチンに合わせると「{1}」になります。",
   "pages.explore.primaryFamily": "主な系統：{0}",
   "pages.profile.maxTemp": "最高約{0}",

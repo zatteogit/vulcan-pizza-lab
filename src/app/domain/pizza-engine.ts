@@ -764,6 +764,10 @@ export interface TimelineStep {
   /** G3-WP-03 (S09-A-13): variante del passo del condimento scelta dal motore
    *  con la cottura effettiva (basilico prima del forno o appena sfornata). */
   bake_length?: ToppingBakeLength;
+  /** B3 (decisione 2 di Matteo, 31/10/2026): passo del condimento «prima
+   *  dell'appretto» spostato dopo la stesura, perché la ricetta non fa
+   *  l'appretto in teglia: testo `description_no_pan_proof`. */
+  topping_variant?: "no_pan_proof";
   /** D-050: quante volte si ripete la cottura (una pizza o teglia alla volta);
    *  duration_minutes è già il totale. */
   rounds?: number;
@@ -2137,6 +2141,18 @@ export function generateRecipe(
     PRE_FERMENT_FLOUR_PCT.max,
     Math.max(PRE_FERMENT_FLOUR_PCT.min, preFerment?.flourPct ?? (preFerment?.type ? undefined : style.method_profile?.phases?.preferment?.flour_pct) ?? PRE_FERMENT_FLOUR_PCT[preFermentType]),
   );
+  /* D-070 (decisione 3 di Matteo, 31/10/2026): il pre-fermento è quello della
+   * versione (tipo dello stile, quota della fonte o del tipo) finché l'utente
+   * non ne cambia tipo o quota. Cambiato, le fasi della fonte cadono (tornano
+   * le quote del modello) e, più sotto, cade la dose di lievito della fonte. */
+  const versionPreFermentType = preFermentKind(style);
+  const versionPreFermentFlourPct = Math.min(PRE_FERMENT_FLOUR_PCT.max, Math.max(PRE_FERMENT_FLOUR_PCT.min,
+    style.method_profile?.phases?.preferment?.flour_pct ?? PRE_FERMENT_FLOUR_PCT[versionPreFermentType]));
+  const preFermentAsVersion = !hasPreFerment ||
+    (preFermentType === versionPreFermentType && Math.abs(preFermentFlourPct - versionPreFermentFlourPct) < 1e-6);
+  if (!preFermentAsVersion && style.method_profile?.phases) {
+    style = { ...style, method_profile: { ...style.method_profile, phases: undefined } };
+  }
 
   // Oven temperature
   let ovenTemp = Math.min(
@@ -2280,7 +2296,10 @@ export function generateRecipe(
 
   // B1 (D-068): lievito della fonte, solo con le ore e la temperatura della
   // fonte; tipo e dose sostituiscono la scelta dalla dispensa e il modello.
-  const sourceYeastApplied = sourceYeast && !style.dough.unleavened
+  // D-070 (decisione 3 di Matteo): e solo col pre-fermento della fonte.
+  const sourcePreFermentKept = sourceYeast?.pre_ferment === undefined ||
+    (sourceYeast.pre_ferment === hasPreFerment && preFermentAsVersion);
+  const sourceYeastApplied = sourceYeast && !style.dough.unleavened && sourcePreFermentKept
     ? sourceYeastUse(sourceYeast, constraints.pantry_yeasts, constraints.excluded_yeasts ?? [], fermentationHours, fermentationTempC)
     : null;
 
@@ -3646,7 +3665,7 @@ function generateTimeline(
   // Helper per iniettare assembly_steps del topping in un certo punto.
   // Restituisce true se uno step "replaces_generic" è già stato iniettato
   // (così la pipeline non aggiunge anche il suo step generico).
-  const injectToppingAt = (point: TimelineInsertPoint): boolean => {
+  const injectToppingAt = (point: TimelineInsertPoint, noPanProof = false): boolean => {
     if (!topping?.assembly_steps) return false;
     let replacedGeneric = false;
     topping.assembly_steps
@@ -3654,15 +3673,18 @@ function generateTimeline(
       .forEach((s) => {
         // G3-WP-03 (S09-A-13, D-G3-02): un solo comando per il basilico.
         const bake = assemblyStepBake(s, effectiveCookSec);
+        // B3: senza appretto in teglia, il testo senza «lascialo lievitare».
+        const variant = noPanProof && s.description_no_pan_proof ? "no_pan_proof" as const : undefined;
         steps.push({
           id: s.id,
           title: s.title,
-          description: assemblyStepDescription(s, bake),
+          description: assemblyStepDescription(s, bake, variant),
           duration_minutes: s.duration_minutes,
           icon: "chef-hat",
           timing_label: `${s.duration_minutes} min`,
           tip: s.tip,
           ...(bake ? { bake_length: bake } : {}),
+          ...(variant ? { topping_variant: variant } : {}),
         });
         if (s.replaces_generic) replacedGeneric = true;
       });
@@ -3914,7 +3936,12 @@ function generateTimeline(
       ),
     );
   }
-  const toppingBeforeProof = injectToppingAt("before_proof");
+  /* B3 (decisione 2 di Matteo, 31/10/2026): un condimento «prima
+   * dell'appretto» si stende sull'impasto già nella teglia, prima che vi
+   * lieviti. Se la ricetta fa l'appretto a panetti (una versione d'autore con
+   * `proof_in_pan` falso, come Adriano Continisio con la margherita dello
+   * stile) il passo va dopo la stesura, col suo testo senza lievitazione. */
+  const toppingBeforeProof = proofInPan ? injectToppingAt("before_proof") : false;
   const proofMessage = style.method_profile?.id === "apiter_teglia" ? em("timeline.proof.apiter", METHOD_MESSAGES_IT["timeline.proof.apiter"]) : undefined;
   const proofTempC = declared?.proof.temp_c ?? Math.max(fermentTemp, PROOF_MIN_TEMP_C);
   if (proofStepMinutes > 0) {
@@ -4051,7 +4078,9 @@ function generateTimeline(
   // I pre_prep "hours_before_start" (marinature ore prima) restano schedulati.
 
   // Topping step in after_shape (es. condimento margherita classica)
-  const toppingReplacesGenericTop = injectToppingAt("after_shape");
+  const toppingAfterShape = injectToppingAt("after_shape");
+  const toppingMovedAfterShape = !proofInPan && injectToppingAt("before_proof", true);
+  const toppingReplacesGenericTop = toppingAfterShape || toppingMovedAfterShape;
 
   // ─── FARCITURA / ASSEMBLAGGIO (layout-aware) ───
   if (layout.type === "stacked" && layout.interlayer === "oil_brush") {

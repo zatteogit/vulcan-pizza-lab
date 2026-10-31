@@ -139,9 +139,12 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *  58 → tranche B2, seguito (decisioni di Matteo del 30/10): famiglia «Di
  *       casa» (families.casa), nota sulla salsa condita (topping.sauceSeasoning).
  *  59 → tranche B3: fasi esplicite e Adriano Continisio (timelineLabels.
- *       proof_declared, fermentation.roomTemp/hoursAssumed, topping.vulcanDoses,
- *       timeline.shape.unoiledPan, timeline.bake.lowThenHigh; toppingI18n e
- *       inspirationI18n della versione).
+ *       proof_declared, fermentation.roomTemp/hoursAssumed,
+ *       timeline.shape.unoiledPan, timeline.bake.lowThenHigh; inspirationI18n
+ *       della versione); con le decisioni di Matteo: nota della salsa con la
+ *       sua fonte (topping.sauceSeasoning), caratteristica della teglia in
+ *       giornata, passo della margherita senza appretto in teglia
+ *       (toppingI18n, description_no_pan_proof).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
 export const LOCALE_BUNDLE_REV = 59;

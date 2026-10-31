@@ -54,6 +54,13 @@ describe.each(Object.entries(LOCALES))("condimenti tradotti · %s", (_locale, tr
     expect(missing).toEqual([]);
   });
 
+  it("i testi alternativi dei passi sono tradotti (B3: senza appretto in teglia)", () => {
+    const missing = recipes.flatMap((r) => r.assembly_steps ?? [])
+      .filter((s) => s.description_no_pan_proof && !tr.steps[s.id]?.description_no_pan_proof)
+      .map((s) => s.id);
+    expect(missing).toEqual([]);
+  });
+
   it("nessuna voce orfana (id che la libreria non ha più)", () => {
     const steps = new Set(stepIds);
     const orphans = [

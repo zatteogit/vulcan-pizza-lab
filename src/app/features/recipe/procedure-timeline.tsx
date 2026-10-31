@@ -152,7 +152,7 @@ export function ProcedureTimeline({
                   displayStep = {
                     ...step,
                     title: activeStep.title,
-                    description: assemblyStepDescription(activeStep, bake),
+                    description: assemblyStepDescription(activeStep, bake, step.topping_variant),
                     tip: activeStep.tip,
                     bake_length: bake,
                   };

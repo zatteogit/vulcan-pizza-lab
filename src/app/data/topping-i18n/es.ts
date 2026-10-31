@@ -366,13 +366,6 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
         "1": { name: "Mozzarella en dados", notes: "en los últimos 5 minutos de horneado" },
       },
     },
-    margherita_teglia_croccante: {
-      ingredients: {
-        "0": { name: "Tomate con una pizca de sal" },
-        "1": { name: "Mozzarella", notes: "tras 10 minutos de horneado" },
-        "2": { name: "Aceite de oliva virgen extra", notes: "un chorrito, con la mozzarella" },
-      },
-    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2783,10 +2776,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "La salsa ahora, la mozzarella al final",
       description: "Reparte la salsa tibia sobre la masa recién extendida, hasta los bordes, y déjala levar en la bandeja. Hornea; en los últimos 5 minutos abre el horno, reparte la mozzarella en dados y termina la cocción.",
-    },
-    spread_margherita_teglia_croccante: {
-      title: "Tomate ahora, mozzarella a los 10 minutos",
-      description: "Reparte el tomate salado hasta los bordes y hornea en la parte baja del horno. A los 10 minutos reparte la mozzarella, añade un chorrito de aceite y termina el horneado en la parte alta durante 4–5 minutos, sin quemar la mozzarella.",
+      description_no_pan_proof: "Reparte la salsa tibia sobre la masa recién extendida en la bandeja, hasta los bordes, y hornea enseguida. En los últimos 5 minutos abre el horno, reparte la mozzarella en dados y termina la cocción.",
     },
     spread_margherita_us: {
       title: "Aliño Margherita americana",

@@ -5,9 +5,12 @@ import {
 } from "../domain/pizza-engine";
 import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { SKILL_WARNING_KEYS } from "../domain/verdict-summary";
-import { getAllInterpretations, getInterpretationById, getInterpretationsForStyle } from "../data/interpretation-library";
+import { getAllInterpretations, getInterpretationById, getInterpretationsForStyle, verifiedSourceBacksHydrationW } from "../data/interpretation-library";
+import { referenceEyebrow, startsWithVowel } from "../features/recipe/reference-label";
+import { UI_MESSAGES_FR } from "../i18n/ui-messages.fr";
+import { UI_MESSAGES_IT } from "../i18n/ui-messages.it";
 import { getImpasto } from "../data/impasto-library";
-import { getToppingForStyle } from "../data/topping-library";
+import { getRecipesByAuthenticity } from "../data/topping-library";
 import { handleMcpMessage } from "../agent/mcp-server";
 import { localizeStep } from "../features/recipe/recipe-output-format";
 import { recipeCardSignals } from "../features/recipe/recipe-card-signals";
@@ -90,7 +93,10 @@ describe("dosi della fonte (3 teglie 30×35, forno di casa a 250 °C)", () => {
     expect(Math.abs(split.prefermentWaterG - 450)).toBeLessThanOrEqual(1);
     // Cottura della versione, non l'ideale dello stile (210 °C, Benedetta).
     expect([r.oven_temp_c, r.cook_time_sec]).toEqual([250, 870]);
-    expect(r.source_notes?.map((n) => n.key)).toEqual(["fermentation.roomTemp", "fermentation.hoursAssumed", "topping.vulcanDoses"]);
+    // Nessun condimento proprio (decisione 2 di Matteo): la margherita dello
+    // stile, che dichiara la sua fonte (Benedetta Rossi).
+    expect(r.source_notes?.map((n) => n.key)).toEqual(["fermentation.roomTemp", "fermentation.hoursAssumed", "topping.sauceSeasoning"]);
+    expect(r.source_notes?.[2].params).toMatchObject({ author: "Benedetta Rossi" });
     expect(r.verdict.outcome).not.toBe("not_feasible");
   });
 
@@ -131,8 +137,8 @@ describe("fasi esplicite nella timeline", () => {
     // Stesura nella teglia non unta, poi il condimento, poi la cottura dal basso all'alto.
     const shape = r.timeline.find((s) => s.id === "shape")!;
     expect([shape.variant, shape.msg?.description?.[0]?.key]).toEqual(["unoiled", "timeline.shape.unoiledPan"]);
-    expect(ids.indexOf("shape")).toBeLessThan(ids.indexOf("spread_margherita_teglia_croccante"));
-    expect(ids.indexOf("spread_margherita_teglia_croccante")).toBeLessThan(ids.indexOf("bake"));
+    expect(ids.indexOf("shape")).toBeLessThan(ids.indexOf("spread_margherita_teglia_in_giornata"));
+    expect(ids.indexOf("spread_margherita_teglia_in_giornata")).toBeLessThan(ids.indexOf("bake"));
     expect(r.timeline.find((s) => s.id === "bake")?.msg?.description?.map((m) => m.key)).toContain("timeline.bake.lowThenHigh");
   });
 
@@ -147,13 +153,15 @@ describe("fasi esplicite nella timeline", () => {
     expect(r.yeast_source!.model_pct).toBeLessThan(0.5);
   });
 
-  it("cambiati ore, temperatura o pre-fermento tornano le quote del modello (e, con ore e temperatura, la sua dose)", () => {
+  it("cambiati ore, temperatura o pre-fermento tornano le quote e la dose del modello", () => {
     const e = entry();
-    for (const change of [{ customFermentationHours: 8 }, { customFermentationTempC: 24 }, { usePreFerment: false }]) {
+    // D-070 (decisione 3 di Matteo, estensione di D-068): anche il pre-fermento
+    // tolto o cambiato (tipo o quota) fa cadere la dose della fonte.
+    for (const change of [{ customFermentationHours: 8 }, { customFermentationTempC: 24 }, { usePreFerment: false },
+      { preFerment: { type: "biga" as const } }, { preFerment: { flourPct: 30 } }]) {
       const r = generateRecipe(e.style, home, { ...e.options, ...change });
       expect(r.declared_phases, JSON.stringify(change)).toBeUndefined();
-      // D-068: la dose della fonte segue ore e temperatura; il solo pre-fermento spento la lascia.
-      if (!("usePreFerment" in change)) expect(r.yeast_source, JSON.stringify(change)).toBeUndefined();
+      expect(r.yeast_source, JSON.stringify(change)).toBeUndefined();
       expect(r.timeline.some((s) => s.temp_c !== undefined), JSON.stringify(change)).toBe(false);
       expect(r.source_notes?.map((n) => n.key) ?? [], JSON.stringify(change)).not.toContain("fermentation.roomTemp");
     }
@@ -231,17 +239,72 @@ describe("MCP", () => {
     expect([data.oven_temp_c, data.cook_time_sec]).toEqual([250, 870]);
     expect(data.pre_ferment).toMatchObject({ type: "poolish", flour_pct: 50, maturation_minutes: 180 });
     expect(data.yeast_source).toMatchObject({ source_type: "fresh", source_pct: 0.5 });
-    expect(data.topping.id).toBe("margherita_teglia_croccante");
+    expect(data.topping.id).toBe("margherita_teglia_in_giornata");
     // Con le ore cambiate: niente fasi della fonte.
     expect(call({ style_id: "teglia_in_giornata", interpretation_id: "adriano_continisio", oven_type: "home", oven_max_temp_c: 250, fermentation_hours: 8 }).declared_phases).toBeNull();
   });
 });
 
-describe("condimento della versione", () => {
-  it("margherita con dosi di Vulcan, dopo la stesura; la margherita dello stile resta quella di Benedetta", () => {
-    const own = getToppingForStyle("margherita_teglia_croccante", style)!;
-    expect(own.assembly_steps?.[0].insert_at).toBe("after_shape");
-    expect(own.source_note?.key).toBe("topping.vulcanDoses");
-    expect(getToppingForStyle("margherita", style)?.id).toBe("margherita_teglia_in_giornata");
+describe("condimento: quelli dello stile (decisione 2 di Matteo, 31/10/2026)", () => {
+  it("nessun condimento proprio: la versione apre la margherita dello stile", () => {
+    expect(adriano.base_topping_concept_id).toBeUndefined();
+    expect(entry().topping).toBe("margherita_teglia_in_giornata");
+  });
+
+  it("senza appretto in teglia la salsa va dopo la stesura e il passo non dice di lievitare", () => {
+    const r = recipe();
+    const ids = r.timeline.map((s) => s.id);
+    const spread = r.timeline.find((s) => s.id === "spread_margherita_teglia_in_giornata")!;
+    expect(ids.indexOf("proof")).toBeLessThan(ids.indexOf("shape"));
+    expect(ids.indexOf("shape") + 1).toBe(ids.indexOf("spread_margherita_teglia_in_giornata"));
+    expect(spread.topping_variant).toBe("no_pan_proof");
+    expect(spread.description).not.toMatch(/lievitare/);
+    const en = { ...IT_LOCALE, ...EN_LOCALE } as CmsContent;
+    expect(localizeStep(spread, r, IT_LOCALE).description).toMatch(/inforna subito/);
+    expect(localizeStep(spread, r, en).description).not.toMatch(/rise/);
+    expect(localizeStep(spread, r, en).description).toMatch(/bake straight away/);
+    // Il riferimento (Benedetta, appretto in teglia) resta com'era: salsa, poi l'appretto.
+    const ref = recipeFromEntry(canonicalRecipeEntry(style), home);
+    const refIds = ref.timeline.map((s) => s.id);
+    expect(refIds.indexOf("spread_margherita_teglia_in_giornata")).toBeLessThan(refIds.indexOf("preheat"));
+    expect(refIds.indexOf("shape")).toBeLessThan(refIds.indexOf("spread_margherita_teglia_in_giornata"));
+    expect(ref.timeline.find((s) => s.id === "spread_margherita_teglia_in_giornata")?.topping_variant).toBeUndefined();
+  });
+
+  it("ogni condimento «prima dell'appretto» di uno stile ha il testo senza appretto in teglia, se una sua versione lo fa a panetti", () => {
+    for (const it of getAllInterpretations().filter((i) => i.process_profile?.proof_in_pan === false)) {
+      const base = STYLES_DB[it.base_style_id];
+      if (!base.proof_in_pan) continue;
+      for (const { recipe: topping } of getRecipesByAuthenticity(base)) {
+        for (const step of topping.assembly_steps?.filter((s) => s.insert_at === "before_proof") ?? []) {
+          expect(step.description_no_pan_proof, `${it.id} · ${topping.id} · ${step.id}`).toBeDefined();
+        }
+      }
+    }
+  });
+});
+
+describe("testi che valgono anche per Adriano (decisione 5 di Matteo, 31/10/2026)", () => {
+  it("«Ispirata ad Adriano Continisio»: «ad» davanti a vocale in italiano, «d’» in francese", () => {
+    const label = referenceEyebrow({ styleId: style.id, tailored: false, tailoredLabel: "Su misura", referenceLabel: "Riferimento",
+      interpretation: adriano, version: null, adaptedToOven: false });
+    expect(label).toBe("Ispirata ad Adriano Continisio");
+    expect([startsWithVowel("Adriano"), startsWithVowel("Èlia"), startsWithVowel("Benedetta"), startsWithVowel("Dekracap")]).toEqual([true, true, false, false]);
+    expect(UI_MESSAGES_IT["recipe.referenceLabel.sourceReferenceVowel"]).toBe("Riferimento, ispirata ad {0}");
+    expect(UI_MESSAGES_FR["recipe.referenceLabel.inspiredVowel"]).toBe("Inspirée d’{0}");
+    expect(UI_MESSAGES_FR["recipe.referenceLabel.sourceReferenceVowel"]).toBe("Référence, inspirée d’{0}");
+  });
+
+  it("la caratteristica dello stile vale anche per la teglia non unta", () => {
+    expect(style.key_characteristics).not.toContain("Teglia di casa ben unta");
+    expect(style.key_characteristics).toContain("Teglia di casa, unta o con la semola");
+  });
+
+  it("80 % con W 250 è retto dalla fonte verificata: niente «W consigliato ≥ 300»", () => {
+    expect(verifiedSourceBacksHydrationW(style.id, 80, 250)).toBe(true);
+    expect(verifiedSourceBacksHydrationW(style.id, 78, 260)).toBe(true);
+    // Più acqua della fonte, o una farina più debole: il suggerimento resta.
+    expect(verifiedSourceBacksHydrationW(style.id, 82, 250)).toBe(false);
+    expect(verifiedSourceBacksHydrationW("napoletana_stg", 60, 200)).toBe(false);
   });
 });

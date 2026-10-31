@@ -413,7 +413,7 @@ function localizeKeyedStep(
     };
   }
   // Passo di un condimento (assembly / pre_prep): si riconosce dall'id.
-  const topping = localizeToppingStepText(step.id, toppingTr, step.bake_length);
+  const topping = localizeToppingStepText(step.id, toppingTr, step.bake_length, step.topping_variant);
   if (topping) {
     return {
       title: topping.title ?? step.title,

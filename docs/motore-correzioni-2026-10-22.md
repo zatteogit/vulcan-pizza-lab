@@ -726,6 +726,29 @@ Adriano; nessuno stile del catalogo li ha, test):
 - **Note della fonte**: `fermentation.roomTemp` (fase con `temp_assumed`) e
   `fermentation.hoursAssumed` (fase con `hours_assumed`).
 
+Seguito con le decisioni di Matteo (ramo `b3-final`, §9.12):
+
+- **Pre-fermento della fonte** (decisione 3). `generateRecipe` confronta il
+  pre-fermento della ricetta con quello della versione (presenza, tipo
+  `preFermentKind`, quota della fonte o del tipo). Diverso: lo stile perde
+  `method_profile.phases` per quella ricetta (tornano le quote) e la dose di
+  `sourceYeast` non vale più (`SourceYeast.pre_ferment`, scritto da
+  `interpretationEngineOptions`). Prima: il pre-fermento spento lasciava la
+  dose della fonte (0,5 % di fresco) su un impasto diretto di 10 h 30; ora
+  quella del modello.
+- **Condimento «prima dell'appretto» senza appretto in teglia** (decisione 2).
+  Con `proof_in_pan` falso (Adriano) un passo `before_proof` andava fra lo
+  staglio e l'appretto nei contenitori, cioè sui panetti, col testo «lascialo
+  lievitare in teglia». Ora va subito dopo la stesura
+  (`injectToppingAt("before_proof", true)`) con `description_no_pan_proof` e
+  `topping_variant: "no_pan_proof"` (UI e traduzioni scelgono lo stesso
+  testo). Gli stili con l'appretto in teglia non cambiano (golden e preset
+  identici).
+
+Misure: `recipes.golden.json` e le righe esistenti di
+`preset-numbers.regression.json` identiche; le tre righe di Adriano invariate
+(stessi minuti: la margherita dello stile ha anch'essa un passo di 3 minuti).
+
 Misure: `preset-numbers.regression.json` ha solo le tre righe nuove di
 Adriano (casa, solo secco, legna), nessun numero cambiato; `recipes.golden.json`
 identico; `mcp-kitchen-parity`, `recipe-entry` e i test di proprietà verdi.

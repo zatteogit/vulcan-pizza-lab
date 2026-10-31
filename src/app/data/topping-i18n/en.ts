@@ -345,13 +345,6 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
         "1": { name: "Diced mozzarella", notes: "in the last 5 minutes of baking" },
       },
     },
-    margherita_teglia_croccante: {
-      ingredients: {
-        "0": { name: "Tomato with a pinch of salt" },
-        "1": { name: "Mozzarella", notes: "after 10 minutes of baking" },
-        "2": { name: "Extra-virgin olive oil", notes: "a drizzle, with the mozzarella" },
-      },
-    },
     margherita_americana: {
       ingredients: {
         "0": { name: "Tomato sauce (tomato passata, oregano, sugar, salt)" },
@@ -1550,10 +1543,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "Sauce now, mozzarella at the end",
       description: "Spread the warm sauce over the freshly stretched dough, right to the edges, and let it rise in the tray. Bake; in the last 5 minutes of baking, open the oven, scatter the diced mozzarella and finish baking.",
-    },
-    spread_margherita_teglia_croccante: {
-      title: "Tomato now, mozzarella after 10 minutes",
-      description: "Spread the salted tomato right to the edges and bake on the bottom of the oven. After 10 minutes scatter the mozzarella, add a drizzle of oil and finish baking at the top of the oven for 4–5 minutes, without burning the mozzarella.",
+      description_no_pan_proof: "Spread the warm sauce over the dough you have just stretched in the tray, right to the edges, and bake straight away. In the last 5 minutes of baking, open the oven, scatter the diced mozzarella and finish baking.",
     },
     spread_margherita_us: {
       title: "American Margherita topping",

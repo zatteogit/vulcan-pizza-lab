@@ -366,13 +366,6 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
         "1": { name: "角切りのモッツァレラ", notes: "焼き上がりの最後の5分に" },
       },
     },
-    margherita_teglia_croccante: {
-      ingredients: {
-        "0": { name: "ひとつまみの塩をしたトマト" },
-        "1": { name: "モッツァレラ", notes: "焼き始めて10分後" },
-        "2": { name: "エクストラバージンオリーブオイル", notes: "モッツァレラと一緒にひと回し" },
-      },
-    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2783,10 +2776,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "ソースは今、モッツァレラは最後に",
       description: "広げたばかりの生地に温かいソースを縁まで塗り、天板のまま発酵させます。オーブンに入れ、焼き上がりの最後の5分でオーブンを開けて角切りのモッツァレラを散らし、焼き上げます。",
-    },
-    spread_margherita_teglia_croccante: {
-      title: "トマトは今、モッツァレラは10分後",
-      description: "塩をしたトマトを端まで広げ、オーブンの下段に入れます。10分後にモッツァレラを散らし、オイルをひと回しかけて、上段で4〜5分焼き上げます。モッツァレラを焦がさないでください。",
+      description_no_pan_proof: "天板に広げたばかりの生地に温かいソースを縁まで塗り、すぐにオーブンに入れます。焼き上がりの最後の5分でオーブンを開けて角切りのモッツァレラを散らし、焼き上げます。",
     },
     spread_margherita_us: {
       title: "アメリカ風Margheritaのトッピング",
