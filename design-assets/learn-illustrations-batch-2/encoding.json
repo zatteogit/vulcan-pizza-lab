@@ -1,0 +1,81 @@
+{
+  "size": [
+    672,
+    448
+  ],
+  "quality": 84,
+  "existing_assets": [
+    {
+      "asset": "src/assets/learn/autolysis.webp",
+      "before_bytes": 53482,
+      "after_bytes": 45510,
+      "before_sha256": "0572a1bafe9e16592ad882bc058d35bdf44b1a8a8e869c707accb7eacd97f5c5",
+      "after_sha256": "4c128e9392e20de8c7a0f886baedb8d907c904af07177f3df07fe43c1f3120a6"
+    },
+    {
+      "asset": "src/assets/learn/ball-shaping.webp",
+      "before_bytes": 55532,
+      "after_bytes": 47860,
+      "before_sha256": "3bd8500bcf14ce52e85a4bf07660014d70b59974f1970531a6927ffde5647653",
+      "after_sha256": "9c779ab7bb8e69461ad9dec15e5f0e9f73659fe2906f579298e922660a6a41a3"
+    },
+    {
+      "asset": "src/assets/learn/biga.webp",
+      "before_bytes": 61804,
+      "after_bytes": 53278,
+      "before_sha256": "777cd8c9088134861aff2842fbd02b35c482e5215e8276778ca68ca96a359224",
+      "after_sha256": "b860d63f4936f88c4488e2d1d9daa2331382f57dcdf1c13469465ef79cbb8f6d"
+    },
+    {
+      "asset": "src/assets/learn/cornicione.webp",
+      "before_bytes": 83050,
+      "after_bytes": 69788,
+      "before_sha256": "48fca7408bc86f90819218d72fdf83562821bad8376583bca28a74bb39d7ddcb",
+      "after_sha256": "0a4322f29d962ea60bea567d5c830a90d95d07094713a11afdf9bb9ece7ef0fe"
+    },
+    {
+      "asset": "src/assets/learn/division.webp",
+      "before_bytes": 43320,
+      "after_bytes": 39262,
+      "before_sha256": "1b4923827cd4886cf8d7db1d3c00a71180ac2e6927f58098a14afd82f3b7c0a3",
+      "after_sha256": "264a4b89d3ccfc1a8f14b4358405105a799bb238355dd5009b16de3c5ca5ed90"
+    },
+    {
+      "asset": "src/assets/learn/folds.webp",
+      "before_bytes": 48242,
+      "after_bytes": 42014,
+      "before_sha256": "67332027a9abdb3b0c3f6351d98fd975c60d457faa35551d7389211c6e29370e",
+      "after_sha256": "2a42cc74511b288d1ed13c157379f6897f9d1ecafb3e3fb2de9ae066ec60ccf5"
+    },
+    {
+      "asset": "src/assets/learn/poke-test.webp",
+      "before_bytes": 31298,
+      "after_bytes": 28594,
+      "before_sha256": "ea57fc51d1f9619293ba1c6fc1e6d7af863623df1f617d46bf2c505f72754cee",
+      "after_sha256": "86e0aaea225828c1cbccd9eb6b11aa483a4dfcfb58f8eea7f27906dd097b3e47"
+    },
+    {
+      "asset": "src/assets/learn/poolish.webp",
+      "before_bytes": 58846,
+      "after_bytes": 50766,
+      "before_sha256": "d01fc1f5efabfa2d192fb1b5f86fdcdd7342c62a5ac345e7829d77756312c9b2",
+      "after_sha256": "4b2b08d13fd6daa18a87be6c1f30036ba76be4f05f3bf613a29dae5e653d1aa9"
+    },
+    {
+      "asset": "src/assets/learn/stretching.webp",
+      "before_bytes": 52140,
+      "after_bytes": 45352,
+      "before_sha256": "00ed5a5f054ac44c34849ddcd5fb95abdf7273e87d7536aa803c2f5296d5d2ad",
+      "after_sha256": "2aa091019dc29720658d32044306d48c68c98afd3797f95366e0559ae2be6ec1"
+    },
+    {
+      "asset": "src/assets/learn/windowpane.webp",
+      "before_bytes": 33326,
+      "after_bytes": 30238,
+      "before_sha256": "cda6df89f5847dc66a74445413c1626ad32555e6ccd77afcbdaa2b962b7fafdb",
+      "after_sha256": "74f476ee3ba314577ae75da770fcf451ec3da27dcd80aa070c45ac1557085734"
+    }
+  ],
+  "new_assets_quality": 80,
+  "old_assets_quality": 84
+}

@@ -1,5 +1,24 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "learn.visual.waterTemperature": "Mede a água com uma sonda mergulhada, sem tocar no fundo nem nas paredes do recipiente. Usa a temperatura indicada na receita.",
+  "learn.visual.mixerDough": "Batedeira com gancho: a massa fica reunida na taça. O aquecimento durante a amassadura depende da máquina, da duração e da massa.",
+  "learn.visual.fryingSeal": "Pressiona os dois bordos para os unir, mantendo a junção sem recheio. Exemplo de pizza frita recheada em meia-lua.",
+  "learn.visual.fryingDrain": "Levanta a pizza frita com uma escumadeira que a sustente, deixa escorrer o óleo e coloca-a numa grelha ou em papel absorvente.",
+  "learn.visual.baseCheck": "Levanta o bordo com uma espátula para observar a base. Exemplo de pizza sem glúten em forma: o dourado exterior, por si só, não indica se o centro está cozido.",
+
+  "learn.visual.hydration": "Água na farinha: a hidratação é a relação entre os seus pesos; não se deduz pelo aspeto da massa.",
+  "learn.visual.wholeWheat": "Um exemplo de farinha integral com fragmentos de farelo. A cor e o aspeto não bastam para identificar o tipo e a força da farinha.",
+  "learn.visual.homeOven": "Forno doméstico: a pedra ou o aço sobre a grelha sustentam a pizza e aquecem a base por contacto. Segue a receita para a posição e o pré-aquecimento.",
+  "learn.visual.peelPrep": "Polvilha ligeiramente a pá antes de colocar a pizza. O desenho mostra a preparação da pá, não a entrada no forno.",
+  "learn.visual.stoneTemperature": "Aponta o termómetro de infravermelhos para a pedra: mede a temperatura da superfície, não do ar do forno nem do interior da pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
+  "learn.visual.bulkFermentation": "Fermentação em bloco: a massa repousa numa só peça, antes da divisão.",
+  "learn.visual.ballFermentation": "Fermentação final em bolas: as porções já boleadas repousam separadas e cobertas. Nos estilos em tabuleiro, este repouso pode ocorrer diretamente nele.",
+  "learn.visual.sourdough": "Massa-mãe líquida: bolhas e vestígios de massa no frasco. A atividade avalia-se após as alimentações, não apenas pela imagem.",
+  "learn.visual.yeast": "Fermento fresco à esquerda e seco instantâneo à direita: formas diferentes de fermento de padeiro. Não se substituem com o mesmo peso.",
+  "learn.visual.ovenFloorDome": "Base em baixo, abóbada em cima: a base sustenta a pizza e a abóbada aquece por cima. Exemplo de forno a lenha.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga logo após a mistura: uma massa irregular, com dobras e bordas rasgadas.",
   "learn.visual.poolish": "Poolish após o repouso: superfície húmida, pequenos orifícios e bolhas irregulares.",

@@ -1,0 +1,178 @@
+{
+  "date": "2026-10-31",
+  "status": "five additional illustrations prepared for review; not published",
+  "previous_set_release": {
+    "pr": "https://github.com/zatteogit/vulcan-pizza-lab/pull/182",
+    "sha": "781a4aa56de9564f1794514f8bcd28cd9d4c54e4",
+    "test_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41179648069",
+    "production_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41179817145",
+    "cloudflare_version": "baa5bb85-1587-45ff-8966-d88852d98739",
+    "status": "published and verified in browser",
+    "verified_pages": [
+      "https://vulcan-pizza-lab.zatteo.workers.dev/learn",
+      "https://vulcan-pizza-lab.zatteo.workers.dev/learn/pre-ferments#pf-biga"
+    ],
+    "observed_loaded_assets": [
+      "ball-shaping-4WHLQGeX.webp",
+      "folds-CG8dKJy1.webp",
+      "poke-test-Chz7ST5p.webp",
+      "poolish-ClWFkOoN.webp",
+      "windowpane-8w6QysVf.webp"
+    ]
+  },
+  "assets": [
+    {
+      "id": "bulk-fermentation",
+      "title": "Puntata",
+      "term": "bulk_fermentation",
+      "stage": "One continuous dough mass before dividing; not a volume or readiness comparison.",
+      "asset": "src/assets/learn/bulk-fermentation.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 38026,
+      "sha256": "e8cc796752e727c0870c9368841c78c61909bdce019ecb1e3ed0fbd2f853ecf8",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2019/06/Bulk-Fermentation-via-@kingarthurflour-1-1.jpg",
+          "alt": "Bread dough in a bowl at the end of bulk fermentation",
+          "publisher": "King Arthur Baking",
+          "original_distributed": false,
+          "author": "Maurizio Leo / King Arthur Baking"
+        }
+      ]
+    },
+    {
+      "id": "ball-fermentation",
+      "title": "Appretto",
+      "term": "ball_fermentation",
+      "stage": "Rounded dough portions resting separately under lids after dividing, as shown in source steps.",
+      "asset": "src/assets/learn/ball-fermentation.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 37066,
+      "sha256": "318a3051d8b7cff720e5e186a1db11c1de7193a1dd4a8201137514ab85ee0783",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2014/12/Pizza_Blog_Sequenced-11.jpg",
+          "alt": "Pizza_Blog_Sequenced-11",
+          "publisher": "King Arthur Baking",
+          "original_distributed": false
+        },
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2014/12/Pizza_Blog_Sequenced-12.jpg",
+          "alt": "Pizza_Blog_Sequenced-12",
+          "publisher": "King Arthur Baking",
+          "original_distributed": false
+        }
+      ]
+    },
+    {
+      "id": "sourdough",
+      "title": "Lievito madre",
+      "term": "sourdough",
+      "stage": "Liquid starter in an open glass jar; picture is not an activity diagnosis.",
+      "asset": "src/assets/learn/sourdough.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 32520,
+      "sha256": "fbc0dd28023be59cdefbb6b65c08fba5172b4bb54e71d7f648661881c3ad89dd",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/recipes/sourdough-starter-recipe",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/sm_2x_960px/public/2020-06/sourdough-starter.jpg?itok=vNUcpLPy",
+          "alt": "Sourdough Starter",
+          "publisher": "King Arthur Baking",
+          "original_distributed": false
+        }
+      ]
+    },
+    {
+      "id": "yeast",
+      "title": "Lievito fresco e secco",
+      "term": "yeast",
+      "stage": "Fresh compressed yeast on left, instant dry yeast on right; shown quantities are not a dose equivalence.",
+      "asset": "src/assets/learn/yeast.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 37198,
+      "sha256": "ee49a933de7e3b0ba916a306890384a8527644ab04d4d58b3988861d28273bba",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2023/04/24/how-to-bake-with-fresh-yeast",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/scaled_small/public/2023-04/fresh-yeast-blog_1.jpg?itok=qopNCRUe",
+          "author": "Liz Neily",
+          "original_distributed": false
+        },
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2023/04/24/how-to-bake-with-fresh-yeast",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/scaled_small/public/2022-08/Instant%20yeast%20superior%20to%20active%20dry%20yeast-1.jpg?itok=CPv6wnYX",
+          "author": "Kristin Teig; food styling Liz Neily",
+          "original_distributed": false
+        }
+      ]
+    },
+    {
+      "id": "oven-floor-dome",
+      "title": "Platea e cielo",
+      "term": "oven_floor_dome",
+      "stage": "The visible floor and vaulted ceiling of an actual wood-fired oven viewed through the opening; no invented cutaway.",
+      "asset": "src/assets/learn/oven-floor-dome.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 54676,
+      "sha256": "f797ca70b492bddb9ae613991ce5d37a18c11e8815b62192df6425eb05a34cd0",
+      "references": [
+        {
+          "page": "https://commons.wikimedia.org/wiki/File:Brick-oven-thumbnail.jpg",
+          "photo_url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Brick-oven-thumbnail.jpg",
+          "author": "Beboplu",
+          "license": "CC0 1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "original_distributed": false
+        }
+      ]
+    }
+  ],
+  "style": "Approved coloured terracotta pen outlines and ivory washes; no image-wide granular texture.",
+  "encoding": {
+    "size": [
+      672,
+      448
+    ],
+    "old_assets_quality": 84,
+    "new_assets_quality": 80,
+    "reason": "Fit five additional learning images inside the unchanged 42 MiB product budget. Approved original masters are preserved locally; previous WebP versions remain in release commit 781a4aa.",
+    "details": "encoding.json"
+  },
+  "validation": {
+    "verify": "133 files, 1734 tests passed, 1 skipped; guards passed",
+    "build": "passed",
+    "budget": "passed",
+    "product_images_bytes": 44025992,
+    "product_images_limit_bytes": 44040192,
+    "headroom_bytes": 14200,
+    "browser": [
+      "Five new figures opened in glossary, captions and sources checked",
+      "Desktop 1280px; yeast and oven checked at 390px; no horizontal overflow",
+      "Approved predecessor verified live after deployment"
+    ],
+    "screenshots": [
+      "review-desktop.jpg",
+      "review-mobile.jpg",
+      "published-first-set.jpg"
+    ]
+  }
+}

@@ -3,6 +3,25 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.waterTemperature": "Misura l’acqua con una sonda immersa, senza toccare fondo o pareti del recipiente. La temperatura da raggiungere è quella indicata dalla ricetta.",
+  "learn.visual.mixerDough": "Impastatrice con gancio: l’impasto è raccolto nella ciotola. Il riscaldamento durante la lavorazione dipende da macchina, durata e impasto.",
+  "learn.visual.fryingSeal": "Schiaccia insieme i due lembi lungo il bordo, mantenendolo libero dal ripieno. Esempio di pizza fritta chiusa a mezzaluna.",
+  "learn.visual.fryingDrain": "Solleva la pizza fritta con una schiumarola che la sostenga, lascia sgocciolare l’olio e appoggiala sulla griglia o sulla carta assorbente.",
+  "learn.visual.baseCheck": "Sollevare il bordo con una paletta permette di osservare il fondo. Esempio di pizza in teglia senza glutine: la doratura esterna non dice da sola se il centro è cotto.",
+
+  "learn.visual.hydration": "Acqua nella farina: l’idratazione è il rapporto tra i loro pesi, non si ricava dall’aspetto dell’impasto.",
+  "learn.visual.wholeWheat": "Un esempio di farina integrale, con frammenti di crusca. Colore e aspetto non bastano a riconoscere tipo e forza della farina.",
+  "learn.visual.homeOven": "Forno domestico: la pietra o l’acciaio sulla griglia sostengono la pizza e scaldano il fondo per contatto. Posizione e preriscaldamento seguono la ricetta.",
+  "learn.visual.peelPrep": "Prima di caricare la pizza, spolvera leggermente la pala. Il disegno mostra la preparazione della pala, non l’infornata.",
+  "learn.visual.stoneTemperature": "Il termometro a infrarossi si punta sulla pietra: legge la temperatura della superficie, non dell’aria del forno né dell’interno della pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
+  "learn.visual.bulkFermentation": "Puntata: l’impasto riposa in un’unica massa, prima dello staglio.",
+  "learn.visual.ballFermentation": "Appretto in panetti: le porzioni già chiuse riposano separate e coperte. Negli stili in teglia, il riposo può avvenire direttamente in teglia.",
+  "learn.visual.sourdough": "Lievito madre in forma liquida: bolle e tracce di impasto nel barattolo. La sua attività si valuta dopo i rinfreschi, non dalla sola immagine.",
+  "learn.visual.yeast": "Fresco a sinistra, secco istantaneo a destra: forme diverse del lievito di birra. Le quantità non sono intercambiabili a parità di peso.",
+  "learn.visual.ovenFloorDome": "Platea in basso, cielo sopra: il piano sostiene la pizza e la volta scalda dall’alto. Esempio di forno a legna.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga appena miscelata: massa irregolare, con pieghe e bordi strappati.",
   "learn.visual.poolish": "Poolish dopo il riposo: superficie umida, piccoli fori e bolle irregolari.",

@@ -1,5 +1,24 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.waterTemperature": "Measure the water with an immersed probe, without touching the bottom or sides of the container. Use the temperature specified by the recipe.",
+  "learn.visual.mixerDough": "Stand mixer with a dough hook: the dough is gathered in the bowl. Heating during mixing depends on the machine, mixing time and dough.",
+  "learn.visual.fryingSeal": "Press the two edges together, keeping the seam free of filling. A half-moon filled fried pizza example.",
+  "learn.visual.fryingDrain": "Lift the fried pizza with a skimmer supporting it, let the oil drip off and place it on a rack or absorbent paper.",
+  "learn.visual.baseCheck": "Lift the edge with a spatula to inspect the base. A gluten-free pan pizza example: browning on the outside alone does not show whether the centre is cooked.",
+
+  "learn.visual.hydration": "Water into flour: hydration is the ratio of their weights; it cannot be read from the dough’s appearance.",
+  "learn.visual.wholeWheat": "One example of whole wheat flour with bran flakes. Colour and appearance alone cannot identify flour type or strength.",
+  "learn.visual.homeOven": "Home oven: a stone or steel on the rack supports the pizza and heats its base by contact. Follow the recipe for positioning and preheating.",
+  "learn.visual.peelPrep": "Lightly dust the peel before loading the pizza. The illustration shows peel preparation, not launching.",
+  "learn.visual.stoneTemperature": "Aim the infrared thermometer at the stone: it reads the surface temperature, not the oven air or the inside of the pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
+  "learn.visual.bulkFermentation": "Bulk fermentation: the dough rests as one mass, before dividing.",
+  "learn.visual.ballFermentation": "Final proof in dough balls: the rounded portions rest separately and covered. For pan pizza styles, this rest can take place directly in the pan.",
+  "learn.visual.sourdough": "Liquid sourdough starter: bubbles and dough streaks in the jar. Activity is assessed after feeding, not from the image alone.",
+  "learn.visual.yeast": "Fresh yeast on the left, instant dry yeast on the right: different forms of baker’s yeast. Equal weights are not interchangeable.",
+  "learn.visual.ovenFloorDome": "Oven floor below, vault above: the floor supports the pizza and the vault heats from above. A wood-fired oven example.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga just after mixing: an irregular mass with folds and torn edges.",
   "learn.visual.poolish": "Poolish after resting: a moist surface with small holes and irregular bubbles.",

@@ -1,5 +1,24 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.waterTemperature": "Mesurez l’eau avec une sonde immergée, sans toucher le fond ni les parois du récipient. Utilisez la température indiquée par la recette.",
+  "learn.visual.mixerDough": "Robot pétrisseur avec crochet : la pâte est rassemblée dans la cuve. L’échauffement pendant le pétrissage dépend de la machine, de la durée et de la pâte.",
+  "learn.visual.fryingSeal": "Pressez les deux bords pour les souder, en gardant la jointure sans garniture. Exemple de pizza frite farcie en demi-lune.",
+  "learn.visual.fryingDrain": "Soulevez la pizza frite avec une écumoire qui la soutient, laissez l’huile s’égoutter puis posez-la sur une grille ou du papier absorbant.",
+  "learn.visual.baseCheck": "Soulevez le bord avec une spatule pour observer le dessous. Exemple de pizza sans gluten en moule : la coloration extérieure seule n’indique pas si le centre est cuit.",
+
+  "learn.visual.hydration": "De l’eau dans la farine : l’hydratation est le rapport entre leurs poids ; elle ne se déduit pas de l’aspect de la pâte.",
+  "learn.visual.wholeWheat": "Un exemple de farine complète avec des fragments de son. La couleur et l’aspect ne suffisent pas à identifier le type et la force d’une farine.",
+  "learn.visual.homeOven": "Four domestique : la pierre ou l’acier sur la grille portent la pizza et chauffent le dessous par contact. Suivez la recette pour la position et le préchauffage.",
+  "learn.visual.peelPrep": "Farinez légèrement la pelle avant d’y déposer la pizza. Le dessin montre la préparation de la pelle, pas l’enfournement.",
+  "learn.visual.stoneTemperature": "Visez la pierre avec le thermomètre infrarouge : il mesure la température de surface, pas celle de l’air du four ni de l’intérieur de la pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
+  "learn.visual.bulkFermentation": "Pointage : la pâte repose en une seule masse, avant la division.",
+  "learn.visual.ballFermentation": "Apprêt en pâtons : les portions déjà boulées reposent séparément et à couvert. Pour les pizzas en plaque, ce repos peut se faire directement dans la plaque.",
+  "learn.visual.sourdough": "Levain liquide : des bulles et des traces de pâte dans le bocal. Son activité s’évalue après les rafraîchis, pas à partir de la seule image.",
+  "learn.visual.yeast": "Levure fraîche à gauche, levure sèche instantanée à droite : différentes formes de levure de boulanger. Elles ne se remplacent pas à poids égal.",
+  "learn.visual.ovenFloorDome": "Sole en bas, voûte au-dessus : la sole porte la pizza et la voûte chauffe par le haut. Exemple de four à bois.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga juste après le mélange : une masse irrégulière, avec des plis et des bords déchirés.",
   "learn.visual.poolish": "Poolish après le repos : une surface humide, de petits trous et des bulles irrégulières.",

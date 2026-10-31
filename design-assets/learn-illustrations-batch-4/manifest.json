@@ -1,0 +1,161 @@
+{
+  "date": "2026-10-31",
+  "status": "Five new illustrations prepared for review, not published",
+  "mode": "built-in image_gen",
+  "style": "Approved coloured terracotta/ivory pen illustration; transparent, no global grain overlay",
+  "assets": [
+    {
+      "id": "water-temperature",
+      "title": "Temperatura dell’acqua",
+      "placements": [
+        "rule_of_55"
+      ],
+      "asset": "src/assets/learn/water-temperature.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 21336,
+      "sha256": "2a6ee78d7e40ade28ee22d9f4257d260f86e57b2c23508eecda22ba67d6b4a87",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/water-temperature.png",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature",
+          "author_or_publisher": "King Arthur Baking",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2018/05/Desired-Dough-Temperature-47.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/references/temperature-23.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Immersed contact probe measures water; no readings or temperature targets in art."
+    },
+    {
+      "id": "mixer-dough",
+      "title": "Impastatrice con gancio",
+      "placements": [
+        "friction_factor"
+      ],
+      "asset": "src/assets/learn/mixer-dough.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 24040,
+      "sha256": "c02b8a76ca6ec1612ffc2ebaacf25ac05846e81e1fdb666cde21cdc1e5603016",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/mixer-dough.png",
+      "references": [
+        {
+          "page": "https://www.giallozafferano.com/recipes/Fried-Pizza.html",
+          "author_or_publisher": "GialloZafferano",
+          "photo_url": "https://www.giallozafferano.com/images/ricette/279/27917/17049_pizza_fritta_strip_4-6.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/references/frying-3.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Middle photo, step 5 only. Dough gathered on a hook, no inferred fixed friction value."
+    },
+    {
+      "id": "frying-seal",
+      "title": "Chiusura della pizza fritta",
+      "placements": [
+        "FR03"
+      ],
+      "asset": "src/assets/learn/frying-seal.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 19016,
+      "sha256": "eb5bd2916582610527a8dc412b101953a9bfc53e8c9617132ae347547c8ecab0",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/frying-seal.png",
+      "references": [
+        {
+          "page": "https://www.giallozafferano.com/recipes/Fried-Pizza.html",
+          "author_or_publisher": "GialloZafferano",
+          "photo_url": "https://www.giallozafferano.com/images/ricette/279/27917/17049_pizza_fritta_strip_25-27.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/references/seal-photo.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Middle photo, step 26. Raw half-moon with hands pressing the clean seam."
+    },
+    {
+      "id": "frying-drain",
+      "title": "Scolatura",
+      "placements": [
+        "FR02"
+      ],
+      "asset": "src/assets/learn/frying-drain.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 29948,
+      "sha256": "25ae6e04febc309fdf0a090e93f51456ac9b07e77a47796e9f4af9d608be9b75",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/frying-drain.png",
+      "references": [
+        {
+          "page": "https://www.giallozafferano.com/recipes/Fried-Pizza.html",
+          "author_or_publisher": "GialloZafferano",
+          "photo_url": "https://www.giallozafferano.com/images/ricette/279/27917/17049_pizza_fritta_strip_28-30.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/references/drain-photo.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Left photo, step 28. Skimmer supports fried pizza above oil; no unsafe bare-hand contact."
+    },
+    {
+      "id": "base-check",
+      "title": "Controllo del fondo",
+      "placements": [
+        "P15"
+      ],
+      "asset": "src/assets/learn/base-check.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 35890,
+      "sha256": "9caa6d7d75dcca990fd03e1c54fd5b1c42e6d6fd7ad856d1b7f9f07f1257695d",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/base-check.png",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2020/06/17/gluten-free-pan-pizza",
+          "author_or_publisher": "Anne Mientka / King Arthur Baking",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/inline-images/Gluten-Free-Pan-Pizza-14.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-4-2026-10-31/references/pan-bottom-photo.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Actual gluten-free PAN PIZZA example, explicitly identified in all captions. The gesture illustrates inspection, not a colour diagnosis, universal readiness or internal doneness."
+    }
+  ],
+  "previous_set_release": {
+    "pr": "https://github.com/zatteogit/vulcan-pizza-lab/pull/184",
+    "sha": "a9ea7417e47080fd452bfb46a17ca863c9e83c9f",
+    "test_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41184375262",
+    "verify_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41184375480",
+    "production_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41184659837",
+    "cloudflare_version": "fe51e2d0-f205-47bf-8923-21d2f98463cf",
+    "status": "Published and verified in the public browser",
+    "observed_loaded_assets": [
+      "hydration-4OpClxrq.webp",
+      "whole-wheat-DTO2bxTK.webp",
+      "home-oven-DWy1NBAD.webp",
+      "peel-prep-Bjg8fKE2.webp",
+      "stone-temperature-BZCM038T.webp"
+    ],
+    "mobile": "390px viewport, 302.5px rendered image width, 672px natural width; no horizontal overflow"
+  },
+  "validation": {
+    "local_checks": "npm run verify passed (133 files, 1734 tests passed, 1 skipped). i18n guard rerun after specifying gluten-free in seven base-check captions. Build and budget passed.",
+    "encoding": "25 assets 644146 bytes; compared with 634564 bytes for previous 20. Same 672x448 resolution; encoded from original PNG masters, quality 74, alpha quality 30. Previous files remain recoverable from a9ea7417; PNGs retained. Existing app-photo files and performance limits unchanged.",
+    "style_comparison": "Re-encoded existing illustrations compared at full asset size on cream; new figures inspected on cream and dark, with a targeted second pass to simplify tiny fried/baked surface marks.",
+    "browser": "All five new images loaded at 672px natural width in their actual glossary/troubleshooting placements; captions and sources checked. Desktop and 390px mobile, no horizontal overflow; base-check caption explicitly identifies the gluten-free pan pizza reference.",
+    "screenshots": [
+      "review-desktop.jpg",
+      "review-mobile.jpg",
+      "published-third-set.jpg"
+    ]
+  }
+}

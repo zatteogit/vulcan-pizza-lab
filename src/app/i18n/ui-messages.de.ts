@@ -1,5 +1,24 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.waterTemperature": "Die Wassertemperatur mit eingetauchtem Fühler messen, ohne Boden oder Wand des Gefäßes zu berühren. Die Zieltemperatur steht im Rezept.",
+  "learn.visual.mixerDough": "Küchenmaschine mit Knethaken: Der Teig sammelt sich in der Schüssel. Die Erwärmung beim Kneten hängt von Maschine, Dauer und Teig ab.",
+  "learn.visual.fryingSeal": "Die beiden Teigränder zusammendrücken und die Naht frei von Füllung halten. Beispiel einer gefüllten, halbmondförmigen frittierten Pizza.",
+  "learn.visual.fryingDrain": "Die frittierte Pizza mit einem Schaumlöffel stützen und herausheben, Öl abtropfen lassen und auf ein Gitter oder saugfähiges Papier legen.",
+  "learn.visual.baseCheck": "Den Rand mit einem Pfannenwender anheben, um den Boden anzusehen. Beispiel einer glutenfreien Pfannenpizza: Die äußere Bräunung allein zeigt nicht, ob die Mitte durchgegart ist.",
+
+  "learn.visual.hydration": "Wasser zum Mehl: Die Hydration ist das Verhältnis ihrer Gewichte und lässt sich nicht am Aussehen des Teigs ablesen.",
+  "learn.visual.wholeWheat": "Ein Beispiel für Vollkornweizenmehl mit Kleieteilchen. Farbe und Aussehen allein verraten weder Mehltype noch Mehlstärke.",
+  "learn.visual.homeOven": "Haushaltsbackofen: Ein Stein oder Backstahl auf dem Rost trägt die Pizza und erhitzt den Boden durch Kontakt. Position und Vorheizen richten sich nach dem Rezept.",
+  "learn.visual.peelPrep": "Den Schieber vor dem Belegen leicht bemehlen. Die Zeichnung zeigt die Vorbereitung des Schiebers, nicht das Einschießen.",
+  "learn.visual.stoneTemperature": "Das Infrarotthermometer auf den Stein richten: Es misst die Oberflächentemperatur, nicht die Ofenluft oder das Innere der Pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
+  "learn.visual.bulkFermentation": "Stockgare: Der Teig ruht als eine zusammenhängende Masse, bevor er geteilt wird.",
+  "learn.visual.ballFermentation": "Stückgare als Teiglinge: Die rundgewirkten Portionen ruhen getrennt und abgedeckt. Bei Blechpizza kann diese Ruhe direkt im Blech stattfinden.",
+  "learn.visual.sourdough": "Flüssiger Sauerteigstarter: Blasen und Teigspuren im Glas. Seine Aktivität wird nach dem Auffrischen beurteilt, nicht allein anhand des Bildes.",
+  "learn.visual.yeast": "Links Frischhefe, rechts Instant-Trockenhefe: verschiedene Formen von Backhefe. Sie sind nicht im gleichen Gewicht austauschbar.",
+  "learn.visual.ovenFloorDome": "Backboden unten, Gewölbe oben: Der Boden trägt die Pizza, das Gewölbe heizt von oben. Beispiel eines Holzofens.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga direkt nach dem Mischen: eine unregelmäßige Masse mit Falten und eingerissenen Rändern.",
   "learn.visual.poolish": "Poolish nach der Ruhezeit: eine feuchte Oberfläche mit kleinen Löchern und unregelmäßigen Blasen.",

@@ -1,0 +1,118 @@
+{
+  "size": [
+    672,
+    448
+  ],
+  "colour_quality": 80,
+  "alpha_quality": 70,
+  "method": 6,
+  "source": "Original PNG masters, not released WebP recompression",
+  "previous_release": "e749dcb8809044f455b2e3f033279e9b3aef2895",
+  "existing_assets": [
+    {
+      "asset": "src/assets/learn/autolysis.webp",
+      "before_bytes": 45510,
+      "after_bytes": 31696,
+      "before_sha256": "4c128e9392e20de8c7a0f886baedb8d907c904af07177f3df07fe43c1f3120a6",
+      "after_sha256": "c0cfe0e27609783d7b0e3aa2efe33e5d525a6473cbedde0da34dba1e0da2d43f"
+    },
+    {
+      "asset": "src/assets/learn/ball-fermentation.webp",
+      "before_bytes": 37066,
+      "after_bytes": 28120,
+      "before_sha256": "318a3051d8b7cff720e5e186a1db11c1de7193a1dd4a8201137514ab85ee0783",
+      "after_sha256": "a56b466d8639b29f5e49ededa5b1449121d8d0431120708be74018e7e031c33b"
+    },
+    {
+      "asset": "src/assets/learn/ball-shaping.webp",
+      "before_bytes": 47860,
+      "after_bytes": 31504,
+      "before_sha256": "9c779ab7bb8e69461ad9dec15e5f0e9f73659fe2906f579298e922660a6a41a3",
+      "after_sha256": "fd52a8fdafba297275a0ca8a1a084b38b76f5ef3e1177570f82a2c0c0c64aa80"
+    },
+    {
+      "asset": "src/assets/learn/biga.webp",
+      "before_bytes": 53278,
+      "after_bytes": 37938,
+      "before_sha256": "b860d63f4936f88c4488e2d1d9daa2331382f57dcdf1c13469465ef79cbb8f6d",
+      "after_sha256": "3f640b08f70d5cd1baa476c5d3ef1eb3a805b333da4312b391857dca8c941338"
+    },
+    {
+      "asset": "src/assets/learn/bulk-fermentation.webp",
+      "before_bytes": 38026,
+      "after_bytes": 27072,
+      "before_sha256": "e8cc796752e727c0870c9368841c78c61909bdce019ecb1e3ed0fbd2f853ecf8",
+      "after_sha256": "252e18cb2b7acd6b264d69545794dc14c1281d4002fe76c8df06ecc84a94ac91"
+    },
+    {
+      "asset": "src/assets/learn/cornicione.webp",
+      "before_bytes": 69788,
+      "after_bytes": 52914,
+      "before_sha256": "0a4322f29d962ea60bea567d5c830a90d95d07094713a11afdf9bb9ece7ef0fe",
+      "after_sha256": "418f00eb4d0a3130691287262a8ba9fd1cd74ca2b0099f686ac800aec70d5fe8"
+    },
+    {
+      "asset": "src/assets/learn/division.webp",
+      "before_bytes": 39262,
+      "after_bytes": 27014,
+      "before_sha256": "264a4b89d3ccfc1a8f14b4358405105a799bb238355dd5009b16de3c5ca5ed90",
+      "after_sha256": "d21f7072cd5852c3d13eb5dcf36b59531221ee3199327eea090e437b4bc1a823"
+    },
+    {
+      "asset": "src/assets/learn/folds.webp",
+      "before_bytes": 42014,
+      "after_bytes": 29994,
+      "before_sha256": "2a42cc74511b288d1ed13c157379f6897f9d1ecafb3e3fb2de9ae066ec60ccf5",
+      "after_sha256": "9f6609a8b390f8a84ffb102e74559ed190a8843ffedd56462f0d17e867053745"
+    },
+    {
+      "asset": "src/assets/learn/oven-floor-dome.webp",
+      "before_bytes": 54676,
+      "after_bytes": 48290,
+      "before_sha256": "f797ca70b492bddb9ae613991ce5d37a18c11e8815b62192df6425eb05a34cd0",
+      "after_sha256": "d15bd8a9c85014ed9c9142a77f03fcd94ecef38666fc8508b06f2d4599d00fe9"
+    },
+    {
+      "asset": "src/assets/learn/poke-test.webp",
+      "before_bytes": 28594,
+      "after_bytes": 19902,
+      "before_sha256": "86e0aaea225828c1cbccd9eb6b11aa483a4dfcfb58f8eea7f27906dd097b3e47",
+      "after_sha256": "dc9e6ae27285956f42758fdc57ce27a042d42be542a6327336447c462f00bd63"
+    },
+    {
+      "asset": "src/assets/learn/poolish.webp",
+      "before_bytes": 50766,
+      "after_bytes": 36130,
+      "before_sha256": "4b2b08d13fd6daa18a87be6c1f30036ba76be4f05f3bf613a29dae5e653d1aa9",
+      "after_sha256": "c659e602f2d7b8f3284c1585f98eb8e28eb782422abf95b84e14db3538cbf968"
+    },
+    {
+      "asset": "src/assets/learn/sourdough.webp",
+      "before_bytes": 32520,
+      "after_bytes": 26830,
+      "before_sha256": "fbc0dd28023be59cdefbb6b65c08fba5172b4bb54e71d7f648661881c3ad89dd",
+      "after_sha256": "458845308e76632144ad2bf67bee91a834afca04e8a1498b35e063c4eafdb413"
+    },
+    {
+      "asset": "src/assets/learn/stretching.webp",
+      "before_bytes": 45352,
+      "after_bytes": 29750,
+      "before_sha256": "2aa091019dc29720658d32044306d48c68c98afd3797f95366e0559ae2be6ec1",
+      "after_sha256": "1ffa5bdff6afd97c617d09d4da593d15f70b3f7f4a42b7faf01268fa13c27da6"
+    },
+    {
+      "asset": "src/assets/learn/windowpane.webp",
+      "before_bytes": 30238,
+      "after_bytes": 20832,
+      "before_sha256": "74f476ee3ba314577ae75da770fcf451ec3da27dcd80aa070c45ac1557085734",
+      "after_sha256": "62a4ec165681442ef5aa96d98ccebac7e8cee85ed25b70023256110cf7a91a52"
+    },
+    {
+      "asset": "src/assets/learn/yeast.webp",
+      "before_bytes": 37198,
+      "after_bytes": 29306,
+      "before_sha256": "ee49a933de7e3b0ba916a306890384a8527644ab04d4d58b3988861d28273bba",
+      "after_sha256": "e3084d95340c3b79a57f22640f2fbf49c7ce6fc3c56a44924b9e8d87909fa3f1"
+    }
+  ]
+}
