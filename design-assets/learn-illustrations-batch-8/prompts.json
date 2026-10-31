@@ -1,0 +1,61 @@
+{
+  "mode": "built-in image_gen",
+  "prompts": [
+    {
+      "id": "starch-paste",
+      "prompt": "Use case: scientific-educational. Create a Vulcan learning illustration with genuine transparent background, landscape 3:2 composition. Image 1 is style reference ONLY: match its warm terracotta/ivory coloured pen, fine brown outlines, simple smooth wash shading; ignore its objects and backdrop. Image 2 is the real photographic reference for subject and physical contacts: a small saucepan containing thick ivory tangzhong flour-water paste with a balloon whisk resting in the paste. Preserve the credible whisk wires entering thick paste and visible broad whisk tracks; a short plain pan handle to left, elevated three-quarter view, entire isolated pan comfortably framed. Simplify the saucepan to ordinary unbranded metal with warm neutral washes. Show thick cooked paste, not dough or bread, no bubbles, no granules, no flour dust. No text, numbers, arrows, molecular diagrams, signature or watermark. NO paper texture, stippling, noise/grain overlay, no plastic 3D shine. Minimal restrained reflections on metal. True transparent alpha around subject, no painted backdrop, no checkerboard, no glow. Do not reproduce text or photo watermark.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/references/tangzhong-6.jpg"
+      ]
+    },
+    {
+      "id": "browned-crust",
+      "prompt": "Use case: scientific-educational. Vulcan learning illustration on genuine transparent background. Image 1 provides STYLE only: warm terracotta and ivory coloured pen with fine brown outlines and restrained smooth washes. Image 2 provides REAL photographic subject reference. Depict ONE of the two oval sourdough loaves from that photo, isolated three-quarter view, prominent natural scored opening and browned golden/terracotta crust contrasting with pale flour-dusted flanks. Preserve credible loaf and scoring structure, simplify tiny crust pores into sparse irregular line details; no granular flour texture or stippling. The image illustrates bread crust browning, not a chemical diagram or comparison of doneness. Horizontal 3:2 composition with generous clear margin all around and entire loaf visible, subject occupies central 70% width. No cloth, table, plants, plate or additional food. No text, labels, arrows, watermark or signature. No paper texture, noise, microtexture, grain overlay, plastic/CGI shine, exaggerated black burn marks. Transparent alpha background, no painted backdrop, glow or checkerboard.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/references/maillard.jpg"
+      ]
+    },
+    {
+      "id": "caramel-sugar",
+      "prompt": "Use case: scientific-educational. A hand-drawn Vulcan learning illustration with genuine transparent background. Image 1: match STYLE only, coloured pen with thin brown outlines and smooth warm washes. Image 2: real PHOTO reference of boiling sugar-water turning amber, use RIGHT panel for subject. Draw a single simple stainless saucepan with shallow transparent amber-gold caramelized sugar at the bottom, seen obliquely from above. Simplify bubbles to about 12 uneven outlined circles of varying size with clear amber liquid between, not a carpet of tiny speckles. No spoon, hand, cream, butter, smoke or stove. Give saucepan neutral warm grey sides and simple short handle, all comfortably framed in landscape 3:2 with transparent margin. Make it clearly an illustration, about the same level of simple line detail as the bowls in image1, no photorealistic surface texture. Fine lines, limited palette, matte broad shading, no noisy brush texture, no stippling or grain, no plastic/CGI gloss. No words, numbers, arrows, signature, branding or watermark. Transparent alpha outside the pan, no glow, no backdrop or checkerboard. Do not reproduce any watermark from source photograph.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/references/caramel-sugar.jpg"
+      ]
+    },
+    {
+      "id": "alveograph-bubble",
+      "prompt": "Use case: scientific-educational. Create a small Vulcan educational coloured-pen illustration, landscape 3:2, real transparent background. Image1 STYLE only: warm ivory and terracotta, fine brown pen contours, restrained smooth flat washes. Image2 real photographic evidence for the mechanism: the alveograph dough bubble is inflated DOWNWARD UNDER a horizontal clamp plate. Preserve that exact geometry. Draw a simple short oval horizontal metal clamping plate, a circular dough rim held under it, and one smooth ivory dough membrane bulging downward in a rounded dome beneath, open space below. A small plain pressure fitting on upper plate may remain. Isolate the clamped bubble only; omit the rest of machine, casing, controls, markings and brand. No loaf, no bowl, no dough ball on top. Use continuous outlined contours and just 3 broad tonal shapes, NO granular bran flecks or photo texture, no stippling, no microscopic pores, no gloss or photorealism. Whole assembly centered with 15% clear border. No text, numbers, charts, arrows, watermark, checkerboard, background or glow. This is a simplified view of a real lab test, not a household baking step.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/references/alveograph.png"
+      ]
+    },
+    {
+      "id": "falling-number-tubes",
+      "prompt": "Use case: scientific-educational. Create a Vulcan learning coloured-pen drawing from the real photos supplied. Image1 STYLE only: fine brown outlines, warm ivory/terracotta smooth washes and restrained glass highlights, like the bowls. Image2 real source: two Falling Number glass tubes held vertically in a white laboratory rack, with metal viscometer stirrer stems above dark collars, pale beige flour-water paste inside each round-bottom tube. Image3 context photo of actual lab analyzer: for understanding scale only, OMIT the analyzer and lab surroundings. Draw the two glass tubes, their collars/stirrers and a simple two-hole ivory stand faithfully, isolated. Retain thin metal stems going down vertically into each tube, visible metal caps above, tubes supported by collars on rack, rounded closed bottoms. Do NOT draw pipettes, graduations, syringes, liquid pouring or gas bubbles. This is a static view of sample tubes and stirrers, NOT an invented visualization of the active heated test. No relative high/low results, timing, arrows or numbers. Entire small rack centered with broad transparent margin in landscape 3:2. Matte pen illustration, no grain/noise/paper texture, no granular paste, no plastic 3D shine, no text or watermark, no painted background or glow. True alpha.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/references/falling-samples.jpg",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/references/falling-analyzer.jpg"
+      ]
+    },
+    {
+      "id": "browned-crust-v2",
+      "prompt": "Edit image1, keeping the EXACT loaf silhouette, angle, single slash opening and brown-versus-pale areas. Redraw all its internal surfaces in the much SIMPLER coloured-pen illustration style of image2 (style only). Remove photographic crust texture and granular flour entirely. Use large smooth ochre/terracotta wash areas, only a handful of thin brown curved cracks and short marks, and pale ivory flanks. No micro-pore pattern, no stippling, no flour speckles, no dense crack network. Make it an editorial drawing, not a filtered photograph or 3D render. Preserve real physical shape of scored baked bread. Keep real transparent alpha outside loaf, no shadow glow, halo or painted backdrop; no text or watermark. Landscape framing with generous margins. Change only style/surface detail, not subject.",
+      "refs": [
+        "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-7f7823fb-7356-45f1-928d-e32ad04536e1.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png"
+      ]
+    },
+    {
+      "id": "caramel-sugar-v2",
+      "prompt": "Edit this illustration, preserving exact saucepan shape, handle, framing, liquid depth and amber colour. Change ONLY the surface rendering: make the caramel between bubbles a clean uniform transparent amber wash with just 2 broad tonal areas. Remove ALL tiny yellow mottled marks, granular/noisy microtexture, sparkles and scattered white highlights. Keep 10 to 12 irregular bubbles as simple thin brown outline rings with one small subdued cream highlight each, not glossy marbles. Simplify metal to broad smooth grey-beige washes, no brushed microtexture. A fine warm-brown pen and smooth wash educational drawing. Preserve transparent alpha outside subject. No backdrop, halo, text, labels or watermark. Preserve physically plausible amber sugar syrup, without cream or butter.",
+      "refs": [
+        "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-1a40915e-fee7-4cbd-a464-5b9af45809f2.png"
+      ]
+    }
+  ]
+}
