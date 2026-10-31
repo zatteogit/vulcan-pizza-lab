@@ -98,7 +98,7 @@ describe("FW-05 diagnosi della fase", () => {
   it("P04 e P03 non sono più critici e P04 non propone subito altro lievito", () => {
     expect(ISSUES_DB.find(i => i.id === "P04")!.severity).toBe("warning");
     expect(ISSUES_DB.find(i => i.id === "P03")!.severity).toBe("warning");
-    expect(ISSUES_DB.find(i => i.id === "P04")!.fixImmediate).not.toMatch(/0[.,]3/);
+    expect(TROUBLESHOOTING_I18N_DEFAULTS.issues.P04.fixImmediate).not.toMatch(/0[.,]3/);
   });
 
   it("P06 non chiede il pH al livello 1 e P10 esclude lo zucchero nella STG, in tutte le lingue", () => {
@@ -176,6 +176,17 @@ describe("G4b-WP-03 problemi per fase", () => {
     expect(getStepTroubleshooting({ id: "shape" })!.issueIds).toContain("P16");
   });
 
+  it("budget D-059: i testi stanno nei cataloghi, italiano compreso, completi e senza orfani", () => {
+    const ids = ISSUES_DB.map((i) => i.id);
+    for (const issue of ISSUES_DB) expect(Object.keys(issue).sort(), issue.id).toEqual(["category", "id", "severity"]);
+    for (const copy of ALL) {
+      expect(Object.keys(copy.issues ?? {}).sort()).toEqual([...ids].sort());
+      for (const id of ids) for (const field of ["symptom", "cause", "testRapido", "fixImmediate", "prevention"] as const) {
+        expect(copy.issues?.[id]?.[field], `${id}.${field}`).toBeTruthy();
+      }
+    }
+  });
+
   it("ogni voce ha una fase dell'ordine, senza «Algoritmo»", () => {
     expect(ISSUES_DB.every((i) => (TROUBLESHOOTING_PHASE_ORDER as readonly string[]).includes(i.category))).toBe(true);
     for (const copy of ALL) expect(copy.categories?.solver).toBeUndefined();
@@ -224,7 +235,7 @@ describe("G4b-WP-03 problemi per fase", () => {
     expect(ISSUES_DB.some((i) => i.id === "P24")).toBe(false);
     const p02 = ISSUES_DB.find((i) => i.id === "P02")!;
     expect(p02.category).toBe("shaping");
-    expect(p02.symptom).toMatch(/buca/);
+    expect(TROUBLESHOOTING_I18N_DEFAULTS.issues.P02.symptom).toMatch(/buca/);
     for (const copy of ALL) expect(copy.issues?.P24).toBeUndefined();
   });
 });

@@ -623,6 +623,26 @@ in più. Chi aggiunge un condimento ora scrive la struttura con `T`/`TIP` nella
 libreria e i testi in `it.ts` come nelle altre sei lingue: il test indica
 ogni testo mancante.
 
+### Fase 2: problemi (troubleshooting)
+
+`ISSUES_DB` tiene id, fase e gravità; sintomo, causa, verifica, rimedio e
+prevenzione dei 24 problemi sono scritti in `TROUBLESHOOTING_I18N_DEFAULTS`
+(`domain-i18n-defaults.ts`, bundle `it`), che prima li derivava dai dati.
+Il server non li legge; nel browser passano tutti da `getLocalizedIssue()`,
+che ora prende i testi solo dal catalogo della lingua (tipo
+`TroubleshootingIssueData` per i dati). Test: ogni catalogo, italiano
+compreso, ha i cinque testi di ogni problema e nessun id in più.
+
+| Misura (gzip) | fase 1 | fase 2 | differenza |
+|---|---|---|---|
+| JS senza lingue | 439,9 kB | **435,8 kB** | −4,1 |
+| JS per utente, ja | 548,9 kB | **544,9 kB** | −4,0 |
+| it | 510,1 kB | 509,2 kB | −0,9 |
+
+Anche l'italiano scende: il chunk condiviso `troubleshooting-data` è
+sparito (era importato dal bundle `it` e dal codice; ora è codice puro e si
+fonde col resto).
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |
