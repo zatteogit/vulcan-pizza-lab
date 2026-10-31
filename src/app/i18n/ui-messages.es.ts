@@ -1,5 +1,12 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.hydration": "Agua sobre la harina: la hidratación es la relación entre sus pesos; no se deduce del aspecto de la masa.",
+  "learn.visual.wholeWheat": "Un ejemplo de harina integral con fragmentos de salvado. El color y el aspecto no bastan para identificar el tipo y la fuerza de la harina.",
+  "learn.visual.homeOven": "Horno doméstico: la piedra o el acero sobre la rejilla sostienen la pizza y calientan la base por contacto. Sigue la receta para la posición y el precalentamiento.",
+  "learn.visual.peelPrep": "Espolvorea ligeramente la pala antes de colocar la pizza. El dibujo muestra la preparación de la pala, no la entrada al horno.",
+  "learn.visual.stoneTemperature": "Apunta el termómetro infrarrojo a la piedra: mide la temperatura de la superficie, no del aire del horno ni del interior de la pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
   "learn.visual.bulkFermentation": "Fermentación en bloque: la masa reposa como una sola pieza, antes de dividirla.",
   "learn.visual.ballFermentation": "Fermentación final en bolas: las porciones ya formadas reposan separadas y cubiertas. En los estilos en bandeja, este reposo puede hacerse directamente en ella.",
   "learn.visual.sourdough": "Masa madre líquida: burbujas y restos de masa en el tarro. La actividad se evalúa tras los refrescos, no solo por la imagen.",

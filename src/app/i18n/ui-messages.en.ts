@@ -1,5 +1,12 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.hydration": "Water into flour: hydration is the ratio of their weights; it cannot be read from the dough’s appearance.",
+  "learn.visual.wholeWheat": "One example of whole wheat flour with bran flakes. Colour and appearance alone cannot identify flour type or strength.",
+  "learn.visual.homeOven": "Home oven: a stone or steel on the rack supports the pizza and heats its base by contact. Follow the recipe for positioning and preheating.",
+  "learn.visual.peelPrep": "Lightly dust the peel before loading the pizza. The illustration shows peel preparation, not launching.",
+  "learn.visual.stoneTemperature": "Aim the infrared thermometer at the stone: it reads the surface temperature, not the oven air or the inside of the pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
   "learn.visual.bulkFermentation": "Bulk fermentation: the dough rests as one mass, before dividing.",
   "learn.visual.ballFermentation": "Final proof in dough balls: the rounded portions rest separately and covered. For pan pizza styles, this rest can take place directly in the pan.",
   "learn.visual.sourdough": "Liquid sourdough starter: bubbles and dough streaks in the jar. Activity is assessed after feeding, not from the image alone.",

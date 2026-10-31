@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-31",
+  "status": "Batch 3 prepared for review; not published",
+  "style": "Approved coloured terracotta and ivory pen illustration, no added noise overlay",
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "id": "hydration",
+      "title": "1 · Acqua e farina",
+      "placements": [
+        "hydration"
+      ],
+      "asset": "src/assets/learn/hydration.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 20088,
+      "sha256": "d8a16db8a994d12c32666897fee43fa54e2525e73af008d5dc329eb796aee5e4",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-3-2026-10-31/hydration.png",
+      "references": [
+        {
+          "page": "https://fabflour.co.uk/step-by-step-guides/step-by-step-bread",
+          "photo_url": "https://fabflour.co.uk/uploads/images/recipe-images/transforms/_225x300_crop_center-center_line/401.jpg",
+          "author": "Fab Flour / UK Flour Millers",
+          "local_reference": "references/mix-401.jpg",
+          "original_distributed": false
+        }
+      ]
+    },
+    {
+      "id": "whole-wheat",
+      "title": "2 · Farina integrale",
+      "placements": [
+        "flour_type"
+      ],
+      "asset": "src/assets/learn/whole-wheat.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 36212,
+      "sha256": "f6d609f18564025eb9508924a6c930a39a32618831c1478b761c78f0ba5a8bca",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-3-2026-10-31/whole-wheat.png",
+      "references": [
+        {
+          "page": "https://commons.wikimedia.org/wiki/File:Whole_wheat_grain_flour_being_scooped.jpg",
+          "photo_url": "https://upload.wikimedia.org/wikipedia/commons/6/66/Whole_wheat_grain_flour_being_scooped.jpg",
+          "author": "Margaret Hoogstrate",
+          "license": "CC BY 3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "changes": "Photographic subject redrawn in terracotta and ivory; scoop and mound isolated and simplified",
+          "local_reference": "references/whole-wheat.jpg",
+          "original_distributed": false
+        }
+      ]
+    },
+    {
+      "id": "home-oven",
+      "title": "3 · Forno domestico",
+      "placements": [
+        "thermal_conductivity",
+        "P09"
+      ],
+      "asset": "src/assets/learn/home-oven.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 46244,
+      "sha256": "66fd2176288230224f1da9257a96fb13e1a3c2cbf38a55dc3ab5e3026c595c5d",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-3-2026-10-31/home-oven.png",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "author": "King Arthur Baking",
+          "local_reference": "references/home-oven.jpg",
+          "selection": "Left panel only; home oven, baking slab and peel",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2015/12/Pizza_Blog_Sequenced-42.jpg",
+          "original_distributed": false
+        }
+      ]
+    },
+    {
+      "id": "peel-prep",
+      "title": "4 · Preparazione della pala",
+      "placements": [
+        "P22"
+      ],
+      "asset": "src/assets/learn/peel-prep.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 35524,
+      "sha256": "cfeab1926d57f3212608e0ba1aea7b01d3ad0037f77e503550dc3756fa9da8b8",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-3-2026-10-31/peel-prep.png",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+          "author": "King Arthur Baking",
+          "local_reference": "references/peel.jpg",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2014/12/Pizza_Blog_Sequenced-13.jpg",
+          "original_distributed": false
+        }
+      ]
+    },
+    {
+      "id": "stone-temperature",
+      "title": "5 · Temperatura della pietra",
+      "placements": [
+        "P10"
+      ],
+      "asset": "src/assets/learn/stone-temperature.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 19204,
+      "sha256": "81eab2cd4b2dac26cd415b14b483b2f6b2c62d9445e94e48293eaf169c00b49b",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-3-2026-10-31/stone-temperature.png",
+      "references": [
+        {
+          "page": "https://www.williams-sonoma.com/netstorage/pdf/Ooni-IR-Thermometer-UU-P06100-Essentials-Guide.pdf",
+          "author": "Ooni",
+          "local_reference": "references/ir-photo.png",
+          "selection": "Page 2 lower-left photograph, cropped from rendered manual; not diagram; screen values removed",
+          "original_distributed": false
+        }
+      ]
+    }
+  ],
+  "previous_set_release": {
+    "pr": "https://github.com/zatteogit/vulcan-pizza-lab/pull/183",
+    "sha": "e749dcb8809044f455b2e3f033279e9b3aef2895",
+    "verify_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41181840652",
+    "test_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41181840678",
+    "production_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41182157587",
+    "cloudflare_version": "295d0f21-de9e-4d14-8b02-23f40748c9d6",
+    "status": "Published and verified in public browser",
+    "observed_loaded_assets": [
+      "bulk-fermentation-fYE68b3T.webp",
+      "ball-fermentation-BbZbrRYM.webp",
+      "sourdough-Li6PeUHd.webp",
+      "yeast-CJGe55-n.webp",
+      "oven-floor-dome-BzGVt89S.webp"
+    ],
+    "mobile_check": "390px viewport, no horizontal overflow, 672px image loaded"
+  },
+  "validation": {
+    "captions": "All seven UI languages; no text in art",
+    "scientific_scope": "No ratio inferred from dough appearance; flour image is one whole-wheat example, no visual grade or W diagnosis; infrared image measures surface only; no fake readings",
+    "encoding": "Original masters retained; same 672x448 geometry; WebP colour quality 80, alpha quality 70. Prior 15 encoded afresh from original PNG masters. Release e749dcb preserves previous files.",
+    "npm_run_verify": "PASS: 133 test files, 1734 tests passed, 1 skipped; all guards passed",
+    "npm_run_build": "PASS, including check:glass",
+    "npm_run_check_budget": "PASS; unchanged limits. 20 learning images 634564 bytes, compared with 652148 bytes for the previous 15.",
+    "browser": "All five loaded at 672px natural width in their actual glossary/troubleshooting placements; source and CC BY 3.0 links verified. Desktop and mobile 390px, no horizontal overflow.",
+    "preview_png_masters": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-3-2026-10-31",
+    "screenshots": [
+      "review-desktop.jpg",
+      "review-mobile.jpg",
+      "published-second-set.jpg"
+    ]
+  }
+}

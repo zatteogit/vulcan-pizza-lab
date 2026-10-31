@@ -1,5 +1,12 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.hydration": "粉に水を加える場面です。加水率は水と粉の重量の比率で、生地の見た目だけでは分かりません。",
+  "learn.visual.wholeWheat": "ふすまの粒が見える全粒粉の一例です。色や見た目だけで粉の種類や強さは判断できません。",
+  "learn.visual.homeOven": "家庭用オーブンでは、網に載せたピザストーンやスチールがピザを支え、接触によって底を加熱します。設置位置と予熱はレシピに従います。",
+  "learn.visual.peelPrep": "ピザを載せる前にピールへ薄く粉を振ります。図はピールの準備で、窯入れの場面ではありません。",
+  "learn.visual.stoneTemperature": "赤外線温度計を石に向けます。測るのは表面温度で、オーブン内の空気やピザ内部の温度ではありません。",
+  "learn.visual.license3": "CC BY 3.0",
+
   "learn.visual.bulkFermentation": "一次発酵。分割する前の生地を、一つのまとまりとして休ませます。",
   "learn.visual.ballFermentation": "分割後の最終発酵。丸めた生地を別々に置き、覆って休ませます。天板で焼くスタイルでは、天板の中で休ませることもあります。",
   "learn.visual.sourdough": "液状のサワードウ種。瓶の中に気泡と生地の跡が見られます。活性は写真だけでなく、種継ぎ後の状態から判断します。",
