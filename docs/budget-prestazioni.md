@@ -28,7 +28,7 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 | CSS (gzip) | 72,2 kB (516 kB non compresso, 30/10/2026) | 75 kB |
 | Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
 | Video totali | 2,6 MB (6 file; erano 48,6) | 3 MB |
-| Immagini totali | 38,5 MB (254 file WebP) | 42 MB |
+| Immagini totali | 32,4 MB (291 file; era 42,0 il 31/10/2026) | 38 MB |
 
 Il controllo gira in CI dopo la build (`.github/workflows/verify.yml`). I limiti
 sono un cricchetto: si abbassano quando si migliora, non si alzano per far
@@ -455,6 +455,111 @@ la tranche A2 del catalogo (#171) la build misura 451,0 kB senza lingue e
 **465 / 570 kB**: restano circa 13–14 kB per le prossime tranche, e il margine
 recuperato non si consuma senza che nessuno se ne accorga. Matteo: «fai quello
 che ritieni giusto».
+
+## Immagini: margine per il catalogo (31/10/2026)
+
+Dopo le illustrazioni di Impara (#182–#185) e le foto dei condimenti dei lotti
+1–3, `check:budget` misurava **«Immagini, totale» 42,0 MB su 42**: nessun
+margine per le prossime foto del catalogo. Il limite non si alza; servivano
+almeno 5 MB.
+
+### Dove sta il peso (prima)
+
+Conto di `check-budget.mjs` (MiB; per ogni scheda dell'archivio CMS la versione
+più grande, le foto di riserva identiche all'archivio contate una volta):
+
+| Categoria | File | Grandi | Piccole (640) | Totale |
+|---|---|---|---|---|
+| Condimenti (`toppings/`) | 154 | 19,01 | 7,03 | **26,04** |
+| Varianti dei condimenti (`toppings/variants/`) | 36 | 3,38 | 1,48 | **4,86** |
+| Schede CMS (25 stili + Sbagliata, `/media/photos/`) | 26 schede | | | 6,58 |
+| Ricette d'autore | 14 | 1,27 | 0,46 | 1,73 |
+| Stili fuori dal CMS | 10 | 1,07 | 0,37 | 1,44 |
+| Illustrazioni di Impara | 25 | 0,61 (672 px, una sola larghezza) | — | 0,61 |
+| Poster dei video | 6 | 0,45 | — | 0,45 |
+| Timeline | 14 | 0,15 | — | 0,15 |
+| `public/` (icone, og) | 6 | 0,12 | — | 0,12 |
+| **Totale** | | | | **41,98** |
+
+Nessun duplicato per contenuto. I condimenti sono il 74 % del totale.
+
+### Dove si vedono (Playwright su `vite preview`)
+
+| Immagine | 390 px, DPR 3 | 1280 px, DPR 2 | Variante scelta |
+|---|---|---|---|
+| Condimento, carosello della scheda Condimento (`sizes` «auto, 100vw», eager) | 354 px CSS → 1062 px reali | **896 px CSS → 1792 px reali** | grande (1254) |
+| Condimento, miniature della striscia, del selettore e della ricerca | 36–48 px CSS → ≤ 144 px | 40–48 px CSS → ≤ 96 px | piccola |
+| Stile, hero della ricetta | 449 px CSS | 1398 px CSS | grande |
+| Ricetta d'autore, card «In primo piano» di Scopri | 360 px CSS | 438 px CSS | grande |
+| Stili e ricette, card in griglia | 174 px CSS → 522 px | 230 px CSS → 460 px | 640 |
+| Illustrazione di Impara | 295 px CSS → 885 px | 466 px CSS → 932 px | 672 (unica) |
+
+La foto grande di un condimento **non** è sovradimensionata: su desktop è già
+ingrandita (1254 px per 1792 reali), quindi portarla a 960 o 1024 px
+toglierebbe dettaglio visibile proprio dove la foto è più grande. Sovradimensionata
+è la piccola: 640 px per miniature che non superano i 144 px reali (288 con
+`sizes` «96px» a 3x, nei browser che ignorano «auto»). Il carosello non la usa
+mai, salvo su schermi a densità 1 sotto i 640 px.
+
+### Cosa è cambiato
+
+Solo i condimenti (`toppings/` e `toppings/variants/`), con le regole in
+`PROFILES` di `scripts/build-responsive-images.py`:
+
+1. **Variante piccola a 320 px** (`<nome>-320.webp` al posto di `-640`): basta
+   alle miniature anche a 3x con `sizes` «96px». Dove servirebbe di più (il
+   carosello a densità 1) il browser sceglie la grande: nessuna perdita, solo
+   un download più grosso in un caso raro. Per le 17 foto consegnate senza
+   originale (lotti 1–2) e lo sfincione bianco del Lotto 3 la 320 si ricava
+   dal WebP grande consegnato: la riduzione a un quarto nasconde gli artefatti.
+2. **Qualità 75 invece di 80** per le 77 foto grandi con originale, rigenerate
+   dall'originale (non dal WebP: niente doppia compressione). SSIM medio
+   rispetto all'originale 0,967 → 0,958; tra la 75 e la 72 si guadagna poco
+   (16,9 → 16,4 MB), sotto la 75 non si è scesi.
+
+Non toccati:
+
+- **Le 26 schede dell'archivio CMS** (25 stili e la Sbagliata): la versione
+  «Precedente» dell'archivio è la copia byte per byte della foto di riserva
+  (`worker/media-catalog.test.ts`) e i file in `/media/photos/` sono immutabili.
+  Lo script ora non le riscrive mai.
+- **I WebP grandi consegnati senza originale** (17 condimenti dei lotti 1–2,
+  circa 130 kB ciascuno, già più compressi della 75) e i due WebP del Lotto 3
+  consegnati accanto all'originale ma più leggeri di quello che farebbe lo
+  script (`tegliaingiornata`, `topping_sfincionebianco`, elenco `DELIVERED`):
+  prima lo script li avrebbe sovrascritti con file più pesanti.
+- **Stili, ricette d'autore, timeline**: rigenerati identici byte per byte.
+  Sono hero e card in primo piano, la parte più visibile; valgono 3,3 MB in
+  tutto.
+- **Illustrazioni di Impara** (0,61 MB, senza originale): lossless 3,9 MB,
+  palette a 256 colori 0,9 MB (sfumature e trasparenza), lossy 70 dal WebP
+  attuale 0,51 MB. Su desktop sono già ingrandite (672 px per 932 reali): −0,1
+  MB non vale una seconda compressione.
+- **Poster dei video** (0,45 MB): −0,07 MB al massimo, non vale.
+
+### Risultato
+
+| Categoria (MiB) | Prima | Dopo | Differenza |
+|---|---|---|---|
+| Condimenti, grandi | 19,01 | 16,16 | −2,85 |
+| Condimenti, piccole | 7,03 | 2,03 | −5,00 |
+| Varianti, grandi | 3,38 | 2,77 | −0,61 |
+| Varianti, piccole | 1,48 | 0,37 | −1,11 |
+| Tutto il resto | 11,08 | 11,08 | 0 |
+| **Immagini, totale** (`check:budget`) | **41,98** | **32,41** | **−9,57** |
+
+**Confronto visivo** (Playwright, `vite preview` della build prima e dopo, con
+«riduci movimento»; Scopri, ricetta napoletana con Margherita AVPN, Ortolana e
+Bufalina del Lotto 1, Impara, a 390 px DPR 3 e 1280 px DPR 2): Scopri, Impara e
+le pagine con condimenti non toccati identiche pixel per pixel. Carosello: SSIM
+0,977–0,988 tra prima e dopo; ingranditi 2x mozzarella, basilico, cornicione
+bruciacchiato e verdure lucide non mostrano differenze riconoscibili. Miniature
+(320 contro 640): SSIM 0,997–0,999.
+
+**Limite abbassato da 42 a 38 MB** col cricchetto: restano 5,6 MB per le
+prossime foto del catalogo (circa 23 condimenti nuovi a 240 kB tra grande e
+piccola). Un condimento nuovo con originale va messo in
+`design-assets/originali/toppings/` e prende da solo la 75 e la 320.
 
 ## Interventi consigliati, in ordine di resa
 

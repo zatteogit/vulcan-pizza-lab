@@ -34,8 +34,10 @@ const BUDGET = {
   maxVideo: 1 * MB,
   /** Tutti i video. Oggi 2,6 MB (erano 48,6). */
   totalVideo: 3 * MB,
-  /** Tutte le immagini (WebP + originali fuori bundle esclusi). Oggi 40,4 MB. */
-  totalImages: 42 * MB,
+  /** Tutte le immagini (WebP + originali fuori bundle esclusi). Il 31/10/2026
+   *  42,0 → 32,4 MB (condimenti: variante piccola 320 px, qualità 75); limite
+   *  abbassato da 42 a 38 MB col cricchetto, 5,6 MB per le prossime foto. */
+  totalImages: 38 * MB,
 };
 
 function walk(dir) {

@@ -1,6 +1,7 @@
 /* ═══ Immagini responsive (BUN-1) ═══
  * Le immagini locali sono WebP in due larghezze: fino a 1280 px (quella che
- * dati e CMS espongono come URL) e 640 px per card e miniature. Qui l'URL
+ * dati e CMS espongono come URL) e una piccola per card e miniature (640 px;
+ * 320 px per i condimenti, che piccoli si vedono solo come miniature). Qui l'URL
  * principale viene riconosciuto e arricchito con srcset, width e height; gli URL
  * esterni o caricati dal CMS passano invariati. La tabella è generata da
  * scripts/build-responsive-images.py. */
