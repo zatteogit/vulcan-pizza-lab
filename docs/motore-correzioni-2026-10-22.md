@@ -1000,7 +1000,7 @@ con 12 byte di margine.
 ## Tranche B5 · Dekracap e il frigo a 8 °C (31/10/2026)
 
 Versione d'autore `dekracap` della teglia romana
-(`docs/progetto-catalogo-italiano.md` §9.12). La fonte tiene l'impasto in
+(`docs/progetto-catalogo-italiano.md` §9.13). La fonte tiene l'impasto in
 frigo a 8 °C, sopra la soglia del motore (`FRIDGE_MAX_TEMP_C` = 6 °C, che
 resta). Prima, una ricetta a 8 °C era sempre «fresco, non in frigo»: pieghe
 con «rimetti il contenitore a 8 °C, non in frigo», tolleranze «room» della

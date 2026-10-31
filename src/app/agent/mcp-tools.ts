@@ -55,7 +55,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.6.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.7.0" } as const;
 
 type Json = Record<string, unknown>;
 

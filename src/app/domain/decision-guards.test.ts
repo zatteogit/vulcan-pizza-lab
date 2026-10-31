@@ -318,7 +318,7 @@ describe("D-070: fasi esplicite solo con i tempi della fonte", () => {
 /* D-070 (decisione di Matteo del 31/10/2026, «Regola generale: mai fuori
  * stile»): il tetto d'idratazione per livello non porta mai la proposta sotto
  * il minimo dello stile. Per chi comincia la proposta resta a quel minimo; la
- * difficoltà la dice «Impasto esigente». Test completo (1.380 ricette) in
+ * difficoltà la dice «Impasto esigente». Test completo (1.392 ricette con Dekracap) in
  * use-cases/mai-fuori-stile.test.ts. */
 describe("D-070: il tetto per livello non esce dallo stile", () => {
   it("ogni stile, ogni livello: l'ottimizzatore resta sopra il minimo dello stile", () => {
@@ -333,12 +333,12 @@ describe("D-070: il tetto per livello non esce dallo stile", () => {
   });
 });
 
-/* D-070 (tranche B5, 31/10/2026; docs/autorialita.md): gli 8 °C di Dekracap
+/* D-071 (tranche B5, 31/10/2026; docs/autorialita.md): gli 8 °C di Dekracap
  * entrano negli override senza spostare la soglia del frigo
  * (FRIDGE_MAX_TEMP_C resta 6 °C, §9.4 M5): fra 7 e 8 °C l'impasto è «in
  * frigo» solo quando la ricetta segue una fonte che ce lo mette, con le ore e
  * la temperatura della fonte. */
-describe("D-070: frigo a 8 °C solo con la fonte", () => {
+describe("D-071: frigo a 8 °C solo con la fonte", () => {
   const options = { customFermentationHours: 48, customFermentationTempC: 8, usePreFerment: false };
   it("senza fonte 8 °C è «fresco, non in frigo»; con la fonte è frigo, dichiarato", () => {
     expect(FRIDGE_MAX_TEMP_C).toBe(6);

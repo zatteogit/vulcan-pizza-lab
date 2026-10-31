@@ -478,7 +478,7 @@ non calcolabile (**Ipotesi:** con una placca 40×30, 0,64 g/cm²). Versione
 bassa (+50 %, 2 teglie 30×40): 578 g per teglia, **0,48 g/cm²**. Tempi: 2 h +
 1 h + 30 minuti in teglia; cottura circa 8 + 4–5 minuti a 250–280 °C.
 
-**Dekracap:** nessuna conversione finché la fonte non è letta. (Letta il 30/10, §9.9: le dosi sono in grammi, nessuna conversione; versione in §9.12.)
+**Dekracap:** nessuna conversione finché la fonte non è letta. (Letta il 30/10, §9.9: le dosi sono in grammi, nessuna conversione; versione in §9.13.)
 
 **Dose della fonte e dose del modello.** Conto con `calculateYeastPercentage`
 (`domain/fermentation-model.ts`) sulle ore e temperature indicate, senza le
@@ -1271,9 +1271,9 @@ Margine per la B4: 7,6 kB di codice e 3,7 kB per utente.
    ad …» davanti a vocale (regola generale `startsWithVowel`; in francese
    «Inspirée d’…», le altre lingue non cambiano).
 
-### 9.12 Stato di B5 (31/10/2026)
+### 9.13 Stato di B5 (31/10/2026)
 
-**Fatto** (ramo `tranche-b5`, D-070 in `docs/autorialita.md`). Versione
+**Fatto** (ramo `tranche-b5`, integrato sopra B3 in `b5-final`; D-071 in `docs/autorialita.md`, prima D-070). Versione
 d'autore della `teglia_romana` (decisione di Matteo), nessuno stile nuovo,
 nessun preset nuovo.
 
@@ -1342,7 +1342,7 @@ nessun preset nuovo.
 - **Testi** in 7 lingue (francese col «vous» dove ci si rivolge a chi legge,
   portoghese del Brasile): firma, tecnica, storia, badge
   (`inspiration-i18n`), due messaggi del motore, un'etichetta di Crea.
-  `LOCALE_BUNDLE_REV` 59.
+  `LOCALE_BUNDLE_REV` 61 (60 è «mai fuori stile», D-070).
 
 #### Come il motore tratta gli 8 °C
 
@@ -1357,7 +1357,7 @@ consiglio da frigo, tolleranze da frigo (fino a +6 h), acqua per un impasto
 a 22 °C (30 → 24 °C con la cucina a 21 °C), nota `fermentation.sourceFridge`
 («zona meno fredda; in un frigo più freddo cresce più piano»). L'appretto
 resta fuori dal frigo. Gli stessi 8 °C scelti a mano in Crea restano
-«fresco» (test e guardia D-070). Misure in
+«fresco» (test e guardia D-071). Misure in
 `docs/motore-correzioni-2026-10-22.md` («Tranche B5»).
 
 #### Cosa vede l'utente (prova nel browser, `vite preview`, forno di casa 250 °C)
@@ -1380,7 +1380,7 @@ resta fuori dal frigo. Gli stessi 8 °C scelti a mano in Crea restano
   «4 °C frigo · 12 °C fresco · 22 °C amb.» (badge «Consigliato: Frigo», la
   proposta su misura a 4 °C). Con il pasto di domani a pranzo (28 h) le 48 h
   non ci stanno: «Per ora non si può fare» (servono 48,9 h), come per Bonci.
-- **MCP 1.6.0**: `get_style` offre `dekracap`; `generate_recipe` con
+- **MCP 1.7.0**: `get_style` offre `dekracap`; `generate_recipe` con
   `interpretation_id: "dekracap"` dà le stesse dosi, `yeast_source`,
   `fermentation_in_fridge: true` e le due note; la guida dice come
   presentarle. Il riferimento della teglia romana non cambia. **Voce**:
