@@ -1,9 +1,9 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
-  "learn.visual.benchFold": "台の上での折りたたみ：水分の多い生地の端を、ちぎらずに本体の上へ折り重ねます。",
-  "learn.visual.prefermentPair": "左は混ぜた直後のビガ、右は休ませた後のポーリッシュです。異なる硬さの例であり、熟成度を判定する比較ではありません。",
-  "learn.visual.stretchingProperties": "手で伸ばすと、生地の反応を観察できます。P・L・Wの値は、この動作ではなく測定機器で求めます。",
-  "learn.visual.poolishPhoto": "ポーリッシュの参考写真",
+  "learn.visual.benchFold": "湿った生地の端を、ちぎらずに台の上で折り重ねます。",
+  "learn.visual.prefermentPair": "左：混ぜた直後のビガ。右：休ませたポーリッシュ。熟成度ではなく硬さの比較です。",
+  "learn.visual.stretchingProperties": "手で生地の反応を見る例です。P・L・Wは機器で測定します。",
+  "learn.visual.poolishPhoto": "ポーリッシュの写真",
 
   "learn.visual.doughTemperature": "生地にプローブを差し込み、温度を測ります。生地の温度は室温と異なることがあります。",
   "learn.visual.coveredRest": "休ませる間は容器を覆い、生地の表面が乾燥するのを抑えます。",
@@ -17,23 +17,23 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "learn.visual.pizzaTurning": "回転用の小さなピールを縁の下に差し込み、ピザを回すのに使います。手は窯の開口部の外に保ちます。",
   "learn.visual.oilTemperature": "油に浸したプローブで測り、温度計の本体は鍋の外に置きます。温度はレシピに従います。",
 
-  "learn.visual.waterTemperature": "温度計のプローブを水に浸し、容器の底や側面に触れないように測ります。目標温度はレシピに従います。",
-  "learn.visual.mixerDough": "ドゥフック付きミキサーで、生地がボウルの中にまとまっています。こねる間の温度上昇は、機械、時間、生地によって変わります。",
-  "learn.visual.fryingSeal": "具が縁に付かないようにし、二枚の生地の縁を押して閉じます。半月形の具入り揚げピザの一例です。",
+  "learn.visual.waterTemperature": "プローブを水に浸し、容器の底や側面に触れずに測ります。目標温度はレシピに従います。",
+  "learn.visual.mixerDough": "フック式ミキサーのボウルにまとまった生地。こねる際の温度上昇は、機械・時間・生地で変わります。",
+  "learn.visual.fryingSeal": "具を縁に付けず、重ねた縁を押して閉じます。半月形の具入り揚げピザの例です。",
   "learn.visual.fryingDrain": "揚げピザを網じゃくしで下から支えて持ち上げ、油を切り、網や吸油紙の上に置きます。",
   "learn.visual.baseCheck": "フライ返しで縁を持ち上げ、底を確認します。グルテンフリーの型焼きピザの一例です。表面の焼き色だけで、中心まで火が通ったかは判断できません。",
 
   "learn.visual.hydration": "粉に水を加える場面です。加水率は水と粉の重量の比率で、生地の見た目だけでは分かりません。",
   "learn.visual.wholeWheat": "ふすまの粒が見える全粒粉の一例です。色や見た目だけで粉の種類や強さは判断できません。",
-  "learn.visual.homeOven": "家庭用オーブンでは、網に載せたピザストーンやスチールがピザを支え、接触によって底を加熱します。設置位置と予熱はレシピに従います。",
+  "learn.visual.homeOven": "家庭用オーブンの網に置いた石板や鋼板がピザを支え、接触で底を加熱します。位置と予熱はレシピに従います。",
   "learn.visual.peelPrep": "ピザを載せる前にピールへ薄く粉を振ります。図はピールの準備で、窯入れの場面ではありません。",
-  "learn.visual.stoneTemperature": "赤外線温度計を石に向けます。測るのは表面温度で、オーブン内の空気やピザ内部の温度ではありません。",
+  "learn.visual.stoneTemperature": "赤外線温度計で石の表面を測ります。炉内の空気やピザ内部の温度ではありません。",
   "learn.visual.license3": "CC BY 3.0",
 
   "learn.visual.bulkFermentation": "一次発酵。分割する前の生地を、一つのまとまりとして休ませます。",
   "learn.visual.ballFermentation": "分割後の最終発酵。丸めた生地を別々に置き、覆って休ませます。天板で焼くスタイルでは、天板の中で休ませることもあります。",
   "learn.visual.sourdough": "液状のサワードウ種。瓶の中に気泡と生地の跡が見られます。活性は写真だけでなく、種継ぎ後の状態から判断します。",
-  "learn.visual.yeast": "左は生イースト、右はインスタントドライイーストです。どちらもパン用イーストですが、同じ重さで置き換えることはできません。",
+  "learn.visual.yeast": "左は生、右はインスタントドライのパン用イースト。同じ重さでの置き換えはできません。",
   "learn.visual.ovenFloorDome": "下が炉床、上が天井です。炉床はピザを支え、天井は上から加熱します。薪窯の一例です。",
 
   "learn.visual.license": "CC BY 2.0",
