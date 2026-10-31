@@ -283,7 +283,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         testRapido: "Go\u00FBter : saveur am\u00E8re ?",
         fixImmediate:
           "Si amer = probl\u00E8me (baisser temp). Si savoureux = NORMAL",
-        prevention: "Gardez la sole à la température du style et brossez la pierre entre deux pizzas",
+        prevention: "Maintenez la sole à la température du style et retirez les résidus avec les outils et la méthode de nettoyage indiqués par le fabricant.",
       },
       P16: {
         symptom: "Corniche basse et plate",

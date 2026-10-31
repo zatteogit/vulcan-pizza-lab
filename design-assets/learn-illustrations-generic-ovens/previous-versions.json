@@ -1,0 +1,14 @@
+{
+  "stone-brushing": {
+    "bytes": 21302,
+    "sha256": "9805e1252f39303e2ab4d95530f1389af6b86f3b35f32803084cb95e089ffe50"
+  },
+  "pizza-turning": {
+    "bytes": 25442,
+    "sha256": "683aa7b7e746a70b4061009dcf074b3506e0719b36608baad9875cfa34dc3a12"
+  },
+  "stone-temperature": {
+    "bytes": 15570,
+    "sha256": "534dc3a4a3d1eee7bdcbe617eb4793c4134e9aab58dd320d5bb91509aca42096"
+  }
+}

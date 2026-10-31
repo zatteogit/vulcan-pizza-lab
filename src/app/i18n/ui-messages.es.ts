@@ -1,5 +1,11 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.portionWeighing": "Pesa cada porción antes de formar la bola. Tanto el peso de la masa como la superficie de la pizza influyen en el grosor.",
+  "learn.visual.mozzarellaDrying": "Distribuye la mozzarella fresca sobre papel absorbente para eliminar el exceso de humedad antes de cubrir la pizza.",
+  "learn.visual.stoneBrushing": "Mantenimiento en frío: retira los residuos con un cepillo adecuado para la piedra, siguiendo las instrucciones del fabricante.",
+  "learn.visual.pizzaTurning": "Introduce la pala de giro bajo un borde para ayudar a girar la pizza. Mantén las manos fuera de la boca del horno.",
+  "learn.visual.oilTemperature": "La sonda sumergida mide el aceite; el cuerpo del termómetro queda fuera del recipiente. Sigue la temperatura de la receta.",
+
   "learn.visual.waterTemperature": "Mide el agua con una sonda sumergida, sin tocar el fondo ni las paredes del recipiente. Usa la temperatura indicada en la receta.",
   "learn.visual.mixerDough": "Amasadora con gancho: la masa queda recogida en el bol. El calentamiento durante el amasado depende de la máquina, la duración y la masa.",
   "learn.visual.fryingSeal": "Presiona los dos bordes para unirlos, manteniendo la unión libre de relleno. Ejemplo de pizza frita rellena en forma de media luna.",

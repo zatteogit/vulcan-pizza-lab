@@ -1,5 +1,11 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.portionWeighing": "Weigh each portion before rounding it. Both dough weight and pizza area affect thickness.",
+  "learn.visual.mozzarellaDrying": "Spread fresh mozzarella on absorbent paper to remove excess moisture before topping the pizza.",
+  "learn.visual.stoneBrushing": "Cold maintenance: remove debris with a brush suitable for the stone, following the manufacturer’s instructions.",
+  "learn.visual.pizzaTurning": "Slide the turning peel under an edge to help rotate the pizza. Keep your hands outside the oven mouth.",
+  "learn.visual.oilTemperature": "The immersed probe measures the oil; the thermometer body stays outside the pan. Follow the recipe’s temperature.",
+
   "learn.visual.waterTemperature": "Measure the water with an immersed probe, without touching the bottom or sides of the container. Use the temperature specified by the recipe.",
   "learn.visual.mixerDough": "Stand mixer with a dough hook: the dough is gathered in the bowl. Heating during mixing depends on the machine, mixing time and dough.",
   "learn.visual.fryingSeal": "Press the two edges together, keeping the seam free of filling. A half-moon filled fried pizza example.",

@@ -1,0 +1,62 @@
+{
+  "status": "Prepared in PR 186, not deployed",
+  "assets": [
+    {
+      "id": "stone-brushing",
+      "asset": "src/assets/learn/stone-brushing.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 19028,
+      "sha256": "518e2f1d8fdb0e5249f72a1c49724263e60bb414fda8c8c33f49d1c87052c801",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-generic-ovens-2026-10-31/stone-brushing.png",
+      "previous_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/stone-brushing.png",
+      "previous_webp": "design-assets/learn-illustrations-generic-ovens/previous-versions/stone-brushing.webp"
+    },
+    {
+      "id": "pizza-turning",
+      "asset": "src/assets/learn/pizza-turning.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 23696,
+      "sha256": "3f508de3d35f2f6377e720356fb6e2101cf492cf1dfddbed707856bb2c2e857e",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-generic-ovens-2026-10-31/pizza-turning.png",
+      "previous_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/pizza-turning.png",
+      "previous_webp": "design-assets/learn-illustrations-generic-ovens/previous-versions/pizza-turning.webp"
+    },
+    {
+      "id": "stone-temperature",
+      "asset": "src/assets/learn/stone-temperature.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 16960,
+      "sha256": "b9b5c4e91a2218f560348496aedec290c61ca332fd0709eb00c6a2a1fc64a56c",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-generic-ovens-2026-10-31/stone-temperature.png",
+      "previous_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-3-2026-10-31/stone-temperature.png",
+      "previous_webp": "design-assets/learn-illustrations-generic-ovens/previous-versions/stone-temperature.webp"
+    }
+  ],
+  "encoding": {
+    "quality": 74,
+    "alpha_quality": 30,
+    "method": 6
+  },
+  "scope": "Only oven enclosures generalized. Same photo-based gestures and tools; original photographic source attribution retained. Home-oven and oven-floor-dome inspected and already generic. Previous exact WebPs and PNG masters retained.",
+  "validation": {
+    "build": "npm run build passed",
+    "budget": "npm run check:budget passed; limits unchanged",
+    "tests": "Existing code unchanged since PR 186 CI passed at 3cecc4e8042a94c226f3276b2561c79880ee66b9. This revision edits three WebPs and design documentation only.",
+    "browser": "All three updated assets loaded at 672px natural width in actual troubleshooting cards. Turning scene checked at 390px with 303px image width and no horizontal overflow; desktop checked with image and caption. All five oven illustrations visually audited: home-oven and oven-floor-dome already generic.",
+    "screenshots": [
+      "review-brushing.jpg",
+      "review-turning.jpg",
+      "review-temperature.jpg",
+      "review-mobile.jpg"
+    ]
+  }
+}

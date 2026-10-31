@@ -303,7 +303,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         testRapido: "\u5473\u898B\uFF1A\u82E6\u3044\uFF1F",
         fixImmediate:
           "\u82E6\u3044 = \u554F\u984C\uFF08\u6E29\u5EA6\u3092\u4E0B\u3052\u308B\uFF09\u3002\u7F8E\u5473\u3057\u3044 = \u6B63\u5E38",
-        prevention: "炉床をスタイルの温度に保ち、ピッツァを焼くたびに石をブラシで払う",
+        prevention: "炉床をスタイルに合った温度に保ち、残りかすはメーカー指定の道具と清掃方法で取り除きます。",
       },
       P16: {
         symptom: "\u7E01\u304C\u4F4E\u304F\u5E73\u3089",

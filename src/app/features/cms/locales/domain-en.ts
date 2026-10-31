@@ -278,7 +278,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         testRapido: "Taste it: bitter flavour?",
         fixImmediate:
           "If bitter = problem (lower temp). If flavourful = NORMAL",
-        prevention: "Keep the floor at the style's temperature and brush the stone between pizzas",
+        prevention: "Keep the floor at the temperature for the style and remove debris using the tools and cleaning procedure specified by the manufacturer.",
       },
       P16: {
         symptom: "Low and flat crust",

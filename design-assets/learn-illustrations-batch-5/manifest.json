@@ -1,0 +1,177 @@
+{
+  "date": "2026-10-31",
+  "status": "Five new illustrations prepared for visual review, not published",
+  "mode": "built-in image_gen",
+  "style": "Approved coloured terracotta/ivory pen illustration, transparent backgrounds, no global grain overlay",
+  "assets": [
+    {
+      "id": "portion-weighing",
+      "title": "Pesare le porzioni",
+      "placements": [
+        "thickness_factor"
+      ],
+      "asset": "src/assets/learn/portion-weighing.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 22688,
+      "sha256": "1adac09f2f7f936b821b3c2ec8a46eccd38b6a73289b873f7dfaa7fc9321cde0",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/portion-weighing.png",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2020/03/16/how-to-make-a-simple-hearth-bread",
+          "author_or_publisher": "King Arthur Baking",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/inline-images/Simple%20Hearth%20Bread-4.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/references/portion-scale.png",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Recomposed from photographed dough portions, scraper and scale. A portion is placed on the platform for clarity; this exact placement is not present in the source photograph. No weight reading."
+    },
+    {
+      "id": "mozzarella-drying",
+      "title": "Asciugare la mozzarella",
+      "placements": [
+        "P18"
+      ],
+      "asset": "src/assets/learn/mozzarella-drying.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 25830,
+      "sha256": "48bf62ea7ae7eac7385e65cd74dabdce3b1afccec8924a5bcfda6740dc8db639",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/mozzarella-drying.png",
+      "references": [
+        {
+          "page": "https://mypizzacorner.com/pizza-tips/how-to-drain-mozzarella-for-pizza/",
+          "author_or_publisher": "Tom Rothwell / My Pizza Corner",
+          "photo_url": "https://mypizzacorner.com/wp-content/uploads/2020/11/slice-mozzarella-for-pizza.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/references/mozzarella-sliced.png",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Hands spread real-shaped fresh mozzarella strips on absorbent paper. Targeted second pass removes fibrous surface exaggeration."
+    },
+    {
+      "id": "stone-brushing",
+      "title": "Pulire la pietra a freddo",
+      "placements": [
+        "P15"
+      ],
+      "asset": "src/assets/learn/stone-brushing.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 19028,
+      "sha256": "518e2f1d8fdb0e5249f72a1c49724263e60bb414fda8c8c33f49d1c87052c801",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-generic-ovens-2026-10-31/stone-brushing.png",
+      "references": [
+        {
+          "page": "https://ooni.com/blogs/ooni-insights/how-to-clean-a-pizza-stone",
+          "author_or_publisher": "Ooni",
+          "photo_url": "https://ooni.com/cdn/shop/articles/PR251029_JanuaryAccessoryLaunches_eCommerce_Newbrushshort_closeup_44dd78cc-8435-4391-8447-195a178c86b1.webp?v=1777369856&width=1080",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/references/brush-54.png",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Cold maintenance, following the manufacturer. Unlit oven; bristles contact the stone. Existing base-check illustration preserved alongside. P15 prevention defers cleaning tools and method to manufacturer, in all seven languages. Oven enclosure generalized; see ../learn-illustrations-generic-ovens/manifest.json."
+    },
+    {
+      "id": "pizza-turning",
+      "title": "Ruotare la pizza",
+      "placements": [
+        "P14"
+      ],
+      "asset": "src/assets/learn/pizza-turning.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 23696,
+      "sha256": "3f508de3d35f2f6377e720356fb6e2101cf492cf1dfddbed707856bb2c2e857e",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-generic-ovens-2026-10-31/pizza-turning.png",
+      "references": [
+        {
+          "page": "https://ooni.com/products/ooni-pizza-turning-peel",
+          "author_or_publisher": "Ooni",
+          "photo_url": "https://ooni.com/cdn/shop/files/4_PR260304_AprilAccessoryLaunchesPDPVisuals_Copy_Images_Turningpeel_TurnF.webp?crop=center&height=640&v=1776802762&width=640",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/references/turning-action.png",
+          "original_distributed": false
+        },
+        {
+          "page": "https://ooni.com/products/ooni-pizza-turning-peel",
+          "author_or_publisher": "Ooni",
+          "photo_url": "https://ooni.com/cdn/shop/files/1_PR260304_AprilAccessoryLaunchesPDPVisuals_Copy_Images_Turningpeel_stacked.webp?crop=center&height=640&v=1776802762&width=640",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/references/turning-tool.png",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Reconstruction from photographed pizza/oven action and actual small circular turning peel. Pizza repositioned mostly onto stone, peel under one edge, hand outside oven. Not a literal trace of the photographed action. Oven enclosure generalized; see ../learn-illustrations-generic-ovens/manifest.json."
+    },
+    {
+      "id": "oil-temperature",
+      "title": "Misurare l’olio",
+      "placements": [
+        "FR01"
+      ],
+      "asset": "src/assets/learn/oil-temperature.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 25678,
+      "sha256": "df843f61d8b969652d9733f44fead0a34b6b56d5183627f7a4d4e4e1585917ae",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/oil-temperature.png",
+      "references": [
+        {
+          "page": "https://blog.thermoworks.com/best-thermometer-for-deep-frying/",
+          "author_or_publisher": "ThermoWorks",
+          "photo_url": "https://blog.thermoworks.com/wp-content/uploads/2018/01/Chefalarm-fries-1-1.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/references/oil-probe-4.png",
+          "original_distributed": false
+        },
+        {
+          "page": "https://blog.thermoworks.com/best-thermometer-for-deep-frying/",
+          "author_or_publisher": "ThermoWorks",
+          "photo_url": "https://blog.thermoworks.com/wp-content/uploads/2017/10/Initial-fry-1-1024x255.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/references/oil-probe-5.png",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Contact probe immersed in oil, clipped to rim; controller remains outside. No numeric targets, dial readings or branding. Targeted second pass changes blue pot to muted terracotta."
+    }
+  ],
+  "previous_set_release": {
+    "pr": "https://github.com/zatteogit/vulcan-pizza-lab/pull/185",
+    "sha": "33a0b81f5fba271efc47d5b37e5a97da9120d275",
+    "verify_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41186183003",
+    "test_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41186183059",
+    "production_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41186500867",
+    "cloudflare_version": "525ed663-c7c0-46c7-a04f-c2c2e4899a68",
+    "status": "Published and verified in public app",
+    "observed_loaded_assets": [
+      "water-temperature-BOyoeW2A.webp",
+      "mixer-dough (visually verified in public glossary)",
+      "frying-seal-BN3_Utgv.webp",
+      "frying-drain-4NCyXkOy.webp",
+      "base-check-DKps67mY.webp"
+    ],
+    "mobile": "390px viewport, 303px rendered image width, 672px natural width; no horizontal overflow"
+  },
+  "validation": {
+    "local_checks": "npm run verify passed: 133 files, 1734 tests passed, 1 skipped; npm run build and npm run check:budget passed; git diff --check passed.",
+    "browser": "All five new images loaded with 672px natural width in actual glossary/troubleshooting placements; captions and sources checked. Desktop and 390px mobile no horizontal overflow. P15 both images load, preserving base-check; captions distinguish cold maintenance.",
+    "encoding": "Existing 25 learning images untouched. Two full-size topping photo encodings reduced by 137084 bytes, same composition and 1254px resolution, from original PNGs; previous exact WebPs archived outside product bundle, 640px versions unchanged. See encoding.json. Product budget unchanged.",
+    "screenshots": [
+      "preview.jpg",
+      "review-desktop.jpg",
+      "review-mobile.jpg",
+      "published-fourth-set.jpg",
+      "published-fourth-set-mobile.jpg"
+    ]
+  },
+  "oven_revision": "Generic masonry ovens; see ../learn-illustrations-generic-ovens/manifest.json. No recognizable portable chassis, feet or commercial trim."
+}

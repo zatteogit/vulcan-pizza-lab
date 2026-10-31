@@ -1,5 +1,11 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.portionWeighing": "Pesez chaque portion avant de la bouler. Le poids de pâte et la surface de la pizza influencent tous deux l’épaisseur.",
+  "learn.visual.mozzarellaDrying": "Répartissez la mozzarella fraîche sur du papier absorbant pour retirer l’excès d’humidité avant de garnir la pizza.",
+  "learn.visual.stoneBrushing": "Entretien à froid : retirez les résidus avec une brosse adaptée à la pierre, en suivant les instructions du fabricant.",
+  "learn.visual.pizzaTurning": "Glissez la petite pelle sous un bord pour aider à tourner la pizza. Gardez les mains hors de l’ouverture du four.",
+  "learn.visual.oilTemperature": "La sonde immergée mesure l’huile ; le boîtier du thermomètre reste hors du récipient. Suivez la température de la recette.",
+
   "learn.visual.waterTemperature": "Mesurez l’eau avec une sonde immergée, sans toucher le fond ni les parois du récipient. Utilisez la température indiquée par la recette.",
   "learn.visual.mixerDough": "Robot pétrisseur avec crochet : la pâte est rassemblée dans la cuve. L’échauffement pendant le pétrissage dépend de la machine, de la durée et de la pâte.",
   "learn.visual.fryingSeal": "Pressez les deux bords pour les souder, en gardant la jointure sans garniture. Exemple de pizza frite farcie en demi-lune.",

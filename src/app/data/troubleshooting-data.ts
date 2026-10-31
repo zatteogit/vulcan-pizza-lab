@@ -220,7 +220,7 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     cause: "Platea più calda di quanto serve allo stile, oppure farina o semola bruciata sulla pietra",
     testRapido: 'Assaggia: sapore amaro?',
     fixImmediate: 'Se amaro = problema (abbassa temp). Se saporito = NORMALE',
-    prevention: "Tieni la platea alla temperatura dello stile e spazzola la pietra fra una pizza e l'altra",
+    prevention: "Tieni la platea alla temperatura dello stile e rimuovi i residui con attrezzi e modalità di pulizia previsti dal produttore.",
     severity: 'info',
   },
   /* Frittura: rimedi qualitativi, la temperatura resta quella della ricetta.
