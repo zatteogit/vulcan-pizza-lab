@@ -1,0 +1,44 @@
+{
+  "new_illustrations": {
+    "size": [
+      672,
+      448
+    ],
+    "quality": 74,
+    "alpha_quality": 30,
+    "method": 6
+  },
+  "existing_25_illustrations": "Untouched",
+  "photo_encoding": [
+    {
+      "asset": "src/assets/toppings/topping_ortolana.webp",
+      "size": [
+        1254,
+        1254
+      ],
+      "before_bytes": 468626,
+      "after_bytes": 398820,
+      "before_sha256": "5391a38ef9037c2a2f1f23690ad3887bc99f40156f6b72ef1adb8ccc3c2aa509",
+      "after_sha256": "a9cfd162e4eb9019208e96e0171fb13537b6e7a2224273d3aab55a0c6986459e",
+      "original_png": "design-assets/originali/toppings/topping_ortolana.png",
+      "previous_webp": "design-assets/learn-illustrations-batch-5/previous-encodings/topping_ortolana.webp",
+      "mean_pixel_error_against_previous": "4.20-4.22 per RGB channel out of 255; visual comparison at display size"
+    },
+    {
+      "asset": "src/assets/toppings/topping_capricciosa.webp",
+      "size": [
+        1254,
+        1254
+      ],
+      "before_bytes": 424966,
+      "after_bytes": 357688,
+      "before_sha256": "efe692abd6e199dae7d44a9a5f90d15c9d516b3cc1048961dd2bd8b971b18bfc",
+      "after_sha256": "1a281bc9ce63f3007a42f78cf5f99f59ebc5f6de83496b2edc413c723bcc8465",
+      "original_png": "design-assets/originali/toppings/topping_capricciosa.png",
+      "previous_webp": "design-assets/learn-illustrations-batch-5/previous-encodings/topping_capricciosa.webp",
+      "mean_pixel_error_against_previous": "4.20-4.22 per RGB channel out of 255; visual comparison at display size"
+    }
+  ],
+  "photo_quality": 75,
+  "photo_resolution_and_composition": "Unchanged; re-encoded from original PNG masters; 640px variants unchanged; previous WebPs archived outside the product bundle. No performance limit changes."
+}

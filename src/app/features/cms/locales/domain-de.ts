@@ -282,7 +282,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         testRapido: "Probieren: bitterer Geschmack?",
         fixImmediate:
           "Wenn bitter = Problem (Temp senken). Wenn w\u00FCrzig = NORMAL",
-        prevention: "Halte die Backfläche auf der Temperatur des Stils und bürste den Stein zwischen zwei Pizzen ab",
+        prevention: "Den Backboden auf der Temperatur für den Stil halten und Rückstände mit den vom Hersteller vorgesehenen Werkzeugen und Reinigungsmethoden entfernen.",
       },
       P16: {
         symptom: "Niedriger, flacher Rand",

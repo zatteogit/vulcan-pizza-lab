@@ -1,5 +1,11 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.portionWeighing": "丸める前に一つ分の生地を量ります。ピザの厚さは、生地の重さと広げる面積の両方で変わります。",
+  "learn.visual.mozzarellaDrying": "ピザに載せる前に、フレッシュモッツァレラを吸水紙に広げて余分な水分を取ります。",
+  "learn.visual.stoneBrushing": "冷めてからのお手入れです。メーカーの指示に従い、石に適したブラシで残りかすを取り除きます。",
+  "learn.visual.pizzaTurning": "回転用の小さなピールを縁の下に差し込み、ピザを回すのに使います。手は窯の開口部の外に保ちます。",
+  "learn.visual.oilTemperature": "油に浸したプローブで測り、温度計の本体は鍋の外に置きます。温度はレシピに従います。",
+
   "learn.visual.waterTemperature": "温度計のプローブを水に浸し、容器の底や側面に触れないように測ります。目標温度はレシピに従います。",
   "learn.visual.mixerDough": "ドゥフック付きミキサーで、生地がボウルの中にまとまっています。こねる間の温度上昇は、機械、時間、生地によって変わります。",
   "learn.visual.fryingSeal": "具が縁に付かないようにし、二枚の生地の縁を押して閉じます。半月形の具入り揚げピザの一例です。",

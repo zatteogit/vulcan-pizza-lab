@@ -1,0 +1,53 @@
+{
+  "mode": "built-in image_gen",
+  "style": "Approved coloured terracotta and ivory pen illustration; transparent background; real photo references; no global granular overlay.",
+  "initial": [
+    {
+      "id": "portion-weighing",
+      "refs": [
+        "portion-scale.png"
+      ],
+      "prompt": "Use case: scientific-educational. Create a landscape 3:2 Vulcan learning illustration on genuine transparent background. The last input is ONLY the approved STYLE reference: clean terracotta ink outlines, warm ivory and muted colour washes, restrained smooth shading, natural physically credible forms. All preceding inputs are genuine photographic SUBJECT references. Do not import photo noise or photo texture. No granular overlay, stippling, grainy paper, shiny plastic or 3D render. No labels, writing, numerals, branding, readouts, watermark, arrows or motion lines. Objects should be within frame; a forearm may enter from an edge. No invented thresholds, diagnostic comparisons or hidden mechanics. Use the photographed dough portions, digital scale and bench scraper as the physical references. Recompose these observed objects to place ONE irregular soft dough portion on the metal weighing platform, with the scraper resting beside it on a small plain worktop patch. Keep the genuine scale shape and soft dough folds; no perfect shiny sphere. The display is BLANK with no units or numerals. The scale sits flat, only the dough is on its platform, and the scraper does not touch it. Simple close view, no hands needed. This teaches weighing a portion, not a fixed universal portion size."
+    },
+    {
+      "id": "mozzarella-drying",
+      "refs": [
+        "mozzarella-sliced.png"
+      ],
+      "prompt": "Use case: scientific-educational. Create a landscape 3:2 Vulcan learning illustration on genuine transparent background. The last input is ONLY the approved STYLE reference: clean terracotta ink outlines, warm ivory and muted colour washes, restrained smooth shading, natural physically credible forms. All preceding inputs are genuine photographic SUBJECT references. Do not import photo noise or photo texture. No granular overlay, stippling, grainy paper, shiny plastic or 3D render. No labels, writing, numerals, branding, readouts, watermark, arrows or motion lines. Objects should be within frame; a forearm may enter from an edge. No invented thresholds, diagnostic comparisons or hidden mechanics. Illustrate the actual photographed preparation: hands place soft fresh mozzarella strips onto plain absorbent kitchen paper resting on a small wooden board. Focus on the mozzarella and gentle handling. Keep its photographed irregular soft curved strip shapes; moist ivory cheese with smooth torn edges, not hard cubes, pyramids, balls of ricotta or gelatin. Plain white paper, no embossed waffle pattern or fine-grained paper texture. Remove the unused knife and all background. The paper lightly touches and absorbs moisture from the cheese. No colander invented, no melted or cooked cheese, no pizza, no text."
+    },
+    {
+      "id": "stone-brushing",
+      "refs": [
+        "brush-54.png"
+      ],
+      "prompt": "Use case: scientific-educational. Create a landscape 3:2 Vulcan learning illustration on genuine transparent background. The last input is ONLY the approved STYLE reference: clean terracotta ink outlines, warm ivory and muted colour washes, restrained smooth shading, natural physically credible forms. All preceding inputs are genuine photographic SUBJECT references. Do not import photo noise or photo texture. No granular overlay, stippling, grainy paper, shiny plastic or 3D render. No labels, writing, numerals, branding, readouts, watermark, arrows or motion lines. Objects should be within frame; a forearm may enter from an edge. No invented thresholds, diagnostic comparisons or hidden mechanics. Follow the actual close-up photo: a long-handled pizza-oven brush with bristles resting against a baking stone inside the oven opening, brushing aside a FEW loose dark flour crumbs. Retain observed bristle contact and the actual brush construction; do not make a household paintbrush or a sponge. Show the long handle leading out of the mouth, no bare fingers in the oven. Clear dry, unlit oven with no fire, steam, water, soap or smoke. Simplify the opening and stone in warm terracotta and ivory. No gritty uniform stone noise or dense rows of crumb speckles. Focus on brush and surface contact."
+    },
+    {
+      "id": "pizza-turning",
+      "refs": [
+        "turning-action.png",
+        "turning-tool.png"
+      ],
+      "prompt": "Use case: scientific-educational. Create a landscape 3:2 Vulcan learning illustration on genuine transparent background. The last input is ONLY the approved STYLE reference: clean terracotta ink outlines, warm ivory and muted colour washes, restrained smooth shading, natural physically credible forms. All preceding inputs are genuine photographic SUBJECT references. Do not import photo noise or photo texture. No granular overlay, stippling, grainy paper, shiny plastic or 3D render. No labels, writing, numerals, branding, readouts, watermark, arrows or motion lines. Objects should be within frame; a forearm may enter from an edge. No invented thresholds, diagnostic comparisons or hidden mechanics. First subject photo provides the genuine pizza and compact oven, second subject photo provides the precise turning-peel shape. Recompose for a clear educational position: the pizza remains mostly supported by the stone just inside the oven mouth, while ONE small circular slotted turning-peel head slips under one edge. Preserve the actual photographed oven opening and real tool construction. Show enough of the long shaft extending safely outside the oven, held at its far end by a hand away from the mouth. The small peel head must be partly visible beneath the rim, not a giant full-size peel or a floating pizza. Restrained small rear flame as in reference, no hands near it. Pizza with a few observed salami rounds, no elaborate topping surface texture. No oven display, brand or arrows. It is a static view of tool position for repositioning, not a fake rotation diagram."
+    },
+    {
+      "id": "oil-temperature",
+      "refs": [
+        "oil-probe-4.png",
+        "oil-probe-5.png"
+      ],
+      "prompt": "Use case: scientific-educational. Create a landscape 3:2 Vulcan learning illustration on genuine transparent background. The last input is ONLY the approved STYLE reference: clean terracotta ink outlines, warm ivory and muted colour washes, restrained smooth shading, natural physically credible forms. All preceding inputs are genuine photographic SUBJECT references. Do not import photo noise or photo texture. No granular overlay, stippling, grainy paper, shiny plastic or 3D render. No labels, writing, numerals, branding, readouts, watermark, arrows or motion lines. Objects should be within frame; a forearm may enter from an edge. No invented thresholds, diagnostic comparisons or hidden mechanics. Use the actual photographed pot, wired thermometer, probe connection and frying setup. Draw a high-sided saucepan with still golden frying oil in its lower portion, a slim metal temperature probe dipping into the oil from a secure rim clip, and the wired digital readout standing on the counter OUTSIDE and away from the pan. Keep the probe's cable connected coherently, the tip immersed without touching the bottom, and the plastic readout out of the oil. A restrained close educational arrangement of these observed objects; remove the fries, tongs, person and busy background. Blank readout and blank buttons, no numbers. No flames, splashes, boiling foam, steam or smoke. Smooth oil surface, clean pen illustration, no grain overlay. This illustrates immersion measurement, not an infrared thermometer."
+    }
+  ],
+  "refinements": [
+    {
+      "id": "oil-temperature",
+      "prompt": "Precise illustration refinement. Image 1 is the EDIT TARGET; image 2 is the approved STYLE. Keep composition and all physical geometry unchanged: wired controller outside the pan, cable, rim clip and immersed metal probe with tip clear of the bottom. Change only the pan colour and rendering: muted warm terracotta/ivory enamel, broad flat colour washes with restrained ink shading. Remove shiny hard specular/3D-looking highlights. Keep the oil golden and readable. Match the warm approved pen illustration palette. No new objects, no text or readings, no extra texture or granular noise. Transparent background, preserve existing transparency."
+    },
+    {
+      "id": "mozzarella-drying",
+      "prompt": "Precise illustration refinement. Image 1 is the EDIT TARGET; image 2 is the approved STYLE. Preserve the hands, gesture, board, absorbent paper, layout and the irregular cheese strips. Change only the cheese surface: fresh soft mozzarella with smooth milky white faces, subtle soft edges and only slightly torn ends. Remove dense ribbed/fibrous/chicken-like streaks, curd granules and rough flaky texture. Keep irregular curved soft strips, not triangles, pyramids or hard cubes. Clean terracotta ink with broad ivory washes; no glossy plastic, no fine grain overlay. No new objects or text. Transparent background, preserve existing transparency."
+    }
+  ]
+}

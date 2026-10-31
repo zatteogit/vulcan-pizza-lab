@@ -3,6 +3,12 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.portionWeighing": "Pesa la porzione prima di formare il panetto. Per lo spessore contano sia il peso dell’impasto sia la superficie della pizza.",
+  "learn.visual.mozzarellaDrying": "Distribuisci la mozzarella fresca sulla carta assorbente per eliminare l’umidità in eccesso prima di condire la pizza.",
+  "learn.visual.stoneBrushing": "Manutenzione a freddo: rimuovi i residui con una spazzola adatta alla pietra, seguendo le istruzioni del produttore.",
+  "learn.visual.pizzaTurning": "Il palettino si inserisce sotto un bordo per aiutare a ruotare la pizza. Tieni le mani fuori dalla bocca del forno.",
+  "learn.visual.oilTemperature": "La sonda immersa misura l’olio; il corpo dello strumento resta fuori dal recipiente. Segui la temperatura della ricetta.",
+
   "learn.visual.waterTemperature": "Misura l’acqua con una sonda immersa, senza toccare fondo o pareti del recipiente. La temperatura da raggiungere è quella indicata dalla ricetta.",
   "learn.visual.mixerDough": "Impastatrice con gancio: l’impasto è raccolto nella ciotola. Il riscaldamento durante la lavorazione dipende da macchina, durata e impasto.",
   "learn.visual.fryingSeal": "Schiaccia insieme i due lembi lungo il bordo, mantenendolo libero dal ripieno. Esempio di pizza fritta chiusa a mezzaluna.",

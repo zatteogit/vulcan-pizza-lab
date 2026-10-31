@@ -447,7 +447,7 @@ function IssueCard({
               />
               {/* Prevenzione */}
               <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.f9797745")} value={issue.prevention} />
-              {illustrated && TROUBLESHOOTING_VISUALS[issue.id] && <LearningIllustration id={TROUBLESHOOTING_VISUALS[issue.id]!} />}
+              {illustrated && TROUBLESHOOTING_VISUALS[issue.id]?.map(id => <LearningIllustration key={id} id={id} />)}
               {/* FW-02 (S13-A-06): dove il consiglio dà una soglia numerica, il
                   «Perché?» dice che è una regola pratica, non tarata sullo stile. */}
               {noteId && <WhyButton noteId={noteId} label={cms.science?.notes?.[noteId]?.title} className="troubleshooting-card__why" />}

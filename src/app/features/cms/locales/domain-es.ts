@@ -276,7 +276,7 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         testRapido: "Prueba: ¿sabor amargo?",
         fixImmediate:
           "Si amargo = problema (baja temp). Si sabroso = NORMAL",
-        prevention: "Mantén la base a la temperatura del estilo y cepilla la piedra entre una pizza y otra",
+        prevention: "Mantén la solera a la temperatura del estilo y retira los residuos con las herramientas y el procedimiento de limpieza indicados por el fabricante.",
       },
       P16: {
         symptom: "Borde bajo y plano",

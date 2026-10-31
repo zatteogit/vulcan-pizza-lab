@@ -1,5 +1,11 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.portionWeighing": "Jede Portion vor dem Rundwirken wiegen. Sowohl Teiggewicht als auch Pizzafläche beeinflussen die Dicke.",
+  "learn.visual.mozzarellaDrying": "Frischen Mozzarella vor dem Belegen auf saugfähigem Papier verteilen, um überschüssige Feuchtigkeit zu entfernen.",
+  "learn.visual.stoneBrushing": "Pflege im kalten Zustand: Rückstände mit einer für den Stein geeigneten Bürste nach Herstelleranweisung entfernen.",
+  "learn.visual.pizzaTurning": "Den kleinen Wendeschieber unter einen Rand schieben, um die Pizza zu drehen. Die Hände außerhalb der Ofenöffnung halten.",
+  "learn.visual.oilTemperature": "Der eingetauchte Fühler misst das Öl; das Thermometergehäuse bleibt außerhalb des Topfs. Die Temperatur im Rezept beachten.",
+
   "learn.visual.waterTemperature": "Die Wassertemperatur mit eingetauchtem Fühler messen, ohne Boden oder Wand des Gefäßes zu berühren. Die Zieltemperatur steht im Rezept.",
   "learn.visual.mixerDough": "Küchenmaschine mit Knethaken: Der Teig sammelt sich in der Schüssel. Die Erwärmung beim Kneten hängt von Maschine, Dauer und Teig ab.",
   "learn.visual.fryingSeal": "Die beiden Teigränder zusammendrücken und die Naht frei von Füllung halten. Beispiel einer gefüllten, halbmondförmigen frittierten Pizza.",
