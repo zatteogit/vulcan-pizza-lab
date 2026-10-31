@@ -1,5 +1,11 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.bulkFermentation": "Fermentación en bloque: la masa reposa como una sola pieza, antes de dividirla.",
+  "learn.visual.ballFermentation": "Fermentación final en bolas: las porciones ya formadas reposan separadas y cubiertas. En los estilos en bandeja, este reposo puede hacerse directamente en ella.",
+  "learn.visual.sourdough": "Masa madre líquida: burbujas y restos de masa en el tarro. La actividad se evalúa tras los refrescos, no solo por la imagen.",
+  "learn.visual.yeast": "Levadura fresca a la izquierda e instantánea seca a la derecha: distintas formas de levadura de panadería. No se sustituyen con el mismo peso.",
+  "learn.visual.ovenFloorDome": "Solera abajo, bóveda arriba: la base sostiene la pizza y la bóveda calienta desde arriba. Ejemplo de horno de leña.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga recién mezclada: una masa irregular con pliegues y bordes desgarrados.",
   "learn.visual.poolish": "Poolish después del reposo: superficie húmeda, pequeños orificios y burbujas irregulares.",

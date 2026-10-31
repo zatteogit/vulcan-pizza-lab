@@ -1,5 +1,11 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "learn.visual.bulkFermentation": "Fermentação em bloco: a massa repousa numa só peça, antes da divisão.",
+  "learn.visual.ballFermentation": "Fermentação final em bolas: as porções já boleadas repousam separadas e cobertas. Nos estilos em tabuleiro, este repouso pode ocorrer diretamente nele.",
+  "learn.visual.sourdough": "Massa-mãe líquida: bolhas e vestígios de massa no frasco. A atividade avalia-se após as alimentações, não apenas pela imagem.",
+  "learn.visual.yeast": "Fermento fresco à esquerda e seco instantâneo à direita: formas diferentes de fermento de padeiro. Não se substituem com o mesmo peso.",
+  "learn.visual.ovenFloorDome": "Base em baixo, abóbada em cima: a base sustenta a pizza e a abóbada aquece por cima. Exemplo de forno a lenha.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga logo após a mistura: uma massa irregular, com dobras e bordas rasgadas.",
   "learn.visual.poolish": "Poolish após o repouso: superfície húmida, pequenos orifícios e bolhas irregulares.",

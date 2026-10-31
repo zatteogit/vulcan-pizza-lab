@@ -8,6 +8,11 @@ import ballShaping from "../../../assets/learn/ball-shaping.webp";
 import pokeTest from "../../../assets/learn/poke-test.webp";
 import stretching from "../../../assets/learn/stretching.webp";
 import cornicione from "../../../assets/learn/cornicione.webp";
+import bulkFermentation from "../../../assets/learn/bulk-fermentation.webp";
+import ballFermentation from "../../../assets/learn/ball-fermentation.webp";
+import sourdough from "../../../assets/learn/sourdough.webp";
+import yeast from "../../../assets/learn/yeast.webp";
+import ovenFloorDome from "../../../assets/learn/oven-floor-dome.webp";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const VISUALS = {
@@ -21,6 +26,11 @@ const VISUALS = {
   "poke-test": { src: pokeTest, caption: () => uiMessage("learn.visual.pokeTest"), source: "https://www.kingarthurbaking.com/blog/2022/08/22/how-to-tell-if-bread-dough-has-risen-enough", author: "King Arthur Baking", cc: false },
   stretching: { src: stretching, caption: () => uiMessage("learn.visual.stretching"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
   cornicione: { src: cornicione, caption: () => uiMessage("learn.visual.cornicione"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
+  "bulk-fermentation": { src: bulkFermentation, caption: () => uiMessage("learn.visual.bulkFermentation"), source: "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation", author: "Maurizio Leo / King Arthur Baking", cc: false },
+  "ball-fermentation": { src: ballFermentation, caption: () => uiMessage("learn.visual.ballFermentation"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
+  sourdough: { src: sourdough, caption: () => uiMessage("learn.visual.sourdough"), source: "https://www.kingarthurbaking.com/recipes/sourdough-starter-recipe", author: "King Arthur Baking", cc: false },
+  yeast: { src: yeast, caption: () => uiMessage("learn.visual.yeast"), source: "https://www.kingarthurbaking.com/blog/2023/04/24/how-to-bake-with-fresh-yeast", author: "Liz Neily, Kristin Teig / King Arthur Baking", cc: false },
+  "oven-floor-dome": { src: ovenFloorDome, caption: () => uiMessage("learn.visual.ovenFloorDome"), source: "https://commons.wikimedia.org/wiki/File:Brick-oven-thumbnail.jpg", author: "Beboplu / Wikimedia Commons", cc: false },
 } as const;
 
 export type LearningIllustrationId = keyof typeof VISUALS;
@@ -31,6 +41,8 @@ export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrat
   folds: "folds", gluten_development: "windowpane", gluten: "windowpane",
   dough_division: "division", ball_shaping: "ball-shaping",
   poke_test: "poke-test", cornicione: "cornicione",
+  bulk_fermentation: "bulk-fermentation", ball_fermentation: "ball-fermentation",
+  sourdough: "sourdough", yeast: "yeast", oven_floor_dome: "oven-floor-dome",
 };
 
 /** These illustrate a gesture in the advice, never a visual diagnosis. */
@@ -44,7 +56,7 @@ export function LearningIllustration({ id, decorative = false }: {
   decorative?: boolean;
 }) {
   const visual = VISUALS[id];
-  const image = <img src={visual.src} width={768} height={512} alt="" loading="lazy" decoding="async" data-region="learning-image" />;
+  const image = <img src={visual.src} width={672} height={448} alt="" loading="lazy" decoding="async" data-region="learning-image" />;
   if (decorative) return image;
   return (
     <figure data-region="learning-visual">
