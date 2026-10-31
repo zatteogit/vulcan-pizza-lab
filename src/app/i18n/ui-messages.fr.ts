@@ -1,5 +1,11 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.doughTemperature": "Insère la sonde dans la pâte pour mesurer sa température, qui peut différer de celle de la pièce.",
+  "learn.visual.coveredRest": "Couvre le récipient pendant le repos pour limiter le dessèchement de la surface de la pâte.",
+  "learn.visual.coveredStorage": "Un couvercle bien ajusté limite le dessèchement. Laisse de la place pour que la pâte puisse gonfler, même pendant le repos au réfrigérateur.",
+  "learn.visual.remilledSemolina": "Un exemple de semoule de blé dur remoulue : l’aspect et la couleur ne suffisent pas à la distinguer des autres farines.",
+  "learn.visual.sauceDosing": "Étale une fine couche de tomate avec la quantité prévue par la recette, en évitant les accumulations au centre.",
+
   "learn.visual.portionWeighing": "Pesez chaque portion avant de la bouler. Le poids de pâte et la surface de la pizza influencent tous deux l’épaisseur.",
   "learn.visual.mozzarellaDrying": "Répartissez la mozzarella fraîche sur du papier absorbant pour retirer l’excès d’humidité avant de garnir la pizza.",
   "learn.visual.stoneBrushing": "Entretien à froid : retirez les résidus avec une brosse adaptée à la pierre, en suivant les instructions du fabricant.",

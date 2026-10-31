@@ -1,5 +1,11 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.doughTemperature": "Insert the probe into the dough to measure its temperature, which may differ from room temperature.",
+  "learn.visual.coveredRest": "Cover the bowl during the rest to limit drying on the dough’s surface.",
+  "learn.visual.coveredStorage": "A well-fitting lid limits drying. Leave room for the dough to expand, including during a rest in the fridge.",
+  "learn.visual.remilledSemolina": "An example of remilled durum wheat semolina: appearance and colour alone cannot distinguish it from other flours.",
+  "learn.visual.sauceDosing": "Spread a light layer of tomato using the amount specified in the recipe, avoiding a thick pool in the centre.",
+
   "learn.visual.portionWeighing": "Weigh each portion before rounding it. Both dough weight and pizza area affect thickness.",
   "learn.visual.mozzarellaDrying": "Spread fresh mozzarella on absorbent paper to remove excess moisture before topping the pizza.",
   "learn.visual.stoneBrushing": "Cold maintenance: remove debris with a brush suitable for the stone, following the manufacturer’s instructions.",

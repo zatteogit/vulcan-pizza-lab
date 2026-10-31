@@ -28,6 +28,11 @@ import mozzarellaDrying from "../../../assets/learn/mozzarella-drying.webp";
 import stoneBrushing from "../../../assets/learn/stone-brushing.webp";
 import pizzaTurning from "../../../assets/learn/pizza-turning.webp";
 import oilTemperature from "../../../assets/learn/oil-temperature.webp";
+import doughTemperature from "../../../assets/learn/dough-temperature.webp";
+import coveredRest from "../../../assets/learn/covered-rest.webp";
+import coveredStorage from "../../../assets/learn/covered-storage.webp";
+import remilledSemolina from "../../../assets/learn/remilled-semolina.webp";
+import sauceDosing from "../../../assets/learn/sauce-dosing.webp";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const VISUALS = {
@@ -61,6 +66,11 @@ const VISUALS = {
   "stone-brushing": { src: stoneBrushing, caption: () => uiMessage("learn.visual.stoneBrushing"), source: "https://ooni.com/blogs/ooni-insights/how-to-clean-a-pizza-stone", author: "Ooni", cc: false },
   "pizza-turning": { src: pizzaTurning, caption: () => uiMessage("learn.visual.pizzaTurning"), source: "https://ooni.com/products/ooni-pizza-turning-peel", author: "Ooni", cc: false },
   "oil-temperature": { src: oilTemperature, caption: () => uiMessage("learn.visual.oilTemperature"), source: "https://blog.thermoworks.com/best-thermometer-for-deep-frying/", author: "ThermoWorks", cc: false },
+  "dough-temperature": { src: doughTemperature, caption: () => uiMessage("learn.visual.doughTemperature"), source: "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature", author: "King Arthur Baking", cc: false },
+  "covered-rest": { src: coveredRest, caption: () => uiMessage("learn.visual.coveredRest"), source: "https://www.kingarthurbaking.com/blog/2021/09/28/how-to-refrigerate-bread-dough-to-bake-later", author: "Mark Weinberg / King Arthur Baking", cc: false },
+  "covered-storage": { src: coveredStorage, caption: () => uiMessage("learn.visual.coveredStorage"), source: "https://www.kingarthurbaking.com/blog/2023/04/18/never-cover-rising-bread-dough-with-towel", author: "King Arthur Baking", cc: false },
+  "remilled-semolina": { src: remilledSemolina, caption: () => uiMessage("learn.visual.remilledSemolina"), source: "https://shop.drax-muehle.de/produkte/detail/1333/bio-hartweizenmehl-semola-di-grano-duro-rimacinata-1-kg", author: "Drax-Mühle", cc: false },
+  "sauce-dosing": { src: sauceDosing, caption: () => uiMessage("learn.visual.sauceDosing"), source: "https://www.pexels.com/photo/putting-tomato-sauce-on-dough-for-pizza-17637072/", author: "Saulo Leite / Pexels", cc: false },
 } as const;
 
 export type LearningIllustrationId = keyof typeof VISUALS;
@@ -76,15 +86,17 @@ export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrat
   hydration: "hydration", flour_type: "whole-wheat", thermal_conductivity: "home-oven",
   rule_of_55: "water-temperature", friction_factor: "mixer-dough",
   thickness_factor: "portion-weighing",
+  q10: "dough-temperature", semola_rimacinata: "remilled-semolina",
 };
 
 /** These illustrate a gesture in the advice, never a visual diagnosis. */
 export const TROUBLESHOOTING_VISUALS: Readonly<Partial<Record<string, readonly LearningIllustrationId[]>>> = {
-  P01: ["folds"], P02: ["stretching"], P03: ["poke-test"], P07: ["stretching"],
-  P16: ["stretching"], P19: ["stretching"], P23: ["ball-shaping"],
+  P01: ["folds"], P02: ["stretching"], P03: ["poke-test"], P07: ["stretching", "covered-rest"],
+  P16: ["stretching"], P19: ["stretching", "covered-rest"], P23: ["ball-shaping"],
+  P04: ["dough-temperature"], P05: ["covered-storage"], P21: ["covered-storage"],
   P09: ["home-oven"], P10: ["stone-temperature"], P22: ["peel-prep"],
   FR02: ["frying-drain"], FR03: ["frying-seal"], P15: ["base-check", "stone-brushing"],
-  FR01: ["oil-temperature"], P18: ["mozzarella-drying"], P14: ["pizza-turning"],
+  FR01: ["oil-temperature"], P18: ["mozzarella-drying", "sauce-dosing"], P14: ["pizza-turning"],
 };
 
 export function LearningIllustration({ id, decorative = false }: {

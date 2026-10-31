@@ -1,5 +1,11 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.doughTemperature": "生地にプローブを差し込み、温度を測ります。生地の温度は室温と異なることがあります。",
+  "learn.visual.coveredRest": "休ませる間は容器を覆い、生地の表面が乾燥するのを抑えます。",
+  "learn.visual.coveredStorage": "容器に合ったふたで乾燥を抑えます。冷蔵庫で休ませる間も生地が膨らめるよう、上に空間を残します。",
+  "learn.visual.remilledSemolina": "デュラム小麦を細かく再製粉したセモリナの一例です。見た目や色だけでは、他の小麦粉と区別できません。",
+  "learn.visual.sauceDosing": "レシピで指定された量のトマトを薄く広げ、中央にたまらないようにします。",
+
   "learn.visual.portionWeighing": "丸める前に一つ分の生地を量ります。ピザの厚さは、生地の重さと広げる面積の両方で変わります。",
   "learn.visual.mozzarellaDrying": "ピザに載せる前に、フレッシュモッツァレラを吸水紙に広げて余分な水分を取ります。",
   "learn.visual.stoneBrushing": "冷めてからのお手入れです。メーカーの指示に従い、石に適したブラシで残りかすを取り除きます。",

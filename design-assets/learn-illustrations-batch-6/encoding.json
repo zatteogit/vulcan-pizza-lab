@@ -1,0 +1,54 @@
+{
+  "new_illustrations": {
+    "size": [
+      672,
+      448
+    ],
+    "quality": 74,
+    "alpha_quality": 30,
+    "method": 6
+  },
+  "existing_30_illustrations": "Untouched",
+  "photo_encoding": [
+    {
+      "asset": "src/assets/toppings/topping_friarellisalsiccia.webp",
+      "original_png": "design-assets/originali/toppings/topping_friarellisalsiccia.png",
+      "candidate": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/codec/topping_friarellisalsiccia-q75.webp",
+      "size": [
+        1254,
+        1254
+      ],
+      "before_bytes": 406528,
+      "after_bytes": 339288,
+      "before_sha256": "2b0a84d2e25c29f6a7314502408c34075da6ea2b7e8d27075a6d37f15b96f547",
+      "after_sha256": "c0c44192566c36b0e164c8ab662532d718affe4a6281ecee225a13f72d4543ac",
+      "mean_rgb_error": [
+        4.088460785136685,
+        3.5486551488188356,
+        4.133018678347311
+      ],
+      "previous_webp": "design-assets/learn-illustrations-batch-6/previous-encodings/topping_friarellisalsiccia.webp"
+    },
+    {
+      "asset": "src/assets/toppings/topping_bianca.webp",
+      "original_png": "design-assets/originali/toppings/topping_bianca.png",
+      "candidate": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/codec/topping_bianca-q75.webp",
+      "size": [
+        1254,
+        1254
+      ],
+      "before_bytes": 395186,
+      "after_bytes": 325236,
+      "before_sha256": "f4717b31c345c6b8756df8bf0fbd1467c5ed77d9f378294dba73679b6edd5182",
+      "after_sha256": "ff03616214b2df65564dfd80c1864cef751eb746b256a31849860cab9bf4cd7a",
+      "mean_rgb_error": [
+        4.070028540250147,
+        3.5975373223547487,
+        4.3224100740469416
+      ],
+      "previous_webp": "design-assets/learn-illustrations-batch-6/previous-encodings/topping_bianca.webp"
+    }
+  ],
+  "photo_quality": 75,
+  "scope": "Re-encoded two full-size topping photos from their original PNGs at unchanged dimensions and composition. Existing small variants unchanged. Previous exact WebPs archived outside product bundle; no performance limits changed."
+}

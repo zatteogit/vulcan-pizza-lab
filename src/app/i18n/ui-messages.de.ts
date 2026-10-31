@@ -1,5 +1,11 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.doughTemperature": "Stecke den Fühler in den Teig, um seine Temperatur zu messen. Sie kann von der Raumtemperatur abweichen.",
+  "learn.visual.coveredRest": "Decke den Behälter während der Ruhezeit ab, damit die Teigoberfläche weniger austrocknet.",
+  "learn.visual.coveredStorage": "Ein gut sitzender Deckel schützt vor Austrocknung. Lass Platz, damit der Teig auch während der Ruhezeit im Kühlschrank aufgehen kann.",
+  "learn.visual.remilledSemolina": "Ein Beispiel für fein nachgemahlenen Hartweizengrieß: Aussehen und Farbe allein reichen nicht aus, um ihn von anderen Mehlen zu unterscheiden.",
+  "learn.visual.sauceDosing": "Verteile die in der Rezeptur vorgesehene Tomatenmenge dünn und vermeide dicke Ansammlungen in der Mitte.",
+
   "learn.visual.portionWeighing": "Jede Portion vor dem Rundwirken wiegen. Sowohl Teiggewicht als auch Pizzafläche beeinflussen die Dicke.",
   "learn.visual.mozzarellaDrying": "Frischen Mozzarella vor dem Belegen auf saugfähigem Papier verteilen, um überschüssige Feuchtigkeit zu entfernen.",
   "learn.visual.stoneBrushing": "Pflege im kalten Zustand: Rückstände mit einer für den Stein geeigneten Bürste nach Herstelleranweisung entfernen.",
