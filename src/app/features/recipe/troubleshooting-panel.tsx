@@ -21,6 +21,7 @@ X,
 type LucideIcon,
 } from 'lucide-react';
 import { AnimatePresence,motion,useReducedMotion } from 'motion/react';
+import { LearningIllustration, TROUBLESHOOTING_VISUALS } from "../learning/learning-illustration";
 import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { createElement, useEffect, useId, useMemo, useState } from 'react';
 import { filterByQuery, searchLexicon } from "../search/text-match";
@@ -185,6 +186,8 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
 
 /* === FULL TROUBLESHOOTING GUIDE (expandable) === */
 interface TroubleshootingGuideProps {
+  /** Educational figures belong to the full guide, not the cooking sheet. */
+  illustrated?: boolean;
   /** Filtro opzionale per categoria */
   filterCategory?: string;
   /** Deep-link (audit lug 2026): issue da aprire e portare in vista all'arrivo,
@@ -194,7 +197,7 @@ interface TroubleshootingGuideProps {
   contextIssueIds?: readonly string[];
 }
 
-export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIssueIds }: TroubleshootingGuideProps) {
+export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIssueIds, illustrated = false }: TroubleshootingGuideProps) {
   const { cms } = useCms();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(initialIssueId ?? null);
@@ -333,6 +336,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
               >
                 <IssueCard
                   issue={issue}
+                  illustrated={illustrated}
                   expanded={expandedId === issue.id}
                   onToggle={() => setExpandedId(expandedId === issue.id ? null : issue.id)}
                 />
@@ -388,10 +392,12 @@ function IssueCard({
   issue,
   expanded,
   onToggle,
+  illustrated = false,
 }: {
   issue: TroubleshootingIssue;
   expanded: boolean;
   onToggle: () => void;
+  illustrated?: boolean;
 }) {
   const { cms } = useCms();
   /* G4b-WP-03: le voci senza soglie (pala, panetto, buchi) dicono che sono
@@ -441,6 +447,7 @@ function IssueCard({
               />
               {/* Prevenzione */}
               <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.f9797745")} value={issue.prevention} />
+              {illustrated && TROUBLESHOOTING_VISUALS[issue.id] && <LearningIllustration id={TROUBLESHOOTING_VISUALS[issue.id]!} />}
               {/* FW-02 (S13-A-06): dove il consiglio dà una soglia numerica, il
                   «Perché?» dice che è una regola pratica, non tarata sullo stile. */}
               {noteId && <WhyButton noteId={noteId} label={cms.science?.notes?.[noteId]?.title} className="troubleshooting-card__why" />}

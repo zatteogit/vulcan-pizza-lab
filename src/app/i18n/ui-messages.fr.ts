@@ -1,5 +1,18 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.license": "CC BY 2.0",
+  "learn.visual.biga": "Biga juste après le mélange : une masse irrégulière, avec des plis et des bords déchirés.",
+  "learn.visual.poolish": "Poolish après le repos : une surface humide, de petits trous et des bulles irrégulières.",
+  "learn.visual.autolysis": "Farine et eau réunies pour le repos en autolyse, avant l’ajout de levure et de sel.",
+  "learn.visual.folds": "Rabat : étirez un bord et repliez-le sur la pâte sans le déchirer.",
+  "learn.visual.windowpane": "Test de la membrane : étirez doucement un petit morceau jusqu’à obtenir un voile fin.",
+  "learn.visual.division": "Division : le coupe-pâte sépare une portion de la masse avant le boulage.",
+  "learn.visual.ballShaping": "Boulage : les mains rassemblent et ferment le pâton en tendant sa surface sans la déchirer.",
+  "learn.visual.pokeTest": "Appuyez doucement avec un doigt, puis observez le retour de l’empreinte : la forme seule n’indique pas le degré de fermentation.",
+  "learn.visual.stretching": "Étalage à la main : pressez du centre vers l’extérieur en préservant le bord plus épais.",
+  "learn.visual.cornicione": "Bord surélevé et centre plus bas : la hauteur et la coloration varient selon le style et la cuisson.",
+  "learn.visual.source": "Illustration à partir d’une référence photographique :",
+
   "edition.partner": "pour {0}",
   "recipe.slots.noneFeasibleTitle": "Pas assez de temps pour ce moment",
   "recipe.slots.noneFeasibleBody": "Avec votre cuisine, aucun style ne tient dans le temps : la pousse, le façonnage et le préchauffage demandent plus. Le premier moment possible est {0}.",

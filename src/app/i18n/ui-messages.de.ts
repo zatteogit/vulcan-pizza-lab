@@ -1,5 +1,18 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.license": "CC BY 2.0",
+  "learn.visual.biga": "Biga direkt nach dem Mischen: eine unregelmäßige Masse mit Falten und eingerissenen Rändern.",
+  "learn.visual.poolish": "Poolish nach der Ruhezeit: eine feuchte Oberfläche mit kleinen Löchern und unregelmäßigen Blasen.",
+  "learn.visual.autolysis": "Mehl und Wasser für die Autolyseruhe, bevor Hefe und Salz hinzukommen.",
+  "learn.visual.folds": "Dehnen und Falten: einen Teigrand dehnen und über die Masse legen, ohne ihn zu zerreißen.",
+  "learn.visual.windowpane": "Fenstertest: ein kleines Teigstück vorsichtig zu einer dünnen Membran dehnen.",
+  "learn.visual.division": "Abstechen: die Teigkarte trennt eine Portion von der Masse, bevor die Teiglinge rundgewirkt werden.",
+  "learn.visual.ballShaping": "Rundwirken: gewölbte Hände schließen den Teigling und spannen seine Oberfläche, ohne sie einzureißen.",
+  "learn.visual.pokeTest": "Mit einem Finger sanft eindrücken und beobachten, wie sich die Delle zurückbildet: die Form allein zeigt den Gärzustand nicht.",
+  "learn.visual.stretching": "Von Hand ausformen: von der Mitte nach außen drücken und den dickeren Rand nicht flach drücken.",
+  "learn.visual.cornicione": "Erhöhter Rand und flachere Mitte: Höhe und Bräunung hängen von Pizzastil und Backweise ab.",
+  "learn.visual.source": "Illustration nach einer Fotovorlage:",
+
   "edition.partner": "für {0}",
   "recipe.slots.noneFeasibleTitle": "Für diesen Zeitpunkt reicht die Zeit nicht",
   "recipe.slots.noneFeasibleBody": "Mit deiner Küche passt kein Stil in die Zeit: Gare, Formen und Vorheizen dauern länger. Der früheste mögliche Zeitpunkt ist {0}.",

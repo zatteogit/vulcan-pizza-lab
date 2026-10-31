@@ -3,6 +3,19 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.license": "CC BY 2.0",
+  "learn.visual.biga": "Biga appena miscelata: massa irregolare, con pieghe e bordi strappati.",
+  "learn.visual.poolish": "Poolish dopo il riposo: superficie umida, piccoli fori e bolle irregolari.",
+  "learn.visual.autolysis": "Farina e acqua riunite per il riposo di autolisi, prima di aggiungere lievito e sale.",
+  "learn.visual.folds": "Pieghe: un lembo si allunga e si ripiega sopra la massa, senza strapparlo.",
+  "learn.visual.windowpane": "Prova del velo: un piccolo pezzo si allarga fino a diventare una pellicola sottile.",
+  "learn.visual.division": "Staglio: il tarocco separa una porzione dalla massa, prima di formare i panetti.",
+  "learn.visual.ballShaping": "Pirlatura: le mani raccolgono e chiudono il panetto, tendendo la superficie senza strapparla.",
+  "learn.visual.pokeTest": "Premi piano con un dito, poi osserva come risale il segno: la sola forma del panetto non ne indica la maturazione.",
+  "learn.visual.stretching": "Stesura a mano: premi dal centro verso fuori e lascia il bordo più spesso, senza schiacciarlo.",
+  "learn.visual.cornicione": "Cornicione rialzato e centro più basso: altezza e doratura cambiano secondo lo stile e la cottura.",
+  "learn.visual.source": "Disegno da riferimento fotografico:",
+
   "edition.partner": "per {0}",
   "recipe.slots.noneFeasibleTitle": "Per questo momento non c'è tempo",
   "recipe.slots.noneFeasibleBody": "Con la tua cucina nessuno stile sta nei tempi: lievitazione, stesura e preriscaldo richiedono di più. Il primo momento possibile è {0}.",

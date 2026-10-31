@@ -13,9 +13,9 @@ import {
   PreFermentComparisonTable,
   PreFermentStyleList
 } from "../features/recipe/pre-ferment-guide";
-import { Flask } from "../features/cooking/step-illustrations";
 import { motionDelay,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { LearningIllustration } from "../features/learning/learning-illustration";
 
 /* FW-09 (S14-A-09): dalla teoria alla pratica. La Pala romana dichiara diretto,
  * biga e poolish (process_type), quindi apre la ricetta col prefermento scelto
@@ -68,7 +68,7 @@ export function PreFermentsPage() {
         {/* Header */}
         <div data-region="page-header" className="preferment-header">
           <div className="preferment-header__icon">
-            <Flask size={58} />
+            <LearningIllustration id="poolish" decorative />
           </div>
           <Heading level="page">
             {pg.learnPreFerments}
@@ -98,6 +98,7 @@ export function PreFermentsPage() {
             >
               <PreFermentCard
                 preFermentType={id}
+                illustration={<LearningIllustration id={id === "autolisi" ? "autolysis" : id} />}
                 showComparison={false}
                 showExample
                 headingLevel={2}

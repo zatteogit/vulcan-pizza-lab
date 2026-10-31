@@ -303,6 +303,56 @@
 /* S11-B-15: l'icona del termine è quella della sua categoria nel glossario;
    sotto i 480 px il decoro del percorso coprirebbe il titolo. */
 [data-page="learn"] .learn-term__icon { color: var(--tertiary); }
+
+/* Source-backed learning figures: the caption declares the pictured stage.
+   Previews are decorative; full figures load only inside opened content. */
+[data-region="learning-image"] {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+}
+[data-region="learning-visual"] {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--container-bg-low);
+}
+[data-region="learning-visual"] [data-region="learning-image"] {
+  max-block-size: calc(var(--space-40) * 2);
+}
+[data-region="learning-visual"] figcaption {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--text-default);
+  font-size: var(--font-size-md);
+  line-height: var(--leading-relaxed);
+}
+[data-region="learning-visual"] figcaption p { margin: 0; }
+[data-region="learning-source"] {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+[data-region="learning-source"] a { color: inherit; text-decoration: underline; }
+[data-page="learn"] .learn-resources__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-4);
+}
+[data-page="learn"] .learn-resources__icon {
+  grid-column: 1 / -1;
+  inline-size: 100%;
+  block-size: var(--space-40);
+}
+[data-page="learn"] .learn-resources__icon [data-region="learning-image"] {
+  block-size: 100%;
+}
+[data-page="learn"] .learn-path__illustration [data-region="learning-image"] {
+  inline-size: var(--space-24);
+}
+.preferment-header__icon [data-region="learning-image"] { inline-size: var(--space-24); }
 @media (max-width: 479px) {
   [data-page="learn"] .learn-path__illustration { display: none; }
 }

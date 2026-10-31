@@ -1,5 +1,18 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.license": "CC BY 2.0",
+  "learn.visual.biga": "Biga just after mixing: an irregular mass with folds and torn edges.",
+  "learn.visual.poolish": "Poolish after resting: a moist surface with small holes and irregular bubbles.",
+  "learn.visual.autolysis": "Flour and water combined for the autolyse rest, before adding yeast and salt.",
+  "learn.visual.folds": "Folding: stretch a flap and fold it over the dough without tearing it.",
+  "learn.visual.windowpane": "Windowpane test: gently stretch a small piece into a thin membrane.",
+  "learn.visual.division": "Dividing: a bench scraper separates a portion from the dough before rounding.",
+  "learn.visual.ballShaping": "Rounding: cupped hands close the dough ball and tension its surface without tearing it.",
+  "learn.visual.pokeTest": "Press gently with one finger, then watch the dent recover: shape alone does not show how far the dough has proofed.",
+  "learn.visual.stretching": "Hand stretching: press outwards from the centre and leave the thicker rim untouched.",
+  "learn.visual.cornicione": "A raised rim and lower centre: height and browning vary with pizza style and baking.",
+  "learn.visual.source": "Illustration using a photographic reference:",
+
   "edition.partner": "for {0}",
   "recipe.slots.noneFeasibleTitle": "There isn't enough time for this moment",
   "recipe.slots.noneFeasibleBody": "With your kitchen no style fits in time: rising, shaping and preheating take longer. The first possible moment is {0}.",
