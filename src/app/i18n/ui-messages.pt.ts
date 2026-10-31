@@ -1,5 +1,10 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "learn.visual.farinographBowl": "Cuba do farinógrafo aberta para aceder à amostra. A absorção determina-se num ensaio com consistência definida, não pelo aspeto da massa.",
+  "learn.visual.farinographReadout": "Esquema sem escala recomposto a partir de curvas do farinógrafo: tempo na horizontal, resistência na vertical. Não permite ler minutos nem comparar farinhas.",
+  "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, redesenhado e simplificado a partir de uma micrografia eletrónica, com cores alteradas e sem escala. Nem todas as bactérias lácticas têm esta forma. Ilustração sob licença CC BY-SA 3.0.",
+  "learn.visual.breadFreezerPortions": "Pão já cozido, dividido em porções e embalado para o congelador: uma prática para retardar o endurecimento. A recristalização do amido não é visível nesta imagem.",
+  "learn.visual.licenseSa3": "CC BY-SA 3.0",
   "learn.visual.alveographBubble": "Massa insuflada sob a placa do alveógrafo. W resulta do ensaio instrumental, não do aspeto da bolha.",
   "learn.visual.fallingNumberTubes": "Tubos e agitadores do teste Falling Number no suporte. A medição exige aquecer a amostra no aparelho e cronometrar a descida do agitador.",
   "learn.visual.brownedCrust": "Crosta dourada de pão: um exemplo de escurecimento para o qual contribuem as reações de Maillard. A cor por si só não mede a cozedura interior.",

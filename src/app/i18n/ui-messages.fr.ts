@@ -1,5 +1,10 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.farinographBowl": "Cuve du farinographe ouverte pour accéder à l’échantillon. L’absorption se détermine par un essai à consistance définie, pas par l’aspect de la pâte.",
+  "learn.visual.farinographReadout": "Schéma sans échelle recomposé à partir de tracés du farinographe : temps en abscisse, résistance en ordonnée. Il ne permet ni de lire des minutes ni de comparer des farines.",
+  "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, redessiné et simplifié d’après une micrographie électronique, avec des couleurs modifiées et sans échelle. Toutes les bactéries lactiques n’ont pas cette forme. Illustration sous licence CC BY-SA 3.0.",
+  "learn.visual.breadFreezerPortions": "Pain déjà cuit, portionné et emballé pour le congélateur : une pratique pour ralentir le rassissement. La recristallisation de l’amidon n’est pas visible sur cette image.",
+  "learn.visual.licenseSa3": "CC BY-SA 3.0",
   "learn.visual.alveographBubble": "Pâte gonflée sous la plaque de l’alvéographe. W résulte de l’essai instrumental, pas de l’aspect de la bulle.",
   "learn.visual.fallingNumberTubes": "Tubes et agitateurs du test Falling Number dans leur support. La mesure nécessite un échantillon chauffé dans l’appareil et le chronométrage de la descente de l’agitateur.",
   "learn.visual.brownedCrust": "Croûte de pain dorée : un exemple de brunissement auquel contribuent les réactions de Maillard. La couleur seule ne mesure pas la cuisson à cœur.",

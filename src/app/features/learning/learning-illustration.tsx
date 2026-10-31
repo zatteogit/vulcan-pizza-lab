@@ -40,9 +40,17 @@ import fallingNumberTubes from "../../../assets/learn/falling-number-tubes.webp"
 import brownedCrust from "../../../assets/learn/browned-crust.webp";
 import caramelSugar from "../../../assets/learn/caramel-sugar.webp";
 import starchPaste from "../../../assets/learn/starch-paste.webp";
+import farinographBowl from "../../../assets/learn/farinograph-bowl.webp";
+import farinographReadout from "../../../assets/learn/farinograph-readout.webp";
+import lacticBacteria from "../../../assets/learn/lactic-bacteria.webp";
+import breadFreezerPortions from "../../../assets/learn/bread-freezer-portions.webp";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const VISUALS = {
+  "farinograph-bowl": { src: farinographBowl, caption: () => uiMessage("learn.visual.farinographBowl"), source: "https://www.anton-paar.com/us-en/products/details/farinograph/", author: "Brabender / Anton Paar", cc: false },
+  "farinograph-readout": { src: farinographReadout, caption: () => uiMessage("learn.visual.farinographReadout"), source: "https://www.anton-paar.com/us-en/products/details/farinograph/", author: "Brabender / Anton Paar", cc: false },
+  "lactic-bacteria": { src: lacticBacteria, caption: () => uiMessage("learn.visual.lacticBacteria"), source: "https://commons.wikimedia.org/wiki/File:Lactobacillus_paracasei.jpg", author: "Dr. Horst Neve / Max Rubner-Institut", cc: false, license: { url: "https://creativecommons.org/licenses/by-sa/3.0/", label: () => uiMessage("learn.visual.licenseSa3") } },
+  "bread-freezer-portions": { src: breadFreezerPortions, caption: () => uiMessage("learn.visual.breadFreezerPortions"), source: "https://www.kingarthurbaking.com/blog/2020/07/08/the-best-way-to-store-yeast-bread", author: "PJ Hamel / King Arthur Baking", cc: false },
   "alveograph-bubble": { src: alveographBubble, caption: () => uiMessage("learn.visual.alveographBubble"), source: "https://www.kpmanalytics.com/products/functional-rheological/alveolab", author: "KPM Analytics", cc: false },
   "falling-number-tubes": { src: fallingNumberTubes, caption: () => uiMessage("learn.visual.fallingNumberTubes"), source: "https://www.montana.edu/barleybreeding/learning-center/learn-about-testing/Falling-Number.html", author: "Montana State University", cc: false },
   "browned-crust": { src: brownedCrust, caption: () => uiMessage("learn.visual.brownedCrust"), source: "https://www.kingarthurbaking.com/blog/2022/02/15/understanding-the-maillard-reaction-in-baking", author: "Raymond Prado / King Arthur Baking", cc: false },
@@ -92,6 +100,8 @@ export type LearningIllustrationId = keyof typeof VISUALS;
 
 /** Only map terms for which the photographed stage actually explains the text. */
 export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
+  absorption: "farinograph-bowl", stability: "farinograph-readout",
+  lab: "lactic-bacteria", retrogradation: "bread-freezer-portions",
   w_alveograph: "alveograph-bubble",
   falling_number: "falling-number-tubes",
   maillard: "browned-crust",
@@ -137,6 +147,7 @@ export function LearningIllustration({ id, decorative = false }: {
         <small data-region="learning-source">
           {uiMessage("learn.visual.source")} <a href={visual.source}>{visual.author}</a>
           {"extraSource" in visual && <> · <a href={visual.extraSource.source}>{visual.extraSource.label()}</a></>}
+          {"license" in visual && <> · <a href={visual.license.url}>{visual.license.label()}</a></>}
           {visual.cc && <> · <a href={"licenseVersion" in visual ? "https://creativecommons.org/licenses/by/3.0/" : "https://creativecommons.org/licenses/by/2.0/"}>{"licenseVersion" in visual ? uiMessage("learn.visual.license3") : uiMessage("learn.visual.license")}</a></>}
         </small>
       </figcaption>

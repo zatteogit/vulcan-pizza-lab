@@ -1,5 +1,10 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.farinographBowl": "Farinograph bowl opened to access the sample. Water absorption is determined by testing at a defined consistency, not by the dough’s appearance.",
+  "learn.visual.farinographReadout": "Unscaled diagram recomposed from farinograph traces: time horizontally, resistance vertically. It cannot be used to read minutes or compare flours.",
+  "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, redrawn and simplified from an electron micrograph, with altered colours and no scale. Not all lactic acid bacteria have this shape. Illustration licensed under CC BY-SA 3.0.",
+  "learn.visual.breadFreezerPortions": "Baked bread, portioned and packed for the freezer: a practice for slowing staling. Starch recrystallisation is not visible in this image.",
+  "learn.visual.licenseSa3": "CC BY-SA 3.0",
   "learn.visual.alveographBubble": "Dough inflated beneath the alveograph plate. W comes from the instrument test, not the appearance of the bubble.",
   "learn.visual.fallingNumberTubes": "Falling Number tubes and stirrers in their stand. Measurement requires a heated sample in the instrument and timing the stirrer’s descent.",
   "learn.visual.brownedCrust": "Browned bread crust: an example of browning to which Maillard reactions contribute. Colour alone does not measure internal doneness.",

@@ -1,5 +1,5 @@
 {
-  "status": "local review; not integrated or published",
+  "status": "approved and integrated; see release receipt for publication",
   "date": "2026-10-31",
   "base_main": "87fb30002b3e0ad3f4b31379807409df8f2ddb23",
   "generation": "built-in image_gen",
@@ -127,5 +127,26 @@
     "evidence_directory": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/",
     "app_source_changed": false,
     "published": false
+  },
+  "integration": {
+    "glossary_targets": [
+      "absorption",
+      "stability",
+      "lab",
+      "retrogradation"
+    ],
+    "locales": [
+      "it",
+      "en",
+      "es",
+      "fr",
+      "de",
+      "pt",
+      "ja"
+    ],
+    "prior_42_assets": "unchanged",
+    "new_asset_bytes": 90912,
+    "license": "LAB rendered with explicit CC BY-SA 3.0 attribution and adaptation notice",
+    "checks": "Node 20 typecheck; 134 test files, 1763 passed, one skipped; lint; production build; performance budget passed"
   }
 }
