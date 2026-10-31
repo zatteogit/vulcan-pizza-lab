@@ -274,3 +274,22 @@ describe("D-068: lievito della fonte e «luogo caldo»", () => {
     expect(r.source_notes?.[0].key).toBe("yeast.sourceDryAsFresh");
   });
 });
+
+/* D-070 (tranche B3, scelta dell'agente da confermare): una versione d'autore
+ * può dichiarare le sue fasi (ore e temperatura ciascuna) e la sua cottura.
+ * Le fasi valgono solo con le ore, la temperatura della puntata e il
+ * pre-fermento della fonte; cambiati quelli, il motore torna alle quote. */
+describe("D-070: fasi esplicite solo con i tempi della fonte", () => {
+  const profile = { id: "guardia", source_url: "https://example.org",
+    phases: { preferment: { hours: 3, temp_c: 20 }, bulk: { hours: 6, temp_c: 22 }, proof: { hours: 1.5, temp_c: 28 } } };
+  const style = { ...STYLES_DB.teglia_in_giornata, method_profile: profile, proof_in_pan: false };
+  it("con i tempi della fonte la timeline ha le sue fasi e temperature", () => {
+    const r = generateRecipe(style, homeKitchen, { customFermentationHours: 10.5, customFermentationTempC: 22, usePreFerment: true });
+    expect(r.timeline.filter((s) => s.temp_c !== undefined).map((s) => `${s.id}@${s.temp_c}`)).toEqual(["preferment@20", "bulk@22", "proof@28"]);
+  });
+  it("con altre ore niente fasi della fonte", () => {
+    const r = generateRecipe(style, homeKitchen, { customFermentationHours: 9, customFermentationTempC: 22, usePreFerment: true });
+    expect(r.declared_phases).toBeUndefined();
+    expect(r.timeline.some((s) => s.temp_c !== undefined)).toBe(false);
+  });
+});

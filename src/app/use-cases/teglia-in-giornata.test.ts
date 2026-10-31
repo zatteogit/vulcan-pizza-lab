@@ -36,8 +36,9 @@ describe("riferimento della teglia casalinga in giornata (Benedetta Rossi)", () 
     expect(benedetta.type).toBe("autore");
     expect(benedetta.source_status).toBe("verified");
     expect(benedetta.url).toBe("https://www.fattoincasadabenedetta.it/ricetta/pizza-in-teglia/");
-    expect(getInterpretationsForStyle(style.id).map((it) => it.id)).toEqual(["benedetta_rossi"]);
-    expect(relatedAuthorVersions(style.id).map((v) => `${v.interpretation.id}:${v.relation}`)).toEqual(["benedetta_rossi:base"]);
+    // B3: con Adriano Continisio, dopo il riferimento.
+    expect(getInterpretationsForStyle(style.id).map((it) => it.id)).toEqual(["benedetta_rossi", "adriano_continisio"]);
+    expect(relatedAuthorVersions(style.id).map((v) => `${v.interpretation.id}:${v.relation}`)).toEqual(["benedetta_rossi:base", "adriano_continisio:base"]);
     // Nessun preset nuovo; il preset «Casalinga» della teglia romana resta lì, col suo ID.
     expect(getVersions(style.id)).toEqual([]);
     expect(getVersions("teglia_romana").map((v) => v.id)).toContain("teglia_casalinga");
@@ -119,7 +120,7 @@ describe("MCP", () => {
     const styles = call("list_styles").structuredContent.styles as { id: string }[];
     expect(styles.map((s) => s.id)).toContain("teglia_in_giornata");
     const got = call("get_style", { style_id: "teglia_in_giornata" }).structuredContent;
-    expect(got.interpretations.map((i: { id: string }) => i.id)).toEqual(["benedetta_rossi"]);
+    expect(got.interpretations.map((i: { id: string }) => i.id)).toEqual(["benedetta_rossi", "adriano_continisio"]);
   });
   it("generate_recipe: riferimento e versione di Benedetta con il lievito della fonte", () => {
     for (const extra of [{ recipe_mode: "canonical" }, { interpretation_id: "benedetta_rossi" }]) {

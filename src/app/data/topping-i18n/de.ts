@@ -366,6 +366,13 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
         "1": { name: "Mozzarella in Würfeln", notes: "in den letzten 5 Minuten des Backens" },
       },
     },
+    margherita_teglia_croccante: {
+      ingredients: {
+        "0": { name: "Tomate mit einer Prise Salz" },
+        "1": { name: "Mozzarella", notes: "nach 10 Minuten Backzeit" },
+        "2": { name: "Natives Olivenöl extra", notes: "ein Faden, mit dem Mozzarella" },
+      },
+    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2776,6 +2783,10 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "Soße jetzt, Mozzarella zum Schluss",
       description: "Verteile die lauwarme Soße bis an die Ränder auf dem frisch ausgebreiteten Teig und lass ihn im Blech gehen. Backe ihn; in den letzten 5 Minuten öffne den Ofen, verteile die Mozzarellawürfel und backe fertig.",
+    },
+    spread_margherita_teglia_croccante: {
+      title: "Jetzt die Tomate, Mozzarella nach 10 Minuten",
+      description: "Verteile die gesalzene Tomate bis zum Rand und schieb das Blech unten in den Ofen. Nach 10 Minuten verteilst du den Mozzarella, gibst einen Faden Öl darüber und backst oben im Ofen 4–5 Minuten fertig, ohne den Mozzarella zu verbrennen.",
     },
     spread_margherita_us: {
       title: "Belag Margherita americana",

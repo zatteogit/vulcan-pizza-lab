@@ -1018,6 +1018,11 @@ export const JA_LOCALE: CmsContent = {
     "fermentation.warmPlace": "出典には「暖かい場所で」とだけあり、温度の指定はありません。{app}は{temp}で計算しており、{tempMin}〜{tempMax}なら問題ありません。時計ではなく、生地が2倍に膨らむのを待ってください。",
     "source.convertedDoses": "出典の分量はミリリットル、小さじ、袋で書かれています。グラムは{app}による換算です。塩や砂糖のような少量の材料では、誤差はおよそ25%です。",
     "topping.sauceSeasoning": "出典には「味付けしたソース」とだけあり、何で味付けするかは書かれていません。ソースのオリーブオイルと塩は{app}の解釈です。",
+    "fermentation.roomTemp": "一次発酵について出典は「室温で」とだけあり、温度の指定はありません。{app}は{temp}で計算しています。",
+    "fermentation.hoursAssumed": "出典には各工程の時間がすべて書かれているわけではありません。書かれていない部分は、レシピの時刻から{app}が見積もった時間です。時計ではなく、生地が2倍に膨らむのを待ってください。",
+    "topping.vulcanDoses": "出典にはトッピングの分量がありません。トマト、モッツァレラ、オイルは{app}の分量です。",
+    "timeline.bake.lowThenHigh": "上下ヒーター：出典どおり、まず下段で焼き、仕上げは天板を上段に移します。",
+    "timeline.shape.unoiledPan": "セモリナをふった台に生地を出し、指先で押して、空気を抜かないように広げます。油を塗らずにセモリナを薄くふった天板に移し、最後まで広げてください。",
     "diet.singleBase": "生地をすべて使って1枚の土台にし、上に玉ねぎをのせる。2枚目の生地や縁を閉じる工程はない。",
     "topping.geometry": "面積 {area} cm² · 基準 {reference} cm² · 分量 ×{scale}。",
     "auth.layoutChanged": "基準とは異なる形です。このバージョンでは構造も変わります",
@@ -1165,6 +1170,14 @@ export const JA_LOCALE: CmsContent = {
       tipNerd:
         "\u30D5\u30A3\u30F3\u30AC\u30FC\u30C6\u30B9\u30C8\uFF1A\u9045\u3044\u623B\u308A=\u6700\u9069\u306A\u767A\u9175\u3002\u901F\u3059\u304E\u308B=\u767A\u9175\u4E0D\u8DB3\u3002\u623B\u3089\u306A\u3044=\u904E\u767A\u9175\u3002",
       longDesc: "\u5206\u5272\u3057\u305F\u751F\u5730\u7389\u306F\u3001\u3082\u3046\u4E00\u5EA6\u3086\u308B\u3093\u3067\u81A8\u3089\u3080\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059\u3002\u8986\u3063\u305F\u307E\u307E\u5E38\u6E29\u306B\u7F6E\u304D\u307E\u3059\u3002\u4F38\u3070\u3059\u30BF\u30A4\u30DF\u30F3\u30B0\u306F\u6B21\u306E\u3068\u304A\u308A\u3067\u3059\uFF1A(1) \u4F53\u7A4D\u304C2\u500D\u306B\u306A\u3063\u305F\u3001(2) \u8868\u9762\u304C\u3075\u3063\u304F\u3089\u3068\u6ED1\u3089\u304B\u3001(3) \u30D5\u30A3\u30F3\u30AC\u30FC\u30C6\u30B9\u30C8\u3067\u3086\u3063\u304F\u308A\u623B\u308B\uFF08\u6307\u3067\u62BC\u3057\u3066\u7D045\u79D2\u3067\u623B\u308B\u306E\u304C\u76EE\u5B89\uFF09\u3002\u623B\u3089\u306A\u3044\u5834\u5408\u306F\u904E\u767A\u9175\u3001\u3059\u3050\u306B\u623B\u308B\u5834\u5408\u306F\u307E\u3060\u767A\u9175\u4E0D\u8DB3\u3067\u3059\u3002",
+    },
+    // B3: appretto alla temperatura scritta dalla fonte (fasi esplicite).
+    proof_declared: {
+      title: "最終発酵",
+      desc: "{temp}で最終発酵",
+      longDesc: "出典どおり、生地を覆って{temp}で2倍になるまで置きます。表面がふっくらとなめらかになり、指で押すとゆっくり戻れば完了です。家の中が涼しければ時間がかかります。時計ではなく生地を見てください。",
+      tipBeginner: "キッチンが{temp}より涼しいときは、暖房器具の近く（上ではなく）など暖かい場所を探し、温度計で確かめてください。",
+      tipNerd: "{temp}では、モデルは{refTemp}に比べて発酵速度を{factor}倍と見積もっています。",
     },
     proof_pan: {
       title: "型で最終発酵",

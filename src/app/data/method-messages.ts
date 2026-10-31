@@ -28,6 +28,12 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   "source.convertedDoses": "La fonte misura in millilitri, cucchiaini e bustine: i grammi sono una conversione di {app}. Sui grammi piccoli, come sale e zucchero, il margine è di circa il 25%.",
   // B2 (seguito): la fonte dice «condita» senza dettaglio (salsa della margherita).
   "topping.sauceSeasoning": "La fonte dice solo «salsa condita», senza dire con che cosa: olio e sale nella salsa sono una lettura di {app}.",
+  // B3: fasi esplicite della fonte (Adriano Continisio): ciò che la fonte non dice.
+  "fermentation.roomTemp": "Per la puntata la fonte dice «a temperatura ambiente», senza gradi: {app} calcola a {temp}.",
+  "fermentation.hoursAssumed": "La fonte non dice quanto dura ogni fase: dove manca, le ore sono una stima di {app} dagli orari della ricetta. Aspetta che l'impasto raddoppi, non l'ora sull'orologio.",
+  "topping.vulcanDoses": "La fonte non dà le dosi del condimento: pomodoro, mozzarella e olio sono dosi di {app}.",
+  "timeline.bake.lowThenHigh": "Forno statico: inforna nella parte bassa, poi sposta la teglia nella parte alta per finire la cottura, come dice la fonte.",
+  "timeline.shape.unoiledPan": "Rovescia l'impasto sul banco spolverato di semola, premilo con la punta delle dita e allargalo senza far uscire l'aria. Mettilo nella teglia non unta, con un velo di semola, e finisci di stenderlo.",
   "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
   "topping.geometry": "Superficie {area} cm² · riferimento {reference} cm² · dosi ×{scale}.",
   "auth.layoutChanged": "Formato diverso dal riferimento: la variante modifica la struttura della ricetta",

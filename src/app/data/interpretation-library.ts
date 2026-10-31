@@ -59,6 +59,9 @@ interface InterpretationParameterOverrides {
   dough_weight_g?: number;
   /** Override impasto (link a IMPASTO_LIBRARY). */
   impasto_ref?: string;
+  /** B3: teglia e carico della fonte (g/cm², lo spessore della teglia), al
+   *  posto della teglia dello stile. Le teglie si contano in cucina. */
+  pan?: { length_cm: number; width_cm: number; g_per_cm2: number };
 }
 
 export interface Interpretation {
@@ -125,7 +128,7 @@ export interface Interpretation {
   verified_canonical?: boolean;
 }
 
-/* ═══ LIBRERIA — 13 voci, testi verificati sulle fonti il 24/10/2026 (Benedetta
+/* ═══ LIBRERIA — 14 voci, testi verificati sulle fonti il 24/10/2026 (Adriano Continisio il 31/10/2026, Benedetta
  * Rossi il 30/10/2026) ═══
  * Registro e fonti: docs/fonti-dati.md §5. Le ricette dei maestri sono
  * «Ispirata a…» (C-5, D-027): ricostruzioni da fonti pubbliche. */
@@ -433,7 +436,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     verified_canonical: true,
   },
 
-  /* ─── AUTORI (1) ─── Tranche B2 (docs/progetto-catalogo-italiano.md §9) */
+  /* ─── AUTORI (2) ─── Tranche B2 e B3 (docs/progetto-catalogo-italiano.md §9) */
   /* Benedetta Rossi, «Pizza in teglia in collaborazione con Paneangeli»,
    * pagina ufficiale verificata col browser di Matteo il 30/10/2026 (§9.9):
    * 250 g di manitoba e 250 g di 00, 400 ml d'acqua tiepida, 50 ml d'olio,
@@ -472,6 +475,55 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     emoji: "🏠",
     badge: "Cucina di casa",
     skill_required: 1,
+  },
+  /* Adriano Continisio, «La pizza in teglia croccante», Profumo di lievito,
+   * 26/11/2009 (verificata, §9.2; riletta il 31/10/2026). Grammi della fonte
+   * per 3 teglie 30×35: 900 g di farina W 250 (450 nel preimpasto), 720 g
+   * d'acqua (450 nel preimpasto), 45 g d'olio, 18 g di sale, 4,5 g di lievito
+   * fresco (tutto nel preimpasto); malto facoltativo, non usato (gli
+   * ingredienti aggiuntivi arrivano con la B4). 1.687,5 g su 3.150 cm² =
+   * 0,536 g/cm². Fasi (B3): preimpasto «ca. 3 ore a 20°» fino alla fossetta;
+   * puntata «a temperatura ambiente», senza durata, fino alla divisione «verso
+   * le 16»: 6 h a 22 °C, lettura di Vulcan (preimpasto al mattino presto,
+   * impasto verso le 10); «Lasciamo raddoppiare a 28°» nei contenitori, senza
+   * durata: 1 h 30, stima di Vulcan. Teglie non unte con un velo di semola,
+   * 250 °C nella parte bassa per 10 minuti, poi mozzarella e olio in alto per
+   * 4–5 (870 s). Sale, olio e zucchero dall'impasto `adriano_continisio`. */
+  adriano_continisio: {
+    id: "adriano_continisio",
+    process_profile: {
+      id: "adriano_continisio", proof_in_pan: false, unoiled_pan: true,
+      phases: {
+        preferment: { hours: 3, temp_c: 20, flour_pct: 50 },
+        bulk: { hours: 6, temp_c: 22, temp_assumed: true, hours_assumed: true },
+        proof: { hours: 1.5, temp_c: 28, hours_assumed: true },
+      },
+      bake: { temp_c: 250, cook_time_sec: 870, racks: "low_then_high" },
+      source_url: "http://profumodilievito.blogspot.com/2009/11/la-pizza-in-teglia-croccante.html",
+    },
+    type: "autore",
+    author: "Adriano Continisio",
+    year_codified: 2009,
+    base_style_id: "teglia_in_giornata",
+    base_topping_concept_id: "margherita_teglia_croccante",
+    parameter_overrides: {
+      hydration_pct: 80,
+      flour_w: 250,
+      fermentation_hours: 10.5,
+      fermentation_temp_c: 22,
+      use_pre_ferment: true,
+      impasto_ref: "adriano_continisio",
+      pan: { length_cm: 30, width_cm: 35, g_per_cm2: 0.536 },
+    },
+    source_yeast: { type: "fresh", pct: 0.5 },
+    source_status: "verified",
+    signature_name: "Ispirata alla pizza in teglia croccante di Adriano Continisio",
+    technique_signature: "Preimpasto con metà della farina, metà dell'acqua e tutto il lievito fresco, circa 3 ore a 20 °C; impasto all'80% in planetaria fino al velo. Panetti a raddoppiare a 28 °C, teglie non unte con un velo di semola, 250 °C prima in basso e poi in alto con la mozzarella.",
+    story: "Adriano Continisio scrive di pane e pizza fatti in casa sul blog «Profumo di lievito». La sua pizza in teglia croccante, del 2009, si fa in giornata: preimpasto al mattino presto, panetti verso le 16 e cottura nel forno di casa a 250 °C.",
+    url: "http://profumodilievito.blogspot.com/2009/11/la-pizza-in-teglia-croccante.html",
+    emoji: "🥖",
+    badge: "Profumo di lievito",
+    skill_required: 3,
   },
 
 };

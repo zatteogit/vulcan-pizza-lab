@@ -742,7 +742,9 @@ export function RecipeConfigurator({
                   PRE_FERMENT_FLOUR_PCT.min,
                   Math.floor(maxPreFermentFlourPct(type, customHydration, PRE_FERMENT_FLOUR_PCT.max) / 5) * 5,
                 );
-                const flourPct = Math.min(maxFlourPct, preFermentChoice?.flourPct ?? PRE_FERMENT_FLOUR_PCT[type]);
+                /* B3: la quota della fonte (fasi esplicite), col tipo dello stile. */
+                const defaultPct = (preFermentChoice?.type ? undefined : style.method_profile?.phases?.preferment?.flour_pct) ?? PRE_FERMENT_FLOUR_PCT[type];
+                const flourPct = Math.min(maxFlourPct, preFermentChoice?.flourPct ?? defaultPct);
                 return (
                   <div className="config-field config-preferment">
                     <SegmentedControl
@@ -770,7 +772,7 @@ export function RecipeConfigurator({
                       onChange={(v) =>
                         onPreFermentChoiceChange({
                           ...preFermentChoice,
-                          flourPct: v === PRE_FERMENT_FLOUR_PCT[type] ? undefined : v,
+                          flourPct: v === defaultPct ? undefined : v,
                         })
                       }
                       min={PRE_FERMENT_FLOUR_PCT.min}
@@ -778,7 +780,7 @@ export function RecipeConfigurator({
                       step={5}
                       unit="%"
                       gradient={SLIDER_GRADIENTS.fermentation}
-                      optimalValue={Math.min(maxFlourPct, PRE_FERMENT_FLOUR_PCT[type])}
+                      optimalValue={Math.min(maxFlourPct, defaultPct)}
                     />
                     {maxFlourPct < PRE_FERMENT_FLOUR_PCT.max && (
                       <p className="type-body config-preferment-sourdough__text" data-region="poolish-max">

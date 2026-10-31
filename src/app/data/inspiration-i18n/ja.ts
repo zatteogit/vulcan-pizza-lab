@@ -75,6 +75,12 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
       story: "ベネデッタ・ロッシは、サイト「Fatto in casa da Benedetta」とテレビで家庭料理のレシピを紹介しています。彼女の天板ピザは数時間で作れます。たっぷりのイースト、暖かい場所、210 °Cの家庭用オーブン。モッツァレラは最後の5分にのせます。",
       badge: "家庭料理",
     },
+    adriano_continisio: {
+      signature_name: "アドリアーノ・コンティニーシオのカリッと焼く天板ピッツァにインスパイア",
+      technique_signature: "粉の半量・水の半量・生イーストの全量で作る前生地を20 °Cで約3時間。80%の生地をスタンドミキサーで薄い膜ができるまでこねます。分割した生地を28 °Cで2倍に、油を塗らずセモリナをふった天板で、250 °Cで最初は下段、モッツァレラをのせて上段へ。",
+      story: "アドリアーノ・コンティニーシオはブログ「Profumo di lievito」で、家で焼くパンとピッツァについて書いています。2009年のカリッと焼く天板ピッツァは1日で完成します。早朝に前生地、16時ごろに分割、家庭用オーブンを250 °Cで焼成。",
+      badge: "Profumo di lievito",
+    },
     da_michele_napoli: {
       signature_name: "マルゲリータとマリナーラ、ほぼそれだけ",
       technique_signature: "メニューは最小限。何十年もマルゲリータとマリナーラだけで、現在は4種類。薪窯で、飾り気なし。",

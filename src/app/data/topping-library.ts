@@ -1080,6 +1080,33 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     }],
   },
 
+  /* Tranche B3: la margherita della versione di Adriano Continisio (stesso
+   * stile). La fonte dice «pomodoro e sale», 10 minuti in basso a 250 °C, poi
+   * mozzarella e un filo d'olio in alto per 4–5 minuti; nessuna dose: i grammi
+   * sono di Vulcan (nota `topping.vulcanDoses`), per la teglia 35×35 dello
+   * stile, circa 0,2 g/cm² di pomodoro e di mozzarella. Si condisce dopo la
+   * stesura nella teglia non unta: non c'è appretto in teglia. Niente
+   * `preferred_for_styles`: la margherita dello stile resta quella di
+   * Benedetta, questa la porta la versione (base_topping_concept_id). */
+  margherita_teglia_croccante: {
+    id: "margherita_teglia_croccante",
+    concept_ref: "margherita",
+    source_note: { key: "topping.vulcanDoses", fallback: METHOD_MESSAGES_IT["topping.vulcanDoses"], params: { app: BRAND.name } },
+    ingredients: [
+      { name: "Pomodoro con un pizzico di sale", components: ["pomodoro", "sale"], amount: { value: 250, unit: "g" } },
+      { name: "Mozzarella", amount: { value: 250, unit: "g" }, notes: "dopo 10 minuti di cottura" },
+      { name: "Olio extravergine", amount: { value: 10, unit: "ml" }, notes: "a filo, con la mozzarella" },
+    ],
+    assembly_steps: [{
+      id: "spread_margherita_teglia_croccante",
+      title: "Pomodoro ora, mozzarella dopo 10 minuti",
+      description: "Distribuisci il pomodoro salato fino ai bordi e inforna nella parte bassa del forno. Dopo 10 minuti distribuisci la mozzarella, aggiungi un filo d'olio e finisci la cottura nella parte alta per 4–5 minuti, senza bruciare la mozzarella.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
   margherita_americana: {
     id: "margherita_americana",
     concept_ref: "margherita",

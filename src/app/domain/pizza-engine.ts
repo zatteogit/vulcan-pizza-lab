@@ -237,6 +237,60 @@ export interface MethodProcessProfile {
    *  morbido e appiccicoso, nessuna incordatura): il passo «Impasto» lo dice
    *  al posto dell'impasto a mano o in macchina. */
   mix_without_kneading?: boolean;
+  /** B3: fasi della fermentazione scritte dalla fonte, con ore e temperatura
+   *  ciascuna (declaredPhases). */
+  phases?: DeclaredPhases;
+  /** B3: cottura della versione (forno ideale e tempo), dentro gli intervalli
+   *  dello stile: sostituisce l'ideale dello stile (profileStyle). */
+  bake?: { temp_c: number; cook_time_sec: number; racks?: "low_then_high" };
+  /** B3: la teglia non si unge; l'impasto si stende su un velo di semola. */
+  unoiled_pan?: boolean;
+}
+
+/** B3: una fase scritta dalla fonte. `temp_assumed`: la fonte non dice i
+ *  gradi della puntata («a temperatura ambiente») e `temp_c` è una scelta di
+ *  Vulcan, dichiarata nella ricetta (nota `fermentation.roomTemp`). */
+export interface DeclaredPhase {
+  hours: number;
+  temp_c: number;
+  temp_assumed?: true;
+  /** La fonte non dice la durata: le ore sono una stima di Vulcan
+   *  (nota `fermentation.hoursAssumed`). */
+  hours_assumed?: true;
+}
+
+/** B3: fasi esplicite di una versione d'autore, in quest'ordine. Il
+ *  pre-fermento è quello del motore (biga o poolish, tutto il lievito
+ *  dentro, `flour_pct` = quota della farina); l'appretto è in teglia o a
+ *  panetti secondo `proof_in_pan`. Le ore sommate sono le ore della ricetta e
+ *  la temperatura della puntata è la sua temperatura: finché sono quelle
+ *  valgono le fasi, cambiate torna il modello delle quote (fermentationPhases).
+ *  Un riposo dei panetti prima dell'appretto in teglia (B4, Paoletta) si
+ *  aggiungerà come chiave in più. */
+export interface DeclaredPhases {
+  preferment?: DeclaredPhase & { flour_pct?: number };
+  bulk: DeclaredPhase;
+  proof: DeclaredPhase;
+}
+
+/** Le fasi della fonte, se ore, temperatura e pre-fermento della ricetta sono
+ *  quelli della fonte; undefined = modello delle quote. */
+export function declaredPhases(
+  profile: MethodProcessProfile | undefined,
+  fermentationHours: number,
+  fermentationTempC: number | undefined,
+  hasPreFerment: boolean,
+): DeclaredPhases | undefined {
+  const p = profile?.phases;
+  if (!p || fermentationTempC === undefined || Boolean(p.preferment) !== hasPreFerment) return undefined;
+  const hours = (p.preferment?.hours ?? 0) + p.bulk.hours + p.proof.hours;
+  return Math.abs(hours - fermentationHours) < 1 / 60 && Math.abs(p.bulk.temp_c - fermentationTempC) < 1e-6 ? p : undefined;
+}
+
+/** B3: lo stile con la cottura della versione (MethodProcessProfile.bake). */
+export function profileStyle(style: PizzaStyle): PizzaStyle {
+  const bake = style.method_profile?.bake;
+  return bake ? { ...style, baking: { ...style.baking, temp_c_ideal: bake.temp_c, cook_time_sec_ideal: bake.cook_time_sec } } : style;
 }
 
 export interface PizzaStyle {
@@ -583,6 +637,8 @@ export interface GeneratedRecipe {
   effective_gluten_w?: number;
   fermentation_hours: number;
   fermentation_temp_c: number;
+  /** B3: fasi della fonte usate dalla ricetta (assenti = quote del modello). */
+  declared_phases?: DeclaredPhases;
   has_pre_ferment: boolean;
   pre_ferment_type?: string;
   /** D-043 — farina nel pre-fermento, % della farina totale. */
@@ -701,7 +757,10 @@ export interface TimelineStep {
   };
   /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. «stir»:
    *  l'impasto si mescola senza impastare (B2), niente incordatura né pieghe. */
-  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan" | "stir";
+  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan" | "stir" | "unoiled";
+  /** B3: temperatura della fase scritta dalla fonte (prefermento, puntata,
+   *  appretto con le fasi esplicite); assente = quella della ricetta. */
+  temp_c?: number;
   /** G3-WP-03 (S09-A-13): variante del passo del condimento scelta dal motore
    *  con la cottura effettiva (basilico prima del forno o appena sfornata). */
   bake_length?: ToppingBakeLength;
@@ -1698,7 +1757,11 @@ export function fermentationPhases(
   hasPreFerment: boolean,
   preFermentType: PreFermentType = "poolish",
   profile?: MethodProcessProfile,
+  /** B3: temperatura della ricetta, per riconoscere le fasi della fonte. */
+  fermentationTempC?: number,
 ): { preferment: number; bulk: number; proof: number } {
+  const declared = declaredPhases(profile, fermentationHours, fermentationTempC, hasPreFerment);
+  if (declared) return { preferment: declared.preferment?.hours ?? 0, bulk: declared.bulk.hours, proof: declared.proof.hours };
   if (!hasPreFerment) {
     const proof = Math.min(fermentationHours, profile?.proof_hours ?? fermentationHours * 0.4);
     return { preferment: 0, bulk: fermentationHours - proof, proof };
@@ -1730,6 +1793,14 @@ export function equivalentFermentationHours(
   /** FW-19: pieghe dello stile, fatte a temperatura ambiente prima della puntata. */
   fold?: FoldPlan,
 ): number {
+  // B3: con le fasi della fonte ogni fase conta alla sua temperatura, in ore
+  // equivalenti alla temperatura della puntata (quella della ricetta).
+  const declared = declaredPhases(profile, fermentationHours, fermentationTempC, hasPreFerment);
+  if (declared) {
+    const bulkSpeed = fermentationSpeedRatio(yeastType, fermentationTempC);
+    return [declared.preferment, declared.bulk, declared.proof]
+      .reduce((sum, phase) => sum + (phase ? phase.hours * fermentationSpeedRatio(yeastType, phase.temp_c) / bulkSpeed : 0), 0);
+  }
   if (fermentationTempC >= PROOF_MIN_TEMP_C || fermentationHours <= 0) return fermentationHours;
   const phases = fermentationPhases(fermentationHours, hasPreFerment, preFermentType, profile);
   // FW-19 (S10-B-10, S09-A-07): con la puntata in frigo le pieghe si fanno
@@ -1955,6 +2026,7 @@ export function generateRecipe(
   options: GenerateRecipeOptions = {},
 ): GeneratedRecipe {
   constraints = { ...constrainOvenToCapacity(constraints), available_hours: floorToQuarterHour(constraints.available_hours) };
+  style = profileStyle(style);
   const {
     customHydration,
     customFlourW,
@@ -2063,7 +2135,7 @@ export function generateRecipe(
   const preFermentType: PreFermentType = preFerment?.type ?? preFermentKind(style);
   const preFermentFlourPct = Math.min(
     PRE_FERMENT_FLOUR_PCT.max,
-    Math.max(PRE_FERMENT_FLOUR_PCT.min, preFerment?.flourPct ?? PRE_FERMENT_FLOUR_PCT[preFermentType]),
+    Math.max(PRE_FERMENT_FLOUR_PCT.min, preFerment?.flourPct ?? (preFerment?.type ? undefined : style.method_profile?.phases?.preferment?.flour_pct) ?? PRE_FERMENT_FLOUR_PCT[preFermentType]),
   );
 
   // Oven temperature
@@ -2244,6 +2316,9 @@ export function generateRecipe(
      lievito madre fa già da pre-fermento e la ricetta lo dice. */
   const preFermentDroppedForSourdough = hasPreFerment && yeastType === "sourdough";
   if (preFermentDroppedForSourdough) hasPreFerment = false;
+  // B3: fasi della fonte, finché ore, temperatura e pre-fermento sono i suoi.
+  const sourcePhases = declaredPhases(style.method_profile, fermentationHours, fermentationTempC, hasPreFerment);
+  const sourcePhaseList = sourcePhases ? [sourcePhases.preferment, sourcePhases.bulk, sourcePhases.proof] : [];
 
   // M-11: la correzione personale («la mia cucina lievita più veloce»)
   // divide la dose: più veloce → meno lievito per le stesse ore.
@@ -2812,6 +2887,13 @@ export function generateRecipe(
           ? [em("fermentation.warmPlace", METHOD_MESSAGES_IT["fermentation.warmPlace"],
             { temp: WARM_PLACE.calcC, tempMin: WARM_PLACE.windowC[0], tempMax: WARM_PLACE.windowC[1], app: BRAND.name })]
           : []),
+        // B3: ciò che la fonte non dice delle fasi (gradi «ambiente», durate).
+        ...(sourcePhases?.bulk.temp_assumed
+          ? [em("fermentation.roomTemp", METHOD_MESSAGES_IT["fermentation.roomTemp"], { temp: sourcePhases.bulk.temp_c, app: BRAND.name })]
+          : []),
+        ...(sourcePhaseList.some((phase) => phase?.hours_assumed)
+          ? [em("fermentation.hoursAssumed", METHOD_MESSAGES_IT["fermentation.hoursAssumed"], { app: BRAND.name })]
+          : []),
         // B2 (seguito): ciò che la fonte del condimento non dice (salsa «condita»).
         ...(defaultTopping?.source_note ? [defaultTopping.source_note] : []),
       ];
@@ -2844,6 +2926,7 @@ export function generateRecipe(
         : undefined,
     fermentation_hours: fermentationHours,
     fermentation_temp_c: fermentationTempC,
+    ...(sourcePhases ? { declared_phases: sourcePhases } : {}),
     has_pre_ferment: hasPreFerment,
     pre_ferment_type: hasPreFerment ? preFermentType : undefined,
     // FW-17 (S08-A-03): un poolish non può contenere più acqua della ricetta.
@@ -3028,7 +3111,7 @@ export function optimizeRecipe(
 
   // Applichiamo gli stessi merge che farebbe generateRecipe per leggere i range
   // effettivi (impasto + versione), così lo spazio di ricerca è coerente.
-  let effStyle = style;
+  let effStyle = profileStyle(style);
   const impastoId = activeImpastoRef ?? style.default_impasto_ref;
   const impasto = impastoId ? getImpasto(impastoId) : undefined;
   if (impasto) {
@@ -3552,7 +3635,9 @@ function generateTimeline(
   hydration?: number,
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
-  const phases = fermentationPhases(fermentHours, hasPreFerment, preFermentType, style.method_profile);
+  const phases = fermentationPhases(fermentHours, hasPreFerment, preFermentType, style.method_profile, fermentTemp);
+  // B3: fasi della fonte, ciascuna con la sua temperatura (passi con temp_c).
+  const declared = declaredPhases(style.method_profile, fermentHours, fermentTemp, hasPreFerment);
   const isUnleavened = !!style.dough.unleavened;
   // Cottura effettiva (cucina effettiva + minuti del condimento): serve già qui
   // per scegliere il testo dei passi del condimento (G3-WP-03).
@@ -3612,6 +3697,7 @@ function generateTimeline(
       duration_minutes: Math.round(phases.preferment * 60),
       icon: "beaker",
       timing_label: `${Math.round(phases.preferment)}h prima`,
+      ...(declared?.preferment ? { temp_c: declared.preferment.temp_c } : {}),
       tip: {
         beginner:
           'Il prefermento è come un "antipasto" per il lievito. Mescola e lascia riposare coperto.',
@@ -3742,6 +3828,7 @@ function generateTimeline(
       duration_minutes: bulkMinutes,
       icon: "clock",
       timing_label: formatDuration(Math.round(bulkMinutes / 60)),
+      ...(declared ? { temp_c: declared.bulk.temp_c } : {}),
       tip: isUnleavened
         ? restTip
         : fermentTemp <= 6
@@ -3829,6 +3916,7 @@ function generateTimeline(
   }
   const toppingBeforeProof = injectToppingAt("before_proof");
   const proofMessage = style.method_profile?.id === "apiter_teglia" ? em("timeline.proof.apiter", METHOD_MESSAGES_IT["timeline.proof.apiter"]) : undefined;
+  const proofTempC = declared?.proof.temp_c ?? Math.max(fermentTemp, PROOF_MIN_TEMP_C);
   if (proofStepMinutes > 0) {
     steps.push({
       id: "proof",
@@ -3836,11 +3924,12 @@ function generateTimeline(
       ...(proofInPan ? { variant: "pan" as const } : {}),
       title: isUnleavened ? "Riposo" : "Appretto",
       description: proofMessage ? renderStepIt([proofMessage]) : isUnleavened
-        ? `Lascia riposare l'impasto coperto a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
+        ? `Lascia riposare l'impasto coperto a ${proofTempC}°C`
         : proofInPan
-          ? `Lievitazione finale in teglia a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
-          : `Lievitazione finale a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`,
+          ? `Lievitazione finale in teglia a ${proofTempC}°C`
+          : `Lievitazione finale a ${proofTempC}°C`,
       duration_minutes: proofStepMinutes,
+      ...(declared ? { temp_c: proofTempC } : {}),
       icon: "timer",
       timing_label: formatDuration(Math.round(proofStepMinutes / 60)),
       tip: isUnleavened
@@ -3938,10 +4027,14 @@ function generateTimeline(
           : em("timeline.shape.round", METHOD_MESSAGES_IT["timeline.shape.round"]);
   }
   if (style.method_profile?.id === "apiter_teglia") shapeMsg = em("timeline.shape.apiter", METHOD_MESSAGES_IT["timeline.shape.apiter"]);
+  // B3: teglia non unta, stesura su un velo di semola (Adriano Continisio).
+  const unoiledPan = Boolean(style.method_profile?.unoiled_pan) && layout.type === "single";
+  if (unoiledPan) shapeMsg = em("timeline.shape.unoiledPan", METHOD_MESSAGES_IT["timeline.shape.unoiledPan"]);
   if (!proofInPan) steps.push(
     keyedStep(
       {
         id: "shape",
+        ...(unoiledPan ? { variant: "unoiled" as const } : {}),
         duration_minutes: layout.type === "folded_layers" ? 10 : 5,
         icon: "expand",
         timing_label: layout.type === "folded_layers" ? "10 min" : "5 min",
@@ -4105,7 +4198,10 @@ function generateTimeline(
         em("timeline.bake.title", "Cottura"),
         [em("timeline.bake.desc", "Cuoci a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, homeMethod
           ? em("timeline.homeTray.bake", METHOD_MESSAGES_IT["timeline.homeTray.bake"])
-          : ovenBakeSetup(equipment, ovenTempLabel)],
+          // B3: la fonte sposta la teglia dal basso all'alto (forno di casa).
+          : style.method_profile?.bake?.racks === "low_then_high" && HOME_OVENS.has(equipment?.ovenType ?? "home")
+            ? em("timeline.bake.lowThenHigh", METHOD_MESSAGES_IT["timeline.bake.lowThenHigh"])
+            : ovenBakeSetup(equipment, ovenTempLabel)],
         {
           beginner: em("timeline.bake.tipBeginner", METHOD_MESSAGES_IT["timeline.bake.tipBeginner"]),
           nerd: em(

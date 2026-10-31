@@ -243,6 +243,21 @@ const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
     },
   },
 
+  /* B3 (docs/progetto-catalogo-italiano.md §9.11, «Per la B3»): sale, olio e
+   * zucchero della versione di Adriano Continisio (teglia casalinga in
+   * giornata), diversi da quelli del riferimento dello stile (Benedetta):
+   * 18 g di sale e 45 g d'olio su 900 g di farina, niente zucchero. */
+  adriano_continisio: {
+    id: "adriano_continisio",
+    name: "Preimpasto e teglia croccante (Adriano Continisio)",
+    description: "Preimpasto liquido con metà della farina, impasto all'80% in planetaria con il 2% di sale e il 5% d'olio, senza zucchero.",
+    emoji: "🥖",
+    dough_overrides: { salt_pct: 2.0, oil_pct: 5.0, fat_type: "oil", sugar_pct: 0 },
+    kneading_method: "poolish_indirect",
+    requires_pre_ferment: true,
+    compatible_styles: ["teglia_in_giornata"],
+  },
+
   /* ═══ IMPASTI SPECIALI — Audit motore 2026-05 (dietetici/salutisti) ═══
    * Applicabili a più stili tramite default_impasto_ref o version.impasto_ref.
    * compatible_styles omesso → generici (filtro UI li mostra ovunque). */

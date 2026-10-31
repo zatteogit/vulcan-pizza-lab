@@ -949,6 +949,11 @@ export const DE_LOCALE: CmsContent = {
     "fermentation.warmPlace": "Die Quelle sagt „an einem warmen Ort“, ohne Gradangabe: {app} rechnet mit {temp}, alles zwischen {tempMin} und {tempMax} passt. Warte, bis sich der Teig verdoppelt hat, statt auf die Uhr zu schauen.",
     "source.convertedDoses": "Die Quelle misst in Millilitern, Teelöffeln und Päckchen: Die Gramm sind eine Umrechnung von {app}. Bei kleinen Mengen wie Salz und Zucker liegt die Unsicherheit bei etwa 25 %.",
     "topping.sauceSeasoning": "Die Quelle sagt nur „gewürzte Soße“, ohne zu sagen, womit: Öl und Salz in der Soße sind eine Auslegung von {app}.",
+    "fermentation.roomTemp": "Für die Stockgare sagt die Quelle „bei Raumtemperatur“, ohne Gradangabe: {app} rechnet mit {temp}.",
+    "fermentation.hoursAssumed": "Die Quelle sagt nicht, wie lange jede Phase dauert: Wo die Angabe fehlt, schätzt {app} die Stunden aus den Uhrzeiten des Rezepts. Warte, bis sich der Teig verdoppelt hat, statt auf die Uhr zu schauen.",
+    "topping.vulcanDoses": "Die Quelle nennt keine Mengen für den Belag: Tomate, Mozzarella und Öl sind Mengen von {app}.",
+    "timeline.bake.lowThenHigh": "Ober- und Unterhitze: Schieb das Blech zuerst unten ein und dann nach oben, um fertig zu backen, wie es die Quelle sagt.",
+    "timeline.shape.unoiledPan": "Stürze den Teig auf die mit Hartweizengrieß bestreute Arbeitsfläche, drücke ihn mit den Fingerspitzen an und zieh ihn auseinander, ohne die Luft herauszudrücken. Leg ihn in das ungefettete, mit etwas Grieß bestreute Blech und zieh ihn fertig aus.",
     "diet.singleBase": "Ein Boden aus dem gesamten Teig: Zwiebeln darauf, ohne zweiten Teigkreis oder Verschließen.",
     "topping.geometry": "Fläche {area} cm² · Referenz {reference} cm² · Mengen ×{scale}.",
     "auth.layoutChanged": "Anderes Format als die Vorlage: Diese Variante verändert den Aufbau",
@@ -1094,6 +1099,14 @@ export const DE_LOCALE: CmsContent = {
       tipNerd:
         "Fingertest: langsame R\u00FCckkehr = optimale G\u00E4rung. Zu schnell = unterg\u00E4rig. Keine R\u00FCckkehr = \u00FCberg\u00E4rig.",
       longDesc: "Nach dem Teilen müssen sich die Teiglinge entspannen und ein letztes Mal aufgehen. Halte sie abgedeckt bei Raumtemperatur. Sie sind bereit zum Ausziehen, wenn: (1) sich ihr Volumen verdoppelt hat, (2) die Oberfläche gewölbt und glatt ist, (3) der Fingertest langsam zurückfedert (drück mit dem Finger hinein: Die Delle sollte sich in ~5 Sekunden füllen). Federt der Teig nicht zurück = übergärig; federt er sofort zurück = noch nicht so weit.",
+    },
+    // B3: appretto alla temperatura scritta dalla fonte (fasi esplicite).
+    proof_declared: {
+      title: "Stückgare",
+      desc: "Stückgare bei {temp}",
+      longDesc: "Halte die Teigstücke abgedeckt bei {temp}, wie es die Quelle sagt, bis sie sich verdoppelt haben: Die Oberfläche ist gewölbt und glatt und federt auf Fingerdruck langsam zurück. Ist es bei dir kühler, dauert es länger: Achte auf den Teig, nicht auf die Uhr.",
+      tipBeginner: "Ist deine Küche kühler als {temp}, such dir eine wärmere Ecke, neben der Heizung, aber nicht darauf, und prüfe mit einem Thermometer.",
+      tipNerd: "Bei {temp} schätzt das Modell eine Gärgeschwindigkeit von {factor}× gegenüber {refTemp}.",
     },
     proof_pan: {
       title: "St\u00FCckgare im Blech",

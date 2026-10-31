@@ -146,13 +146,14 @@ export function canonicalRecipeEntry(style: PizzaStyle, scoreWeights?: ScoreWeig
     customFermentationTempC: (interp ? interpretationFermentTempC(interp) : undefined) ?? v?.fermentation_temp_c ?? defaultFermentTempC(style, hours),
     usePreFerment: o?.use_pre_ferment ?? v?.use_pre_ferment ?? (impasto?.requires_pre_ferment ?? style.requires_pre_ferment),
     customSalt: dough.salt_pct,
-    // Come la scheda: teglia dello stile e mix di farine dello stile.
+    // Come la scheda: teglia dello stile e mix di farine dello stile; B3: la
+    // teglia e il carico della fonte, se la versione li scrive.
     panConfig: {
       panShape: defaultPanShape(style),
-      panLength: style.shape.length_cm,
-      panWidth: style.shape.width_cm,
+      panLength: o?.pan?.length_cm ?? style.shape.length_cm,
+      panWidth: o?.pan?.width_cm ?? style.shape.width_cm,
       panDiameter: style.shape.diameter_cm,
-      thickness: style.shape.thickness_factor,
+      thickness: o?.pan?.g_per_cm2 ?? style.shape.thickness_factor,
     },
     customFlourBlend: blendAtW(dough.flour_blend, o?.flour_w ?? v?.flour_w ?? Math.round((dough.flour_w_range[0] + dough.flour_w_range[1]) / 2)),
     scoreWeights,
@@ -181,17 +182,22 @@ export function recipeFromEntry(entry: ReturnType<typeof canonicalRecipeEntry>, 
   return generateRecipe(entry.style, constraints, { ...entry.options, scoreWeights });
 }
 
+/** Forno ideale di un preset: quello della versione d'autore, se ne scrive uno
+ *  (B3, MethodProcessProfile.bake), altrimenti l'ideale dello stile. */
+export const presetIdealOvenC = (style: PizzaStyle, interpretation?: Interpretation | null) =>
+  interpretation?.process_profile?.bake?.temp_c ?? style.baking.temp_c_ideal;
+
 /** Forno con cui Crea apre un preset (versione, firma, Riferimento): il massimo
- *  della cucina, senza superare l'ideale dello stile. */
-export const presetOvenTemp = (style: PizzaStyle, c: UserConstraints) =>
-  Math.min(style.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c);
+ *  della cucina, senza superare l'ideale del preset. */
+export const presetOvenTemp = (style: PizzaStyle, c: UserConstraints, interpretation?: Interpretation | null) =>
+  Math.min(presetIdealOvenC(style, interpretation), c.oven_capacity_temp_c ?? c.oven_max_temp_c);
 
 /** G1b: la ricetta che «Genera con questa versione» apre in Crea (preset della
  *  versione d'autore sul forno di presetOvenTemp). Il suo verdetto dice nel
  *  pannello stile se la versione è fattibile con la cucina dell'utente. */
 export function authorVersionRecipe(style: PizzaStyle, interpretation: Interpretation, constraints: UserConstraints, scoreWeights?: ScoreWeightsOverride): GeneratedRecipe {
   return recipeFromEntry(canonicalRecipeEntry(style, scoreWeights, interpretation),
-    { ...constraints, oven_max_temp_c: presetOvenTemp(style, constraints) });
+    { ...constraints, oven_max_temp_c: presetOvenTemp(style, constraints, interpretation) });
 }
 
 export function canonicalRecipe(style: PizzaStyle, constraints: UserConstraints, scoreWeights?: ScoreWeightsOverride): GeneratedRecipe {

@@ -2,7 +2,7 @@ import { encodePan } from "../features/recipe/pan-url";
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
 import { referenceEyebrow } from "../features/recipe/reference-label";
-import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified, presetOvenTemp } from "../use-cases/recipe-entry";
+import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified, presetOvenTemp, presetIdealOvenC } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { Bookmark, ChevronRight, Heart, Sparkles } from "lucide-react";
 import {
@@ -671,7 +671,7 @@ export function HomePage() {
     }, constraints.available_hours, engineConstraints);
     setSetupNotice(null);
     setSelectedFlourId(null);
-    setConstraints(c => ({...c, oven_max_temp_c: presetOvenTemp(selectedStyle, c)}));
+    setConstraints(c => ({...c, oven_max_temp_c: presetOvenTemp(selectedStyle, c, e.interpretation)}));
   }, [selectedStyle, resetForStyle, constraints.available_hours, engineConstraints, activeVersion, activeInterpretationId]);
 
   const resetCreateBaseRecipe = useCallback(() => {
@@ -703,7 +703,7 @@ export function HomePage() {
       setSelectedFlourId(null);
       setRecipeName("");
       applyInterpretationToState(interpretation);
-      if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: presetOvenTemp(selectedStyle, c)}));
+      if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: presetOvenTemp(selectedStyle, c, interpretation)}));
     },
     [applyInterpretationToState, resetCreateBaseRecipe, selectedStyle],
   );
@@ -853,7 +853,7 @@ export function HomePage() {
     fermentHours: customFermentHours, fermentTemp: customFermentTemp, usePreFerment,
     preFerment: preFermentChoice, panConfig, toppingConcept: selectedToppingConcept, flourBlend: customFlourBlend,
   };
-  const createDirty = Boolean(selectedStyle && createReferencePreset && (isRecipePresetModified(createReferencePreset, createCurrentParams) || Math.min(constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal)));
+  const createDirty = Boolean(selectedStyle && createReferencePreset && (isRecipePresetModified(createReferencePreset, createCurrentParams) || Math.min(constraints.oven_max_temp_c, presetIdealOvenC(selectedStyle, createReferenceEntry?.interpretation)) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, presetIdealOvenC(selectedStyle, createReferenceEntry?.interpretation))));
   /* Revisione G2: il Crea parte già adattato alla cucina (applySelectStyle).
      Quei valori sono una scelta di Vulcan, non una modifica dell'utente: li
      fotografiamo dopo il commit dello stile e, finché coincidono, il
@@ -1508,7 +1508,7 @@ export function HomePage() {
                 <RecipeMatchCard
                   scores={recipe.scores}
                   ovenTemp={constraints.oven_max_temp_c}
-                  idealTemp={selectedStyle.baking.temp_c_ideal}
+                  idealTemp={recipe.style.baking.temp_c_ideal}
                   minTemp={selectedStyle.baking.temp_c_range[0]}
                   mode={createDirty ? "adapted" : "canonical"}
                   dirty={createDirty}

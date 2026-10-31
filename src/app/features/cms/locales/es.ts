@@ -962,6 +962,11 @@ export const ES_LOCALE: CmsContent = {
     "fermentation.warmPlace": "La fuente dice «en un lugar cálido», sin grados: {app} calcula a {temp}, y vale cualquier punto entre {tempMin} y {tempMax}. Espera a que la masa doble su volumen, no a la hora del reloj.",
     "source.convertedDoses": "La fuente mide en mililitros, cucharaditas y sobres: los gramos son una conversión de {app}. En las cantidades pequeñas, como la sal y el azúcar, el margen es de alrededor del 25 %.",
     "topping.sauceSeasoning": "La fuente solo dice «salsa aliñada», sin decir con qué: el aceite y la sal de la salsa son una lectura de {app}.",
+    "fermentation.roomTemp": "Para la primera fermentación la fuente dice «a temperatura ambiente», sin grados: {app} calcula a {temp}.",
+    "fermentation.hoursAssumed": "La fuente no dice cuánto dura cada fase: donde falta, las horas son una estimación de {app} a partir de los horarios de la receta. Espera a que la masa doble su volumen, no a la hora del reloj.",
+    "topping.vulcanDoses": "La fuente no da las cantidades de la cobertura: el tomate, la mozzarella y el aceite son cantidades de {app}.",
+    "timeline.bake.lowThenHigh": "Horno estático: hornea en la parte baja y luego sube la bandeja a la parte alta para terminar la cocción, como dice la fuente.",
+    "timeline.shape.unoiledPan": "Vuelca la masa sobre la mesa espolvoreada con sémola, presiónala con la punta de los dedos y estírala sin sacarle el aire. Ponla en la bandeja sin engrasar, con un velo de sémola, y termina de estirarla.",
     "diet.singleBase": "Una base con toda la masa: cebolla encima, sin segundo disco ni cierre.",
     "topping.geometry": "Superficie {area} cm² · referencia {reference} cm² · cantidades ×{scale}.",
     "auth.layoutChanged": "Formato distinto de la referencia: la variante cambia la estructura de la receta",
@@ -1109,6 +1114,14 @@ export const ES_LOCALE: CmsContent = {
       tipNerd:
         "Test del dedo: retorno lento = fermentaci\u00F3n \u00F3ptima. Demasiado r\u00E1pido = sub-fermentado. Sin retorno = sobre-fermentado.",
       longDesc: "Tras el boleado, los bollos deben relajarse e hincharse una \u00FAltima vez. Mantenlos tapados a temperatura ambiente. Ser\u00E1 el momento de estirarlos cuando: (1) hayan duplicado su volumen, (2) la superficie est\u00E9 abombada y lisa, (3) la prueba del dedo se recupere despacio (presiona con el dedo: debe volver en ~5 segundos). Si la masa no vuelve = sobrefermentada; si vuelve enseguida = todav\u00EDa le falta.",
+    },
+    // B3: appretto alla temperatura scritta dalla fonte (fasi esplicite).
+    proof_declared: {
+      title: "Segunda fermentación",
+      desc: "Fermentación final a {temp}",
+      longDesc: "Mantén las piezas tapadas a {temp}, como dice la fuente, hasta que doblen su volumen: la superficie está abombada y lisa y, al presionarla con un dedo, vuelve despacio. Si en casa hace más fresco tardará más: mira la masa, no el reloj.",
+      tipBeginner: "Si la cocina está por debajo de {temp}, busca un rincón más cálido, cerca de un radiador pero no encima, y compruébalo con un termómetro.",
+      tipNerd: "A {temp} el modelo estima una velocidad de fermentación de {factor}× respecto a {refTemp}.",
     },
     proof_pan: {
       title: "Fermentaci\u00F3n final en bandeja",

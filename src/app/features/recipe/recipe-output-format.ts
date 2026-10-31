@@ -479,7 +479,8 @@ function localizeStepBase(
   const fermTemp = recipe.fermentation_temp_c;
   // ENG-2: stesso fattore di velocità del motore (Q10 a tratti continuo), non
   // più Math.pow(2, …) fisso. Decimale della lingua (0,4 in italiano), una cifra.
-  const fermRatio = fermentationSpeedRatio(recipe.yeast_type, fermTemp);
+  // B3: con le fasi della fonte il passo porta la sua temperatura (temp_c).
+  const fermRatio = fermentationSpeedRatio(recipe.yeast_type, step.temp_c ?? fermTemp);
   const fermFactor = fmt
     ? fmt.number(fermRatio, { minimumFractionDigits: 1, maximumFractionDigits: 1 })
     : fermRatio.toFixed(1);
@@ -538,12 +539,15 @@ function localizeStepBase(
         ? (labels.rest || labels.proof)
         : step.variant === "pan"
           ? (labels.proof_pan || labels.proof)
-          : labels.proof;
+          : step.temp_c !== undefined
+            ? (labels.proof_declared || labels.proof)
+            : labels.proof;
       break;
     case "shape":
       if (recipe.style.method_profile?.id === "apiter_teglia") return formatRawStep(step);
       // Audit totale n. 7: stesura in teglia prima dell'appretto, testo del motore.
-      if (step.variant === "pan") return formatRawStep(step);
+      // B3: teglia non unta, su un velo di semola (testo del motore).
+      if (step.variant === "pan" || step.variant === "unoiled") return formatRawStep(step);
       // Con layout speciale, motore già genera desc specifica per il tipo di stesura
       if (hasSpecialLayout) return formatRawStep(step);
       entry = isThin ? (labels.shape_thin || labels.shape) : (isRect && labels.shape?.descAlt) ? labels.shape : labels.shape;
@@ -633,7 +637,7 @@ function localizeStepBase(
   // il sottotitolo dice "a 4°C" mentre il testo dice "temperatura ambiente".
   const proofTemp = Math.max(fermTemp, 18);
   const vars: Record<string, string | number> = {
-    temp: formatTemp(step.id === "proof" ? proofTemp : fermTemp),
+    temp: formatTemp(step.temp_c ?? (step.id === "proof" ? proofTemp : fermTemp)),
     refTemp: formatTemp(18),
     fridgeTemp: formatTemp(4),
     type: prefType,
@@ -644,7 +648,8 @@ function localizeStepBase(
     hours: fmt
       ? fmt.durationMinutes(Math.round(step.duration_minutes))
       : fmtDuration(step.duration_minutes),
-    prefTemp: prefType === "biga" ? `${formatTemp(18)}–${formatTemp(20)}` : `${formatTemp(20)}–${formatTemp(22)}`,
+    prefTemp: step.temp_c !== undefined ? formatTemp(step.temp_c)
+      : prefType === "biga" ? `${formatTemp(18)}–${formatTemp(20)}` : `${formatTemp(20)}–${formatTemp(22)}`,
     prefHydration: fmt ? fmt.percent(44) : "44%",
   };
   const title = entry.title || step.title;

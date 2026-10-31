@@ -55,7 +55,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.5.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.6.0" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -315,6 +315,8 @@ function recipeData(recipe: GeneratedRecipe) {
       ingredients_total: toppingIngredients!.map(i => ({...i,amount:{...i.amount,value:i.amount.value*recipe.dough_balls}})) } : null,
     fermentation_hours: recipe.fermentation_hours,
     fermentation_temp_c: recipe.fermentation_temp_c,
+    // B3: fasi scritte dalla fonte (ore e temperatura ciascuna); null = quote del modello.
+    declared_phases: recipe.declared_phases ?? null,
     pre_ferment: preFermentData(recipe),
     oven_temp_c: recipe.oven_temp_c,
     cook_time_sec: recipe.cook_time_sec,
@@ -334,6 +336,7 @@ function recipeData(recipe: GeneratedRecipe) {
       title: step.title,
       description: step.description,
       duration_minutes: step.duration_minutes,
+      ...(step.temp_c !== undefined ? { temp_c: step.temp_c } : {}),
       // D-050: cotture ripetute una alla volta; la durata è già il totale.
       ...(step.rounds ? { rounds: step.rounds } : {}),
       // FW-19: secondi di un giro e recupero del forno fra due giri (ipotesi), già nel totale.

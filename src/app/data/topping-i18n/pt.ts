@@ -366,6 +366,13 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
         "1": { name: "Mussarela em cubinhos", notes: "nos últimos 5 minutos de forno" },
       },
     },
+    margherita_teglia_croccante: {
+      ingredients: {
+        "0": { name: "Tomate com uma pitada de sal" },
+        "1": { name: "Muçarela", notes: "depois de 10 minutos de forno" },
+        "2": { name: "Azeite extravirgem", notes: "um fio, com a muçarela" },
+      },
+    },
     margherita_americana: {
       ingredients: {
         "0": {
@@ -2776,6 +2783,10 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "Molho agora, mussarela no fim",
       description: "Espalhe o molho morno sobre a massa recém-aberta, até as bordas, e deixe crescer na assadeira. Leve ao forno; nos últimos 5 minutos, abra o forno, espalhe a mussarela em cubinhos e termine de assar.",
+    },
+    spread_margherita_teglia_croccante: {
+      title: "Tomate agora, muçarela depois de 10 minutos",
+      description: "Espalhe o tomate salgado até as bordas e leve à parte de baixo do forno. Depois de 10 minutos, distribua a muçarela, regue com um fio de azeite e termine de assar na parte de cima por 4–5 minutos, sem queimar a muçarela.",
     },
     spread_margherita_us: {
       title: "Cobertura Margherita americana",

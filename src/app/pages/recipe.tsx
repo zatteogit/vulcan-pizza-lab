@@ -1,7 +1,7 @@
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
 import { referenceEyebrow } from "../features/recipe/reference-label";
-import { buildGeneratedRecipe, recipeFromEntry, canonicalRecipeEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
+import { buildGeneratedRecipe, recipeFromEntry, canonicalRecipeEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified, presetIdealOvenC, presetOvenTemp } from "../use-cases/recipe-entry";
 import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 /* === RECIPE PAGE — VPL-058 + VPL-064 ===
    Pagina ricetta self-contained per stile.
@@ -417,7 +417,7 @@ function RecipeContent({
     hydration: customHydration, flourW: customFlourW, flourPL: customFlourPL, salt: customSalt,
     fermentHours: customFermentHours, fermentTemp: customFermentTemp, usePreFerment,
     preFerment: preFermentChoice, panConfig, toppingConcept: selectedToppingConcept, flourBlend: customFlourBlend,
-  }) || Math.min(constraints.oven_max_temp_c, style.baking.temp_c_ideal) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, style.baking.temp_c_ideal);
+  }) || Math.min(constraints.oven_max_temp_c, presetIdealOvenC(style, originalEntry.interpretation)) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, presetIdealOvenC(style, originalEntry.interpretation));
 
   const applyPreset = useCallback((version: StyleVersion | null, interpretation: Interpretation | null) => {
     setRecipeName("");
@@ -429,7 +429,7 @@ function RecipeContent({
     setCustomFlourBlend(p.flourBlend); setSelectedToppingConcept(p.toppingConcept);
     setActiveVersionId(version?.id ?? null); setActiveInterpretationId(interpretation?.id ?? null);
     setOptimizedHydration(null); setLastOptimization(null);
-    setConstraints(current => ({ ...current, oven_max_temp_c: Math.min(style.baking.temp_c_ideal, current.oven_capacity_temp_c ?? current.oven_max_temp_c) }));
+    setConstraints(current => ({ ...current, oven_max_temp_c: presetOvenTemp(style, current, interpretation) }));
     const next = new URLSearchParams(); next.set("mode", "canonical");
     if (version) next.set("v", version.id);
     if (interpretation) next.set("interpretation", interpretation.id);
@@ -1079,7 +1079,7 @@ function RecipeContent({
             <RecipeMatchCard
               scores={matchRecipe.scores}
               ovenTemp={matchRecipe.oven_temp_c}
-              idealTemp={style.baking.temp_c_ideal}
+              idealTemp={matchRecipe.style.baking.temp_c_ideal}
               minTemp={style.baking.temp_c_range[0]}
               mode={recipeMode === "lab" ? "lab" : isDirty ? "adapted" : "canonical"}
               dirty={isDirty}

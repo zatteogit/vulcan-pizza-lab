@@ -75,6 +75,12 @@ export const INSPIRATION_I18N_FR: InspirationTranslation = {
       story: "Benedetta Rossi publie des recettes de cuisine maison sur son site « Fatto in casa da Benedetta » et à la télévision. Sa pizza en plaque se fait en quelques heures : beaucoup de levure, un endroit chaud et le four domestique à 210 °C, avec la mozzarella dans les 5 dernières minutes.",
       badge: "Cuisine maison",
     },
+    adriano_continisio: {
+      signature_name: "Inspirée de la pizza en plaque croustillante d'Adriano Continisio",
+      technique_signature: "Pré-pâte avec la moitié de la farine, la moitié de l'eau et toute la levure fraîche, environ 3 heures à 20 °C ; pâte à 80 % au robot jusqu'au test de la membrane. Pâtons à doubler à 28 °C, plaques non huilées saupoudrées de semoule, 250 °C d'abord en bas puis en haut avec la mozzarella.",
+      story: "Adriano Continisio écrit sur le pain et la pizza faits maison sur son blog « Profumo di lievito ». Sa pizza en plaque croustillante, de 2009, se fait dans la journée : pré-pâte tôt le matin, pâtons vers 16 h et cuisson au four domestique à 250 °C.",
+      badge: "Profumo di lievito",
+    },
     da_michele_napoli: {
       signature_name: "Margherita et Marinara, et pas grand-chose d’autre",
       technique_signature: "Carte réduite à l’essentiel : pendant des décennies, seulement Margherita et Marinara, aujourd’hui quatre pizzas. Four à bois et pas de fioritures.",
