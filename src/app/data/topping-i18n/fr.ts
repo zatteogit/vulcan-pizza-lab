@@ -2776,6 +2776,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "La sauce maintenant, la mozzarella à la fin",
       description: "Étalez la sauce tiède sur la pâte tout juste étalée, jusqu'aux bords, et laissez-la lever dans la plaque. Enfournez ; dans les 5 dernières minutes de cuisson, ouvrez le four, répartissez la mozzarella en dés et terminez la cuisson.",
+      description_no_pan_proof: "Étalez la sauce tiède sur la pâte tout juste étalée dans la plaque, jusqu'aux bords, et enfournez aussitôt. Dans les 5 dernières minutes de cuisson, ouvrez le four, répartissez la mozzarella en dés et terminez la cuisson.",
     },
     spread_margherita_us: {
       title: "Garniture Margherita américaine",

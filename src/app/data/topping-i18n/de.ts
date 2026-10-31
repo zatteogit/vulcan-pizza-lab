@@ -2776,6 +2776,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "Soße jetzt, Mozzarella zum Schluss",
       description: "Verteile die lauwarme Soße bis an die Ränder auf dem frisch ausgebreiteten Teig und lass ihn im Blech gehen. Backe ihn; in den letzten 5 Minuten öffne den Ofen, verteile die Mozzarellawürfel und backe fertig.",
+      description_no_pan_proof: "Verteile die lauwarme Soße bis an die Ränder auf dem Teig, den du gerade im Blech ausgebreitet hast, und schieb ihn sofort in den Ofen. In den letzten 5 Minuten öffne den Ofen, verteile die Mozzarellawürfel und backe fertig.",
     },
     spread_margherita_us: {
       title: "Belag Margherita americana",

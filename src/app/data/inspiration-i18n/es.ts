@@ -75,6 +75,12 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
       story: "Benedetta Rossi publica recetas de cocina casera en su web «Fatto in casa da Benedetta» y en televisión. Su pizza en bandeja se hace en pocas horas: mucha levadura, un lugar cálido y el horno de casa a 210 °C, con la mozzarella en los últimos 5 minutos.",
       badge: "Cocina casera",
     },
+    adriano_continisio: {
+      signature_name: "Inspirada en la pizza en bandeja crujiente de Adriano Continisio",
+      technique_signature: "Prefermento con la mitad de la harina, la mitad del agua y toda la levadura fresca, unas 3 horas a 20 °C; masa al 80% en batidora amasadora hasta la prueba de la membrana. Piezas a doblar a 28 °C, bandejas sin engrasar con un velo de sémola, 250 °C primero abajo y luego arriba con la mozzarella.",
+      story: "Adriano Continisio escribe sobre pan y pizza caseros en su blog «Profumo di lievito». Su pizza en bandeja crujiente, de 2009, se hace en el día: prefermento a primera hora de la mañana, piezas hacia las 16 y horneado en el horno de casa a 250 °C.",
+      badge: "Profumo di lievito",
+    },
     da_michele_napoli: {
       signature_name: "Margherita y Marinara, y poco más",
       technique_signature: "Carta reducida al mínimo: durante décadas solo Margherita y Marinara, hoy cuatro pizzas. Horno de leña y nada de florituras.",

@@ -961,7 +961,11 @@ export const FR_LOCALE: CmsContent = {
     "yeast.sourceFreshAsDry": "La source utilise de la levure fraîche, {sourcePct}% sur la farine. Dans votre garde-manger il y a de la levure sèche : ici la dose est de {pct}%, convertie par {app} au rapport de 1 à 3 (1 g de levure sèche vaut environ 3 g de fraîche).",
     "fermentation.warmPlace": "La source dit « dans un endroit chaud », sans degrés : {app} calcule à {temp}, et tout convient entre {tempMin} et {tempMax}. Attendez que la pâte double de volume, pas l'heure indiquée par la montre.",
     "source.convertedDoses": "La source mesure en millilitres, cuillères à café et sachets : les grammes sont une conversion de {app}. Pour les petites quantités, comme le sel et le sucre, la marge est d'environ 25 %.",
-    "topping.sauceSeasoning": "La source dit seulement « sauce assaisonnée », sans préciser avec quoi : l'huile et le sel de la sauce sont une interprétation de {app}.",
+    "topping.sauceSeasoning": "La Margherita vient de la recette de {author}, qui dit seulement « sauce assaisonnée », sans préciser avec quoi : l'huile et le sel de la sauce sont une interprétation de {app}.",
+    "fermentation.roomTemp": "Pour le pointage, la source dit « à température ambiante », sans degrés : {app} calcule à {temp}.",
+    "fermentation.hoursAssumed": "La source ne dit pas combien de temps dure chaque phase : là où elle ne le dit pas, les heures sont une estimation de {app} à partir des horaires de la recette. Attendez que la pâte double de volume, pas l'heure indiquée par la montre.",
+    "timeline.bake.lowThenHigh": "Four statique : enfournez en bas, puis montez la plaque en haut pour finir la cuisson, comme le dit la source.",
+    "timeline.shape.unoiledPan": "Renversez la pâte sur le plan saupoudré de semoule, appuyez du bout des doigts et étirez-la sans chasser l'air. Posez-la dans la plaque non huilée, saupoudrée de semoule, et finissez de l'étaler.",
     "diet.singleBase": "Une seule base avec toute la pâte : oignons dessus, sans second disque ni fermeture.",
     "topping.geometry": "Surface {area} cm² · référence {reference} cm² · quantités ×{scale}.",
     "auth.layoutChanged": "Format différent de la référence : cette variante change la structure",
@@ -1103,6 +1107,14 @@ export const FR_LOCALE: CmsContent = {
       tipNerd:
         "Test du doigt : retour lent = fermentation optimale. Trop rapide = sous-ferment\u00E9. Pas de retour = sur-ferment\u00E9.",
       longDesc: "Apr\u00E8s la division, les p\u00E2tons doivent se d\u00E9tendre et gonfler une derni\u00E8re fois. Gardez-les couverts \u00E0 temp\u00E9rature ambiante. Il sera temps de les \u00E9taler quand : (1) ils ont doubl\u00E9 de volume, (2) la surface est bomb\u00E9e et lisse, (3) le test du doigt remonte lentement (appuyez avec le doigt : la p\u00E2te doit revenir en ~5 secondes). Si la p\u00E2te ne revient pas = surferment\u00E9e ; si elle revient tout de suite = pas encore pr\u00EAte.",
+    },
+    // B3: appretto alla temperatura scritta dalla fonte (fasi esplicite).
+    proof_declared: {
+      title: "Apprêt",
+      desc: "Levée finale à {temp}",
+      longDesc: "Gardez les pâtons couverts à {temp}, comme le dit la source, jusqu'à ce qu'ils doublent : la surface est bombée et lisse et, pressée du doigt, remonte lentement. Si chez vous il fait plus frais, cela prend plus de temps : regardez la pâte, pas la montre.",
+      tipBeginner: "Si votre cuisine est en dessous de {temp}, cherchez un coin plus chaud, près d'un radiateur mais pas dessus, et vérifiez avec un thermomètre.",
+      tipNerd: "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}.",
     },
     proof_pan: {
       title: "Appr\u00EAt en plaque",
@@ -1284,7 +1296,7 @@ export const FR_LOCALE: CmsContent = {
     fugazzeta: "Double couche farcie de mozzarella|Oignon dessus, sans tomate|\u00C9paisse et moelleuse (al molde)|Origan et huile d'olive en finition",
     california_style: "Base fine artisanale|Ingr\u00E9dients gourmets de saison|Associations non traditionnelles|Approche de chef",
     greek_pan: "Moule tr\u00E8s huil\u00E9, fond frit|Mie moelleuse et \u00E9paisse|M\u00E9lange mozzarella + cheddar|Diner gr\u00E9co-am\u00E9ricain",
-    teglia_in_giornata: "Prête le jour même|Hydratation autour de 80%|Plaque maison bien huilée|Four domestique",
+    teglia_in_giornata: "Prête le jour même|Hydratation autour de 80%|Plaque maison, huilée ou à la semoule|Four domestique",
   },
   deviationLabels: {
     unclassified: "À vérifier",

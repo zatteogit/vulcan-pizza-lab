@@ -959,7 +959,11 @@ export const PT_LOCALE: CmsContent = {
     "yeast.sourceFreshAsDry": "A fonte usa fermento fresco, {sourcePct}% sobre a farinha. Na sua despensa há fermento seco: aqui a dose é {pct}%, convertida pelo {app} na proporção de 1 para 3 (1 g de fermento seco equivale a cerca de 3 g de fresco).",
     "fermentation.warmPlace": "A fonte diz “em um lugar quente”, sem graus: o {app} calcula a {temp}, e qualquer ponto entre {tempMin} e {tempMax} funciona. Espere a massa dobrar de volume, não o relógio.",
     "source.convertedDoses": "A fonte mede em mililitros, colheres de chá e sachês: os gramas são uma conversão do {app}. Nas quantidades pequenas, como sal e açúcar, a margem é de cerca de 25%.",
-    "topping.sauceSeasoning": "A fonte diz apenas “molho temperado”, sem dizer com o quê: o azeite e o sal do molho são uma leitura do {app}.",
+    "topping.sauceSeasoning": "A Margherita vem da receita de {author}, que diz apenas “molho temperado”, sem dizer com o quê: o azeite e o sal do molho são uma leitura do {app}.",
+    "fermentation.roomTemp": "Para a primeira fermentação a fonte diz “em temperatura ambiente”, sem graus: o {app} calcula a {temp}.",
+    "fermentation.hoursAssumed": "A fonte não diz quanto dura cada fase: onde falta, as horas são uma estimativa do {app} a partir dos horários da receita. Espere a massa dobrar de volume, não o relógio.",
+    "timeline.bake.lowThenHigh": "Forno estático: asse na parte de baixo e depois passe a assadeira para a parte de cima para terminar, como diz a fonte.",
+    "timeline.shape.unoiledPan": "Vire a massa na bancada polvilhada com sêmola, pressione com a ponta dos dedos e abra sem tirar o ar. Coloque na assadeira sem untar, polvilhada com sêmola, e termine de abrir.",
     "diet.singleBase": "Uma base com toda a massa: cebola por cima, sem segundo disco nem fecho.",
     "topping.geometry": "Área {area} cm² · referência {reference} cm² · quantidades ×{scale}.",
     "auth.layoutChanged": "Formato diferente da referência: esta versão altera a estrutura da receita",
@@ -1107,6 +1111,14 @@ export const PT_LOCALE: CmsContent = {
       tipNerd:
         "Teste do dedo: retorno lento = fermenta\u00E7\u00E3o \u00F3tima. Muito r\u00E1pido = sub-fermentado. Sem retorno = sobre-fermentado.",
       longDesc: "Depois da divis\u00E3o, as bolas de massa precisam relaxar e crescer uma \u00FAltima vez. Mantenha-as cobertas em temperatura ambiente. Estar\u00E1 na hora de abri-las quando: (1) tiverem dobrado de volume, (2) a superf\u00EDcie estiver abaulada e lisa, (3) no teste do dedo a massa voltar devagar (pressione com o dedo: deve voltar em ~5 segundos). Se a massa n\u00E3o voltar = passou do ponto; se voltar na hora = ainda falta fermentar.",
+    },
+    // B3: appretto alla temperatura scritta dalla fonte (fasi esplicite).
+    proof_declared: {
+      title: "Segunda fermentação",
+      desc: "Fermentação final a {temp}",
+      longDesc: "Mantenha os pedaços cobertos a {temp}, como diz a fonte, até dobrarem de volume: a superfície fica abaulada e lisa e, apertada com um dedo, volta devagar. Se a sua casa estiver mais fresca, vai demorar mais: olhe a massa, não o relógio.",
+      tipBeginner: "Se a cozinha estiver abaixo de {temp}, procure um canto mais quente, perto de um aquecedor mas não em cima, e confira com um termômetro.",
+      tipNerd: "A {temp} o modelo estima uma velocidade de fermentação de {factor}× em relação a {refTemp}.",
     },
     proof_pan: {
       title: "Fermenta\u00E7\u00E3o final na assadeira",
@@ -1282,7 +1294,7 @@ export const PT_LOCALE: CmsContent = {
     fugazzeta: "Camada dupla recheada de mussarela|Cebola por cima, sem tomate|Alta e macia (al molde)|Or\u00E9gano e azeite extravirgem no final",
     california_style: "Base fina artesanal|Ingredientes gourmet da esta\u00E7\u00E3o|Combina\u00E7\u00F5es n\u00E3o tradicionais|Abordagem autoral de chef",
     greek_pan: "Assadeira bem untada, fundo frito|Miolo macio e alto|Mix mussarela + cheddar|Diner greco-americano",
-    teglia_in_giornata: "Pronta no mesmo dia|Hidratação em torno de 80%|Assadeira de casa bem untada|Forno de casa",
+    teglia_in_giornata: "Pronta no mesmo dia|Hidratação em torno de 80%|Assadeira de casa, untada ou com sêmola|Forno de casa",
   },
   deviationLabels: {
     unclassified: "Por verificar",

@@ -2776,6 +2776,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "Molho agora, mussarela no fim",
       description: "Espalhe o molho morno sobre a massa recém-aberta, até as bordas, e deixe crescer na assadeira. Leve ao forno; nos últimos 5 minutos, abra o forno, espalhe a mussarela em cubinhos e termine de assar.",
+      description_no_pan_proof: "Espalhe o molho morno sobre a massa recém-aberta na assadeira, até as bordas, e leve ao forno em seguida. Nos últimos 5 minutos, abra o forno, espalhe a mussarela em cubinhos e termine de assar.",
     },
     spread_margherita_us: {
       title: "Cobertura Margherita americana",

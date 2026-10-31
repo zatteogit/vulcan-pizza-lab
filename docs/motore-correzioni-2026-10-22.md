@@ -694,3 +694,66 @@ invece dei 20 dell'impasto a mano).
   ciò che la fonte non dice (`ToppingRecipe.source_note`, nelle
   `source_notes`): la margherita della teglia in giornata dice che olio e sale
   della salsa «condita» sono una lettura di Vulcan.
+
+## Tranche B3 · fasi esplicite e cottura della versione (31/10/2026)
+
+Versione di Adriano Continisio sulla teglia in giornata
+(`docs/progetto-catalogo-italiano.md` §9.12). Campi nuovi di
+`MethodProcessProfile`, attivi solo per i profili che li dichiarano (oggi solo
+Adriano; nessuno stile del catalogo li ha, test):
+
+- **Fasi esplicite** (`phases: { preferment?, bulk, proof }`, ciascuna con
+  `hours` e `temp_c`; `declaredPhases`). Valgono solo se le ore della ricetta
+  sono la somma delle fasi, la temperatura della ricetta è quella della
+  puntata e il pre-fermento c'è se e solo se la fonte lo ha; altrimenti
+  `fermentationPhases` torna alle quote di sempre (D-050). Con le fasi:
+  durate della timeline dalla fonte, `temp_c` sui passi prefermento, puntata e
+  appretto (testo «Lievitazione finale a 28 °C», UI e MCP), e
+  `equivalentFermentationHours` conta ogni fase alla sua temperatura in ore
+  equivalenti alla puntata (prima: tutte le ore alla temperatura della
+  ricetta; Adriano 10,5 h → 14,4 h equivalenti a 18 °C nei «Dati del
+  modello»). Il pre-fermento è quello del motore (poolish 1:1, tutto il
+  lievito): `phases.preferment.flour_pct` (50 %) è la quota predefinita
+  finché l'utente non sceglie un altro tipo o un'altra quota.
+- **Cottura della versione** (`bake: { temp_c, cook_time_sec, racks? }`,
+  `profileStyle`): sostituisce forno e tempo ideali dello stile dentro
+  `generateRecipe` e `optimizeRecipe`; Crea e la scheda aprono il preset a
+  `presetOvenTemp(style, cucina, versione)`. `racks: "low_then_high"`: nel
+  forno di casa il passo «Cottura» dice «parte bassa, poi parte alta»
+  (`timeline.bake.lowThenHigh`) invece del ripiano medio-alto generico.
+- **Teglia non unta** (`unoiled_pan`): passo «Stesura» con la semola
+  (`timeline.shape.unoiledPan`, variante `unoiled`).
+- **Note della fonte**: `fermentation.roomTemp` (fase con `temp_assumed`) e
+  `fermentation.hoursAssumed` (fase con `hours_assumed`).
+
+Seguito con le decisioni di Matteo (ramo `b3-final`, §9.12):
+
+- **Pre-fermento della fonte** (decisione 3). `generateRecipe` confronta il
+  pre-fermento della ricetta con quello della versione (presenza, tipo
+  `preFermentKind`, quota della fonte o del tipo). Diverso: lo stile perde
+  `method_profile.phases` per quella ricetta (tornano le quote) e la dose di
+  `sourceYeast` non vale più (`SourceYeast.pre_ferment`, scritto da
+  `interpretationEngineOptions`). Prima: il pre-fermento spento lasciava la
+  dose della fonte (0,5 % di fresco) su un impasto diretto di 10 h 30; ora
+  quella del modello.
+- **Condimento «prima dell'appretto» senza appretto in teglia** (decisione 2).
+  Con `proof_in_pan` falso (Adriano) un passo `before_proof` andava fra lo
+  staglio e l'appretto nei contenitori, cioè sui panetti, col testo «lascialo
+  lievitare in teglia». Ora va subito dopo la stesura
+  (`injectToppingAt("before_proof", true)`) con `description_no_pan_proof` e
+  `topping_variant: "no_pan_proof"` (UI e traduzioni scelgono lo stesso
+  testo). Gli stili con l'appretto in teglia non cambiano (golden e preset
+  identici).
+
+Misure: `recipes.golden.json` e le righe esistenti di
+`preset-numbers.regression.json` identiche; le tre righe di Adriano invariate
+(stessi minuti: la margherita dello stile ha anch'essa un passo di 3 minuti).
+
+Misure: `preset-numbers.regression.json` ha solo le tre righe nuove di
+Adriano (casa, solo secco, legna), nessun numero cambiato; `recipes.golden.json`
+identico; `mcp-kitchen-parity`, `recipe-entry` e i test di proprietà verdi.
+Due test sono stati allineati al comportamento del browser senza cambiarne il
+senso: la parità MCP confronta anche `temp_c` dei passi e, per «Ottimizza per
+me» da una versione d'autore, usa lo stile col condimento della versione (come
+fa Crea con `styleWithSelectedTopping`); `authorVersionRecipe` passa la
+versione a `presetOvenTemp`.

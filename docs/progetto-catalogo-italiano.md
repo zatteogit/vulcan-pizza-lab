@@ -1066,3 +1066,196 @@ utente in giapponese 561,3 → 562,5 kB (limite 570); CSS invariato (72,4 kB).
   oltre per 12–15 minuti: serve una cottura nel profilo della versione.
 - `recommend_styles` accetta al massimo 30 stili (`limit`), quanti ce ne
   sono ora.
+
+### 9.12 Stato di B3 (31/10/2026)
+
+**Fatto** (ramo `tranche-b3`, poi `b3-final` con le decisioni di Matteo del
+30/10, in fondo; D-070 in `docs/autorialita.md`). Fonte riletta il 31/10/2026: il raddoppio a 28 °C avviene **nei
+contenitori**, poi i pezzi si stendono su semola e vanno nelle teglie non
+unte (non c'è appretto in teglia); per una pizza alta l'autore consiglia
+invece le teglie unte e il raddoppio in teglia (variante, non usata).
+
+#### Fasi esplicite (M3)
+
+Forma dei dati in `MethodProcessProfile` (`domain/pizza-engine.ts`), nel
+profilo della versione:
+
+```ts
+phases: {
+  preferment?: { hours, temp_c, flour_pct? },   // biga o poolish del motore
+  bulk:        { hours, temp_c, temp_assumed?, hours_assumed? },
+  proof:       { hours, temp_c, hours_assumed? }, // in teglia o a panetti: proof_in_pan
+}
+```
+
+- **Perché così.** Tre chiavi fisse nell'ordine del processo invece di un
+  elenco libero: niente fasi doppie o fuori ordine da validare, e ognuna si
+  aggancia a un passo che la timeline, la modalità cottura, la Timeline comoda
+  e l'MCP conoscono già (`preferment`, `bulk`, `proof`). Il pre-fermento è
+  quello del motore (poolish 1:1, tutto il lievito, sale mai): la fase ne dice
+  solo ore, temperatura e quota di farina. `temp_assumed` / `hours_assumed`
+  segnano ciò che la fonte non dice e la ricetta lo dichiara.
+- **Quando valgono.** Solo se le ore della ricetta sono la somma delle fasi,
+  la temperatura della ricetta è quella della puntata e il pre-fermento c'è
+  come nella fonte (`declaredPhases`). Cambiati questi in Crea o nell'MCP,
+  tornano le quote del modello (D-050), come il lievito della fonte (D-068).
+  Il pre-fermento è «come nella fonte» se c'è (o manca) come nella versione e
+  ha il tipo e la quota della versione: tolto, aggiunto o cambiato di tipo o
+  quota, cadono le fasi **e** la dose di lievito della fonte (decisione 3 di
+  Matteo, estensione di D-068: `SourceYeast.pre_ferment`, guardia in
+  decision-guards.test.ts).
+- **Coerenza.** Timeline con le durate della fonte e `temp_c` su ogni fase
+  (testi «a 20 °C», «a 22 °C», «a 28 °C» in UI e MCP; nuovo testo d'appretto
+  `timelineLabels.proof_declared`, perché quello standard dice «a temperatura
+  ambiente»); il modello del lievito conta ogni fase alla sua temperatura
+  (`equivalentFermentationHours`, solo stima: la dose resta della fonte);
+  punteggi su ore e temperatura della ricetta come prima.
+- **Per la B4 (Paoletta, 2 h + 1 h + 30 min in teglia).** La forma regge
+  puntata e appretto in teglia (test con un profilo di prova); il riposo di
+  1 h dei panetti fra la puntata e la stesura in teglia sarà una chiave in più
+  (`rest`) con il suo passo: non c'è ancora.
+
+#### Cottura e teglia della versione
+
+`bake: { temp_c, cook_time_sec, racks? }` nel profilo (dentro gli intervalli
+dello stile, test): Adriano 250 °C, 870 s (10 + 4,5 minuti), parte bassa poi
+parte alta. Crea e la scheda aprono la versione a 250 °C (`presetOvenTemp` con
+la versione); il riferimento resta a 210 °C. `parameter_overrides.pan`:
+teglia 30×35 e 0,536 g/cm² della fonte (lo spessore di Crea, «Sottile e
+croccante»). `unoiled_pan`: stesura su semola nella teglia non unta.
+
+#### Versione «Ispirata ad Adriano Continisio» (`adriano_continisio`)
+
+Tipo `autore`, fonte **verificata**, `source_yeast` fresco 0,5 %. Sale 2 % e
+olio 5 % senza zucchero dall'impasto `adriano_continisio` della
+`IMPASTO_LIBRARY` (`impasto_ref`, §9.11). Malto facoltativo non usato (B4).
+Nessun condimento proprio (decisione 2 di Matteo): l'utente sceglie dalla
+lista dello stile, oggi la margherita di Benedetta. Quella margherita mette la
+salsa prima dell'appretto in teglia, che Adriano non fa (l'appretto è nei
+contenitori): correzione generale nel motore, un passo del condimento
+`before_proof` va **dopo la stesura** quando la ricetta non fa l'appretto in
+teglia, con il testo `description_no_pan_proof` («…e inforna subito», 7
+lingue; test che ogni condimento `before_proof` di uno stile con una versione
+a panetti ce l'abbia). La nota della salsa «condita» (`topping.sauceSeasoning`)
+ora nomina la sua fonte («La margherita viene dalla ricetta di Benedetta
+Rossi…»), perché con Adriano «la fonte» sarebbe stata lui.
+
+Fasi: preimpasto 3 h a 20 °C (fonte); puntata 6 h a 22 °C («a temperatura
+ambiente» fino alle 16 con l'impasto verso le 10: lettura di Vulcan,
+dichiarata); appretto nei contenitori 1 h 30 a 28 °C (gradi della fonte,
+durata stimata da Vulcan, dichiarata). Totale 10 h 30, dentro i 2–12 h dello
+stile.
+
+Dosi, 3 teglie 30×35, forno di casa 250 °C (test in
+`use-cases/teglia-in-giornata-adriano.test.ts`; tolleranza ±1 g su farina,
+acqua e metà del preimpasto, perché il motore arrotonda la teglia a 562 g
+invece di 562,5; il resto esatto):
+
+| | Fonte | Motore |
+|---|---|---|
+| Farina W 250 | 900 (450 nel preimpasto) | 899 (450) |
+| Acqua | 720 (450 nel preimpasto) | 719 (450) |
+| Sale | 18 | 18 |
+| Olio | 45 | 45 |
+| Lievito fresco | 4,5 (tutto nel preimpasto) | 4,5 (tutto nel poolish) |
+| Teglia | 562,5 g, 0,536 g/cm² | 562 g |
+| Forno | 250 °C, 10 + 4–5 min | 250 °C, 870 s |
+
+Con solo lievito secco: 0,17 % convertito 1:3 e dichiarato (D-068).
+
+#### L'impasto di Adriano si lavora (`isUnworkedPanDough` falso)
+
+La fonte impasta in planetaria fino al velo, divide, piega a tre, arrotola,
+lascia raddoppiare nei contenitori, poi rovescia, stende sul banco con la
+semola e trasferisce sull'avambraccio nella teglia. Sono i passaggi in cui
+l'80 % è difficile per chi comincia (impastare un impasto appiccicoso,
+formarlo, stenderlo senza strapparlo, trasferirlo): la regola di B2 non vale
+e il principiante vede «Impasto esigente» e «Abbassa l'idratazione»
+(89/100 «Si può fare, con qualche accortezza»). Il riferimento di Benedetta,
+mescolato nella teglia unta, resta senza segnali (97).
+
+#### Proposta su misura
+
+Invariata: parte dal riferimento (Benedetta) entro le tolleranze; per tutti i
+livelli resta nello stile (77 %, W 280, 6 h a 22 °C col forno di casa; test).
+«Ottimizza per me» partendo da Adriano segue la regola generale: per il
+principiante il tetto di livello porta l'acqua al 68 % (fuori dai 75–82 %
+dello stile), 12 h senza preimpasto. **Non cambiato** (punto 4 qui sotto): la
+regola generale sposterebbe proposte di stili esistenti.
+
+#### MCP e voce
+
+MCP 1.6.0: `generate_recipe` con `interpretation_id: "adriano_continisio"`
+restituisce `declared_phases` (null = quote del modello), `temp_c` sui passi
+delle fasi, cottura 250 °C × 870 s, `pre_ferment` 50 % con `maturation_minutes`
+180, la margherita dello stile (dopo la stesura) e le note; la guida (`agent/mcp-guide.ts`)
+spiega come presentarle. La voce legge la proposta per lo stile, non le
+versioni: invariata.
+
+#### Cosa vede l'utente (prova nel browser, `vite preview`, forno di casa 250 °C)
+
+- **`/recipe/teglia_in_giornata`, versione Adriano** (it ed en-GB, 390 e
+  1280 px): «Ispirata ad Adriano Continisio» (dopo le decisioni di Matteo;
+  prima «Ispirata a…»), tre note (22 °C «ambiente», ore stimate, la
+  margherita dalla ricetta di Benedetta Rossi), caratteristica «Teglia di
+  casa, unta o con la semola», 80 %, W 250–330, 10 h 30 ambiente, forno
+  250 °C, 89/100 con «Impasto esigente»; teglia 30×35 da 562 g; poolish
+  150 + 150 g con tutto il lievito per una teglia. Procedimento: prefermento
+  3 h, impasto, puntata 6 h a 22 °C, staglio, appretto 1 h 30 a 28 °C (gli
+  ultimi 30 minuti col preriscaldo a 250 °C), stesura su semola nella teglia
+  non unta, salsa «…e inforna subito» con la mozzarella negli ultimi 5
+  minuti, cottura «parte bassa, poi parte alta» (`b3-final`, it ed en-GB a
+  390 px).
+- **Crea, `b3-final`** (principiante, poi livello 3): «Genera con questa
+  versione» apre «Ispirata ad Adriano Continisio» a 250 °C, 89/100; in
+  «Personalizza» col livello 3, 80 % e W 250 senza «W consigliato ≥ 300».
+  Per chi comincia la card non offre «Adatta alla mia cucina» (nessun margine
+  sopra 89), quindi il 68 % del punto 4 non si vede da qui.
+- **Crea**: la card su misura resta 97; nel pannello, con i dettagli tecnici,
+  «Versioni d'autore: Benedetta Rossi … Adriano Continisio, Ispirata alla
+  pizza in teglia croccante…, Con accortezza», tecnica, storia e fonte;
+  «Genera con questa versione» apre la ricetta a 250 °C; in «Personalizza»
+  preimpasto poolish 50 %, 22 °C, spessore «Sottile e croccante».
+
+**Budget** (gzip, misurato su main `781a4aa` e sul ramo): codice senza lingue
+455,6 → 457,4 kB (limite 465); per utente in giapponese 563,7 → 566,3 kB
+(limite 570); CSS 72,6 kB invariato (limite 74). `LOCALE_BUNDLE_REV` 59.
+Margine per la B4: 7,6 kB di codice e 3,7 kB per utente.
+
+#### Decisioni di Matteo (30/10) e cosa è cambiato (`b3-final`)
+
+1. **Durate stimate** (puntata 6 h a 22 °C, appretto 1 h 30 a 28 °C),
+   dichiarate: approvate, invariate.
+2. **Nessun condimento proprio per Adriano**: tolti
+   `margherita_teglia_croccante` (con le traduzioni e la nota
+   `topping.vulcanDoses`) e il collegamento della versione. Il procedimento
+   con la margherita dello stile: stesura su semola nella teglia non unta,
+   salsa «…e inforna subito», cottura dal basso all'alto, mozzarella negli
+   ultimi 5 minuti (sopra, «Versione»).
+3. **Lievito della fonte legato al pre-fermento**: tolto, aggiunto o cambiato
+   (tipo o quota) torna la dose del modello, come per ore e temperatura (test
+   in `teglia-in-giornata-adriano.test.ts` e guardia D-070).
+4. **«Ottimizza per me» sempre dentro lo stile: non applicato, da decidere.**
+   La regola generale (il tetto d'idratazione per livello non scende sotto il
+   minimo dello stile) cambia proposte di stili esistenti. Misura su 30 stili
+   × 4 livelli × 3 cucine (casa 24 h, casa 72 h, legna), proposta su misura e
+   «Ottimizza per me» dal riferimento, da ogni versione e da ogni versione
+   d'autore (1.380 ricette): **114 cambiano**, 111 in 8 stili esistenti
+   (teglia romana 30, pala romana 18, pinsa 15, baciata 15, spaccata 15,
+   Detroit 9, focaccia barese 6, canotto 3) e le 3 di Adriano; 108 per chi
+   comincia e 6 per il livello 2 (versioni con intervalli propri: `teglia_alta`,
+   `spaccata_bonci`). Esempi, forno di casa, livello 1: teglia romana su
+   misura 67,9 → 74,9 %, pala romana 68 → 75 %, pinsa 68 → 72 %, baciata e
+   spaccata 67,7 → 74,7 %, Detroit e focaccia barese 68 → 70 %; Adriano 68 →
+   75 % (ma resta senza preimpasto, 12 h). Le alternative: (a) la regola
+   generale con questi cambi dichiarati; (b) solo per le versioni d'autore
+   (tipo `autore`), che però non è una regola generale; (c) lasciare il tetto
+   com'è e dire nella proposta che esce dallo stile.
+5. **Testi veri per ogni versione**: caratteristica «Teglia di casa, unta o
+   con la semola» (7 lingue); i due suggerimenti W↔idratazione di Crea
+   («W consigliato ≥ …», «idratazione massima ~…») non compaiono se una
+   versione dello stile con la fonte verificata ha almeno quell'acqua con al
+   massimo quella W (`verifiedSourceBacksHydrationW`: Adriano, 80 % con
+   W 250); etichetta «Ispirata ad Adriano Continisio» e «Riferimento, ispirata
+   ad …» davanti a vocale (regola generale `startsWithVowel`; in francese
+   «Inspirée d’…», le altre lingue non cambiano).

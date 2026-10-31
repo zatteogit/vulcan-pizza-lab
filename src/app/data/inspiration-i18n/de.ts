@@ -75,6 +75,12 @@ export const INSPIRATION_I18N_DE: InspirationTranslation = {
       story: "Benedetta Rossi veröffentlicht Rezepte der Hausmannskost auf ihrer Website „Fatto in casa da Benedetta“ und im Fernsehen. Ihre Blechpizza ist in wenigen Stunden fertig: viel Hefe, ein warmer Ort und der Haushaltsbackofen bei 210 °C, den Mozzarella erst in den letzten 5 Minuten.",
       badge: "Hausmannskost",
     },
+    adriano_continisio: {
+      signature_name: "Inspiriert von Adriano Continisios knuspriger Blechpizza",
+      technique_signature: "Vorteig mit der Hälfte des Mehls, der Hälfte des Wassers und der ganzen Frischhefe, etwa 3 Stunden bei 20 °C; Teig mit 80 % in der Küchenmaschine bis zur Fensterprobe. Teigstücke verdoppeln sich bei 28 °C, ungefettete Bleche mit etwas Grieß, 250 °C erst unten, dann oben mit dem Mozzarella.",
+      story: "Adriano Continisio schreibt in seinem Blog „Profumo di lievito“ über selbst gebackenes Brot und Pizza. Seine knusprige Blechpizza von 2009 entsteht an einem Tag: Vorteig am frühen Morgen, Teigstücke gegen 16 Uhr und Backen im Haushaltsofen bei 250 °C.",
+      badge: "Profumo di lievito",
+    },
     da_michele_napoli: {
       signature_name: "Margherita und Marinara, und wenig mehr",
       technique_signature: "Aufs Nötigste reduzierte Karte: jahrzehntelang nur Margherita und Marinara, heute vier Pizzen. Holzofen und kein Schnickschnack.",

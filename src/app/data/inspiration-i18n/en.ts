@@ -75,6 +75,12 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
       story: "Benedetta Rossi publishes home-cooking recipes on her website “Fatto in casa da Benedetta” and on television. Her tray pizza takes just a few hours: plenty of yeast, a warm place and a home oven at 210 °C, with the mozzarella added in the last 5 minutes.",
       badge: "Home cooking",
     },
+    adriano_continisio: {
+      signature_name: "Inspired by Adriano Continisio’s crispy tray pizza",
+      technique_signature: "A pre-dough with half the flour, half the water and all the fresh yeast, about 3 hours at 20 °C; an 80% dough kneaded in a stand mixer until it passes the windowpane test. Dough pieces left to double at 28 °C, ungreased trays dusted with semolina, 250 °C first at the bottom and then at the top with the mozzarella.",
+      story: "Adriano Continisio writes about home-made bread and pizza on his blog “Profumo di lievito”. His crispy tray pizza, from 2009, is made in a day: pre-dough early in the morning, dough pieces at around 16:00 and baking in a home oven at 250 °C.",
+      badge: "Profumo di lievito",
+    },
     da_michele_napoli: {
       signature_name: "Margherita and Marinara, and little else",
       technique_signature: "A bare-bones menu: for decades only Margherita and Marinara, four pizzas today. Wood-fired oven, no frills.",

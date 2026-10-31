@@ -47,7 +47,8 @@ function openedInCreate(constraints: UserConstraints, edit: { fermentHours?: num
 describe("interpretationEngineOptions", () => {
   it("lievito con le ore e la temperatura della versione; «luogo caldo» a 26 °C", () => {
     expect(interpretationEngineOptions(TEST_AUTORE)).toEqual({
-      sourceYeast: { type: "dry", pct: 1.4, hours: 2, temp_c: 26 }, warmPlace: true,
+      // D-070: la dose vale anche solo col pre-fermento della fonte (qui nessuno).
+      sourceYeast: { type: "dry", pct: 1.4, hours: 2, temp_c: 26, pre_ferment: false }, warmPlace: true,
     });
     expect(canonicalRecipeEntry(style, weights, TEST_AUTORE).options.customFermentationTempC).toBe(26);
   });

@@ -3,7 +3,7 @@ import { METHOD_MESSAGES_IT } from "../data/method-messages";
 import { getInterpretationById, interpretationFermentTempC, type Interpretation } from "../data/interpretation-library";
 import { getStyleReference, getVersionById, type StyleVersion } from "../data/style-versions";
 import { resolveTopping, getToppingForStyle } from "../data/topping-library";
-import { defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
+import { STYLES_DB, defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
   type GeneratedRecipe, type GenerateRecipeOptions, type PanConfig, type PizzaStyle,
   type PreFermentChoice, type ScoreWeightsOverride, type UserConstraints, type VersionRangeOverrides,
   type AuthenticityCenter,
@@ -96,7 +96,9 @@ export function sourceReferenceCenter(style: PizzaStyle): AuthenticityCenter | u
  *  fonte lo scrive) e il «luogo caldo» senza gradi. Una sola funzione per
  *  l'apertura del preset e per la ricetta di Crea, così le due coincidono
  *  (test di authorVersionRecipe). Il motore usa la dose della fonte solo
- *  finché ore e temperatura della ricetta sono queste. */
+ *  finché ore, temperatura e pre-fermento della ricetta sono questi (D-070,
+ *  decisione 3 di Matteo: tolto, aggiunto o cambiato il pre-fermento torna il
+ *  modello). */
 export function interpretationEngineOptions(interpretation: Interpretation | null | undefined): Pick<GenerateRecipeOptions, "sourceYeast" | "warmPlace" | "convertedDoses"> {
   if (!interpretation) return {};
   const o = interpretation.parameter_overrides;
@@ -104,11 +106,20 @@ export function interpretationEngineOptions(interpretation: Interpretation | nul
   const y = interpretation.source_yeast;
   return {
     ...(y && o?.fermentation_hours !== undefined && tempC !== undefined
-      ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours, temp_c: tempC } }
+      ? { sourceYeast: { type: y.type, pct: y.pct, hours: o.fermentation_hours, temp_c: tempC,
+          pre_ferment: interpretationUsesPreFerment(interpretation) } }
       : {}),
     ...(o?.warm_place ? { warmPlace: true } : {}),
     ...(interpretation.converted_doses ? { convertedDoses: true } : {}),
   };
+}
+
+/** Il pre-fermento della versione, come lo apre canonicalRecipeEntry: quello
+ *  scritto nella versione, altrimenti quello dell'impasto o dello stile. */
+function interpretationUsesPreFerment(interpretation: Interpretation): boolean {
+  const o = interpretation.parameter_overrides;
+  const impasto = o?.impasto_ref ? getImpasto(o.impasto_ref) : undefined;
+  return o?.use_pre_ferment ?? impasto?.requires_pre_ferment ?? STYLES_DB[interpretation.base_style_id]?.requires_pre_ferment ?? false;
 }
 
 /** La ricetta originale sulla cucina dell'utente, con gli stessi parametri
@@ -146,13 +157,14 @@ export function canonicalRecipeEntry(style: PizzaStyle, scoreWeights?: ScoreWeig
     customFermentationTempC: (interp ? interpretationFermentTempC(interp) : undefined) ?? v?.fermentation_temp_c ?? defaultFermentTempC(style, hours),
     usePreFerment: o?.use_pre_ferment ?? v?.use_pre_ferment ?? (impasto?.requires_pre_ferment ?? style.requires_pre_ferment),
     customSalt: dough.salt_pct,
-    // Come la scheda: teglia dello stile e mix di farine dello stile.
+    // Come la scheda: teglia dello stile e mix di farine dello stile; B3: la
+    // teglia e il carico della fonte, se la versione li scrive.
     panConfig: {
       panShape: defaultPanShape(style),
-      panLength: style.shape.length_cm,
-      panWidth: style.shape.width_cm,
+      panLength: o?.pan?.length_cm ?? style.shape.length_cm,
+      panWidth: o?.pan?.width_cm ?? style.shape.width_cm,
       panDiameter: style.shape.diameter_cm,
-      thickness: style.shape.thickness_factor,
+      thickness: o?.pan?.g_per_cm2 ?? style.shape.thickness_factor,
     },
     customFlourBlend: blendAtW(dough.flour_blend, o?.flour_w ?? v?.flour_w ?? Math.round((dough.flour_w_range[0] + dough.flour_w_range[1]) / 2)),
     scoreWeights,
@@ -181,17 +193,22 @@ export function recipeFromEntry(entry: ReturnType<typeof canonicalRecipeEntry>, 
   return generateRecipe(entry.style, constraints, { ...entry.options, scoreWeights });
 }
 
+/** Forno ideale di un preset: quello della versione d'autore, se ne scrive uno
+ *  (B3, MethodProcessProfile.bake), altrimenti l'ideale dello stile. */
+export const presetIdealOvenC = (style: PizzaStyle, interpretation?: Interpretation | null) =>
+  interpretation?.process_profile?.bake?.temp_c ?? style.baking.temp_c_ideal;
+
 /** Forno con cui Crea apre un preset (versione, firma, Riferimento): il massimo
- *  della cucina, senza superare l'ideale dello stile. */
-export const presetOvenTemp = (style: PizzaStyle, c: UserConstraints) =>
-  Math.min(style.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c);
+ *  della cucina, senza superare l'ideale del preset. */
+export const presetOvenTemp = (style: PizzaStyle, c: UserConstraints, interpretation?: Interpretation | null) =>
+  Math.min(presetIdealOvenC(style, interpretation), c.oven_capacity_temp_c ?? c.oven_max_temp_c);
 
 /** G1b: la ricetta che «Genera con questa versione» apre in Crea (preset della
  *  versione d'autore sul forno di presetOvenTemp). Il suo verdetto dice nel
  *  pannello stile se la versione è fattibile con la cucina dell'utente. */
 export function authorVersionRecipe(style: PizzaStyle, interpretation: Interpretation, constraints: UserConstraints, scoreWeights?: ScoreWeightsOverride): GeneratedRecipe {
   return recipeFromEntry(canonicalRecipeEntry(style, scoreWeights, interpretation),
-    { ...constraints, oven_max_temp_c: presetOvenTemp(style, constraints) });
+    { ...constraints, oven_max_temp_c: presetOvenTemp(style, constraints, interpretation) });
 }
 
 export function canonicalRecipe(style: PizzaStyle, constraints: UserConstraints, scoreWeights?: ScoreWeightsOverride): GeneratedRecipe {

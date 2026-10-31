@@ -519,6 +519,8 @@ export const UI_MESSAGES_ES: Record<string, string> = {
   "recipe.referenceLabel.disciplinare": "Reglamento {0}",
   "recipe.referenceLabel.inspired": "Inspirada en {0}",
   "recipe.referenceLabel.sourceReference": "Referencia, inspirada en {0}",
+  "recipe.referenceLabel.inspiredVowel": "Inspirada en {0}",
+  "recipe.referenceLabel.sourceReferenceVowel": "Referencia, inspirada en {0}",
   "recipe.referenceLabel.authorAdapt": "Es la versión del autor, tal como la describe. Con «{0}» la adaptas a tu cocina y pasa a ser «{1}».",
   "pages.explore.primaryFamily": "Familia principal: {0}",
   "pages.profile.maxTemp": "hasta ~{0}",

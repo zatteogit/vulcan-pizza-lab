@@ -31,17 +31,29 @@ export interface ReferenceLabelInput {
   adaptedToOven: boolean;
 }
 
+/** B3 (decisione 5 di Matteo, 31/10/2026): un nome che comincia per vocale
+ *  vuole «ad» in italiano («Ispirata ad Adriano») e «d’» in francese
+ *  («Inspirée d’Adriano»); le altre lingue hanno la stessa frase per tutti. */
+export function startsWithVowel(name: string): boolean {
+  return /^[aeiouyàâäáèéêëìíîïòóôöùúûü]/i.test(name.trim());
+}
+
 export function referenceEyebrow(input: ReferenceLabelInput): string {
   const { interpretation: it, version } = input;
   if (input.tailored) return input.tailoredLabel;
   // B2 (decisione 2 di Matteo, 30/10/2026): il riferimento dello stile è una
   // sua versione d'autore (base «fonte»): «Riferimento, ispirata a …».
   const reference = getStyleReference(input.styleId);
+  const name = it ? it.author ?? interpretationShortName(it) : "";
   if (it && reference.basis === "fonte" && reference.referenceInterpretationId === it.id) {
-    return uiMessage("recipe.referenceLabel.sourceReference", [it.author ?? interpretationShortName(it)]);
+    return startsWithVowel(name)
+      ? uiMessage("recipe.referenceLabel.sourceReferenceVowel", [name])
+      : uiMessage("recipe.referenceLabel.sourceReference", [name]);
   }
   if (it && it.type !== "disciplinare") {
-    return uiMessage("recipe.referenceLabel.inspired", [it.author ?? interpretationShortName(it)]);
+    return startsWithVowel(name)
+      ? uiMessage("recipe.referenceLabel.inspiredVowel", [name])
+      : uiMessage("recipe.referenceLabel.inspired", [name]);
   }
   if (it && !input.adaptedToOven) {
     return uiMessage("recipe.referenceLabel.disciplinare", [interpretationShortName(it)]);

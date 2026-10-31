@@ -1543,6 +1543,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "Sauce now, mozzarella at the end",
       description: "Spread the warm sauce over the freshly stretched dough, right to the edges, and let it rise in the tray. Bake; in the last 5 minutes of baking, open the oven, scatter the diced mozzarella and finish baking.",
+      description_no_pan_proof: "Spread the warm sauce over the dough you have just stretched in the tray, right to the edges, and bake straight away. In the last 5 minutes of baking, open the oven, scatter the diced mozzarella and finish baking.",
     },
     spread_margherita_us: {
       title: "American Margherita topping",

@@ -937,6 +937,14 @@ export const IT_LOCALE: CmsContent = {
       desc: "Lievitazione finale a {temp}",
       longDesc: "I panetti dopo lo staglio devono rilassarsi e gonfiarsi un'ultima volta. Tienili coperti a temperatura ambiente. Sar\u00E0 ora di stenderli quando: (1) sono raddoppiati di volume, (2) la superficie \u00E8 bombata e liscia, (3) il poke-test torna su lentamente (premi col dito: deve tornare in ~5 secondi). Se la pasta non torna su = sovrafermentata; se torna su subito = ancora indietro.",
     },
+    // B3: appretto alla temperatura scritta dalla fonte (fasi esplicite).
+    proof_declared: {
+      title: "Appretto",
+      desc: "Lievitazione finale a {temp}",
+      longDesc: "Tieni i pezzi coperti a {temp}, come dice la fonte, finché raddoppiano: la superficie è bombata e liscia e, premuta con un dito, torna su lentamente. Se in casa fa più fresco ci vuole più tempo: guarda l'impasto, non l'orologio.",
+      tipBeginner: "Se la cucina è più fresca di {temp}, cerca un angolo più caldo, vicino a un termosifone ma non sopra, e controlla con un termometro.",
+      tipNerd: "A {temp} il modello stima una velocità di fermentazione di {factor}× rispetto a {refTemp}.",
+    },
     proof_pan: {
       title: "Appretto in teglia",
       desc: "Lievitazione finale in teglia a {temp}",

@@ -75,6 +75,12 @@ export const INSPIRATION_I18N_PT: InspirationTranslation = {
       story: "Benedetta Rossi publica receitas de cozinha caseira no site “Fatto in casa da Benedetta” e na televisão. A pizza de assadeira dela fica pronta em poucas horas: bastante fermento, um lugar quente e o forno de casa a 210 °C, com a mussarela nos últimos 5 minutos.",
       badge: "Cozinha caseira",
     },
+    adriano_continisio: {
+      signature_name: "Inspirada na pizza de assadeira crocante de Adriano Continisio",
+      technique_signature: "Pré-fermento com metade da farinha, metade da água e todo o fermento fresco, cerca de 3 horas a 20 °C; massa a 80% na batedeira planetária até o ponto de véu. Pedaços dobrando de volume a 28 °C, assadeiras sem untar com um véu de sêmola, 250 °C primeiro embaixo e depois em cima com a muçarela.",
+      story: "Adriano Continisio escreve sobre pão e pizza caseiros no blog “Profumo di lievito”. A pizza de assadeira crocante dele, de 2009, fica pronta no mesmo dia: pré-fermento logo cedo, pedaços por volta das 16h e forno de casa a 250 °C.",
+      badge: "Profumo di lievito",
+    },
     da_michele_napoli: {
       signature_name: "Margherita e Marinara, e pouco mais",
       technique_signature: "Cardápio reduzido ao essencial: por décadas só Margherita e Marinara, hoje quatro pizzas. Forno a lenha e nada de firulas.",

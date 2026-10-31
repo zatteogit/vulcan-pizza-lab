@@ -14,6 +14,10 @@
  * modello, perché con tempi diversi la dose della fonte non ha più riscontro.
  * Sulla dose della fonte non si applica la correzione personale («la mia
  * cucina lievita più veloce»): è scritta dall'autore, non stimata.
+ * D-070 (decisione 3 di Matteo, 31/10/2026, estensione di D-068): la dose
+ * vale anche solo col pre-fermento della fonte. Se l'utente lo toglie, lo
+ * aggiunge o ne cambia tipo o quota, torna la dose del modello (il motore
+ * confronta il pre-fermento della ricetta con quello della versione).
  *
  * Dispensa (decisione 6 di Matteo, 30/10/2026): tipo e dose come scritti; se
  * in dispensa manca quel tipo e c'è l'altro lievito di birra, si converte col
@@ -34,6 +38,10 @@ export interface SourceYeast {
   /** Ore e temperatura della fonte: la dose vale solo con queste. */
   hours: number;
   temp_c: number;
+  /** D-070: la fonte ha un pre-fermento (quello della versione, col suo tipo
+   *  e la sua quota): la dose vale solo con quello, o solo senza se è false.
+   *  Assente = non si controlla (chiamate dirette al motore). */
+  pre_ferment?: boolean;
 }
 
 /** La dose della fonte come entra nella ricetta. */

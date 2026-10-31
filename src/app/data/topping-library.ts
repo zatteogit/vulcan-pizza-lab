@@ -156,7 +156,7 @@ interface ToppingPrepStep {
 
 /** Punto della timeline dove inserire uno step di assemblaggio. */
 export type TimelineInsertPoint =
-  | "before_proof"       // dopo la stesura in teglia, prima dell'appretto
+  | "before_proof"       // dopo la stesura in teglia, prima dell'appretto (senza appretto in teglia: dopo la stesura, B3)
   | "after_shape"        // dopo stesura, prima della cottura
   | "after_stack"        // tra sovrapposizione e cottura (per layout stacked)
   | "after_fill_internal" // dopo ripieno+sigillatura (per closed_stuffed)
@@ -174,6 +174,11 @@ export interface ToppingAssemblyStep {
    *  cottura effettiva); `description` vale per quelle lunghe. Il motore ne
    *  sceglie uno solo (assemblyStepDescription), niente «se la cottura…». */
   description_short_bake?: string;
+  /** B3 (decisione 2 di Matteo, 31/10/2026): testo per quando la ricetta non
+   *  fa l'appretto in teglia (una versione d'autore che lo fa a panetti, come
+   *  Adriano Continisio). Il motore sposta allora un passo `before_proof` dopo
+   *  la stesura e usa questo testo, senza «lascialo lievitare in teglia». */
+  description_no_pan_proof?: string;
   insert_at: TimelineInsertPoint;
   duration_minutes: number;
   /** Se true, sostituisce lo step generico (es. "Farcitura" generica) al posto di aggiungersi. */
@@ -1065,7 +1070,9 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "margherita_teglia_in_giornata",
     concept_ref: "margherita",
     preferred_for_styles: ["teglia_in_giornata"],
-    source_note: { key: "topping.sauceSeasoning", fallback: METHOD_MESSAGES_IT["topping.sauceSeasoning"], params: { app: BRAND.name } },
+    // B3: la nota nomina la fonte del condimento, perché si vede anche con le
+    // versioni d'autore dello stile che non hanno una margherita propria.
+    source_note: { key: "topping.sauceSeasoning", fallback: METHOD_MESSAGES_IT["topping.sauceSeasoning"], params: { app: BRAND.name, author: "Benedetta Rossi" } },
     ingredients: [
       { name: "Salsa di pomodoro condita (pomodoro, olio, sale)", components: ["pomodoro", "olio", "sale"], amount: { value: 300, unit: "g" }, notes: "tiepida" },
       { name: "Mozzarella a dadini", amount: { value: 250, unit: "g" }, notes: "negli ultimi 5 minuti di cottura" },
@@ -1074,6 +1081,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       id: "spread_margherita_teglia_in_giornata",
       title: "Salsa ora, mozzarella a fine cottura",
       description: "Distribuisci la salsa tiepida sull'impasto appena steso, fino ai bordi, e lascialo lievitare in teglia. Inforna; negli ultimi 5 minuti di cottura apri il forno, distribuisci la mozzarella a dadini e finisci la cottura.",
+      description_no_pan_proof: "Distribuisci la salsa tiepida sull'impasto appena steso nella teglia, fino ai bordi, e inforna subito. Negli ultimi 5 minuti di cottura apri il forno, distribuisci la mozzarella a dadini e finisci la cottura.",
       insert_at: "before_proof",
       duration_minutes: 3,
       replaces_generic: true,

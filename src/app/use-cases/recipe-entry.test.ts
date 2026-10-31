@@ -174,7 +174,7 @@ describe("authorVersionRecipe", () => {
  it("coincide con la ricetta che Crea costruisce dal preset della versione", () => {
   for(const constraints of [...kitchens, p3]) for(const style of Object.values(STYLES_DB)) for(const it of getInterpretationsForStyle(style.id)) {
    const p=recipePresetState(style,null,it);
-   const opened=buildGeneratedRecipe({style,scoreWeights:weights,constraints:{...constraints,oven_max_temp_c:presetOvenTemp(style,constraints)},
+   const opened=buildGeneratedRecipe({style,scoreWeights:weights,constraints:{...constraints,oven_max_temp_c:presetOvenTemp(style,constraints,it)},
     customHydration:p.hydration,customFlourW:p.flourW,customFlourPL:p.flourPL,customSalt:p.salt,
     customFermentHours:p.fermentHours,customFermentTemp:p.fermentTemp,usePreFerment:p.usePreFerment,
     preFermentChoice:{},panConfig:p.panConfig,activeVersion:null,activeInterpretationId:it.id,

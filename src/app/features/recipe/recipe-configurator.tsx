@@ -30,6 +30,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import { useDetailLevel } from "../../hooks/use-detail-level";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { sourceReferenceCenter } from "../../use-cases/recipe-entry";
+import { verifiedSourceBacksHydrationW } from "../../data/interpretation-library";
 import { kitchenConstraints, resolveEffectiveKitchen } from "../../use-cases/effective-kitchen";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
 import { FLOUR_STRENGTH_SCALE, flourFitForStyle } from "../../domain/flour-strength";
@@ -115,6 +116,8 @@ function computeAdaptiveHints(
   fermentTemp: number,
   flourPL: number | undefined,
   cfg: any,
+  /** B3: una versione verificata dello stile regge questa coppia W/idratazione. */
+  backedBySource = false,
 ): AdaptiveHints {
   const hints: AdaptiveHints = {
     hydration: null,
@@ -140,7 +143,9 @@ function computeAdaptiveHints(
 
   // === W ↔ Hydration: proportional within style ranges ===
   // If W is low in its range but H is high in its range → mismatch
-  if (wPos < 0.3 && hPos > 0.7) {
+  // B3 (decisione 5 di Matteo): i suggerimenti W↔idratazione non
+  // contraddicono una versione dello stile con la fonte verificata.
+  if (wPos < 0.3 && hPos > 0.7 && !backedBySource) {
     const suggestedMinW = Math.round((sW[0] + (sW[1] - sW[0]) * hPos * 0.9) / 10) * 10;
     hints.flourW = {
       adaptiveMin: Math.max(sW[0], suggestedMinW),
@@ -148,7 +153,7 @@ function computeAdaptiveHints(
     };
   }
 
-  if (hPos > 0.8 && wPos < 0.5) {
+  if (hPos > 0.8 && wPos < 0.5 && !backedBySource) {
     const suggestedMaxH = Math.round(sH[0] + (sH[1] - sH[0]) * Math.max(0.3, wPos));
     hints.hydration = {
       adaptiveMax: Math.min(sH[1], suggestedMaxH),
@@ -444,6 +449,7 @@ export function RecipeConfigurator({
     customFermentTemp,
     customFlourPL,
     cfg,
+    verifiedSourceBacksHydrationW(style.id, customHydration, customFlourW),
   );
   /* B2 (seguito): con il lievito della fonte le ore sono quelle della fonte. */
   const adaptiveHints = timing?.yeastFromSource ? { ...computedHints, fermentation: null } : computedHints;
@@ -742,7 +748,9 @@ export function RecipeConfigurator({
                   PRE_FERMENT_FLOUR_PCT.min,
                   Math.floor(maxPreFermentFlourPct(type, customHydration, PRE_FERMENT_FLOUR_PCT.max) / 5) * 5,
                 );
-                const flourPct = Math.min(maxFlourPct, preFermentChoice?.flourPct ?? PRE_FERMENT_FLOUR_PCT[type]);
+                /* B3: la quota della fonte (fasi esplicite), col tipo dello stile. */
+                const defaultPct = (preFermentChoice?.type ? undefined : style.method_profile?.phases?.preferment?.flour_pct) ?? PRE_FERMENT_FLOUR_PCT[type];
+                const flourPct = Math.min(maxFlourPct, preFermentChoice?.flourPct ?? defaultPct);
                 return (
                   <div className="config-field config-preferment">
                     <SegmentedControl
@@ -770,7 +778,7 @@ export function RecipeConfigurator({
                       onChange={(v) =>
                         onPreFermentChoiceChange({
                           ...preFermentChoice,
-                          flourPct: v === PRE_FERMENT_FLOUR_PCT[type] ? undefined : v,
+                          flourPct: v === defaultPct ? undefined : v,
                         })
                       }
                       min={PRE_FERMENT_FLOUR_PCT.min}
@@ -778,7 +786,7 @@ export function RecipeConfigurator({
                       step={5}
                       unit="%"
                       gradient={SLIDER_GRADIENTS.fermentation}
-                      optimalValue={Math.min(maxFlourPct, PRE_FERMENT_FLOUR_PCT[type])}
+                      optimalValue={Math.min(maxFlourPct, defaultPct)}
                     />
                     {maxFlourPct < PRE_FERMENT_FLOUR_PCT.max && (
                       <p className="type-body config-preferment-sourdough__text" data-region="poolish-max">

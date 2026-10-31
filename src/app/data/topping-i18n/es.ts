@@ -2776,6 +2776,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "La salsa ahora, la mozzarella al final",
       description: "Reparte la salsa tibia sobre la masa recién extendida, hasta los bordes, y déjala levar en la bandeja. Hornea; en los últimos 5 minutos abre el horno, reparte la mozzarella en dados y termina la cocción.",
+      description_no_pan_proof: "Reparte la salsa tibia sobre la masa recién extendida en la bandeja, hasta los bordes, y hornea enseguida. En los últimos 5 minutos abre el horno, reparte la mozzarella en dados y termina la cocción.",
     },
     spread_margherita_us: {
       title: "Aliño Margherita americana",

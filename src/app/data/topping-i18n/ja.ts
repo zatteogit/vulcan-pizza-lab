@@ -2776,6 +2776,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     spread_margherita_teglia_in_giornata: {
       title: "ソースは今、モッツァレラは最後に",
       description: "広げたばかりの生地に温かいソースを縁まで塗り、天板のまま発酵させます。オーブンに入れ、焼き上がりの最後の5分でオーブンを開けて角切りのモッツァレラを散らし、焼き上げます。",
+      description_no_pan_proof: "天板に広げたばかりの生地に温かいソースを縁まで塗り、すぐにオーブンに入れます。焼き上がりの最後の5分でオーブンを開けて角切りのモッツァレラを散らし、焼き上げます。",
     },
     spread_margherita_us: {
       title: "アメリカ風Margheritaのトッピング",

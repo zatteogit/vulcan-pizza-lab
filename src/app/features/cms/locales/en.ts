@@ -1130,7 +1130,11 @@ export const EN_LOCALE: CmsContent = {
     "yeast.sourceFreshAsDry": "The source uses fresh yeast, {sourcePct}% on the flour. Your pantry has dry yeast: here the dose is {pct}%, converted by {app} at a 1 to 3 ratio (1 g of dry yeast is worth about 3 g of fresh).",
     "fermentation.warmPlace": "The source says “in a warm place”, without degrees: {app} calculates at {temp}, and anything between {tempMin} and {tempMax} works. Wait for the dough to double, not for the clock.",
     "source.convertedDoses": "The source measures in millilitres, teaspoons and sachets: the grams are a conversion by {app}. For small amounts, such as salt and sugar, the margin is about 25%.",
-    "topping.sauceSeasoning": "The source only says “seasoned sauce”, without saying what with: the oil and salt in the sauce are {app}'s reading.",
+    "topping.sauceSeasoning": "The Margherita comes from {author}'s recipe, which only says “seasoned sauce”, without saying what with: the oil and salt in the sauce are {app}'s reading.",
+    "fermentation.roomTemp": "For the bulk rise the source says “at room temperature”, without degrees: {app} calculates at {temp}.",
+    "fermentation.hoursAssumed": "The source does not say how long every phase lasts: where it doesn't, the hours are an estimate by {app} from the recipe's timings. Wait for the dough to double, not for the clock.",
+    "timeline.bake.lowThenHigh": "Static oven: bake at the bottom, then move the tray to the top to finish baking, as the source says.",
+    "timeline.shape.unoiledPan": "Turn the dough out onto a counter dusted with semolina, press it with your fingertips and stretch it without knocking the air out. Put it in the ungreased tray, dusted with semolina, and finish stretching it.",
     "diet.singleBase": "One base using all the dough: onions on top, without a second disc or sealing.",
     "topping.geometry": "Area {area} cm² · reference {reference} cm² · amounts ×{scale}.",
     "auth.layoutChanged": "Different format from the reference: this variant changes the recipe structure",
@@ -1279,6 +1283,14 @@ export const EN_LOCALE: CmsContent = {
       tipNerd:
         "Poke test: slow return = optimal fermentation. Too fast = under-proofed. No return = over-proofed.",
       longDesc: "After dividing, the dough balls need to relax and rise one last time. Keep them covered at room temperature. They're ready to stretch when: (1) they've doubled in volume, (2) the surface is domed and smooth, (3) the poke test springs back slowly (press with a finger: it should spring back in ~5 seconds). If the dough doesn't spring back = over-proofed; if it springs back straight away = under-proofed.",
+    },
+    // B3: appretto alla temperatura scritta dalla fonte (fasi esplicite).
+    proof_declared: {
+      title: "Final proof",
+      desc: "Final rise at {temp}",
+      longDesc: "Keep the pieces covered at {temp}, as the source says, until they double: the surface is domed and smooth and, pressed with a finger, springs back slowly. If your home is cooler it takes longer: watch the dough, not the clock.",
+      tipBeginner: "If your kitchen is cooler than {temp}, find a warmer spot, near a radiator but not on it, and check with a thermometer.",
+      tipNerd: "At {temp} the model estimates a fermentation speed of {factor}× compared with {refTemp}.",
     },
     proof_pan: {
       title: "Final rise in the pan",
@@ -1457,7 +1469,7 @@ export const EN_LOCALE: CmsContent = {
     fugazzeta: "Double layer stuffed with mozzarella|Onion on top, no tomato|Tall and soft (al molde)|Oregano and EVO oil to finish",
     california_style: "Thin artisan base|Seasonal gourmet ingredients|Non-traditional combinations|Chef-driven approach",
     greek_pan: "Heavily oiled pan, fried bottom|Thick, soft crumb|Mozzarella + cheddar blend|Greek-American diner",
-    teglia_in_giornata: "Ready the same day|Hydration around 80%|Well-oiled home tray|Home oven",
+    teglia_in_giornata: "Ready the same day|Hydration around 80%|Home tray, oiled or dusted with semolina|Home oven",
   },
   deviationLabels: {
     unclassified: "Unverified",
