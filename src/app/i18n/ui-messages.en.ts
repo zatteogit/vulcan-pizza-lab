@@ -1,5 +1,10 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.benchFold": "Bench folding: a flap of wet dough is folded back over the mass without tearing it.",
+  "learn.visual.prefermentPair": "Left: freshly mixed biga. Right: poolish after resting. This compares different consistencies, not stages in a readiness test.",
+  "learn.visual.stretchingProperties": "Stretching by hand shows how dough responds. P, L and W are measured with instruments, not by this gesture.",
+  "learn.visual.poolishPhoto": "Poolish photograph",
+
   "learn.visual.doughTemperature": "Insert the probe into the dough to measure its temperature, which may differ from room temperature.",
   "learn.visual.coveredRest": "Cover the bowl during the rest to limit drying on the dough’s surface.",
   "learn.visual.coveredStorage": "A well-fitting lid limits drying. Leave room for the dough to expand, including during a rest in the fridge.",

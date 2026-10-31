@@ -1,5 +1,10 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.benchFold": "Rabat sur le plan de travail : un bord de pâte humide est replié sur la masse sans la déchirer.",
+  "learn.visual.prefermentPair": "À gauche, une biga juste mélangée ; à droite, un poolish après repos. La comparaison montre des consistances différentes, pas un test de maturation.",
+  "learn.visual.stretchingProperties": "Étirer la pâte à la main permet d’observer sa réaction. Les valeurs P, L et W se mesurent avec des instruments, pas avec ce geste.",
+  "learn.visual.poolishPhoto": "Photo du poolish",
+
   "learn.visual.doughTemperature": "Insère la sonde dans la pâte pour mesurer sa température, qui peut différer de celle de la pièce.",
   "learn.visual.coveredRest": "Couvre le récipient pendant le repos pour limiter le dessèchement de la surface de la pâte.",
   "learn.visual.coveredStorage": "Un couvercle bien ajusté limite le dessèchement. Laisse de la place pour que la pâte puisse gonfler, même pendant le repos au réfrigérateur.",

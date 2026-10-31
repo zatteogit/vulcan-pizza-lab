@@ -1,0 +1,24 @@
+{
+  "mode": "built-in image_gen",
+  "items": [
+    {
+      "id": "bench-fold",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-7-2026-10-31/references/kneading-34.jpg",
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png"
+      ],
+      "prompt": "Use case: scientific-educational. Create ONE landscape 3:2 illustration on genuine transparent background. Input 1 is a photographic montage: use ONLY its TOP-RIGHT panel, showing hands laying the far edge of a wet dough mass back over itself on the work surface. Input 2 is ONLY the approved Vulcan STYLE reference. Precisely preserve the photographed hand positions, gentle pinching grip on the folded flap, soft thick dough mass supported by the counter, and actual contact between flap and dough. One static gesture only, not a multi-panel sequence. Remove torso, flour scatter, lettering, apron/logo, woodgrain and background. The counter may be a tiny plain ivory patch. Match clean warm coloured pen illustration with thin terracotta-brown outlines, ivory dough, restrained smooth washes. Natural irregular dough with one fold, not a shiny perfect blob or torn/stretchy cheese. No grain, stippling, paper texture, dense pores, artificial gloss, plastic 3D effects, arrows, text or numbers. Do not depict a diagnostic stage or a universal kneading duration.",
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-be2c8ec2-69f9-4717-b20e-eb9bb765741a.png"
+    },
+    {
+      "id": "preferment-pair",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-7-2026-10-31/references/biga-input.jpg",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-7-2026-10-31/references/poolish-input.jpg",
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png"
+      ],
+      "prompt": "Use case: scientific-educational. Create ONE clean educational landscape 3:2 illustration with TWO bowls side by side, genuine transparent background. Input 1 is a real photograph of freshly mixed biga; Input 2 is a real photograph of poolish the morning after mixing; Input 3 is ONLY the approved Vulcan STYLE reference. LEFT: preserve the observed fairly firm irregular off-white biga mass, a few coarse joined folds and broken edges as in input1, not tiny rubble, pebbles, dry flour or a perfectly smooth proofed ball. RIGHT: preserve the observed wetter poolish with a loose flatter surface and a SMALL number of irregular round openings/bubbles as in input2, no whipped foam or honeycomb wallpaper. Recompose the contents into two ordinary low wide bowls, one terracotta left and clear ivory glass right, presented at the same modest elevated angle so both consistencies read clearly. No imaginary scientific cutaways, volume marks, numerals, arrows, labels, symbols, ingredient bags or text. This compares photographed consistencies at DIFFERENT described stages, NOT two maturity levels or a universal readiness test. Match the warm coloured pen style, fine terracotta/brown outlines, ivory and muted warm washes, broad smooth shading. No grain overlay, stippling, paper texture, evenly repeated pores, microtexture, glossy plastic or 3D rendering. All bowls within frame with a little clear gap.",
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-ec5d2d77-7d62-490c-a562-fb3e9c747499.png"
+    }
+  ]
+}

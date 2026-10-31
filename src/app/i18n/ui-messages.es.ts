@@ -1,5 +1,10 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.benchFold": "Pliegues en la mesa: un borde de la masa húmeda se dobla sobre el resto sin desgarrarlo.",
+  "learn.visual.prefermentPair": "A la izquierda, una biga recién mezclada; a la derecha, un poolish tras el reposo. Se comparan consistencias, no se comprueba la maduración.",
+  "learn.visual.stretchingProperties": "Estirar a mano permite observar cómo responde la masa. Los valores P, L y W se miden con instrumentos, no con este gesto.",
+  "learn.visual.poolishPhoto": "Foto del poolish",
+
   "learn.visual.doughTemperature": "Introduce la sonda en la masa para medir su temperatura, que puede ser distinta de la temperatura ambiente.",
   "learn.visual.coveredRest": "Cubre el recipiente durante el reposo para limitar que se seque la superficie de la masa.",
   "learn.visual.coveredStorage": "Una tapa bien ajustada limita la desecación. Deja espacio para que la masa pueda crecer, también durante el reposo en la nevera.",
