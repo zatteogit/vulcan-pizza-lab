@@ -1,5 +1,11 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.doughTemperature": "Introduce la sonda en la masa para medir su temperatura, que puede ser distinta de la temperatura ambiente.",
+  "learn.visual.coveredRest": "Cubre el recipiente durante el reposo para limitar que se seque la superficie de la masa.",
+  "learn.visual.coveredStorage": "Una tapa bien ajustada limita la desecación. Deja espacio para que la masa pueda crecer, también durante el reposo en la nevera.",
+  "learn.visual.remilledSemolina": "Un ejemplo de sémola de trigo duro remolida: el aspecto y el color por sí solos no permiten distinguirla de otras harinas.",
+  "learn.visual.sauceDosing": "Extiende una capa ligera de tomate con la cantidad indicada en la receta, evitando acumulaciones en el centro.",
+
   "learn.visual.portionWeighing": "Pesa cada porción antes de formar la bola. Tanto el peso de la masa como la superficie de la pizza influyen en el grosor.",
   "learn.visual.mozzarellaDrying": "Distribuye la mozzarella fresca sobre papel absorbente para eliminar el exceso de humedad antes de cubrir la pizza.",
   "learn.visual.stoneBrushing": "Mantenimiento en frío: retira los residuos con un cepillo adecuado para la piedra, siguiendo las instrucciones del fabricante.",

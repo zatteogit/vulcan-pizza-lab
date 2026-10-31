@@ -3,6 +3,12 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.doughTemperature": "Inserisci la sonda nell’impasto: misura la sua temperatura, che può differire da quella della stanza.",
+  "learn.visual.coveredRest": "Copri il recipiente durante il riposo per limitare l’essiccazione della superficie dell’impasto.",
+  "learn.visual.coveredStorage": "Un coperchio ben adattato limita l’essiccazione. Lascia spazio perché l’impasto possa crescere anche durante il riposo in frigo.",
+  "learn.visual.remilledSemolina": "Un esempio di semola rimacinata di grano duro: aspetto e colore non bastano a distinguerla da altre farine.",
+  "learn.visual.sauceDosing": "Distribuisci il pomodoro in uno strato leggero, secondo la quantità prevista dalla ricetta, evitando accumuli al centro.",
+
   "learn.visual.portionWeighing": "Pesa la porzione prima di formare il panetto. Per lo spessore contano sia il peso dell’impasto sia la superficie della pizza.",
   "learn.visual.mozzarellaDrying": "Distribuisci la mozzarella fresca sulla carta assorbente per eliminare l’umidità in eccesso prima di condire la pizza.",
   "learn.visual.stoneBrushing": "Manutenzione a freddo: rimuovi i residui con una spazzola adatta alla pietra, seguendo le istruzioni del produttore.",

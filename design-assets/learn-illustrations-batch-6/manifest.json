@@ -1,0 +1,169 @@
+{
+  "date": "2026-10-31",
+  "status": "Prepared for visual review, not published",
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "id": "dough-temperature",
+      "title": "Temperatura dell’impasto",
+      "placements": [
+        "q10",
+        "P04"
+      ],
+      "asset": "src/assets/learn/dough-temperature.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 23350,
+      "sha256": "95a78bbd2cf152b98ed9c083dd203788d198f57261328b3fcad721d7e79b0f7c",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/dough-temperature.png",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2018/05/Desired-Dough-Temperature-45.jpg",
+          "author_or_publisher": "King Arthur Baking",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/references/temperature-22.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Contact probe in dough, blank display. In Q10 this illustrates measuring the temperature variable, not a measured coefficient or a rate comparison."
+    },
+    {
+      "id": "covered-rest",
+      "title": "Coprire durante il riposo",
+      "placements": [
+        "P07",
+        "P19"
+      ],
+      "asset": "src/assets/learn/covered-rest.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 26158,
+      "sha256": "16b846f4dfc2aef100662f09f39802f4a74abfc307a88d3d044fc8f378ddb954",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/covered-rest.png",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2021/09/28/how-to-refrigerate-bread-dough-to-bake-later",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image_sm/public/2021-09/2020-01-29_Easiest-Loaf_Recipe-Step-5_mark-weinberg_0890.jpg?itok=7OfIPrK9",
+          "author_or_publisher": "Mark Weinberg / King Arthur Baking",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/references/cover-gesture.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Actual gesture covering a mixing bowl with film; no film wrapped directly around dough. Preserves the existing stretching image alongside."
+    },
+    {
+      "id": "covered-storage",
+      "title": "Conservare con spazio",
+      "placements": [
+        "P05",
+        "P21"
+      ],
+      "asset": "src/assets/learn/covered-storage.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 19552,
+      "sha256": "86f0de85bd3ab4273c13fa4cde1215fe7784a7cbf279466f19435d74f539cbbc",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/covered-storage.png",
+      "references": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2023/04/18/never-cover-rising-bread-dough-with-towel",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image_sm/public/2023-04/QZ7A7215.jpg?itok=b8neHnq3",
+          "author_or_publisher": "King Arthur Baking",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/references/covered-tub.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Lidded container with headroom, no graduations. Photograph is of a proofing container, not a refrigerator scene. Cold-rest caption also supported by https://www.kingarthurbaking.com/blog/2021/09/28/how-to-refrigerate-bread-dough-to-bake-later . No universal fill ratio or stage implied."
+    },
+    {
+      "id": "remilled-semolina",
+      "title": "Semola rimacinata",
+      "placements": [
+        "semola_rimacinata"
+      ],
+      "asset": "src/assets/learn/remilled-semolina.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 16872,
+      "sha256": "8322707da8677781fb8e451170cf8d16e42dd85d33fd1e5d5c50a3cab445d93a",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/remilled-semolina.png",
+      "references": [
+        {
+          "page": "https://shop.drax-muehle.de/produkte/detail/1333/bio-hartweizenmehl-semola-di-grano-duro-rimacinata-1-kg",
+          "photo_url": "https://shop.drax-muehle.de/media/cache/cache/products/425029660537.jpg",
+          "author_or_publisher": "Drax-Mühle",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/references/semolina.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Ingredient photograph explicitly labelled remilled durum semolina by its supplier. Simplified illustrated powder, no microscopy or appearance-based identification claim."
+    },
+    {
+      "id": "sauce-dosing",
+      "title": "Dosare il pomodoro",
+      "placements": [
+        "P18"
+      ],
+      "asset": "src/assets/learn/sauce-dosing.webp",
+      "size": [
+        672,
+        448
+      ],
+      "bytes": 21226,
+      "sha256": "4214efed82afb6db8909d6a55a97802f3c1a595d2a5c683547fb339d054eabe3",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/sauce-dosing.png",
+      "references": [
+        {
+          "page": "https://www.pexels.com/photo/putting-tomato-sauce-on-dough-for-pizza-17637072/",
+          "photo_url": "https://images.pexels.com/photos/17637072/pexels-photo-17637072/free-photo-of-putting-tomato-sauce-on-dough-for-pizza.png?auto=compress&dpr=1&h=750&w=1260",
+          "author_or_publisher": "Saulo Leite / Pexels",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-6-2026-10-31/references/sauce-gesture.jpg",
+          "original_distributed": false
+        }
+      ],
+      "scope": "Photographed raw base, hand and spoon; sauce distribution recomposed from initial deposited dollop to spreading phase. Two targeted refinements simplify sauce texture and remove regular rings. Quantity stays with recipe; no universal dose. Preserves approved mozzarella image alongside."
+    }
+  ],
+  "previous_set_release": {
+    "pr": "https://github.com/zatteogit/vulcan-pizza-lab/pull/186",
+    "sha": "d06b1343f397edba7b3f66313a5693667205169f",
+    "verify_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41189616748",
+    "test_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41189616820",
+    "production_run": "https://github.com/zatteogit/vulcan-pizza-lab/actions/runs/41189842867",
+    "cloudflare_version": "8acf51dd-5cd5-4171-9037-780d73e75091",
+    "status": "Published and verified in public app",
+    "observed_loaded_assets": [
+      "portion-weighing-qjvZrzLk.webp",
+      "mozzarella-drying-2tMI7iJu.webp",
+      "stone-brushing-DDU2sg9T.webp",
+      "pizza-turning-C57tWBlt.webp",
+      "oil-temperature-wiWJygwA.webp",
+      "stone-temperature-Cx6Tq3ba.webp"
+    ],
+    "mobile": "390px viewport on public P14, 288px rendered image width, 672px natural width; no horizontal overflow"
+  },
+  "validation": {
+    "local_checks": "npm run verify: 133 files, 1734 tests passed, 1 skipped. Final build and check:budget passed; limits unchanged. No code changes after verify, only targeted sauce WebP refinements.",
+    "encoding": "Existing 30 learning assets untouched. Two large topping photos re-encoded at same 1254px resolution/composition from original PNGs, visually compared, saving 137190 bytes; previous exact WebPs archived outside bundle, responsive small versions unchanged. See encoding.json.",
+    "browser": "All five new assets loaded at 672px natural width in actual glossary/troubleshooting placements, with localized captions and source links. Existing stretching and mozzarella illustrations remain alongside new figures. P18 verified at 390px: two 288px images and no horizontal overflow. Desktop also has no horizontal overflow.",
+    "screenshots": [
+      "published-fifth-set.jpg",
+      "online-mobile.jpg",
+      "online-brushing.jpg",
+      "review-temperature.jpg",
+      "review-rest.jpg",
+      "review-storage.jpg",
+      "review-semolina.jpg",
+      "review-sauce.jpg",
+      "review-mobile.jpg"
+    ]
+  }
+}
