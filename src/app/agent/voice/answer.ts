@@ -7,6 +7,7 @@
 
 import { getDefaultDoughBalls, getServingUnit, isFriedStyle, STYLES_DB } from "../../domain/pizza-engine";
 import { flourWText } from "../../domain/flour-w-display";
+import { isFridgeTempC } from "../../domain/fermentation-constants";
 import { handleMcpMessage } from "../mcp-server";
 import type { ServingUnitWord, VoiceCatalog } from "./catalog";
 import { firstSentences, speechify, spokenGrams, spokenHours, toSsml } from "./speech";
@@ -112,6 +113,14 @@ function bakedFirst(styles: Json[]): Json[] {
 /** Il tempo minimo che chiede uno stile non fattibile: il più alto tra i blocchi
  *  di tempo dell'MCP (finestra di lavoro e lievitazione). La finestra da sola
  *  non è il tempo della ricetta: dirla farebbe sentire un numero falso. */
+/** B5 (decisione di Matteo, 31/10/2026): «in frigo» con la stessa regola
+ *  della tabella di marcia: fino a 6 °C, fino a 8 °C solo se la fonte della
+ *  versione ce lo mette (`fermentation_in_fridge` dell'MCP). Prima la voce
+ *  diceva «in frigo» fino a 8 °C anche senza fonte. */
+export function spokenInFridge(recipe: Record<string, unknown>): boolean {
+  return isFridgeTempC(Number(recipe.fermentation_temp_c), recipe.fermentation_in_fridge === true);
+}
+
 export function neededHours(blockers: Json[] | undefined): number | undefined {
   const hours = (blockers ?? [])
     .filter((b) => b.kind === "time_window" || b.kind === "fermentation_too_short")
@@ -250,7 +259,7 @@ function answerRecipe(query: VoiceQuery, opts: VoiceOptions): VoiceAnswer {
   else sentences.push(say.flourBand(flourBandWords(r.parameter_ranges?.flour_w, r.flour_w, catalog)));
   if (r.pre_ferment) sentences.push(say.preFerment(say.preFermentKinds[r.pre_ferment.type] ?? r.pre_ferment.type, g(r.pre_ferment.flour_g)));
   if (style.dough.unleavened) sentences.push(say.unleavened);
-  else sentences.push(say.fermentation(spokenHours(r.fermentation_hours, catalog), Math.round(r.fermentation_temp_c), r.fermentation_temp_c <= 8));
+  else sentences.push(say.fermentation(spokenHours(r.fermentation_hours, catalog), Math.round(r.fermentation_temp_c), spokenInFridge(r)));
   const total = spokenHours(r.schedule.total_minutes / 60, catalog);
   sentences.push(isFriedStyle(style) ? say.fry(Math.round(r.oven_temp_c), total) : say.oven(Math.round(r.oven_temp_c), total));
   const caveats = caveatSentence(r.scores?.warnings, catalog);
