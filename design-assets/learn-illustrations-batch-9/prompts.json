@@ -1,0 +1,44 @@
+{
+  "mode": "built-in image_gen",
+  "prompts": [
+    {
+      "id": "farinograph-bowl",
+      "prompt": "Use case: scientific-educational. New Vulcan learning illustration, landscape 3:2, genuinely transparent background. Image1 is STYLE only: fine warm-brown pen contours, smooth restrained terracotta/ivory washes. Image2 is the REAL PHOTOGRAPHIC REFERENCE for the apparatus geometry and contact points: an open farinograph mixing chamber during sample access, with its removable front pulled toward lower left and dough around the two HORIZONTAL kneading shafts. Recompose into a compact clear three-quarter view of just the open mixing chamber and short generic base. Omit the operator hands entirely; show the removable front resting beside the chamber, with the two shafts connected to that front as in the photo. Preserve the original horizontal shafts and dough placement, with a simple open transparent hinged lid. It is a STATIC OPEN chamber, not a running test. Simplify all enclosure and fittings, remove logos, stickers, brand colours and numbers. No whisk, vertical hook, planetary mixer or additional blades. If the removed assembly is too complex, keep the two parts spatially aligned exactly as reference; don't invent connections. Entire assembly comfortably framed with clear alpha margin. NO text, axes, readings, arrows, labels or watermark. Clearly hand-drawn coloured pen, not 3D/photorealism. Smooth matte washes, no metal grain, stippling, noise, microtexture, paper texture or plastic shine. True transparency outside subject, no painted backdrop, glow or checkerboard.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/references/farino-tools.jpg"
+      ]
+    },
+    {
+      "id": "farinograph-readout",
+      "prompt": "Use case: scientific-educational. Vulcan learning illustration, landscape 3:2 with true transparent alpha background. Image1 STYLE only: warm terracotta/ivory coloured pen, thin warm-brown contours, restrained SMOOTH washes. Image2 REAL reference for subject: the lab tablet showing farinograph traces, held by two hands. Redraw only the small unbranded tablet in both hands, isolated. Preserve plausible thumbs and grips at left and right edges. No machine, flour scoops, jewellery or coats. On the off-white screen draw just simple x and y axes and THREE thin muted terracotta/brown curves following the reference: rapid initial rise near the left edge, rounded early peak, then slow gentle decline toward right. Keep the three curves ordered and close together as source; remove all grid, numeric scales, values, time readout, coloured legends, ticks, buttons and text. The screen is a qualitative illustration adapted from the reference, NOT a measurement display that can be read numerically. Entire hands and tablet comfortably framed with generous clear margin. Match a hand-drawn editorial look, not CGI. No texture noise, stippling, grain, speckled skin, paper texture, glossy plastic, dramatic highlights, watermark, glow, backdrop or checkerboard. True transparency outside the subject.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/references/farinogram.jpg"
+      ]
+    },
+    {
+      "id": "lactic-bacteria",
+      "prompt": "Use case: scientific-educational. Educational coloured-pen illustration for Vulcan, landscape 3:2 on genuinely transparent alpha background. Image1 is STYLE only: fine warm-brown pen contours with restrained terracotta/ivory washes, simple smooth material rendering. Image2 is the REAL scanning electron micrograph reference, identified as Lacticaseibacillus paracasei (formerly Lactobacillus paracasei). Redraw a small SELECTED cluster of about 9 rod-shaped cells from the CENTRAL part of that micrograph, preserving their credible elongated blunt-ended and gently curved shapes, natural overlapping arrangement and variation in length; include a couple of end-to-end pairs where seen. Omit the porous substrate entirely. Cells are smooth simple solid rods, not hollow tubes, sausages on a plate, capsules with seams, caterpillars or aliens. Absolutely NO flagella, spikes, hairs, nuclei, DNA, organelles, faces, legs, internal structures or added spherical microbes. Use conventional muted terracotta and ivory colours; this is not a claim about actual bacterial colour. Thin outlines and just one soft shadow wash per cell, not glossy round 3D toys. Whole small cluster centered with generous transparent margin. No circular frame, microscope, petri dish, scale bar, units, words, arrows or watermark. NO stippling, grain, noisy overlay, paper texture, microtexture, plastic gloss, glow or painted backdrop. Keep genuine transparency.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/references/lab.jpg"
+      ]
+    },
+    {
+      "id": "bread-freezer-portions",
+      "prompt": "Use case: scientific-educational. New Vulcan learning illustration, landscape 3:2, genuine transparent alpha background. Image1 provides STYLE only: delicate warm-brown pen outline and restrained smooth terracotta/ivory washes, no noisy textures. Image2 is REAL photo evidence for arrangement: several short packets of sliced baked sandwich bread in a closed transparent food bag. Depict a COMPACT stack of three small packets of already baked bread slices, individually wrapped as source and placed inside one loosely enclosing transparent bag closed above with a simple plain twist tie. Recompose into a three-quarter view so the rectangular bread-slice faces, thin golden crusts and packet seams are understandable. Draw the complete bag comfortably within frame, leaving a broad transparent margin. No freezer, refrigerator, frost, snowflakes, date labels, text, icons or claims of freshness. Bread is baked with small sparse irregular crumb marks; do not draw dense pore texture, flour dust, seeds or dough bubbles. Transparent film is shown with just a few fine warm-grey folded contour lines and very restrained pale washes, not dazzling highlights or crumpled silver material. Keep it a clean coloured-pen drawing, not photorealistic food or 3D plastic. The artwork shows packaging for freezer storage, NOT microscopic starch changes or a comparison of stale and fresh bread. No background, checkerboard, halo, watermark, stippling, grain, noisy overlay or paper texture.",
+      "refs": [
+        "/Users/matteo/dev/Vulcan/output/learn-illustrations-reference-pilot-2026-10-30/selected-style.png",
+        "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/references/bread-storage.jpg"
+      ]
+    },
+    {
+      "id": "bread-freezer-portions-v2",
+      "prompt": "Edit this drawing, preserving EXACTLY the bag silhouette, three wrapped bread packets, twist tie, camera angle and transparent background. Change only the surface rendering: remove all granular/mottled texture from crust, crumb and plastic film. Use smooth broad ivory and ochre pen-wash areas. Each visible crumb face gets only about 10 small irregular simple hole marks; crust is smooth with a few gentle colour variations, not speckled. The bag has sparse thin folded contour lines and a few broad transparent pale wash shapes, with no sparkling white lines, grain, crumpled-foil texture or shiny 3D look. Keep credible sliced bread, individual wrapping and outer bag closure. No extra props, frost, writing, numeric labels, icons or arrows. True transparent alpha outside the subject; no backdrop or glow. Keep the illustration delicate and consistent with coloured-pen Vulcan illustrations.",
+      "refs": [
+        "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-71f400dd-f58b-4ddf-8961-e131c9949349.png"
+      ]
+    }
+  ]
+}

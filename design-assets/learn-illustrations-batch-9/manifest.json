@@ -1,0 +1,131 @@
+{
+  "status": "local review; not integrated or published",
+  "date": "2026-10-31",
+  "base_main": "87fb30002b3e0ad3f4b31379807409df8f2ddb23",
+  "generation": "built-in image_gen",
+  "previous_42_illustrations": "unchanged",
+  "assets": [
+    {
+      "id": "farinograph-bowl",
+      "title": "Assorbimento · Vasca del farinografo",
+      "target": "absorption",
+      "source": "https://www.anton-paar.com/us-en/products/details/farinograph/",
+      "source_image": "https://www.anton-paar.com/fileadmin/_processed_/3/5/csm_Slider_7_2400x1600_Brabender_FarinoGraph_7_b378bef120.jpg",
+      "author": "Brabender / Anton Paar",
+      "caption_it": "Vasca del farinografo aperta per accedere al campione. L’assorbimento si determina con una prova a consistenza definita: la quantità d’acqua non si ricava dall’aspetto dell’impasto.",
+      "limitations": "Stato statico di accesso al campione, non una misura in corso. Operatore omesso; involucro e raccordi semplificati. La misurazione si esegue con il gruppo richiuso secondo il protocollo.",
+      "file": "assets/farinograph-bowl.webp",
+      "reference": "references/farinograph-bowl.jpg",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/farinograph-bowl.png",
+      "bytes": 27524,
+      "sha256": "29eca317a06e876dbdb7690cfd9355db670f56fd356c6c482a5d2c7950ee8959",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "farinograph-readout",
+      "title": "Stabilità · Lettura del tracciato",
+      "target": "stability",
+      "source": "https://www.anton-paar.com/us-en/products/details/farinograph/",
+      "source_image": "https://www.anton-paar.com/fileadmin/_processed_/0/c/csm_KF_2400x1600_Brabender_FarinoGraph_6_01c64b5013.jpg",
+      "author": "Brabender / Anton Paar",
+      "caption_it": "Schema senza scala ricomposto dai tracciati mostrati sul display del farinografo: tempo in orizzontale, resistenza in verticale. La stabilità si misura durante la prova; qui non si possono leggere minuti o confrontare farine.",
+      "limitations": "Tre curve qualitative, senza scala né dati sperimentali utilizzabili. Numeri, interfaccia, legenda e riferimenti a campioni specifici rimossi; non è una trascrizione dei risultati della fotografia.",
+      "file": "assets/farinograph-readout.webp",
+      "reference": "references/farinograph-readout.jpg",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/farinograph-readout.png",
+      "bytes": 20368,
+      "sha256": "41046d6f4c58be077d33d9b47117754911e83c29c01f852e0f3199484a0f5804",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "lactic-bacteria",
+      "title": "LAB · Un esempio al microscopio",
+      "target": "lab",
+      "source": "https://commons.wikimedia.org/wiki/File:Lactobacillus_paracasei.jpg",
+      "source_image": "https://upload.wikimedia.org/wikipedia/commons/8/86/Lactobacillus_paracasei.jpg",
+      "author": "Dr. Horst Neve / Max Rubner-Institut",
+      "caption_it": "Un esempio di batterio lattico a bastoncino: Lacticaseibacillus paracasei, ridisegnato da una micrografia elettronica. Colori convenzionali e nessuna scala dimensionale; non tutti i LAB hanno questa forma.",
+      "limitations": "Selezione e ricomposizione di un gruppo di cellule dalla micrografia. Substrato omesso; superfici e colori semplificati. Non identifica i batteri di uno specifico lievito madre.",
+      "license": "CC BY-SA 3.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "taxonomy_source": "https://lpsn.dsmz.de/species/lacticaseibacillus-paracasei",
+      "adaptation_notice": "Illustrazione derivata dalla micrografia: selezione e ricomposizione delle cellule, semplificazione dei contorni, colori modificati. La presente illustrazione è distribuita con licenza CC BY-SA 3.0.",
+      "file": "assets/lactic-bacteria.webp",
+      "reference": "references/lactic-bacteria.jpg",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/lactic-bacteria.png",
+      "bytes": 20484,
+      "sha256": "3141f47f00e183feb8b87761b49132f6d669b365cf46f74188adb68391d175c7",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "bread-freezer-portions",
+      "title": "Retrogradazione · Conservazione del pane",
+      "target": "retrogradation",
+      "source": "https://www.kingarthurbaking.com/blog/2020/07/08/the-best-way-to-store-yeast-bread",
+      "source_image": "https://www.kingarthurbaking.com/sites/default/files/inline-images/The%20best%20way%20to%20store%20bread-16.jpg",
+      "author": "PJ Hamel / King Arthur Baking",
+      "caption_it": "Pane già cotto, porzionato e confezionato per il congelatore: un esempio di conservazione per rallentarne il raffermamento. La ricristallizzazione dell’amido non è visibile in questa immagine.",
+      "limitations": "Tre pacchetti di fette ricomposti dalla fotografia. Nessun confronto visivo fra pane fresco e raffermo; non rappresenta impasto da far lievitare o conservazione a temperatura ambiente. Non certifica sicurezza o durata di conservazione.",
+      "file": "assets/bread-freezer-portions.webp",
+      "reference": "references/bread-freezer-portions.jpg",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/bread-freezer-portions.png",
+      "bytes": 22536,
+      "sha256": "18b9e063169df66164103a7f6fb19da9f0f38a6c60b131b60b6353399716fa62",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ],
+  "remaining_scope_note": "Formulas, biochemical processes and app scores need sources and visual explanations specific to each concept. Smell and taste cards stay textual unless a useful advice-related gesture is identified.",
+  "encoding": {
+    "quality": 74,
+    "alpha_quality": 30,
+    "method": 6,
+    "total_bytes": 90912
+  },
+  "validation": {
+    "status": "local-review-verified-not-integrated",
+    "gallery_url": "http://127.0.0.1:5193/design-assets/learn-illustrations-batch-9/index.html",
+    "desktop": {
+      "viewport_width": 1280,
+      "document_scroll_width": 1280,
+      "loaded_images": 8
+    },
+    "mobile": {
+      "viewport_width": 390,
+      "document_scroll_width": 390,
+      "loaded_images": 8
+    },
+    "interaction": "LAB source-photo comparison opens; author and CC BY-SA 3.0 links rendered",
+    "viewport_override_reset": true,
+    "evidence_directory": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-9-2026-10-31/",
+    "app_source_changed": false,
+    "published": false
+  }
+}
