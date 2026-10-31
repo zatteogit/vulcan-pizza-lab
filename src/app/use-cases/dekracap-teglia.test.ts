@@ -5,6 +5,7 @@ import { YEAST_DRY_RATIO } from "../domain/fermentation-model";
 import { sourceProcessUse } from "../domain/source-process";
 import { getInterpretationById, getInterpretationsForStyle, isBlockedByStyle } from "../data/interpretation-library";
 import { getImpasto } from "../data/impasto-library";
+import { getEquipmentByStyle } from "../data/parametric-databases";
 import { handleMcpMessage } from "../agent/mcp-server";
 import { IT_LOCALE } from "../features/cms/locales/it";
 import { METHOD_MESSAGES_IT } from "../data/method-messages";
@@ -207,5 +208,14 @@ describe("pieghe della fonte (decisione di Matteo: le fasi della versione)", () 
     expect(text).toMatch(/in frigo/);
     expect(METHOD_MESSAGES_IT["source.dekracapProcess"]).not.toMatch(/pieghe/);
     expect(METHOD_MESSAGES_IT["source.dekracapProcess"]).toMatch(/staglio dopo circa 24 ore/);
+  });
+});
+
+describe("teglia dello stile dalle sue fonti (decisione di Matteo)", () => {
+  it("ferro blu o acciaio/lamiera, niente alluminio (disciplinare 2016: «apposita teglia di ferro blu»)", () => {
+    const pan = getEquipmentByStyle("teglia_romana")!.specialEquipment[0];
+    expect(pan).toBe("Teglia in ferro blu o acciaio/lamiera");
+    expect(pan).not.toMatch(/allumin/i);
+    expect(dekracap.technique_signature).toMatch(/ferro blu o di lamiera/);
   });
 });
