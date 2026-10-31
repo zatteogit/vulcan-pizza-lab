@@ -2705,7 +2705,8 @@ export function generateRecipe(
   // ── Regola 55: Water Temperature Calculation ──
   // Formula: T_water = DDT × 3 − T_room − T_flour − friction_factor
   // DDT (Desired Dough Temperature): 24°C standard, 22°C for cold-ferment styles
-  const ddt = fermentationTempC <= 4 ? 22 : 24;
+  // B5: anche la puntata nel frigo della fonte (8 °C) è a freddo.
+  const ddt = fermentationTempC <= 4 || sourceFridge ? 22 : 24;
   const kitchenTemp = constraints.kitchen_temp_c ?? DEFAULT_KITCHEN_TEMP;
   const flourTemp = kitchenTemp; // flour stored at ambient temperature
   // Friction factor from mixer type (Regola 55 / Costante K from Notion DB)

@@ -288,7 +288,7 @@ Alcuni stili dispongono di **versioni pre-configurate** a seconda del livello di
 
 ## 4. Metodi di Impasto (Libreria Impasti)
 
-L'applicazione definisce **7 metodologie strutturate di lavorazione dell'impasto** riutilizzabili dagli stili:
+L'applicazione definisce **8 metodologie strutturate di lavorazione dell'impasto** riutilizzabili dagli stili:
 
 1.  **Teglia Romana classica** (`teglia_romana_classica`) | 📐
     *   *Metodo*: No-knead con pieghe (`no_knead_folds`). Idratazione `75% - 85%`, W `300 - 360`, P/L `0.50 - 0.60`, sale `2.5%`, olio EVO `2.5%`.
@@ -311,6 +311,8 @@ L'applicazione definisce **7 metodologie strutturate di lavorazione dell'impasto
 7.  **Integrale / multicereali** (`integrale_multicereali`) | 🌰
     *   *Metodo*: Autolisi ed impasto (`autolisi_then_knead`). Idratazione `70% - 80%`, W `200 - 280`, P/L `0.45 - 0.60`, sale `2.2%`, olio `2.0%`.
     *   *Lavorazione*: Autolisi iniziale di 60 minuti per idratare e ammorbidire la crusca, poi impasto e maturazione di 12-36h.
+8.  **Teglia no knead 48 h (Dekracap)** (`dekracap_48h`) | 📐
+    *   *Metodo*: cambia solo sale (`2,12%`) e olio EVO (`1,69%`) della teglia romana per la versione d'autore `dekracap` (tranche B5); gli intervalli restano quelli dello stile.
 
 ---
 

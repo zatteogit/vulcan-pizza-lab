@@ -396,7 +396,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.recipe-configurator.flourUnknownHint": "袋のWを確認すると、レシピがより正確になります。",
   "features.recipe.recipe-configurator.tempManual": "{0}(手動)",
   "features.recipe.recipe-configurator.tempWarmPlace": "暖かい場所・{0}",
-  "features.recipe.recipe-configurator.tempSourceFridge": "冷蔵庫・{0}",
+  "features.recipe.recipe-configurator.tempSourceFridge": "{0} 冷蔵庫",
   "features.recipe.recipe-configurator.rangeOutsideTrack": "このスタイル:{0}〜{1}(お使いのオーブンの上限を超えます)",
   "features.recipe.recipe-configurator.rangeOutsideScale": "このスタイル:{0}〜{1}(一部が目盛りの外)",
   "features.recipe.recipe-configurator.a88f9d1e": "強力",

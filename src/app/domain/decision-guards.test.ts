@@ -347,8 +347,10 @@ describe("D-070: frigo a 8 °C solo con la fonte", () => {
     const fridge = generateRecipe(STYLES_DB.teglia_romana, homeKitchen, { ...options, sourceProcess: { hours: 48, temp_c: 8, fridge: true } });
     expect(fridge.fermentation_in_fridge).toBe(true);
     expect(fridge.source_notes?.map((n) => n.key)).toEqual(["fermentation.sourceFridge"]);
-    // Le dosi non cambiano: il frigo della fonte cambia i testi, non i numeri.
+    // Dosi e tempi non cambiano: il frigo della fonte cambia i testi e
+    // l'acqua (impasto finale a 22 °C, come per ogni puntata a freddo).
     expect([fridge.flour_g, fridge.water_g, fridge.yeast_g, fridge.timeline.map((s) => s.duration_minutes)])
       .toEqual([plain.flour_g, plain.water_g, plain.yeast_g, plain.timeline.map((s) => s.duration_minutes)]);
+    expect(fridge.water_temp_c! - plain.water_temp_c!).toBe(-6);
   });
 });

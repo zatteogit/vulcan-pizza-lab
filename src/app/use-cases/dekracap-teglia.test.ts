@@ -104,6 +104,9 @@ describe("8 °C: in frigo solo perché la fonte ce lo mette", () => {
     expect(proof + r.timeline.find((s) => s.id === "preheat")!.duration_minutes).toBe(120);
     expect(sourceTiming(r)).toEqual({ yeastFromSource: true, warmPlace: false, sourceFridge: true });
   });
+  it("l'acqua punta a un impasto a 22 °C, come per la puntata a freddo (cucina a 21 °C: 24 °C)", () => {
+    expect(r.water_temp_c).toBe(24);
+  });
   it("le tolleranze della Timeline comoda trattano la puntata come frigo (fino a +6 h, non +2 h)", () => {
     const bulk = r.timeline.find((s) => s.id === "bulk")!.duration_minutes;
     expect(Math.max(...stretchOptions(bulk, isColdPhase("bulk", 8, true)))).toBe(360);

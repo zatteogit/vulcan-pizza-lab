@@ -478,7 +478,7 @@ non calcolabile (**Ipotesi:** con una placca 40×30, 0,64 g/cm²). Versione
 bassa (+50 %, 2 teglie 30×40): 578 g per teglia, **0,48 g/cm²**. Tempi: 2 h +
 1 h + 30 minuti in teglia; cottura circa 8 + 4–5 minuti a 250–280 °C.
 
-**Dekracap:** nessuna conversione finché la fonte non è letta.
+**Dekracap:** nessuna conversione finché la fonte non è letta. (Letta il 30/10, §9.9: le dosi sono in grammi, nessuna conversione; versione in §9.12.)
 
 **Dose della fonte e dose del modello.** Conto con `calculateYeastPercentage`
 (`domain/fermentation-model.ts`) sulle ore e temperature indicate, senza le
@@ -1270,3 +1270,159 @@ Margine per la B4: 7,6 kB di codice e 3,7 kB per utente.
    W 250); etichetta «Ispirata ad Adriano Continisio» e «Riferimento, ispirata
    ad …» davanti a vocale (regola generale `startsWithVowel`; in francese
    «Inspirée d’…», le altre lingue non cambiano).
+
+### 9.12 Stato di B5 (31/10/2026)
+
+**Fatto** (ramo `tranche-b5`, D-070 in `docs/autorialita.md`). Versione
+d'autore della `teglia_romana` (decisione di Matteo), nessuno stile nuovo,
+nessun preset nuovo.
+
+#### Versione «Ispirata a Dekracap» (`dekracap`)
+
+- **Fonte** (tipo `autore`, stato **verificato** sulla copia d'archivio):
+  «Ricetta di Dekracap», pubblicata da Notturno Italiano nel primo post del
+  «WeekEnd della Pizza in Teglia No Knead», La Confraternita della Pizza,
+  6/10/2014 (modificata il 14/10/2015). L'originale
+  (https://laconfraternitadellapizza.forumfree.it/?t=69617704) è cancellato;
+  si cita e si linka la copia
+  https://web.archive.org/web/20171112155246/http://laconfraternitadellapizza.forumfree.it:80/?t=69617704
+  (`url` della versione e `source_url` del profilo). La storia della versione
+  dice chi l'ha pubblicata, quando, e che si legge nella copia di Wayback
+  Machine. Dettagli in `docs/ricerca/confraternita-2026-10-30.md` §1.
+- **Intervalli della teglia romana (`isBlockedByStyle`)**: nessuno da
+  allargare.
+
+  | | Fonte | Stile | Versione |
+  |---|---|---|---|
+  | Idratazione | 84,7 % (1000/1180) | 75–85 % | 84,7 % |
+  | Lievitazione | 48 h | 24–48 h | 48 h |
+  | Temperatura | 8 °C (impasto in frigo) | nessuna imposta | 8 °C |
+  | W | 350–400 («meglio circa 400») | 300–380 | **375** |
+
+  La forbice W della fonte esce in parte da quella dello stile (380–400): la
+  versione usa W 375, centro della forbice della fonte e dentro quella dello
+  stile, che **non cambia**. Scelta da confermare (punto 1 qui sotto).
+- **Dosi**, teglia 30×40, forno di casa 250 °C, 1 teglia (test in
+  `use-cases/dekracap-teglia.test.ts`). Il motore lavora sulle percentuali
+  della dose per 1 L d'acqua; quella per teglia della fonte è la stessa dose
+  scalata e arrotondata.
+
+  | | Fonte, 1 L d'acqua | Fonte, teglia 30×40 | % sulla farina | Motore |
+  |---|---|---|---|---|
+  | Farina W 350/400 | 1180 | 350 | 100 | 350 (W 375) |
+  | Acqua | 1000 | 296 | 84,7 | 296 |
+  | Lievito di birra fresco | 3 | 1 | 0,254 | 0,9 |
+  | Sale | 25 | 7,5 | 2,12 | 7 |
+  | Olio EVO | 20 | 6 | 1,69 | 6 |
+  | Totale | | 660 | | 660 |
+
+  Tolleranza dichiarata: farina, acqua, olio e totale al grammo; sale ±0,5 g
+  (il motore scrive i grammi interi, 7,42 → 7); lievito ±0,15 g (0,89 g; la
+  fonte arrotonda a 1). Sale e olio arrivano con l'impasto `dekracap_48h`, che
+  cambia solo quelli (§9.11, «Per la B3»).
+- **Lievito della fonte** (B1): fresco 0,254 %, con 48 h a 8 °C. Il modello
+  stimerebbe 0,112 % per le stesse ore (`yeast_source.model_pct`): la fonte ne
+  usa circa 2,3 volte tanto, e il motore usa la sua dose. Con solo lievito
+  secco in dispensa: 0,085 % (rapporto 1:3 del motore, nota
+  `yeast.sourceFreshAsDry`); l'1:1 «in frigo» dell'autore (28/9/2014) non si
+  usa e la storia della versione lo dice («qui la conversione usa 1 a 3»).
+  Con altre ore o un'altra temperatura torna la dose del modello (test).
+- **Processo**, come lo dice la tabella di marcia: impasto mescolato senza
+  impastare (stile no knead, 10 min); 3 giri di pieghe ogni 45 min (quelle
+  dello stile), poi in frigo; puntata 43 h 45 a 8 °C in frigo; staglio
+  (15 min); appretto fuori dal frigo 2 h (1 h 30 + 30 min di preriscaldo);
+  stesura; condimento; cottura a 250 °C per 18 min (1063 s: **minuti del
+  motore**, la fonte non li dice). In tutto 48 h 52 min. Ciò che la tabella
+  non sa ancora dire sta in una nota della ricetta (`source.dekracapProcess`,
+  «Come fa la fonte»): pieghe dopo quasi un'ora di riposo a 15 minuti l'una
+  dall'altra, staglio dopo circa 24 ore e di nuovo in frigo, fuori dal frigo
+  da 2 ore a mezz'ora prima, stesura sulla semola, cottura subito. La teglia
+  (ferro blu o lamiera; niente antiaderente, alluminio, carta forno) è nella
+  tecnica della versione.
+- **Testi** in 7 lingue (francese col «vous» dove ci si rivolge a chi legge,
+  portoghese del Brasile): firma, tecnica, storia, badge
+  (`inspiration-i18n`), due messaggi del motore, un'etichetta di Crea.
+  `LOCALE_BUNDLE_REV` 59.
+
+#### Come il motore tratta gli 8 °C
+
+Prima: sempre «fresco, non in frigo» (soglia `FRIDGE_MAX_TEMP_C` = 6 °C):
+pieghe con «rimetti il contenitore a 8 °C, non in frigo», tolleranze
+d'ambiente nella Timeline comoda, acqua per un impasto a 24 °C. La soglia
+resta 6 °C; la versione dichiara `fridge` e, solo con le sue ore e la sua
+temperatura, la ricetta ha `fermentation_in_fridge` (fino a 8 °C,
+`SOURCE_FRIDGE_MAX_C`): pieghe «poi metti il contenitore in frigo», «Come si
+fa» della puntata «Trasferisci il contenitore in frigorifero (8 °C)»,
+consiglio da frigo, tolleranze da frigo (fino a +6 h), acqua per un impasto
+a 22 °C (30 → 24 °C con la cucina a 21 °C), nota `fermentation.sourceFridge`
+(«zona meno fredda; in un frigo più freddo cresce più piano»). L'appretto
+resta fuori dal frigo. Gli stessi 8 °C scelti a mano in Crea restano
+«fresco» (test e guardia D-070). Misure in
+`docs/motore-correzioni-2026-10-22.md` («Tranche B5»).
+
+#### Cosa vede l'utente (prova nel browser, `vite preview`, forno di casa 250 °C)
+
+- **`/recipe/teglia_romana?interpretation=dekracap`** (it ed en-GB, 390 e
+  1280 px): «Ispirata a Dekracap» / «Inspired by Dekracap»; le due note della
+  fonte sopra la ricetta; chip «Dekracap» fra le versioni; 84,7 %, 48 h
+  frigo, 250 °C; 86/100 «Si può fare, con qualche accortezza»; ingredienti
+  350/296/7/0,9 fresco/6 g, 660 g, acqua a 24 °C. Procedimento: Impasto,
+  Pieghe («Dopo l'ultimo giro metti il contenitore in frigo»), Puntata 43 h
+  45 min a 8 °C, Staglio, Appretto 2 h a 18 °C, Preriscalda, Stesura,
+  Condimento, Cottura 18 min. Nella finestra «Vedi tutte» la scheda della
+  versione con firma, 2014, tecnica, storia con la citazione e il link
+  «Dekracap ↗» alla copia d'archivio.
+- **Crea** (pasto lunedì a pranzo, 52 h): nel pannello della teglia romana,
+  con i dettagli tecnici, «Versioni d'autore: Dekracap, Ispirata alla teglia
+  no knead a 48 ore di Dekracap, Con accortezza», tecnica, storia e fonte
+  web.archive.org; «Genera con questa versione» apre la ricetta, e in
+  «Personalizza» la temperatura compare come **«8 °C frigo»** accanto a
+  «4 °C frigo · 12 °C fresco · 22 °C amb.» (badge «Consigliato: Frigo», la
+  proposta su misura a 4 °C). Con il pasto di domani a pranzo (28 h) le 48 h
+  non ci stanno: «Per ora non si può fare» (servono 48,9 h), come per Bonci.
+- **MCP 1.6.0**: `get_style` offre `dekracap`; `generate_recipe` con
+  `interpretation_id: "dekracap"` dà le stesse dosi, `yeast_source`,
+  `fermentation_in_fridge: true` e le due note; la guida dice come
+  presentarle. Il riferimento della teglia romana non cambia. **Voce**:
+  invariata; legge il riferimento o la proposta su misura, non le versioni
+  d'autore, e dice già «in frigo» fino a 8 °C (`voice/answer.ts`).
+
+#### Budget (gzip)
+
+Codice senza lingue 455,6 → 456,6 kB (limite 465); per utente in giapponese
+563,7 → 565,3 kB (limite 570); CSS invariato (72,6 kB). Misure su `781a4aa`
+(main) e su questo ramo.
+
+#### Da decidere (Matteo)
+
+1. **W**: 375 (centro della fonte, dentro lo stile), oppure 380 (il più vicino
+   al «meglio circa 400» senza toccare lo stile), oppure allargare la forbice
+   della teglia romana a 400 (cambierebbe lo stile). *Raccomandazione: 375.*
+2. **Fuori dal frigo**: 2 h (il limite alto della fonte, scelto ora) o meno.
+3. **Staglio a metà**: con le fasi esplicite della B3 lo staglio a 24 h e il
+   ritorno in frigo diventano passi veri e la nota «Come fa la fonte» si
+   accorcia. *Raccomandazione: farlo dopo la B3.*
+4. **Pieghe della versione**: oggi quelle dello stile (3 × 45 min); la fonte
+   ne fa 3 a 15 minuti dopo quasi un'ora di riposo. Servirebbe un piano di
+   pieghe per versione (stessa famiglia di B3).
+5. **Teglia**: il dato dello stile (`parametric-databases.ts`) dice «Teglia
+   alluminio/acciaio», la fonte dice niente alluminio. Correggere il dato
+   della teglia romana (testo generico, 7 lingue) o lasciarlo.
+6. **«Acqua fredda»** compare nell'attrezzatura della fonte senza dire per
+   cosa: il motore propone acqua a 24 °C (impasto a 22 °C). Da rileggere
+   sulla copia d'archivio.
+7. Titolo della finestra delle versioni «Versioni di pizzaioli e
+   disciplinari»: ora contiene due autori che non fanno i pizzaioli
+   (Benedetta Rossi, Dekracap).
+8. **Voce**: dice «in frigo» fino a 8 °C anche senza fonte, la tabella di
+   marcia fino a 6 °C. Nessuno stile oggi è a 7–8 °C, quindi non si vede;
+   proposta: usare la stessa regola (`isFridgeTempC` con
+   `fermentation_in_fridge` dall'MCP).
+
+#### Per la B3
+
+- Il frigo della fonte è un attributo del processo, non della ricetta: con
+  le fasi esplicite (M3) diventa «fase in frigo» per fase, e `sourceProcess`
+  (ore, temperatura, `fridge`, note) può confluire nel profilo delle fasi.
+- Le note sul processo (`Interpretation.source_notes`) servono anche ad
+  Adriano e Paoletta per ciò che la tabella non dice ancora.
