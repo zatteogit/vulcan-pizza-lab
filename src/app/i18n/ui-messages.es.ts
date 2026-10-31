@@ -1,5 +1,11 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.waterTemperature": "Mide el agua con una sonda sumergida, sin tocar el fondo ni las paredes del recipiente. Usa la temperatura indicada en la receta.",
+  "learn.visual.mixerDough": "Amasadora con gancho: la masa queda recogida en el bol. El calentamiento durante el amasado depende de la máquina, la duración y la masa.",
+  "learn.visual.fryingSeal": "Presiona los dos bordes para unirlos, manteniendo la unión libre de relleno. Ejemplo de pizza frita rellena en forma de media luna.",
+  "learn.visual.fryingDrain": "Levanta la pizza frita con una espumadera que la sostenga, deja escurrir el aceite y colócala sobre una rejilla o papel absorbente.",
+  "learn.visual.baseCheck": "Levanta el borde con una espátula para observar la base. Ejemplo de pizza sin gluten en bandeja: el dorado exterior por sí solo no indica si el centro está cocido.",
+
   "learn.visual.hydration": "Agua sobre la harina: la hidratación es la relación entre sus pesos; no se deduce del aspecto de la masa.",
   "learn.visual.wholeWheat": "Un ejemplo de harina integral con fragmentos de salvado. El color y el aspecto no bastan para identificar el tipo y la fuerza de la harina.",
   "learn.visual.homeOven": "Horno doméstico: la piedra o el acero sobre la rejilla sostienen la pizza y calientan la base por contacto. Sigue la receta para la posición y el precalentamiento.",

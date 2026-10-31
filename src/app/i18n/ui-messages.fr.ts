@@ -1,5 +1,11 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.waterTemperature": "Mesurez l’eau avec une sonde immergée, sans toucher le fond ni les parois du récipient. Utilisez la température indiquée par la recette.",
+  "learn.visual.mixerDough": "Robot pétrisseur avec crochet : la pâte est rassemblée dans la cuve. L’échauffement pendant le pétrissage dépend de la machine, de la durée et de la pâte.",
+  "learn.visual.fryingSeal": "Pressez les deux bords pour les souder, en gardant la jointure sans garniture. Exemple de pizza frite farcie en demi-lune.",
+  "learn.visual.fryingDrain": "Soulevez la pizza frite avec une écumoire qui la soutient, laissez l’huile s’égoutter puis posez-la sur une grille ou du papier absorbant.",
+  "learn.visual.baseCheck": "Soulevez le bord avec une spatule pour observer le dessous. Exemple de pizza sans gluten en moule : la coloration extérieure seule n’indique pas si le centre est cuit.",
+
   "learn.visual.hydration": "De l’eau dans la farine : l’hydratation est le rapport entre leurs poids ; elle ne se déduit pas de l’aspect de la pâte.",
   "learn.visual.wholeWheat": "Un exemple de farine complète avec des fragments de son. La couleur et l’aspect ne suffisent pas à identifier le type et la force d’une farine.",
   "learn.visual.homeOven": "Four domestique : la pierre ou l’acier sur la grille portent la pizza et chauffent le dessous par contact. Suivez la recette pour la position et le préchauffage.",

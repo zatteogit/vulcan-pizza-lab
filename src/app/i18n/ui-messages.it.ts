@@ -3,6 +3,12 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.waterTemperature": "Misura l’acqua con una sonda immersa, senza toccare fondo o pareti del recipiente. La temperatura da raggiungere è quella indicata dalla ricetta.",
+  "learn.visual.mixerDough": "Impastatrice con gancio: l’impasto è raccolto nella ciotola. Il riscaldamento durante la lavorazione dipende da macchina, durata e impasto.",
+  "learn.visual.fryingSeal": "Schiaccia insieme i due lembi lungo il bordo, mantenendolo libero dal ripieno. Esempio di pizza fritta chiusa a mezzaluna.",
+  "learn.visual.fryingDrain": "Solleva la pizza fritta con una schiumarola che la sostenga, lascia sgocciolare l’olio e appoggiala sulla griglia o sulla carta assorbente.",
+  "learn.visual.baseCheck": "Sollevare il bordo con una paletta permette di osservare il fondo. Esempio di pizza in teglia senza glutine: la doratura esterna non dice da sola se il centro è cotto.",
+
   "learn.visual.hydration": "Acqua nella farina: l’idratazione è il rapporto tra i loro pesi, non si ricava dall’aspetto dell’impasto.",
   "learn.visual.wholeWheat": "Un esempio di farina integrale, con frammenti di crusca. Colore e aspetto non bastano a riconoscere tipo e forza della farina.",
   "learn.visual.homeOven": "Forno domestico: la pietra o l’acciaio sulla griglia sostengono la pizza e scaldano il fondo per contatto. Posizione e preriscaldamento seguono la ricetta.",

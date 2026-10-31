@@ -1,5 +1,11 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.waterTemperature": "温度計のプローブを水に浸し、容器の底や側面に触れないように測ります。目標温度はレシピに従います。",
+  "learn.visual.mixerDough": "ドゥフック付きミキサーで、生地がボウルの中にまとまっています。こねる間の温度上昇は、機械、時間、生地によって変わります。",
+  "learn.visual.fryingSeal": "具が縁に付かないようにし、二枚の生地の縁を押して閉じます。半月形の具入り揚げピザの一例です。",
+  "learn.visual.fryingDrain": "揚げピザを網じゃくしで下から支えて持ち上げ、油を切り、網や吸油紙の上に置きます。",
+  "learn.visual.baseCheck": "フライ返しで縁を持ち上げ、底を確認します。グルテンフリーの型焼きピザの一例です。表面の焼き色だけで、中心まで火が通ったかは判断できません。",
+
   "learn.visual.hydration": "粉に水を加える場面です。加水率は水と粉の重量の比率で、生地の見た目だけでは分かりません。",
   "learn.visual.wholeWheat": "ふすまの粒が見える全粒粉の一例です。色や見た目だけで粉の種類や強さは判断できません。",
   "learn.visual.homeOven": "家庭用オーブンでは、網に載せたピザストーンやスチールがピザを支え、接触によって底を加熱します。設置位置と予熱はレシピに従います。",

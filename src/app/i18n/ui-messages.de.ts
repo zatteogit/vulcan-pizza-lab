@@ -1,5 +1,11 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.waterTemperature": "Die Wassertemperatur mit eingetauchtem Fühler messen, ohne Boden oder Wand des Gefäßes zu berühren. Die Zieltemperatur steht im Rezept.",
+  "learn.visual.mixerDough": "Küchenmaschine mit Knethaken: Der Teig sammelt sich in der Schüssel. Die Erwärmung beim Kneten hängt von Maschine, Dauer und Teig ab.",
+  "learn.visual.fryingSeal": "Die beiden Teigränder zusammendrücken und die Naht frei von Füllung halten. Beispiel einer gefüllten, halbmondförmigen frittierten Pizza.",
+  "learn.visual.fryingDrain": "Die frittierte Pizza mit einem Schaumlöffel stützen und herausheben, Öl abtropfen lassen und auf ein Gitter oder saugfähiges Papier legen.",
+  "learn.visual.baseCheck": "Den Rand mit einem Pfannenwender anheben, um den Boden anzusehen. Beispiel einer glutenfreien Pfannenpizza: Die äußere Bräunung allein zeigt nicht, ob die Mitte durchgegart ist.",
+
   "learn.visual.hydration": "Wasser zum Mehl: Die Hydration ist das Verhältnis ihrer Gewichte und lässt sich nicht am Aussehen des Teigs ablesen.",
   "learn.visual.wholeWheat": "Ein Beispiel für Vollkornweizenmehl mit Kleieteilchen. Farbe und Aussehen allein verraten weder Mehltype noch Mehlstärke.",
   "learn.visual.homeOven": "Haushaltsbackofen: Ein Stein oder Backstahl auf dem Rost trägt die Pizza und erhitzt den Boden durch Kontakt. Position und Vorheizen richten sich nach dem Rezept.",

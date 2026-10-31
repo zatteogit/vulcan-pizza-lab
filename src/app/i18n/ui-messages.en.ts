@@ -1,5 +1,11 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.waterTemperature": "Measure the water with an immersed probe, without touching the bottom or sides of the container. Use the temperature specified by the recipe.",
+  "learn.visual.mixerDough": "Stand mixer with a dough hook: the dough is gathered in the bowl. Heating during mixing depends on the machine, mixing time and dough.",
+  "learn.visual.fryingSeal": "Press the two edges together, keeping the seam free of filling. A half-moon filled fried pizza example.",
+  "learn.visual.fryingDrain": "Lift the fried pizza with a skimmer supporting it, let the oil drip off and place it on a rack or absorbent paper.",
+  "learn.visual.baseCheck": "Lift the edge with a spatula to inspect the base. A gluten-free pan pizza example: browning on the outside alone does not show whether the centre is cooked.",
+
   "learn.visual.hydration": "Water into flour: hydration is the ratio of their weights; it cannot be read from the dough’s appearance.",
   "learn.visual.wholeWheat": "One example of whole wheat flour with bran flakes. Colour and appearance alone cannot identify flour type or strength.",
   "learn.visual.homeOven": "Home oven: a stone or steel on the rack supports the pizza and heats its base by contact. Follow the recipe for positioning and preheating.",

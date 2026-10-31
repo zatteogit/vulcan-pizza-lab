@@ -18,6 +18,11 @@ import wholeWheat from "../../../assets/learn/whole-wheat.webp";
 import homeOven from "../../../assets/learn/home-oven.webp";
 import peelPrep from "../../../assets/learn/peel-prep.webp";
 import stoneTemperature from "../../../assets/learn/stone-temperature.webp";
+import waterTemperature from "../../../assets/learn/water-temperature.webp";
+import mixerDough from "../../../assets/learn/mixer-dough.webp";
+import fryingSeal from "../../../assets/learn/frying-seal.webp";
+import fryingDrain from "../../../assets/learn/frying-drain.webp";
+import baseCheck from "../../../assets/learn/base-check.webp";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const VISUALS = {
@@ -41,6 +46,11 @@ const VISUALS = {
   "home-oven": { src: homeOven, caption: () => uiMessage("learn.visual.homeOven"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
   "peel-prep": { src: peelPrep, caption: () => uiMessage("learn.visual.peelPrep"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
   "stone-temperature": { src: stoneTemperature, caption: () => uiMessage("learn.visual.stoneTemperature"), source: "https://www.williams-sonoma.com/netstorage/pdf/Ooni-IR-Thermometer-UU-P06100-Essentials-Guide.pdf", author: "Ooni", cc: false },
+  "water-temperature": { src: waterTemperature, caption: () => uiMessage("learn.visual.waterTemperature"), source: "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature", author: "King Arthur Baking", cc: false },
+  "mixer-dough": { src: mixerDough, caption: () => uiMessage("learn.visual.mixerDough"), source: "https://www.giallozafferano.com/recipes/Fried-Pizza.html", author: "GialloZafferano", cc: false },
+  "frying-seal": { src: fryingSeal, caption: () => uiMessage("learn.visual.fryingSeal"), source: "https://www.giallozafferano.com/recipes/Fried-Pizza.html", author: "GialloZafferano", cc: false },
+  "frying-drain": { src: fryingDrain, caption: () => uiMessage("learn.visual.fryingDrain"), source: "https://www.giallozafferano.com/recipes/Fried-Pizza.html", author: "GialloZafferano", cc: false },
+  "base-check": { src: baseCheck, caption: () => uiMessage("learn.visual.baseCheck"), source: "https://www.kingarthurbaking.com/blog/2020/06/17/gluten-free-pan-pizza", author: "King Arthur Baking", cc: false },
 } as const;
 
 export type LearningIllustrationId = keyof typeof VISUALS;
@@ -54,6 +64,7 @@ export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrat
   bulk_fermentation: "bulk-fermentation", ball_fermentation: "ball-fermentation",
   sourdough: "sourdough", yeast: "yeast", oven_floor_dome: "oven-floor-dome",
   hydration: "hydration", flour_type: "whole-wheat", thermal_conductivity: "home-oven",
+  rule_of_55: "water-temperature", friction_factor: "mixer-dough",
 };
 
 /** These illustrate a gesture in the advice, never a visual diagnosis. */
@@ -61,6 +72,7 @@ export const TROUBLESHOOTING_VISUALS: Readonly<Partial<Record<string, LearningIl
   P01: "folds", P02: "stretching", P03: "poke-test", P07: "stretching",
   P16: "stretching", P19: "stretching", P23: "ball-shaping",
   P09: "home-oven", P10: "stone-temperature", P22: "peel-prep",
+  FR02: "frying-drain", FR03: "frying-seal", P15: "base-check",
 };
 
 export function LearningIllustration({ id, decorative = false }: {

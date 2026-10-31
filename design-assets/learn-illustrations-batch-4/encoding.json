@@ -1,0 +1,152 @@
+{
+  "size": [
+    672,
+    448
+  ],
+  "quality": 74,
+  "alpha_quality": 30,
+  "method": 6,
+  "source": "Original native PNG masters; previous WebPs preserved at a9ea7417e47080fd452bfb46a17ca863c9e83c9f",
+  "existing_assets": [
+    {
+      "asset": "src/assets/learn/autolysis.webp",
+      "before_bytes": 31696,
+      "after_bytes": 26888,
+      "before_sha256": "c0cfe0e27609783d7b0e3aa2efe33e5d525a6473cbedde0da34dba1e0da2d43f",
+      "after_sha256": "ebf871e89a36fdfbb0ceca877a92e6158ae78c2d7f68c7badab91c6a1fa6abd2"
+    },
+    {
+      "asset": "src/assets/learn/ball-fermentation.webp",
+      "before_bytes": 28120,
+      "after_bytes": 23750,
+      "before_sha256": "a56b466d8639b29f5e49ededa5b1449121d8d0431120708be74018e7e031c33b",
+      "after_sha256": "929104acc5e883eb52f1b1523a778d508ace3600647b4852832da971aab9d2b2"
+    },
+    {
+      "asset": "src/assets/learn/ball-shaping.webp",
+      "before_bytes": 31504,
+      "after_bytes": 24888,
+      "before_sha256": "fd52a8fdafba297275a0ca8a1a084b38b76f5ef3e1177570f82a2c0c0c64aa80",
+      "after_sha256": "b6dda67923656bd63050321fd88fc630ed1ee8b3d48c48d3d3c7b2f1c7a859e6"
+    },
+    {
+      "asset": "src/assets/learn/biga.webp",
+      "before_bytes": 37938,
+      "after_bytes": 30874,
+      "before_sha256": "3f640b08f70d5cd1baa476c5d3ef1eb3a805b333da4312b391857dca8c941338",
+      "after_sha256": "2feaa16822e7fe8b95c5ed27f5dc117efec904e7fa587e5bd86d2b7ab42cf30a"
+    },
+    {
+      "asset": "src/assets/learn/bulk-fermentation.webp",
+      "before_bytes": 27072,
+      "after_bytes": 22176,
+      "before_sha256": "252e18cb2b7acd6b264d69545794dc14c1281d4002fe76c8df06ecc84a94ac91",
+      "after_sha256": "7491199d324af0b851e2e60f3071c2de3be4969f5ff239681d2957a4342f5aa4"
+    },
+    {
+      "asset": "src/assets/learn/cornicione.webp",
+      "before_bytes": 52914,
+      "after_bytes": 43734,
+      "before_sha256": "418f00eb4d0a3130691287262a8ba9fd1cd74ca2b0099f686ac800aec70d5fe8",
+      "after_sha256": "6141a7085489db3420c28040fa8d8f0cac298b560b336767899d3a2e7f2d5359"
+    },
+    {
+      "asset": "src/assets/learn/division.webp",
+      "before_bytes": 27014,
+      "after_bytes": 22410,
+      "before_sha256": "d21f7072cd5852c3d13eb5dcf36b59531221ee3199327eea090e437b4bc1a823",
+      "after_sha256": "72c40d6c3b5ec8f53714d4a0b756574f989a6db51a763ce78fd2153927a1cac5"
+    },
+    {
+      "asset": "src/assets/learn/folds.webp",
+      "before_bytes": 29994,
+      "after_bytes": 24846,
+      "before_sha256": "9f6609a8b390f8a84ffb102e74559ed190a8843ffedd56462f0d17e867053745",
+      "after_sha256": "6a04c6fc08758d3110ac41a960ff11346c6eaba904db2807a84ee30917f42467"
+    },
+    {
+      "asset": "src/assets/learn/home-oven.webp",
+      "before_bytes": 46244,
+      "after_bytes": 38556,
+      "before_sha256": "66fd2176288230224f1da9257a96fb13e1a3c2cbf38a55dc3ab5e3026c595c5d",
+      "after_sha256": "d75804b046ec94cda3d138fd7b4d6f447fbbf3e616e2c5fbf6c052d72d00c3c3"
+    },
+    {
+      "asset": "src/assets/learn/hydration.webp",
+      "before_bytes": 20088,
+      "after_bytes": 16692,
+      "before_sha256": "d8a16db8a994d12c32666897fee43fa54e2525e73af008d5dc329eb796aee5e4",
+      "after_sha256": "c0c19228fd8064e52f2e99cd1e9a918d822fb90981666599fe1936c151763457"
+    },
+    {
+      "asset": "src/assets/learn/oven-floor-dome.webp",
+      "before_bytes": 48290,
+      "after_bytes": 30372,
+      "before_sha256": "d15bd8a9c85014ed9c9142a77f03fcd94ecef38666fc8508b06f2d4599d00fe9",
+      "after_sha256": "0019f9daff24bc7bc80458be5584bf4dd159f28c852d42eff23bd7cb58b363f8"
+    },
+    {
+      "asset": "src/assets/learn/peel-prep.webp",
+      "before_bytes": 35524,
+      "after_bytes": 28892,
+      "before_sha256": "cfeab1926d57f3212608e0ba1aea7b01d3ad0037f77e503550dc3756fa9da8b8",
+      "after_sha256": "cae2569a7ed29b71cad6be97240dffa556e87fcb23ec36af39df196f59ec175b"
+    },
+    {
+      "asset": "src/assets/learn/poke-test.webp",
+      "before_bytes": 19902,
+      "after_bytes": 16508,
+      "before_sha256": "dc9e6ae27285956f42758fdc57ce27a042d42be542a6327336447c462f00bd63",
+      "after_sha256": "5a3ee27f0374acb1820e63446ddd3058f7b4d992fc32743ff2b59ac32fd9e274"
+    },
+    {
+      "asset": "src/assets/learn/poolish.webp",
+      "before_bytes": 36130,
+      "after_bytes": 30488,
+      "before_sha256": "c659e602f2d7b8f3284c1585f98eb8e28eb782422abf95b84e14db3538cbf968",
+      "after_sha256": "d6a2c5ff8317424bba9d40df1382836d857d01ab0dde93517bc34b5ac47c5d7b"
+    },
+    {
+      "asset": "src/assets/learn/sourdough.webp",
+      "before_bytes": 26830,
+      "after_bytes": 21894,
+      "before_sha256": "458845308e76632144ad2bf67bee91a834afca04e8a1498b35e063c4eafdb413",
+      "after_sha256": "60649e0b33881d347104711a7929f8c812b3fdba68ea24a3f2f410526776cf3b"
+    },
+    {
+      "asset": "src/assets/learn/stone-temperature.webp",
+      "before_bytes": 19204,
+      "after_bytes": 15570,
+      "before_sha256": "81eab2cd4b2dac26cd415b14b483b2f6b2c62d9445e94e48293eaf169c00b49b",
+      "after_sha256": "534dc3a4a3d1eee7bdcbe617eb4793c4134e9aab58dd320d5bb91509aca42096"
+    },
+    {
+      "asset": "src/assets/learn/stretching.webp",
+      "before_bytes": 29750,
+      "after_bytes": 24640,
+      "before_sha256": "1ffa5bdff6afd97c617d09d4da593d15f70b3f7f4a42b7faf01268fa13c27da6",
+      "after_sha256": "9851a70e92fe5c510fa93cbac4e3ecc2816e3ce7ef33df4ef72e49942a29a355"
+    },
+    {
+      "asset": "src/assets/learn/whole-wheat.webp",
+      "before_bytes": 36212,
+      "after_bytes": 28676,
+      "before_sha256": "f6d609f18564025eb9508924a6c930a39a32618831c1478b761c78f0ba5a8bca",
+      "after_sha256": "9389269dba88a6e9614a6c8369328534a1fa99fbe536692309142ce6a2233e9c"
+    },
+    {
+      "asset": "src/assets/learn/windowpane.webp",
+      "before_bytes": 20832,
+      "after_bytes": 17744,
+      "before_sha256": "62a4ec165681442ef5aa96d98ccebac7e8cee85ed25b70023256110cf7a91a52",
+      "after_sha256": "66a8b003af42ede56c9f63fe7aa2a70ee21c73bf3e9d39b000f795f3e895cad2"
+    },
+    {
+      "asset": "src/assets/learn/yeast.webp",
+      "before_bytes": 29306,
+      "after_bytes": 24318,
+      "before_sha256": "e3084d95340c3b79a57f22640f2fbf49c7ce6fc3c56a44924b9e8d87909fa3f1",
+      "after_sha256": "4bae7cb36755d5f789e7260dccd2ec33cc5fd07dd8c4b4ef6315b44c2cea8352"
+    }
+  ]
+}
