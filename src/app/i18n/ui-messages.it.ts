@@ -3,6 +3,13 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.hydration": "Acqua nella farina: l’idratazione è il rapporto tra i loro pesi, non si ricava dall’aspetto dell’impasto.",
+  "learn.visual.wholeWheat": "Un esempio di farina integrale, con frammenti di crusca. Colore e aspetto non bastano a riconoscere tipo e forza della farina.",
+  "learn.visual.homeOven": "Forno domestico: la pietra o l’acciaio sulla griglia sostengono la pizza e scaldano il fondo per contatto. Posizione e preriscaldamento seguono la ricetta.",
+  "learn.visual.peelPrep": "Prima di caricare la pizza, spolvera leggermente la pala. Il disegno mostra la preparazione della pala, non l’infornata.",
+  "learn.visual.stoneTemperature": "Il termometro a infrarossi si punta sulla pietra: legge la temperatura della superficie, non dell’aria del forno né dell’interno della pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
   "learn.visual.bulkFermentation": "Puntata: l’impasto riposa in un’unica massa, prima dello staglio.",
   "learn.visual.ballFermentation": "Appretto in panetti: le porzioni già chiuse riposano separate e coperte. Negli stili in teglia, il riposo può avvenire direttamente in teglia.",
   "learn.visual.sourdough": "Lievito madre in forma liquida: bolle e tracce di impasto nel barattolo. La sua attività si valuta dopo i rinfreschi, non dalla sola immagine.",

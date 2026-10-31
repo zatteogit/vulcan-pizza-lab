@@ -1,5 +1,12 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.hydration": "Wasser zum Mehl: Die Hydration ist das Verhältnis ihrer Gewichte und lässt sich nicht am Aussehen des Teigs ablesen.",
+  "learn.visual.wholeWheat": "Ein Beispiel für Vollkornweizenmehl mit Kleieteilchen. Farbe und Aussehen allein verraten weder Mehltype noch Mehlstärke.",
+  "learn.visual.homeOven": "Haushaltsbackofen: Ein Stein oder Backstahl auf dem Rost trägt die Pizza und erhitzt den Boden durch Kontakt. Position und Vorheizen richten sich nach dem Rezept.",
+  "learn.visual.peelPrep": "Den Schieber vor dem Belegen leicht bemehlen. Die Zeichnung zeigt die Vorbereitung des Schiebers, nicht das Einschießen.",
+  "learn.visual.stoneTemperature": "Das Infrarotthermometer auf den Stein richten: Es misst die Oberflächentemperatur, nicht die Ofenluft oder das Innere der Pizza.",
+  "learn.visual.license3": "CC BY 3.0",
+
   "learn.visual.bulkFermentation": "Stockgare: Der Teig ruht als eine zusammenhängende Masse, bevor er geteilt wird.",
   "learn.visual.ballFermentation": "Stückgare als Teiglinge: Die rundgewirkten Portionen ruhen getrennt und abgedeckt. Bei Blechpizza kann diese Ruhe direkt im Blech stattfinden.",
   "learn.visual.sourdough": "Flüssiger Sauerteigstarter: Blasen und Teigspuren im Glas. Seine Aktivität wird nach dem Auffrischen beurteilt, nicht allein anhand des Bildes.",

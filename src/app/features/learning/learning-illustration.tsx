@@ -13,6 +13,11 @@ import ballFermentation from "../../../assets/learn/ball-fermentation.webp";
 import sourdough from "../../../assets/learn/sourdough.webp";
 import yeast from "../../../assets/learn/yeast.webp";
 import ovenFloorDome from "../../../assets/learn/oven-floor-dome.webp";
+import hydration from "../../../assets/learn/hydration.webp";
+import wholeWheat from "../../../assets/learn/whole-wheat.webp";
+import homeOven from "../../../assets/learn/home-oven.webp";
+import peelPrep from "../../../assets/learn/peel-prep.webp";
+import stoneTemperature from "../../../assets/learn/stone-temperature.webp";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const VISUALS = {
@@ -31,6 +36,11 @@ const VISUALS = {
   sourdough: { src: sourdough, caption: () => uiMessage("learn.visual.sourdough"), source: "https://www.kingarthurbaking.com/recipes/sourdough-starter-recipe", author: "King Arthur Baking", cc: false },
   yeast: { src: yeast, caption: () => uiMessage("learn.visual.yeast"), source: "https://www.kingarthurbaking.com/blog/2023/04/24/how-to-bake-with-fresh-yeast", author: "Liz Neily, Kristin Teig / King Arthur Baking", cc: false },
   "oven-floor-dome": { src: ovenFloorDome, caption: () => uiMessage("learn.visual.ovenFloorDome"), source: "https://commons.wikimedia.org/wiki/File:Brick-oven-thumbnail.jpg", author: "Beboplu / Wikimedia Commons", cc: false },
+  hydration: { src: hydration, caption: () => uiMessage("learn.visual.hydration"), source: "https://fabflour.co.uk/step-by-step-guides/step-by-step-bread", author: "Fab Flour / UK Flour Millers", cc: false },
+  "whole-wheat": { src: wholeWheat, caption: () => uiMessage("learn.visual.wholeWheat"), source: "https://commons.wikimedia.org/wiki/File:Whole_wheat_grain_flour_being_scooped.jpg", author: "Margaret Hoogstrate", cc: true, licenseVersion: "3.0" },
+  "home-oven": { src: homeOven, caption: () => uiMessage("learn.visual.homeOven"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
+  "peel-prep": { src: peelPrep, caption: () => uiMessage("learn.visual.peelPrep"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
+  "stone-temperature": { src: stoneTemperature, caption: () => uiMessage("learn.visual.stoneTemperature"), source: "https://www.williams-sonoma.com/netstorage/pdf/Ooni-IR-Thermometer-UU-P06100-Essentials-Guide.pdf", author: "Ooni", cc: false },
 } as const;
 
 export type LearningIllustrationId = keyof typeof VISUALS;
@@ -43,12 +53,14 @@ export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrat
   poke_test: "poke-test", cornicione: "cornicione",
   bulk_fermentation: "bulk-fermentation", ball_fermentation: "ball-fermentation",
   sourdough: "sourdough", yeast: "yeast", oven_floor_dome: "oven-floor-dome",
+  hydration: "hydration", flour_type: "whole-wheat", thermal_conductivity: "home-oven",
 };
 
 /** These illustrate a gesture in the advice, never a visual diagnosis. */
 export const TROUBLESHOOTING_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
   P01: "folds", P02: "stretching", P03: "poke-test", P07: "stretching",
   P16: "stretching", P19: "stretching", P23: "ball-shaping",
+  P09: "home-oven", P10: "stone-temperature", P22: "peel-prep",
 };
 
 export function LearningIllustration({ id, decorative = false }: {
@@ -65,7 +77,7 @@ export function LearningIllustration({ id, decorative = false }: {
         <p>{visual.caption()}</p>
         <small data-region="learning-source">
           {uiMessage("learn.visual.source")} <a href={visual.source}>{visual.author}</a>
-          {visual.cc && <> · <a href="https://creativecommons.org/licenses/by/2.0/">{uiMessage("learn.visual.license")}</a></>}
+          {visual.cc && <> · <a href={"licenseVersion" in visual ? "https://creativecommons.org/licenses/by/3.0/" : "https://creativecommons.org/licenses/by/2.0/"}>{"licenseVersion" in visual ? uiMessage("learn.visual.license3") : uiMessage("learn.visual.license")}</a></>}
         </small>
       </figcaption>
     </figure>
