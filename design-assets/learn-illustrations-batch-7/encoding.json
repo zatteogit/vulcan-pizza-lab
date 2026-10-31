@@ -1,0 +1,28 @@
+{
+  "new_assets": [
+    {
+      "id": "bench-fold",
+      "bytes": 20204,
+      "size": [
+        672,
+        448
+      ],
+      "sha256": "925d26ef53604371c3d606a7c13dd63e04bf60b64e7365fde0c1ebbabd4545b1"
+    },
+    {
+      "id": "preferment-pair",
+      "bytes": 25606,
+      "size": [
+        672,
+        448
+      ],
+      "sha256": "376d6ed9399f0dace165ee7d0960f332d0f61b6072d3aea98cc2deb5ed426601"
+    }
+  ],
+  "quality": 74,
+  "alpha_quality": 30,
+  "method": 6,
+  "previous_35": "Unchanged",
+  "topping_photos": "Unchanged",
+  "performance_limits": "Unchanged"
+}

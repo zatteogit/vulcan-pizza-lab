@@ -1,5 +1,10 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.benchFold": "Falten auf der Arbeitsfläche: Ein Rand des feuchten Teigs wird über die Masse gelegt, ohne ihn zu zerreißen.",
+  "learn.visual.prefermentPair": "Links: frisch gemischte Biga. Rechts: Poolish nach der Ruhezeit. Der Vergleich zeigt unterschiedliche Konsistenzen und ist kein Reifetest.",
+  "learn.visual.stretchingProperties": "Beim Dehnen von Hand lässt sich die Reaktion des Teigs beobachten. P, L und W werden mit Messgeräten bestimmt, nicht durch diesen Handgriff.",
+  "learn.visual.poolishPhoto": "Poolish-Foto",
+
   "learn.visual.doughTemperature": "Stecke den Fühler in den Teig, um seine Temperatur zu messen. Sie kann von der Raumtemperatur abweichen.",
   "learn.visual.coveredRest": "Decke den Behälter während der Ruhezeit ab, damit die Teigoberfläche weniger austrocknet.",
   "learn.visual.coveredStorage": "Ein gut sitzender Deckel schützt vor Austrocknung. Lass Platz, damit der Teig auch während der Ruhezeit im Kühlschrank aufgehen kann.",

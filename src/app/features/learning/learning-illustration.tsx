@@ -33,6 +33,8 @@ import coveredRest from "../../../assets/learn/covered-rest.webp";
 import coveredStorage from "../../../assets/learn/covered-storage.webp";
 import remilledSemolina from "../../../assets/learn/remilled-semolina.webp";
 import sauceDosing from "../../../assets/learn/sauce-dosing.webp";
+import benchFold from "../../../assets/learn/bench-fold.webp";
+import prefermentPair from "../../../assets/learn/preferment-pair.webp";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const VISUALS = {
@@ -71,6 +73,9 @@ const VISUALS = {
   "covered-storage": { src: coveredStorage, caption: () => uiMessage("learn.visual.coveredStorage"), source: "https://www.kingarthurbaking.com/blog/2023/04/18/never-cover-rising-bread-dough-with-towel", author: "King Arthur Baking", cc: false },
   "remilled-semolina": { src: remilledSemolina, caption: () => uiMessage("learn.visual.remilledSemolina"), source: "https://shop.drax-muehle.de/produkte/detail/1333/bio-hartweizenmehl-semola-di-grano-duro-rimacinata-1-kg", author: "Drax-Mühle", cc: false },
   "sauce-dosing": { src: sauceDosing, caption: () => uiMessage("learn.visual.sauceDosing"), source: "https://www.pexels.com/photo/putting-tomato-sauce-on-dough-for-pizza-17637072/", author: "Saulo Leite / Pexels", cc: false },
+  "bench-fold": { src: benchFold, caption: () => uiMessage("learn.visual.benchFold"), source: "https://www.kingarthurbaking.com/blog/2017/06/19/kneading-wet-dough-by-hand", author: "King Arthur Baking", cc: false },
+  "preferment-pair": { src: prefermentPair, caption: () => uiMessage("learn.visual.prefermentPair"), source: "https://www.flickr.com/photos/grongar/3683817769/", author: "Rebecca Siegel", cc: true, extraSource: { source: "https://commons.wikimedia.org/wiki/File:Poolish_for_Artos.jpg", label: () => uiMessage("learn.visual.poolishPhoto") } },
+  "stretching-properties": { src: stretching, caption: () => uiMessage("learn.visual.stretchingProperties"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
 } as const;
 
 export type LearningIllustrationId = keyof typeof VISUALS;
@@ -78,7 +83,7 @@ export type LearningIllustrationId = keyof typeof VISUALS;
 /** Only map terms for which the photographed stage actually explains the text. */
 export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
   biga: "biga", poolish: "poolish", autolysis: "autolysis",
-  folds: "folds", gluten_development: "windowpane", gluten: "windowpane",
+  folds: "folds", gluten_development: "bench-fold", gluten: "windowpane",
   dough_division: "division", ball_shaping: "ball-shaping",
   poke_test: "poke-test", cornicione: "cornicione",
   bulk_fermentation: "bulk-fermentation", ball_fermentation: "ball-fermentation",
@@ -87,6 +92,8 @@ export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrat
   rule_of_55: "water-temperature", friction_factor: "mixer-dough",
   thickness_factor: "portion-weighing",
   q10: "dough-temperature", semola_rimacinata: "remilled-semolina",
+  pre_ferment: "preferment-pair",
+  p_tenacity: "stretching-properties", l_extensibility: "stretching-properties", pl_ratio: "stretching-properties",
 };
 
 /** These illustrate a gesture in the advice, never a visual diagnosis. */
@@ -94,6 +101,7 @@ export const TROUBLESHOOTING_VISUALS: Readonly<Partial<Record<string, readonly L
   P01: ["folds"], P02: ["stretching"], P03: ["poke-test"], P07: ["stretching", "covered-rest"],
   P16: ["stretching"], P19: ["stretching", "covered-rest"], P23: ["ball-shaping"],
   P04: ["dough-temperature"], P05: ["covered-storage"], P21: ["covered-storage"],
+  P08: ["stretching"],
   P09: ["home-oven"], P10: ["stone-temperature"], P22: ["peel-prep"],
   FR02: ["frying-drain"], FR03: ["frying-seal"], P15: ["base-check", "stone-brushing"],
   FR01: ["oil-temperature"], P18: ["mozzarella-drying", "sauce-dosing"], P14: ["pizza-turning"],
@@ -113,6 +121,7 @@ export function LearningIllustration({ id, decorative = false }: {
         <p>{visual.caption()}</p>
         <small data-region="learning-source">
           {uiMessage("learn.visual.source")} <a href={visual.source}>{visual.author}</a>
+          {"extraSource" in visual && <> · <a href={visual.extraSource.source}>{visual.extraSource.label()}</a></>}
           {visual.cc && <> · <a href={"licenseVersion" in visual ? "https://creativecommons.org/licenses/by/3.0/" : "https://creativecommons.org/licenses/by/2.0/"}>{"licenseVersion" in visual ? uiMessage("learn.visual.license3") : uiMessage("learn.visual.license")}</a></>}
         </small>
       </figcaption>

@@ -1,5 +1,10 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.benchFold": "台の上での折りたたみ：水分の多い生地の端を、ちぎらずに本体の上へ折り重ねます。",
+  "learn.visual.prefermentPair": "左は混ぜた直後のビガ、右は休ませた後のポーリッシュです。異なる硬さの例であり、熟成度を判定する比較ではありません。",
+  "learn.visual.stretchingProperties": "手で伸ばすと、生地の反応を観察できます。P・L・Wの値は、この動作ではなく測定機器で求めます。",
+  "learn.visual.poolishPhoto": "ポーリッシュの参考写真",
+
   "learn.visual.doughTemperature": "生地にプローブを差し込み、温度を測ります。生地の温度は室温と異なることがあります。",
   "learn.visual.coveredRest": "休ませる間は容器を覆い、生地の表面が乾燥するのを抑えます。",
   "learn.visual.coveredStorage": "容器に合ったふたで乾燥を抑えます。冷蔵庫で休ませる間も生地が膨らめるよう、上に空間を残します。",

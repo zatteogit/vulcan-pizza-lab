@@ -3,6 +3,11 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.benchFold": "Pieghe sul banco: un lembo dell’impasto umido viene ripiegato sulla massa, senza strapparlo.",
+  "learn.visual.prefermentPair": "A sinistra, una biga appena miscelata; a destra, un poolish dopo il riposo. Il confronto mostra consistenze diverse, non un test di maturazione.",
+  "learn.visual.stretchingProperties": "Un allungamento a mano mostra come reagisce l’impasto. I valori P, L e W si misurano con prove strumentali, non con questo gesto.",
+  "learn.visual.poolishPhoto": "Foto del poolish",
+
   "learn.visual.doughTemperature": "Inserisci la sonda nell’impasto: misura la sua temperatura, che può differire da quella della stanza.",
   "learn.visual.coveredRest": "Copri il recipiente durante il riposo per limitare l’essiccazione della superficie dell’impasto.",
   "learn.visual.coveredStorage": "Un coperchio ben adattato limita l’essiccazione. Lascia spazio perché l’impasto possa crescere anche durante il riposo in frigo.",
