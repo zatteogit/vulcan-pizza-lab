@@ -106,9 +106,9 @@
     "mobile": "Public P18 checked at 390px: both images load at 672px natural width, 288px rendered; no horizontal overflow"
   },
   "validation": {
-    "local_checks": "npm run verify passed: 134 files, 1763 tests passed, 1 skipped; npm run build, npm run check:budget and git diff --check passed.",
+    "local_checks": "Checks repeated after rebasing onto main 87a106d1410ec3d4054071734f398409f501a028: npm run verify passed (134 files, 1763 tests passed, 1 skipped), npm run build, npm run check:budget and git diff --check passed.",
     "browser": "Both new illustrations load with 672px natural width in the expanded glossary. The pair caption, two photographic source links and CC BY 2.0 link were checked. P/L and P08 reuse checked in their actual contexts. Pair checked at 390px: 288px image width, credits wrap without horizontal overflow.",
-    "encoding": "Two new WebPs, 672x448, quality 74, alpha quality 30, method 6; 45810 bytes combined. Existing 35 illustrations and every topping photograph untouched. Performance limits unchanged. Per-user JS maximum 569.1/570 kB gzip; image budget passes.",
+    "encoding": "Two new WebPs, 672x448, quality 74, alpha quality 30, method 6; 45810 bytes combined. Existing 35 learning illustrations and topping photos unchanged by this PR. Performance limits unchanged by this PR. After inheriting main responsive-image work: per-user JS maximum 569.0/570 kB gzip; product images 32.7/38.0 MB.",
     "screenshots": [
       "preview.jpg",
       "review-pair.jpg",
