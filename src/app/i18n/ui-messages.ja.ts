@@ -1,5 +1,10 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.farinographBowl": "試料を取り出せるよう開いたファリノグラフの混合槽。吸水率は一定の硬さになる条件で試験して求めます。生地の見た目からは判断できません。",
+  "learn.visual.farinographReadout": "ファリノグラフの曲線をもとに再構成した、目盛りのない模式図。横軸は時間、縦軸は抵抗です。分数の読み取りや小麦粉の比較には使えません。",
+  "learn.visual.lacticBacteria": "電子顕微鏡写真から形を描き直して単純化したLacticaseibacillus paracasei。色は変更しており、縮尺はありません。すべての乳酸菌がこの形とは限りません。イラストのライセンスはCC BY-SA 3.0です。",
+  "learn.visual.breadFreezerPortions": "焼いたパンを小分けにして冷凍用に包装した例。老化を遅らせるための保存方法です。この絵ではデンプンの再結晶化は見えません。",
+  "learn.visual.licenseSa3": "CC BY-SA 3.0",
   "learn.visual.alveographBubble": "アルベオグラフの板の下で膨らむ生地。Wは泡の見た目ではなく機器で測定します。",
   "learn.visual.fallingNumberTubes": "支持台に置いたフォーリングナンバーの試験管と撹拌棒。測定では装置内で試料を加熱し、棒の落下時間を計ります。",
   "learn.visual.brownedCrust": "パンの焼き色はメイラード反応などによる褐変の例です。色だけでは内部の焼け具合を測れません。",

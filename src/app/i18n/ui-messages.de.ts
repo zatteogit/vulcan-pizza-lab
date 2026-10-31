@@ -1,5 +1,10 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.farinographBowl": "Geöffnete Farinographen-Mischkammer für den Zugang zur Probe. Die Wasseraufnahme wird bei definierter Konsistenz geprüft, nicht am Aussehen des Teigs abgelesen.",
+  "learn.visual.farinographReadout": "Schema ohne Maßstab, nach Farinographenkurven neu zusammengestellt: Zeit horizontal, Widerstand vertikal. Daraus lassen sich weder Minuten ablesen noch Mehle vergleichen.",
+  "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, nach einer Elektronenmikroskopaufnahme neu gezeichnet und vereinfacht, mit veränderten Farben und ohne Maßstab. Nicht alle Milchsäurebakterien haben diese Form. Illustration unter CC BY-SA 3.0.",
+  "learn.visual.breadFreezerPortions": "Gebackenes Brot, portioniert und für das Gefrierfach verpackt: eine Möglichkeit, das Altbackenwerden zu verlangsamen. Die Rekristallisation der Stärke ist hier nicht sichtbar.",
+  "learn.visual.licenseSa3": "CC BY-SA 3.0",
   "learn.visual.alveographBubble": "Unter der Alveographenplatte aufgeblasener Teig. W stammt aus der instrumentellen Prüfung, nicht aus dem Aussehen der Blase.",
   "learn.visual.fallingNumberTubes": "Falling-Number-Röhrchen mit Rührern im Ständer. Für die Messung wird die Probe im Gerät erhitzt und die Sinkzeit des Rührers gemessen.",
   "learn.visual.brownedCrust": "Gebräunte Brotkruste: ein Beispiel für Bräunung, zu der Maillard-Reaktionen beitragen. Die Farbe allein misst nicht, ob das Innere durchgebacken ist.",

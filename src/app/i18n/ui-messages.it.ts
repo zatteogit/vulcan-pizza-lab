@@ -3,6 +3,11 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.farinographBowl": "Vasca del farinografo aperta per accedere al campione. L’assorbimento si determina con una prova a consistenza definita, non dall’aspetto dell’impasto.",
+  "learn.visual.farinographReadout": "Schema senza scala ricomposto dai tracciati del farinografo: tempo in orizzontale, resistenza in verticale. Non permette di leggere minuti o confrontare farine.",
+  "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, ridisegnato e semplificato da una micrografia elettronica, con colori modificati e senza scala. Non tutti i batteri lattici hanno questa forma. Illustrazione distribuita con licenza CC BY-SA 3.0.",
+  "learn.visual.breadFreezerPortions": "Pane già cotto, porzionato e confezionato per il congelatore: una pratica per rallentarne il raffermamento. La ricristallizzazione dell’amido non è visibile nell’immagine.",
+  "learn.visual.licenseSa3": "CC BY-SA 3.0",
   "learn.visual.alveographBubble": "Bolla d’impasto gonfiata sotto la piastra dell’alveografo. W deriva dalla prova strumentale, non dall’aspetto della bolla.",
   "learn.visual.fallingNumberTubes": "Provette e agitatori della prova Falling Number, qui nel supporto. La misura richiede il campione riscaldato nello strumento e il tempo di discesa dell’agitatore.",
   "learn.visual.brownedCrust": "Crosta dorata di pane: un esempio di imbrunimento a cui contribuiscono le reazioni di Maillard. Il colore da solo non misura la cottura interna.",
