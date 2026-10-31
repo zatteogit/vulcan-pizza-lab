@@ -1,5 +1,11 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.bulkFermentation": "Pointage : la pâte repose en une seule masse, avant la division.",
+  "learn.visual.ballFermentation": "Apprêt en pâtons : les portions déjà boulées reposent séparément et à couvert. Pour les pizzas en plaque, ce repos peut se faire directement dans la plaque.",
+  "learn.visual.sourdough": "Levain liquide : des bulles et des traces de pâte dans le bocal. Son activité s’évalue après les rafraîchis, pas à partir de la seule image.",
+  "learn.visual.yeast": "Levure fraîche à gauche, levure sèche instantanée à droite : différentes formes de levure de boulanger. Elles ne se remplacent pas à poids égal.",
+  "learn.visual.ovenFloorDome": "Sole en bas, voûte au-dessus : la sole porte la pizza et la voûte chauffe par le haut. Exemple de four à bois.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga juste après le mélange : une masse irrégulière, avec des plis et des bords déchirés.",
   "learn.visual.poolish": "Poolish après le repos : une surface humide, de petits trous et des bulles irrégulières.",

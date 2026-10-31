@@ -3,6 +3,12 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.bulkFermentation": "Puntata: l’impasto riposa in un’unica massa, prima dello staglio.",
+  "learn.visual.ballFermentation": "Appretto in panetti: le porzioni già chiuse riposano separate e coperte. Negli stili in teglia, il riposo può avvenire direttamente in teglia.",
+  "learn.visual.sourdough": "Lievito madre in forma liquida: bolle e tracce di impasto nel barattolo. La sua attività si valuta dopo i rinfreschi, non dalla sola immagine.",
+  "learn.visual.yeast": "Fresco a sinistra, secco istantaneo a destra: forme diverse del lievito di birra. Le quantità non sono intercambiabili a parità di peso.",
+  "learn.visual.ovenFloorDome": "Platea in basso, cielo sopra: il piano sostiene la pizza e la volta scalda dall’alto. Esempio di forno a legna.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga appena miscelata: massa irregolare, con pieghe e bordi strappati.",
   "learn.visual.poolish": "Poolish dopo il riposo: superficie umida, piccoli fori e bolle irregolari.",

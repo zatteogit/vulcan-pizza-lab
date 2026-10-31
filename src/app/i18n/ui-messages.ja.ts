@@ -1,5 +1,11 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.bulkFermentation": "一次発酵。分割する前の生地を、一つのまとまりとして休ませます。",
+  "learn.visual.ballFermentation": "分割後の最終発酵。丸めた生地を別々に置き、覆って休ませます。天板で焼くスタイルでは、天板の中で休ませることもあります。",
+  "learn.visual.sourdough": "液状のサワードウ種。瓶の中に気泡と生地の跡が見られます。活性は写真だけでなく、種継ぎ後の状態から判断します。",
+  "learn.visual.yeast": "左は生イースト、右はインスタントドライイーストです。どちらもパン用イーストですが、同じ重さで置き換えることはできません。",
+  "learn.visual.ovenFloorDome": "下が炉床、上が天井です。炉床はピザを支え、天井は上から加熱します。薪窯の一例です。",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "混ぜた直後のビガ。形は不均一で、折り目やちぎれた縁が見られます。",
   "learn.visual.poolish": "休ませた後のプーリッシュ。湿った表面に小さな穴と不規則な気泡が見られます。",

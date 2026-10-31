@@ -1,5 +1,11 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.bulkFermentation": "Stockgare: Der Teig ruht als eine zusammenhängende Masse, bevor er geteilt wird.",
+  "learn.visual.ballFermentation": "Stückgare als Teiglinge: Die rundgewirkten Portionen ruhen getrennt und abgedeckt. Bei Blechpizza kann diese Ruhe direkt im Blech stattfinden.",
+  "learn.visual.sourdough": "Flüssiger Sauerteigstarter: Blasen und Teigspuren im Glas. Seine Aktivität wird nach dem Auffrischen beurteilt, nicht allein anhand des Bildes.",
+  "learn.visual.yeast": "Links Frischhefe, rechts Instant-Trockenhefe: verschiedene Formen von Backhefe. Sie sind nicht im gleichen Gewicht austauschbar.",
+  "learn.visual.ovenFloorDome": "Backboden unten, Gewölbe oben: Der Boden trägt die Pizza, das Gewölbe heizt von oben. Beispiel eines Holzofens.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga direkt nach dem Mischen: eine unregelmäßige Masse mit Falten und eingerissenen Rändern.",
   "learn.visual.poolish": "Poolish nach der Ruhezeit: eine feuchte Oberfläche mit kleinen Löchern und unregelmäßigen Blasen.",

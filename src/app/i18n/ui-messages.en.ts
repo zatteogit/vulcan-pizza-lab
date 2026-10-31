@@ -1,5 +1,11 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.bulkFermentation": "Bulk fermentation: the dough rests as one mass, before dividing.",
+  "learn.visual.ballFermentation": "Final proof in dough balls: the rounded portions rest separately and covered. For pan pizza styles, this rest can take place directly in the pan.",
+  "learn.visual.sourdough": "Liquid sourdough starter: bubbles and dough streaks in the jar. Activity is assessed after feeding, not from the image alone.",
+  "learn.visual.yeast": "Fresh yeast on the left, instant dry yeast on the right: different forms of baker’s yeast. Equal weights are not interchangeable.",
+  "learn.visual.ovenFloorDome": "Oven floor below, vault above: the floor supports the pizza and the vault heats from above. A wood-fired oven example.",
+
   "learn.visual.license": "CC BY 2.0",
   "learn.visual.biga": "Biga just after mixing: an irregular mass with folds and torn edges.",
   "learn.visual.poolish": "Poolish after resting: a moist surface with small holes and irregular bubbles.",
