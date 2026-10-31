@@ -593,7 +593,7 @@ export const JA_LOCALE: CmsContent = {
     inspirationLabel: "バージョン",
     inspirationBase: "基準",
     inspirationSeeAll: "すべて見る",
-    inspirationModalTitle: "ピッツァイオーロと規定のバージョン",
+    inspirationModalTitle: "作り手のバージョンと規定",
     inspirationLearnLink: "「学ぶ」セクションで詳しく",
     inspirationSelect: "選択",
     inspirationSelected: "選択中",

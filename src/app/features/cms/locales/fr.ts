@@ -537,7 +537,7 @@ export const FR_LOCALE: CmsContent = {
     inspirationLabel: "Version",
     inspirationBase: "Référence",
     inspirationSeeAll: "Voir toutes",
-    inspirationModalTitle: "Versions de pizzaïolos et de cahiers des charges",
+    inspirationModalTitle: "Versions d’auteur et cahiers des charges",
     inspirationLearnLink: "En savoir plus dans la section Apprendre",
     inspirationSelect: "Sélectionner",
     inspirationSelected: "Sélectionnée",

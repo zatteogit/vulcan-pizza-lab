@@ -581,7 +581,9 @@ export const IT_LOCALE: CmsContent = {
     inspirationLabel: "Versione",
     inspirationBase: "Riferimento",
     inspirationSeeAll: "Vedi tutte",
-    inspirationModalTitle: "Versioni di pizzaioli e disciplinari",
+    // B5: anche autori che non fanno i pizzaioli (Benedetta Rossi, Adriano
+    // Continisio, Dekracap): stesso nome di «Versioni d'autore» del pannello.
+    inspirationModalTitle: "Versioni d'autore e disciplinari",
     inspirationLearnLink: "Scopri di più nella sezione Impara",
     inspirationSelect: "Seleziona",
     inspirationSelected: "Selezionata",

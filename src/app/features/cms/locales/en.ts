@@ -713,7 +713,7 @@ export const EN_LOCALE: CmsContent = {
     inspirationLabel: "Version",
     inspirationBase: "Reference",
     inspirationSeeAll: "See all",
-    inspirationModalTitle: "Versions from pizzaioli and official rules",
+    inspirationModalTitle: "Author versions and official rules",
     inspirationLearnLink: "Learn more in the Learn section",
     inspirationSelect: "Select",
     inspirationSelected: "Selected",

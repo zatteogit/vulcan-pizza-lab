@@ -538,7 +538,7 @@ export const ES_LOCALE: CmsContent = {
     inspirationLabel: "Versión",
     inspirationBase: "Referencia",
     inspirationSeeAll: "Ver todas",
-    inspirationModalTitle: "Versiones de pizzaioli y reglamentos",
+    inspirationModalTitle: "Versiones de autor y reglamentos",
     inspirationLearnLink: "Descubre más en la sección Aprende",
     inspirationSelect: "Seleccionar",
     inspirationSelected: "Seleccionada",
