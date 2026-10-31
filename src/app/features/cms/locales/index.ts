@@ -151,8 +151,10 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *       d'acqua per livello non scende sotto il minimo dello stile
  *       (profile.skillEffectRule).
  *  61 → tranche B5: Dekracap (inspirationI18n), frigo della fonte a 8 °C
- *       (fermentation.sourceFridge) e processo della fonte
- *       (source.dekracapProcess).
+ *       (fermentation.sourceFridge), processo della fonte
+ *       (source.dekracapProcess), riposo prima delle pieghe
+ *       (timeline.folds.restFirst), «8 °C frigo» in Crea e titolo della
+ *       finestra delle versioni (misc.inspirationModalTitle).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
 export const LOCALE_BUNDLE_REV = 61;

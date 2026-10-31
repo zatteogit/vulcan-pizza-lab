@@ -116,9 +116,9 @@ export interface Interpretation {
    *  docs/progetto-catalogo-italiano.md. */
   converted_doses?: true;
   /** B5: ciò che la fonte fa e la tabella di marcia di Vulcan non sa ancora
-   *  dire (per Dekracap lo staglio a metà del frigo, che aspetta le fasi
-   *  esplicite della B3). Note della ricetta, con le ore e la temperatura
-   *  della versione, come il lievito della fonte. */
+   *  dire (per Dekracap lo staglio a metà del frigo: le fasi esplicite di B3
+   *  non hanno ancora i panetti in frigo, §9.13). Note della ricetta, con le
+   *  ore e la temperatura della versione, come il lievito della fonte. */
   source_notes?: EngineMsg[];
 
   /* ─── Narrativa ─── */

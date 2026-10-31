@@ -1027,6 +1027,19 @@ che la dichiarano:
   lo permettono.
 - **Sale e olio della versione** con un impasto (`dekracap_48h`, solo
   `salt_pct` e `oil_pct`), la strada già pronta del §9.11.
+- **Pieghe della versione** (`b5-final`, decisione di Matteo):
+  `MethodProcessProfile.folds` e `profileFolds(style)` al posto di
+  `stylePlanFolds(style.id)` (timeline e due chiamate di
+  `equivalentFermentationHours`); `FoldPlan.restBeforeMin` allunga il passo
+  «Pieghe» del riposo prima del primo giro (`foldWindowMinutes`) e aggiunge
+  il messaggio `timeline.folds.restFirst`. Dekracap: 3 × 45 min dello stile
+  → 50 min + 3 × 15 min; puntata 43 h 45 → 44 h 25; totale e dosi uguali
+  (la dose è della fonte; cambia solo `yeast_source.model_pct`, il
+  confronto). Gli stili e le altre versioni non dichiarano `folds`: golden e
+  preset invariati.
+- **Voce** (`spokenInFridge`): «in frigo» con `isFridgeTempC` e
+  `fermentation_in_fridge`, come la tabella di marcia (prima: fino a 8 °C
+  sempre). Nessuno stile è a 7–8 °C: le risposte di oggi non cambiano.
 
 Misure: `preset-numbers.regression.json` ha solo tre righe nuove
 (`teglia_romana · dekracap` su tre cucine), `recipes.golden.json` identico.

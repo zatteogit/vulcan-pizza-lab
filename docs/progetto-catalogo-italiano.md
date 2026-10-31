@@ -1273,7 +1273,10 @@ Margine per la B4: 7,6 kB di codice e 3,7 kB per utente.
 
 ### 9.13 Stato di B5 (31/10/2026)
 
-**Fatto** (ramo `tranche-b5`, integrato sopra B3 in `b5-final`; D-071 in `docs/autorialita.md`, prima D-070). Versione
+**Fatto** (ramo `tranche-b5`, integrato sopra B3 in `b5-final`, riportato il
+04/11 sopra main con «mai fuori stile» in `b5-rebase`; D-071 in
+`docs/autorialita.md`, prima D-070; D-070 resta la voce di B3 e della regola
+«mai fuori stile»). Versione
 d'autore della `teglia_romana` (decisione di Matteo), nessuno stile nuovo,
 nessun preset nuovo.
 
@@ -1297,11 +1300,11 @@ nessun preset nuovo.
   | Idratazione | 84,7 % (1000/1180) | 75–85 % | 84,7 % |
   | Lievitazione | 48 h | 24–48 h | 48 h |
   | Temperatura | 8 °C (impasto in frigo) | nessuna imposta | 8 °C |
-  | W | 350–400 («meglio circa 400») | 300–380 | **375** |
+  | W | 350–400 («meglio circa 400») | 300–380 | **380** |
 
   La forbice W della fonte esce in parte da quella dello stile (380–400): la
-  versione usa W 375, centro della forbice della fonte e dentro quella dello
-  stile, che **non cambia**. Scelta da confermare (punto 1 qui sotto).
+  versione usa **W 380** (decisione di Matteo), il più vicino al «meglio circa
+  400» della fonte dentro la forbice dello stile, che **non cambia**.
 - **Dosi**, teglia 30×40, forno di casa 250 °C, 1 teglia (test in
   `use-cases/dekracap-teglia.test.ts`). Il motore lavora sulle percentuali
   della dose per 1 L d'acqua; quella per teglia della fonte è la stessa dose
@@ -1309,7 +1312,7 @@ nessun preset nuovo.
 
   | | Fonte, 1 L d'acqua | Fonte, teglia 30×40 | % sulla farina | Motore |
   |---|---|---|---|---|
-  | Farina W 350/400 | 1180 | 350 | 100 | 350 (W 375) |
+  | Farina W 350/400 | 1180 | 350 | 100 | 350 (W 380) |
   | Acqua | 1000 | 296 | 84,7 | 296 |
   | Lievito di birra fresco | 3 | 1 | 0,254 | 0,9 |
   | Sale | 25 | 7,5 | 2,12 | 7 |
@@ -1328,17 +1331,18 @@ nessun preset nuovo.
   usa e la storia della versione lo dice («qui la conversione usa 1 a 3»).
   Con altre ore o un'altra temperatura torna la dose del modello (test).
 - **Processo**, come lo dice la tabella di marcia: impasto mescolato senza
-  impastare (stile no knead, 10 min); 3 giri di pieghe ogni 45 min (quelle
-  dello stile), poi in frigo; puntata 43 h 45 a 8 °C in frigo; staglio
+  impastare (stile no knead, 10 min); **pieghe della fonte** (`b5-final`):
+  circa 50 minuti di riposo coperto («quasi un'ora», lettura di Vulcan), poi
+  3 giri a 15 minuti l'uno dall'altro, poi in frigo (1 h 35 in tutto; prima
+  3 × 45 min dello stile); puntata 44 h 25 a 8 °C in frigo; staglio
   (15 min); appretto fuori dal frigo 2 h (1 h 30 + 30 min di preriscaldo);
   stesura; condimento; cottura a 250 °C per 18 min (1063 s: **minuti del
   motore**, la fonte non li dice). In tutto 48 h 52 min. Ciò che la tabella
   non sa ancora dire sta in una nota della ricetta (`source.dekracapProcess`,
-  «Come fa la fonte»): pieghe dopo quasi un'ora di riposo a 15 minuti l'una
-  dall'altra, staglio dopo circa 24 ore e di nuovo in frigo, fuori dal frigo
-  da 2 ore a mezz'ora prima, stesura sulla semola, cottura subito. La teglia
-  (ferro blu o lamiera; niente antiaderente, alluminio, carta forno) è nella
-  tecnica della versione.
+  «Come fa la fonte»): staglio dopo circa 24 ore e di nuovo in frigo, fuori
+  dal frigo da 2 ore a mezz'ora prima, stesura sulla semola, cottura subito.
+  La teglia (ferro blu o lamiera; niente antiaderente, alluminio, carta
+  forno) è nella tecnica della versione e ora anche nel dato dello stile.
 - **Testi** in 7 lingue (francese col «vous» dove ci si rivolge a chi legge,
   portoghese del Brasile): firma, tecnica, storia, badge
   (`inspiration-i18n`), due messaggi del motore, un'etichetta di Crea.
@@ -1362,7 +1366,14 @@ resta fuori dal frigo. Gli stessi 8 °C scelti a mano in Crea restano
 
 #### Cosa vede l'utente (prova nel browser, `vite preview`, forno di casa 250 °C)
 
-- **`/recipe/teglia_romana?interpretation=dekracap`** (it ed en-GB, 390 e
+- **`b5-final`, `/recipe/teglia_romana`, versione Dekracap** (it ed en-GB,
+  390 px; il link `?interpretation=` apre il riferimento, si sceglie la chip):
+  pieghe «Prima lascia riposare l'impasto coperto per circa 50 min, come fa
+  la fonte. Fai 3 giri di pieghe, uno ogni 15 min… Dopo l'ultimo giro metti
+  il contenitore in frigo» (1 h 35), puntata 44 h 25 a 8 °C; nota «Come fa la
+  fonte» senza le pieghe; finestra «Vedi tutte» intitolata «Versioni
+  d'autore e disciplinari» / «Author versions and official rules».
+- **Prima, su `tranche-b5`** (it ed en-GB, 390 e
   1280 px): «Ispirata a Dekracap» / «Inspired by Dekracap»; le due note della
   fonte sopra la ricetta; chip «Dekracap» fra le versioni; 84,7 %, 48 h
   frigo, 250 °C; 86/100 «Si può fare, con qualche accortezza»; ingredienti
@@ -1383,46 +1394,65 @@ resta fuori dal frigo. Gli stessi 8 °C scelti a mano in Crea restano
 - **MCP 1.7.0**: `get_style` offre `dekracap`; `generate_recipe` con
   `interpretation_id: "dekracap"` dà le stesse dosi, `yeast_source`,
   `fermentation_in_fridge: true` e le due note; la guida dice come
-  presentarle. Il riferimento della teglia romana non cambia. **Voce**:
-  invariata; legge il riferimento o la proposta su misura, non le versioni
-  d'autore, e dice già «in frigo» fino a 8 °C (`voice/answer.ts`).
+  presentarle. Il riferimento della teglia romana non cambia. **Voce**: legge
+  il riferimento o la proposta su misura, non le versioni d'autore; dice «in
+  frigo» con la regola del motore (`spokenInFridge` in `voice/answer.ts`:
+  fino a 6 °C, fino a 8 °C solo con `fermentation_in_fridge`; prima fino a
+  8 °C sempre).
 
 #### Budget (gzip)
 
 Codice senza lingue 455,6 → 456,6 kB (limite 465); per utente in giapponese
 563,7 → 565,3 kB (limite 570); CSS invariato (72,6 kB). Misure su `781a4aa`
-(main) e su questo ramo.
+(main) e su questo ramo. **B3 e B5 insieme** (`b5-final`, con le decisioni
+di Matteo): codice senza lingue 458,9 kB, per utente in giapponese 568,3 kB,
+CSS 72,6 kB (`b3-final` da solo: 457,8 e 566,6). Margine: 6,1 e 1,7 kB.
+**Sopra main** (`b5-rebase`, 04/11, base `137afbb` = main `ad30d51` con
+«mai fuori stile»; dopo la #202 l'italiano dei dati è un catalogo come le
+altre lingue e i limiti sono gli stessi): codice senza lingue 423,5 → 424,5 kB
+(limite 465), per utente in giapponese 536,9 → 538,5 kB (limite 570).
+`LOCALE_BUNDLE_REV` 61, MCP 1.7.0.
 
-#### Da decidere (Matteo)
+#### Decisioni di Matteo (31/10) e cosa è cambiato (`b5-final`)
 
-1. **W**: 375 (centro della fonte, dentro lo stile), oppure 380 (il più vicino
-   al «meglio circa 400» senza toccare lo stile), oppure allargare la forbice
-   della teglia romana a 400 (cambierebbe lo stile). *Raccomandazione: 375.*
-2. **Fuori dal frigo**: 2 h (il limite alto della fonte, scelto ora) o meno.
-3. **Staglio a metà**: con le fasi esplicite della B3 lo staglio a 24 h e il
-   ritorno in frigo diventano passi veri e la nota «Come fa la fonte» si
-   accorcia. *Raccomandazione: farlo dopo la B3.*
-4. **Pieghe della versione**: oggi quelle dello stile (3 × 45 min); la fonte
-   ne fa 3 a 15 minuti dopo quasi un'ora di riposo. Servirebbe un piano di
-   pieghe per versione (stessa famiglia di B3).
-5. **Teglia**: il dato dello stile (`parametric-databases.ts`) dice «Teglia
-   alluminio/acciaio», la fonte dice niente alluminio. Correggere il dato
-   della teglia romana (testo generico, 7 lingue) o lasciarlo.
-6. **«Acqua fredda»** compare nell'attrezzatura della fonte senza dire per
-   cosa: il motore propone acqua a 24 °C (impasto a 22 °C). Da rileggere
-   sulla copia d'archivio.
-7. Titolo della finestra delle versioni «Versioni di pizzaioli e
-   disciplinari»: ora contiene due autori che non fanno i pizzaioli
-   (Benedetta Rossi, Dekracap).
-8. **Voce**: dice «in frigo» fino a 8 °C anche senza fonte, la tabella di
-   marcia fino a 6 °C. Nessuno stile oggi è a 7–8 °C, quindi non si vede;
-   proposta: usare la stessa regola (`isFridgeTempC` con
-   `fermentation_in_fridge` dall'MCP).
+1. **W 380**, il più vicino al «meglio circa 400» dentro la forbice dello
+   stile (300–380, invariata). Cambiano solo le tre righe di Dekracap di
+   `preset-numbers.regression.json` (W375 → W380).
+2. **Fuori dal frigo 2 h**: invariato.
+3. **Fasi della fonte con le fasi esplicite di B3**:
+   - **Pieghe: fatte.** `MethodProcessProfile.folds` (`profileFolds`) sostituisce
+     le pieghe dello stile, con `FoldPlan.restBeforeMin` per il riposo prima
+     del primo giro; nuovo messaggio `timeline.folds.restFirst` (7 lingue).
+     Ore totali, dosi e righe dei preset invariate.
+   - **Staglio a metà del frigo: non fatto**, resta la nota «Come fa la
+     fonte». Cosa manca: le fasi di B3 sono tre chiavi fisse (pre-fermento,
+     puntata, appretto) e la puntata è una sola, alla temperatura della
+     ricetta. Lo staglio a 24 h con il ritorno in frigo chiede una quarta
+     fase, i **panetti in frigo** dopo lo staglio (circa 22 h a 8 °C, poi 2 h
+     fuori), con il suo passo nella tabella di marcia: testi e consigli in 7
+     lingue, tolleranze della Timeline comoda e della modalità cottura
+     (`isColdPhase`, `FLEXIBLE_STEP_IDS`), stima del lievito per fase, campo
+     MCP e guida, e la stessa chiave servirebbe al riposo dei panetti di
+     Paoletta (B4, `rest`). È lo stesso lavoro della B4: conviene farlo lì,
+     una volta per entrambe. Il budget per utente ha 1,7 kB di margine.
+4. **Teglia dello stile**: fonti dello stile riaperte il 31/10/2026. Il
+   disciplinare della Confraternita (2016, il riferimento APITER) dice
+   «apposita teglia di ferro blu (debitamente pre-trattata…)», unta su
+   perimetro e diagonali; Alfè 2020 «la classica teglia in ferro blu», e «in
+   mancanza» le teglie ordinarie; Trezzi 2020 non ne parla. Nessuna cita
+   l'alluminio: il dato dello stile (`parametric-databases.ts`) passa da
+   «Teglia alluminio/acciaio» (senza fonte) a «Teglia in ferro blu o
+   acciaio/lamiera». È un dato non tradotto e non mostrato nelle pagine
+   pubbliche (solo strumenti di sviluppo).
+5. **Titolo della finestra**: «Versioni d'autore e disciplinari» in 7 lingue
+   (lo stesso nome di «Versioni d'autore» del pannello).
+6. **Voce**: stessa regola del motore (punto «MCP e voce» sopra).
+7. **«Acqua fredda»** nell'attrezzatura della fonte: ancora da rileggere.
 
-#### Per la B3
+#### Rispetto a B3
 
-- Il frigo della fonte è un attributo del processo, non della ricetta: con
-  le fasi esplicite (M3) diventa «fase in frigo» per fase, e `sourceProcess`
-  (ore, temperatura, `fridge`, note) può confluire nel profilo delle fasi.
-- Le note sul processo (`Interpretation.source_notes`) servono anche ad
-  Adriano e Paoletta per ciò che la tabella non dice ancora.
+- Il frigo della fonte resta un attributo della ricetta (`sourceProcess`),
+  non delle fasi: Dekracap non usa `phases` perché la sua puntata è una sola
+  a 8 °C e le fasi di B3 non hanno ancora i panetti in frigo (sopra).
+- Le note sul processo (`Interpretation.source_notes`) restano per ciò che
+  la tabella non dice ancora (lo staglio a metà del frigo).
