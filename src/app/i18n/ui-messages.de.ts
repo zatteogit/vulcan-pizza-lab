@@ -1,5 +1,11 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.alveographBubble": "Unter der Alveographenplatte aufgeblasener Teig. W stammt aus der instrumentellen Prüfung, nicht aus dem Aussehen der Blase.",
+  "learn.visual.fallingNumberTubes": "Falling-Number-Röhrchen mit Rührern im Ständer. Für die Messung wird die Probe im Gerät erhitzt und die Sinkzeit des Rührers gemessen.",
+  "learn.visual.brownedCrust": "Gebräunte Brotkruste: ein Beispiel für Bräunung, zu der Maillard-Reaktionen beitragen. Die Farbe allein misst nicht, ob das Innere durchgebacken ist.",
+  "learn.visual.caramelSugar": "Zucker und Wasser werden zu bernsteinfarbenem Karamell erhitzt, bevor weitere Zutaten hinzukommen. Blasen allein zeigen weder Temperatur noch Garstufe an.",
+  "learn.visual.starchPaste": "Eingedicktes Tangzhong im Topf: ein Beispiel für die Wirkung von Wasser und Wärme auf Stärke. Die Körner und ihre Veränderungen sind in diesem Maßstab nicht sichtbar.",
+
   "learn.visual.benchFold": "Falten auf der Arbeitsfläche: Ein Rand des feuchten Teigs wird über die Masse gelegt, ohne ihn zu zerreißen.",
   "learn.visual.prefermentPair": "Links: frisch gemischte Biga. Rechts: Poolish nach der Ruhezeit. Der Vergleich zeigt unterschiedliche Konsistenzen und ist kein Reifetest.",
   "learn.visual.stretchingProperties": "Beim Dehnen von Hand lässt sich die Reaktion des Teigs beobachten. P, L und W werden mit Messgeräten bestimmt, nicht durch diesen Handgriff.",

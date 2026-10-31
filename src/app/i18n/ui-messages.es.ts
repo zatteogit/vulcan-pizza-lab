@@ -1,5 +1,11 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.alveographBubble": "Masa inflada bajo la placa del alveógrafo. W procede de la prueba instrumental, no del aspecto de la burbuja.",
+  "learn.visual.fallingNumberTubes": "Tubos y agitadores de Falling Number en su soporte. La medición requiere calentar la muestra en el instrumento y cronometrar el descenso del agitador.",
+  "learn.visual.brownedCrust": "Corteza dorada de pan: un ejemplo de pardeamiento al que contribuyen las reacciones de Maillard. El color por sí solo no mide la cocción interior.",
+  "learn.visual.caramelSugar": "Azúcar y agua calentados hasta obtener caramelo ámbar, antes de añadir otros ingredientes. Las burbujas por sí solas no indican temperatura ni punto de cocción.",
+  "learn.visual.starchPaste": "Tangzhong espesado en un cazo: un ejemplo del efecto del agua y el calor sobre el almidón. Los gránulos y sus cambios no son visibles a esta escala.",
+
   "learn.visual.benchFold": "Pliegues en la mesa: un borde de la masa húmeda se dobla sobre el resto sin desgarrarlo.",
   "learn.visual.prefermentPair": "A la izquierda, una biga recién mezclada; a la derecha, un poolish tras el reposo. Se comparan consistencias, no se comprueba la maduración.",
   "learn.visual.stretchingProperties": "Estirar a mano permite observar cómo responde la masa. Los valores P, L y W se miden con instrumentos, no con este gesto.",

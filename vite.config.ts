@@ -364,8 +364,11 @@ export default defineConfig(({ command, mode }) => ({
            senza effetti collaterali (icone, piccoli componenti DS) si fondono
            in un chunk caricato nelle stesse condizioni. Meno file, meno
            involucri e gzip più efficace: −4 kB sul codice senza lingue.
-           Integrazione ondata 2 (FW-04 + D-062/D-063): 6000 (−1,4 kB). */
-        experimentalMinChunkSize: 6000,
+           Integrazione ondata 2 (FW-04 + D-062/D-063): 6000 (−1,4 kB).
+           Illustrazioni Impara, lotto 8: 20000 per ridurre gli involucri
+           dei piccoli chunk. Lingue e strumenti restano separati; il controllo
+           budget verifica anche che le lingue non entrino nel codice comune. */
+        experimentalMinChunkSize: 20000,
         manualChunks(id) {
           const file = id.replace(/\\/g, "/");
           if (/\/node_modules\/(react|react-dom|react-router|scheduler)\//.test(file)) return "vendor-react";
