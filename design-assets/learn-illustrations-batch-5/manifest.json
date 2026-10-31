@@ -65,9 +65,9 @@
         672,
         448
       ],
-      "bytes": 21302,
-      "sha256": "9805e1252f39303e2ab4d95530f1389af6b86f3b35f32803084cb95e089ffe50",
-      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/stone-brushing.png",
+      "bytes": 19028,
+      "sha256": "518e2f1d8fdb0e5249f72a1c49724263e60bb414fda8c8c33f49d1c87052c801",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-generic-ovens-2026-10-31/stone-brushing.png",
       "references": [
         {
           "page": "https://ooni.com/blogs/ooni-insights/how-to-clean-a-pizza-stone",
@@ -77,7 +77,7 @@
           "original_distributed": false
         }
       ],
-      "scope": "Cold maintenance, following the manufacturer. Unlit oven; bristles contact the stone. Existing base-check illustration preserved alongside. P15 prevention defers cleaning tools and method to manufacturer, in all seven languages."
+      "scope": "Cold maintenance, following the manufacturer. Unlit oven; bristles contact the stone. Existing base-check illustration preserved alongside. P15 prevention defers cleaning tools and method to manufacturer, in all seven languages. Oven enclosure generalized; see ../learn-illustrations-generic-ovens/manifest.json."
     },
     {
       "id": "pizza-turning",
@@ -90,9 +90,9 @@
         672,
         448
       ],
-      "bytes": 25442,
-      "sha256": "683aa7b7e746a70b4061009dcf074b3506e0719b36608baad9875cfa34dc3a12",
-      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-5-2026-10-31/pizza-turning.png",
+      "bytes": 23696,
+      "sha256": "3f508de3d35f2f6377e720356fb6e2101cf492cf1dfddbed707856bb2c2e857e",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-generic-ovens-2026-10-31/pizza-turning.png",
       "references": [
         {
           "page": "https://ooni.com/products/ooni-pizza-turning-peel",
@@ -109,7 +109,7 @@
           "original_distributed": false
         }
       ],
-      "scope": "Reconstruction from photographed pizza/oven action and actual small circular turning peel. Pizza repositioned mostly onto stone, peel under one edge, hand outside oven. Not a literal trace of the photographed action."
+      "scope": "Reconstruction from photographed pizza/oven action and actual small circular turning peel. Pizza repositioned mostly onto stone, peel under one edge, hand outside oven. Not a literal trace of the photographed action. Oven enclosure generalized; see ../learn-illustrations-generic-ovens/manifest.json."
     },
     {
       "id": "oil-temperature",
@@ -172,5 +172,6 @@
       "published-fourth-set.jpg",
       "published-fourth-set-mobile.jpg"
     ]
-  }
+  },
+  "oven_revision": "Generic masonry ovens; see ../learn-illustrations-generic-ovens/manifest.json. No recognizable portable chassis, feet or commercial trim."
 }
