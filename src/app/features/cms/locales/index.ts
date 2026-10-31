@@ -1,6 +1,7 @@
 import type { CmsContent, LocaleId } from "../cms-context";
 import { registerUiMessages } from "../../../i18n/ui-messages";
 import { registerToppingTexts } from "../../../data/topping-i18n/registry";
+import { registerMethodMessages } from "../../../data/method-messages";
 
 /* ═══ LOCALE REGISTRY ═══
  * Each locale is a full CmsContent bundle, loaded ON DEMAND (audit lug 2026:
@@ -189,6 +190,7 @@ export function primeLocaleBundle(bundle: CmsContent): void {
   loadedBundles[bundle.locale.id] = bundle;
   registerUiMessages(bundle.locale.id, bundle.messages);
   registerToppingTexts(bundle.locale.id, bundle.toppingI18n);
+  registerMethodMessages(bundle.engineMessages);
 }
 
 export async function loadLocaleBundle(

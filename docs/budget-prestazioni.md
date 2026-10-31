@@ -663,6 +663,35 @@ arriva al lettore.
 | JS per utente, ja | 544,9 kB | **538,4 kB** | −6,5 |
 | it | 509,2 kB | 508,2 kB | −1,0 |
 
+### Fase 4: messaggi del motore
+
+I 133 testi italiani di `METHOD_MESSAGES_IT` (metodo, cambi «prima → ora»,
+raccomandazioni, sostenibilità) erano nel chunk d'ingresso. Ora sono in
+`data/method-messages.it.ts`, che caricano il bundle `it` (dentro
+`engineMessages`, come prima) e il server. `METHOD_MESSAGES_IT` resta il
+nome che il motore legge per il testo di riserva dei messaggi
+(`EngineMsg.fallback`), senza toccare `pizza-engine.ts`: è un oggetto che si
+riempie alla registrazione (`registerMethodMessages`). Il server registra
+l'italiano; nel browser il `CmsProvider` e `primeLocaleBundle()` registrano gli
+`engineMessages` della lingua attiva, che hanno le stesse chiavi (la UI
+risolve comunque i messaggi per chiave, quindi lo schermo non cambia).
+
+- **Letture al caricamento.** Sul server i dati si caricano prima della
+  registrazione: i tre dati che leggevano un testo al caricamento del modulo
+  (`formula_variant` della focaccia barese in `styles-db.ts`, `source_note` e
+  `method_note` in `topping-library.ts`) ora hanno un getter. Il test
+  `method-messages.test.ts` carica i dati con il registro vuoto, registra
+  l'italiano e controlla ogni messaggio del motore scritto nei dati
+  (verificato che fallisce se si toglie un getter).
+- `STEP_COPY_IT` (staglio e appretto, 0,5 kB) resta nel codice: nel CMS sta
+  sotto chiavi diverse, non basta registrarlo.
+
+| Misura (gzip) | fase 3 | fase 4 | differenza |
+|---|---|---|---|
+| JS senza lingue | 429,4 kB | **423,9 kB** | −5,5 |
+| JS per utente, ja | 538,4 kB | **533,0 kB** | −5,4 |
+| it | 508,2 kB | 507,7 kB | −0,5 |
+
 ## Interventi consigliati, in ordine di resa
 
 | # | Intervento | Effetto atteso | Costo |

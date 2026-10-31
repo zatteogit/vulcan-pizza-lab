@@ -1,158 +1,21 @@
-/** Italian source copy shared by the engine and CMS: a method instruction must
- * not drift between the MCP fallback and the localized UI. */
-export const METHOD_MESSAGES_IT: Record<string, string> = {
-  // G1a (budget): consigli dell'olio e della frittura, una sola copia per motore e CMS.
-  "timeline.heatOil.tipBeginner": "Sotto i 170 °C la pizza assorbe olio e diventa unta; sopra i 190 °C si colora fuori e resta cruda dentro.",
-  "timeline.heatOil.tipNerd": "Tra 180 e 190 °C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
-  "timeline.fry.tipBeginner": "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
-  "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girandola a metà, crosta e ripieno cuociono in modo uniforme.",
-  // G1a (budget): «Prima → Ora» di recipe-entry.ts, una sola copia per motore e CMS.
-  "change.topping": "Condimento: {from} → {to}",
-  "change.hydration": "Idratazione: {from}% → {to}%",
-  "change.flour": "Forza farina: W{from} → W{to}",
-  "change.flourPL": "P/L farina: {from} → {to}",
-  "change.fermentation": "Fermentazione: {fromHours} a {fromTemp} → {toHours} a {toTemp}",
-  "change.prefermentOn": "Si aggiunge un prefermento",
-  "change.prefermentOff": "Si passa all’impasto diretto",
-  "change.prefermentDetails": "Prefermento: {fromType} {from}% → {toType} {to}%",
-  "change.cooking": "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
-  "timeline.preheat.includesProof": "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
-  "timeline.preheat.includesProofOil": "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.",
-  // FW-17 (D-P): niente biga o poolish col solo lievito madre.
-  "preferment.sourdoughInstead": "Biga e poolish si fanno con il lievito di birra: con il solo lievito madre la ricetta non li usa, perché il lievito madre fa già da prefermento. Per averli, aggiungi un lievito di birra alla dispensa.",
-  // B1 (D-068): lievito della fonte convertito per la dispensa, «luogo caldo» senza gradi.
-  "yeast.sourceDryAsFresh": "La fonte usa lievito secco, {sourcePct}% sulla farina. In dispensa hai lievito fresco: qui la dose è {pct}%, convertita da {app} col rapporto 1 a 3 (1 g di secco vale circa 3 g di fresco).",
-  "yeast.sourceFreshAsDry": "La fonte usa lievito fresco, {sourcePct}% sulla farina. In dispensa hai lievito secco: qui la dose è {pct}%, convertita da {app} col rapporto 1 a 3 (1 g di secco vale circa 3 g di fresco).",
-  "fermentation.warmPlace": "La fonte dice «in un luogo caldo», senza gradi: {app} calcola a {temp}, e va bene fra {tempMin} e {tempMax}. Aspetta che l'impasto raddoppi, non l'ora sull'orologio.",
-  // B2 (D-066): misure di casa (ml, cucchiaini, bustine) convertite in grammi.
-  "source.convertedDoses": "La fonte misura in millilitri, cucchiaini e bustine: i grammi sono una conversione di {app}. Sui grammi piccoli, come sale e zucchero, il margine è di circa il 25%.",
-  // B2 (seguito): la fonte dice «condita» senza dettaglio (salsa della margherita).
-  "topping.sauceSeasoning": "La margherita viene dalla ricetta di {author}, che dice solo «salsa condita» senza dire con che cosa: olio e sale nella salsa sono una lettura di {app}.",
-  // B3: fasi esplicite della fonte (Adriano Continisio): ciò che la fonte non dice.
-  "fermentation.roomTemp": "Per la puntata la fonte dice «a temperatura ambiente», senza gradi: {app} calcola a {temp}.",
-  "fermentation.hoursAssumed": "La fonte non dice quanto dura ogni fase: dove manca, le ore sono una stima di {app} dagli orari della ricetta. Aspetta che l'impasto raddoppi, non l'ora sull'orologio.",
-  "timeline.bake.lowThenHigh": "Forno statico: inforna nella parte bassa, poi sposta la teglia nella parte alta per finire la cottura, come dice la fonte.",
-  "timeline.shape.unoiledPan": "Rovescia l'impasto sul banco spolverato di semola, premilo con la punta delle dita e allargalo senza far uscire l'aria. Mettilo nella teglia non unta, con un velo di semola, e finisci di stenderlo.",
-  "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
-  "topping.geometry": "Superficie {area} cm² · riferimento {reference} cm² · dosi ×{scale}.",
-  "auth.layoutChanged": "Formato diverso dal riferimento: la variante modifica la struttura della ricetta",
-  "auth.directMethod": "Il riferimento usa un impasto diretto: il prefermento modifica il metodo",
-  "timeline.shape.title": "Stesura",
-  "timeline.shape.pan": "Stendi l'impasto nella teglia oliata con le mani, fino agli angoli; poi lascialo lievitare lì.",
-  "timeline.proof.apiter": "Appretto in contenitore chiuso a temperatura ambiente. Le ore comprendono anche il preriscaldo; controlla elasticità e sviluppo dell’impasto.",
-  "timeline.shape.doubleThinSheet": "Allarga a mano due sfoglie sottilissime, quasi trasparenti, con il dorso delle mani sotto la pasta; evita strappi.",
-  "timeline.shape.stacked": "Stendi il primo disco nella teglia oliata; tieni il secondo da parte.",
-  "timeline.shape.closedStuffedFried": "Stendi il disco di base, lasciando il secondo per la chiusura.",
-  "timeline.shape.closedStuffed": "Stendi il disco di base in teglia, lasciando il secondo per la chiusura.",
-  "timeline.shape.rectangular": "Stendi l'impasto nella teglia oliata con le mani",
-  "timeline.shape.thin": "Stendila con il mattarello, sottilissima",
-  "timeline.shape.round": "Allarga a mano dal centro e preserva il cornicione",
-  "timeline.shape.apiter": "Prima di stendere, verifica almeno 19°C al cuore. Allarga sul piano infarinato con le dita, trasferisci sulle braccia nella teglia appena oliata e accompagna fino agli angoli.",
-  "formula.withoutPotato": "Versione senza patate nell’impasto.",
-  /* FW-06 (S07-B-02): il tetto di autenticità detto come regola, non come misura. */
-  "auth.fuelCap": "Senza il forno previsto dallo stile, e sotto i suoi {min} °C minimi, l'autenticità si ferma a {cap}/100: è una regola dell'app, non una misura",
-  /* D-063: il combustibile pesa solo se il forno non arriva al minimo dello stile. */
-  "auth.notWoodOven": "Forno non a legna e sotto i {min} °C minimi dello stile: −15 punti sull’asse attrezzatura (35% dell’autenticità)",
-  "auth.woodByMethod": "Lo stile prevede il forno a legna (per la Napoletana STG lo chiede il disciplinare): il tuo forno arriva ai {min} °C minimi, quindi è un’informazione e non toglie punti",
-  "auth.notCoalOven": "Il forno a carbone definisce il metodo originale: con un altro combustibile la ricetta è adattata",
-  "gen.notCoalOven": "Lo stile originale usa il carbone: il forno selezionato comporta una diversa cottura e impronta aromatica",
-  "gen.homeBakingMethod": "Cottura domestica a {temp} su teglia capovolta preriscaldata; risultato diverso dalla cottura originale a {ideal}",
-  "gen.ovenTooNarrow": "Il tuo forno accetta pizze fino a {max} cm e questa ricetta prevede {diameter} cm: stendi il disco a {max} cm al massimo.",
-  "gen.notWoodOven": "Lo stile prevede il forno a legna: con il tuo forno il risultato si avvicina, ma non è quello canonico.",
-  "timeline.mix.spiral.desc": "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura.",
-  "timeline.mix.spiral.tipNerd": "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare.",
-  "timeline.mix.fork.desc": "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile.",
-  "timeline.mix.fork.tipNerd": "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata.",
-  "timeline.mix.planetary.tipBeginner": "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
-  "timeline.mix.planetary.tipNerd": "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda.",
-  "timeline.mix.stand_domestic.desc": "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda.",
-  "timeline.mix.stand_domestic.tipBeginner": "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo.",
-  "timeline.mix.stand_domestic.tipNerd": "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore.",
-  "timeline.mix.generic.desc": "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico.",
-  "timeline.mix.hands.desc": "Impasta a mano fino a incordatura (~15-20 min) con pieghe sul piano.",
-  // B2: la fonte mescola senza impastare (MethodProcessProfile.mix_without_kneading).
-  "timeline.mix.stir": "Mescola gli ingredienti con un cucchiaio, aggiungendo i liquidi poco alla volta, finché non restano grumi di farina. L'impasto è molto morbido e appiccicoso: non va impastato.",
-  "timeline.divide.pansTitle": "Dividi nelle teglie",
-  "timeline.divide.pans": "Pesa l'impasto e dividilo fra le teglie unte, versandolo con una spatola o con le mani unte: non va lavorato né arrotondato.",
-  "timeline.mix.hands.descHighHydration": "Impasta a mano fino a incordatura (~15-20 min) con lo slap & fold.",
-  "timeline.mix.hands.tipBeginner": "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
-  "timeline.mix.hands.tipNerd": "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica. Oltre il {pct}% di idratazione si passa allo slap & fold.",
-  "timeline.topping.basilThreshold": "Con cotture fino a {sec} il basilico va in forno con la pizza, altrimenti dopo: è una nostra scelta, non una misura.",
-  "timeline.oven.topGrillStone": "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare i bordi.",
-  "timeline.oven.topGrillShelf": "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare i bordi.",
-  "timeline.oven.bottomBoost": "Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.",
-  "timeline.oven.fanAssisted": "Ventilato: usa una temperatura leggermente più bassa se il bordo asciuga, ruota a metà cottura e proteggi i topping delicati.",
-  "timeline.oven.gasRear": "Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.",
-  "timeline.oven.woodSideFlame": "Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.",
-  "timeline.oven.coal": "Forno a carbone con platea preriscaldata: controlla la colorazione di fondo e bordi e ruota per uniformare la cottura.",
-  "timeline.oven.wood": "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.",
-  "timeline.oven.electricHigh": "Forno elettrico ad alta temperatura: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare i bordi tutt'intorno.",
-  "timeline.oven.gas": "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.",
-  "timeline.oven.gasPizza": "Forno a gas da pizza: scalda finché la pietra arriva in temperatura (misurala con un termometro a infrarossi), poi inforna e ruota spesso la pizza, perché la fiamma sta su un lato.",
-  "timeline.oven.staticStone": "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per dorare i bordi: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
-  "timeline.oven.staticShelf": "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per dorare i bordi: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
-  // FW-07 (S10-A-22): cottura sotto la massima del forno.
-  "timeline.oven.staticStoneSet": "Forno statico (resistenza sopra + sotto) impostato a {temp}, non al massimo; pietra/acciaio già caldi sul ripiano medio-alto.",
-  "timeline.oven.staticShelfSet": "Forno statico (resistenza sopra + sotto) impostato a {temp}, non al massimo; ripiano medio-alto.",
-  "timeline.oven.electricHighSet": "Forno elettrico ad alta temperatura impostato a {temp}, non alla massima potenza; pietra ben preriscaldata. Gira la pizza a metà cottura per dorare i bordi tutt'intorno.",
-  "timeline.oven.gasSet": "Forno a gas impostato a {temp}, non a fiamma massima; pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.",
-  "timeline.divide.unequalDiscs": "Dividi ogni unità in due porzioni: 60% per la base e 40% per la copertura. Forma due dischi.",
-  "timeline.shape.foldedLayers": "Stendi una sfoglia sottilissima e ripiega {folds} volte a libro, distribuendo la farcitura tra le pieghe.",
-  "timeline.stack.desc": "Spennella il primo disco con olio EVO; adagia sopra il secondo disco e sigilla leggermente i bordi.",
-  "timeline.stack.tipNerd": "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake.",
-  "timeline.fillClosed.desc": "Disponi la farcitura sul disco di base; copri con il secondo disco e sigilla bene tutto il bordo.",
-  "timeline.fillClosed.tipNerd": "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
-  "timeline.fillSheets.desc": "Distribuisci lo stracchino a fiocchi sulla prima sfoglia; copri con la seconda sfoglia, sigilla i bordi e condisci la superficie con olio e sale.",
-  "timeline.bakeWhite.tipNerd": "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping.",
-  "timeline.splitFill.desc": "Estrai la pizza dal forno. Con un coltello a sega tagliala orizzontalmente in due metà. Farcisci l'interno con i condimenti scelti e richiudi.",
-  "timeline.splitFill.tipNerd": "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni.",
-  "timeline.homeTray.bake": "Inforna sulla teglia capovolta già calda. Controlla la doratura della base e la cottura prima di sfornare.",
-  "timeline.bake.tipNerd": "La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A {temp} la caramellizzazione crea ~600 composti aromatici.",
-  "feas.ovenSuboptimal": "Forno sotto-ottimale: {temp} vs ideale {ideal}",
-  "feas.ovenTooCold": "Forno troppo freddo: {temp} < minimo {min}",
-  "feas.wTooHigh": "W oltre l’intervallo dello stile ({w}): verifica anche P/L",
-  "feas.hydrationBeginnerHigh": "Idratazione >75% sconsigliata per principianti",
-  "feas.hydrationMedBeginner": "Idratazione media-alta per principiante",
-  "feas.flourTooWeakForHydration": "Farina troppo debole per questa idratazione",
-  "feas.prefermentNeedsExperience": "Prefermento richiede esperienza",
-  "dig.fermentTooShort": "Riposo molto breve: indice di maturazione basso",
-  "dig.fermentShort": "Fermentazione breve: indice di maturazione contenuto",
-  "dig.extremeMaturation": "Fermentazione prolungata: controlla la tenuta dell'impasto",
-  "dig.highYeastDosage": "Dose lievito {pct}%: correzione euristica del punteggio (-{penalty})",
-  "dig.coldFermentation": "Maturazione in frigorifero: tempi e sviluppo dipendono dalla temperatura",
-  "need.checkExclusions": "Verifica le esclusioni sulla farina scelta",
-  "need.excludedIngredient": "La ricetta contiene un ingrediente che non vuoi usare: {ingredient}",
-  "need.excludedFlour": "La ricetta richiede una farina che hai escluso: {flour}",
-  "need.purchaseRefused": "Manca un requisito e hai scelto di non procurartelo",
-  "aid.semolina": "Facoltativa: poca semola rimacinata per lo spolvero; puoi usare la farina della ricetta",
-  "timeline.mix.spiral.tipBeginner": "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte.",
-  "timeline.mix.fork.tipBeginner": "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza.",
-  "timeline.mix.planetary.desc": "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo).",
-  "timeline.mix.generic.tipBeginner": "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
-  "timeline.mix.generic.tipNerd": "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada.",
-  "timeline.divide.multiPiece": "Dividi in {pieces} pezzi uguali per ogni unità. Forma una pallina o un disco con ognuno.",
-  "timeline.stack.tipBeginner": "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli.",
-  "timeline.fillClosed.tipBeginner": "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
-  "timeline.bakeWhite.desc": "Cuoci a {temp} senza farcitura. La pizza deve essere dorata ma non bruciata.",
-  "timeline.bakeWhite.tipBeginner": "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti.",
-  "timeline.splitFill.tipBeginner": "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle.",
-  "timeline.bake2.desc": "Rimettila in forno a {temp} solo per asciugare e amalgamare. Pochi minuti.",
-  /* FW-19 (S10-A-16): a questo punto il forno è già caldo; il consiglio dice
-     come riconoscere la pizza cotta. */
-  "timeline.bake.tipBeginner": "È cotta quando il bordo è dorato e, sollevandola con la pala, il fondo è asciutto e ha qualche puntino scuro.",
-  /* FW-19 (S10-B-10, S09-A-07): il passo «Pieghe». */
-  "timeline.folds.tipBeginner": "Bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro; gira il contenitore e ripeti sui quattro lati. Copri fra un giro e l'altro.",
-  "timeline.folds.tipNerd": "Le pieghe allineano e tendono le fibre di glutine e ridistribuiscono i gas: danno forza all'impasto senza lavoro meccanico.",
-  "timeline.topPost.desc": "Aggiungi i condimenti a freddo direttamente sulla superficie cotta.",
-  "rec.fried": "Si frigge in pentola: il forno non serve",
-  "rec.ovenIdeal": "Il tuo forno raggiunge la temperatura ideale ({ideal})",
-  "rec.flourMix": "Mescolando le tue farine: {weakPct}% {weak} e {strongPct}% {strong}, W {w} circa",
-  "sust.quickCook": "Cottura rapida: basso consumo energetico",
-  "sust.longCook": "Cottura lunga: consumo energetico elevato",
-  "sust.ambientFerment": "Fermentazione a temperatura ambiente: nessun consumo frigorifero",
-  "sust.pureDough": "Impasto puro: solo farina, acqua, sale, lievito",
-  "sust.sourdoughZeroImpact": "Lievito madre: autoprodotto, a impatto zero"
-};
+/* Budget D-059 (31/10/2026): i testi italiani dei messaggi del motore stanno
+ * in method-messages.it.ts (bundle `it` e server). METHOD_MESSAGES_IT resta il
+ * nome che il motore legge come testo di riserva dei messaggi (EngineMsg.fallback),
+ * ma si riempie alla registrazione: il server registra l'italiano, il
+ * CmsProvider e primeLocaleBundle() i messaggi del motore della lingua attiva
+ * (`engineMessages`, che contengono le stesse chiavi: la UI li risolve comunque
+ * per chiave). Mai leggerlo al caricamento di un modulo: lì si usa un getter. */
+export const METHOD_MESSAGES_IT: Record<string, string> = {};
+
+let registeredSource: Record<string, string> | undefined;
+
+/** Sostituisce i testi di riserva dei messaggi del motore. */
+export function registerMethodMessages(texts: Record<string, string> | undefined): void {
+  if (!texts || texts === registeredSource) return;
+  registeredSource = texts;
+  for (const key of Object.keys(METHOD_MESSAGES_IT)) delete METHOD_MESSAGES_IT[key];
+  Object.assign(METHOD_MESSAGES_IT, texts);
+}
 
 /** G1a (budget): staglio e appretto, gli stessi testi nei passi del motore
  *  (MCP) e nel CMS (`timeline.divide`, `divide_teglia`, `proof`). */

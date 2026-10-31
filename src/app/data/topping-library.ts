@@ -1068,7 +1068,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["teglia_in_giornata"],
     // B3: la nota nomina la fonte del condimento, perché si vede anche con le
     // versioni d'autore dello stile che non hanno una margherita propria.
-    source_note: { key: "topping.sauceSeasoning", fallback: METHOD_MESSAGES_IT["topping.sauceSeasoning"], params: { app: BRAND.name, author: "Benedetta Rossi" } },
+    source_note: { key: "topping.sauceSeasoning", get fallback() { return METHOD_MESSAGES_IT["topping.sauceSeasoning"]; }, params: { app: BRAND.name, author: "Benedetta Rossi" } },
     ingredients: [
       { name: "Salsa di pomodoro condita (pomodoro, olio, sale)", components: ["pomodoro", "olio", "sale"], amount: { value: 300, unit: "g" }, notes: T },
       { name: "Mozzarella a dadini", amount: { value: 250, unit: "g" }, notes: T },
@@ -1689,7 +1689,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["fugazzeta"],
     compatible_layouts: ["single"],
     layout_override: { type: "single", pieces_per_unit: 1, interlayer: "none", filling_timing: "pre_bake", cook_mode: "topped" },
-    method_note: { key: "diet.singleBase", fallback: METHOD_MESSAGES_IT["diet.singleBase"] },
+    method_note: { key: "diet.singleBase", get fallback() { return METHOD_MESSAGES_IT["diet.singleBase"]; } },
     ingredients: [
       { name: "Cipolla bianca a velo abbondante", amount: { value: 250, unit: "g" }, section: "superficie" },
       { name: "Origano secco", amount: { value: 3, unit: "g" }, section: "superficie" },

@@ -1,6 +1,7 @@
 import type { CmsContent } from "../cms-context";
 import { STYLES_DB } from "../../../domain/styles-db";
-import { METHOD_MESSAGES_IT, STEP_COPY_IT } from "../../../data/method-messages";
+import { STEP_COPY_IT } from "../../../data/method-messages";
+import { METHOD_MESSAGES_IT_TEXT } from "../../../data/method-messages.it";
 import { ALLERGEN_MESSAGES_IT } from "../../../data/allergen-data";
 import { DIETARY_MESSAGES_IT } from "../../../data/dietary-data";
 /* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
@@ -843,7 +844,7 @@ export const IT_LOCALE: CmsContent = {
     "timeline.fry.title": "Frittura",
     "timeline.fry.desc": "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
     "timeline.mix.title": "Impasto",
-    ...METHOD_MESSAGES_IT,
+    ...METHOD_MESSAGES_IT_TEXT,
     "timeline.divide.title": "Staglio",
     "timeline.stack.title": "Sovrapposizione",
     "timeline.fillClosed.title": "Ripieno e chiusura",

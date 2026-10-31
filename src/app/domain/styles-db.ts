@@ -1048,7 +1048,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
 
   focaccia_barese: {
     id: "focaccia_barese",
-    formula_variant: { key: "formula.withoutPotato", fallback: METHOD_MESSAGES_IT["formula.withoutPotato"] },
+    formula_variant: { key: "formula.withoutPotato", get fallback() { return METHOD_MESSAGES_IT["formula.withoutPotato"]; } },
     proof_in_pan: true,
     name: "Focaccia Barese",
     family: "regionale",
