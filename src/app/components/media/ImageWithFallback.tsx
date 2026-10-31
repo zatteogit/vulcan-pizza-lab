@@ -9,7 +9,7 @@ import { getResponsiveImage, IMAGE_SIZES } from "./responsive-images";
  * - Sizing dal className/style del chiamante (sul wrapper); l'img riempie.
  * - BUN-1: loading="lazy" e decoding="async" di default; `priority` solo per
  *   l'hero sopra la piega (eager + fetchpriority="high"). Per i WebP locali
- *   aggiunge srcset 640w/1280w, width e height (riserva lo spazio). */
+ *   aggiunge srcset (variante piccola + grande), width e height (riserva lo spazio). */
 
 function FallbackGlyph() {
   return (
