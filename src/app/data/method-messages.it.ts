@@ -39,9 +39,11 @@ export const METHOD_MESSAGES_IT_TEXT: Record<string, string> = {
   "timeline.bake.lowThenHigh": "Forno statico: inforna nella parte bassa, poi sposta la teglia nella parte alta per finire la cottura, come dice la fonte.",
   "timeline.shape.unoiledPan": "Rovescia l'impasto sul banco spolverato di semola, premilo con la punta delle dita e allargalo senza far uscire l'aria. Mettilo nella teglia non unta, con un velo di semola, e finisci di stenderlo.",
   // B5: frigo della fonte sopra la soglia di Vulcan (Dekracap, 8 °C) e ciò che
-  // la tabella di marcia non sa ancora dire (staglio a metà del frigo, B3).
+  // la tabella di marcia non sa ancora dire (staglio a metà del frigo).
   "fermentation.sourceFridge": "La fonte vuole l'impasto in frigo a {temp}, nella zona meno fredda: la dose di lievito è per quella temperatura. In un frigo più freddo l'impasto cresce più piano.",
-  "source.dekracapProcess": "Come fa la fonte: dopo quasi un'ora di riposo, tre giri di pieghe a 15 minuti l'uno dall'altro; staglio dopo circa 24 ore e di nuovo in frigo; fuori dal frigo da 2 ore a mezz'ora prima di cuocere; stesura sulla semola e cottura subito. La tabella di marcia di {app} usa le pieghe dello stile e fa lo staglio all'uscita dal frigo; le ore totali sono le stesse.",
+  "source.dekracapProcess": "Come fa la fonte: staglio dopo circa 24 ore e di nuovo in frigo; fuori dal frigo da 2 ore a mezz'ora prima di cuocere; stesura sulla semola e cottura subito. La tabella di marcia di {app} fa lo staglio all'uscita dal frigo; le ore totali sono le stesse.",
+  // B5: riposo della fonte prima delle pieghe (FoldPlan.restBeforeMin).
+  "timeline.folds.restFirst": "Prima lascia riposare l'impasto coperto per circa {rest}, come fa la fonte.",
   "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
   "topping.geometry": "Superficie {area} cm² · riferimento {reference} cm² · dosi ×{scale}.",
   "auth.layoutChanged": "Formato diverso dal riferimento: la variante modifica la struttura della ricetta",

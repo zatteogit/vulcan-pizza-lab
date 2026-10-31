@@ -7,6 +7,7 @@ import { getInterpretationById, getInterpretationsForStyle, isBlockedByStyle } f
 import { getImpasto } from "../data/impasto-library";
 import { handleMcpMessage } from "../agent/mcp-server";
 import { IT_LOCALE } from "../features/cms/locales/it";
+import { METHOD_MESSAGES_IT } from "../data/method-messages";
 import { localizeStep } from "../features/recipe/recipe-output-format";
 import { sourceTiming } from "../features/recipe/recipe-configurator";
 import { isColdPhase } from "./cook-timing";
@@ -94,7 +95,7 @@ describe("8 °C: in frigo solo perché la fonte ce lo mette", () => {
   it("la ricetta lo dice: pieghe e poi in frigo, puntata in frigo, appretto fuori", () => {
     expect(r.fermentation_in_fridge).toBe(true);
     const folds = r.timeline.find((s) => s.id === "folds")!;
-    expect(folds.msg?.description?.[0]?.key).toBe("timeline.folds.descCold");
+    expect(folds.msg?.description?.map((m) => m.key)).toEqual(["timeline.folds.restFirst", "timeline.folds.descCold"]);
     expect(r.timeline.find((s) => s.id === "bulk")?.tip?.beginner).toMatch(/In frigo/);
     expect(isColdPhase("bulk", 8, r.fermentation_in_fridge)).toBe(true);
     expect(isColdPhase("proof", 8, r.fermentation_in_fridge)).toBe(false);
@@ -182,5 +183,29 @@ describe("D-070: Dekracap e «Ottimizza per me» restano nello stile", () => {
       expect(r.hydration_pct, `livello ${skill_level}`).toBeLessThanOrEqual(max);
       if (skill_level === 1) expect(r.hydration_pct).toBe(min);
     }
+  });
+});
+
+describe("pieghe della fonte (decisione di Matteo: le fasi della versione)", () => {
+  const r = authorVersionRecipe(style, dekracap, home);
+  it("quasi un'ora di riposo, poi 3 giri a 15 minuti, poi in frigo: al posto delle pieghe dello stile (3 × 45)", () => {
+    expect(dekracap.process_profile?.folds).toEqual({ count: 3, intervalMin: 15, restBeforeMin: 50 });
+    const folds = r.timeline.find((s) => s.id === "folds")!;
+    expect(folds.duration_minutes).toBe(50 + 3 * 15);
+    expect(folds.msg?.description?.[0]?.params).toEqual({ rest: 50 });
+    expect(folds.msg?.description?.[1]?.params).toEqual({ count: 3, interval: 15 });
+    const ids = r.timeline.map((s) => s.id);
+    expect(ids.indexOf("folds")).toBe(ids.indexOf("bulk") - 1);
+    // Il riferimento della teglia romana tiene le pieghe dello stile.
+    const ref = recipeFromEntry(canonicalRecipeEntry(style), home).timeline.find((s) => s.id === "folds");
+    expect(ref?.msg?.description?.map((m) => m.key)).not.toContain("timeline.folds.restFirst");
+  });
+  it("in italiano: riposo, pieghe, frigo; la nota della fonte non parla più di pieghe", () => {
+    const text = localizeStep(r.timeline.find((s) => s.id === "folds")!, r, IT_LOCALE).description;
+    expect(text).toMatch(/circa 50\s?min/);
+    expect(text).toMatch(/uno ogni 15\s?min/);
+    expect(text).toMatch(/in frigo/);
+    expect(METHOD_MESSAGES_IT["source.dekracapProcess"]).not.toMatch(/pieghe/);
+    expect(METHOD_MESSAGES_IT["source.dekracapProcess"]).toMatch(/staglio dopo circa 24 ore/);
   });
 });

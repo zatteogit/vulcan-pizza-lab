@@ -246,6 +246,9 @@ export interface MethodProcessProfile {
   bake?: { temp_c: number; cook_time_sec: number; racks?: "low_then_high" };
   /** B3: la teglia non si unge; l'impasto si stende su un velo di semola. */
   unoiled_pan?: boolean;
+  /** B5: pieghe della fonte (numero, intervallo, riposo prima del primo
+   *  giro), al posto di quelle dello stile (profileFolds). */
+  folds?: FoldPlan;
 }
 
 /** B3: una fase scritta dalla fonte. `temp_assumed`: la fonte non dice i
@@ -1832,6 +1835,9 @@ export function equivalentFermentationHours(
 export interface FoldPlan {
   count: number;
   intervalMin: number;
+  /** B5: riposo coperto prima del primo giro (Dekracap: quasi un'ora); fa
+   *  parte del passo «Pieghe», a temperatura ambiente. */
+  restBeforeMin?: number;
 }
 
 /** Margine che la puntata deve tenere oltre alle pieghe (anche dopo aver
@@ -1846,11 +1852,17 @@ export function stylePlanFolds(styleId: string): FoldPlan | undefined {
   return { count: fold.foldCount, intervalMin: fold.foldInterval_min };
 }
 
+/** B5: le pieghe della versione d'autore, se le scrive, altrimenti quelle
+ *  dello stile. */
+export function profileFolds(style: PizzaStyle): FoldPlan | undefined {
+  return style.method_profile?.folds ?? stylePlanFolds(style.id);
+}
+
 /** Minuti del passo «Pieghe» ricavati da una puntata di `bulkMinutes`:
  *  0 se la puntata è troppo corta per contenerle con margine. */
 export function foldWindowMinutes(bulkMinutes: number, fold: FoldPlan | undefined): number {
   if (!fold) return 0;
-  const minutes = fold.count * fold.intervalMin;
+  const minutes = (fold.restBeforeMin ?? 0) + fold.count * fold.intervalMin;
   return bulkMinutes >= minutes + FOLD_MIN_BULK_LEFT_MIN ? minutes : 0;
 }
 
@@ -2357,7 +2369,7 @@ export function generateRecipe(
   const modelYeastPct = (type: "fresh" | "dry") => Math.max(
     0.01,
     calculateYeastPercentage(
-      equivalentFermentationHours(fermentationHours, fermentationTempC, type, hasPreFerment, preFermentType, style.method_profile, stylePlanFolds(style.id)),
+      equivalentFermentationHours(fermentationHours, fermentationTempC, type, hasPreFerment, preFermentType, style.method_profile, profileFolds(style)),
       fermentationTempC,
       type,
     ) /
@@ -2608,7 +2620,7 @@ export function generateRecipe(
   const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
   const sciSpeedRatio = fermentationSpeedRatio(yeastType, fermentationTempC);
   const effectiveHours18c =
-    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType, style.method_profile, stylePlanFolds(style.id)) * sciSpeedRatio;
+    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType, style.method_profile, profileFolds(style)) * sciSpeedRatio;
 
   // Gluten network score: flour W strength + hydration sweet spot + kneading method
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
@@ -3819,7 +3831,7 @@ function generateTimeline(
     : Math.min(bulkMinutesFull, Math.max(0, idealPreheat - proofMinutes));
   // FW-19: le pieghe sono un passo ricavato dall'inizio della puntata (stessa
   // soglia del calcolo del lievito, equivalentFermentationHours).
-  const foldPlan = isUnleavened ? undefined : stylePlanFolds(style.id);
+  const foldPlan = isUnleavened ? undefined : profileFolds(style);
   const foldMinutes = foldWindowMinutes(phases.bulk * 60, foldPlan);
   const bulkMinutes = bulkMinutesFull - borrowedFromBulk - foldMinutes;
   const preheatMinutes = preheatDuringProof ? idealPreheat : proofMinutes + borrowedFromBulk;
@@ -3858,13 +3870,19 @@ function generateTimeline(
       keyedStep(
         { id: "folds", duration_minutes: foldMinutes, icon: "hand", timing_label: `${foldPlan.count} × ${foldPlan.intervalMin} min` },
         em("timeline.folds.title", "Pieghe"),
-        [em(
-          foldsKey,
-          foldsFallback[foldsKey],
-          foldsKey === "timeline.folds.descCool"
-            ? { count: foldPlan.count, interval: foldPlan.intervalMin, temp: fermentTemp }
-            : { count: foldPlan.count, interval: foldPlan.intervalMin },
-        )],
+        [
+          // B5: il riposo della fonte prima del primo giro.
+          ...(foldPlan.restBeforeMin
+            ? [em("timeline.folds.restFirst", METHOD_MESSAGES_IT["timeline.folds.restFirst"], { rest: foldPlan.restBeforeMin })]
+            : []),
+          em(
+            foldsKey,
+            foldsFallback[foldsKey],
+            foldsKey === "timeline.folds.descCool"
+              ? { count: foldPlan.count, interval: foldPlan.intervalMin, temp: fermentTemp }
+              : { count: foldPlan.count, interval: foldPlan.intervalMin },
+          ),
+        ],
         {
           beginner: em("timeline.folds.tipBeginner", METHOD_MESSAGES_IT["timeline.folds.tipBeginner"]),
           nerd: em("timeline.folds.tipNerd", METHOD_MESSAGES_IT["timeline.folds.tipNerd"]),

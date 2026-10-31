@@ -52,6 +52,7 @@ const MINUTE_PARAMS: Record<string, readonly string[]> = {
   "timeline.folds.desc": ["interval"],
   "timeline.folds.descCold": ["interval"],
   "timeline.folds.descCool": ["interval"],
+  "timeline.folds.restFirst": ["rest"],
 };
 /** Parametri che sono id di farine della dispensa (C-3). */
 const FLOUR_PARAMS: Record<string, readonly string[]> = {
