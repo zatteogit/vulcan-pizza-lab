@@ -1,5 +1,11 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "learn.visual.alveographBubble": "Massa insuflada sob a placa do alveógrafo. W resulta do ensaio instrumental, não do aspeto da bolha.",
+  "learn.visual.fallingNumberTubes": "Tubos e agitadores do teste Falling Number no suporte. A medição exige aquecer a amostra no aparelho e cronometrar a descida do agitador.",
+  "learn.visual.brownedCrust": "Crosta dourada de pão: um exemplo de escurecimento para o qual contribuem as reações de Maillard. A cor por si só não mede a cozedura interior.",
+  "learn.visual.caramelSugar": "Açúcar e água aquecidos até obter caramelo âmbar, antes de juntar outros ingredientes. As bolhas por si só não indicam a temperatura nem o ponto de cozedura.",
+  "learn.visual.starchPaste": "Tangzhong engrossado num tacho: um exemplo do efeito da água e do calor no amido. Os grânulos e as suas alterações não são visíveis a esta escala.",
+
   "learn.visual.benchFold": "Dobras na bancada: uma aba da massa húmida é dobrada sobre o resto, sem a rasgar.",
   "learn.visual.prefermentPair": "À esquerda, uma biga acabada de misturar; à direita, um poolish após o repouso. A comparação mostra consistências diferentes, não é um teste de maturação.",
   "learn.visual.stretchingProperties": "Esticar à mão permite observar como a massa reage. Os valores P, L e W são medidos com instrumentos, não com este gesto.",

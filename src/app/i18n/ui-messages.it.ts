@@ -3,6 +3,12 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.alveographBubble": "Bolla d’impasto gonfiata sotto la piastra dell’alveografo. W deriva dalla prova strumentale, non dall’aspetto della bolla.",
+  "learn.visual.fallingNumberTubes": "Provette e agitatori della prova Falling Number, qui nel supporto. La misura richiede il campione riscaldato nello strumento e il tempo di discesa dell’agitatore.",
+  "learn.visual.brownedCrust": "Crosta dorata di pane: un esempio di imbrunimento a cui contribuiscono le reazioni di Maillard. Il colore da solo non misura la cottura interna.",
+  "learn.visual.caramelSugar": "Zucchero e acqua scaldati fino a ottenere caramello ambrato, prima di aggiungere altri ingredienti. Le bolle non indicano da sole temperatura o punto di cottura.",
+  "learn.visual.starchPaste": "Tangzhong addensato in un pentolino: un esempio dell’effetto di acqua e calore sull’amido. I granuli e i loro cambiamenti non sono visibili a questa scala.",
+
   "learn.visual.benchFold": "Pieghe sul banco: un lembo dell’impasto umido viene ripiegato sulla massa, senza strapparlo.",
   "learn.visual.prefermentPair": "A sinistra, una biga appena miscelata; a destra, un poolish dopo il riposo. Il confronto mostra consistenze diverse, non un test di maturazione.",
   "learn.visual.stretchingProperties": "Un allungamento a mano mostra come reagisce l’impasto. I valori P, L e W si misurano con prove strumentali, non con questo gesto.",

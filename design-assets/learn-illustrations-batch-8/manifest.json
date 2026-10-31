@@ -1,0 +1,174 @@
+{
+  "status": "approved, integrated locally; publication pending",
+  "created": "2026-10-31",
+  "generator": "built-in image_gen",
+  "style": "Approved Vulcan coloured pen, terracotta and ivory, transparent background",
+  "assets": [
+    {
+      "id": "alveograph-bubble",
+      "title": "W · Alveografo",
+      "intended_glossary": "w_alveograph",
+      "file": "assets/alveograph-bubble.webp",
+      "reference": "references/alveograph-bubble.jpg",
+      "source": "https://www.kpmanalytics.com/products/functional-rheological/alveolab",
+      "author": "KPM Analytics",
+      "caption_it": "Bolla d’impasto gonfiata sotto la piastra dell’alveografo. W deriva dalla prova strumentale, non dall’aspetto della bolla.",
+      "limitations": "Meccanismo isolato dalla macchina; piastra semplificata. Nessuna curva o lettura inventata.",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/alveograph-bubble.png",
+      "bytes": 11328,
+      "sha256": "24069b0f468bf103b8d6b6547557c76f88295f73f31d23c8edbd7a73e7a7a03a",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "falling-number-tubes",
+      "title": "Falling Number",
+      "intended_glossary": "falling_number",
+      "file": "assets/falling-number-tubes.webp",
+      "reference": "references/falling-number-tubes.jpg",
+      "source": "https://www.montana.edu/barleybreeding/learning-center/learn-about-testing/Falling-Number.html",
+      "author": "Montana State University",
+      "caption_it": "Provette e agitatori della prova Falling Number, qui nel supporto. La misura richiede il campione riscaldato nello strumento e il tempo di discesa dell’agitatore.",
+      "limitations": "Vista statica del supporto dopo la prova; non raffigura la fase di riscaldamento o risultati a confronto.",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/falling-number-tubes.png",
+      "bytes": 12954,
+      "sha256": "fbe2b9d65a5402bbf55d4a42e2292334967ba0d85067debe744a22703ae1986b",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "browned-crust",
+      "title": "Maillard",
+      "intended_glossary": "maillard",
+      "file": "assets/browned-crust.webp",
+      "reference": "references/browned-crust.jpg",
+      "source": "https://www.kingarthurbaking.com/blog/2022/02/15/understanding-the-maillard-reaction-in-baking",
+      "author": "Raymond Prado / King Arthur Baking",
+      "caption_it": "Crosta dorata di pane: un esempio di imbrunimento a cui contribuiscono le reazioni di Maillard. Il colore da solo non misura la cottura interna.",
+      "limitations": "Un solo filone selezionato dalla foto; ridotto il dettaglio della superficie. Non attribuisce tutto l’imbrunimento a un unico processo.",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/browned-crust.png",
+      "bytes": 28318,
+      "sha256": "3ac3d3944dbaddf0e55bc440d85439fdc789af53140fe48428491c36878993be",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "caramel-sugar",
+      "title": "Caramellizzazione",
+      "intended_glossary": "caramelization",
+      "file": "assets/caramel-sugar.webp",
+      "reference": "references/caramel-sugar.jpg",
+      "source": "https://umamidays.com/how-to-caramelize-sugar/",
+      "author": "Connie Veneracion / Umami Days",
+      "caption_it": "Zucchero e acqua scaldati fino a ottenere caramello ambrato, prima di aggiungere altri ingredienti. Le bolle non indicano da sole temperatura o punto di cottura.",
+      "limitations": "Pannello destro della sequenza; utensile ricomposto e bolle semplificate. Nessuna panna o burro.",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/caramel-sugar.png",
+      "bytes": 22904,
+      "sha256": "4f7aae6fbc7ba9186d97f6dc1b237d6aa053efc961247574e873fe95ca438e03",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "starch-paste",
+      "title": "Gelatinizzazione dell’amido",
+      "intended_glossary": "starch_gelatinization",
+      "file": "assets/starch-paste.webp",
+      "reference": "references/starch-paste.jpg",
+      "source": "https://www.kingarthurbaking.com/blog/2018/03/26/introduction-to-tangzhong",
+      "author": "PJ Hamel / King Arthur Baking",
+      "caption_it": "Tangzhong addensato in un pentolino: un esempio dell’effetto di acqua e calore sull’amido. I granuli e i loro cambiamenti non sono visibili a questa scala.",
+      "limitations": "Pasta cotta e contatto della frusta dalla foto. È un esempio del fenomeno, non una fase richiesta per tutte le pizze.",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31/starch-paste.png",
+      "bytes": 26340,
+      "sha256": "1f66626200e58079da7cc611d170bdd729747dd1eb5d135caf1684bc831e94f8",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ],
+  "encoding": {
+    "quality": 74,
+    "alpha_quality": 30,
+    "method": 6,
+    "total_webp_bytes": 101844
+  },
+  "validation": {
+    "gallery_desktop": {
+      "viewport_width": 1280,
+      "no_horizontal_overflow": true
+    },
+    "gallery_mobile": {
+      "viewport_width": 390,
+      "scroll_width": 375,
+      "no_horizontal_overflow": true
+    },
+    "loaded_images_and_references": 10,
+    "previous_37_illustrations": "unchanged",
+    "application_code": "mapped to the five intended glossary entries with captions in seven languages",
+    "production": "not deployed",
+    "screenshots_root": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-8-2026-10-31",
+    "bundle_comparison": {
+      "node": 20,
+      "previous_min_chunk_size": 6000,
+      "selected_min_chunk_size": 20000,
+      "initial_static_js_previous_gzip_bytes": 144148,
+      "initial_static_js_selected_gzip_bytes": 143101,
+      "no_locale_import_in_common_code": true,
+      "performance_limits": "unchanged",
+      "full_budget": "passed: 568.8 KiB per user, Japanese; 458.0 KiB common; 32.8 MiB images"
+    },
+    "quality": {
+      "node": 20,
+      "command": "npm run typecheck && npm test -- --maxWorkers=2 && npm run lint",
+      "passed_test_files": 134,
+      "passed_tests": 1763,
+      "skipped_tests": 1,
+      "result": "passed",
+      "notes": "Default-parallel local runs encountered machine contention and timeouts. The same full suite and guards passed with two test workers; no test timeouts, assertions or budget limits changed."
+    },
+    "glossary_context": {
+      "w_alveograph": {
+        "desktop": true,
+        "natural_width": 672,
+        "caption_and_source": true
+      },
+      "starch_gelatinization": {
+        "production_preview_desktop": true,
+        "mobile_width": 390,
+        "image_width": 288,
+        "document_scroll_width": 375,
+        "natural_width": 672,
+        "caption_and_source": true
+      }
+    }
+  }
+}

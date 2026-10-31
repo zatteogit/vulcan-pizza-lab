@@ -1,5 +1,11 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.alveographBubble": "アルベオグラフの板の下で膨らむ生地。Wは泡の見た目ではなく機器で測定します。",
+  "learn.visual.fallingNumberTubes": "支持台に置いたフォーリングナンバーの試験管と撹拌棒。測定では装置内で試料を加熱し、棒の落下時間を計ります。",
+  "learn.visual.brownedCrust": "パンの焼き色はメイラード反応などによる褐変の例です。色だけでは内部の焼け具合を測れません。",
+  "learn.visual.caramelSugar": "他の材料を加える前の、砂糖と水を加熱した琥珀色のカラメル。泡だけでは温度や加熱段階は分かりません。",
+  "learn.visual.starchPaste": "鍋でとろみがついた湯種は、水と熱がでんぷんに作用する例です。この大きさでは粒やその変化は見えません。",
+
   "learn.visual.benchFold": "湿った生地の端を、ちぎらずに台の上で折り重ねます。",
   "learn.visual.prefermentPair": "左：混ぜた直後のビガ。右：休ませたポーリッシュ。熟成度ではなく硬さの比較です。",
   "learn.visual.stretchingProperties": "手で生地の反応を見る例です。P・L・Wは機器で測定します。",

@@ -1,5 +1,11 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.alveographBubble": "Pâte gonflée sous la plaque de l’alvéographe. W résulte de l’essai instrumental, pas de l’aspect de la bulle.",
+  "learn.visual.fallingNumberTubes": "Tubes et agitateurs du test Falling Number dans leur support. La mesure nécessite un échantillon chauffé dans l’appareil et le chronométrage de la descente de l’agitateur.",
+  "learn.visual.brownedCrust": "Croûte de pain dorée : un exemple de brunissement auquel contribuent les réactions de Maillard. La couleur seule ne mesure pas la cuisson à cœur.",
+  "learn.visual.caramelSugar": "Sucre et eau chauffés jusqu’au caramel ambré, avant l’ajout d’autres ingrédients. Les bulles seules n’indiquent ni température ni stade de cuisson.",
+  "learn.visual.starchPaste": "Tangzhong épaissi dans une casserole : un exemple de l’effet de l’eau et de la chaleur sur l’amidon. Les granules et leurs changements ne sont pas visibles à cette échelle.",
+
   "learn.visual.benchFold": "Rabat sur le plan de travail : un bord de pâte humide est replié sur la masse sans la déchirer.",
   "learn.visual.prefermentPair": "À gauche, une biga juste mélangée ; à droite, un poolish après repos. La comparaison montre des consistances différentes, pas un test de maturation.",
   "learn.visual.stretchingProperties": "Étirer la pâte à la main permet d’observer sa réaction. Les valeurs P, L et W se mesurent avec des instruments, pas avec ce geste.",

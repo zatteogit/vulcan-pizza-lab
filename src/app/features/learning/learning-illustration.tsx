@@ -35,9 +35,19 @@ import remilledSemolina from "../../../assets/learn/remilled-semolina.webp";
 import sauceDosing from "../../../assets/learn/sauce-dosing.webp";
 import benchFold from "../../../assets/learn/bench-fold.webp";
 import prefermentPair from "../../../assets/learn/preferment-pair.webp";
+import alveographBubble from "../../../assets/learn/alveograph-bubble.webp";
+import fallingNumberTubes from "../../../assets/learn/falling-number-tubes.webp";
+import brownedCrust from "../../../assets/learn/browned-crust.webp";
+import caramelSugar from "../../../assets/learn/caramel-sugar.webp";
+import starchPaste from "../../../assets/learn/starch-paste.webp";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const VISUALS = {
+  "alveograph-bubble": { src: alveographBubble, caption: () => uiMessage("learn.visual.alveographBubble"), source: "https://www.kpmanalytics.com/products/functional-rheological/alveolab", author: "KPM Analytics", cc: false },
+  "falling-number-tubes": { src: fallingNumberTubes, caption: () => uiMessage("learn.visual.fallingNumberTubes"), source: "https://www.montana.edu/barleybreeding/learning-center/learn-about-testing/Falling-Number.html", author: "Montana State University", cc: false },
+  "browned-crust": { src: brownedCrust, caption: () => uiMessage("learn.visual.brownedCrust"), source: "https://www.kingarthurbaking.com/blog/2022/02/15/understanding-the-maillard-reaction-in-baking", author: "Raymond Prado / King Arthur Baking", cc: false },
+  "caramel-sugar": { src: caramelSugar, caption: () => uiMessage("learn.visual.caramelSugar"), source: "https://umamidays.com/how-to-caramelize-sugar/", author: "Connie Veneracion / Umami Days", cc: false },
+  "starch-paste": { src: starchPaste, caption: () => uiMessage("learn.visual.starchPaste"), source: "https://www.kingarthurbaking.com/blog/2018/03/26/introduction-to-tangzhong", author: "PJ Hamel / King Arthur Baking", cc: false },
   biga: { src: biga, caption: () => uiMessage("learn.visual.biga"), source: "https://www.flickr.com/photos/grongar/3683817769/", author: "Rebecca Siegel", cc: true },
   poolish: { src: poolish, caption: () => uiMessage("learn.visual.poolish"), source: "https://commons.wikimedia.org/wiki/File:Poolish_for_Artos.jpg", author: "Rebecca Siegel", cc: true },
   autolysis: { src: autolysis, caption: () => uiMessage("learn.visual.autolysis"), source: "https://www.kingarthurbaking.com/blog/2017/09/29/using-the-autolyse-method", author: "King Arthur Baking", cc: false },
@@ -82,6 +92,11 @@ export type LearningIllustrationId = keyof typeof VISUALS;
 
 /** Only map terms for which the photographed stage actually explains the text. */
 export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
+  w_alveograph: "alveograph-bubble",
+  falling_number: "falling-number-tubes",
+  maillard: "browned-crust",
+  caramelization: "caramel-sugar",
+  starch_gelatinization: "starch-paste",
   biga: "biga", poolish: "poolish", autolysis: "autolysis",
   folds: "folds", gluten_development: "bench-fold", gluten: "windowpane",
   dough_division: "division", ball_shaping: "ball-shaping",

@@ -1,5 +1,11 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.alveographBubble": "Dough inflated beneath the alveograph plate. W comes from the instrument test, not the appearance of the bubble.",
+  "learn.visual.fallingNumberTubes": "Falling Number tubes and stirrers in their stand. Measurement requires a heated sample in the instrument and timing the stirrer’s descent.",
+  "learn.visual.brownedCrust": "Browned bread crust: an example of browning to which Maillard reactions contribute. Colour alone does not measure internal doneness.",
+  "learn.visual.caramelSugar": "Sugar and water heated to amber caramel, before other ingredients are added. Bubbles alone do not indicate temperature or cooking stage.",
+  "learn.visual.starchPaste": "Thickened tangzhong in a saucepan: an example of water and heat acting on starch. The granules and their changes are not visible at this scale.",
+
   "learn.visual.benchFold": "Bench folding: a flap of wet dough is folded back over the mass without tearing it.",
   "learn.visual.prefermentPair": "Left: freshly mixed biga. Right: poolish after resting. This compares different consistencies, not stages in a readiness test.",
   "learn.visual.stretchingProperties": "Stretching by hand shows how dough responds. P, L and W are measured with instruments, not by this gesture.",
