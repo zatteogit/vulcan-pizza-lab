@@ -1,5 +1,10 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.manitobaFlour": "Farine emballée et petit échantillon en vrac. Pour choisir une Manitoba, consultez la force W et les caractéristiques du fabricant : l’aspect de la poudre ne suffit pas à l’identifier.",
+  "learn.visual.fructanIngredients": "L’ail et l’oignon sont des exemples de sources de fructanes, un groupe de FODMAP. La liste n’est pas exhaustive : l’image ne mesure aucune teneur et n’indique ni portions ni tolérance individuelle.",
+  "learn.visual.fermentedSalami": "Salami fermenté : un exemple d’aliment où peuvent se former des amines biogènes, dont l’histamine. La teneur n’est pas visible dans la tranche et ne se déduit ni de la couleur ni de l’affinage déclaré.",
+  "learn.visual.pizzaServing": "Une portion de pizza déjà cuite est prise sur la planche pour être servie. La scène accompagne le conseil de servir après cuisson ; elle ne compare pas visuellement une pizza sèche et une pizza moelleuse.",
+  "learn.visual.efsa": "EFSA",
   "learn.visual.farinographBowl": "Cuve du farinographe ouverte pour accéder à l’échantillon. L’absorption se détermine par un essai à consistance définie, pas par l’aspect de la pâte.",
   "learn.visual.farinographReadout": "Schéma sans échelle recomposé à partir de tracés du farinographe : temps en abscisse, résistance en ordonnée. Il ne permet ni de lire des minutes ni de comparer des farines.",
   "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, redessiné et simplifié d’après une micrographie électronique, avec des couleurs modifiées et sans échelle. Toutes les bactéries lactiques n’ont pas cette forme. Illustration sous licence CC BY-SA 3.0.",

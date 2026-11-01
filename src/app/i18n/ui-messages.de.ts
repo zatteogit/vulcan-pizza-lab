@@ -1,5 +1,10 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.manitobaFlour": "Verpacktes Mehl und eine kleine lose Probe. Bei Manitoba-Mehl sind der W-Wert und die Herstellerangaben entscheidend: Am Aussehen des Pulvers lässt es sich nicht erkennen.",
+  "learn.visual.fructanIngredients": "Knoblauch und Zwiebel sind Beispiele für Fruktanquellen, eine FODMAP-Gruppe. Die Liste ist nicht vollständig: Das Bild misst keinen Gehalt und gibt weder Portionsgrößen noch individuelle Verträglichkeit an.",
+  "learn.visual.fermentedSalami": "Fermentierte Salami: ein Beispiel für Lebensmittel, in denen biogene Amine wie Histamin entstehen können. Der Gehalt ist in der Scheibe nicht sichtbar und lässt sich weder aus der Farbe noch aus der angegebenen Reifung ableiten.",
+  "learn.visual.pizzaServing": "Ein Stück gebackene Pizza wird zum Servieren vom Brett genommen. Die Szene begleitet den Hinweis zum Servieren nach dem Backen; sie zeigt keinen Vergleich zwischen trockener und weicher Pizza.",
+  "learn.visual.efsa": "EFSA",
   "learn.visual.farinographBowl": "Geöffnete Farinographen-Mischkammer für den Zugang zur Probe. Die Wasseraufnahme wird bei definierter Konsistenz geprüft, nicht am Aussehen des Teigs abgelesen.",
   "learn.visual.farinographReadout": "Schema ohne Maßstab, nach Farinographenkurven neu zusammengestellt: Zeit horizontal, Widerstand vertikal. Daraus lassen sich weder Minuten ablesen noch Mehle vergleichen.",
   "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, nach einer Elektronenmikroskopaufnahme neu gezeichnet und vereinfacht, mit veränderten Farben und ohne Maßstab. Nicht alle Milchsäurebakterien haben diese Form. Illustration unter CC BY-SA 3.0.",

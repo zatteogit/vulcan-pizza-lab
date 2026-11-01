@@ -1,5 +1,10 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.manitobaFlour": "包装された小麦粉と少量のサンプル。マニトバ粉を選ぶ際はW値やメーカーの仕様を確認します。粉の見た目だけでは識別できません。",
+  "learn.visual.fructanIngredients": "ニンニクとタマネギは、FODMAPの一種であるフルクタンの供給源の例です。全食品の一覧ではなく、含有量や適切な分量、個人の耐性を示す絵でもありません。",
+  "learn.visual.fermentedSalami": "発酵サラミは、ヒスタミンなどの生体アミンが生成し得る食品の例です。含有量は断面には見えず、色や表示された熟成期間からも判断できません。",
+  "learn.visual.pizzaServing": "焼いたピザを盛り付けるため、まな板から一切れ取る場面です。焼成後に提供するという助言に添えるもので、乾いたピザと柔らかいピザの見た目の比較ではありません。",
+  "learn.visual.efsa": "EFSA",
   "learn.visual.farinographBowl": "試料を取り出せるよう開いたファリノグラフの混合槽。吸水率は一定の硬さになる条件で試験して求めます。生地の見た目からは判断できません。",
   "learn.visual.farinographReadout": "ファリノグラフの曲線をもとに再構成した、目盛りのない模式図。横軸は時間、縦軸は抵抗です。分数の読み取りや小麦粉の比較には使えません。",
   "learn.visual.lacticBacteria": "電子顕微鏡写真から形を描き直して単純化したLacticaseibacillus paracasei。色は変更しており、縮尺はありません。すべての乳酸菌がこの形とは限りません。イラストのライセンスはCC BY-SA 3.0です。",

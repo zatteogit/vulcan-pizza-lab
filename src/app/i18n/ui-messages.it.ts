@@ -3,6 +3,11 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.manitobaFlour": "Farina confezionata e un piccolo campione sfuso. Per scegliere una Manitoba consulta forza W e caratteristiche dichiarate dal produttore: l’aspetto della polvere non basta a identificarla.",
+  "learn.visual.fructanIngredients": "Aglio e cipolla sono esempi di fonti di fruttani, un gruppo di FODMAP. Non sono un elenco completo: l’immagine non misura il contenuto né indica porzioni o tolleranza personale.",
+  "learn.visual.fermentedSalami": "Salame fermentato: un esempio di alimento in cui possono formarsi ammine biogene, tra cui l’istamina. Il suo contenuto non si vede nella fetta e non si deduce dal colore o dalla stagionatura dichiarata.",
+  "learn.visual.pizzaServing": "Una porzione di pizza già cotta viene presa dal tagliere per servirla. La scena accompagna il consiglio sul servizio dopo la cottura: non è un confronto visivo tra pizza secca e morbida.",
+  "learn.visual.efsa": "EFSA",
   "learn.visual.farinographBowl": "Vasca del farinografo aperta per accedere al campione. L’assorbimento si determina con una prova a consistenza definita, non dall’aspetto dell’impasto.",
   "learn.visual.farinographReadout": "Schema senza scala ricomposto dai tracciati del farinografo: tempo in orizzontale, resistenza in verticale. Non permette di leggere minuti o confrontare farine.",
   "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, ridisegnato e semplificato da una micrografia elettronica, con colori modificati e senza scala. Non tutti i batteri lattici hanno questa forma. Illustrazione distribuita con licenza CC BY-SA 3.0.",
