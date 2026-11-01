@@ -1,0 +1,35 @@
+[
+  {
+    "id": "poolish-final-mix",
+    "page": "https://electricbluefood.com/poolish-pizza-dough/",
+    "author": "Eva / Electric Blue Food",
+    "photo_url": "https://electricbluefood.com/wp-content/uploads/2020/05/poolish-pizza-dough-02-683x1024.jpg",
+    "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-14-2026-11-01/references/poolish-pour.jpg",
+    "reference_sha256": "91448e11ff1825bbb0c3aaa4c5fde004a035897595186c2d5f3af6ebb739204a",
+    "role": "physical photograph; approved bench-fold is style only",
+    "recomposition_and_limits": "La foto documenta poolish vero in trasferimento. Il disegno non stabilisce dosi, maturazione o una soglia di bolle; omette il marchio, il tavolo e semplifica le superfici.",
+    "original_distributed": false
+  },
+  {
+    "id": "autolyse-final-incorporation",
+    "page": "https://thepracticalkitchen.com/basic-overnight-pizza-dough-with-baking-steel-instructions/",
+    "author": "Rebecca Eisenberg / The Practical Kitchen",
+    "photo_url": "https://thepracticalkitchen.com/wp-content/uploads/2020/08/overnight-thin-crust-pizza-dough-0258.jpg",
+    "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-14-2026-11-01/references/pincer.jpg",
+    "reference_sha256": "060a81ca5089f8481c7e1425051739fa29c57d7dc7fe0749e2de2a73257630bc",
+    "role": "physical photograph; approved bench-fold is style only",
+    "recomposition_and_limits": "La foto originale usa sale e miscela di acqua, lievito e zucchero. Si riprende soltanto il gesto di incorporazione: la tavola non aggiunge zucchero alla procedura di Vulcan e non prescrive quantità o un ordine universale.",
+    "original_distributed": false
+  },
+  {
+    "id": "hand-back-stretching",
+    "page": "https://thepracticalkitchen.com/how-to-hand-stretch-pizza-dough-a-visual-guide/",
+    "author": "Rebecca Eisenberg / The Practical Kitchen",
+    "photo_url": "https://thepracticalkitchen.com/wp-content/uploads/2020/08/how-to-hand-stretch-pizza-dough-0078.jpg",
+    "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-14-2026-11-01/references/knuckles.jpg",
+    "reference_sha256": "4dc07676a5007a0b3f37cd890814b9ab09590a133f3118ad6e9c5b9e60106b91",
+    "role": "physical photograph; approved bench-fold is style only",
+    "recomposition_and_limits": "Il riferimento mostra un momento della stesura con una mano più alta e una che sostiene il bordo inferiore. Non si rappresenta un lancio in aria né una misura dello spessore. Una posa credibile, non una riparazione del buco.",
+    "original_distributed": false
+  }
+]
