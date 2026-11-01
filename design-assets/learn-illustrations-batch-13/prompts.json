@@ -1,0 +1,151 @@
+[
+  {
+    "id": "room-air-temperature",
+    "title": "Misurare l’aria della stanza",
+    "target": "Metodo · kitchen-temp-default; Problemi · P04, prevenzione",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ambient-124.webp"
+    ],
+    "scene": "Draw one small freestanding DIGITAL AIR thermometer, in a three-quarter view with a visible simple rear support, standing by itself. Its built-in air sensor housing is a couple of discreet side ventilation slots, NOT a metal food probe. Recompose the photographed device as a generic low rectangular ivory unit with softly rounded corners, one small plain button, a terracotta trim and one rectangular blank LCD. Do not copy the distinctive arched silhouette or round display of the branded reference. No plants, books, furniture, bowl or kitchen scene. The complete whole instrument and support are clearly visible. Simple matte pen drawing; it should read as a modest kitchen measuring tool, not a smart thermostat or a toy.",
+    "caption_it": "Un termometro per l’aria misura la temperatura nel punto in cui si trova. Il valore della cucina va misurato: non è necessariamente quello dell’impasto. Display senza cifre.",
+    "limits": "Strumento reso generico dalla fotografia ThermoWorks in ambiente interno. Nessuna lettura, precisione o soglia rappresentata; nessun modello consigliato.",
+    "sources": [
+      {
+        "page": "https://www.thermoworks.com/products/spot",
+        "author": "ThermoWorks",
+        "photo_url": "https://www.thermoworks.com/cdn/shop/files/ShopifyWebsite-PDP-GalleryImages-SPOT-April2026-04.webp?v=1777661457&width=3840",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ambient-124.webp",
+        "role": "physical photo",
+        "original_distributed": false
+      }
+    ],
+    "prompt": "Create ONE educational illustration for Vulcan. Reference image 1 is STYLE ONLY: match its warm coloured-pen drawing, fine warm-brown contours, ivory and terracotta palette, restrained smooth matte washes. Subsequent photographs establish the objects, physical contacts and material state, not a photographic rendering. No paper grain, stippling, granular overlays, repeated tiny marks, shiny plastic, CGI or exaggerated glossy highlights. Do not copy brand logos, product-specific silhouette, controls or lettering. All LCDs are completely blank. No words, labels, numbers, tick marks, arrows, scales or ingredient packaging in the artwork; explanations will be in HTML. Landscape 3:2, entire scene inside comfortable transparent margins. True alpha outside the actual outlined objects: no coloured halo, glow, vignette, table background or shadow floor. Use clean broad ivory areas with few long contours for flour/dough, not fields of fine texture. Educational physical credibility takes priority over decorative detail.\n\nDraw one small freestanding DIGITAL AIR thermometer, in a three-quarter view with a visible simple rear support, standing by itself. Its built-in air sensor housing is a couple of discreet side ventilation slots, NOT a metal food probe. Recompose the photographed device as a generic low rectangular ivory unit with softly rounded corners, one small plain button, a terracotta trim and one rectangular blank LCD. Do not copy the distinctive arched silhouette or round display of the branded reference. No plants, books, furniture, bowl or kitchen scene. The complete whole instrument and support are clearly visible. Simple matte pen drawing; it should read as a modest kitchen measuring tool, not a smart thermostat or a toy."
+  },
+  {
+    "id": "fridge-shelf-temperature",
+    "title": "Controllare il ripiano del frigo",
+    "target": "Problemi · P21, temperatura sul ripiano usato",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ambient-123.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/covered-tub.jpg"
+    ],
+    "scene": "A compact vignette of ONE short glass refrigerator shelf with a small plain DIGITAL AIR thermometer at the front-left, standing securely on the shelf, and ONE closed clear rectangular proofing tub behind/right with a modest amount of ivory dough and generous headroom. Base the instrument-on-shelf arrangement on photo2, replacing unrelated food and bottles with the lidded dough tub physically documented in photo3. Give the thermometer the same generic design as described here: low rectangular ivory body, softly rounded corners, terracotta trim, one rectangular BLANK LCD and one small plain button, simple rear support. No arched branded silhouette or round display. Built-in air sensor: no wire, needle or metal probe; it must not touch or enter the dough. The dough tub is clearly CLOSED by a plain snug pale terracotta lid; no graduations, quantities or brand. Show just the shelf edge and a small pale cool-grey refrigerator back/side corner to establish context, not a whole refrigerator, door hardware, freezer, food stock or appliance model. Entire small vignette within transparent margins. No frost, ice, condensation droplets or snowflake icon.",
+    "caption_it": "Il termometro legge l’aria sul ripiano usato per l’impasto. Il recipiente resta chiuso: questa lettura non misura il cuore dell’impasto e non certifica la stabilità del frigo.",
+    "limits": "Scena ricomposta: termometro sul ripiano dalla foto ThermoWorks, recipiente da King Arthur Baking. La foto del recipiente non era scattata in frigorifero. Nessuna zona del frigo è dichiarata universalmente migliore.",
+    "sources": [
+      {
+        "page": "https://www.thermoworks.com/products/spot",
+        "author": "ThermoWorks",
+        "photo_url": "https://www.thermoworks.com/cdn/shop/files/ShopifyWebsite-PDP-GalleryImages-SPOT-April2026-03.webp?v=1777661457&width=3840",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ambient-123.webp",
+        "role": "physical photo",
+        "original_distributed": false
+      },
+      {
+        "page": "https://www.kingarthurbaking.com/blog/2023/04/18/never-cover-rising-bread-dough-with-towel",
+        "author": "King Arthur Baking",
+        "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image_sm/public/2023-04/QZ7A7215.jpg?itok=b8neHnq3",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/covered-tub.jpg",
+        "role": "physical photo",
+        "original_distributed": false
+      }
+    ],
+    "prompt": "Create ONE educational illustration for Vulcan. Reference image 1 is STYLE ONLY: match its warm coloured-pen drawing, fine warm-brown contours, ivory and terracotta palette, restrained smooth matte washes. Subsequent photographs establish the objects, physical contacts and material state, not a photographic rendering. No paper grain, stippling, granular overlays, repeated tiny marks, shiny plastic, CGI or exaggerated glossy highlights. Do not copy brand logos, product-specific silhouette, controls or lettering. All LCDs are completely blank. No words, labels, numbers, tick marks, arrows, scales or ingredient packaging in the artwork; explanations will be in HTML. Landscape 3:2, entire scene inside comfortable transparent margins. True alpha outside the actual outlined objects: no coloured halo, glow, vignette, table background or shadow floor. Use clean broad ivory areas with few long contours for flour/dough, not fields of fine texture. Educational physical credibility takes priority over decorative detail.\n\nA compact vignette of ONE short glass refrigerator shelf with a small plain DIGITAL AIR thermometer at the front-left, standing securely on the shelf, and ONE closed clear rectangular proofing tub behind/right with a modest amount of ivory dough and generous headroom. Base the instrument-on-shelf arrangement on photo2, replacing unrelated food and bottles with the lidded dough tub physically documented in photo3. Give the thermometer the same generic design as described here: low rectangular ivory body, softly rounded corners, terracotta trim, one rectangular BLANK LCD and one small plain button, simple rear support. No arched branded silhouette or round display. Built-in air sensor: no wire, needle or metal probe; it must not touch or enter the dough. The dough tub is clearly CLOSED by a plain snug pale terracotta lid; no graduations, quantities or brand. Show just the shelf edge and a small pale cool-grey refrigerator back/side corner to establish context, not a whole refrigerator, door hardware, freezer, food stock or appliance model. Entire small vignette within transparent margins. No frost, ice, condensation droplets or snowflake icon."
+  },
+  {
+    "id": "flour-temperature",
+    "title": "Misurare la temperatura della farina",
+    "target": "Metodo · water-temp-rule, variabile della farina",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ddt-22.jpg",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/flour-bowl.jpg"
+    ],
+    "scene": "A real-looking practical hand holds a GENERIC digital probe thermometer above a whole clear glass mixing bowl containing a modest mound of loose ivory FLOUR, not dough and not water. Photo2 provides the hand grip, the tool support and probe angle; photo3 provides the clear bowl and actual flour. Recompose the measurement for flour according to the source procedure, do not retain the dough in photo2. A straight thin metal probe enters the flour so that its sensing tip is visibly buried well inside the mound, with no contact with the bottom or wall. The thermometer body and the hand remain ABOVE the powder; no ingredient pouring. The powder mound is matte and broadly irregular, with 3 or 4 soft contours only, not smooth batter swirls and no speckles. No scales or scoop. Thermometer has an ivory simple non-branded body, small terracotta trim, a completely BLANK rectangular LCD, no copied proprietary folding-hinge outline. Believable hand, whole bowl visible, wrist may enter from top-right edge. No imaginary sensor values or units.",
+    "caption_it": "La sonda misura la farina, una delle temperature usate nel calcolo dell’acqua. Scena ricomposta: la fotografia del gesto originale misurava un impasto. Display senza cifre.",
+    "limits": "Gesto e strumento da Barb Alpern, farina in ciotola da PJ Hamel; la misurazione della farina è descritta nel riferimento professionale King Arthur. Non si spaccia la foto del gesto per una foto di misurazione della farina. Nessuna profondità, lettura o temperatura ottimale indicata.",
+    "sources": [
+      {
+        "page": "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature",
+        "author": "Barb Alpern / King Arthur Baking",
+        "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2018/05/Desired-Dough-Temperature-45.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ddt-22.jpg",
+        "role": "physical photo",
+        "original_distributed": false
+      },
+      {
+        "page": "https://www.kingarthurbaking.com/blog/2022/02/18/digital-kitchen-scale",
+        "author": "PJ Hamel / King Arthur Baking",
+        "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/scaled_small/public/2022-02/Baking%20with%20a%20scale-5.jpg?itok=hAYZliS9",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/flour-bowl.jpg",
+        "role": "physical photo",
+        "original_distributed": false
+      },
+      {
+        "page": "https://www.kingarthurbaking.com/pro/reference/dough-temperature",
+        "author": "King Arthur Baking",
+        "photo_url": null,
+        "local_reference": null,
+        "role": "procedural description: flour temperature is an input, not a photo",
+        "original_distributed": false
+      }
+    ],
+    "prompt": "Create ONE educational illustration for Vulcan. Reference image 1 is STYLE ONLY: match its warm coloured-pen drawing, fine warm-brown contours, ivory and terracotta palette, restrained smooth matte washes. Subsequent photographs establish the objects, physical contacts and material state, not a photographic rendering. No paper grain, stippling, granular overlays, repeated tiny marks, shiny plastic, CGI or exaggerated glossy highlights. Do not copy brand logos, product-specific silhouette, controls or lettering. All LCDs are completely blank. No words, labels, numbers, tick marks, arrows, scales or ingredient packaging in the artwork; explanations will be in HTML. Landscape 3:2, entire scene inside comfortable transparent margins. True alpha outside the actual outlined objects: no coloured halo, glow, vignette, table background or shadow floor. Use clean broad ivory areas with few long contours for flour/dough, not fields of fine texture. Educational physical credibility takes priority over decorative detail.\n\nA real-looking practical hand holds a GENERIC digital probe thermometer above a whole clear glass mixing bowl containing a modest mound of loose ivory FLOUR, not dough and not water. Photo2 provides the hand grip, the tool support and probe angle; photo3 provides the clear bowl and actual flour. Recompose the measurement for flour according to the source procedure, do not retain the dough in photo2. A straight thin metal probe enters the flour so that its sensing tip is visibly buried well inside the mound, with no contact with the bottom or wall. The thermometer body and the hand remain ABOVE the powder; no ingredient pouring. The powder mound is matte and broadly irregular, with 3 or 4 soft contours only, not smooth batter swirls and no speckles. No scales or scoop. Thermometer has an ivory simple non-branded body, small terracotta trim, a completely BLANK rectangular LCD, no copied proprietary folding-hinge outline. Believable hand, whole bowl visible, wrist may enter from top-right edge. No imaginary sensor values or units."
+  },
+  {
+    "id": "yeast-freshness-check",
+    "title": "Controllare un lievito secco dubbio",
+    "target": "Problemi · P04, controllo rapido del lievito",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/yeast-test-28.jpg"
+    ],
+    "scene": "Draw ONLY ONE shallow clear glass bowl containing a small amount of pale ivory watery yeast suspension with a light, thin patchy foam layer and a handful of irregular visible medium bubbles near the perimeter. Use the LEFT bowl in photo2 for the physical liquid-and-foam appearance. Keep liquid depth low and bowl mostly empty; it is a loose suspension, NOT dough, poolish, yogurt, mashed food, thick meringue or a giant foam dome. Simplify foam into a few broad pale shapes, not hundreds of tiny dots or granular pattern. No packets, brand, spoon, cup measurements, timer, hands or extra bowls. Entire bowl visible in three-quarter view with thin warm-brown glass contours. The pictured setup illustrates an OPTIONAL freshness check for uncertain dry yeast; do not invent a visual pass/fail sign, checkmark or diagnostic comparison.",
+    "caption_it": "Esempio di lievito secco in acqua durante una prova di attività. Serve quando si dubita del lievito: non è un passaggio necessario per ogni impasto, né un modo per calcolare la dose.",
+    "limits": "Dalla fotografia di PJ Hamel: selezionata una sola ciotola della coppia con lieviti secchi. Non rappresenta lievito fresco, bicarbonato o lievito chimico; schiuma e quantità non diventano una soglia universale.",
+    "sources": [
+      {
+        "page": "https://www.kingarthurbaking.com/blog/2015/11/05/test-yeast-baking-powder-baking-soda-freshness",
+        "author": "PJ Hamel / King Arthur Baking",
+        "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2015/10/Testing-baking-powder-baking-soda-and-yeast-for-freshness-9.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/yeast-test-28.jpg",
+        "role": "physical photo",
+        "original_distributed": false
+      },
+      {
+        "page": "https://www.kingarthurbaking.com/blog/2023/05/10/guide-to-baking-with-yeast",
+        "author": "King Arthur Baking",
+        "photo_url": null,
+        "local_reference": null,
+        "role": "context: checking viability is optional, not routine activation",
+        "original_distributed": false
+      }
+    ],
+    "prompt": "Create ONE educational illustration for Vulcan. Reference image 1 is STYLE ONLY: match its warm coloured-pen drawing, fine warm-brown contours, ivory and terracotta palette, restrained smooth matte washes. Subsequent photographs establish the objects, physical contacts and material state, not a photographic rendering. No paper grain, stippling, granular overlays, repeated tiny marks, shiny plastic, CGI or exaggerated glossy highlights. Do not copy brand logos, product-specific silhouette, controls or lettering. All LCDs are completely blank. No words, labels, numbers, tick marks, arrows, scales or ingredient packaging in the artwork; explanations will be in HTML. Landscape 3:2, entire scene inside comfortable transparent margins. True alpha outside the actual outlined objects: no coloured halo, glow, vignette, table background or shadow floor. Use clean broad ivory areas with few long contours for flour/dough, not fields of fine texture. Educational physical credibility takes priority over decorative detail.\n\nDraw ONLY ONE shallow clear glass bowl containing a small amount of pale ivory watery yeast suspension with a light, thin patchy foam layer and a handful of irregular visible medium bubbles near the perimeter. Use the LEFT bowl in photo2 for the physical liquid-and-foam appearance. Keep liquid depth low and bowl mostly empty; it is a loose suspension, NOT dough, poolish, yogurt, mashed food, thick meringue or a giant foam dome. Simplify foam into a few broad pale shapes, not hundreds of tiny dots or granular pattern. No packets, brand, spoon, cup measurements, timer, hands or extra bowls. Entire bowl visible in three-quarter view with thin warm-brown glass contours. The pictured setup illustrates an OPTIONAL freshness check for uncertain dry yeast; do not invent a visual pass/fail sign, checkmark or diagnostic comparison."
+  },
+  {
+    "id": "dough-volume-comparison",
+    "title": "Confrontare lo sviluppo dell’impasto",
+    "target": "Problemi · P03/P05, osservazione dello sviluppo; Metodo · stime dei tempi",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/bulk-25.jpg"
+    ],
+    "scene": "TWO IDENTICAL modest terracotta bowls side by side, same viewpoint, same size, no dividing line. They show two qualitative moments of the SAME dough, based on top-left and bottom-right photographs in photo2, not two different recipes. Left bowl: smaller irregular matte ivory mound after mixing/folding, a broad band of exposed inner bowl wall around it. Right bowl: a visibly wider, gently domed smoother ivory mass spreading toward the bowl sides after rest. Use only the real relative shape change seen in the photo; do NOT exaggerate to a balloon, huge overspill or a claimed exact doubling. Same dough colour and bowl geometry in both. No hands, utensils, liquid cups, covers, rulers, graduations, labels, numbers, percent signs, arrows or clocks. Both whole bowls visible, three-quarter view rather than a schematic cross-section. A few broad dough folds and long fine contours only; no tiny dots, dense bubble map or granular skin. It is an observational comparison, not a proof of universal readiness.",
+    "caption_it": "Due momenti di sviluppo, da confrontare nello stesso recipiente. Il volume è un’osservazione utile; queste forme non fissano un tempo, un raddoppio o un momento di fine lievitazione validi per tutti gli impasti.",
+    "limits": "Coppia ricomposta dalla sequenza fotografica di Maurizio Leo, che comprende anche pieghe tra i momenti. Non è un esperimento misurato, non isola la sola fermentazione e non dà una soglia universale di maturazione.",
+    "sources": [
+      {
+        "page": "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation",
+        "author": "Maurizio Leo / King Arthur Baking",
+        "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2019/06/Bread-Dough-in-Bulk-Fermentation-via-@kingarthurflour-bulk-progress.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/bulk-25.jpg",
+        "role": "physical photo",
+        "original_distributed": false
+      }
+    ],
+    "prompt": "Create ONE educational illustration for Vulcan. Reference image 1 is STYLE ONLY: match its warm coloured-pen drawing, fine warm-brown contours, ivory and terracotta palette, restrained smooth matte washes. Subsequent photographs establish the objects, physical contacts and material state, not a photographic rendering. No paper grain, stippling, granular overlays, repeated tiny marks, shiny plastic, CGI or exaggerated glossy highlights. Do not copy brand logos, product-specific silhouette, controls or lettering. All LCDs are completely blank. No words, labels, numbers, tick marks, arrows, scales or ingredient packaging in the artwork; explanations will be in HTML. Landscape 3:2, entire scene inside comfortable transparent margins. True alpha outside the actual outlined objects: no coloured halo, glow, vignette, table background or shadow floor. Use clean broad ivory areas with few long contours for flour/dough, not fields of fine texture. Educational physical credibility takes priority over decorative detail.\n\nTWO IDENTICAL modest terracotta bowls side by side, same viewpoint, same size, no dividing line. They show two qualitative moments of the SAME dough, based on top-left and bottom-right photographs in photo2, not two different recipes. Left bowl: smaller irregular matte ivory mound after mixing/folding, a broad band of exposed inner bowl wall around it. Right bowl: a visibly wider, gently domed smoother ivory mass spreading toward the bowl sides after rest. Use only the real relative shape change seen in the photo; do NOT exaggerate to a balloon, huge overspill or a claimed exact doubling. Same dough colour and bowl geometry in both. No hands, utensils, liquid cups, covers, rulers, graduations, labels, numbers, percent signs, arrows or clocks. Both whole bowls visible, three-quarter view rather than a schematic cross-section. A few broad dough folds and long fine contours only; no tiny dots, dense bubble map or granular skin. It is an observational comparison, not a proof of universal readiness."
+  }
+]
