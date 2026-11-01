@@ -367,8 +367,10 @@ export default defineConfig(({ command, mode }) => ({
            Integrazione ondata 2 (FW-04 + D-062/D-063): 6000 (−1,4 kB).
            Illustrazioni Impara, lotto 8: 20000 per ridurre gli involucri
            dei piccoli chunk. Lingue e strumenti restano separati; il controllo
-           budget verifica anche che le lingue non entrino nel codice comune. */
-        experimentalMinChunkSize: 20000,
+           budget verifica anche che le lingue non entrino nel codice comune.
+           Lotto 10: 30000, per consolidare ulteriori piccoli chunk e conservare
+           il budget per utente senza tagliare le didascalie. */
+        experimentalMinChunkSize: 30000,
         manualChunks(id) {
           const file = id.replace(/\\/g, "/");
           if (/\/node_modules\/(react|react-dom|react-router|scheduler)\//.test(file)) return "vendor-react";

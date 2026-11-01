@@ -1,5 +1,5 @@
 {
-  "status": "local review; not integrated or published",
+  "status": "approved and integrated; see release receipt for publication",
   "date": "2026-11-01",
   "base_main": "194c574a0af3cab11362025c314a515e048817bb",
   "generation": "built-in image_gen; one call per asset and targeted edits",
@@ -174,5 +174,29 @@
     "evidence_directory": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-10-2026-11-01/",
     "app_source_changed": false,
     "published": false
+  },
+  "integration": {
+    "glossary_targets": [
+      "manitoba",
+      "fodmap",
+      "histamine"
+    ],
+    "troubleshooting_targets": [
+      "P17"
+    ],
+    "reuse": "P11 uses the existing home-oven illustration with its original source credit",
+    "locales": [
+      "it",
+      "en",
+      "es",
+      "fr",
+      "de",
+      "pt",
+      "ja"
+    ],
+    "new_asset_bytes": 83020,
+    "previous_46_assets": "byte-identical",
+    "checks": "Node 20 typecheck; 134 test files, 1763 passed, one skipped; all guards; production build and performance budget passed",
+    "budget_note": "Small-chunk consolidation 20000 to 30000; total worst-case per-user JS 569.7/570 KiB, initial static JS 149218 bytes gzip. No budget increase or locale/tool leakage."
   }
 }

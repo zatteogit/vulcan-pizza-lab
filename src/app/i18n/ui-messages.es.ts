@@ -1,5 +1,10 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.manitobaFlour": "Harina envasada y una pequeña muestra suelta. Para elegir una Manitoba, consulta la fuerza W y las características declaradas por el fabricante: el aspecto del polvo no basta para identificarla.",
+  "learn.visual.fructanIngredients": "El ajo y la cebolla son ejemplos de fuentes de fructanos, un grupo de FODMAP. No es una lista completa: la imagen no mide el contenido ni indica porciones o tolerancia individual.",
+  "learn.visual.fermentedSalami": "Salame fermentado: un ejemplo de alimento en el que pueden formarse aminas biógenas, incluida la histamina. Su contenido no se ve en la loncha ni se deduce del color o de la maduración declarada.",
+  "learn.visual.pizzaServing": "Una porción de pizza ya horneada se toma de la tabla para servirla. La escena acompaña el consejo de servir tras la cocción; no compara visualmente una pizza seca con una tierna.",
+  "learn.visual.efsa": "EFSA",
   "learn.visual.farinographBowl": "Cubeta del farinógrafo abierta para acceder a la muestra. La absorción se determina mediante una prueba a consistencia definida, no por el aspecto de la masa.",
   "learn.visual.farinographReadout": "Esquema sin escala recompuesto a partir de trazados del farinógrafo: tiempo en horizontal y resistencia en vertical. No permite leer minutos ni comparar harinas.",
   "learn.visual.lacticBacteria": "Lacticaseibacillus paracasei, redibujado y simplificado a partir de una micrografía electrónica, con colores modificados y sin escala. No todas las bacterias lácticas tienen esta forma. Ilustración bajo licencia CC BY-SA 3.0.",

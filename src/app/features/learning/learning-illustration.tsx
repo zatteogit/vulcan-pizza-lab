@@ -44,9 +44,17 @@ import farinographBowl from "../../../assets/learn/farinograph-bowl.webp";
 import farinographReadout from "../../../assets/learn/farinograph-readout.webp";
 import lacticBacteria from "../../../assets/learn/lactic-bacteria.webp";
 import breadFreezerPortions from "../../../assets/learn/bread-freezer-portions.webp";
+import manitobaFlour from "../../../assets/learn/manitoba-flour.webp";
+import fructanIngredients from "../../../assets/learn/fructan-ingredients.webp";
+import fermentedSalami from "../../../assets/learn/fermented-salami.webp";
+import pizzaServing from "../../../assets/learn/pizza-serving.webp";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const VISUALS = {
+  "manitoba-flour": { src: manitobaFlour, caption: () => uiMessage("learn.visual.manitobaFlour"), source: "https://www.molinomagri.com/it/prodotti/112-180-manitoba", author: "Molino Magri", cc: false },
+  "fructan-ingredients": { src: fructanIngredients, caption: () => uiMessage("learn.visual.fructanIngredients"), source: "https://www.monashfodmap.com/about-fodmap-and-ibs/high-and-low-fodmap-foods/", author: "Monash University / Monash FODMAP", cc: false },
+  "fermented-salami": { src: fermentedSalami, caption: () => uiMessage("learn.visual.fermentedSalami"), source: "https://www.salamecacciatore.it/il-prodotto/", author: "Consorzio Cacciatore Italiano", cc: false, extraSource: { source: "https://www.efsa.europa.eu/en/efsajournal/pub/2393", label: () => uiMessage("learn.visual.efsa") } },
+  "pizza-serving": { src: pizzaServing, caption: () => uiMessage("learn.visual.pizzaServing"), source: "https://www.kingarthurbaking.com/blog/2026/07/06/pizza-party-ideas", author: "Patrick Marinello / King Arthur Baking; food styling Yekaterina Boytsova", cc: false },
   "farinograph-bowl": { src: farinographBowl, caption: () => uiMessage("learn.visual.farinographBowl"), source: "https://www.anton-paar.com/us-en/products/details/farinograph/", author: "Brabender / Anton Paar", cc: false },
   "farinograph-readout": { src: farinographReadout, caption: () => uiMessage("learn.visual.farinographReadout"), source: "https://www.anton-paar.com/us-en/products/details/farinograph/", author: "Brabender / Anton Paar", cc: false },
   "lactic-bacteria": { src: lacticBacteria, caption: () => uiMessage("learn.visual.lacticBacteria"), source: "https://commons.wikimedia.org/wiki/File:Lactobacillus_paracasei.jpg", author: "Dr. Horst Neve / Max Rubner-Institut", cc: false, license: { url: "https://creativecommons.org/licenses/by-sa/3.0/", label: () => uiMessage("learn.visual.licenseSa3") } },
@@ -100,6 +108,7 @@ export type LearningIllustrationId = keyof typeof VISUALS;
 
 /** Only map terms for which the photographed stage actually explains the text. */
 export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
+  manitoba: "manitoba-flour", fodmap: "fructan-ingredients", histamine: "fermented-salami",
   absorption: "farinograph-bowl", stability: "farinograph-readout",
   lab: "lactic-bacteria", retrogradation: "bread-freezer-portions",
   w_alveograph: "alveograph-bubble",
@@ -127,6 +136,7 @@ export const TROUBLESHOOTING_VISUALS: Readonly<Partial<Record<string, readonly L
   P16: ["stretching"], P19: ["stretching", "covered-rest"], P23: ["ball-shaping"],
   P04: ["dough-temperature"], P05: ["covered-storage"], P21: ["covered-storage"],
   P08: ["stretching"],
+  P11: ["home-oven"], P17: ["pizza-serving"],
   P09: ["home-oven"], P10: ["stone-temperature"], P22: ["peel-prep"],
   FR02: ["frying-drain"], FR03: ["frying-seal"], P15: ["base-check", "stone-brushing"],
   FR01: ["oil-temperature"], P18: ["mozzarella-drying", "sauce-dosing"], P14: ["pizza-turning"],
