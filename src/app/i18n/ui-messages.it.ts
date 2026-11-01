@@ -68,6 +68,18 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "learn.visual.cornicione": "Cornicione rialzato e centro più basso: altezza e doratura cambiano secondo lo stile e la cottura.",
   "learn.visual.source": "Disegno da riferimento fotografico:",
 
+  "learn.diagram.arrhenius": "Schema ideale: ln k = ln A − (Eₐ/R) · (1/T), con A ed Eₐ costanti, Eₐ positivo e T in kelvin. Nessuna scala o misura sperimentale. {brand} usa invece un modello Q₁₀ a tratti per la fermentazione.",
+  "learn.diagram.proteolysis": "Una catena di nove elementi diventa due frammenti e un elemento libero per idrolisi catalizzata da proteasi. Simboli convenzionali, non atomi o una sequenza reale di glutine: non misurano la maturazione né indicano assenza di glutine.",
+  "learn.diagram.a_score": "La barra mostra i pesi dei criteri, non il risultato di una ricetta. Il motore applica poi regole su combustibile e adeguatezza termica. A-Score indica vicinanza al riferimento dello stile, non una certificazione.",
+  "learn.diagram.f_score": "La barra mostra i pesi dei criteri, non un punteggio di ricetta. La prova del velo richiama l’esperienza senza misurarla. Il verdetto di fattibilità è separato: F-Score non garantisce un piano fattibile.",
+  "learn.diagram.d_score": "Gli ingressi del modello per impasti lievitati: la biga è un esempio di prefermento. Nessun peso o risultato numerico è rappresentato. D-Score stima la maturazione, non la digeribilità personale o i FODMAP.",
+  "learn.diagram.chain": "Catena proteica",
+  "learn.diagram.hydrolysis": "Idrolisi catalizzata da proteasi",
+  "learn.diagram.fragments": "Frammenti più corti",
+  "learn.diagram.skill": "Esperienza",
+  "learn.diagram.duration": "Durata",
+  "learn.diagram.model": "Modello {brand}",
+
   "edition.partner": "per {0}",
   "recipe.slots.noneFeasibleTitle": "Per questo momento non c'è tempo",
   "recipe.slots.noneFeasibleBody": "Con la tua cucina nessuno stile sta nei tempi: lievitazione, stesura e preriscaldo richiedono di più. Il primo momento possibile è {0}.",

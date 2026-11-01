@@ -65,6 +65,18 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "learn.visual.cornicione": "A raised rim and lower centre: height and browning vary with pizza style and baking.",
   "learn.visual.source": "Illustration using a photographic reference:",
 
+  "learn.diagram.arrhenius": "Idealised diagram: ln k = ln A − (Eₐ/R) · (1/T), with constant A and Eₐ, positive Eₐ and T in kelvin. No scale or experimental measurements. {brand} instead uses a piecewise Q₁₀ fermentation model.",
+  "learn.diagram.proteolysis": "Protease-catalysed hydrolysis splits a chain of nine elements into two fragments and one free element. Conventional symbols, not atoms or a real gluten sequence: they measure neither maturation nor the absence of gluten.",
+  "learn.diagram.a_score": "The bar shows criterion weights, not a recipe result. The engine then applies fuel and thermal suitability rules. A-Score indicates closeness to the style reference, not certification.",
+  "learn.diagram.f_score": "The bar shows criterion weights, not a recipe score. The windowpane test represents experience without measuring it. The feasibility verdict is separate: F-Score does not guarantee a feasible plan.",
+  "learn.diagram.d_score": "Model inputs for leavened dough: biga is one example of a preferment. No weights or numeric result are shown. D-Score estimates maturation, not personal digestibility or FODMAPs.",
+  "learn.diagram.chain": "Protein chain",
+  "learn.diagram.hydrolysis": "Protease-catalysed hydrolysis",
+  "learn.diagram.fragments": "Shorter fragments",
+  "learn.diagram.skill": "Experience",
+  "learn.diagram.duration": "Duration",
+  "learn.diagram.model": "{brand} model",
+
   "edition.partner": "for {0}",
   "recipe.slots.noneFeasibleTitle": "There isn't enough time for this moment",
   "recipe.slots.noneFeasibleBody": "With your kitchen no style fits in time: rising, shaping and preheating take longer. The first possible moment is {0}.",

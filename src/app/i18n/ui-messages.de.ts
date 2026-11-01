@@ -65,6 +65,18 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "learn.visual.cornicione": "Erhöhter Rand und flachere Mitte: Höhe und Bräunung hängen von Pizzastil und Backweise ab.",
   "learn.visual.source": "Illustration nach einer Fotovorlage:",
 
+  "learn.diagram.arrhenius": "Ideales Schema: ln k = ln A − (Eₐ/R) · (1/T), bei konstantem A und Eₐ, positivem Eₐ und T in Kelvin. Keine Skala oder Messdaten. {brand} nutzt für die Gärung stattdessen ein abschnittsweises Q₁₀-Modell.",
+  "learn.diagram.proteolysis": "Proteasekatalysierte Hydrolyse zerlegt eine Kette aus neun Elementen in zwei Fragmente und ein freies Element. Schematische Symbole, keine Atome oder reale Glutensequenz: weder Reifung noch Glutenfreiheit werden gemessen.",
+  "learn.diagram.a_score": "Der Balken zeigt die Gewichtung der Kriterien, kein Rezeptresultat. Danach gelten Regeln zu Brennstoff und thermischer Eignung. A-Score beschreibt die Nähe zur Stilreferenz, keine Zertifizierung.",
+  "learn.diagram.f_score": "Der Balken zeigt Kriteriengewichte, keinen Rezeptwert. Der Fenstertest steht für Erfahrung, ohne sie zu messen. Die Machbarkeit wird separat beurteilt: F-Score garantiert keinen durchführbaren Plan.",
+  "learn.diagram.d_score": "Modelleingaben für Hefeteige: Biga ist ein Beispiel für einen Vorteig. Keine Gewichte oder Zahlenresultate dargestellt. D-Score schätzt die Reifung, nicht die persönliche Verdaulichkeit oder FODMAPs.",
+  "learn.diagram.chain": "Proteinkette",
+  "learn.diagram.hydrolysis": "Proteasekatalysierte Hydrolyse",
+  "learn.diagram.fragments": "Kürzere Fragmente",
+  "learn.diagram.skill": "Erfahrung",
+  "learn.diagram.duration": "Dauer",
+  "learn.diagram.model": "{brand}-Modell",
+
   "edition.partner": "für {0}",
   "recipe.slots.noneFeasibleTitle": "Für diesen Zeitpunkt reicht die Zeit nicht",
   "recipe.slots.noneFeasibleBody": "Mit deiner Küche passt kein Stil in die Zeit: Gare, Formen und Vorheizen dauern länger. Der früheste mögliche Zeitpunkt ist {0}.",

@@ -1,6 +1,8 @@
 # Learning illustrations · Batch 11
 
-Local review proposals for the five remaining glossary entries: Arrhenius, proteolysis, A-Score, F-Score and D-Score. No application integration or publication in this batch.
+Five approved proposals for the remaining glossary entries: Arrhenius, proteolysis, A-Score, F-Score and D-Score. The original review files below are preserved.
+
+App integration adds five geometry-only SVGs in `src/assets/learn/`, a token-styled HTML diagram renderer, seven translated caption/label sets and cached reuse of the existing photo-grounded artwork. All 44 glossary entries now have a visual mapping; P06/P20 remain text-led. Source images are unchanged. Publication uses the main/test/production workflow; deployment and live evidence are recorded separately in `/Users/matteo/dev/Vulcan/output/learn-illustration-release-11-2026-11-01/`.
 
 Open `review.html` through the existing Vite server at `/design-assets/learn-illustrations-batch-11/review.html`. The portable copy is in `/Users/matteo/dev/Vulcan/output/learn-illustration-batch-11-2026-11-01/`.
 
@@ -39,3 +41,9 @@ All labels, formulas and credits are selectable HTML. Localize them through the 
 - Application tests/build were not repeated: only independent review assets and documentation changed.
 
 P06 and P20 remain text-led: an illustration cannot establish a taste/smell diagnosis.
+
+## Production integration checks
+
+The app imports geometry-only SVGs and positions the existing cached WebPs over them. Captions and diagram-specific labels use the seven CMS message catalogs; existing CMS labels and locale number formatting are reused. Tests check engine/bar agreement, residue conservation, no baked text/base64 imagery, all 44 glossary mappings and decorative cards without nested links.
+
+The existing 30,000-byte minimum chunk threshold and every performance limit remain unchanged. An explicit group consolidates learning pages, data and contextual explanations; `onlyExplicitManualChunks` keeps dependencies out of that manual group. Node 20 measurements: common JS 468,911 bytes gzip; Japanese worst case 583,623 / 583,680 bytes; CSS 73.1 / 74 KiB. Worst-case JS headroom is only 57 bytes, so further additions need fresh budget verification. Initial static JS is 149,170 bytes, versus 149,218 at the preceding release. Locale boundaries and tool exclusion checks pass. Runtime smoke checks cover the production build as well as dev.

@@ -65,6 +65,18 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "learn.visual.cornicione": "盛り上がった縁と低い中央。高さと焼き色はピザのスタイルと焼き方で変わります。",
   "learn.visual.source": "写真を参考にしたイラスト：",
 
+  "learn.diagram.arrhenius": "模式図：ln k = ln A − (Eₐ/R) · (1/T)。A・Eₐ一定、Eₐは正、Tはケルビン。目盛り・実測値なし。{brand}の発酵計算は区分的Q₁₀モデルです。",
+  "learn.diagram.proteolysis": "プロテアーゼによる加水分解で9要素の鎖を2断片と1遊離要素に分けます。記号は原子や実際のグルテン配列ではなく、熟成度やグルテンの不在を示しません。",
+  "learn.diagram.a_score": "棒は評価項目の重みで、レシピの結果ではありません。計算後に燃料・熱条件の規則を適用します。A-Scoreはスタイル基準への近さで、認証ではありません。",
+  "learn.diagram.f_score": "棒は評価項目の重みで、レシピの点数ではありません。薄膜テストは経験の例で、測定ではありません。実行可能性は別判定です。F-Scoreは実行可能な計画を保証しません。",
+  "learn.diagram.d_score": "発酵生地モデルへの入力です。ビガは前発酵生地の一例。重み・数値結果は示しません。D-Scoreは熟成の推定で、個人の消化しやすさやFODMAPの測定ではありません。",
+  "learn.diagram.chain": "タンパク質の鎖",
+  "learn.diagram.hydrolysis": "プロテアーゼによる加水分解",
+  "learn.diagram.fragments": "短い断片",
+  "learn.diagram.skill": "経験",
+  "learn.diagram.duration": "時間",
+  "learn.diagram.model": "{brand}モデル",
+
   "edition.partner": "{0} 向け",
   "recipe.slots.noneFeasibleTitle": "この時間には間に合いません",
   "recipe.slots.noneFeasibleBody": "あなたのキッチンでは、どのスタイルも時間内に収まりません。発酵・成形・予熱にもっと時間がかかります。最も早く可能なのは{0}です。",

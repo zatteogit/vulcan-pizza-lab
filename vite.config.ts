@@ -371,8 +371,13 @@ export default defineConfig(({ command, mode }) => ({
            Lotto 10: 30000, per consolidare ulteriori piccoli chunk e conservare
            il budget per utente senza tagliare le didascalie. */
         experimentalMinChunkSize: 30000,
+        /* Keep learning UI/data together without pulling their dependencies
+           (or any locale) into the group. Initial entry imports are measured
+           separately from the worst-case per-user budget. */
+        onlyExplicitManualChunks: true,
         manualChunks(id) {
           const file = id.replace(/\\/g, "/");
+          if (/\/src\/app\/(features\/learning\/|features\/glossary\/|features\/science\/why-button\.tsx$|features\/recipe\/(pre-ferment-guide|score-explainer)\.tsx$|data\/(glossary-data|glossary-terms|glossary-copy|troubleshooting-data)\.ts$|pages\/(learn|glossary|troubleshooting|pre-ferments|method)\.tsx$)/.test(file)) return "learning";
           if (/\/node_modules\/(react|react-dom|react-router|scheduler)\//.test(file)) return "vendor-react";
           /* "motion" è un wrapper: senza framer-motion qui, i ~120 kB veri
              finivano nel chunk principale (audit bundle lug 2026). */
