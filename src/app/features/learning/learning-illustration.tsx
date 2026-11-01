@@ -48,9 +48,10 @@ import manitobaFlour from "../../../assets/learn/manitoba-flour.webp";
 import fructanIngredients from "../../../assets/learn/fructan-ingredients.webp";
 import fermentedSalami from "../../../assets/learn/fermented-salami.webp";
 import pizzaServing from "../../../assets/learn/pizza-serving.webp";
+import { LearningDiagram, isLearningDiagramId, type LearningDiagramId } from "./learning-diagram";
 import { uiMessage } from "../../i18n/ui-messages";
 
-const VISUALS = {
+const LEARNING_ARTWORK = {
   "manitoba-flour": { src: manitobaFlour, caption: () => uiMessage("learn.visual.manitobaFlour"), source: "https://www.molinomagri.com/it/prodotti/112-180-manitoba", author: "Molino Magri", cc: false },
   "fructan-ingredients": { src: fructanIngredients, caption: () => uiMessage("learn.visual.fructanIngredients"), source: "https://www.monashfodmap.com/about-fodmap-and-ibs/high-and-low-fodmap-foods/", author: "Monash University / Monash FODMAP", cc: false },
   "fermented-salami": { src: fermentedSalami, caption: () => uiMessage("learn.visual.fermentedSalami"), source: "https://www.salamecacciatore.it/il-prodotto/", author: "Consorzio Cacciatore Italiano", cc: false, extraSource: { source: "https://www.efsa.europa.eu/en/efsajournal/pub/2393", label: () => uiMessage("learn.visual.efsa") } },
@@ -104,10 +105,11 @@ const VISUALS = {
   "stretching-properties": { src: stretching, caption: () => uiMessage("learn.visual.stretchingProperties"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
 } as const;
 
-export type LearningIllustrationId = keyof typeof VISUALS;
+export type LearningIllustrationId = keyof typeof LEARNING_ARTWORK | LearningDiagramId;
 
 /** Only map terms for which the photographed stage actually explains the text. */
 export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
+  arrhenius: "arrhenius", proteolysis: "proteolysis", a_score: "a_score", f_score: "f_score", d_score: "d_score",
   manitoba: "manitoba-flour", fodmap: "fructan-ingredients", histamine: "fermented-salami",
   absorption: "farinograph-bowl", stability: "farinograph-readout",
   lab: "lactic-bacteria", retrogradation: "bread-freezer-portions",
@@ -146,7 +148,8 @@ export function LearningIllustration({ id, decorative = false }: {
   id: LearningIllustrationId;
   decorative?: boolean;
 }) {
-  const visual = VISUALS[id];
+  if (isLearningDiagramId(id)) return <LearningDiagram id={id} artwork={LEARNING_ARTWORK} decorative={decorative} />;
+  const visual = LEARNING_ARTWORK[id];
   const image = <img src={visual.src} width={672} height={448} alt="" loading="lazy" decoding="async" data-region="learning-image" />;
   if (decorative) return image;
   return (

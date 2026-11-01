@@ -1,0 +1,65 @@
+{
+  "commit": "26e0ea995d5918eeb0b3a0f19bfac6294e62dae1",
+  "generatedFrom": "scoreModelFacts(); no sample recipe or score fabricated",
+  "model": {
+    "authenticityWeights": {
+      "ingredients": 0.35,
+      "process": 0.3,
+      "equipment": 0.35
+    },
+    "feasibilityWeights": {
+      "oven": 0.4,
+      "flour": 0.3,
+      "skill": 0.3
+    },
+    "bands": {
+      "A": [
+        90,
+        75,
+        60
+      ],
+      "F": [
+        85,
+        70,
+        50
+      ],
+      "D": [
+        85,
+        70,
+        50
+      ]
+    },
+    "authenticityFuelCap": 75,
+    "nonFeasibleCeiling": 39,
+    "compositeWeights": {
+      "authenticity": 0.55,
+      "feasibility": 0.45,
+      "digestibility": 0,
+      "sustainability": 0,
+      "experimentation": 0
+    },
+    "compositeRule": "min"
+  },
+  "sourceFiles": [
+    {
+      "path": "src/app/domain/recipe-score.ts",
+      "sha256": "c8a584115d79cb4293ed2a3d91e0c3cb3b82b1c32777841375fbfa313e01fb38"
+    },
+    {
+      "path": "src/app/domain/pizza-engine.ts",
+      "sha256": "9c6a6df33e6067bf798f42624a79cebe3755f4fc60da01267816ed061bfd414c"
+    },
+    {
+      "path": "src/app/domain/science/engine-facts.ts",
+      "sha256": "beba45683ba5979b4dabc0de31fcb14c585f9035b6b31df77530637d7f8f76d3"
+    }
+  ],
+  "dInputs": [
+    "fermentationHours",
+    "fermentationTempC",
+    "yeastType",
+    "yeastPct",
+    "hasPreFerment"
+  ],
+  "dScope": "Overview of leavened dough only. The engine also has an unleavened branch. No health or FODMAP output is represented."
+}

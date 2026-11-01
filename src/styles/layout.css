@@ -376,3 +376,40 @@
   }
   [data-page="learn"] .learn-resources__card { height: 100%; }
 }
+
+/* Approved batch 11 plates: labels stay HTML; cached artwork is reused.
+   Percent coordinates follow the 672 × 448 source geometry. */
+[data-region="learning-diagram"] { position: relative; aspect-ratio: 3 / 2; inline-size: 100%; max-inline-size: calc(var(--space-40) * 4); margin-inline: auto; }
+[data-region="learning-diagram"] [data-region="learning-image"] { max-block-size: none; }
+[data-diagram-picture] { position: absolute; object-fit: contain; block-size: 34.82%; inline-size: 28.27%; inset-block-start: 9.375%; }
+[data-diagram-picture="0"] { inset-inline-start: 4.167%; }
+[data-diagram-picture="1"] { inset-inline-start: 36.01%; }
+[data-diagram-picture="2"] { inset-inline-start: 67.86%; }
+[data-diagram-label], [data-diagram-weight] { position: absolute; transform: translate(-50%, -50%); font-size: var(--font-size-sm); line-height: var(--leading-tight); font-weight: var(--font-weight-medium); text-align: center; max-inline-size: 30%; }
+[data-diagram-label="0"] { inset-inline-start: 18.3%; inset-block-start: 50%; }
+[data-diagram-label="1"] { inset-inline-start: 50.15%; inset-block-start: 50%; }
+[data-diagram-label="2"] { inset-inline-start: 82%; inset-block-start: 50%; }
+[data-diagram-weight] { inset-block-start: 68.75%; color: var(--learning-diagram-on-fill); }
+[data-learning-diagram="a_score"] [data-diagram-weight="0"] { inset-inline-start: 22.14%; }
+[data-learning-diagram="a_score"] [data-diagram-weight="1"] { inset-inline-start: 50%; }
+[data-learning-diagram="a_score"] [data-diagram-weight="2"] { inset-inline-start: 77.86%; }
+[data-learning-diagram="f_score"] [data-diagram-weight="0"] { inset-inline-start: 24.29%; }
+[data-learning-diagram="f_score"] [data-diagram-weight="1"] { inset-inline-start: 54.29%; }
+[data-learning-diagram="f_score"] [data-diagram-weight="2"] { inset-inline-start: 80%; }
+[data-learning-diagram="arrhenius"] [data-diagram-label="0"] { inset-inline-start: 12%; inset-block-start: 14%; }
+[data-learning-diagram="arrhenius"] [data-diagram-label="1"] { inset-inline-start: 88%; inset-block-start: 81%; }
+[data-learning-diagram="arrhenius"] [data-diagram-label="2"] { inset-inline-start: 57%; inset-block-start: 18%; }
+[data-learning-diagram="proteolysis"] [data-diagram-label="0"] { inset-inline-start: 50%; inset-block-start: 13%; }
+[data-learning-diagram="proteolysis"] [data-diagram-label="1"] { inset-inline-start: 72%; inset-block-start: 46%; }
+[data-learning-diagram="proteolysis"] [data-diagram-label="2"] { inset-inline-start: 50%; inset-block-start: 80%; }
+[data-learning-diagram="d_score"] [data-diagram-picture] { inline-size: 22.92%; block-size: 22.32%; }
+[data-learning-diagram="d_score"] [data-diagram-picture="0"] { inset-inline-start: 6.7%; inset-block-start: 48.66%; }
+[data-learning-diagram="d_score"] [data-diagram-picture="1"] { inset-inline-start: 36.01%; inset-block-start: 8.04%; }
+[data-learning-diagram="d_score"] [data-diagram-picture="2"] { inset-inline-start: 36.01%; inset-block-start: 48.21%; }
+[data-learning-diagram="d_score"] [data-diagram-label] { max-inline-size: 22%; }
+[data-learning-diagram="d_score"] [data-diagram-label="0"] { inset-inline-start: 18.3%; inset-block-start: 34%; }
+[data-learning-diagram="d_score"] [data-diagram-label="1"] { inset-inline-start: 18.3%; inset-block-start: 74%; }
+[data-learning-diagram="d_score"] [data-diagram-label="2"] { inset-inline-start: 47.3%; inset-block-start: 34%; }
+[data-learning-diagram="d_score"] [data-diagram-label="3"] { inset-inline-start: 47.3%; inset-block-start: 74%; }
+[data-learning-diagram="d_score"] [data-diagram-label="4"] { inset-inline-start: 81.8%; inset-block-start: 47%; color: var(--learning-diagram-on-fill); max-inline-size: 18%; }
+[data-learning-diagram="d_score"] [data-diagram-label="5"] { inset-inline-start: 81.8%; inset-block-start: 78%; color: var(--learning-diagram-on-fill); max-inline-size: 20%; }

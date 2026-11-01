@@ -65,6 +65,18 @@ export const UI_MESSAGES_ES: Record<string, string> = {
   "learn.visual.cornicione": "Borde elevado y centro más bajo: la altura y el dorado varían según el estilo y la cocción.",
   "learn.visual.source": "Ilustración con referencia fotográfica:",
 
+  "learn.diagram.arrhenius": "Esquema ideal: ln k = ln A − (Eₐ/R) · (1/T), con A y Eₐ constantes, Eₐ positivo y T en kelvin. Sin escala ni mediciones experimentales. {brand} utiliza un modelo Q₁₀ por tramos para la fermentación.",
+  "learn.diagram.proteolysis": "La hidrólisis catalizada por proteasas divide una cadena de nueve elementos en dos fragmentos y un elemento libre. Símbolos convencionales, no átomos ni una secuencia real de gluten: no miden la maduración ni indican ausencia de gluten.",
+  "learn.diagram.a_score": "La barra muestra los pesos de los criterios, no el resultado de una receta. Después se aplican reglas sobre combustible y adecuación térmica. A-Score indica proximidad al estilo de referencia, no una certificación.",
+  "learn.diagram.f_score": "La barra muestra pesos de criterios, no una puntuación de receta. La prueba de la membrana representa la experiencia sin medirla. La viabilidad se evalúa por separado: F-Score no garantiza un plan viable.",
+  "learn.diagram.d_score": "Entradas del modelo para masas fermentadas: la biga es un ejemplo de prefermento. No se muestran pesos ni resultados numéricos. D-Score estima la maduración, no la digestibilidad personal ni los FODMAP.",
+  "learn.diagram.chain": "Cadena proteica",
+  "learn.diagram.hydrolysis": "Hidrólisis catalizada por proteasas",
+  "learn.diagram.fragments": "Fragmentos más cortos",
+  "learn.diagram.skill": "Experiencia",
+  "learn.diagram.duration": "Duración",
+  "learn.diagram.model": "Modelo {brand}",
+
   "edition.partner": "para {0}",
   "recipe.slots.noneFeasibleTitle": "No hay tiempo para este momento",
   "recipe.slots.noneFeasibleBody": "Con tu cocina ningún estilo cabe en el tiempo: la fermentación, el estirado y el precalentamiento necesitan más. El primer momento posible es {0}.",

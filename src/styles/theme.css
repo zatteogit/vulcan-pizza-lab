@@ -1019,6 +1019,7 @@
   --data-warmth: var(--color-amber-600);
   --data-warmth-deep: var(--color-amber-800);
   --data-label-ink: var(--foreground);
+  --learning-diagram-on-fill: var(--color-terracotta-900);
   /* i fill restano cromatici; il testo mantiene contrasto AA */
 
   /* ── Forge / Heat palette (blob forge, hero ember) ── */

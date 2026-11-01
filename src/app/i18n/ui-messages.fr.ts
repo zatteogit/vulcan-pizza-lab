@@ -65,6 +65,18 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "learn.visual.cornicione": "Bord surélevé et centre plus bas : la hauteur et la coloration varient selon le style et la cuisson.",
   "learn.visual.source": "Illustration à partir d’une référence photographique :",
 
+  "learn.diagram.arrhenius": "Schéma idéal : ln k = ln A − (Eₐ/R) · (1/T), avec A et Eₐ constants, Eₐ positif et T en kelvins. Sans échelle ni mesures expérimentales. {brand} utilise plutôt un modèle Q₁₀ par morceaux pour la fermentation.",
+  "learn.diagram.proteolysis": "L’hydrolyse catalysée par les protéases divise une chaîne de neuf éléments en deux fragments et un élément libre. Symboles conventionnels, pas des atomes ni une séquence réelle de gluten : ils ne mesurent ni la maturation ni l’absence de gluten.",
+  "learn.diagram.a_score": "La barre montre les poids des critères, pas le résultat d’une recette. Le moteur applique ensuite des règles de combustible et d’adéquation thermique. A-Score indique la proximité du style de référence, pas une certification.",
+  "learn.diagram.f_score": "La barre montre les poids des critères, pas un score de recette. Le test de la membrane évoque l’expérience sans la mesurer. La faisabilité est évaluée séparément : F-Score ne garantit pas un programme réalisable.",
+  "learn.diagram.d_score": "Entrées du modèle pour pâtes levées : la biga est un exemple de préferment. Aucun poids ni résultat numérique n’est représenté. D-Score estime la maturation, pas la digestibilité personnelle ni les FODMAP.",
+  "learn.diagram.chain": "Chaîne protéique",
+  "learn.diagram.hydrolysis": "Hydrolyse catalysée par les protéases",
+  "learn.diagram.fragments": "Fragments plus courts",
+  "learn.diagram.skill": "Expérience",
+  "learn.diagram.duration": "Durée",
+  "learn.diagram.model": "Modèle {brand}",
+
   "edition.partner": "pour {0}",
   "recipe.slots.noneFeasibleTitle": "Pas assez de temps pour ce moment",
   "recipe.slots.noneFeasibleBody": "Avec votre cuisine, aucun style ne tient dans le temps : la pousse, le façonnage et le préchauffage demandent plus. Le premier moment possible est {0}.",

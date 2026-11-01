@@ -371,12 +371,17 @@ export default defineConfig(({ command, mode }) => ({
            Lotto 10: 30000, per consolidare ulteriori piccoli chunk e conservare
            il budget per utente senza tagliare le didascalie. */
         experimentalMinChunkSize: 30000,
+        /* Keep learning UI/data together without pulling their dependencies
+           (or any locale) into the group. Initial entry imports are measured
+           separately from the worst-case per-user budget. */
+        onlyExplicitManualChunks: true,
         manualChunks(id) {
           const file = id.replace(/\\/g, "/");
-          if (/\/node_modules\/(react|react-dom|react-router|scheduler)\//.test(file)) return "vendor-react";
-          /* "motion" è un wrapper: senza framer-motion qui, i ~120 kB veri
-             finivano nel chunk principale (audit bundle lug 2026). */
-          if (/\/node_modules\/(motion|framer-motion|motion-dom|motion-utils)\//.test(file)) return "vendor-motion";
+          if (/\/src\/app\/(features\/learning\/|features\/glossary\/|features\/science\/why-button\.tsx$|features\/recipe\/(pre-ferment-guide|score-explainer)\.tsx$|data\/(glossary-data|glossary-terms|glossary-copy|troubleshooting-data)\.ts$|pages\/(learn|glossary|troubleshooting|pre-ferments|method)\.tsx$)/.test(file)) return "learning";
+          /* React and Motion are already static dependencies of the entry.
+             One UI vendor shares their compression dictionary; the same
+             largest-chunk limit continues to apply. */
+          if (/\/node_modules\/(react|react-dom|react-router|scheduler|motion|framer-motion|motion-dom|motion-utils)\//.test(file)) return "vendor-ui";
           /* Il catalogo UI italiano non ha più un chunk proprio (budget D-059,
              30/10/2026): entra nel bundle `it-…` con gli altri testi italiani.
              Le traduzioni dei condimenti (D-065) hanno invece un chunk

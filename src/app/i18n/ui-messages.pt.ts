@@ -65,6 +65,18 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "learn.visual.cornicione": "Borda elevada e centro mais baixo: a altura e o dourado variam com o estilo e a cozedura.",
   "learn.visual.source": "Ilustração com referência fotográfica:",
 
+  "learn.diagram.arrhenius": "Esquema ideal: ln k = ln A − (Eₐ/R) · (1/T), com A e Eₐ constantes, Eₐ positivo e T em kelvin. Sem escala nem medições experimentais. {brand} utiliza um modelo Q₁₀ por intervalos para a fermentação.",
+  "learn.diagram.proteolysis": "A hidrólise catalisada por proteases divide uma cadeia de nove elementos em dois fragmentos e um elemento livre. Símbolos convencionais, não átomos nem uma sequência real de glúten: não medem a maturação nem indicam ausência de glúten.",
+  "learn.diagram.a_score": "A barra mostra os pesos dos critérios, não o resultado de uma receita. O motor aplica depois regras de combustível e adequação térmica. A-Score indica proximidade ao estilo de referência, não uma certificação.",
+  "learn.diagram.f_score": "A barra mostra os pesos dos critérios, não uma pontuação de receita. O teste do véu representa experiência sem a medir. A viabilidade é avaliada separadamente: F-Score não garante um plano viável.",
+  "learn.diagram.d_score": "Entradas do modelo para massas levedadas: a biga é um exemplo de pré-fermento. Não são apresentados pesos nem resultados numéricos. D-Score estima a maturação, não a digestibilidade pessoal nem os FODMAP.",
+  "learn.diagram.chain": "Cadeia proteica",
+  "learn.diagram.hydrolysis": "Hidrólise catalisada por proteases",
+  "learn.diagram.fragments": "Fragmentos mais curtos",
+  "learn.diagram.skill": "Experiência",
+  "learn.diagram.duration": "Duração",
+  "learn.diagram.model": "Modelo {brand}",
+
   "edition.partner": "para {0}",
   "recipe.slots.noneFeasibleTitle": "Não dá tempo para este momento",
   "recipe.slots.noneFeasibleBody": "Com a sua cozinha nenhum estilo cabe no tempo: fermentação, abertura e pré-aquecimento levam mais. O primeiro momento possível é {0}.",
