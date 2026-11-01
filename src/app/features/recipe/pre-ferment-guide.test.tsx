@@ -27,8 +27,8 @@ describe("PreFermentCard — «Come si fa»", () => {
     expect(items[2]).toContain("biga-in-water.webp");
     expect(items[3]).toMatch(/sale/);
     expect(out).toContain('loading="lazy"');
-    expect(out).toContain("https://www.billyparisi.com/biga-recipe/");
-    expect(out).toContain("https://anitalianinmykitchen.com/italian-bread/");
+    expect(out).not.toContain("https://www.billyparisi.com/biga-recipe/");
+    expect(out).not.toContain("https://anitalianinmykitchen.com/italian-bread/");
     expect(html({ preFermentType: "biga" })).not.toContain("<figure");
   });
 

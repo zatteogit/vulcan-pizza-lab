@@ -64,7 +64,7 @@ const LEARNING_ARTWORK = {
   "autolyse-initial-mix": { src: autolyseInitialMix, caption: () => uiMessage("learn.visual.autolyseInitialMix"), source: "https://www.billyparisi.com/biga-recipe/", author: "Chef Billy Parisi", cc: false, extraSources: [{ source: "https://anitalianinmykitchen.com/italian-bread/", author: "Rosemary Molloy" }, { source: "https://www.theperfectloaf.com/guides/how-to-autolyse/", author: "Maurizio Leo / The Perfect Loaf" }] },
   "manitoba-flour": { src: manitobaFlour, caption: () => uiMessage("learn.visual.manitobaFlour"), source: "https://www.molinomagri.com/it/prodotti/112-180-manitoba", author: "Molino Magri", cc: false },
   "fructan-ingredients": { src: fructanIngredients, caption: () => uiMessage("learn.visual.fructanIngredients"), source: "https://www.monashfodmap.com/about-fodmap-and-ibs/high-and-low-fodmap-foods/", author: "Monash University / Monash FODMAP", cc: false },
-  "fermented-salami": { src: fermentedSalami, caption: () => uiMessage("learn.visual.fermentedSalami"), source: "https://www.salamecacciatore.it/il-prodotto/", author: "Consorzio Cacciatore Italiano", cc: false, extraSource: { source: "https://www.efsa.europa.eu/en/efsajournal/pub/2393", label: () => uiMessage("learn.visual.efsa") } },
+  "fermented-salami": { src: fermentedSalami, caption: () => uiMessage("learn.visual.fermentedSalami"), source: "https://www.salamecacciatore.it/il-prodotto/", author: "Consorzio Cacciatore Italiano", cc: false, scientificSource: { source: "https://www.efsa.europa.eu/en/efsajournal/pub/2393", label: () => uiMessage("learn.visual.efsa") } },
   "pizza-serving": { src: pizzaServing, caption: () => uiMessage("learn.visual.pizzaServing"), source: "https://www.kingarthurbaking.com/blog/2026/07/06/pizza-party-ideas", author: "Patrick Marinello / King Arthur Baking; food styling Yekaterina Boytsova", cc: false },
   "farinograph-bowl": { src: farinographBowl, caption: () => uiMessage("learn.visual.farinographBowl"), source: "https://www.anton-paar.com/us-en/products/details/farinograph/", author: "Brabender / Anton Paar", cc: false },
   "farinograph-readout": { src: farinographReadout, caption: () => uiMessage("learn.visual.farinographReadout"), source: "https://www.anton-paar.com/us-en/products/details/farinograph/", author: "Brabender / Anton Paar", cc: false },
@@ -160,6 +160,9 @@ export function LearningIllustration({ id, decorative = false }: {
 }) {
   if (isLearningDiagramId(id)) return <LearningDiagram id={id} artwork={LEARNING_ARTWORK} decorative={decorative} />;
   const visual = LEARNING_ARTWORK[id];
+  // Photo inspiration stays in the internal registry. Declared licensed
+  // adaptations and sources supporting factual content keep their credits.
+  const attributed = visual.cc || "license" in visual;
   const image = <img src={visual.src} width={672} height={448} alt="" loading="lazy" decoding="async" data-region="learning-image" />;
   if (decorative) return image;
   return (
@@ -167,13 +170,15 @@ export function LearningIllustration({ id, decorative = false }: {
       {image}
       <figcaption>
         <p>{visual.caption()}</p>
-        <small data-region="learning-source">
+        {attributed && <small data-region="learning-source">
           {uiMessage("learn.visual.source")} <a href={visual.source}>{visual.author}</a>
           {"extraSource" in visual && <> · <a href={visual.extraSource.source}>{visual.extraSource.label()}</a></>}
-          {"extraSources" in visual && visual.extraSources.map(source => <span key={source.source} data-region="source"> · <a href={source.source}>{source.author}</a></span>)}
           {"license" in visual && <> · <a href={visual.license.url}>{visual.license.label()}</a></>}
           {visual.cc && <> · <a href={"licenseVersion" in visual ? "https://creativecommons.org/licenses/by/3.0/" : "https://creativecommons.org/licenses/by/2.0/"}>{"licenseVersion" in visual ? uiMessage("learn.visual.license3") : uiMessage("learn.visual.license")}</a></>}
-        </small>
+        </small>}
+        {"scientificSource" in visual && <small data-region="learning-source">
+          {uiMessage("science.sheet.sources")} <a href={visual.scientificSource.source}>{visual.scientificSource.label()}</a>
+        </small>}
       </figcaption>
     </figure>
   );

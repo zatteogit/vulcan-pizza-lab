@@ -4,7 +4,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "learn.visual.bigaHandMixing": "Die Biga nur kurz mischen: Unregelmäßige Klumpen bleiben erhalten, keine glatte Kugel kneten.",
   "learn.visual.poolishStirring": "Der Löffel vermischt den frisch angesetzten, flüssigen Poolish. Das Bild zeigt nicht das Ende der Reifezeit.",
   "learn.visual.bigaInWater": "Bigastücke im Wasser für den Hauptteig, bevor sie eingearbeitet werden.",
-  "learn.visual.autolyseInitialMix": "Neu zusammengesetzter Handgriff: hier nur Mehl und Wasser vor der Autolyseruhe. Hefe und Salz folgen später.",
+  "learn.visual.autolyseInitialMix": "Vor der Autolyseruhe werden nur Mehl und Wasser gemischt. Hefe und Salz folgen später.",
   "learn.visual.genericFlourTest": "Allgemeine Darstellung der Prüfung, kein Messergebnis dieser Mehlsorte.",
   "learn.visual.manitobaFlour": "Verpacktes Mehl und eine kleine lose Probe. Bei Manitoba-Mehl sind der W-Wert und die Herstellerangaben entscheidend: Am Aussehen des Pulvers lässt es sich nicht erkennen.",
   "learn.visual.fructanIngredients": "Knoblauch und Zwiebel sind Beispiele für Fruktanquellen, eine FODMAP-Gruppe. Die Liste ist nicht vollständig: Das Bild misst keinen Gehalt und gibt weder Portionsgrößen noch individuelle Verträglichkeit an.",

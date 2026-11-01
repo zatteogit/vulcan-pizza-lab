@@ -1,0 +1,184 @@
+{
+  "batch": 13,
+  "date": "2026-11-01",
+  "base_commit": "bd3ceed2a39dda3361e4cc6dae406afcee935063",
+  "status": "Prepared for local visual review; not integrated or published",
+  "mode": "built-in image_gen; one call per distinct asset",
+  "export": "Pillow resize/format conversion only; original alpha preserved; no creative postprocessing",
+  "style_reference": {
+    "path": "src/assets/learn/bench-fold.webp",
+    "sha256": "925d26ef53604371c3d606a7c13dd63e04bf60b64e7365fde0c1ebbabd4545b1",
+    "role": "approved style only"
+  },
+  "assets": [
+    {
+      "id": "room-air-temperature",
+      "title": "Misurare l’aria della stanza",
+      "target": "Metodo · kitchen-temp-default; Problemi · P04, prevenzione",
+      "asset": "assets/room-air-temperature.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 20170,
+      "sha256": "a9e22498d7e95ae4d54e3a95d492e16e2da40323d1c637d0ecac90dd30870692",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/masters/room-air-temperature.png",
+      "master_sha256": "d985a067d287fb7fdb4fb86404860d35e9e374ddcaa460a6c0fbcf08cdb37cc2",
+      "sources": [
+        {
+          "page": "https://www.thermoworks.com/products/spot",
+          "author": "ThermoWorks",
+          "photo_url": "https://www.thermoworks.com/cdn/shop/files/ShopifyWebsite-PDP-GalleryImages-SPOT-April2026-04.webp?v=1777661457&width=3840",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ambient-124.webp",
+          "role": "physical photo",
+          "original_distributed": false,
+          "sha256": "b585a7473c3a1a001416cde9d347c77418a7a8165d0e47b15020e397bec67507"
+        }
+      ],
+      "caption_it": "Misura l’aria vicino alla zona in cui riposa l’impasto: la sua temperatura può essere diversa da quella dell’impasto.",
+      "recomposition_and_limits": "Strumento reso generico dalla fotografia ThermoWorks in ambiente interno. Nessuna lettura, precisione o soglia rappresentata; nessun modello consigliato."
+    },
+    {
+      "id": "fridge-shelf-temperature",
+      "title": "Controllare il ripiano del frigo",
+      "target": "Problemi · P21, temperatura sul ripiano usato",
+      "asset": "assets/fridge-shelf-temperature.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 37864,
+      "sha256": "fa357fd51ae0c073ba1526e9ddbc05e0cfecbeda2f1a09d814ef2abd0eaddc47",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/masters/fridge-shelf-temperature.png",
+      "master_sha256": "de164eee01f69da2e93f2a13a6d064aa1ad47f18d3a4bad29cf05f7088241ffe",
+      "sources": [
+        {
+          "page": "https://www.thermoworks.com/products/spot",
+          "author": "ThermoWorks",
+          "photo_url": "https://www.thermoworks.com/cdn/shop/files/ShopifyWebsite-PDP-GalleryImages-SPOT-April2026-03.webp?v=1777661457&width=3840",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ambient-123.webp",
+          "role": "physical photo",
+          "original_distributed": false,
+          "sha256": "8ab4491f90fd94efaa5744344f4b600ce777d967e98fae397524718780608a8c"
+        },
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2023/04/18/never-cover-rising-bread-dough-with-towel",
+          "author": "King Arthur Baking",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image_sm/public/2023-04/QZ7A7215.jpg?itok=b8neHnq3",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/covered-tub.jpg",
+          "role": "physical photo",
+          "original_distributed": false,
+          "sha256": "1eaf7ead9d666f0ae52249477532e911550facab389013c05a184f6105e47359"
+        }
+      ],
+      "caption_it": "Controlla la temperatura dell’aria sul ripiano usato, lasciando chiuso il recipiente. La temperatura del cuore dell’impasto può essere diversa.",
+      "recomposition_and_limits": "Scena ricomposta: termometro sul ripiano dalla foto ThermoWorks, recipiente da King Arthur Baking. La foto del recipiente non era scattata in frigorifero. Nessuna zona del frigo è dichiarata universalmente migliore."
+    },
+    {
+      "id": "flour-temperature",
+      "title": "Misurare la temperatura della farina",
+      "target": "Metodo · water-temp-rule, variabile della farina",
+      "asset": "assets/flour-temperature.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 40488,
+      "sha256": "6aa5a17a46d5cd58b2ab30259287beafcac4ab73e87dcd61200b68ba515dc806",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/masters/flour-temperature.png",
+      "master_sha256": "ffdfc5b5384b43d948684033de4dab046ddf08f3e48a9f81982e9f51a56a50cd",
+      "sources": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature",
+          "author": "Barb Alpern / King Arthur Baking",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2018/05/Desired-Dough-Temperature-45.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/ddt-22.jpg",
+          "role": "physical photo",
+          "original_distributed": false,
+          "sha256": "bc1226fb15262d0b09bbba409978e80838199b7948898c57e8a90b104b62704b"
+        },
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2022/02/18/digital-kitchen-scale",
+          "author": "PJ Hamel / King Arthur Baking",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/scaled_small/public/2022-02/Baking%20with%20a%20scale-5.jpg?itok=hAYZliS9",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/flour-bowl.jpg",
+          "role": "physical photo",
+          "original_distributed": false,
+          "sha256": "f05f976c0176bdcbb007d3fbd6ba1da28e16152230ceaff6a517aee27b0d6a2f"
+        },
+        {
+          "page": "https://www.kingarthurbaking.com/pro/reference/dough-temperature",
+          "author": "King Arthur Baking",
+          "photo_url": null,
+          "local_reference": null,
+          "role": "procedural description: flour temperature is an input, not a photo",
+          "original_distributed": false
+        }
+      ],
+      "caption_it": "La sonda misura la temperatura della farina, una delle variabili usate per calcolare quella dell’acqua.",
+      "recomposition_and_limits": "Gesto e strumento da Barb Alpern, farina in ciotola da PJ Hamel; la misurazione della farina è descritta nel riferimento professionale King Arthur. Non si spaccia la foto del gesto per una foto di misurazione della farina. Nessuna profondità, lettura o temperatura ottimale indicata."
+    },
+    {
+      "id": "yeast-freshness-check",
+      "title": "Controllare un lievito secco dubbio",
+      "target": "Problemi · P04, controllo rapido del lievito",
+      "asset": "assets/yeast-freshness-check.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 41516,
+      "sha256": "9789cd2d2022499a123c921c86f36fc5d3627e1da24bebf06687664b2ac6ccb8",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/masters/yeast-freshness-check.png",
+      "master_sha256": "4f97b30159fa83da7529f67bc86f5ffd961889ec2edfbe5e5a87c580469afcb9",
+      "sources": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2015/11/05/test-yeast-baking-powder-baking-soda-freshness",
+          "author": "PJ Hamel / King Arthur Baking",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2015/10/Testing-baking-powder-baking-soda-and-yeast-for-freshness-9.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/yeast-test-28.jpg",
+          "role": "physical photo",
+          "original_distributed": false,
+          "sha256": "2e59a694049b424aed6f984779cb833196b1c3adfa3a9c7a75cbb88a85d9dfd2"
+        },
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2023/05/10/guide-to-baking-with-yeast",
+          "author": "King Arthur Baking",
+          "photo_url": null,
+          "local_reference": null,
+          "role": "context: checking viability is optional, not routine activation",
+          "original_distributed": false
+        }
+      ],
+      "caption_it": "Una prova di attività del lievito secco in acqua, utile quando si dubita della sua vitalità. Non serve eseguirla per ogni impasto.",
+      "recomposition_and_limits": "Dalla fotografia di PJ Hamel: selezionata una sola ciotola della coppia con lieviti secchi. Non rappresenta lievito fresco, bicarbonato o lievito chimico; schiuma e quantità non diventano una soglia universale."
+    },
+    {
+      "id": "dough-volume-comparison",
+      "title": "Confrontare lo sviluppo dell’impasto",
+      "target": "Problemi · P03/P05, osservazione dello sviluppo; Metodo · stime dei tempi",
+      "asset": "assets/dough-volume-comparison.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 41878,
+      "sha256": "3bbe8f08427cfcba784e147257c0d97eaef1d15efdf939a04bc8a7d3dbcbd904",
+      "original_png": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/masters/dough-volume-comparison.png",
+      "master_sha256": "5aa0ef266fa5fb85eb562a2f717f5b92e59130f53a294a18fc824218255012bd",
+      "sources": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation",
+          "author": "Maurizio Leo / King Arthur Baking",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/blog-images/2019/06/Bread-Dough-in-Bulk-Fermentation-via-@kingarthurflour-bulk-progress.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-13-2026-11-01/references/bulk-25.jpg",
+          "role": "physical photo",
+          "original_distributed": false,
+          "sha256": "d24d489845df218fb2eae36644d9d72a629aa4541310c95df5a71b662f87025c"
+        }
+      ],
+      "caption_it": "Osserva come cambia il volume nello stesso recipiente. La fine della lievitazione dipende dall’impasto e dal procedimento.",
+      "recomposition_and_limits": "Coppia ricomposta dalla sequenza fotografica di Maurizio Leo, che comprende anche pieghe tra i momenti. Non è un esperimento misurato, non isola la sola fermentazione e non dà una soglia universale di maturazione."
+    }
+  ]
+}

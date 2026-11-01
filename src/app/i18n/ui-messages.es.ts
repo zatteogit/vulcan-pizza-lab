@@ -4,7 +4,7 @@ export const UI_MESSAGES_ES: Record<string, string> = {
   "learn.visual.bigaHandMixing": "Mezcla la biga brevemente: deben quedar grumos irregulares, sin buscar una bola lisa.",
   "learn.visual.poolishStirring": "La cuchara mezcla el poolish recién preparado, todavía fluido. No muestra el final de la maduración.",
   "learn.visual.bigaInWater": "Trozos de biga en el agua de la masa final, antes de incorporarlos.",
-  "learn.visual.autolyseInitialMix": "Gesto recompuesto: aquí solo harina y agua antes del reposo de autólisis. La levadura y la sal se añaden después.",
+  "learn.visual.autolyseInitialMix": "Se mezclan solo harina y agua antes del reposo de autólisis. La levadura y la sal se añaden después.",
   "learn.visual.genericFlourTest": "Ilustración genérica del ensayo, no un resultado medido en esta harina.",
   "learn.visual.manitobaFlour": "Harina envasada y una pequeña muestra suelta. Para elegir una Manitoba, consulta la fuerza W y las características declaradas por el fabricante: el aspecto del polvo no basta para identificarla.",
   "learn.visual.fructanIngredients": "El ajo y la cebolla son ejemplos de fuentes de fructanos, un grupo de FODMAP. No es una lista completa: la imagen no mide el contenido ni indica porciones o tolerancia individual.",
