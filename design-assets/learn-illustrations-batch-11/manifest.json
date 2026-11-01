@@ -1,0 +1,148 @@
+{
+  "status": "local-review-only",
+  "baseCommit": "26e0ea995d5918eeb0b3a0f19bfac6294e62dae1",
+  "method": "Original SVG diagrams; Arrhenius plotted with Matplotlib; reused approved photo-grounded raster cutouts. No new image generation.",
+  "sources": {
+    "arrhenius": [
+      [
+        "IUPAC · equazione di Arrhenius",
+        "https://goldbook.iupac.org/terms/view/A00446"
+      ],
+      [
+        "Purdue · costante di velocità ed energia di attivazione",
+        "https://chemed.chem.purdue.edu/genchem/topicreview/bp/ch22/activate.php"
+      ]
+    ],
+    "proteolysis": [
+      [
+        "Gene Ontology · proteolisi",
+        "https://amigo.geneontology.org/amigo/term/GO%3A0006508?relation=regulates"
+      ],
+      [
+        "Thiele et al., 2004 · idrolisi del glutine in pasta acida",
+        "https://pubmed.ncbi.nlm.nih.gov/14995138/"
+      ]
+    ],
+    "a_score": [
+      [
+        "Vulcan · pesi e calcolo A-Score",
+        "https://github.com/zatteogit/vulcan-pizza-lab/blob/26e0ea995d5918eeb0b3a0f19bfac6294e62dae1/src/app/domain/pizza-engine.ts#L1145"
+      ]
+    ],
+    "f_score": [
+      [
+        "Vulcan · calcolo F-Score",
+        "https://github.com/zatteogit/vulcan-pizza-lab/blob/26e0ea995d5918eeb0b3a0f19bfac6294e62dae1/src/app/domain/pizza-engine.ts#L1340"
+      ]
+    ],
+    "d_score": [
+      [
+        "Vulcan · modello di maturazione",
+        "https://github.com/zatteogit/vulcan-pizza-lab/blob/26e0ea995d5918eeb0b3a0f19bfac6294e62dae1/src/app/domain/pizza-engine.ts#L1440"
+      ]
+    ]
+  },
+  "reusedArtworkReferences": {
+    "manitoba-flour": [
+      "Molino Magri · farina Manitoba",
+      "https://www.molinomagri.com/it/prodotti/112-180-manitoba"
+    ],
+    "bench-fold": [
+      "King Arthur Baking · lavorazione di un impasto idratato",
+      "https://www.kingarthurbaking.com/blog/2017/06/19/kneading-wet-dough-by-hand"
+    ],
+    "home-oven": [
+      "King Arthur Baking · cottura nel forno domestico",
+      "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make"
+    ],
+    "windowpane": [
+      "King Arthur Baking · prova del velo",
+      "https://www.kingarthurbaking.com/blog/2022/10/14/what-is-the-windowpane-test-for-bread-dough"
+    ],
+    "dough-temperature": [
+      "King Arthur Baking · temperatura dell’impasto",
+      "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature"
+    ],
+    "yeast": [
+      "Liz Neily / Kristin Teig, King Arthur Baking · lievito fresco",
+      "https://www.kingarthurbaking.com/blog/2023/04/24/how-to-bake-with-fresh-yeast"
+    ],
+    "biga": [
+      "Rebecca Siegel · Biga, riferimento fotografico CC BY 2.0",
+      "https://www.flickr.com/photos/grongar/3683817769/"
+    ]
+  },
+  "reusedArtworkSha256": {
+    "manitoba-flour": "164ca32ef506e8a81c3c558cec1b0bebce2c409d5a7cfa3bb17663cf337dcbf6",
+    "bench-fold": "925d26ef53604371c3d606a7c13dd63e04bf60b64e7365fde0c1ebbabd4545b1",
+    "home-oven": "d75804b046ec94cda3d138fd7b4d6f447fbbf3e616e2c5fbf6c052d72d00c3c3",
+    "windowpane": "66a8b003af42ede56c9f63fe7aa2a70ee21c73bf3e9d39b000f795f3e895cad2",
+    "dough-temperature": "95a78bbd2cf152b98ed9c083dd203788d198f57261328b3fcad721d7e79b0f7c",
+    "yeast": "4bae7cb36755d5f789e7260dccd2ec33cc5fd07dd8c4b4ef6315b44c2cea8352",
+    "biga": "2feaa16822e7fe8b95c5ed27f5dc117efec904e7fa587e5bd86d2b7ab42cf30a"
+  },
+  "plates": [
+    {
+      "id": "arrhenius",
+      "caption": "Forma linearizzata ideale: ln k = ln A − (Eₐ/R) · (1/T). Per Eₐ positivo e parametri costanti, la pendenza è negativa. T è la temperatura assoluta in kelvin.",
+      "limitation": "Schema teorico senza dati sperimentali o scale numeriche. Vulcan usa un modello Q₁₀ a tratti per la fermentazione: questa curva non rappresenta il suo calcolo.",
+      "reused": [],
+      "sha256": "6218a4aa74479a910c1f74a5bae4b2c067b0d3ee29a269050fdbe333c7bb5073"
+    },
+    {
+      "id": "proteolysis",
+      "caption": "La proteolisi rompe legami peptidici per idrolisi. Lo schema conserva tutti i nove elementi: una catena diventa due frammenti e un elemento libero.",
+      "limitation": "Elementi convenzionali, non atomi né una sequenza reale di glutine. Nell’impasto l’attività dipende da enzimi e condizioni: lo schema non misura la maturazione e non indica assenza di glutine.",
+      "reused": [],
+      "sha256": "477d083c8667913d07e11b1958c6ed11889bab9f99bd8622b2c81cde93e957fb"
+    },
+    {
+      "id": "a_score",
+      "caption": "Ingredienti, processo e attrezzatura contribuiscono con i pesi indicati. Le lunghezze della barra rappresentano i pesi dei criteri, non un risultato di ricetta.",
+      "limitation": "Il motore applica anche regole e limiti legati a combustibile e adeguatezza termica. Questo è lo schema della ponderazione iniziale, non una certificazione di autenticità.",
+      "reused": [
+        "manitoba-flour",
+        "bench-fold",
+        "home-oven"
+      ],
+      "sha256": "0c9a3a62ddf3aebb94f0536672ce70f1a7302318f38c4fa40556139bb6042b94"
+    },
+    {
+      "id": "f_score",
+      "caption": "Forno, farina ed esperienza contribuiscono con i pesi indicati. Il gesto della prova del velo richiama l’esperienza; non serve a misurarla.",
+      "limitation": "La barra mostra la ponderazione dei criteri, non un punteggio reale. Il verdetto di fattibilità viene valutato separatamente: un F-Score non garantisce che il piano sia fattibile.",
+      "reused": [
+        "home-oven",
+        "manitoba-flour",
+        "windowpane"
+      ],
+      "sha256": "1d7101836c45b95b89d70f7dc77100e4531331d1a26a9b389d2fb49682727472"
+    },
+    {
+      "id": "d_score",
+      "caption": "Tempo, temperatura, tipo e dose di lievito, presenza di un prefermento entrano nel modello di Vulcan. La biga è un esempio di prefermento, non l’unico.",
+      "limitation": "Vista sintetica per impasti lievitati, senza formula completa o pesi inventati. È una stima del modello, non una misura clinica della digeribilità personale né dei FODMAP.",
+      "reused": [
+        "dough-temperature",
+        "yeast",
+        "biga"
+      ],
+      "sha256": "3168aac8184ad47d37c9afad3b3277a2597017327f562c021017d6a705262309"
+    }
+  ],
+  "checks": {
+    "arrhenius": "Schematic constant negative slope for positive Ea, fixed A/Ea, no numerical ticks or sampled physical rates.",
+    "proteolysis": {
+      "before": 9,
+      "after": [
+        4,
+        4,
+        1
+      ],
+      "orderedColorsConserved": true
+    },
+    "weightsFrom": "engine-facts.json captured from scoreModelFacts()",
+    "d": "Inputs only; no score, weights or clinical outcome invented."
+  },
+  "integrationNote": "Review SVGs embed existing cutouts for portability. App integration should reuse cached assets, avoiding duplicate base64 payloads. Localize HTML labels/captions/credits. No source art overwritten."
+}
