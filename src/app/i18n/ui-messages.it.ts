@@ -3,6 +3,12 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.flourWeighing": "Tara la ciotola prima di pesare la farina. La bilancia è generica e il display non indica una quantità.",
+  "learn.visual.bigaHandMixing": "Mescola la biga brevemente: restano grumi irregolari, senza cercare una palla liscia.",
+  "learn.visual.poolishStirring": "Il cucchiaio amalgama il poolish appena miscelato, ancora fluido. Non è il momento di fine maturazione.",
+  "learn.visual.bigaInWater": "Pezzi di biga nell’acqua dell’impasto finale, prima di amalgamarli.",
+  "learn.visual.autolyseInitialMix": "Gesto ricomposto: qui soltanto farina e acqua prima del riposo di autolisi. Lievito e sale seguono.",
+  "learn.visual.genericFlourTest": "Schema generico della prova, non un risultato misurato su questa farina.",
   "learn.visual.manitobaFlour": "Farina confezionata e un piccolo campione sfuso. Per scegliere una Manitoba consulta forza W e caratteristiche dichiarate dal produttore: l’aspetto della polvere non basta a identificarla.",
   "learn.visual.fructanIngredients": "Aglio e cipolla sono esempi di fonti di fruttani, un gruppo di FODMAP. Non sono un elenco completo: l’immagine non misura il contenuto né indica porzioni o tolleranza personale.",
   "learn.visual.fermentedSalami": "Salame fermentato: un esempio di alimento in cui possono formarsi ammine biogene, tra cui l’istamina. Il suo contenuto non si vede nella fetta e non si deduce dal colore o dalla stagionatura dichiarata.",

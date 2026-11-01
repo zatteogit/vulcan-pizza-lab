@@ -48,10 +48,20 @@ import manitobaFlour from "../../../assets/learn/manitoba-flour.webp";
 import fructanIngredients from "../../../assets/learn/fructan-ingredients.webp";
 import fermentedSalami from "../../../assets/learn/fermented-salami.webp";
 import pizzaServing from "../../../assets/learn/pizza-serving.webp";
+import flourWeighing from "../../../assets/learn/flour-weighing.webp";
+import bigaHandMixing from "../../../assets/learn/biga-hand-mixing.webp";
+import poolishStirring from "../../../assets/learn/poolish-stirring.webp";
+import bigaInWater from "../../../assets/learn/biga-in-water.webp";
+import autolyseInitialMix from "../../../assets/learn/autolyse-initial-mix.webp";
 import { LearningDiagram, isLearningDiagramId, type LearningDiagramId } from "./learning-diagram";
 import { uiMessage } from "../../i18n/ui-messages";
 
 const LEARNING_ARTWORK = {
+  "flour-weighing": { src: flourWeighing, caption: () => uiMessage("learn.visual.flourWeighing"), source: "https://www.kingarthurbaking.com/blog/2022/02/18/digital-kitchen-scale", author: "PJ Hamel / King Arthur Baking", cc: false },
+  "biga-hand-mixing": { src: bigaHandMixing, caption: () => uiMessage("learn.visual.bigaHandMixing"), source: "https://www.billyparisi.com/biga-recipe/", author: "Chef Billy Parisi", cc: false, extraSources: [{ source: "https://anitalianinmykitchen.com/italian-bread/", author: "Rosemary Molloy" }] },
+  "poolish-stirring": { src: poolishStirring, caption: () => uiMessage("learn.visual.poolishStirring"), source: "https://milkandpop.com/homemade-french-baguette/", author: "Tatiana Kamakura / Milk and Pop", cc: false },
+  "biga-in-water": { src: bigaInWater, caption: () => uiMessage("learn.visual.bigaInWater"), source: "https://anitalianinmykitchen.com/italian-bread/", author: "Rosemary Molloy", cc: false },
+  "autolyse-initial-mix": { src: autolyseInitialMix, caption: () => uiMessage("learn.visual.autolyseInitialMix"), source: "https://www.billyparisi.com/biga-recipe/", author: "Chef Billy Parisi", cc: false, extraSources: [{ source: "https://anitalianinmykitchen.com/italian-bread/", author: "Rosemary Molloy" }, { source: "https://www.theperfectloaf.com/guides/how-to-autolyse/", author: "Maurizio Leo / The Perfect Loaf" }] },
   "manitoba-flour": { src: manitobaFlour, caption: () => uiMessage("learn.visual.manitobaFlour"), source: "https://www.molinomagri.com/it/prodotti/112-180-manitoba", author: "Molino Magri", cc: false },
   "fructan-ingredients": { src: fructanIngredients, caption: () => uiMessage("learn.visual.fructanIngredients"), source: "https://www.monashfodmap.com/about-fodmap-and-ibs/high-and-low-fodmap-foods/", author: "Monash University / Monash FODMAP", cc: false },
   "fermented-salami": { src: fermentedSalami, caption: () => uiMessage("learn.visual.fermentedSalami"), source: "https://www.salamecacciatore.it/il-prodotto/", author: "Consorzio Cacciatore Italiano", cc: false, extraSource: { source: "https://www.efsa.europa.eu/en/efsajournal/pub/2393", label: () => uiMessage("learn.visual.efsa") } },
@@ -160,6 +170,7 @@ export function LearningIllustration({ id, decorative = false }: {
         <small data-region="learning-source">
           {uiMessage("learn.visual.source")} <a href={visual.source}>{visual.author}</a>
           {"extraSource" in visual && <> · <a href={visual.extraSource.source}>{visual.extraSource.label()}</a></>}
+          {"extraSources" in visual && visual.extraSources.map(source => <span key={source.source} data-region="source"> · <a href={source.source}>{source.author}</a></span>)}
           {"license" in visual && <> · <a href={visual.license.url}>{visual.license.label()}</a></>}
           {visual.cc && <> · <a href={"licenseVersion" in visual ? "https://creativecommons.org/licenses/by/3.0/" : "https://creativecommons.org/licenses/by/2.0/"}>{"licenseVersion" in visual ? uiMessage("learn.visual.license3") : uiMessage("learn.visual.license")}</a></>}
         </small>

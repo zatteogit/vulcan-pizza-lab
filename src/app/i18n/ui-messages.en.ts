@@ -1,5 +1,11 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.flourWeighing": "Tare the bowl before weighing the flour. The scale is generic and the display shows no quantity.",
+  "learn.visual.bigaHandMixing": "Mix the biga briefly, leaving irregular clumps rather than working it into a smooth ball.",
+  "learn.visual.poolishStirring": "The spoon combines freshly mixed, fluid poolish. This does not show the end of its fermentation.",
+  "learn.visual.bigaInWater": "Pieces of biga in the final dough water, before mixing them in.",
+  "learn.visual.autolyseInitialMix": "Recomposed gesture: only flour and water here, before the autolyse rest. Yeast and salt follow.",
+  "learn.visual.genericFlourTest": "A generic illustration of the test, not a result measured for this flour.",
   "learn.visual.manitobaFlour": "Packaged flour and a small loose sample. To choose a Manitoba flour, check the strength W and the manufacturer’s specifications: the powder’s appearance cannot identify it.",
   "learn.visual.fructanIngredients": "Garlic and onion are examples of fructan sources, one FODMAP group. This is not a complete list: the image measures no content and indicates no portion sizes or individual tolerance.",
   "learn.visual.fermentedSalami": "Fermented salami: an example of food in which biogenic amines, including histamine, can form. The content is not visible in the slice and cannot be inferred from colour or declared ageing.",

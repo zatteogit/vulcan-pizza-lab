@@ -1,5 +1,11 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.flourWeighing": "Tarer le bol avant de peser la farine. La balance est générique et son écran n’indique aucune quantité.",
+  "learn.visual.bigaHandMixing": "Mélanger brièvement la biga : garder des morceaux irréguliers, sans chercher à former une boule lisse.",
+  "learn.visual.poolishStirring": "La cuillère mélange le poolish fraîchement préparé, encore fluide. Ce n’est pas la fin de sa maturation.",
+  "learn.visual.bigaInWater": "Morceaux de biga dans l’eau de la pâte finale, avant de les incorporer.",
+  "learn.visual.autolyseInitialMix": "Geste recomposé : ici, uniquement farine et eau avant le repos d’autolyse. Levure et sel viennent ensuite.",
+  "learn.visual.genericFlourTest": "Schéma générique de l’essai, et non un résultat mesuré sur cette farine.",
   "learn.visual.manitobaFlour": "Farine emballée et petit échantillon en vrac. Pour choisir une Manitoba, consultez la force W et les caractéristiques du fabricant : l’aspect de la poudre ne suffit pas à l’identifier.",
   "learn.visual.fructanIngredients": "L’ail et l’oignon sont des exemples de sources de fructanes, un groupe de FODMAP. La liste n’est pas exhaustive : l’image ne mesure aucune teneur et n’indique ni portions ni tolérance individuelle.",
   "learn.visual.fermentedSalami": "Salami fermenté : un exemple d’aliment où peuvent se former des amines biogènes, dont l’histamine. La teneur n’est pas visible dans la tranche et ne se déduit ni de la couleur ni de l’affinage déclaré.",
