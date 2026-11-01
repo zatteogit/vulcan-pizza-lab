@@ -115,6 +115,8 @@ export function PreFermentStyleList({ kind, locale }: { kind: "biga" | "poolish"
 interface PreFermentCardProps {
   /** Learning-page figure; recipe cards stay compact. */
   illustration?: ReactNode;
+  /** Optional step figures supplied by Impara; recipe cards stay compact. */
+  stepIllustrations?: Readonly<Partial<Record<number, ReactNode>>>;
   preFermentType?: string;
   /** FW-03 (S14-A-10): false dove la tabella di confronto è già in pagina. */
   showComparison?: boolean;
@@ -130,7 +132,7 @@ interface PreFermentCardProps {
   showExample?: boolean;
 }
 
-export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext, open, onOpenChange, showExample, illustration }: PreFermentCardProps) {
+export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel, recipeContext, open, onOpenChange, showExample, illustration, stepIllustrations }: PreFermentCardProps) {
   const { cms, bcp47 } = useCms();
   const pf = cms.preFerment;
   const id: PreFermentId = (PRE_FERMENT_IDS as readonly string[]).includes(preFermentType)
@@ -208,7 +210,10 @@ export function PreFermentCard({ preFermentType = 'poolish', showComparison = tr
                 <StepsHeading className="preferment-guide-card__tips-label">{pf.stepsLabel}</StepsHeading>
                 <ol className="preferment-guide-card__tips-list preferment-guide-card__steps">
                   {item.steps.map((step, i) => (
-                    <li key={i} className="preferment-guide-card__tips-item">{fill(step)}</li>
+                    <li key={i} className="preferment-guide-card__tips-item">
+                      {fill(step)}
+                      {stepIllustrations?.[i]}
+                    </li>
                   ))}
                 </ol>
                 <WhyButton noteId="pre-ferment-procedure" />

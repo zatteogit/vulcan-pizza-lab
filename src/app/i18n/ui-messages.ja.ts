@@ -1,5 +1,11 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.flourWeighing": "粉を量る前にボウルの重さを風袋引きします。特定の製品ではなく、表示部に分量は示していません。",
+  "learn.visual.bigaHandMixing": "ビガは短時間だけ混ぜます。滑らかな球状にこねず、不規則な塊を残します。",
+  "learn.visual.poolishStirring": "混ぜたばかりの流動性のあるプーリッシュをスプーンでなじませています。発酵完了時の姿ではありません。",
+  "learn.visual.bigaInWater": "本ごね用の水に入れたビガの断片。これから混ぜ合わせる段階です。",
+  "learn.visual.autolyseInitialMix": "手の動きを再構成した図です。ここではオートリーズ休止前の粉と水だけを混ぜ、酵母と塩は後から加えます。",
+  "learn.visual.genericFlourTest": "試験の一般的な模式図であり、この粉で実測した結果ではありません。",
   "learn.visual.manitobaFlour": "包装された小麦粉と少量のサンプル。マニトバ粉を選ぶ際はW値やメーカーの仕様を確認します。粉の見た目だけでは識別できません。",
   "learn.visual.fructanIngredients": "ニンニクとタマネギは、FODMAPの一種であるフルクタンの供給源の例です。全食品の一覧ではなく、含有量や適切な分量、個人の耐性を示す絵でもありません。",
   "learn.visual.fermentedSalami": "発酵サラミは、ヒスタミンなどの生体アミンが生成し得る食品の例です。含有量は断面には見えず、色や表示された熟成期間からも判断できません。",

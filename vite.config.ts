@@ -371,13 +371,13 @@ export default defineConfig(({ command, mode }) => ({
            Lotto 10: 30000, per consolidare ulteriori piccoli chunk e conservare
            il budget per utente senza tagliare le didascalie. */
         experimentalMinChunkSize: 30000,
-        /* Keep learning UI/data together without pulling their dependencies
+        /* Keep learning UI/data and its science/flour explanations together without pulling their dependencies
            (or any locale) into the group. Initial entry imports are measured
            separately from the worst-case per-user budget. */
         onlyExplicitManualChunks: true,
         manualChunks(id) {
           const file = id.replace(/\\/g, "/");
-          if (/\/src\/app\/(features\/learning\/|features\/glossary\/|features\/science\/why-button\.tsx$|features\/recipe\/(pre-ferment-guide|score-explainer)\.tsx$|data\/(glossary-data|glossary-terms|glossary-copy|troubleshooting-data)\.ts$|pages\/(learn|glossary|troubleshooting|pre-ferments|method)\.tsx$)/.test(file)) return "learning";
+          if (/\/src\/app\/(features\/learning\/|features\/glossary\/|features\/science\/(why-button|science-sheet|use-science-note)\.tsx?$|features\/recipe\/(pre-ferment-guide|score-explainer)\.tsx$|data\/(glossary-data|glossary-terms|glossary-copy|troubleshooting-data)\.ts$|pages\/(learn|glossary|troubleshooting|pre-ferments|method|flour)\.tsx$|use-cases\/learning-path\.ts$)/.test(file)) return "learning";
           /* React and Motion are already static dependencies of the entry.
              One UI vendor shares their compression dictionary; the same
              largest-chunk limit continues to apply. */

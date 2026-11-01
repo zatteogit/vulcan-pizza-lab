@@ -15,7 +15,7 @@ import {
 } from "../features/recipe/pre-ferment-guide";
 import { motionDelay,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
-import { LearningIllustration } from "../features/learning/learning-illustration";
+import { LearningIllustration, type LearningIllustrationId } from "../features/learning/learning-illustration";
 
 /* FW-09 (S14-A-09): dalla teoria alla pratica. La Pala romana dichiara diretto,
  * biga e poolish (process_type), quindi apre la ricetta col prefermento scelto
@@ -28,6 +28,12 @@ const PRE_FERMENT_ORDER = [
   "poolish",
   "autolisi",
 ] as const;
+
+const STEP_VISUALS: Record<(typeof PRE_FERMENT_ORDER)[number], Readonly<Record<number, LearningIllustrationId>>> = {
+  biga: { 0: "biga-hand-mixing", 1: "covered-rest", 2: "biga-in-water" },
+  poolish: { 0: "poolish-stirring", 1: "covered-rest" },
+  autolisi: { 0: "autolyse-initial-mix", 1: "covered-rest" },
+};
 
 export function PreFermentsPage() {
   const { cms, bcp47 } = useCms();
@@ -99,6 +105,7 @@ export function PreFermentsPage() {
               <PreFermentCard
                 preFermentType={id}
                 illustration={<LearningIllustration id={id === "autolisi" ? "autolysis" : id} />}
+                stepIllustrations={Object.fromEntries(Object.entries(STEP_VISUALS[id]).map(([step, visual]) => [step, <LearningIllustration key={step} id={visual} />]))}
                 showComparison={false}
                 showExample
                 headingLevel={2}

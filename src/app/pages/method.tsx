@@ -19,6 +19,15 @@ import { localizedFormula, sourceLabel } from "../features/science/source-label"
 import { latestSourceReading, methodAssumptions, methodGroups, methodSources, type MethodGroupId } from "../data/method-sections";
 import type { EvidenceKind, ScienceNote, SourceStatus } from "../domain/science/types";
 import { METHOD_ANCHORS, methodNoteHref, methodSectionHref, methodSourceAnchor, methodSourceHref } from "../features/method/method-link";
+import { LearningIllustration, type LearningIllustrationId } from "../features/learning/learning-illustration";
+
+const NOTE_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
+  "q10-fermentation": "dough-temperature",
+  "thickness-factor": "portion-weighing",
+  "flour-w-by-grade": "alveograph-bubble",
+  "surface-conductivity": "oven-floor-dome",
+  "score-weights": "a_score",
+};
 
 const KIND_TONE: Record<EvidenceKind, BadgeTone> = {
   exact: "success",
@@ -164,6 +173,7 @@ export function MethodPage() {
           defaultOpen={target === note.id}
           className="method-note__details"
         >
+          {NOTE_VISUALS[note.id] && <LearningIllustration id={NOTE_VISUALS[note.id]!} />}
           <dl className="method-note__facts">
             {text?.l2 && (
               <>
@@ -260,7 +270,7 @@ export function MethodPage() {
         <section id={METHOD_ANCHORS.how} aria-labelledby={`${METHOD_ANCHORS.how}-title`} className="method-page__section" data-region="section">
           <Heading level="md" as="h2" id={`${METHOD_ANCHORS.how}-title`}>{uiMessage("pages.method.how.title")}</Heading>
           <ol className="method-page__how">
-            {HOW_KEYS.map((key) => <li key={key}>{uiMessage(key)}</li>)}
+            {HOW_KEYS.map((key, i) => <li key={key}>{uiMessage(key)}{i === 0 && <LearningIllustration id="flour-weighing" />}</li>)}
           </ol>
           <dl className="method-page__legend">
             {KINDS.map((kind) => (

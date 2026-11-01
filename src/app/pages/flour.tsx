@@ -25,6 +25,7 @@ import { methodSourceHref } from "../features/method/method-link";
 import { evidenceLabel } from "../features/science/science-sheet";
 import { sourceLabel } from "../features/science/source-label";
 import { WhyButton } from "../features/science/why-button";
+import { LearningIllustration } from "../features/learning/learning-illustration";
 import { formatNumber, formatPercent, formatRange, formatUnit } from "../i18n/format";
 import { uiMessage } from "../i18n/ui-messages";
 import { buildFlourSheet, type FlourField, type FlourFieldId } from "../use-cases/flour-sheet";
@@ -178,6 +179,8 @@ export function FlourPage() {
               );
             })}
           </dl>
+          <LearningIllustration id="alveograph-bubble" />
+          <p className="science-sheet__text">{uiMessage("learn.visual.genericFlourTest")}</p>
         </Disclosure>
       </main>
     </div>
