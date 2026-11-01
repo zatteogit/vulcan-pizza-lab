@@ -1,6 +1,6 @@
 # Impara · Lotto 13
 
-Five local review proposals after the published batch 12: room air temperature, refrigerator-shelf temperature, flour temperature, optional dry-yeast activity check and qualitative dough-development comparison. No app integration or production deployment in this batch yet. Photographic inspiration and recomposition records stay internal; the review gallery shows only useful educational captions, per Matteo’s preference of 2026-11-01. Existing application artwork and text are preserved.
+Five local review proposals after the published batch 12: room air temperature, refrigerator-shelf temperature, flour temperature, optional dry-yeast activity check and qualitative dough-development comparison. Approved by Matteo on 2026-11-01 and now integrated into the application; production release evidence is recorded separately in `/Users/matteo/dev/Vulcan/output/learn-illustration-release-13-2026-11-01/`. Photographic inspiration and recomposition records stay internal; the review gallery shows only useful educational captions, per Matteo’s preference of 2026-11-01. Existing application artwork and text are preserved.
 
 - Gallery: `review.html`, served at [lotto 13](http://127.0.0.1:5196/design-assets/learn-illustrations-batch-13/review.html).
 - Final project assets: `assets/`, five alpha WebPs at 672 × 448.
@@ -24,7 +24,7 @@ The volume comparison follows Maurizio Leo's actual four-photo sequence, which a
 
 The glossary already maps all 44 terms; 22 of 24 troubleshooting entries already have useful imagery. P06/P20 remain text-led: taste or smell cannot be diagnosed visually. These five proposals improve specific practical explanations rather than marking unpictured topics as automatically needing art.
 
-Proposed placements: `kitchen-temp-default` / P04 prevention; P21 shelf-temperature check; `water-temp-rule`; P04 dry-yeast check; P03/P05 and the explanation of estimated fermentation time. The torn-dough repair gesture is deferred: researched pages support pinching in text, but no sufficiently clear matching photograph was selected. No unsupported gesture is drawn.
+Integrated placements: `kitchen-temp-default` / P04 prevention; P21 shelf-temperature check; `water-temp-rule`; P04 dry-yeast check; P03/P05 and the explanation of estimated fermentation time. The torn-dough repair gesture is deferred: researched pages support pinching in text, but no sufficiently clear matching photograph was selected. No unsupported gesture is drawn.
 
 To reproduce export and gallery generation from preserved originals:
 
@@ -32,4 +32,4 @@ To reproduce export and gallery generation from preserved originals:
 python3 design-assets/learn-illustrations-batch-13/build.py
 ```
 
-Verification is limited to these independent review assets: alpha, five loaded 672 × 448 images, captions, 1280px desktop and 390px mobile layouts, light/dark backgrounds. Screenshots and `verification.json` are stored in the output directory. App tests and bundle-budget checks belong to the later integration.
+The independent review verification covers: alpha, five loaded 672 × 448 images, captions, 1280px desktop and 390px mobile layouts, light/dark backgrounds. Screenshots and `verification.json` are stored in the output directory. Integration verification: `npm run verify`, production build and unchanged performance budgets pass. Local desktop/mobile checks cover all five illustrations with loaded 672px assets, localized captions, no inspiration links and no horizontal overflow.

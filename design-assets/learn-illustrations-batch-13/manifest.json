@@ -2,7 +2,7 @@
   "batch": 13,
   "date": "2026-11-01",
   "base_commit": "bd3ceed2a39dda3361e4cc6dae406afcee935063",
-  "status": "Prepared for local visual review; not integrated or published",
+  "status": "Approved and integrated; deployment evidence in output/learn-illustration-release-13-2026-11-01",
   "mode": "built-in image_gen; one call per distinct asset",
   "export": "Pillow resize/format conversion only; original alpha preserved; no creative postprocessing",
   "style_reference": {
@@ -180,5 +180,23 @@
       "caption_it": "Osserva come cambia il volume nello stesso recipiente. La fine della lievitazione dipende dall’impasto e dal procedimento.",
       "recomposition_and_limits": "Coppia ricomposta dalla sequenza fotografica di Maurizio Leo, che comprende anche pieghe tra i momenti. Non è un esperimento misurato, non isola la sola fermentazione e non dà una soglia universale di maturazione."
     }
-  ]
+  ],
+  "placements": {
+    "room-air-temperature": [
+      "method:kitchen-temp-default"
+    ],
+    "flour-temperature": [
+      "method:water-temp-rule"
+    ],
+    "yeast-freshness-check": [
+      "troubleshooting:P04"
+    ],
+    "fridge-shelf-temperature": [
+      "troubleshooting:P21"
+    ],
+    "dough-volume-comparison": [
+      "troubleshooting:P03",
+      "troubleshooting:P05"
+    ]
+  }
 }

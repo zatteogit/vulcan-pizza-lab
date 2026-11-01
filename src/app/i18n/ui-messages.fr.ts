@@ -1,5 +1,10 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.roomAirTemperature": "Mesure l’air près de l’endroit où repose la pâte : sa température peut différer de celle de la pâte.",
+  "learn.visual.fridgeShelfTemperature": "Vérifie la température de l’air sur la clayette utilisée, en gardant le récipient fermé. La température à cœur de la pâte peut être différente.",
+  "learn.visual.flourTemperature": "La sonde mesure la température de la farine, une des variables servant à calculer celle de l’eau.",
+  "learn.visual.yeastFreshnessCheck": "Un test d’activité de la levure sèche dans l’eau, utile en cas de doute sur sa vitalité. Il n’est pas nécessaire pour chaque pâte.",
+  "learn.visual.doughVolumeComparison": "Observe l’évolution du volume dans le même récipient. La fin de la fermentation dépend de la pâte et du procédé.",
   "learn.visual.flourWeighing": "Tarer le bol avant de peser la farine. La balance est générique et son écran n’indique aucune quantité.",
   "learn.visual.bigaHandMixing": "Mélanger brièvement la biga : garder des morceaux irréguliers, sans chercher à former une boule lisse.",
   "learn.visual.poolishStirring": "La cuillère mélange le poolish fraîchement préparé, encore fluide. Ce n’est pas la fin de sa maturation.",
