@@ -1,0 +1,178 @@
+{
+  "status": "local review; not integrated or published",
+  "date": "2026-11-01",
+  "base_main": "194c574a0af3cab11362025c314a515e048817bb",
+  "generation": "built-in image_gen; one call per asset and targeted edits",
+  "previous_46_illustrations": "unchanged",
+  "assets": [
+    {
+      "id": "manitoba-flour",
+      "title": "Manitoba · Leggere le caratteristiche",
+      "target": "manitoba",
+      "source": "https://www.molinomagri.com/it/prodotti/112-180-manitoba",
+      "source_images": [
+        "https://www.molinomagri.com/upload/catalogo/180/d_sacco-farina-dolce-MANITOBA.png",
+        "https://www.molinomagri.com/upload/catalogo/180/d_farina-per-manitoba-v2.png"
+      ],
+      "reference_files": [
+        "manitoba-bag.png",
+        "manitoba-flour.png"
+      ],
+      "author": "Molino Magri",
+      "caption_it": "Farina confezionata e un piccolo campione sfuso. Per scegliere una Manitoba consulta forza W e caratteristiche dichiarate dal produttore: l’aspetto della polvere non basta a identificarla.",
+      "limitations": "Sacco reso generico, senza marchi o scritte. Il campione di farina è ricomposto dal primo piano della foto; il vasetto di lievito madre è omesso. Non rappresenta una prova di forza o un contenuto proteico misurato. Le caratteristiche del prodotto fotografato non definiscono tutte le farine commercializzate come Manitoba.",
+      "file": "assets/manitoba-flour.webp",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-10-2026-11-01/manitoba-flour.png",
+      "bytes": 12964,
+      "sha256": "164ca32ef506e8a81c3c558cec1b0bebce2c409d5a7cfa3bb17663cf337dcbf6",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "references": [
+        "references/manitoba-bag.jpg",
+        "references/manitoba-flour.jpg"
+      ]
+    },
+    {
+      "id": "fructan-ingredients",
+      "title": "FODMAP · Aglio e cipolla",
+      "target": "fodmap",
+      "source": "https://www.monashfodmap.com/about-fodmap-and-ibs/high-and-low-fodmap-foods/",
+      "source_images": [
+        "https://fodmap-publicsite-us-east-2.s3.amazonaws.com/production/media/images/onion.width-500.jpg"
+      ],
+      "reference_files": [
+        "onion-garlic.jpg"
+      ],
+      "author": "Monash University / Monash FODMAP",
+      "caption_it": "Aglio e cipolla sono esempi di fonti di fruttani, un gruppo di FODMAP. Non sono un elenco completo: l’immagine non misura il contenuto né indica porzioni o tolleranza personale.",
+      "limitations": "Selezione e ricomposizione di cipolla, bulbo d’aglio e spicchi dalla fotografia; porri e cipollotti omessi. Nessun semaforo, soglia, piano dietetico o equivalenza tra FODMAP e glutine.",
+      "evidence": [
+        "https://www.monashfodmap.com/about-fodmap-and-ibs/high-and-low-fodmap-foods/",
+        "https://www.monashfodmap.com/blog/gluten-and-ibs/"
+      ],
+      "file": "assets/fructan-ingredients.webp",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-10-2026-11-01/fructan-ingredients.png",
+      "bytes": 20922,
+      "sha256": "ad37eef721b970702b2f63db0d23248a33c4fc3e92618af89d73dea039bf1af4",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "references": [
+        "references/onion-garlic.jpg"
+      ]
+    },
+    {
+      "id": "fermented-salami",
+      "title": "Istamina · Un esempio di alimento fermentato",
+      "target": "histamine",
+      "source": "https://www.salamecacciatore.it/il-prodotto/",
+      "source_images": [
+        "https://www.salamecacciatore.it/wp-content/uploads/2026/05/Rectangle-118-1-1024x853.webp"
+      ],
+      "reference_files": [
+        "salami.webp"
+      ],
+      "author": "Consorzio Cacciatore Italiano",
+      "caption_it": "Salame fermentato: un esempio di alimento in cui possono formarsi ammine biogene, tra cui l’istamina. Il suo contenuto non si vede nella fetta e non si deduce dal colore o dalla stagionatura dichiarata.",
+      "limitations": "La foto del Consorzio documenta la forma del prodotto e il contatto delle dita, non un’analisi chimica. Aspetto semplificato; scritte e frecce rimosse. Nessuna deduzione sulla concentrazione del campione fotografato, sulla sicurezza o sulla tolleranza personale.",
+      "evidence": [
+        "https://www.efsa.europa.eu/en/efsajournal/pub/2393",
+        "https://pubmed.ncbi.nlm.nih.gov/22061332/"
+      ],
+      "file": "assets/fermented-salami.webp",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-10-2026-11-01/fermented-salami.png",
+      "bytes": 20754,
+      "sha256": "51d9b714bf0d34ddc9ec7328eae7a006098097f08811f3801dda3b3b8723b152",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "references": [
+        "references/salami.jpg"
+      ]
+    },
+    {
+      "id": "pizza-serving",
+      "title": "Pizza troppo secca · Il servizio",
+      "target": "P17",
+      "source": "https://www.kingarthurbaking.com/blog/2026/07/06/pizza-party-ideas",
+      "source_images": [
+        "https://www.kingarthurbaking.com/sites/default/files/2025-12/Flaky-Puff-Crust-Pizza_ROTY_2025_Lifestyle_H_0058.jpg"
+      ],
+      "reference_files": [
+        "serving-pizza.jpg"
+      ],
+      "author": "Patrick Marinello / King Arthur Baking; food styling Yekaterina Boytsova",
+      "caption_it": "Una porzione di pizza già cotta viene presa dal tagliere per servirla. La scena accompagna il consiglio sul servizio dopo la cottura: non è un confronto visivo tra pizza secca e morbida.",
+      "limitations": "Tre porzioni ricomposte dalla foto, una sostenuta dalla mano; il supporto è reso come un semplice tagliere in legno. Omesse altre mani, ciotole, utensili e stoviglie. Il colore non certifica cottura, temperatura, umidità o sicurezza. La ricetta della pizza sfogliata fotografata non viene estesa a tutti gli stili.",
+      "file": "assets/pizza-serving.webp",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-10-2026-11-01/pizza-serving.png",
+      "bytes": 28380,
+      "sha256": "096d0bc3ac0ba3c5fcda250a764cd4cbf687a0bcecdb50f6200124fa3cc2af16",
+      "size": [
+        672,
+        448
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "references": [
+        "references/serving-pizza.jpg"
+      ]
+    }
+  ],
+  "encoding": {
+    "quality": 74,
+    "alpha_quality": 30,
+    "method": 6,
+    "total_bytes": 83020
+  },
+  "reuse_candidate": {
+    "target": "P11",
+    "existing_asset": "home-oven",
+    "source": "https://www.kingarthurbaking.com/blog/2021/10/04/how-to-turn-any-home-oven-into-a-pizza-oven",
+    "scope": "Existing approved generic home-oven illustration can accompany the advice about continuing the bake. It must not diagnose the pizza or imply fixed time/temperature values. No new oven image is needed."
+  },
+  "remaining_scope": "Arrhenius, proteolysis and the three app scores need faithful concept-specific visual explanations. P06 and P20 concern taste/smell; no visual diagnosis or raw-dough tasting scene is proposed.",
+  "validation": {
+    "status": "local-review-verified-not-integrated",
+    "gallery_url": "http://127.0.0.1:5193/design-assets/learn-illustrations-batch-10/index.html",
+    "desktop": {
+      "viewport_width": 1280,
+      "document_scroll_width": 1280,
+      "four_illustrations_loaded": true,
+      "all_five_reference_images_loaded": true,
+      "existing_oven_loaded": true,
+      "four_comparison_disclosures": "opened and verified",
+      "dark_background": "visually checked"
+    },
+    "mobile": {
+      "viewport_width": 390,
+      "document_scroll_width": 390,
+      "figure_width": 328,
+      "four_illustrations_loaded": true,
+      "reference_comparison": "visually checked"
+    },
+    "viewport_override_reset": true,
+    "asset_checks": "four 672x448 RGBA WebPs, transparent alpha, hashes match manifest; six prompts retained",
+    "evidence_directory": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-10-2026-11-01/",
+    "app_source_changed": false,
+    "published": false
+  }
+}
