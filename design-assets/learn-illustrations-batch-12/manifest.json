@@ -1,0 +1,184 @@
+{
+  "batch": 12,
+  "date": "2026-11-01",
+  "state": "local-review-only",
+  "base_commit": "20632adeb6d04c95d99385295eefa8a29a634d3c",
+  "mode": "built-in image_gen; one call per asset; scale regenerated as a static weighing setup",
+  "export": "Pillow resize/format conversion only; generated alpha preserved; no background removal or creative postprocessing",
+  "source_photo_policy": "Research references only, not published product assets or gallery images",
+  "assets": [
+    {
+      "id": "flour-weighing",
+      "asset": "design-assets/learn-illustrations-batch-12/assets/flour-weighing.webp",
+      "sha256": "3eb546e18d735e8ff60cf32cfb6fdb343635b840df667c82ad521c65c3b87878",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-12-2026-11-01/masters/flour-weighing.png",
+      "master_sha256": "908735f8cc9b3ce290fcfaabc8a9cc8377632401fa4337fee7ebf05df1ef0a12",
+      "dimensions": [
+        672,
+        448
+      ],
+      "sources": [
+        {
+          "author": "PJ Hamel / King Arthur Baking",
+          "url": "https://www.kingarthurbaking.com/blog/2022/02/18/digital-kitchen-scale",
+          "image": "https://www.kingarthurbaking.com/sites/default/files/styles/scaled_small/public/2022-02/Baking%20with%20a%20scale-5.jpg?itok=hAYZliS9",
+          "local": "scale-bowl-photo.jpg",
+          "research_photo_sha256": "f05f976c0176bdcbb007d3fbd6ba1da28e16152230ceaff6a517aee27b0d6a2f"
+        }
+      ],
+      "recomposition_and_limits": "Scena ricomposta dalla foto di PJ Hamel: bilancia resa generica, marchio e lettura rimossi. Nessuna quantità o capacità rappresentata; non è una bilancia per microdosi di lievito.",
+      "caption_it": "La ciotola poggia sulla bilancia. Prima si tara il recipiente, poi si pesa la quantità di farina indicata nella ricetta. Il display è volutamente privo di cifre.",
+      "target": "Metodo e fonti · calcoli su pesi e percentuali; preparazione dei prefermenti"
+    },
+    {
+      "id": "biga-hand-mixing",
+      "asset": "design-assets/learn-illustrations-batch-12/assets/biga-hand-mixing.webp",
+      "sha256": "172d1f9b6d4a6dfcae43eba133d80d0bbc131dce1540398eca221f6c02de75c7",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-12-2026-11-01/masters/biga-hand-mixing.png",
+      "master_sha256": "af5d18e75bd13e0e223ba4156798ba121ba23beb1e1add8b63858ae02e60204d",
+      "dimensions": [
+        672,
+        448
+      ],
+      "sources": [
+        {
+          "author": "Chef Billy Parisi",
+          "url": "https://www.billyparisi.com/biga-recipe/",
+          "image": "https://www.billyparisi.com/wp-content/uploads/2025/10/biga-process-1-1024x560.jpg",
+          "local": "hand-mix-photo.jpg",
+          "research_photo_sha256": "d733d75f761c09c4e8606708da5f2cc6e5d75be59c5483c192ba9fb57cbd9729"
+        },
+        {
+          "author": "Rosemary Molloy / An Italian in my Kitchen",
+          "url": "https://anitalianinmykitchen.com/italian-bread/",
+          "image": "https://anitalianinmykitchen.com/wp-content/uploads/2020/01/bread-1-1-of-1.jpg",
+          "local": "biga-mixing-photo.jpg",
+          "research_photo_sha256": "7a87c6d188f3c3eee9f07179653825ae4386d46e0ba9c7787166eac229e47d3d"
+        }
+      ],
+      "recomposition_and_limits": "Gesto tratto da Billy Parisi; consistenza irregolare confrontata con Rosemary Molloy e con la tavola approvata. Le dosi e la ricetta di quei siti non sono trasferite a Vulcan.",
+      "caption_it": "Le dita raccolgono brevemente farina, acqua e lievito. La biga resta a grumi irregolari: il gesto non cerca una palla liscia né una maglia sviluppata.",
+      "target": "Prefermenti · Biga · Come si fa, passaggio 1"
+    },
+    {
+      "id": "poolish-stirring",
+      "asset": "design-assets/learn-illustrations-batch-12/assets/poolish-stirring.webp",
+      "sha256": "554045b1583ab0be09b1557028d6c51d1c21b40b197954722e219f910ca5a8ad",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-12-2026-11-01/masters/poolish-stirring.png",
+      "master_sha256": "4cf379119ffa418db41fbc01a6583aa3039a17629f7094c6472adb5604095e62",
+      "dimensions": [
+        672,
+        448
+      ],
+      "sources": [
+        {
+          "author": "Tatiana Kamakura / Milk and Pop",
+          "url": "https://milkandpop.com/homemade-french-baguette/",
+          "image": "https://milkandpop.com/wp-content/uploads/2023/10/how-to-make-poolish-starter-3.jpg",
+          "local": "poolish-mixing-photo.jpg",
+          "research_photo_sha256": "05dea5380110ae23719a66a648c5deef05278813ee58e041c969ff4ba895ae0c"
+        }
+      ],
+      "recomposition_and_limits": "Fotografia Milk and Pop ricomposta dal barattolo alla ciotola; gesto e consistenza osservati. Maturazione, proporzioni e tempi restano nel testo della guida.",
+      "caption_it": "Il cucchiaio amalgama il poolish appena miscelato fino a una pastella omogenea. La scena mostra la preparazione, non il momento in cui è pronto dopo la maturazione.",
+      "target": "Prefermenti · Poolish · Come si fa, passaggio 1"
+    },
+    {
+      "id": "biga-in-water",
+      "asset": "design-assets/learn-illustrations-batch-12/assets/biga-in-water.webp",
+      "sha256": "e19d1c0ccea8aa14fb0d8c7f0de9f596df005766025b2f5c2edd602055f55634",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-12-2026-11-01/masters/biga-in-water.png",
+      "master_sha256": "94e713a716fe54fc452095c4f53d471dd2bc9ebd23e3569b11813f599e263d64",
+      "dimensions": [
+        672,
+        448
+      ],
+      "sources": [
+        {
+          "author": "Rosemary Molloy / An Italian in my Kitchen",
+          "url": "https://anitalianinmykitchen.com/italian-bread/",
+          "image": "https://anitalianinmykitchen.com/wp-content/uploads/2020/01/bread-3-1-of-1.jpg",
+          "local": "biga-water-photo.jpg",
+          "research_photo_sha256": "46e2faec777ee7541495699df15b9a55b1c3ee9b58e5e6eff4678e0ce8dd176f"
+        },
+        {
+          "author": "Rosemary Molloy / An Italian in my Kitchen",
+          "url": "https://anitalianinmykitchen.com/italian-bread/",
+          "image": "https://anitalianinmykitchen.com/wp-content/uploads/2020/01/bread-1-1-of-1.jpg",
+          "local": "biga-mixing-photo.jpg",
+          "research_photo_sha256": "7a87c6d188f3c3eee9f07179653825ae4386d46e0ba9c7787166eac229e47d3d"
+        }
+      ],
+      "recomposition_and_limits": "Scena derivata dalla foto di biga e acqua di Rosemary Molloy; recipiente ricomposto in vetro per rendere leggibile il livello del liquido. Non mostra una spezzatura manuale non documentata né un impasto finito.",
+      "caption_it": "All’inizio dell’impasto finale la biga viene spezzata nell’acqua prevista dal procedimento. I pezzi devono poi amalgamarsi: la scena non rappresenta un impasto già finito.",
+      "target": "Prefermenti · Biga · Come si fa, passaggio 3"
+    },
+    {
+      "id": "autolyse-initial-mix",
+      "asset": "design-assets/learn-illustrations-batch-12/assets/autolyse-initial-mix.webp",
+      "sha256": "3b2be302bee47ce0d3b2ce6635fbd0b7e1828f34a09f86a41ec9405a280af091",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-12-2026-11-01/masters/autolyse-initial-mix.png",
+      "master_sha256": "f6257da1e4fcfc2afd57e157dec6e26504dcbfae821c9560ae637e6635d6f0c4",
+      "dimensions": [
+        672,
+        448
+      ],
+      "sources": [
+        {
+          "author": "Chef Billy Parisi",
+          "url": "https://www.billyparisi.com/biga-recipe/",
+          "image": "https://www.billyparisi.com/wp-content/uploads/2025/10/biga-process-1-1024x560.jpg",
+          "local": "hand-mix-photo.jpg",
+          "research_photo_sha256": "d733d75f761c09c4e8606708da5f2cc6e5d75be59c5483c192ba9fb57cbd9729"
+        },
+        {
+          "author": "Rosemary Molloy / An Italian in my Kitchen",
+          "url": "https://anitalianinmykitchen.com/italian-bread/",
+          "image": "https://anitalianinmykitchen.com/wp-content/uploads/2020/01/bread-1-1-of-1.jpg",
+          "local": "biga-mixing-photo.jpg",
+          "research_photo_sha256": "7a87c6d188f3c3eee9f07179653825ae4386d46e0ba9c7787166eac229e47d3d"
+        },
+        {
+          "author": "Maurizio Leo / The Perfect Loaf",
+          "url": "https://www.theperfectloaf.com/guides/how-to-autolyse/",
+          "role": "Procedural description, not a photographic input"
+        }
+      ],
+      "recomposition_and_limits": "Il gesto di impasto a mano deriva dalla foto di Billy Parisi e viene ricomposto per farina e acqua secondo la descrizione dell’autolisi di Maurizio Leo. Non si attribuisce alla foto originale la composizione dell’autolisi.",
+      "caption_it": "Si riuniscono soltanto farina e acqua, fino a inumidire tutta la farina, prima del riposo di autolisi. Lievito e sale si aggiungono nei passaggi successivi della guida.",
+      "target": "Prefermenti · Autolisi · Come si fa, passaggio 1"
+    }
+  ],
+  "reuse": [
+    [
+      "dough-temperature.webp",
+      "Metodo · temperatura reale dell’impasto",
+      "Collegare al termometro, senza attribuire una lettura al disegno."
+    ],
+    [
+      "covered-rest.webp",
+      "Prefermenti · riposo coperto",
+      "Riutilizzo nei passaggi di riposo; tempi e condizioni restano nel testo."
+    ],
+    [
+      "alveograph-bubble.webp",
+      "Metodo / Farine · prove di laboratorio",
+      "Spiegazione generica della prova; nessun risultato sperimentale attribuito alla singola farina."
+    ],
+    [
+      "oven-floor-dome.webp",
+      "Metodo · calore e forno",
+      "Usare nella spiegazione termica, senza suggerire un modello commerciale."
+    ],
+    [
+      "a-score-diagram.svg",
+      "Metodo · criteri di valutazione",
+      "Riutilizzare il renderer HTML localizzato già esistente; non trasformare lo schema in una fotografia."
+    ],
+    [
+      "portion-weighing.webp",
+      "Metodo · massa e porzioni",
+      "Richiamo utile alle quantità; nessun peso leggibile inventato."
+    ]
+  ]
+}
