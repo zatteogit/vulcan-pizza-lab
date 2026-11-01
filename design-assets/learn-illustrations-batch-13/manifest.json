@@ -35,7 +35,7 @@
           "sha256": "b585a7473c3a1a001416cde9d347c77418a7a8165d0e47b15020e397bec67507"
         }
       ],
-      "caption_it": "Un termometro per l’aria misura la temperatura nel punto in cui si trova. Il valore della cucina va misurato: non è necessariamente quello dell’impasto. Display senza cifre.",
+      "caption_it": "Misura l’aria vicino alla zona in cui riposa l’impasto: la sua temperatura può essere diversa da quella dell’impasto.",
       "recomposition_and_limits": "Strumento reso generico dalla fotografia ThermoWorks in ambiente interno. Nessuna lettura, precisione o soglia rappresentata; nessun modello consigliato."
     },
     {
@@ -71,7 +71,7 @@
           "sha256": "1eaf7ead9d666f0ae52249477532e911550facab389013c05a184f6105e47359"
         }
       ],
-      "caption_it": "Il termometro legge l’aria sul ripiano usato per l’impasto. Il recipiente resta chiuso: questa lettura non misura il cuore dell’impasto e non certifica la stabilità del frigo.",
+      "caption_it": "Controlla la temperatura dell’aria sul ripiano usato, lasciando chiuso il recipiente. La temperatura del cuore dell’impasto può essere diversa.",
       "recomposition_and_limits": "Scena ricomposta: termometro sul ripiano dalla foto ThermoWorks, recipiente da King Arthur Baking. La foto del recipiente non era scattata in frigorifero. Nessuna zona del frigo è dichiarata universalmente migliore."
     },
     {
@@ -115,7 +115,7 @@
           "original_distributed": false
         }
       ],
-      "caption_it": "La sonda misura la farina, una delle temperature usate nel calcolo dell’acqua. Scena ricomposta: la fotografia del gesto originale misurava un impasto. Display senza cifre.",
+      "caption_it": "La sonda misura la temperatura della farina, una delle variabili usate per calcolare quella dell’acqua.",
       "recomposition_and_limits": "Gesto e strumento da Barb Alpern, farina in ciotola da PJ Hamel; la misurazione della farina è descritta nel riferimento professionale King Arthur. Non si spaccia la foto del gesto per una foto di misurazione della farina. Nessuna profondità, lettura o temperatura ottimale indicata."
     },
     {
@@ -150,7 +150,7 @@
           "original_distributed": false
         }
       ],
-      "caption_it": "Esempio di lievito secco in acqua durante una prova di attività. Serve quando si dubita del lievito: non è un passaggio necessario per ogni impasto, né un modo per calcolare la dose.",
+      "caption_it": "Una prova di attività del lievito secco in acqua, utile quando si dubita della sua vitalità. Non serve eseguirla per ogni impasto.",
       "recomposition_and_limits": "Dalla fotografia di PJ Hamel: selezionata una sola ciotola della coppia con lieviti secchi. Non rappresenta lievito fresco, bicarbonato o lievito chimico; schiuma e quantità non diventano una soglia universale."
     },
     {
@@ -177,7 +177,7 @@
           "sha256": "d24d489845df218fb2eae36644d9d72a629aa4541310c95df5a71b662f87025c"
         }
       ],
-      "caption_it": "Due momenti di sviluppo, da confrontare nello stesso recipiente. Il volume è un’osservazione utile; queste forme non fissano un tempo, un raddoppio o un momento di fine lievitazione validi per tutti gli impasti.",
+      "caption_it": "Osserva come cambia il volume nello stesso recipiente. La fine della lievitazione dipende dall’impasto e dal procedimento.",
       "recomposition_and_limits": "Coppia ricomposta dalla sequenza fotografica di Maurizio Leo, che comprende anche pieghe tra i momenti. Non è un esperimento misurato, non isola la sola fermentazione e non dà una soglia universale di maturazione."
     }
   ]

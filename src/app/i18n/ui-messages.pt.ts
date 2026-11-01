@@ -4,7 +4,7 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "learn.visual.bigaHandMixing": "Misture a biga brevemente: devem restar pedaços irregulares, sem formar uma bola lisa.",
   "learn.visual.poolishStirring": "A colher mistura o poolish recém-preparado, ainda fluido. Não representa o fim da maturação.",
   "learn.visual.bigaInWater": "Pedaços de biga na água da massa final, antes de incorporá-los.",
-  "learn.visual.autolyseInitialMix": "Gesto recomposto: aqui, apenas farinha e água antes do repouso de autólise. Fermento e sal entram depois.",
+  "learn.visual.autolyseInitialMix": "Misture apenas farinha e água antes do repouso de autólise. Fermento e sal entram depois.",
   "learn.visual.genericFlourTest": "Ilustração genérica do ensaio, não um resultado medido nesta farinha.",
   "learn.visual.manitobaFlour": "Farinha embalada e uma pequena amostra solta. Para escolher uma Manitoba, consulta a força W e as características declaradas pelo fabricante: o aspeto do pó não basta para a identificar.",
   "learn.visual.fructanIngredients": "Alho e cebola são exemplos de fontes de frutanos, um grupo de FODMAP. A lista não é completa: a imagem não mede o teor nem indica porções ou tolerância individual.",

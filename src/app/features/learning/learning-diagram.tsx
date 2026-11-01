@@ -48,7 +48,7 @@ export function LearningDiagram({ id, artwork, decorative = false }: { id: Learn
     <figcaption>
       <p>{diagram.caption()}</p>
       <small data-region="learning-source">{uiMessage("science.sheet.sources")} {SOURCES[id].map(([label, url], index) => <Fragment key={url}>{index > 0 && " · "}<a href={url}>{label}</a></Fragment>)}
-        {diagram.pictures.map(key => <Fragment key={key}>{" · "}<a href={artwork[key].source}>{artwork[key].author}</a>{artwork[key].cc && <> · <a href="https://creativecommons.org/licenses/by/2.0/">{uiMessage("learn.visual.license")}</a></>}</Fragment>)}
+        {diagram.pictures.filter(key => artwork[key].cc).map(key => <Fragment key={key}>{" · "}<a href={artwork[key].source}>{artwork[key].author}</a> · <a href="https://creativecommons.org/licenses/by/2.0/">{uiMessage("learn.visual.license")}</a></Fragment>)}
       </small>
     </figcaption>
   </figure>;
