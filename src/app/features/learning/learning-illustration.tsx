@@ -1,3 +1,8 @@
+import roomAirTemperature from "../../../assets/learn/room-air-temperature.webp";
+import fridgeShelfTemperature from "../../../assets/learn/fridge-shelf-temperature.webp";
+import flourTemperature from "../../../assets/learn/flour-temperature.webp";
+import yeastFreshnessCheck from "../../../assets/learn/yeast-freshness-check.webp";
+import doughVolumeComparison from "../../../assets/learn/dough-volume-comparison.webp";
 import biga from "../../../assets/learn/biga.webp";
 import poolish from "../../../assets/learn/poolish.webp";
 import autolysis from "../../../assets/learn/autolysis.webp";
@@ -57,6 +62,12 @@ import { LearningDiagram, isLearningDiagramId, type LearningDiagramId } from "./
 import { uiMessage } from "../../i18n/ui-messages";
 
 const LEARNING_ARTWORK = {
+  "room-air-temperature": { src: roomAirTemperature, caption: () => uiMessage("learn.visual.roomAirTemperature"), source: "https://www.thermoworks.com/products/spot", author: "ThermoWorks", cc: false },
+  "fridge-shelf-temperature": { src: fridgeShelfTemperature, caption: () => uiMessage("learn.visual.fridgeShelfTemperature"), source: "https://www.thermoworks.com/products/spot", author: "ThermoWorks", cc: false },
+  "flour-temperature": { src: flourTemperature, caption: () => uiMessage("learn.visual.flourTemperature"), source: "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature", author: "Barb Alpern / King Arthur Baking", cc: false },
+  "yeast-freshness-check": { src: yeastFreshnessCheck, caption: () => uiMessage("learn.visual.yeastFreshnessCheck"), source: "https://www.kingarthurbaking.com/blog/2015/11/05/test-yeast-baking-powder-baking-soda-freshness", author: "PJ Hamel / King Arthur Baking", cc: false },
+  "dough-volume-comparison": { src: doughVolumeComparison, caption: () => uiMessage("learn.visual.doughVolumeComparison"), source: "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation", author: "Maurizio Leo / King Arthur Baking", cc: false },
+
   "flour-weighing": { src: flourWeighing, caption: () => uiMessage("learn.visual.flourWeighing"), source: "https://www.kingarthurbaking.com/blog/2022/02/18/digital-kitchen-scale", author: "PJ Hamel / King Arthur Baking", cc: false },
   "biga-hand-mixing": { src: bigaHandMixing, caption: () => uiMessage("learn.visual.bigaHandMixing"), source: "https://www.billyparisi.com/biga-recipe/", author: "Chef Billy Parisi", cc: false, extraSources: [{ source: "https://anitalianinmykitchen.com/italian-bread/", author: "Rosemary Molloy" }] },
   "poolish-stirring": { src: poolishStirring, caption: () => uiMessage("learn.visual.poolishStirring"), source: "https://milkandpop.com/homemade-french-baguette/", author: "Tatiana Kamakura / Milk and Pop", cc: false },
@@ -144,9 +155,9 @@ export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrat
 
 /** These illustrate a gesture in the advice, never a visual diagnosis. */
 export const TROUBLESHOOTING_VISUALS: Readonly<Partial<Record<string, readonly LearningIllustrationId[]>>> = {
-  P01: ["folds"], P02: ["stretching"], P03: ["poke-test"], P07: ["stretching", "covered-rest"],
+  P01: ["folds"], P02: ["stretching"], P03: ["poke-test", "dough-volume-comparison"], P07: ["stretching", "covered-rest"],
   P16: ["stretching"], P19: ["stretching", "covered-rest"], P23: ["ball-shaping"],
-  P04: ["dough-temperature"], P05: ["covered-storage"], P21: ["covered-storage"],
+  P04: ["dough-temperature", "yeast-freshness-check"], P05: ["covered-storage", "dough-volume-comparison"], P21: ["covered-storage", "fridge-shelf-temperature"],
   P08: ["stretching"],
   P11: ["home-oven"], P17: ["pizza-serving"],
   P09: ["home-oven"], P10: ["stone-temperature"], P22: ["peel-prep"],

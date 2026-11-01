@@ -7,7 +7,7 @@ const render = (id: LearningIllustrationId) => renderToStaticMarkup(createElemen
 
 describe("learning credits distinguish inspiration from attribution and evidence", () => {
   it("keeps useful captions without publishing photographic inspiration", () => {
-    for (const id of ["bench-fold", "autolyse-initial-mix", "farinograph-bowl"] as const) {
+    for (const id of ["bench-fold", "autolyse-initial-mix", "farinograph-bowl", "room-air-temperature", "fridge-shelf-temperature", "flour-temperature", "yeast-freshness-check", "dough-volume-comparison"] as const) {
       const html = render(id);
       expect(html).toContain("<figcaption><p>");
       expect(html).not.toContain('data-region="learning-source"');

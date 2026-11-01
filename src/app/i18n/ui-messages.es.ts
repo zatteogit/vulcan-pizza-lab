@@ -1,5 +1,10 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.roomAirTemperature": "Mide el aire cerca de donde reposa la masa: su temperatura puede ser distinta de la de la masa.",
+  "learn.visual.fridgeShelfTemperature": "Comprueba la temperatura del aire en el estante utilizado, manteniendo cerrado el recipiente. La temperatura del centro de la masa puede ser distinta.",
+  "learn.visual.flourTemperature": "La sonda mide la temperatura de la harina, una de las variables para calcular la del agua.",
+  "learn.visual.yeastFreshnessCheck": "Una prueba de actividad de la levadura seca en agua, útil si se duda de su viabilidad. No hace falta en cada masa.",
+  "learn.visual.doughVolumeComparison": "Observa cómo cambia el volumen en el mismo recipiente. El final de la fermentación depende de la masa y del procedimiento.",
   "learn.visual.flourWeighing": "Tara el bol antes de pesar la harina. La báscula es genérica y la pantalla no indica ninguna cantidad.",
   "learn.visual.bigaHandMixing": "Mezcla la biga brevemente: deben quedar grumos irregulares, sin buscar una bola lisa.",
   "learn.visual.poolishStirring": "La cuchara mezcla el poolish recién preparado, todavía fluido. No muestra el final de la maduración.",

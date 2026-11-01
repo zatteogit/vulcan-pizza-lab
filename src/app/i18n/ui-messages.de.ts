@@ -1,5 +1,10 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.roomAirTemperature": "Miss die Luft dort, wo der Teig ruht: Ihre Temperatur kann von der des Teigs abweichen.",
+  "learn.visual.fridgeShelfTemperature": "Prüfe die Lufttemperatur auf dem verwendeten Kühlschrankboden und halte den Teigbehälter geschlossen. Die Kerntemperatur des Teigs kann abweichen.",
+  "learn.visual.flourTemperature": "Die Sonde misst die Mehltemperatur, eine der Größen zur Berechnung der Wassertemperatur.",
+  "learn.visual.yeastFreshnessCheck": "Ein Aktivitätstest für Trockenhefe in Wasser, wenn ihre Triebkraft ungewiss ist. Er ist nicht für jeden Teig nötig.",
+  "learn.visual.doughVolumeComparison": "Beobachte, wie sich das Volumen im selben Gefäß verändert. Das Ende der Gärung hängt vom Teig und vom Verfahren ab.",
   "learn.visual.flourWeighing": "Die Schüssel vor dem Abwiegen des Mehls tarieren. Die Waage ist neutral gestaltet und zeigt keine Menge an.",
   "learn.visual.bigaHandMixing": "Die Biga nur kurz mischen: Unregelmäßige Klumpen bleiben erhalten, keine glatte Kugel kneten.",
   "learn.visual.poolishStirring": "Der Löffel vermischt den frisch angesetzten, flüssigen Poolish. Das Bild zeigt nicht das Ende der Reifezeit.",

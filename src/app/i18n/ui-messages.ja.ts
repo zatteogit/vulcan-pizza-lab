@@ -1,5 +1,10 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.roomAirTemperature": "生地を休ませる場所の近くで気温を測ります。気温と生地の温度は異なることがあります。",
+  "learn.visual.fridgeShelfTemperature": "生地の容器を閉じたまま、使用する棚の空気の温度を確認します。生地の中心温度は異なることがあります。",
+  "learn.visual.flourTemperature": "温度計で粉の温度を測ります。粉の温度は、加える水の温度を計算する際に使う値の一つです。",
+  "learn.visual.yeastFreshnessCheck": "活性が不安なときに、水でドライイーストの働きを確かめる方法です。毎回行う必要はありません。",
+  "learn.visual.doughVolumeComparison": "同じ容器で体積の変化を観察します。発酵を終える時点は、生地と製法によって異なります。",
   "learn.visual.flourWeighing": "粉を量る前にボウルの重さを風袋引きします。特定の製品ではなく、表示部に分量は示していません。",
   "learn.visual.bigaHandMixing": "ビガは短時間だけ混ぜます。滑らかな球状にこねず、不規則な塊を残します。",
   "learn.visual.poolishStirring": "混ぜたばかりの流動性のあるプーリッシュをスプーンでなじませています。発酵完了時の姿ではありません。",

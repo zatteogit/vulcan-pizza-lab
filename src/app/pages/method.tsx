@@ -22,6 +22,8 @@ import { METHOD_ANCHORS, methodNoteHref, methodSectionHref, methodSourceAnchor, 
 import { LearningIllustration, type LearningIllustrationId } from "../features/learning/learning-illustration";
 
 const NOTE_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
+  "kitchen-temp-default": "room-air-temperature",
+  "water-temp-rule": "flour-temperature",
   "q10-fermentation": "dough-temperature",
   "thickness-factor": "portion-weighing",
   "flour-w-by-grade": "alveograph-bubble",

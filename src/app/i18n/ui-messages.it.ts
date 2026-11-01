@@ -3,6 +3,11 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.roomAirTemperature": "Misura l’aria vicino alla zona in cui riposa l’impasto: la sua temperatura può essere diversa da quella dell’impasto.",
+  "learn.visual.fridgeShelfTemperature": "Controlla la temperatura dell’aria sul ripiano usato, lasciando chiuso il recipiente. La temperatura del cuore dell’impasto può essere diversa.",
+  "learn.visual.flourTemperature": "La sonda misura la temperatura della farina, una delle variabili usate per calcolare quella dell’acqua.",
+  "learn.visual.yeastFreshnessCheck": "Una prova di attività del lievito secco in acqua, utile quando si dubita della sua vitalità. Non serve eseguirla per ogni impasto.",
+  "learn.visual.doughVolumeComparison": "Osserva come cambia il volume nello stesso recipiente. La fine della lievitazione dipende dall’impasto e dal procedimento.",
   "learn.visual.flourWeighing": "Tara la ciotola prima di pesare la farina. La bilancia è generica e il display non indica una quantità.",
   "learn.visual.bigaHandMixing": "Mescola la biga brevemente: restano grumi irregolari, senza cercare una palla liscia.",
   "learn.visual.poolishStirring": "Il cucchiaio amalgama il poolish appena miscelato, ancora fluido. Non è il momento di fine maturazione.",

@@ -1,5 +1,10 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.roomAirTemperature": "Measure the air near where the dough rests: its temperature may differ from the dough’s.",
+  "learn.visual.fridgeShelfTemperature": "Check the air temperature on the shelf you use, keeping the dough container closed. The dough’s core temperature may differ.",
+  "learn.visual.flourTemperature": "The probe measures flour temperature, one of the inputs used to calculate water temperature.",
+  "learn.visual.yeastFreshnessCheck": "A dry-yeast activity test in water, useful when its viability is in doubt. It is not needed for every dough.",
+  "learn.visual.doughVolumeComparison": "Observe how the volume changes in the same container. The end of fermentation depends on the dough and the procedure.",
   "learn.visual.flourWeighing": "Tare the bowl before weighing the flour. The scale is generic and the display shows no quantity.",
   "learn.visual.bigaHandMixing": "Mix the biga briefly, leaving irregular clumps rather than working it into a smooth ball.",
   "learn.visual.poolishStirring": "The spoon combines freshly mixed, fluid poolish. This does not show the end of its fermentation.",
