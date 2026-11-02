@@ -1,5 +1,8 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.saltBeforeFlour": "Bei der Napoletana STG wird das Salz vor der Mehlzugabe im Wasser aufgelöst. Die Szene zeigt die Salzzugabe ohne Mengenangabe.",
+  "learn.visual.rectangularPanMeasuring": "Für eine rechteckige Form brauchst du beide Innenmaße: Länge und Breite, ohne den äußeren Rand. Hier wird die längere Seite gemessen.",
+  "learn.visual.roundPanMeasuring": "Miss bei einer runden Form den Innendurchmesser durch die Mitte. Der äußere Rand gehört nicht zur nutzbaren Fläche; das Lineal zeigt keinen Wert zum Übernehmen.",
   "learn.visual.doughTearPinching": "Wenn ein kleines Loch entsteht, führe die Ränder zusammen und drücke sie zu. Decke den Teig anschließend ab und lass ihn ruhen, bevor du es erneut versuchst.",
   "learn.visual.gentleBubblePress": "Drücke vor dem Ausziehen die größten Blasen im Teig vorsichtig flach. Bei Stilen mit erhöhtem Rand bleibt dieser ohne Druck.",
   "learn.visual.plainParbakedBase": "Ein vorgebackener Boden, noch ohne Belag. Wenn das Rezept Vorbacken vorsieht, belege den Boden und backe ihn nach der angegebenen Methode fertig.",

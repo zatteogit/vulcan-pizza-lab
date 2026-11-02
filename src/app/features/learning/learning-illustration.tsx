@@ -1,3 +1,6 @@
+import saltBeforeFlour from "../../../assets/learn/salt-before-flour.webp";
+import rectangularPanMeasuring from "../../../assets/learn/rectangular-pan-measuring.webp";
+import roundPanMeasuring from "../../../assets/learn/round-pan-measuring.webp";
 import doughTearPinching from "../../../assets/learn/dough-tear-pinching.webp";
 import gentleBubblePress from "../../../assets/learn/gentle-bubble-press.webp";
 import plainParbakedBase from "../../../assets/learn/plain-parbaked-base.webp";
@@ -73,6 +76,10 @@ import { LearningDiagram, isLearningDiagramId, type LearningDiagramId } from "./
 import { uiMessage } from "../../i18n/ui-messages";
 
 const LEARNING_ARTWORK = {
+  "salt-before-flour": { src: saltBeforeFlour, caption: () => uiMessage("learn.visual.saltBeforeFlour"), cc: false },
+  "rectangular-pan-measuring": { src: rectangularPanMeasuring, caption: () => uiMessage("learn.visual.rectangularPanMeasuring"), cc: false },
+  "round-pan-measuring": { src: roundPanMeasuring, caption: () => uiMessage("learn.visual.roundPanMeasuring"), cc: false },
+
   "dough-tear-pinching": { src: doughTearPinching, caption: () => uiMessage("learn.visual.doughTearPinching"), cc: false },
   "gentle-bubble-press": { src: gentleBubblePress, caption: () => uiMessage("learn.visual.gentleBubblePress"), cc: false },
   "plain-parbaked-base": { src: plainParbakedBase, caption: () => uiMessage("learn.visual.plainParbakedBase"), cc: false },
@@ -152,6 +159,9 @@ const LEARNING_ARTWORK = {
 } as const;
 
 export type LearningIllustrationId = keyof typeof LEARNING_ARTWORK | LearningDiagramId;
+
+/** Complement weighing with the two usable pan dimensions. */
+export const PAN_MEASURING_VISUALS: readonly LearningIllustrationId[] = ["rectangular-pan-measuring", "round-pan-measuring"];
 
 /** Only map terms for which the photographed stage actually explains the text. */
 export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {

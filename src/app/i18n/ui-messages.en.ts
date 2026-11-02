@@ -1,5 +1,8 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.saltBeforeFlour": "In the Neapolitan STG method, salt is dissolved in the water before adding flour. The scene shows salt being added, without specifying a dose.",
+  "learn.visual.rectangularPanMeasuring": "For a rectangular pan, measure both inside dimensions: length and width, excluding the outer rim. The illustration shows the longer side being measured.",
+  "learn.visual.roundPanMeasuring": "For a round pan, measure the inside diameter through the centre. The outer rim is not part of the usable area; the ruler gives no value to copy.",
   "learn.visual.doughTearPinching": "If a small hole opens, bring the edges together and pinch them closed. Then cover the dough and let it rest before trying again.",
   "learn.visual.gentleBubblePress": "Before stretching, gently press the largest bubbles in the dough. For styles with a raised rim, keep pressure away from the edge.",
   "learn.visual.plainParbakedBase": "A parbaked base, still without toppings. When the recipe calls for parbaking, add the toppings and finish baking according to the method.",

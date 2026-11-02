@@ -1,0 +1,3 @@
+Discarded v3: background-extraction edit introduced excess texture.
+
+Use case: background-extraction. Clean transparent cutout of the existing illustration, changing ONLY its background/transparency. Keep the exact hand, bowls, dry salt flecks, water, outlines, smooth matte pen washes and their composition. Every pixel outside the actual objects must be TRANSPARENT with alpha=0. There must be no opaque or translucent full-canvas background, no dark gradient and no glow around contours. Keep the illustration itself opaque except for the clear glass/water appropriate transparency. Do NOT redesign, simplify, recolour, smooth out details or change the pose. No paper rectangle, no shadow floor, no new text or objects. Preserve landscape 3:2 and generous alpha margin.

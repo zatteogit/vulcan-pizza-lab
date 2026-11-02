@@ -1,5 +1,8 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.saltBeforeFlour": "En el método de la Napoletana STG, la sal se disuelve en el agua antes de añadir la harina. La escena muestra la adición de sal, sin indicar una dosis.",
+  "learn.visual.rectangularPanMeasuring": "Para una bandeja rectangular necesitas las dos medidas interiores: largo y ancho, sin incluir el borde exterior. Aquí se mide el lado largo.",
+  "learn.visual.roundPanMeasuring": "Para una bandeja redonda, mide el diámetro interior pasando por el centro. El borde exterior no forma parte de la superficie útil; la regla no muestra un valor que copiar.",
   "learn.visual.doughTearPinching": "Si se abre un agujero pequeño, junta los bordes y pellízcalos para cerrarlo. Después tapa la masa y déjala reposar antes de intentarlo de nuevo.",
   "learn.visual.gentleBubblePress": "Antes de estirar, presiona con suavidad las burbujas más grandes de la masa. En los estilos con borde elevado, evita presionar el borde.",
   "learn.visual.plainParbakedBase": "Una base precocida, todavía sin ingredientes. Cuando la receta indique precocción, añade los ingredientes y termina de hornear según el método.",

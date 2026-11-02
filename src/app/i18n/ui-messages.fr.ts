@@ -1,5 +1,8 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.saltBeforeFlour": "Dans la méthode de la Napoletana STG, le sel est dissous dans l’eau avant d’ajouter la farine. La scène montre l’ajout du sel, sans indiquer de dose.",
+  "learn.visual.rectangularPanMeasuring": "Pour un moule rectangulaire, mesure les deux dimensions intérieures : longueur et largeur, sans le rebord extérieur. Ici, on mesure le côté long.",
+  "learn.visual.roundPanMeasuring": "Pour un moule rond, mesure le diamètre intérieur en passant par le centre. Le rebord extérieur ne fait pas partie de la surface utile ; la règle ne donne aucune valeur à recopier.",
   "learn.visual.doughTearPinching": "Si un petit trou se forme, rapproche les bords et pince-les pour le refermer. Couvre ensuite la pâte et laisse-la reposer avant de réessayer.",
   "learn.visual.gentleBubblePress": "Avant d’étaler, presse délicatement les plus grosses bulles de la pâte. Pour les styles à bord gonflé, évite d’appuyer sur le bord.",
   "learn.visual.plainParbakedBase": "Une base précuite, encore sans garniture. Lorsque la recette prévoit une précuisson, ajoute la garniture et termine la cuisson selon la méthode.",

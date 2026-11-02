@@ -19,20 +19,21 @@ import { localizedFormula, sourceLabel } from "../features/science/source-label"
 import { latestSourceReading, methodAssumptions, methodGroups, methodSources, type MethodGroupId } from "../data/method-sections";
 import type { EvidenceKind, ScienceNote, SourceStatus } from "../domain/science/types";
 import { METHOD_ANCHORS, methodNoteHref, methodSectionHref, methodSourceAnchor, methodSourceHref } from "../features/method/method-link";
-import { LearningIllustration, type LearningIllustrationId } from "../features/learning/learning-illustration";
+import { LearningIllustration, PAN_MEASURING_VISUALS, type LearningIllustrationId } from "../features/learning/learning-illustration";
 
-const NOTE_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
-  "yeast-dose": "yeast-precision-weighing",
-  "sourdough-starter-dose": "sourdough-dose-weighing",
-  "water-activity": "water-activity-sample",
-  "bake-time-home-preheat": "stone-steel-surfaces",
-  "kitchen-temp-default": "room-air-temperature",
-  "water-temp-rule": "flour-temperature",
-  "q10-fermentation": "dough-temperature",
-  "thickness-factor": "portion-weighing",
-  "flour-w-by-grade": "alveograph-bubble",
-  "surface-conductivity": "stone-steel-surfaces",
-  "score-weights": "a_score",
+const NOTE_VISUALS: Readonly<Partial<Record<string, readonly LearningIllustrationId[]>>> = {
+  "stg-salt-timing": ["salt-before-flour"],
+  "yeast-dose": ["yeast-precision-weighing"],
+  "sourdough-starter-dose": ["sourdough-dose-weighing"],
+  "water-activity": ["water-activity-sample"],
+  "bake-time-home-preheat": ["stone-steel-surfaces"],
+  "kitchen-temp-default": ["room-air-temperature"],
+  "water-temp-rule": ["flour-temperature"],
+  "q10-fermentation": ["dough-temperature"],
+  "thickness-factor": ["portion-weighing", ...PAN_MEASURING_VISUALS],
+  "flour-w-by-grade": ["alveograph-bubble"],
+  "surface-conductivity": ["stone-steel-surfaces"],
+  "score-weights": ["a_score"],
 };
 
 const KIND_TONE: Record<EvidenceKind, BadgeTone> = {
@@ -179,7 +180,7 @@ export function MethodPage() {
           defaultOpen={target === note.id}
           className="method-note__details"
         >
-          {NOTE_VISUALS[note.id] && <LearningIllustration id={NOTE_VISUALS[note.id]!} />}
+          {NOTE_VISUALS[note.id]?.map(id => <LearningIllustration key={id} id={id} />)}
           <dl className="method-note__facts">
             {text?.l2 && (
               <>

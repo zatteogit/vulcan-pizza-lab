@@ -1,0 +1,27 @@
+{
+  "initial_generations": {
+    "salt-before-flour": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-9b3ad7b6-e610-465e-a38d-63a856938d27.png",
+    "rectangular-pan-measuring": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-23c35c48-6509-46da-a7ab-0383b9538858.png",
+    "round-pan-measuring": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-331db752-d274-42a8-87c8-4ad8c23c18be.png"
+  },
+  "revisions": [
+    {
+      "id": "salt-before-flour",
+      "selected": false,
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-287a3aa7-697d-4d46-adf6-920c64384966.png",
+      "reason": "Replace the misleading liquid-like ribbons with a few isolated salt fragments; preserve all other shapes and colour washes."
+    },
+    {
+      "id": "salt-before-flour",
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-c217a0fc-dc4f-4c1e-9eaf-4818e9b4fa9a.png",
+      "selected": false,
+      "reason": "Background extraction variant introduces excess surface texture."
+    },
+    {
+      "id": "salt-before-flour",
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-fa5bdcdf-defa-426d-b8fc-1175feb5f009.png",
+      "selected": true,
+      "reason": "New generation from the real photo and approved style with separate salt flecks and clean alpha."
+    }
+  ]
+}

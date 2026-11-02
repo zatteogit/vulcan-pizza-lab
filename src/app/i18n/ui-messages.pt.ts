@@ -1,5 +1,8 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "learn.visual.saltBeforeFlour": "No método da Napoletana STG, dissolve-se o sal na água antes de juntar a farinha. A cena mostra a adição do sal, sem indicar uma dose.",
+  "learn.visual.rectangularPanMeasuring": "Para um tabuleiro retangular, mede as duas dimensões interiores: comprimento e largura, sem incluir o bordo exterior. Aqui mede-se o lado comprido.",
+  "learn.visual.roundPanMeasuring": "Para uma forma redonda, mede o diâmetro interior passando pelo centro. O bordo exterior não faz parte da área útil; a régua não mostra um valor para copiar.",
   "learn.visual.doughTearPinching": "Se abrir um pequeno furo, junta as bordas e aperta-as para o fechar. Depois cobre a massa e deixa-a repousar antes de tentar novamente.",
   "learn.visual.gentleBubblePress": "Antes de esticar, pressiona suavemente as bolhas maiores da massa. Nos estilos com borda alta, evita pressionar a borda.",
   "learn.visual.plainParbakedBase": "Uma base pré-cozida, ainda sem cobertura. Quando a receita prevê pré-cozedura, junta a cobertura e termina a cozedura segundo o método.",
