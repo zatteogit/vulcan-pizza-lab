@@ -1,0 +1,97 @@
+{
+  "batch": 17,
+  "date": "2026-11-02",
+  "base_commit": "d958ecb356538bcaefbe178f9701c36e86a784a4",
+  "status": "Three review proposals, not integrated or published",
+  "mode": "built-in Imagegen, one distinct call per asset",
+  "export": "Pillow resize/format conversion only; generated alpha preserved",
+  "edits": "edits.json",
+  "style_reference": {
+    "path": "src/assets/learn/bench-fold.webp",
+    "sha256": "925d26ef53604371c3d606a7c13dd63e04bf60b64e7365fde0c1ebbabd4545b1",
+    "role": "approved style only"
+  },
+  "assets": [
+    {
+      "id": "salt-before-flour",
+      "title": "Il sale nell’acqua, prima della farina",
+      "target": "Metodo e fonti · Il sale nella Napoletana STG",
+      "asset": "assets/salt-before-flour.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 33790,
+      "sha256": "b37f5bc41906cf523ed80fec981154b20474923c090e80f185321cb140b101a5",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-17-2026-11-02/masters/salt-before-flour.png",
+      "master_sha256": "c2689467c5869450c00b7ca23cc45f3717eb7b889a0f06506832c9600d40d3e2",
+      "caption_it": "Nel procedimento della Napoletana STG il sale si scioglie nell’acqua prima di aggiungere la farina. La scena mostra l’aggiunta del sale, senza indicare una dose.",
+      "sources": [
+        {
+          "page": "https://www.cucinabyelena.com/authentic-neapolitan-pizza-dough/",
+          "author": "Elena Davis / Cucina by Elena",
+          "photo_url": "https://www.cucinabyelena.com/wp-content/uploads/2021/08/Authentic-Neapolitan-Pizza-Dough-Recipe-2-1200x1752.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-17-2026-11-02/references/salt-water-elena.jpg",
+          "role": "actual salt dish held over clear water in a glass bowl, before flour",
+          "original_distributed": false,
+          "sha256": "b875315bd3cf3d02f367722313e45e143b4e146dd816454314457fcaa19df94d"
+        }
+      ],
+      "recomposition_and_limits": "La foto reale di Elena Davis mostra un piattino di sale tenuto sopra una ciotola d’acqua prima della farina. Si cambia l’angolo e si inclina il piattino per rendere leggibile l’aggiunta; nessuna quantità o intera ricetta trasferita dalla fonte. La sequenza descritta dalla nota resta fondata sul disciplinare STG già citato nell’app. Una foto di La Cucina Italiana è scartata: la didascalia parla del sale ma la foto mostra già un impasto con farina."
+    },
+    {
+      "id": "rectangular-pan-measuring",
+      "title": "Misurare una teglia rettangolare",
+      "target": "Metodo e fonti / Glossario · Thickness factor",
+      "asset": "assets/rectangular-pan-measuring.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 28250,
+      "sha256": "2c84fc56d7a5a72966e10168187b82ea0943c83735cd708089ef75da838f12c8",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-17-2026-11-02/masters/rectangular-pan-measuring.png",
+      "master_sha256": "f5fedb5bd3215f2ce4b17de6242949fd04c3d7788f3e1318adb97e91480b21ea",
+      "caption_it": "Per la teglia rettangolare servono le due misure interne: lato lungo e lato corto, senza includere il bordo esterno. Qui è mostrata la misura del lato lungo.",
+      "sources": [
+        {
+          "page": "https://bakeschool.com/how-to-measure-cake-pan-sizes/",
+          "author": "Janice Lawandi / The Bake School",
+          "photo_url": "https://bakeschool.com/wp-content/uploads/2022/01/Measuring-the-size-of-a-square-cake-pan-with-a-ruler.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-17-2026-11-02/references/measure-square.jpg",
+          "role": "real pan-rim/ruler support and inside-edge measuring relationship; source is square",
+          "original_distributed": false,
+          "sha256": "9f3868015d03b50c5df992f5e0cb4a19436df655a1e8c75ee0279d08227ddc84"
+        }
+      ],
+      "recomposition_and_limits": "La fotografia di Janice Lawandi documenta una teglia quadrata e una riga appoggiata sopra l’apertura. Si ricompone una teglia rettangolare generica poco profonda e si ruota la misura sul lato lungo; non si copiano marchio, letture o dimensioni. Una sola misura è mostrata; la didascalia richiede entrambe per la superficie rettangolare."
+    },
+    {
+      "id": "round-pan-measuring",
+      "title": "Misurare il diametro interno",
+      "target": "Metodo e fonti / Glossario · Thickness factor",
+      "asset": "assets/round-pan-measuring.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 28928,
+      "sha256": "b846a192b5abe0dd42a59a27a018d0d32cf80982f8395f6096608e80ac981012",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-17-2026-11-02/masters/round-pan-measuring.png",
+      "master_sha256": "a27d0c88fe1579ce24a0bf09f57af75b518075fd2d488a7d5330064b22213dcd",
+      "caption_it": "Per una teglia tonda misura il diametro interno passando per il centro. Il bordo esterno non fa parte della superficie utile; la riga non mostra un valore da copiare.",
+      "sources": [
+        {
+          "page": "https://bakeschool.com/how-to-measure-cake-pan-sizes/",
+          "author": "Janice Lawandi / The Bake School",
+          "photo_url": "https://bakeschool.com/wp-content/uploads/2022/01/Measuring-the-size-of-a-round-cake-pan-with-a-ruler.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-17-2026-11-02/references/measure-round.jpg",
+          "role": "actual ruler spanning pan centre at top opening and inner-edge diameter measurement",
+          "original_distributed": false,
+          "sha256": "bfff5173c9fd2ca37e8c9d35552ee36f3f1cbf3fffe0d5db362aea19f121dc8d"
+        }
+      ],
+      "recomposition_and_limits": "Riferimento reale di Janice Lawandi: riga lungo il diametro di una teglia tonda. Si semplificano teglia e riga, eliminando marchi, doppia scala e numeri; la teglia generica ha pareti dritte e bordo basso. Nessun diametro prescritto o calcolo dell’area incorporato nel raster."
+    }
+  ]
+}
