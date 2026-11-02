@@ -1,5 +1,8 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.poolishFinalMix": "残りの水と混ぜておいたポーリッシュを、本ごね用の粉に加えます。へらで容器に残った分も移します。",
+  "learn.visual.autolyseFinalIncorporation": "オートリーズ休止の後、手順に従って材料を混ぜ込みます。ボウルの中で手で生地を挟み、折りたたんでなじませます。",
+  "learn.visual.handBackStretching": "手の甲で生地を支えながら広げ、重さを分散させて中心に指先を押し込みません。抵抗があれば台に戻して休ませます。",
   "learn.visual.roomAirTemperature": "生地を休ませる場所の近くで気温を測ります。気温と生地の温度は異なることがあります。",
   "learn.visual.fridgeShelfTemperature": "生地の容器を閉じたまま、使用する棚の空気の温度を確認します。生地の中心温度は異なることがあります。",
   "learn.visual.flourTemperature": "温度計で粉の温度を測ります。粉の温度は、加える水の温度を計算する際に使う値の一つです。",

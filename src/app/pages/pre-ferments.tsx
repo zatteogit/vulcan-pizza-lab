@@ -31,8 +31,8 @@ const PRE_FERMENT_ORDER = [
 
 const STEP_VISUALS: Record<(typeof PRE_FERMENT_ORDER)[number], Readonly<Record<number, LearningIllustrationId>>> = {
   biga: { 0: "biga-hand-mixing", 1: "covered-rest", 2: "biga-in-water" },
-  poolish: { 0: "poolish-stirring", 1: "covered-rest" },
-  autolisi: { 0: "autolyse-initial-mix", 1: "covered-rest" },
+  poolish: { 0: "poolish-stirring", 1: "covered-rest", 2: "poolish-final-mix" },
+  autolisi: { 0: "autolyse-initial-mix", 1: "covered-rest", 2: "autolyse-final-incorporation" },
 };
 
 export function PreFermentsPage() {

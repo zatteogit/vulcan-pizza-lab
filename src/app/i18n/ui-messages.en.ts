@@ -1,5 +1,8 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.poolishFinalMix": "Add the poolish already mixed with the remaining water to the flour for the final dough. Scrape it from its container with a spatula.",
+  "learn.visual.autolyseFinalIncorporation": "After the autolyse rest, incorporate the ingredients called for by the method. The hand squeezes and folds the dough in the bowl.",
+  "learn.visual.handBackStretching": "The backs of the hands support the dough as it widens, spreading its weight without pressing fingertips into the centre. If it resists, set it down and let it rest.",
   "learn.visual.roomAirTemperature": "Measure the air near where the dough rests: its temperature may differ from the dough’s.",
   "learn.visual.fridgeShelfTemperature": "Check the air temperature on the shelf you use, keeping the dough container closed. The dough’s core temperature may differ.",
   "learn.visual.flourTemperature": "The probe measures flour temperature, one of the inputs used to calculate water temperature.",

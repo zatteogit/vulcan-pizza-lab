@@ -1,7 +1,7 @@
 {
   "batch": 14,
   "date": "2026-11-01",
-  "status": "Three review proposals, not integrated or deployed",
+  "status": "Approved 2026-11-02; integrated in Prefermenti and Problemi e soluzioni, release verification pending",
   "mode": "built-in Imagegen, one distinct call per asset",
   "export": "Pillow resize and WebP conversion only; alpha preserved",
   "assets": [
@@ -33,7 +33,9 @@
         "role": "physical photograph; approved bench-fold is style only",
         "recomposition_and_limits": "La foto documenta poolish vero in trasferimento. Il disegno non stabilisce dosi, maturazione o una soglia di bolle; omette il marchio, il tavolo e semplifica le superfici.",
         "original_distributed": false
-      }
+      },
+      "integration_caption_it": "Unisci il poolish già mescolato all’acqua rimasta alla farina dell’impasto finale. Recuperalo dal recipiente con una spatola.",
+      "integration_note": "The caption follows the existing Vulcan step: mix poolish with remaining water, then add flour. The illustration shows the transfer into flour after that first mixing; no ingredient amounts are inferred from the image."
     },
     {
       "id": "autolyse-final-incorporation",
@@ -106,5 +108,17 @@
   },
   "variants": {
     "poolish-final-mix": "First variant retained internally; selected v2 removes small flour clods and crops no bowl."
+  },
+  "placements": {
+    "poolish-final-mix": [
+      "pre-ferments:poolish:step-3"
+    ],
+    "autolyse-final-incorporation": [
+      "pre-ferments:autolisi:step-3"
+    ],
+    "hand-back-stretching": [
+      "troubleshooting:P02",
+      "troubleshooting:P16"
+    ]
   }
 }

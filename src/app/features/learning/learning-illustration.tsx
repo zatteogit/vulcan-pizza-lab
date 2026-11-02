@@ -1,3 +1,6 @@
+import poolishFinalMix from "../../../assets/learn/poolish-final-mix.webp";
+import autolyseFinalIncorporation from "../../../assets/learn/autolyse-final-incorporation.webp";
+import handBackStretching from "../../../assets/learn/hand-back-stretching.webp";
 import roomAirTemperature from "../../../assets/learn/room-air-temperature.webp";
 import fridgeShelfTemperature from "../../../assets/learn/fridge-shelf-temperature.webp";
 import flourTemperature from "../../../assets/learn/flour-temperature.webp";
@@ -62,68 +65,72 @@ import { LearningDiagram, isLearningDiagramId, type LearningDiagramId } from "./
 import { uiMessage } from "../../i18n/ui-messages";
 
 const LEARNING_ARTWORK = {
-  "room-air-temperature": { src: roomAirTemperature, caption: () => uiMessage("learn.visual.roomAirTemperature"), source: "https://www.thermoworks.com/products/spot", author: "ThermoWorks", cc: false },
-  "fridge-shelf-temperature": { src: fridgeShelfTemperature, caption: () => uiMessage("learn.visual.fridgeShelfTemperature"), source: "https://www.thermoworks.com/products/spot", author: "ThermoWorks", cc: false },
-  "flour-temperature": { src: flourTemperature, caption: () => uiMessage("learn.visual.flourTemperature"), source: "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature", author: "Barb Alpern / King Arthur Baking", cc: false },
-  "yeast-freshness-check": { src: yeastFreshnessCheck, caption: () => uiMessage("learn.visual.yeastFreshnessCheck"), source: "https://www.kingarthurbaking.com/blog/2015/11/05/test-yeast-baking-powder-baking-soda-freshness", author: "PJ Hamel / King Arthur Baking", cc: false },
-  "dough-volume-comparison": { src: doughVolumeComparison, caption: () => uiMessage("learn.visual.doughVolumeComparison"), source: "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation", author: "Maurizio Leo / King Arthur Baking", cc: false },
+  "poolish-final-mix": { src: poolishFinalMix, caption: () => uiMessage("learn.visual.poolishFinalMix"), cc: false },
+  "autolyse-final-incorporation": { src: autolyseFinalIncorporation, caption: () => uiMessage("learn.visual.autolyseFinalIncorporation"), cc: false },
+  "hand-back-stretching": { src: handBackStretching, caption: () => uiMessage("learn.visual.handBackStretching"), cc: false },
 
-  "flour-weighing": { src: flourWeighing, caption: () => uiMessage("learn.visual.flourWeighing"), source: "https://www.kingarthurbaking.com/blog/2022/02/18/digital-kitchen-scale", author: "PJ Hamel / King Arthur Baking", cc: false },
-  "biga-hand-mixing": { src: bigaHandMixing, caption: () => uiMessage("learn.visual.bigaHandMixing"), source: "https://www.billyparisi.com/biga-recipe/", author: "Chef Billy Parisi", cc: false, extraSources: [{ source: "https://anitalianinmykitchen.com/italian-bread/", author: "Rosemary Molloy" }] },
-  "poolish-stirring": { src: poolishStirring, caption: () => uiMessage("learn.visual.poolishStirring"), source: "https://milkandpop.com/homemade-french-baguette/", author: "Tatiana Kamakura / Milk and Pop", cc: false },
-  "biga-in-water": { src: bigaInWater, caption: () => uiMessage("learn.visual.bigaInWater"), source: "https://anitalianinmykitchen.com/italian-bread/", author: "Rosemary Molloy", cc: false },
-  "autolyse-initial-mix": { src: autolyseInitialMix, caption: () => uiMessage("learn.visual.autolyseInitialMix"), source: "https://www.billyparisi.com/biga-recipe/", author: "Chef Billy Parisi", cc: false, extraSources: [{ source: "https://anitalianinmykitchen.com/italian-bread/", author: "Rosemary Molloy" }, { source: "https://www.theperfectloaf.com/guides/how-to-autolyse/", author: "Maurizio Leo / The Perfect Loaf" }] },
-  "manitoba-flour": { src: manitobaFlour, caption: () => uiMessage("learn.visual.manitobaFlour"), source: "https://www.molinomagri.com/it/prodotti/112-180-manitoba", author: "Molino Magri", cc: false },
-  "fructan-ingredients": { src: fructanIngredients, caption: () => uiMessage("learn.visual.fructanIngredients"), source: "https://www.monashfodmap.com/about-fodmap-and-ibs/high-and-low-fodmap-foods/", author: "Monash University / Monash FODMAP", cc: false },
-  "fermented-salami": { src: fermentedSalami, caption: () => uiMessage("learn.visual.fermentedSalami"), source: "https://www.salamecacciatore.it/il-prodotto/", author: "Consorzio Cacciatore Italiano", cc: false, scientificSource: { source: "https://www.efsa.europa.eu/en/efsajournal/pub/2393", label: () => uiMessage("learn.visual.efsa") } },
-  "pizza-serving": { src: pizzaServing, caption: () => uiMessage("learn.visual.pizzaServing"), source: "https://www.kingarthurbaking.com/blog/2026/07/06/pizza-party-ideas", author: "Patrick Marinello / King Arthur Baking; food styling Yekaterina Boytsova", cc: false },
-  "farinograph-bowl": { src: farinographBowl, caption: () => uiMessage("learn.visual.farinographBowl"), source: "https://www.anton-paar.com/us-en/products/details/farinograph/", author: "Brabender / Anton Paar", cc: false },
-  "farinograph-readout": { src: farinographReadout, caption: () => uiMessage("learn.visual.farinographReadout"), source: "https://www.anton-paar.com/us-en/products/details/farinograph/", author: "Brabender / Anton Paar", cc: false },
+  "room-air-temperature": { src: roomAirTemperature, caption: () => uiMessage("learn.visual.roomAirTemperature"), cc: false },
+  "fridge-shelf-temperature": { src: fridgeShelfTemperature, caption: () => uiMessage("learn.visual.fridgeShelfTemperature"), cc: false },
+  "flour-temperature": { src: flourTemperature, caption: () => uiMessage("learn.visual.flourTemperature"), cc: false },
+  "yeast-freshness-check": { src: yeastFreshnessCheck, caption: () => uiMessage("learn.visual.yeastFreshnessCheck"), cc: false },
+  "dough-volume-comparison": { src: doughVolumeComparison, caption: () => uiMessage("learn.visual.doughVolumeComparison"), cc: false },
+
+  "flour-weighing": { src: flourWeighing, caption: () => uiMessage("learn.visual.flourWeighing"), cc: false },
+  "biga-hand-mixing": { src: bigaHandMixing, caption: () => uiMessage("learn.visual.bigaHandMixing"), cc: false },
+  "poolish-stirring": { src: poolishStirring, caption: () => uiMessage("learn.visual.poolishStirring"), cc: false },
+  "biga-in-water": { src: bigaInWater, caption: () => uiMessage("learn.visual.bigaInWater"), cc: false },
+  "autolyse-initial-mix": { src: autolyseInitialMix, caption: () => uiMessage("learn.visual.autolyseInitialMix"), cc: false },
+  "manitoba-flour": { src: manitobaFlour, caption: () => uiMessage("learn.visual.manitobaFlour"), cc: false },
+  "fructan-ingredients": { src: fructanIngredients, caption: () => uiMessage("learn.visual.fructanIngredients"), cc: false },
+  "fermented-salami": { src: fermentedSalami, caption: () => uiMessage("learn.visual.fermentedSalami"), cc: false, scientificSource: { source: "https://www.efsa.europa.eu/en/efsajournal/pub/2393", label: () => uiMessage("learn.visual.efsa") } },
+  "pizza-serving": { src: pizzaServing, caption: () => uiMessage("learn.visual.pizzaServing"), cc: false },
+  "farinograph-bowl": { src: farinographBowl, caption: () => uiMessage("learn.visual.farinographBowl"), cc: false },
+  "farinograph-readout": { src: farinographReadout, caption: () => uiMessage("learn.visual.farinographReadout"), cc: false },
   "lactic-bacteria": { src: lacticBacteria, caption: () => uiMessage("learn.visual.lacticBacteria"), source: "https://commons.wikimedia.org/wiki/File:Lactobacillus_paracasei.jpg", author: "Dr. Horst Neve / Max Rubner-Institut", cc: false, license: { url: "https://creativecommons.org/licenses/by-sa/3.0/", label: () => uiMessage("learn.visual.licenseSa3") } },
-  "bread-freezer-portions": { src: breadFreezerPortions, caption: () => uiMessage("learn.visual.breadFreezerPortions"), source: "https://www.kingarthurbaking.com/blog/2020/07/08/the-best-way-to-store-yeast-bread", author: "PJ Hamel / King Arthur Baking", cc: false },
-  "alveograph-bubble": { src: alveographBubble, caption: () => uiMessage("learn.visual.alveographBubble"), source: "https://www.kpmanalytics.com/products/functional-rheological/alveolab", author: "KPM Analytics", cc: false },
-  "falling-number-tubes": { src: fallingNumberTubes, caption: () => uiMessage("learn.visual.fallingNumberTubes"), source: "https://www.montana.edu/barleybreeding/learning-center/learn-about-testing/Falling-Number.html", author: "Montana State University", cc: false },
-  "browned-crust": { src: brownedCrust, caption: () => uiMessage("learn.visual.brownedCrust"), source: "https://www.kingarthurbaking.com/blog/2022/02/15/understanding-the-maillard-reaction-in-baking", author: "Raymond Prado / King Arthur Baking", cc: false },
-  "caramel-sugar": { src: caramelSugar, caption: () => uiMessage("learn.visual.caramelSugar"), source: "https://umamidays.com/how-to-caramelize-sugar/", author: "Connie Veneracion / Umami Days", cc: false },
-  "starch-paste": { src: starchPaste, caption: () => uiMessage("learn.visual.starchPaste"), source: "https://www.kingarthurbaking.com/blog/2018/03/26/introduction-to-tangzhong", author: "PJ Hamel / King Arthur Baking", cc: false },
+  "bread-freezer-portions": { src: breadFreezerPortions, caption: () => uiMessage("learn.visual.breadFreezerPortions"), cc: false },
+  "alveograph-bubble": { src: alveographBubble, caption: () => uiMessage("learn.visual.alveographBubble"), cc: false },
+  "falling-number-tubes": { src: fallingNumberTubes, caption: () => uiMessage("learn.visual.fallingNumberTubes"), cc: false },
+  "browned-crust": { src: brownedCrust, caption: () => uiMessage("learn.visual.brownedCrust"), cc: false },
+  "caramel-sugar": { src: caramelSugar, caption: () => uiMessage("learn.visual.caramelSugar"), cc: false },
+  "starch-paste": { src: starchPaste, caption: () => uiMessage("learn.visual.starchPaste"), cc: false },
   biga: { src: biga, caption: () => uiMessage("learn.visual.biga"), source: "https://www.flickr.com/photos/grongar/3683817769/", author: "Rebecca Siegel", cc: true },
   poolish: { src: poolish, caption: () => uiMessage("learn.visual.poolish"), source: "https://commons.wikimedia.org/wiki/File:Poolish_for_Artos.jpg", author: "Rebecca Siegel", cc: true },
-  autolysis: { src: autolysis, caption: () => uiMessage("learn.visual.autolysis"), source: "https://www.kingarthurbaking.com/blog/2017/09/29/using-the-autolyse-method", author: "King Arthur Baking", cc: false },
-  folds: { src: folds, caption: () => uiMessage("learn.visual.folds"), source: "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation", author: "Maurizio Leo / King Arthur Baking", cc: false },
-  windowpane: { src: windowpane, caption: () => uiMessage("learn.visual.windowpane"), source: "https://www.kingarthurbaking.com/blog/2022/10/14/what-is-the-windowpane-test-for-bread-dough", author: "King Arthur Baking", cc: false },
-  division: { src: division, caption: () => uiMessage("learn.visual.division"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
-  "ball-shaping": { src: ballShaping, caption: () => uiMessage("learn.visual.ballShaping"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
-  "poke-test": { src: pokeTest, caption: () => uiMessage("learn.visual.pokeTest"), source: "https://www.kingarthurbaking.com/blog/2022/08/22/how-to-tell-if-bread-dough-has-risen-enough", author: "King Arthur Baking", cc: false },
-  stretching: { src: stretching, caption: () => uiMessage("learn.visual.stretching"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
-  cornicione: { src: cornicione, caption: () => uiMessage("learn.visual.cornicione"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
-  "bulk-fermentation": { src: bulkFermentation, caption: () => uiMessage("learn.visual.bulkFermentation"), source: "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation", author: "Maurizio Leo / King Arthur Baking", cc: false },
-  "ball-fermentation": { src: ballFermentation, caption: () => uiMessage("learn.visual.ballFermentation"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
-  sourdough: { src: sourdough, caption: () => uiMessage("learn.visual.sourdough"), source: "https://www.kingarthurbaking.com/recipes/sourdough-starter-recipe", author: "King Arthur Baking", cc: false },
-  yeast: { src: yeast, caption: () => uiMessage("learn.visual.yeast"), source: "https://www.kingarthurbaking.com/blog/2023/04/24/how-to-bake-with-fresh-yeast", author: "Liz Neily, Kristin Teig / King Arthur Baking", cc: false },
-  "oven-floor-dome": { src: ovenFloorDome, caption: () => uiMessage("learn.visual.ovenFloorDome"), source: "https://commons.wikimedia.org/wiki/File:Brick-oven-thumbnail.jpg", author: "Beboplu / Wikimedia Commons", cc: false },
-  hydration: { src: hydration, caption: () => uiMessage("learn.visual.hydration"), source: "https://fabflour.co.uk/step-by-step-guides/step-by-step-bread", author: "Fab Flour / UK Flour Millers", cc: false },
+  autolysis: { src: autolysis, caption: () => uiMessage("learn.visual.autolysis"), cc: false },
+  folds: { src: folds, caption: () => uiMessage("learn.visual.folds"), cc: false },
+  windowpane: { src: windowpane, caption: () => uiMessage("learn.visual.windowpane"), cc: false },
+  division: { src: division, caption: () => uiMessage("learn.visual.division"), cc: false },
+  "ball-shaping": { src: ballShaping, caption: () => uiMessage("learn.visual.ballShaping"), cc: false },
+  "poke-test": { src: pokeTest, caption: () => uiMessage("learn.visual.pokeTest"), cc: false },
+  stretching: { src: stretching, caption: () => uiMessage("learn.visual.stretching"), cc: false },
+  cornicione: { src: cornicione, caption: () => uiMessage("learn.visual.cornicione"), cc: false },
+  "bulk-fermentation": { src: bulkFermentation, caption: () => uiMessage("learn.visual.bulkFermentation"), cc: false },
+  "ball-fermentation": { src: ballFermentation, caption: () => uiMessage("learn.visual.ballFermentation"), cc: false },
+  sourdough: { src: sourdough, caption: () => uiMessage("learn.visual.sourdough"), cc: false },
+  yeast: { src: yeast, caption: () => uiMessage("learn.visual.yeast"), cc: false },
+  "oven-floor-dome": { src: ovenFloorDome, caption: () => uiMessage("learn.visual.ovenFloorDome"), cc: false },
+  hydration: { src: hydration, caption: () => uiMessage("learn.visual.hydration"), cc: false },
   "whole-wheat": { src: wholeWheat, caption: () => uiMessage("learn.visual.wholeWheat"), source: "https://commons.wikimedia.org/wiki/File:Whole_wheat_grain_flour_being_scooped.jpg", author: "Margaret Hoogstrate", cc: true, licenseVersion: "3.0" },
-  "home-oven": { src: homeOven, caption: () => uiMessage("learn.visual.homeOven"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
-  "peel-prep": { src: peelPrep, caption: () => uiMessage("learn.visual.peelPrep"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
-  "stone-temperature": { src: stoneTemperature, caption: () => uiMessage("learn.visual.stoneTemperature"), source: "https://www.williams-sonoma.com/netstorage/pdf/Ooni-IR-Thermometer-UU-P06100-Essentials-Guide.pdf", author: "Ooni", cc: false },
-  "water-temperature": { src: waterTemperature, caption: () => uiMessage("learn.visual.waterTemperature"), source: "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature", author: "King Arthur Baking", cc: false },
-  "mixer-dough": { src: mixerDough, caption: () => uiMessage("learn.visual.mixerDough"), source: "https://www.giallozafferano.com/recipes/Fried-Pizza.html", author: "GialloZafferano", cc: false },
-  "frying-seal": { src: fryingSeal, caption: () => uiMessage("learn.visual.fryingSeal"), source: "https://www.giallozafferano.com/recipes/Fried-Pizza.html", author: "GialloZafferano", cc: false },
-  "frying-drain": { src: fryingDrain, caption: () => uiMessage("learn.visual.fryingDrain"), source: "https://www.giallozafferano.com/recipes/Fried-Pizza.html", author: "GialloZafferano", cc: false },
-  "base-check": { src: baseCheck, caption: () => uiMessage("learn.visual.baseCheck"), source: "https://www.kingarthurbaking.com/blog/2020/06/17/gluten-free-pan-pizza", author: "King Arthur Baking", cc: false },
-  "portion-weighing": { src: portionWeighing, caption: () => uiMessage("learn.visual.portionWeighing"), source: "https://www.kingarthurbaking.com/blog/2020/03/16/how-to-make-a-simple-hearth-bread", author: "King Arthur Baking", cc: false },
-  "mozzarella-drying": { src: mozzarellaDrying, caption: () => uiMessage("learn.visual.mozzarellaDrying"), source: "https://mypizzacorner.com/pizza-tips/how-to-drain-mozzarella-for-pizza/", author: "Tom Rothwell / My Pizza Corner", cc: false },
-  "stone-brushing": { src: stoneBrushing, caption: () => uiMessage("learn.visual.stoneBrushing"), source: "https://ooni.com/blogs/ooni-insights/how-to-clean-a-pizza-stone", author: "Ooni", cc: false },
-  "pizza-turning": { src: pizzaTurning, caption: () => uiMessage("learn.visual.pizzaTurning"), source: "https://ooni.com/products/ooni-pizza-turning-peel", author: "Ooni", cc: false },
-  "oil-temperature": { src: oilTemperature, caption: () => uiMessage("learn.visual.oilTemperature"), source: "https://blog.thermoworks.com/best-thermometer-for-deep-frying/", author: "ThermoWorks", cc: false },
-  "dough-temperature": { src: doughTemperature, caption: () => uiMessage("learn.visual.doughTemperature"), source: "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature", author: "King Arthur Baking", cc: false },
-  "covered-rest": { src: coveredRest, caption: () => uiMessage("learn.visual.coveredRest"), source: "https://www.kingarthurbaking.com/blog/2021/09/28/how-to-refrigerate-bread-dough-to-bake-later", author: "Mark Weinberg / King Arthur Baking", cc: false },
-  "covered-storage": { src: coveredStorage, caption: () => uiMessage("learn.visual.coveredStorage"), source: "https://www.kingarthurbaking.com/blog/2023/04/18/never-cover-rising-bread-dough-with-towel", author: "King Arthur Baking", cc: false },
-  "remilled-semolina": { src: remilledSemolina, caption: () => uiMessage("learn.visual.remilledSemolina"), source: "https://shop.drax-muehle.de/produkte/detail/1333/bio-hartweizenmehl-semola-di-grano-duro-rimacinata-1-kg", author: "Drax-Mühle", cc: false },
-  "sauce-dosing": { src: sauceDosing, caption: () => uiMessage("learn.visual.sauceDosing"), source: "https://www.pexels.com/photo/putting-tomato-sauce-on-dough-for-pizza-17637072/", author: "Saulo Leite / Pexels", cc: false },
-  "bench-fold": { src: benchFold, caption: () => uiMessage("learn.visual.benchFold"), source: "https://www.kingarthurbaking.com/blog/2017/06/19/kneading-wet-dough-by-hand", author: "King Arthur Baking", cc: false },
+  "home-oven": { src: homeOven, caption: () => uiMessage("learn.visual.homeOven"), cc: false },
+  "peel-prep": { src: peelPrep, caption: () => uiMessage("learn.visual.peelPrep"), cc: false },
+  "stone-temperature": { src: stoneTemperature, caption: () => uiMessage("learn.visual.stoneTemperature"), cc: false },
+  "water-temperature": { src: waterTemperature, caption: () => uiMessage("learn.visual.waterTemperature"), cc: false },
+  "mixer-dough": { src: mixerDough, caption: () => uiMessage("learn.visual.mixerDough"), cc: false },
+  "frying-seal": { src: fryingSeal, caption: () => uiMessage("learn.visual.fryingSeal"), cc: false },
+  "frying-drain": { src: fryingDrain, caption: () => uiMessage("learn.visual.fryingDrain"), cc: false },
+  "base-check": { src: baseCheck, caption: () => uiMessage("learn.visual.baseCheck"), cc: false },
+  "portion-weighing": { src: portionWeighing, caption: () => uiMessage("learn.visual.portionWeighing"), cc: false },
+  "mozzarella-drying": { src: mozzarellaDrying, caption: () => uiMessage("learn.visual.mozzarellaDrying"), cc: false },
+  "stone-brushing": { src: stoneBrushing, caption: () => uiMessage("learn.visual.stoneBrushing"), cc: false },
+  "pizza-turning": { src: pizzaTurning, caption: () => uiMessage("learn.visual.pizzaTurning"), cc: false },
+  "oil-temperature": { src: oilTemperature, caption: () => uiMessage("learn.visual.oilTemperature"), cc: false },
+  "dough-temperature": { src: doughTemperature, caption: () => uiMessage("learn.visual.doughTemperature"), cc: false },
+  "covered-rest": { src: coveredRest, caption: () => uiMessage("learn.visual.coveredRest"), cc: false },
+  "covered-storage": { src: coveredStorage, caption: () => uiMessage("learn.visual.coveredStorage"), cc: false },
+  "remilled-semolina": { src: remilledSemolina, caption: () => uiMessage("learn.visual.remilledSemolina"), cc: false },
+  "sauce-dosing": { src: sauceDosing, caption: () => uiMessage("learn.visual.sauceDosing"), cc: false },
+  "bench-fold": { src: benchFold, caption: () => uiMessage("learn.visual.benchFold"), cc: false },
   "preferment-pair": { src: prefermentPair, caption: () => uiMessage("learn.visual.prefermentPair"), source: "https://www.flickr.com/photos/grongar/3683817769/", author: "Rebecca Siegel", cc: true, extraSource: { source: "https://commons.wikimedia.org/wiki/File:Poolish_for_Artos.jpg", label: () => uiMessage("learn.visual.poolishPhoto") } },
-  "stretching-properties": { src: stretching, caption: () => uiMessage("learn.visual.stretchingProperties"), source: "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make", author: "King Arthur Baking", cc: false },
+  "stretching-properties": { src: stretching, caption: () => uiMessage("learn.visual.stretchingProperties"), cc: false },
 } as const;
 
 export type LearningIllustrationId = keyof typeof LEARNING_ARTWORK | LearningDiagramId;
@@ -155,8 +162,8 @@ export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrat
 
 /** These illustrate a gesture in the advice, never a visual diagnosis. */
 export const TROUBLESHOOTING_VISUALS: Readonly<Partial<Record<string, readonly LearningIllustrationId[]>>> = {
-  P01: ["folds"], P02: ["stretching"], P03: ["poke-test", "dough-volume-comparison"], P07: ["stretching", "covered-rest"],
-  P16: ["stretching"], P19: ["stretching", "covered-rest"], P23: ["ball-shaping"],
+  P01: ["folds"], P02: ["stretching", "hand-back-stretching"], P03: ["poke-test", "dough-volume-comparison"], P07: ["stretching", "covered-rest"],
+  P16: ["stretching", "hand-back-stretching"], P19: ["stretching", "covered-rest"], P23: ["ball-shaping"],
   P04: ["dough-temperature", "yeast-freshness-check"], P05: ["covered-storage", "dough-volume-comparison"], P21: ["covered-storage", "fridge-shelf-temperature"],
   P08: ["stretching"],
   P11: ["home-oven"], P17: ["pizza-serving"],
@@ -171,8 +178,8 @@ export function LearningIllustration({ id, decorative = false }: {
 }) {
   if (isLearningDiagramId(id)) return <LearningDiagram id={id} artwork={LEARNING_ARTWORK} decorative={decorative} />;
   const visual = LEARNING_ARTWORK[id];
-  // Photo inspiration stays in the internal registry. Declared licensed
-  // adaptations and sources supporting factual content keep their credits.
+  // Photo inspiration is archived in design-assets/learn-photographic-inspiration.json.
+  // Declared licensed adaptations and factual sources keep their credits.
   const attributed = visual.cc || "license" in visual;
   const image = <img src={visual.src} width={672} height={448} alt="" loading="lazy" decoding="async" data-region="learning-image" />;
   if (decorative) return image;

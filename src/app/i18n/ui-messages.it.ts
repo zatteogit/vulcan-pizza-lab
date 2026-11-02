@@ -3,6 +3,9 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.poolishFinalMix": "Unisci il poolish già mescolato all’acqua rimasta alla farina dell’impasto finale. Recuperalo dal recipiente con una spatola.",
+  "learn.visual.autolyseFinalIncorporation": "Dopo il riposo di autolisi, incorpora gli ingredienti previsti dal procedimento. La mano stringe e ripiega la massa nella ciotola.",
+  "learn.visual.handBackStretching": "Il dorso delle mani sostiene la pasta durante l’allargamento, distribuendo il peso senza puntare le dita nel centro. Se oppone resistenza, appoggiala e lasciala riposare.",
   "learn.visual.roomAirTemperature": "Misura l’aria vicino alla zona in cui riposa l’impasto: la sua temperatura può essere diversa da quella dell’impasto.",
   "learn.visual.fridgeShelfTemperature": "Controlla la temperatura dell’aria sul ripiano usato, lasciando chiuso il recipiente. La temperatura del cuore dell’impasto può essere diversa.",
   "learn.visual.flourTemperature": "La sonda misura la temperatura della farina, una delle variabili usate per calcolare quella dell’acqua.",
