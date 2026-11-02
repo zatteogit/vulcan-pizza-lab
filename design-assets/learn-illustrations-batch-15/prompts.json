@@ -1,0 +1,130 @@
+[
+  {
+    "id": "yeast-precision-weighing",
+    "title": "Pesare una piccola dose di lievito",
+    "target": "Metodo e fonti · Dose di lievito",
+    "caption_it": "Pesa il lievito nel piccolo recipiente tarato, usando una bilancia adatta alla dose richiesta dalla ricetta.",
+    "limits": "La foto Ooni documenta davvero il versamento di lievito secco nel piattino della piattaforma piccola. Si mantiene quel contatto e si ridisegna una bilancia generica a piattaforma singola, senza display numerico o promessa di risoluzione. Nessuna dose viene ricavata dall’immagine.",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/precision-55.jpg"
+    ],
+    "sources": [
+      {
+        "page": "https://ooni.com/collections/pizza-prep/products/ooni-dual-platform-digital-scales",
+        "author": "Ooni",
+        "photo_url": "https://ooni.com/cdn/shop/products/Ooni-DualScales-Lifestyle2-1500px.jpg?crop=center&format=webp&height=640&v=1649193591&width=640",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/precision-55.jpg",
+        "role": "actual photograph: dry yeast poured into small weighing dish",
+        "original_distributed": false
+      }
+    ],
+    "scene": "A compact generic SINGLE-PLATFORM precision scale in three-quarter view, with a small shallow removable ivory weighing dish resting fully on its small flat platform. Keep the platform supporting the dish as in photo2's SMALL RIGHT platform. Omit the large left flour platform entirely, and redesign the housing into a simple modest ivory rectangle with terracotta trim, ONE blank rectangular LCD and two plain unmarked buttons. One realistic hand tilts a small ivory pinch bowl above the dish, adding a small amount of dry yeast. Photo2 documents the actual yeast transfer. Show a low pale-tan mound in the dish with only a few broad cluster contours; the falling stream is just a few short understated marks, no dense spray of hundreds of tiny dots. No flour, bags, calibration weights, teaspoons, grams, digits or decimal symbols. The hand does not touch the weighing dish or scale while ingredients are being added. Whole device and dish visible with clear alpha margin.",
+    "prompt": "Use case: scientific-educational. Create ONE new educational illustration for Vulcan. Input image 1 is STYLE ONLY: warm coloured-pen illustration, fine warm-brown outlines, restrained smooth matte washes, terracotta and ivory palette, very clean broad surfaces. Remaining images are REAL PHOTOGRAPHIC REFERENCES for physical objects, contact points, pose and material state; reinterpret their composition. No text, labels, numbers, logos, arrows or watermark anywhere; any display is completely blank. No paper grain, granular overlays, stippling, hatching fields, photographic food texture, plastic shine, CGI or halo. Landscape 3:2, whole scene inside generous transparent margins; all objects fit, hands may have cropped forearm ends only. True alpha outside actual outlined objects, no tabletop rectangle, background, aura or cast shadow. A few long fine lines and broad smooth matte colour areas rather than tiny texture marks. Functional credibility comes first.\n\nA compact generic SINGLE-PLATFORM precision scale in three-quarter view, with a small shallow removable ivory weighing dish resting fully on its small flat platform. Keep the platform supporting the dish as in photo2's SMALL RIGHT platform. Omit the large left flour platform entirely, and redesign the housing into a simple modest ivory rectangle with terracotta trim, ONE blank rectangular LCD and two plain unmarked buttons. One realistic hand tilts a small ivory pinch bowl above the dish, adding a small amount of dry yeast. Photo2 documents the actual yeast transfer. Show a low pale-tan mound in the dish with only a few broad cluster contours; the falling stream is just a few short understated marks, no dense spray of hundreds of tiny dots. No flour, bags, calibration weights, teaspoons, grams, digits or decimal symbols. The hand does not touch the weighing dish or scale while ingredients are being added. Whole device and dish visible with clear alpha margin."
+  },
+  {
+    "id": "sourdough-dose-weighing",
+    "title": "Pesare la madre della ricetta",
+    "target": "Metodo e fonti · Dose di lievito madre",
+    "caption_it": "Trasferisci la madre nel recipiente tarato, togli la spatola e leggi il peso. Il peso non misura la forza del lievito madre.",
+    "limits": "Ricomposizione dichiarata: la foto di Maurizio Leo della tara mostra un barattolo vuoto sulla bilancia durante un rinfresco; altre foto dello stesso autore documentano spatola, massa e consistenza della madre. Non si spaccia la foto come pesatura già pronta della dose di Vulcan e non si propone un rapporto di rinfresco universale.",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-15.jpg",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-17.jpg",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-18.jpg"
+    ],
+    "sources": [
+      {
+        "page": "https://www.theperfectloaf.com/7-easy-steps-making-incredible-sourdough--starter-scratch/",
+        "author": "Maurizio Leo / The Perfect Loaf",
+        "photo_url": "https://www.theperfectloaf.com/wp-content/uploads/2013/10/theperfectloaf-making-sourdough-starter-from-scratch-1-1080x721.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-15.jpg",
+        "role": "actual jar support on scale and tare action; originally an empty jar",
+        "original_distributed": false
+      },
+      {
+        "page": "https://www.theperfectloaf.com/7-easy-steps-making-incredible-sourdough--starter-scratch/",
+        "author": "Maurizio Leo / The Perfect Loaf",
+        "photo_url": "https://www.theperfectloaf.com/wp-content/uploads/2013/10/theperfectloaf-making-sourdough-starter-from-scratch-3.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-17.jpg",
+        "role": "actual spatula and soft starter consistency",
+        "original_distributed": false
+      },
+      {
+        "page": "https://www.theperfectloaf.com/7-easy-steps-making-incredible-sourdough--starter-scratch/",
+        "author": "Maurizio Leo / The Perfect Loaf",
+        "photo_url": "https://www.theperfectloaf.com/wp-content/uploads/2013/10/theperfectloaf-making-sourdough-starter-from-scratch-5-1080x721.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-18.jpg",
+        "role": "actual liquid-starter consistency, not a readiness threshold",
+        "original_distributed": false
+      }
+    ],
+    "scene": "One ordinary kitchen digital scale, a simple ivory base with terracotta accent and a single BLANK display. On the platform stands ONE short wide-mouthed straight clear glass jar with a modest amount of ivory liquid sourdough starter at its bottom. Use photo2 for the physical support of the jar flat on the weighing platform; remove all brand-specific details and any number. One hand holds a small ivory spatula with a terracotta handle over the open jar. A short cohesive dollop of soft starter is being scraped down into the jar, based on the actual material and tool in photo3 and the starter consistency in photo4. Not a long dramatic stretchy noodle, not pouring clear water and no dry flour addition. A few broad swirls in the starter and 2 or 3 irregular larger bubbles only. Hand and spatula never press on the jar or scale. This is adding a recipe portion of starter before reading its weight, NOT a feeding-ratio diagram, not a fermentation comparison and not a pass/fail test. One jar only, no lid, no bands, graduations, clock, ticks or exact volume claims. Whole jar and scale visible.",
+    "prompt": "Use case: scientific-educational. Create ONE new educational illustration for Vulcan. Input image 1 is STYLE ONLY: warm coloured-pen illustration, fine warm-brown outlines, restrained smooth matte washes, terracotta and ivory palette, very clean broad surfaces. Remaining images are REAL PHOTOGRAPHIC REFERENCES for physical objects, contact points, pose and material state; reinterpret their composition. No text, labels, numbers, logos, arrows or watermark anywhere; any display is completely blank. No paper grain, granular overlays, stippling, hatching fields, photographic food texture, plastic shine, CGI or halo. Landscape 3:2, whole scene inside generous transparent margins; all objects fit, hands may have cropped forearm ends only. True alpha outside actual outlined objects, no tabletop rectangle, background, aura or cast shadow. A few long fine lines and broad smooth matte colour areas rather than tiny texture marks. Functional credibility comes first.\n\nOne ordinary kitchen digital scale, a simple ivory base with terracotta accent and a single BLANK display. On the platform stands ONE short wide-mouthed straight clear glass jar with a modest amount of ivory liquid sourdough starter at its bottom. Use photo2 for the physical support of the jar flat on the weighing platform; remove all brand-specific details and any number. One hand holds a small ivory spatula with a terracotta handle over the open jar. A short cohesive dollop of soft starter is being scraped down into the jar, based on the actual material and tool in photo3 and the starter consistency in photo4. Not a long dramatic stretchy noodle, not pouring clear water and no dry flour addition. A few broad swirls in the starter and 2 or 3 irregular larger bubbles only. Hand and spatula never press on the jar or scale. This is adding a recipe portion of starter before reading its weight, NOT a feeding-ratio diagram, not a fermentation comparison and not a pass/fail test. One jar only, no lid, no bands, graduations, clock, ticks or exact volume claims. Whole jar and scale visible."
+  },
+  {
+    "id": "stone-steel-surfaces",
+    "title": "Due superfici di cottura",
+    "target": "Metodo e fonti · Conducibilità della superficie / preriscaldamento",
+    "caption_it": "Pietra a sinistra, acciaio a destra: due superfici che sostengono la pizza e trasferiscono calore al fondo. Preriscaldamento e uso dipendono dalla superficie e dalla ricetta.",
+    "limits": "Coppia ricomposta da fotografie di prodotti reali King Arthur Baking e Baking Steel. Sagome generiche, senza loghi, incisioni o proporzioni dimensionali prescrittive. Non è una prova comparativa, non assegna temperature, tempi o valori di conducibilità alle tavole.",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/stone-product-28.jpg",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/steel-product-2.jpg"
+    ],
+    "sources": [
+      {
+        "page": "https://shop.kingarthurbaking.com/items/king-arthur-bread-and-pizza-stone",
+        "author": "King Arthur Baking",
+        "photo_url": "https://cdn11.bigcommerce.com/s-ihwnd7z21q/images/stencil/1280x1280/products/426/6708/211820_1__16652_2927__77828.1739465039.jpg?c=1",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/stone-product-28.jpg",
+        "role": "actual cordierite baking stone slab",
+        "original_distributed": false
+      },
+      {
+        "page": "https://bakingsteel.com/products/baking-steel",
+        "author": "Baking Steel",
+        "photo_url": "https://bakingsteel.com/cdn/shop/files/Baking_Steel_Original.jpg?v=1776298815&width=480",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/steel-product-2.jpg",
+        "role": "actual seasoned steel baking plate",
+        "original_distributed": false
+      }
+    ],
+    "scene": "TWO separate whole rectangular baking slabs side by side, not stacked, same simple oblique three-quarter viewpoint. LEFT: an ivory-beige matte cordierite pizza stone based on photo2, a substantial solid slab with one clearly visible side edge and softly rounded corners. RIGHT: a dark warm-grey seasoned steel pizza plate based on photo3, a solid rectangular plate with a visible thin side edge and rounded corners. These are FLAT baking surfaces, not rimmed trays, oven grids, serving boards or cutting boards. Each plate stands alone at an easy-to-read angle, with a small clear gap between them and no overlap. No logo, engraving, holes, handles, feet, decorative grooves, ruler or numeric thickness relationship. No food, oven, hands, heat arrows or glowing hot metal. The stone is broad matte ivory wash with only 2 or 3 faint long tonal variations; absolutely NO gritty pores, tiny speckles or repeated stone-grain pattern. The steel is smooth matte charcoal-grey with a restrained warm-brown edge and a single broad soft wash, no shiny silver mirror or rust. No under-object shadow floor.",
+    "prompt": "Use case: scientific-educational. Create ONE new educational illustration for Vulcan. Input image 1 is STYLE ONLY: warm coloured-pen illustration, fine warm-brown outlines, restrained smooth matte washes, terracotta and ivory palette, very clean broad surfaces. Remaining images are REAL PHOTOGRAPHIC REFERENCES for physical objects, contact points, pose and material state; reinterpret their composition. No text, labels, numbers, logos, arrows or watermark anywhere; any display is completely blank. No paper grain, granular overlays, stippling, hatching fields, photographic food texture, plastic shine, CGI or halo. Landscape 3:2, whole scene inside generous transparent margins; all objects fit, hands may have cropped forearm ends only. True alpha outside actual outlined objects, no tabletop rectangle, background, aura or cast shadow. A few long fine lines and broad smooth matte colour areas rather than tiny texture marks. Functional credibility comes first.\n\nTWO separate whole rectangular baking slabs side by side, not stacked, same simple oblique three-quarter viewpoint. LEFT: an ivory-beige matte cordierite pizza stone based on photo2, a substantial solid slab with one clearly visible side edge and softly rounded corners. RIGHT: a dark warm-grey seasoned steel pizza plate based on photo3, a solid rectangular plate with a visible thin side edge and rounded corners. These are FLAT baking surfaces, not rimmed trays, oven grids, serving boards or cutting boards. Each plate stands alone at an easy-to-read angle, with a small clear gap between them and no overlap. No logo, engraving, holes, handles, feet, decorative grooves, ruler or numeric thickness relationship. No food, oven, hands, heat arrows or glowing hot metal. The stone is broad matte ivory wash with only 2 or 3 faint long tonal variations; absolutely NO gritty pores, tiny speckles or repeated stone-grain pattern. The steel is smooth matte charcoal-grey with a restrained warm-brown edge and a single broad soft wash, no shiny silver mirror or rust. No under-object shadow floor."
+  },
+  {
+    "id": "water-activity-sample",
+    "title": "Preparare una misura dell’attività dell’acqua",
+    "target": "Metodo e fonti · Attività dell’acqua (Aw)",
+    "caption_it": "Il campione entra nella coppetta dello strumento, poi si chiude la camera per misurare l’attività dell’acqua. La stima di Vulcan non sostituisce questa misura.",
+    "limits": "Il manuale ufficiale AQUALAB 5TE mostra una coppetta di campione alimentare sopra il vano aperto e prescrive la misura a camera chiusa. Si mantiene la relazione coppetta-vano-coperchio, semplificando scocca e sensori senza ricostruire un modello commerciale. Il campione originale è bruno: non viene presentato come impasto di pizza o come campione misurato da Vulcan.",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/aw-manual-53.jpg",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/aw-manual-0.jpg"
+    ],
+    "sources": [
+      {
+        "page": "https://aqualab.com/aqualab-5te/user-manual",
+        "author": "AQUALAB by Addium",
+        "photo_url": "https://cdn.prod.website-files.com/690a1d0feae0a20f18e26fb6/69c2c6946a9dea083b5bdd33_AQUALAB%205_Manual_Insert%20Sample.avif",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/aw-manual-53.jpg",
+        "role": "manufacturer photograph: cup, chamber and lid relationship; blue instructional arrow omitted",
+        "original_distributed": false
+      },
+      {
+        "page": "https://aqualab.com/aqualab-5te/user-manual",
+        "author": "AQUALAB by Addium",
+        "photo_url": "https://cdn.prod.website-files.com/690a1d0feae0a20f18e26fb6/69bb169c0871982b23712bc2_AQUALAB%205_Front.avif",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/aw-manual-0.jpg",
+        "role": "manufacturer whole-device photograph for support and enclosure proportions",
+        "original_distributed": false
+      }
+    ],
+    "scene": "A compact generic benchtop WATER ACTIVITY meter, in three-quarter front view, simplified from the real instrument in photo2. Whole device visible. A modest ivory rectangular housing with terracotta trim: a large completely BLANK rectangular screen on the LEFT front portion, and on the RIGHT a circular recessed metal sample well with an upright hinged sensor lid behind it. The lid is visibly attached at its rear hinge and aligned to close over the well. Keep the actual cup-to-well diameter relationship from photo2. A shallow clear round sample cup is seated INSIDE the open circular well, no hand and no floating cup. It contains a thin low layer of matte warm-brown generic food sample, smooth simplified fill, not identifiable as pizza dough, with no granular texture or excessive heaping. The cup itself has NO lid while inside the chamber. The raised instrument lid has a simple restrained inner circular seal and two understated sensor spots based on the source, no invented probes, pipes, microscope lens, cables, extruded needles or exposed circuitry. This is the preparation stage BEFORE closing the chamber and taking a reading; no glowing indicators or active numeric result. Omit blue arrows, product names, graphics and interface content from the source. The housing must look like an ordinary generic lab instrument rather than reproduce the proprietary wedge shape, vent pattern, brand or control layout. No cutaway, scientific plotting, floating labels or fake readings.",
+    "prompt": "Use case: scientific-educational. Create ONE new educational illustration for Vulcan. Input image 1 is STYLE ONLY: warm coloured-pen illustration, fine warm-brown outlines, restrained smooth matte washes, terracotta and ivory palette, very clean broad surfaces. Remaining images are REAL PHOTOGRAPHIC REFERENCES for physical objects, contact points, pose and material state; reinterpret their composition. No text, labels, numbers, logos, arrows or watermark anywhere; any display is completely blank. No paper grain, granular overlays, stippling, hatching fields, photographic food texture, plastic shine, CGI or halo. Landscape 3:2, whole scene inside generous transparent margins; all objects fit, hands may have cropped forearm ends only. True alpha outside actual outlined objects, no tabletop rectangle, background, aura or cast shadow. A few long fine lines and broad smooth matte colour areas rather than tiny texture marks. Functional credibility comes first.\n\nA compact generic benchtop WATER ACTIVITY meter, in three-quarter front view, simplified from the real instrument in photo2. Whole device visible. A modest ivory rectangular housing with terracotta trim: a large completely BLANK rectangular screen on the LEFT front portion, and on the RIGHT a circular recessed metal sample well with an upright hinged sensor lid behind it. The lid is visibly attached at its rear hinge and aligned to close over the well. Keep the actual cup-to-well diameter relationship from photo2. A shallow clear round sample cup is seated INSIDE the open circular well, no hand and no floating cup. It contains a thin low layer of matte warm-brown generic food sample, smooth simplified fill, not identifiable as pizza dough, with no granular texture or excessive heaping. The cup itself has NO lid while inside the chamber. The raised instrument lid has a simple restrained inner circular seal and two understated sensor spots based on the source, no invented probes, pipes, microscope lens, cables, extruded needles or exposed circuitry. This is the preparation stage BEFORE closing the chamber and taking a reading; no glowing indicators or active numeric result. Omit blue arrows, product names, graphics and interface content from the source. The housing must look like an ordinary generic lab instrument rather than reproduce the proprietary wedge shape, vent pattern, brand or control layout. No cutaway, scientific plotting, floating labels or fake readings."
+  }
+]

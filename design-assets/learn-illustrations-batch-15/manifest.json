@@ -1,0 +1,174 @@
+{
+  "batch": 15,
+  "date": "2026-11-02",
+  "base_commit": "9dee51450fdb07e1039be8ab70b0335b2916e1d2",
+  "status": "Four review proposals, not integrated or published",
+  "mode": "built-in Imagegen, one distinct call per asset",
+  "export": "Pillow resize/format conversion only; generated alpha preserved",
+  "edits": "edits.json",
+  "style_reference": {
+    "path": "src/assets/learn/bench-fold.webp",
+    "sha256": "925d26ef53604371c3d606a7c13dd63e04bf60b64e7365fde0c1ebbabd4545b1",
+    "role": "approved style only"
+  },
+  "assets": [
+    {
+      "id": "yeast-precision-weighing",
+      "title": "Pesare una piccola dose di lievito",
+      "target": "Metodo e fonti · Dose di lievito",
+      "asset": "assets/yeast-precision-weighing.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 31486,
+      "sha256": "03eb26d50f82478665967ea63670bd01aaf2d1261de800e95be86ef7231e2a25",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/masters/yeast-precision-weighing.png",
+      "master_sha256": "65065b7da9d85079cfbdbbd799451b0687a912bdef28ee98ed4e35961b90b5e8",
+      "caption_it": "Pesa il lievito nel piccolo recipiente tarato, usando una bilancia adatta alla dose richiesta dalla ricetta.",
+      "sources": [
+        {
+          "page": "https://ooni.com/collections/pizza-prep/products/ooni-dual-platform-digital-scales",
+          "author": "Ooni",
+          "photo_url": "https://ooni.com/cdn/shop/products/Ooni-DualScales-Lifestyle2-1500px.jpg?crop=center&format=webp&height=640&v=1649193591&width=640",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/precision-55.jpg",
+          "role": "actual photograph: dry yeast poured into small weighing dish",
+          "original_distributed": false,
+          "sha256": "00a49a220f723284ce055437d5687862923df0e91c50d6a31219c9b57eafe90f"
+        }
+      ],
+      "recomposition_and_limits": "La foto Ooni documenta davvero il versamento di lievito secco nel piattino della piattaforma piccola. Si mantiene quel contatto e si ridisegna una bilancia generica a piattaforma singola, senza display numerico o promessa di risoluzione. Nessuna dose viene ricavata dall’immagine."
+    },
+    {
+      "id": "sourdough-dose-weighing",
+      "title": "Pesare la madre della ricetta",
+      "target": "Metodo e fonti · Dose di lievito madre",
+      "asset": "assets/sourdough-dose-weighing.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 24810,
+      "sha256": "0dcb609f3bcfc1185b13996c8ccfe0bcaf9296213c5d16811be094f7789f824d",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/masters/sourdough-dose-weighing.png",
+      "master_sha256": "2dd8bb4279059c311d060349b6a5a6a807979e03f8222ab50af539ff8d9bd157",
+      "caption_it": "Trasferisci la madre nel recipiente tarato, togli la spatola e leggi il peso. Il peso non misura la forza del lievito madre.",
+      "sources": [
+        {
+          "page": "https://www.theperfectloaf.com/7-easy-steps-making-incredible-sourdough--starter-scratch/",
+          "author": "Maurizio Leo / The Perfect Loaf",
+          "photo_url": "https://www.theperfectloaf.com/wp-content/uploads/2013/10/theperfectloaf-making-sourdough-starter-from-scratch-1-1080x721.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-15.jpg",
+          "role": "actual jar support on scale and tare action; originally an empty jar",
+          "original_distributed": false,
+          "sha256": "24f23d4bb721f4b8e71de64da0f9274772ceee856c4f7464a72e2c347981b770"
+        },
+        {
+          "page": "https://www.theperfectloaf.com/7-easy-steps-making-incredible-sourdough--starter-scratch/",
+          "author": "Maurizio Leo / The Perfect Loaf",
+          "photo_url": "https://www.theperfectloaf.com/wp-content/uploads/2013/10/theperfectloaf-making-sourdough-starter-from-scratch-3.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-17.jpg",
+          "role": "actual spatula and soft starter consistency",
+          "original_distributed": false,
+          "sha256": "ead4d7edcec0635391a3102a7ee91a624eee3bc383d4697ea62a82b9816d34a7"
+        },
+        {
+          "page": "https://www.theperfectloaf.com/7-easy-steps-making-incredible-sourdough--starter-scratch/",
+          "author": "Maurizio Leo / The Perfect Loaf",
+          "photo_url": "https://www.theperfectloaf.com/wp-content/uploads/2013/10/theperfectloaf-making-sourdough-starter-from-scratch-5-1080x721.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-18.jpg",
+          "role": "actual liquid-starter consistency, not a readiness threshold",
+          "original_distributed": false,
+          "sha256": "ffb26f8db06b0e1633c5120b9e562383ac106c03576fc3dda0ab0a4996aa00bb"
+        }
+      ],
+      "recomposition_and_limits": "Ricomposizione dichiarata: la foto di Maurizio Leo della tara mostra un barattolo vuoto sulla bilancia durante un rinfresco; altre foto dello stesso autore documentano spatola, massa e consistenza della madre. Non si spaccia la foto come pesatura già pronta della dose di Vulcan e non si propone un rapporto di rinfresco universale."
+    },
+    {
+      "id": "stone-steel-surfaces",
+      "title": "Due superfici di cottura",
+      "target": "Metodo e fonti · Conducibilità della superficie / preriscaldamento",
+      "asset": "assets/stone-steel-surfaces.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 25226,
+      "sha256": "bd7787f5513e0454cf8c5b928f9e838219d2b12439e272c9f92454068dde3c23",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/masters/stone-steel-surfaces.png",
+      "master_sha256": "3632f49be845d7753d20a3fd30f0f4e4aa53a2722080b3a5c4c56eac4fa6f16d",
+      "caption_it": "Pietra a sinistra, acciaio a destra: due superfici che sostengono la pizza e trasferiscono calore al fondo. Preriscaldamento e uso dipendono dalla superficie e dalla ricetta.",
+      "sources": [
+        {
+          "page": "https://shop.kingarthurbaking.com/items/king-arthur-bread-and-pizza-stone",
+          "author": "King Arthur Baking",
+          "photo_url": "https://cdn11.bigcommerce.com/s-ihwnd7z21q/images/stencil/1280x1280/products/426/6708/211820_1__16652_2927__77828.1739465039.jpg?c=1",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/stone-product-28.jpg",
+          "role": "actual cordierite baking stone slab",
+          "original_distributed": false,
+          "sha256": "dd4c02c5746d88d559681309a9c5d56b88200ac8bd05de567e9e49f8dcac064d"
+        },
+        {
+          "page": "https://bakingsteel.com/products/baking-steel",
+          "author": "Baking Steel",
+          "photo_url": "https://bakingsteel.com/cdn/shop/files/Baking_Steel_Original.jpg?v=1776298815&width=480",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/steel-product-2.jpg",
+          "role": "actual seasoned steel baking plate",
+          "original_distributed": false,
+          "sha256": "8cb40a5c82c3857354ce6af07cd3a4940b217173cc90a8bc6477bb793bf79601"
+        }
+      ],
+      "recomposition_and_limits": "Coppia ricomposta da fotografie di prodotti reali King Arthur Baking e Baking Steel. Sagome generiche, senza loghi, incisioni o proporzioni dimensionali prescrittive. Non è una prova comparativa, non assegna temperature, tempi o valori di conducibilità alle tavole."
+    },
+    {
+      "id": "water-activity-sample",
+      "title": "Preparare una misura dell’attività dell’acqua",
+      "target": "Metodo e fonti · Attività dell’acqua (Aw)",
+      "asset": "assets/water-activity-sample.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 28190,
+      "sha256": "77cf11aa52ea66f129fc5eb5363709efd8e8edab72762a6ec311a155c4a6fb7b",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/masters/water-activity-sample.png",
+      "master_sha256": "43bfe8c8af332bf24730ba37eae2f268c8ef79c5d08bc388d8fa637c870e660f",
+      "caption_it": "Il campione entra nella coppetta dello strumento, poi si chiude la camera per misurare l’attività dell’acqua. La stima di Vulcan non sostituisce questa misura.",
+      "sources": [
+        {
+          "page": "https://aqualab.com/aqualab-5te/user-manual",
+          "author": "AQUALAB by Addium",
+          "photo_url": "https://cdn.prod.website-files.com/690a1d0feae0a20f18e26fb6/69c2c6946a9dea083b5bdd33_AQUALAB%205_Manual_Insert%20Sample.avif",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/aw-manual-53.jpg",
+          "role": "manufacturer photograph: cup, chamber and lid relationship; blue instructional arrow omitted",
+          "original_distributed": false,
+          "sha256": "00cba4f0f8161f6ce6c20b89bad1c081d4db1eaf71f447d9c345263d6cb602fe"
+        },
+        {
+          "page": "https://aqualab.com/aqualab-5te/user-manual",
+          "author": "AQUALAB by Addium",
+          "photo_url": "https://cdn.prod.website-files.com/690a1d0feae0a20f18e26fb6/69bb169c0871982b23712bc2_AQUALAB%205_Front.avif",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/aw-manual-0.jpg",
+          "role": "manufacturer whole-device photograph for support and enclosure proportions",
+          "original_distributed": false,
+          "sha256": "71360a2652bd5a8a5d8844d90790384d9f8dd520ba0214732df7c2a69dd6e98a"
+        }
+      ],
+      "recomposition_and_limits": "Il manuale ufficiale AQUALAB 5TE mostra una coppetta di campione alimentare sopra il vano aperto e prescrive la misura a camera chiusa. Si mantiene la relazione coppetta-vano-coperchio, semplificando scocca e sensori senza ricostruire un modello commerciale. Il campione originale è bruno: non viene presentato come impasto di pizza o come campione misurato da Vulcan."
+    }
+  ],
+  "verification": {
+    "viewports": [
+      1280,
+      390
+    ],
+    "all_four_images_loaded": true,
+    "no_horizontal_overflow": true,
+    "no_public_source_links": true,
+    "light_and_dark_inspected": true,
+    "evidence": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/verification.json"
+  },
+  "selected_revisions": {
+    "sourdough-dose-weighing": "v2: blade placed inside jar; exact edit prompt in edits.json, v1 preserved in output variants"
+  }
+}
