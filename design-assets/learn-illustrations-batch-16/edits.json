@@ -1,0 +1,39 @@
+{
+  "initial_generations": {
+    "dough-tear-pinching": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-5f869f0b-07a1-4823-b1e6-dc9de3bc28d2.png",
+    "gentle-bubble-press": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-236eb111-8ea3-45c1-a165-e392ab5d70b5.png",
+    "plain-parbaked-base": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-43e8cae2-8603-424e-a1bf-8dc91806ee83.png",
+    "fried-piece-interior": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-8dfe972f-9404-4c3e-878a-9d7681653ea6.png"
+  },
+  "revisions": [
+    {
+      "id": "dough-tear-pinching",
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-b450e0b8-554d-4978-bf8d-3e72cf3ec3c5.png",
+      "retained_as": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/variants/dough-tear-pinching-v2.png",
+      "selected": false,
+      "reason": "Flat cleanup variant loses the approved coloured-pen wash. Composited v1 already has clean alpha, so original selected."
+    },
+    {
+      "id": "gentle-bubble-press",
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-5435ec7d-06b7-4e31-9708-917b614e2bb0.png",
+      "retained_as": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/variants/gentle-bubble-press-v2.png",
+      "selected": false,
+      "reason": "Flat cleanup variant loses the approved coloured-pen wash. Composited v1 already has clean alpha, so original selected."
+    },
+    {
+      "id": "plain-parbaked-base",
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-87343a97-8e14-451d-9cee-62d0a155f418.png",
+      "retained_as": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/variants/plain-parbaked-base-v2.png",
+      "selected": false,
+      "reason": "Flat cleanup variant loses the approved coloured-pen wash. Composited v1 already has clean alpha, so original selected."
+    },
+    {
+      "id": "fried-piece-interior",
+      "generated": "/Users/matteo/.codex/generated_images/01a18731-7935-7200-926e-9ff6059f2798/exec-6100876c-0b71-4ea8-99be-b81bbb526c1a.png",
+      "retained_as": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/variants/fried-piece-interior-v2.png",
+      "selected": false,
+      "reason": "Flat cleanup variant loses the approved coloured-pen wash. Composited v1 already has clean alpha, so original selected."
+    }
+  ],
+  "selected": "v1 for all four; alpha inspected composited on light and dark; the black halo in uncomposited RGB lies in alpha-zero pixels and is not part of the displayed asset."
+}

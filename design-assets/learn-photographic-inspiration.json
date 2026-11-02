@@ -274,6 +274,34 @@
     "water-activity-sample": {
       "source": "https://aqualab.com/aqualab-5te/user-manual",
       "author": "AQUALAB by Addium"
+    },
+    "dough-tear-pinching": {
+      "source": "https://bakingthegoods.com/quick-and-easy-pizza-dough/",
+      "author": "Becky Sue / Baking the Goods",
+      "extraSources": [
+        {
+          "source": "https://mypizzacorner.com/pizza-tips/pizza-dough-problems/",
+          "author": "Tom / My Pizza Corner"
+        }
+      ]
+    },
+    "gentle-bubble-press": {
+      "source": "https://bakingthegoods.com/quick-and-easy-pizza-dough/",
+      "author": "Becky Sue / Baking the Goods",
+      "extraSources": [
+        {
+          "source": "https://mypizzacorner.com/pizza-tips/pizza-dough-problems/",
+          "author": "Tom / My Pizza Corner"
+        }
+      ]
+    },
+    "plain-parbaked-base": {
+      "source": "https://www.kingarthurbaking.com/blog/2014/04/25/homemade-frozen-pizza",
+      "author": "Rick Holbrook / King Arthur Baking; food styling Sheila Jarnes"
+    },
+    "fried-piece-interior": {
+      "source": "https://www.cookist.it/la-ricetta-pizza-fritta/",
+      "author": "Elpidio / Cookist"
     }
   }
 }
