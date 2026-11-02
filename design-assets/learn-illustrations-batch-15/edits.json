@@ -1,0 +1,14 @@
+[
+  {
+    "id": "sourdough-dose-weighing-v2",
+    "mode": "built-in Imagegen edit",
+    "target_original": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/variants/sourdough-dose-weighing-v1.png",
+    "target_sha256": "84b1849e51a3dc11a709bb11cde77441336b12a3a5b8cdaea76c33319c294be0",
+    "references": [
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/variants/sourdough-dose-weighing-v1.png",
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-15-2026-11-02/references/starter-how-17.jpg"
+    ],
+    "prompt": "Use case: precise-object-edit, educational illustration. Edit input image 1 only to correct the spatula-to-jar interaction. Keep the same scale, jar, hand anatomy, terracotta/ivory palette, clean fine-brown pen style, matte smooth broad washes, blank display and transparent background. Input image 2 is the approved style reference; input image 3 is real photographic reference for the spatula and starter consistency. Change only the spatula blade's position, the starter on it and their occlusion by the jar rim. Put the blade tip visibly DOWN INSIDE THE JAR MOUTH, over its back half, with the lower part of the blade below the upper rim. The soft starter on the blade is entirely inside the jar opening, BEHIND the continuous front rim, never hanging over or smearing the outside front wall. The front edge of the glass rim must remain clearly visible in front of the inserted blade. A short soft dollop may descend within the jar toward the starter already at the bottom. No long rope, no impossible part passing through glass, no split/disconnected blade. The hand and spatula do not rest on or press against the rim or scale. Keep the entire jar and scale in frame and the scene's general composition. No labels, numbers, icons, logos, watermark, hatching, stippling, paper grain, granular overlay, new props, halo or background. Preserve genuine alpha outside the objects."
+  }
+]

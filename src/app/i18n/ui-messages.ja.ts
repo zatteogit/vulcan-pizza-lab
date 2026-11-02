@@ -1,5 +1,9 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.yeastPrecisionWeighing": "レシピの分量を量れるはかりを使い、小さな容器を風袋引きしてからイーストを量ります。",
+  "learn.visual.sourdoughDoseWeighing": "風袋引きした容器に発酵種を移し、へらを取り出してから重さを読みます。重さは発酵種の力を示すものではありません。",
+  "learn.visual.stoneSteelSurfaces": "左は石、右は鋼板。どちらもピザを支え、底に熱を伝える焼成面です。予熱と使い方は、素材とレシピによって異なります。",
+  "learn.visual.waterActivitySample": "試料を装置のカップに入れ、測定室を閉じて水分活性を測ります。{brand}の推定値は、この測定の代わりにはなりません。",
   "learn.visual.poolishFinalMix": "残りの水と混ぜておいたポーリッシュを、本ごね用の粉に加えます。へらで容器に残った分も移します。",
   "learn.visual.autolyseFinalIncorporation": "オートリーズ休止の後、手順に従って材料を混ぜ込みます。ボウルの中で手で生地を挟み、折りたたんでなじませます。",
   "learn.visual.handBackStretching": "手の甲で生地を支えながら広げ、重さを分散させて中心に指先を押し込みません。抵抗があれば台に戻して休ませます。",

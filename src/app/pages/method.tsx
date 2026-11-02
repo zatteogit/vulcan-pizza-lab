@@ -22,12 +22,16 @@ import { METHOD_ANCHORS, methodNoteHref, methodSectionHref, methodSourceAnchor, 
 import { LearningIllustration, type LearningIllustrationId } from "../features/learning/learning-illustration";
 
 const NOTE_VISUALS: Readonly<Partial<Record<string, LearningIllustrationId>>> = {
+  "yeast-dose": "yeast-precision-weighing",
+  "sourdough-starter-dose": "sourdough-dose-weighing",
+  "water-activity": "water-activity-sample",
+  "bake-time-home-preheat": "stone-steel-surfaces",
   "kitchen-temp-default": "room-air-temperature",
   "water-temp-rule": "flour-temperature",
   "q10-fermentation": "dough-temperature",
   "thickness-factor": "portion-weighing",
   "flour-w-by-grade": "alveograph-bubble",
-  "surface-conductivity": "oven-floor-dome",
+  "surface-conductivity": "stone-steel-surfaces",
   "score-weights": "a_score",
 };
 

@@ -252,6 +252,28 @@
     "stretching-properties": {
       "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
       "author": "King Arthur Baking"
+    },
+    "yeast-precision-weighing": {
+      "source": "https://ooni.com/collections/pizza-prep/products/ooni-dual-platform-digital-scales",
+      "author": "Ooni"
+    },
+    "sourdough-dose-weighing": {
+      "source": "https://www.theperfectloaf.com/7-easy-steps-making-incredible-sourdough--starter-scratch/",
+      "author": "Maurizio Leo / The Perfect Loaf"
+    },
+    "stone-steel-surfaces": {
+      "source": "https://shop.kingarthurbaking.com/items/king-arthur-bread-and-pizza-stone",
+      "author": "King Arthur Baking",
+      "extraSources": [
+        {
+          "source": "https://bakingsteel.com/products/baking-steel",
+          "author": "Baking Steel"
+        }
+      ]
+    },
+    "water-activity-sample": {
+      "source": "https://aqualab.com/aqualab-5te/user-manual",
+      "author": "AQUALAB by Addium"
     }
   }
 }

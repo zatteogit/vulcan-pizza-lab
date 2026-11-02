@@ -3,6 +3,10 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.yeastPrecisionWeighing": "Pesa il lievito nel piccolo recipiente tarato, usando una bilancia adatta alla dose richiesta dalla ricetta.",
+  "learn.visual.sourdoughDoseWeighing": "Trasferisci la madre nel recipiente tarato, togli la spatola e leggi il peso. Il peso non misura la forza del lievito madre.",
+  "learn.visual.stoneSteelSurfaces": "Pietra a sinistra, acciaio a destra: due superfici che sostengono la pizza e trasferiscono calore al fondo. Preriscaldamento e uso dipendono dalla superficie e dalla ricetta.",
+  "learn.visual.waterActivitySample": "Il campione entra nella coppetta dello strumento, poi si chiude la camera per misurare l’attività dell’acqua. La stima di {brand} non sostituisce questa misura.",
   "learn.visual.poolishFinalMix": "Unisci il poolish già mescolato all’acqua rimasta alla farina dell’impasto finale. Recuperalo dal recipiente con una spatola.",
   "learn.visual.autolyseFinalIncorporation": "Dopo il riposo di autolisi, incorpora gli ingredienti previsti dal procedimento. La mano stringe e ripiega la massa nella ciotola.",
   "learn.visual.handBackStretching": "Il dorso delle mani sostiene la pasta durante l’allargamento, distribuendo il peso senza puntare le dita nel centro. Se oppone resistenza, appoggiala e lasciala riposare.",

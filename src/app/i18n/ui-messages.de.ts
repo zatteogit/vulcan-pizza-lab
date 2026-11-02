@@ -1,5 +1,9 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.yeastPrecisionWeighing": "Wiege die Hefe im kleinen tarierten Gefäß ab, mit einer für die Rezeptmenge geeigneten Waage.",
+  "learn.visual.sourdoughDoseWeighing": "Gib den Sauerteig in das tarierte Gefäß, nimm den Teigschaber heraus und lies das Gewicht ab. Das Gewicht misst nicht die Triebkraft des Sauerteigs.",
+  "learn.visual.stoneSteelSurfaces": "Links Stein, rechts Stahl: zwei Oberflächen, die die Pizza tragen und Wärme an den Boden abgeben. Vorheizen und Verwendung hängen von der Oberfläche und dem Rezept ab.",
+  "learn.visual.waterActivitySample": "Die Probe kommt in den Probenbecher des Geräts. Dann wird die Kammer geschlossen, um die Wasseraktivität zu messen. {brand}s Schätzung ersetzt diese Messung nicht.",
   "learn.visual.poolishFinalMix": "Gib den bereits mit dem restlichen Wasser vermischten Poolish zum Mehl für den Hauptteig. Schabe ihn mit einem Teigschaber aus dem Gefäß.",
   "learn.visual.autolyseFinalIncorporation": "Arbeite nach der Autolyseruhe die im Verfahren vorgesehenen Zutaten ein. Die Hand drückt und faltet den Teig in der Schüssel.",
   "learn.visual.handBackStretching": "Die Handrücken tragen den Teig beim Dehnen und verteilen sein Gewicht, ohne die Fingerspitzen in die Mitte zu drücken. Wenn er Widerstand leistet, lege ihn ab und lass ihn ruhen.",
