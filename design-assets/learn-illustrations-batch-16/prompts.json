@@ -1,0 +1,121 @@
+[
+  {
+    "id": "dough-tear-pinching",
+    "title": "Chiudere un piccolo strappo",
+    "target": "Problemi e soluzioni · P02",
+    "caption_it": "Se si apre un piccolo buco, avvicina e pizzica i bordi per richiuderlo. Poi copri il panetto e lascialo riposare prima di riprovare.",
+    "limits": "Ricomposizione: Becky Sue fotografa la chiusura della cucitura di un panetto, non la riparazione di un foro; il gesto pollice-dita viene riapplicato a un piccolo strappo nella base documentata da Tom. Nessun lembo aggiunto né toppa separata; si illustra il consiglio già presente in P02.",
+    "sources": [
+      {
+        "page": "https://bakingthegoods.com/quick-and-easy-pizza-dough/",
+        "author": "Becky Sue / Baking the Goods",
+        "photo_url": "https://bakingthegoods.com/wp-content/uploads/2022/10/Quick-and-Easy-Pizza-Dough-4.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/pinch-seal.jpg",
+        "role": "actual thumb/finger pinching contact while closing a dough-ball seam, not an existing tear repair",
+        "original_distributed": false
+      },
+      {
+        "page": "https://mypizzacorner.com/pizza-tips/pizza-dough-problems/",
+        "author": "Tom / My Pizza Corner",
+        "photo_url": "https://mypizzacorner.com/wp-content/uploads/2020/11/shaped-pizza.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/repair-shaped.jpg",
+        "role": "actual raw stretched dough disc; no hole in source",
+        "original_distributed": false
+      }
+    ],
+    "scene": "One thin raw ivory pizza dough disc, roughly round and seen from a clearly elevated three-quarter viewpoint, fully visible. A small short tear in the middle is being CLOSED: the two adjacent edges of the SAME dough are brought together into one short low pinched seam. Two ordinary hands enter from the upper sides, with opposing thumb and index-finger pads gently compressing the edges together. Use photo2 only for the real finger-to-soft-dough pinch mechanics; its source is a dough BALL seam, but here the body stays a flat disc based on photo3. No tall dough ball, no dumpling, no filled calzone, no detached patch, no added scrap. Only a tiny narrow unclosed slit just ahead of the pinch, not a huge hole; the seam behind the fingers is already joined. The rest of the disc is lying flat, not lifted and stretched. Natural correct five-finger anatomy, wrists outside the dough, no crossed fingers, fingers contacting the material rather than hovering. A modest soft raised rim left untouched. Plain unpainted nails. One or two broad shallow dough folds only, no dense dimples or flour speckles. No tools, no toppings, no flour cloud.",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/pinch-seal.jpg",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/repair-shaped.jpg"
+    ],
+    "prompt": "Use case: scientific-educational. Create ONE new educational illustration for Vulcan. Input image 1 is STYLE ONLY: warm coloured-pen illustration, fine warm-brown outlines, restrained smooth matte washes, terracotta and ivory palette, very clean broad surfaces. Remaining images are REAL PHOTOGRAPHIC REFERENCES for physical objects, contact points, pose and material state; independently reinterpret and recompose them as described. No text, labels, numbers, logos, arrows or watermark anywhere. No paper grain, granular overlays, stippling, hatching fields, photographic food texture, plastic shine, CGI or halo. Landscape 3:2, whole scene inside generous transparent margins; all objects fit, hands may have cropped forearm ends only. True alpha outside actual outlined objects, no tabletop rectangle, background, aura or cast shadow. A few long fine lines and broad smooth matte colour areas rather than tiny texture marks. Functional credibility comes first.\n\nOne thin raw ivory pizza dough disc, roughly round and seen from a clearly elevated three-quarter viewpoint, fully visible. A small short tear in the middle is being CLOSED: the two adjacent edges of the SAME dough are brought together into one short low pinched seam. Two ordinary hands enter from the upper sides, with opposing thumb and index-finger pads gently compressing the edges together. Use photo2 only for the real finger-to-soft-dough pinch mechanics; its source is a dough BALL seam, but here the body stays a flat disc based on photo3. No tall dough ball, no dumpling, no filled calzone, no detached patch, no added scrap. Only a tiny narrow unclosed slit just ahead of the pinch, not a huge hole; the seam behind the fingers is already joined. The rest of the disc is lying flat, not lifted and stretched. Natural correct five-finger anatomy, wrists outside the dough, no crossed fingers, fingers contacting the material rather than hovering. A modest soft raised rim left untouched. Plain unpainted nails. One or two broad shallow dough folds only, no dense dimples or flour speckles. No tools, no toppings, no flour cloud."
+  },
+  {
+    "id": "gentle-bubble-press",
+    "title": "Premere delicatamente le bolle grandi",
+    "target": "Problemi e soluzioni · P08",
+    "caption_it": "Prima della stesura, premi delicatamente le bolle più grandi del panetto. Negli stili con cornicione, lascia il bordo libero dalla pressione.",
+    "limits": "Ricomposizione di una foto reale di pressione con i polpastrelli e di una bolla reale di gas sotto la pelle dell’impasto. La seconda foto documenta un impasto non ancora steso: non è una diagnosi della lievitazione, una dimensione prescritta o una sequenza prima/dopo.",
+    "sources": [
+      {
+        "page": "https://bakingthegoods.com/quick-and-easy-pizza-dough/",
+        "author": "Becky Sue / Baking the Goods",
+        "photo_url": "https://bakingthegoods.com/wp-content/uploads/2022/10/Quick-and-Easy-Pizza-Dough-35.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/press-flat.jpg",
+        "role": "actual fingertip contact on dough during initial flattening",
+        "original_distributed": false
+      },
+      {
+        "page": "https://mypizzacorner.com/pizza-tips/pizza-dough-problems/",
+        "author": "Tom / My Pizza Corner",
+        "photo_url": "https://mypizzacorner.com/wp-content/uploads/2020/09/large-bubble-dough.jpg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/bubble-actual.jpg",
+        "role": "real local air pocket under dough skin, originally in an unshaped mass; not a readiness diagnosis",
+        "original_distributed": false
+      }
+    ],
+    "scene": "One soft raw ivory pizza dough puck partway flattened, seen from elevated three-quarter view so its TOP surface is clearly visible; irregular rounded outline, thicker and smaller than a fully stretched pizza. ONE ordinary hand comes in from upper right. Its index and middle fingertip PADS gently press downward on ONE slightly raised large gas bubble in the INTERIOR of the dough puck, away from the outer rim, flattening that local bulge. Use photo2 for the actual light fingertip-to-dough contact and photo3 only for how a local air pocket lifts a thin continuous dough skin. Do not reproduce a huge transparent balloon: show just a modest soft low dome immediately ahead of the pads and a shallow indentation under them. Dough surface remains intact, NO puncture or hole and no spike, fork or knife. No separate objects that look like pearls, beads or lumps placed on dough. The rim remains rounded and untouched, no pressing all around it. One simple continuous dough body; one hand with natural five-finger anatomy and plain nails, other fingers relaxed and not clawing. No toppings, no finished bread, no giant charred bubbles and no before-after panel. Very restrained ivory washes and broad outlines only.",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/press-flat.jpg",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/bubble-actual.jpg"
+    ],
+    "prompt": "Use case: scientific-educational. Create ONE new educational illustration for Vulcan. Input image 1 is STYLE ONLY: warm coloured-pen illustration, fine warm-brown outlines, restrained smooth matte washes, terracotta and ivory palette, very clean broad surfaces. Remaining images are REAL PHOTOGRAPHIC REFERENCES for physical objects, contact points, pose and material state; independently reinterpret and recompose them as described. No text, labels, numbers, logos, arrows or watermark anywhere. No paper grain, granular overlays, stippling, hatching fields, photographic food texture, plastic shine, CGI or halo. Landscape 3:2, whole scene inside generous transparent margins; all objects fit, hands may have cropped forearm ends only. True alpha outside actual outlined objects, no tabletop rectangle, background, aura or cast shadow. A few long fine lines and broad smooth matte colour areas rather than tiny texture marks. Functional credibility comes first.\n\nOne soft raw ivory pizza dough puck partway flattened, seen from elevated three-quarter view so its TOP surface is clearly visible; irregular rounded outline, thicker and smaller than a fully stretched pizza. ONE ordinary hand comes in from upper right. Its index and middle fingertip PADS gently press downward on ONE slightly raised large gas bubble in the INTERIOR of the dough puck, away from the outer rim, flattening that local bulge. Use photo2 for the actual light fingertip-to-dough contact and photo3 only for how a local air pocket lifts a thin continuous dough skin. Do not reproduce a huge transparent balloon: show just a modest soft low dome immediately ahead of the pads and a shallow indentation under them. Dough surface remains intact, NO puncture or hole and no spike, fork or knife. No separate objects that look like pearls, beads or lumps placed on dough. The rim remains rounded and untouched, no pressing all around it. One simple continuous dough body; one hand with natural five-finger anatomy and plain nails, other fingers relaxed and not clawing. No toppings, no finished bread, no giant charred bubbles and no before-after panel. Very restrained ivory washes and broad outlines only."
+  },
+  {
+    "id": "plain-parbaked-base",
+    "title": "La base prima del condimento",
+    "target": "Problemi e soluzioni · P09 / P18",
+    "caption_it": "Una base precotta, ancora senza condimento. Quando la ricetta prevede la precottura, aggiungi il topping e completa la cottura secondo il metodo.",
+    "limits": "La foto reale KAB mostra basi precotte per congelamento. Si isola una base e si cambia la presentazione su teglia: nessuna conservazione, durata o soglia di colore dedotta dall’immagine, né applicazione universale alla Napoletana.",
+    "sources": [
+      {
+        "page": "https://www.kingarthurbaking.com/blog/2014/04/25/homemade-frozen-pizza",
+        "author": "Rick Holbrook / King Arthur Baking; food styling Sheila Jarnes",
+        "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/scaled_small/public/2024-04/Homemade-Frozen-Pizza_Step3-Alt.jpg?itok=spA6yaD1",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/parbake-rounds.jpg",
+        "role": "actual set pale parbaked crust without toppings; no timing transferred",
+        "original_distributed": false
+      }
+    ],
+    "scene": "One single whole PLAIN PARBAKED pizza crust, on a simple shallow unbranded warm-grey metal baking tray with a low rim. View from elevated three-quarter angle so the entire round crust and the tray support are visible. Use photo2 for the physically real pale set crust, uneven shallow depressions and modest rim. Its surface is matte warm ivory with only a faint golden wash on parts of the rim: not a raw glossy dough ball, not fully browned cooked bread, no leopard char. The centre is flat, slightly irregular and gently undulating, with two or three broad shallow folds; NO grid of tiny bubbles, repeated pores or grain. Crust bare, absolutely no tomato, cheese, herbs, toppings, flour or seeds. A new composition with ONE round base on ONE simple tray, not a duplicate of the source stacking arrangement. Tray and crust fit wholly in frame, separated from alpha by generous margins. No oven, heating elements, hands, rack, parchment, timer or temperature. Thin brown linework and smooth matte washes on both metal and bread, no silver chrome reflections.",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/parbake-rounds.jpg"
+    ],
+    "prompt": "Use case: scientific-educational. Create ONE new educational illustration for Vulcan. Input image 1 is STYLE ONLY: warm coloured-pen illustration, fine warm-brown outlines, restrained smooth matte washes, terracotta and ivory palette, very clean broad surfaces. Remaining images are REAL PHOTOGRAPHIC REFERENCES for physical objects, contact points, pose and material state; independently reinterpret and recompose them as described. No text, labels, numbers, logos, arrows or watermark anywhere. No paper grain, granular overlays, stippling, hatching fields, photographic food texture, plastic shine, CGI or halo. Landscape 3:2, whole scene inside generous transparent margins; all objects fit, hands may have cropped forearm ends only. True alpha outside actual outlined objects, no tabletop rectangle, background, aura or cast shadow. A few long fine lines and broad smooth matte colour areas rather than tiny texture marks. Functional credibility comes first.\n\nOne single whole PLAIN PARBAKED pizza crust, on a simple shallow unbranded warm-grey metal baking tray with a low rim. View from elevated three-quarter angle so the entire round crust and the tray support are visible. Use photo2 for the physically real pale set crust, uneven shallow depressions and modest rim. Its surface is matte warm ivory with only a faint golden wash on parts of the rim: not a raw glossy dough ball, not fully browned cooked bread, no leopard char. The centre is flat, slightly irregular and gently undulating, with two or three broad shallow folds; NO grid of tiny bubbles, repeated pores or grain. Crust bare, absolutely no tomato, cheese, herbs, toppings, flour or seeds. A new composition with ONE round base on ONE simple tray, not a duplicate of the source stacking arrangement. Tray and crust fit wholly in frame, separated from alpha by generous margins. No oven, heating elements, hands, rack, parchment, timer or temperature. Thin brown linework and smooth matte washes on both metal and bread, no silver chrome reflections."
+  },
+  {
+    "id": "fried-piece-interior",
+    "title": "Controllare anche l’interno del fritto",
+    "target": "Problemi e soluzioni · FR01",
+    "caption_it": "Apri un pezzo di prova e controlla anche l’impasto all’interno: il colore esterno, da solo, non basta. Per i pezzi successivi, segui la temperatura prevista dalla ricetta.",
+    "limits": "Ricomposizione della foto reale Cookist di pizza fritta tagliata, con struttura e farcia visibili. Nessun confronto crudo/cotto, spessore numerico o dichiarazione di sicurezza desunti dal colore. Coltello a riposo e tagliere sono contesto ordinario del controllo, non si inventa un taglio in corso.",
+    "sources": [
+      {
+        "page": "https://www.cookist.it/la-ricetta-pizza-fritta/",
+        "author": "Elpidio / Cookist",
+        "photo_url": "https://staticcookist.akamaized.net/wp-content/uploads/sites/21/2025/05/pizza-fritta-finale.jpeg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/fritta-cookist.jpg",
+        "role": "real cut fried pizza: continuous crust, crumb and filling layers",
+        "original_distributed": false
+      },
+      {
+        "page": "https://www.cookist.it/la-ricetta-pizza-fritta/",
+        "author": "Elpidio / Cookist",
+        "photo_url": "https://staticcookist.akamaized.net/wp-content/uploads/sites/21/2025/05/pizza-fritta-finale-2.jpeg",
+        "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/fritta-cookist2.jpg",
+        "role": "real whole fried half-moon shape and outer surface",
+        "original_distributed": false
+      }
+    ],
+    "scene": "One SMALL fried filled half-moon pizza cut crosswise into TWO pieces, resting side by side with a clear small gap on one simple rounded rectangular ivory wooden cutting board. Both halves belong to the SAME small half-moon; not two whole calzones, not a sandwich, not layers stacked. Use photo2 for real cut geometry, continuous fried dough shell, thin white crumb layer and modest ricotta/cheese filling with only a couple of muted terracotta-pink filling fragments. Show the cut faces oriented toward the viewer for checking the interior: golden thin outer shell, pale matte crumb and softer cream filling are visibly distinct. Nothing is oozing or spilling out, no dramatic cheese pull, no raw grey dough comparison, no steam. Use photo3 for the simple half-moon outer form. Whole small board and both pieces fit inside frame. One ordinary small kitchen knife lies at REST on the board to one side, blade edge away from the food, terracotta handle, safe separate from the pieces; no hands or cutting action. No oil pot, decorative herbs, tomato bowl, tablecloth, branding, garnish or plate. Smooth broad terracotta/gold washes and just 3 or 4 soft irregular crust blisters, NOT the thousands of fine fried-food pores in the photograph, no glistening oil or plastic shine.",
+    "refs": [
+      "/Users/matteo/.codex/worktrees/cms-photo-archive/Vulcan/src/assets/learn/bench-fold.webp",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/fritta-cookist.jpg",
+      "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/fritta-cookist2.jpg"
+    ],
+    "prompt": "Use case: scientific-educational. Create ONE new educational illustration for Vulcan. Input image 1 is STYLE ONLY: warm coloured-pen illustration, fine warm-brown outlines, restrained smooth matte washes, terracotta and ivory palette, very clean broad surfaces. Remaining images are REAL PHOTOGRAPHIC REFERENCES for physical objects, contact points, pose and material state; independently reinterpret and recompose them as described. No text, labels, numbers, logos, arrows or watermark anywhere. No paper grain, granular overlays, stippling, hatching fields, photographic food texture, plastic shine, CGI or halo. Landscape 3:2, whole scene inside generous transparent margins; all objects fit, hands may have cropped forearm ends only. True alpha outside actual outlined objects, no tabletop rectangle, background, aura or cast shadow. A few long fine lines and broad smooth matte colour areas rather than tiny texture marks. Functional credibility comes first.\n\nOne SMALL fried filled half-moon pizza cut crosswise into TWO pieces, resting side by side with a clear small gap on one simple rounded rectangular ivory wooden cutting board. Both halves belong to the SAME small half-moon; not two whole calzones, not a sandwich, not layers stacked. Use photo2 for real cut geometry, continuous fried dough shell, thin white crumb layer and modest ricotta/cheese filling with only a couple of muted terracotta-pink filling fragments. Show the cut faces oriented toward the viewer for checking the interior: golden thin outer shell, pale matte crumb and softer cream filling are visibly distinct. Nothing is oozing or spilling out, no dramatic cheese pull, no raw grey dough comparison, no steam. Use photo3 for the simple half-moon outer form. Whole small board and both pieces fit inside frame. One ordinary small kitchen knife lies at REST on the board to one side, blade edge away from the food, terracotta handle, safe separate from the pieces; no hands or cutting action. No oil pot, decorative herbs, tomato bowl, tablecloth, branding, garnish or plate. Smooth broad terracotta/gold washes and just 3 or 4 soft irregular crust blisters, NOT the thousands of fine fried-food pores in the photograph, no glistening oil or plastic shine."
+  }
+]

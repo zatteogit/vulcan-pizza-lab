@@ -1,0 +1,151 @@
+{
+  "batch": 16,
+  "date": "2026-11-02",
+  "base_commit": "37c88d0c66ba029d467eb7d2cc37d1918ee52107",
+  "status": "Four review proposals, not integrated or published",
+  "mode": "built-in Imagegen, one distinct call per asset",
+  "export": "Pillow resize/format conversion only; generated alpha preserved",
+  "edits": "edits.json",
+  "style_reference": {
+    "path": "src/assets/learn/bench-fold.webp",
+    "sha256": "925d26ef53604371c3d606a7c13dd63e04bf60b64e7365fde0c1ebbabd4545b1",
+    "role": "approved style only"
+  },
+  "assets": [
+    {
+      "id": "dough-tear-pinching",
+      "title": "Chiudere un piccolo strappo",
+      "target": "Problemi e soluzioni · P02",
+      "asset": "assets/dough-tear-pinching.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 39778,
+      "sha256": "86556f90052f3ee6b9a388b0c53e806b7858a506a4684fcb9d62924030302743",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/masters/dough-tear-pinching.png",
+      "master_sha256": "744091b1d71f556e8b6272a2df2e81573d4acd2da941a0027bf6b1d6d0e9e590",
+      "caption_it": "Se si apre un piccolo buco, avvicina e pizzica i bordi per richiuderlo. Poi copri il panetto e lascialo riposare prima di riprovare.",
+      "sources": [
+        {
+          "page": "https://bakingthegoods.com/quick-and-easy-pizza-dough/",
+          "author": "Becky Sue / Baking the Goods",
+          "photo_url": "https://bakingthegoods.com/wp-content/uploads/2022/10/Quick-and-Easy-Pizza-Dough-4.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/pinch-seal.jpg",
+          "role": "actual thumb/finger pinching contact while closing a dough-ball seam, not an existing tear repair",
+          "original_distributed": false,
+          "sha256": "9dcf523ee0f0432c74dc77fa78c01a7726ca072fbb5c4d6b37c9e587537c4783"
+        },
+        {
+          "page": "https://mypizzacorner.com/pizza-tips/pizza-dough-problems/",
+          "author": "Tom / My Pizza Corner",
+          "photo_url": "https://mypizzacorner.com/wp-content/uploads/2020/11/shaped-pizza.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/repair-shaped.jpg",
+          "role": "actual raw stretched dough disc; no hole in source",
+          "original_distributed": false,
+          "sha256": "3819f2bcac4ad4e23565bc73af309ebf72ebdcd2094395fa9b569b79da99e07d"
+        }
+      ],
+      "recomposition_and_limits": "Ricomposizione: Becky Sue fotografa la chiusura della cucitura di un panetto, non la riparazione di un foro; il gesto pollice-dita viene riapplicato a un piccolo strappo nella base documentata da Tom. Nessun lembo aggiunto né toppa separata; si illustra il consiglio già presente in P02."
+    },
+    {
+      "id": "gentle-bubble-press",
+      "title": "Premere delicatamente le bolle grandi",
+      "target": "Problemi e soluzioni · P08",
+      "asset": "assets/gentle-bubble-press.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 32114,
+      "sha256": "ce2ebfc303b461f58fa1240bf82c1f8f7fb2e8df975a69d8d58d069ca624148b",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/masters/gentle-bubble-press.png",
+      "master_sha256": "b8fdcac2697c8be15ccc100391e227ec132c201d466850d7c8d8756323ba85ed",
+      "caption_it": "Prima della stesura, premi delicatamente le bolle più grandi del panetto. Negli stili con cornicione, lascia il bordo libero dalla pressione.",
+      "sources": [
+        {
+          "page": "https://bakingthegoods.com/quick-and-easy-pizza-dough/",
+          "author": "Becky Sue / Baking the Goods",
+          "photo_url": "https://bakingthegoods.com/wp-content/uploads/2022/10/Quick-and-Easy-Pizza-Dough-35.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/press-flat.jpg",
+          "role": "actual fingertip contact on dough during initial flattening",
+          "original_distributed": false,
+          "sha256": "f4ecc91b73ba51f2cff6522d62f96810edd8c8e18124439e397ae7626968d381"
+        },
+        {
+          "page": "https://mypizzacorner.com/pizza-tips/pizza-dough-problems/",
+          "author": "Tom / My Pizza Corner",
+          "photo_url": "https://mypizzacorner.com/wp-content/uploads/2020/09/large-bubble-dough.jpg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/bubble-actual.jpg",
+          "role": "real local air pocket under dough skin, originally in an unshaped mass; not a readiness diagnosis",
+          "original_distributed": false,
+          "sha256": "276eab5ecbfb43b9110a3413baadd7b6dc360d37866721fed08565c5870932e0"
+        }
+      ],
+      "recomposition_and_limits": "Ricomposizione di una foto reale di pressione con i polpastrelli e di una bolla reale di gas sotto la pelle dell’impasto. La seconda foto documenta un impasto non ancora steso: non è una diagnosi della lievitazione, una dimensione prescritta o una sequenza prima/dopo."
+    },
+    {
+      "id": "plain-parbaked-base",
+      "title": "La base prima del condimento",
+      "target": "Problemi e soluzioni · P09 / P18",
+      "asset": "assets/plain-parbaked-base.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 32136,
+      "sha256": "40ede6139558290aabd0930e3d823cc0db861ac183dbe4ff3424108a03ff05ec",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/masters/plain-parbaked-base.png",
+      "master_sha256": "16d79e0a793b8cf59cdb7a1fb719652b5a4701841d8ba978f7a73e1db5540ce0",
+      "caption_it": "Una base precotta, ancora senza condimento. Quando la ricetta prevede la precottura, aggiungi il topping e completa la cottura secondo il metodo.",
+      "sources": [
+        {
+          "page": "https://www.kingarthurbaking.com/blog/2014/04/25/homemade-frozen-pizza",
+          "author": "Rick Holbrook / King Arthur Baking; food styling Sheila Jarnes",
+          "photo_url": "https://www.kingarthurbaking.com/sites/default/files/styles/scaled_small/public/2024-04/Homemade-Frozen-Pizza_Step3-Alt.jpg?itok=spA6yaD1",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/parbake-rounds.jpg",
+          "role": "actual set pale parbaked crust without toppings; no timing transferred",
+          "original_distributed": false,
+          "sha256": "e6742a3989222f8e11eb5cd3efd507f68dba0d6164aba785d1eaa4b64ab00c30"
+        }
+      ],
+      "recomposition_and_limits": "La foto reale KAB mostra basi precotte per congelamento. Si isola una base e si cambia la presentazione su teglia: nessuna conservazione, durata o soglia di colore dedotta dall’immagine, né applicazione universale alla Napoletana."
+    },
+    {
+      "id": "fried-piece-interior",
+      "title": "Controllare anche l’interno del fritto",
+      "target": "Problemi e soluzioni · FR01",
+      "asset": "assets/fried-piece-interior.webp",
+      "dimensions": [
+        672,
+        448
+      ],
+      "bytes": 35294,
+      "sha256": "068cd7869e545bf52d036098d1ab48cb78c287fbff3e6c483a984af6b1121e60",
+      "master": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/masters/fried-piece-interior.png",
+      "master_sha256": "088b4e0a29b572a7d5dfbd7bb827991d2d1c25e9ef27ad09f8b66dcf56186dac",
+      "caption_it": "Apri un pezzo di prova e controlla anche l’impasto all’interno: il colore esterno, da solo, non basta. Per i pezzi successivi, segui la temperatura prevista dalla ricetta.",
+      "sources": [
+        {
+          "page": "https://www.cookist.it/la-ricetta-pizza-fritta/",
+          "author": "Elpidio / Cookist",
+          "photo_url": "https://staticcookist.akamaized.net/wp-content/uploads/sites/21/2025/05/pizza-fritta-finale.jpeg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/fritta-cookist.jpg",
+          "role": "real cut fried pizza: continuous crust, crumb and filling layers",
+          "original_distributed": false,
+          "sha256": "8d0c368d9c3bdcf58adb885e4b426e312d8c0c2798ea1f21324f403262357896"
+        },
+        {
+          "page": "https://www.cookist.it/la-ricetta-pizza-fritta/",
+          "author": "Elpidio / Cookist",
+          "photo_url": "https://staticcookist.akamaized.net/wp-content/uploads/sites/21/2025/05/pizza-fritta-finale-2.jpeg",
+          "local_reference": "/Users/matteo/dev/Vulcan/output/learn-illustration-batch-16-2026-11-02/references/fritta-cookist2.jpg",
+          "role": "real whole fried half-moon shape and outer surface",
+          "original_distributed": false,
+          "sha256": "34825ece2913c4f4d4a2dd32bde4f05ebfa14a2e7ee0f825aa18e265db315fcc"
+        }
+      ],
+      "recomposition_and_limits": "Ricomposizione della foto reale Cookist di pizza fritta tagliata, con struttura e farcia visibili. Nessun confronto crudo/cotto, spessore numerico o dichiarazione di sicurezza desunti dal colore. Coltello a riposo e tagliere sono contesto ordinario del controllo, non si inventa un taglio in corso."
+    }
+  ]
+}
