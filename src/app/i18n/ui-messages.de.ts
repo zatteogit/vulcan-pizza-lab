@@ -1,5 +1,8 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.poolishFinalMix": "Gib den bereits mit dem restlichen Wasser vermischten Poolish zum Mehl für den Hauptteig. Schabe ihn mit einem Teigschaber aus dem Gefäß.",
+  "learn.visual.autolyseFinalIncorporation": "Arbeite nach der Autolyseruhe die im Verfahren vorgesehenen Zutaten ein. Die Hand drückt und faltet den Teig in der Schüssel.",
+  "learn.visual.handBackStretching": "Die Handrücken tragen den Teig beim Dehnen und verteilen sein Gewicht, ohne die Fingerspitzen in die Mitte zu drücken. Wenn er Widerstand leistet, lege ihn ab und lass ihn ruhen.",
   "learn.visual.roomAirTemperature": "Miss die Luft dort, wo der Teig ruht: Ihre Temperatur kann von der des Teigs abweichen.",
   "learn.visual.fridgeShelfTemperature": "Prüfe die Lufttemperatur auf dem verwendeten Kühlschrankboden und halte den Teigbehälter geschlossen. Die Kerntemperatur des Teigs kann abweichen.",
   "learn.visual.flourTemperature": "Die Sonde misst die Mehltemperatur, eine der Größen zur Berechnung der Wassertemperatur.",

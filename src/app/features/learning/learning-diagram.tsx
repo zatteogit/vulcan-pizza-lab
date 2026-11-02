@@ -22,7 +22,9 @@ export function isLearningDiagramId(id: string): id is LearningDiagramId {
   return Object.prototype.hasOwnProperty.call(DIAGRAMS, id);
 }
 
-type Artwork = Readonly<Record<string, { src: string; source: string; author: string; cc: boolean }>>;
+type Artwork = Readonly<Record<string, { src: string } & (
+  { cc: true; source: string; author: string } | { cc: false }
+)>>;
 const CODE = "https://github.com/zatteogit/vulcan-pizza-lab/blob/26e0ea995d5918eeb0b3a0f19bfac6294e62dae1/src/app/domain/";
 const SOURCES = {
   arrhenius: [["IUPAC", "https://goldbook.iupac.org/terms/view/A00446"], ["Purdue", "https://chemed.chem.purdue.edu/genchem/topicreview/bp/ch22/activate.php"]],
@@ -48,7 +50,10 @@ export function LearningDiagram({ id, artwork, decorative = false }: { id: Learn
     <figcaption>
       <p>{diagram.caption()}</p>
       <small data-region="learning-source">{uiMessage("science.sheet.sources")} {SOURCES[id].map(([label, url], index) => <Fragment key={url}>{index > 0 && " · "}<a href={url}>{label}</a></Fragment>)}
-        {diagram.pictures.filter(key => artwork[key].cc).map(key => <Fragment key={key}>{" · "}<a href={artwork[key].source}>{artwork[key].author}</a> · <a href="https://creativecommons.org/licenses/by/2.0/">{uiMessage("learn.visual.license")}</a></Fragment>)}
+        {diagram.pictures.map(key => {
+          const visual = artwork[key];
+          return visual.cc ? <Fragment key={key}>{" · "}<a href={visual.source}>{visual.author}</a> · <a href="https://creativecommons.org/licenses/by/2.0/">{uiMessage("learn.visual.license")}</a></Fragment> : null;
+        })}
       </small>
     </figcaption>
   </figure>;

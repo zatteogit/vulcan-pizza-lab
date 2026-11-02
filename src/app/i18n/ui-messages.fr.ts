@@ -1,5 +1,8 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.poolishFinalMix": "Ajoute le poolish déjà mélangé au reste de l’eau à la farine de la pâte finale. Racle le récipient avec une spatule.",
+  "learn.visual.autolyseFinalIncorporation": "Après le repos d’autolyse, incorpore les ingrédients prévus par le procédé. La main presse et replie la pâte dans le bol.",
+  "learn.visual.handBackStretching": "Le dos des mains soutient la pâte pendant son élargissement et répartit son poids sans enfoncer les doigts au centre. Si elle résiste, pose-la et laisse-la reposer.",
   "learn.visual.roomAirTemperature": "Mesure l’air près de l’endroit où repose la pâte : sa température peut différer de celle de la pâte.",
   "learn.visual.fridgeShelfTemperature": "Vérifie la température de l’air sur la clayette utilisée, en gardant le récipient fermé. La température à cœur de la pâte peut être différente.",
   "learn.visual.flourTemperature": "La sonde mesure la température de la farine, une des variables servant à calculer celle de l’eau.",

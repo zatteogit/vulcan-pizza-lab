@@ -30,6 +30,18 @@ describe("PreFermentCard — «Come si fa»", () => {
     expect(out).not.toContain("https://www.billyparisi.com/biga-recipe/");
     expect(out).not.toContain("https://anitalianinmykitchen.com/italian-bread/");
     expect(html({ preFermentType: "biga" })).not.toContain("<figure");
+    for (const [preFermentType, id] of [
+      ["poolish", "poolish-final-mix"],
+      ["autolisi", "autolyse-final-incorporation"],
+    ] as const) {
+      const illustrated = steps(html({ preFermentType, stepIllustrations: {
+        2: createElement(LearningIllustration, { id }),
+      } }));
+      expect(illustrated[0]).not.toContain("<figure");
+      expect(illustrated[1]).not.toContain("<figure");
+      expect(illustrated[2]).toContain(`${id}.webp`);
+      expect(html({ preFermentType })).not.toContain("<figure");
+    }
   });
 
   it("biga: quattro passi in un <ol>, il sale nell'ultimo, con il «Perché?» della procedura", () => {

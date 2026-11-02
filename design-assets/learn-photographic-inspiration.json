@@ -1,0 +1,257 @@
+{
+  "description": "Photographic inspiration for independently reinterpreted artwork. Preserved internally; not shipped in the application. Licensed adaptations and scientific sources remain in the public renderer.",
+  "artwork": {
+    "poolish-final-mix": {
+      "source": "https://electricbluefood.com/poolish-pizza-dough/",
+      "author": "Eva / Electric Blue Food"
+    },
+    "autolyse-final-incorporation": {
+      "source": "https://thepracticalkitchen.com/basic-overnight-pizza-dough-with-baking-steel-instructions/",
+      "author": "Rebecca Eisenberg / The Practical Kitchen"
+    },
+    "hand-back-stretching": {
+      "source": "https://thepracticalkitchen.com/how-to-hand-stretch-pizza-dough-a-visual-guide/",
+      "author": "Rebecca Eisenberg / The Practical Kitchen"
+    },
+    "room-air-temperature": {
+      "source": "https://www.thermoworks.com/products/spot",
+      "author": "ThermoWorks"
+    },
+    "fridge-shelf-temperature": {
+      "source": "https://www.thermoworks.com/products/spot",
+      "author": "ThermoWorks"
+    },
+    "flour-temperature": {
+      "source": "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature",
+      "author": "Barb Alpern / King Arthur Baking"
+    },
+    "yeast-freshness-check": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/11/05/test-yeast-baking-powder-baking-soda-freshness",
+      "author": "PJ Hamel / King Arthur Baking"
+    },
+    "dough-volume-comparison": {
+      "source": "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation",
+      "author": "Maurizio Leo / King Arthur Baking"
+    },
+    "flour-weighing": {
+      "source": "https://www.kingarthurbaking.com/blog/2022/02/18/digital-kitchen-scale",
+      "author": "PJ Hamel / King Arthur Baking"
+    },
+    "biga-hand-mixing": {
+      "source": "https://www.billyparisi.com/biga-recipe/",
+      "author": "Chef Billy Parisi",
+      "extraSources": [
+        {
+          "source": "https://anitalianinmykitchen.com/italian-bread/",
+          "author": "Rosemary Molloy"
+        }
+      ]
+    },
+    "poolish-stirring": {
+      "source": "https://milkandpop.com/homemade-french-baguette/",
+      "author": "Tatiana Kamakura / Milk and Pop"
+    },
+    "biga-in-water": {
+      "source": "https://anitalianinmykitchen.com/italian-bread/",
+      "author": "Rosemary Molloy"
+    },
+    "autolyse-initial-mix": {
+      "source": "https://www.billyparisi.com/biga-recipe/",
+      "author": "Chef Billy Parisi",
+      "extraSources": [
+        {
+          "source": "https://anitalianinmykitchen.com/italian-bread/",
+          "author": "Rosemary Molloy"
+        },
+        {
+          "source": "https://www.theperfectloaf.com/guides/how-to-autolyse/",
+          "author": "Maurizio Leo / The Perfect Loaf"
+        }
+      ]
+    },
+    "manitoba-flour": {
+      "source": "https://www.molinomagri.com/it/prodotti/112-180-manitoba",
+      "author": "Molino Magri"
+    },
+    "fructan-ingredients": {
+      "source": "https://www.monashfodmap.com/about-fodmap-and-ibs/high-and-low-fodmap-foods/",
+      "author": "Monash University / Monash FODMAP"
+    },
+    "fermented-salami": {
+      "source": "https://www.salamecacciatore.it/il-prodotto/",
+      "author": "Consorzio Cacciatore Italiano"
+    },
+    "pizza-serving": {
+      "source": "https://www.kingarthurbaking.com/blog/2026/07/06/pizza-party-ideas",
+      "author": "Patrick Marinello / King Arthur Baking; food styling Yekaterina Boytsova"
+    },
+    "farinograph-bowl": {
+      "source": "https://www.anton-paar.com/us-en/products/details/farinograph/",
+      "author": "Brabender / Anton Paar"
+    },
+    "farinograph-readout": {
+      "source": "https://www.anton-paar.com/us-en/products/details/farinograph/",
+      "author": "Brabender / Anton Paar"
+    },
+    "bread-freezer-portions": {
+      "source": "https://www.kingarthurbaking.com/blog/2020/07/08/the-best-way-to-store-yeast-bread",
+      "author": "PJ Hamel / King Arthur Baking"
+    },
+    "alveograph-bubble": {
+      "source": "https://www.kpmanalytics.com/products/functional-rheological/alveolab",
+      "author": "KPM Analytics"
+    },
+    "falling-number-tubes": {
+      "source": "https://www.montana.edu/barleybreeding/learning-center/learn-about-testing/Falling-Number.html",
+      "author": "Montana State University"
+    },
+    "browned-crust": {
+      "source": "https://www.kingarthurbaking.com/blog/2022/02/15/understanding-the-maillard-reaction-in-baking",
+      "author": "Raymond Prado / King Arthur Baking"
+    },
+    "caramel-sugar": {
+      "source": "https://umamidays.com/how-to-caramelize-sugar/",
+      "author": "Connie Veneracion / Umami Days"
+    },
+    "starch-paste": {
+      "source": "https://www.kingarthurbaking.com/blog/2018/03/26/introduction-to-tangzhong",
+      "author": "PJ Hamel / King Arthur Baking"
+    },
+    "autolysis": {
+      "source": "https://www.kingarthurbaking.com/blog/2017/09/29/using-the-autolyse-method",
+      "author": "King Arthur Baking"
+    },
+    "folds": {
+      "source": "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation",
+      "author": "Maurizio Leo / King Arthur Baking"
+    },
+    "windowpane": {
+      "source": "https://www.kingarthurbaking.com/blog/2022/10/14/what-is-the-windowpane-test-for-bread-dough",
+      "author": "King Arthur Baking"
+    },
+    "division": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+      "author": "King Arthur Baking"
+    },
+    "ball-shaping": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+      "author": "King Arthur Baking"
+    },
+    "poke-test": {
+      "source": "https://www.kingarthurbaking.com/blog/2022/08/22/how-to-tell-if-bread-dough-has-risen-enough",
+      "author": "King Arthur Baking"
+    },
+    "stretching": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+      "author": "King Arthur Baking"
+    },
+    "cornicione": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+      "author": "King Arthur Baking"
+    },
+    "bulk-fermentation": {
+      "source": "https://www.kingarthurbaking.com/blog/2019/07/22/bulk-fermentation",
+      "author": "Maurizio Leo / King Arthur Baking"
+    },
+    "ball-fermentation": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+      "author": "King Arthur Baking"
+    },
+    "sourdough": {
+      "source": "https://www.kingarthurbaking.com/recipes/sourdough-starter-recipe",
+      "author": "King Arthur Baking"
+    },
+    "yeast": {
+      "source": "https://www.kingarthurbaking.com/blog/2023/04/24/how-to-bake-with-fresh-yeast",
+      "author": "Liz Neily, Kristin Teig / King Arthur Baking"
+    },
+    "oven-floor-dome": {
+      "source": "https://commons.wikimedia.org/wiki/File:Brick-oven-thumbnail.jpg",
+      "author": "Beboplu / Wikimedia Commons"
+    },
+    "hydration": {
+      "source": "https://fabflour.co.uk/step-by-step-guides/step-by-step-bread",
+      "author": "Fab Flour / UK Flour Millers"
+    },
+    "home-oven": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+      "author": "King Arthur Baking"
+    },
+    "peel-prep": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+      "author": "King Arthur Baking"
+    },
+    "stone-temperature": {
+      "source": "https://www.williams-sonoma.com/netstorage/pdf/Ooni-IR-Thermometer-UU-P06100-Essentials-Guide.pdf",
+      "author": "Ooni"
+    },
+    "water-temperature": {
+      "source": "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature",
+      "author": "King Arthur Baking"
+    },
+    "mixer-dough": {
+      "source": "https://www.giallozafferano.com/recipes/Fried-Pizza.html",
+      "author": "GialloZafferano"
+    },
+    "frying-seal": {
+      "source": "https://www.giallozafferano.com/recipes/Fried-Pizza.html",
+      "author": "GialloZafferano"
+    },
+    "frying-drain": {
+      "source": "https://www.giallozafferano.com/recipes/Fried-Pizza.html",
+      "author": "GialloZafferano"
+    },
+    "base-check": {
+      "source": "https://www.kingarthurbaking.com/blog/2020/06/17/gluten-free-pan-pizza",
+      "author": "King Arthur Baking"
+    },
+    "portion-weighing": {
+      "source": "https://www.kingarthurbaking.com/blog/2020/03/16/how-to-make-a-simple-hearth-bread",
+      "author": "King Arthur Baking"
+    },
+    "mozzarella-drying": {
+      "source": "https://mypizzacorner.com/pizza-tips/how-to-drain-mozzarella-for-pizza/",
+      "author": "Tom Rothwell / My Pizza Corner"
+    },
+    "stone-brushing": {
+      "source": "https://ooni.com/blogs/ooni-insights/how-to-clean-a-pizza-stone",
+      "author": "Ooni"
+    },
+    "pizza-turning": {
+      "source": "https://ooni.com/products/ooni-pizza-turning-peel",
+      "author": "Ooni"
+    },
+    "oil-temperature": {
+      "source": "https://blog.thermoworks.com/best-thermometer-for-deep-frying/",
+      "author": "ThermoWorks"
+    },
+    "dough-temperature": {
+      "source": "https://www.kingarthurbaking.com/blog/2018/05/29/desired-dough-temperature",
+      "author": "King Arthur Baking"
+    },
+    "covered-rest": {
+      "source": "https://www.kingarthurbaking.com/blog/2021/09/28/how-to-refrigerate-bread-dough-to-bake-later",
+      "author": "Mark Weinberg / King Arthur Baking"
+    },
+    "covered-storage": {
+      "source": "https://www.kingarthurbaking.com/blog/2023/04/18/never-cover-rising-bread-dough-with-towel",
+      "author": "King Arthur Baking"
+    },
+    "remilled-semolina": {
+      "source": "https://shop.drax-muehle.de/produkte/detail/1333/bio-hartweizenmehl-semola-di-grano-duro-rimacinata-1-kg",
+      "author": "Drax-Mühle"
+    },
+    "sauce-dosing": {
+      "source": "https://www.pexels.com/photo/putting-tomato-sauce-on-dough-for-pizza-17637072/",
+      "author": "Saulo Leite / Pexels"
+    },
+    "bench-fold": {
+      "source": "https://www.kingarthurbaking.com/blog/2017/06/19/kneading-wet-dough-by-hand",
+      "author": "King Arthur Baking"
+    },
+    "stretching-properties": {
+      "source": "https://www.kingarthurbaking.com/blog/2015/01/05/best-pizza-youll-ever-make",
+      "author": "King Arthur Baking"
+    }
+  }
+}

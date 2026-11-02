@@ -1,5 +1,8 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "learn.visual.poolishFinalMix": "Añade el poolish ya mezclado con el agua restante a la harina de la masa final. Recupéralo del recipiente con una espátula.",
+  "learn.visual.autolyseFinalIncorporation": "Tras el reposo de autólisis, incorpora los ingredientes indicados en el procedimiento. La mano aprieta y pliega la masa dentro del bol.",
+  "learn.visual.handBackStretching": "El dorso de las manos sostiene la masa al ensancharla, repartiendo su peso sin clavar los dedos en el centro. Si ofrece resistencia, apóyala y déjala reposar.",
   "learn.visual.roomAirTemperature": "Mide el aire cerca de donde reposa la masa: su temperatura puede ser distinta de la de la masa.",
   "learn.visual.fridgeShelfTemperature": "Comprueba la temperatura del aire en el estante utilizado, manteniendo cerrado el recipiente. La temperatura del centro de la masa puede ser distinta.",
   "learn.visual.flourTemperature": "La sonda mide la temperatura de la harina, una de las variables para calcular la del agua.",
