@@ -1,5 +1,9 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "learn.visual.yeastPrecisionWeighing": "Pesa o fermento no pequeno recipiente tarado, com uma balança adequada à dose pedida pela receita.",
+  "learn.visual.sourdoughDoseWeighing": "Transfere a massa-mãe para o recipiente tarado, retira a espátula e lê o peso. O peso não mede a força da massa-mãe.",
+  "learn.visual.stoneSteelSurfaces": "Pedra à esquerda, aço à direita: duas superfícies que sustentam a pizza e transferem calor para a base. O pré-aquecimento e o uso dependem da superfície e da receita.",
+  "learn.visual.waterActivitySample": "A amostra é colocada na cápsula do aparelho e a câmara é fechada para medir a atividade da água. A estimativa do {brand} não substitui esta medição.",
   "learn.visual.poolishFinalMix": "Junta o poolish já misturado com a água restante à farinha da massa final. Retira-o do recipiente com uma espátula.",
   "learn.visual.autolyseFinalIncorporation": "Após o repouso de autólise, incorpora os ingredientes previstos no procedimento. A mão aperta e dobra a massa dentro da tigela.",
   "learn.visual.handBackStretching": "O dorso das mãos sustenta a massa ao alargá-la, distribuindo o peso sem pressionar as pontas dos dedos no centro. Se resistir, pousa-a e deixa-a repousar.",

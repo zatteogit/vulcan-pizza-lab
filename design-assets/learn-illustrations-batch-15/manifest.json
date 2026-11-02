@@ -2,7 +2,7 @@
   "batch": 15,
   "date": "2026-11-02",
   "base_commit": "9dee51450fdb07e1039be8ab70b0335b2916e1d2",
-  "status": "Four review proposals, not integrated or published",
+  "status": "Approved 2026-11-02 and integrated into Metodo e fonti; release verification recorded separately",
   "mode": "built-in Imagegen, one distinct call per asset",
   "export": "Pillow resize/format conversion only; generated alpha preserved",
   "edits": "edits.json",
@@ -170,5 +170,20 @@
   },
   "selected_revisions": {
     "sourdough-dose-weighing": "v2: blade placed inside jar; exact edit prompt in edits.json, v1 preserved in output variants"
+  },
+  "placements": {
+    "yeast-precision-weighing": [
+      "method:yeast-dose"
+    ],
+    "sourdough-dose-weighing": [
+      "method:sourdough-starter-dose"
+    ],
+    "stone-steel-surfaces": [
+      "method:surface-conductivity",
+      "method:bake-time-home-preheat"
+    ],
+    "water-activity-sample": [
+      "method:water-activity"
+    ]
   }
 }

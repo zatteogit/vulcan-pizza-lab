@@ -1,6 +1,6 @@
 # Impara · Lotto 15
 
-Four photo-grounded review proposals for useful unillustrated practical explanations in Metodo e fonti: precision weighing of dry yeast, weighing a starter portion, stone/steel baking surfaces, and preparation of a water-activity sample. Not integrated into the application or published.
+Four photo-grounded illustrations for useful unillustrated practical explanations in Metodo e fonti: precision weighing of dry yeast, weighing a starter portion, stone/steel baking surfaces, and preparation of a water-activity sample. Approved by Matteo on 2026-11-02 and integrated into Metodo e fonti. Release evidence is recorded separately in `/Users/matteo/dev/Vulcan/output/learn-illustration-release-15-2026-11-02/`.
 
 - Review: `review.html`, with light/dark switch and useful captions only.
 - Final project WebPs: `assets/`, four 672 × 448 alpha images.
@@ -29,8 +29,12 @@ To rebuild exports and the review gallery from the preserved masters:
 python3 design-assets/learn-illustrations-batch-15/build.py
 ```
 
-Application tests and bundle budgets belong to a later integration. These independent design proposals are checked for image integrity, alpha, correct references/captions and responsive gallery layout.
+Application tests, bundle budgets and live responsive checks are required for the release. These independent design proposals are checked for image integrity, alpha, correct references/captions and responsive gallery layout.
 
 The selected starter-weighing v2 puts the blade inside the jar, behind the front rim. Its caption explicitly says to remove the spatula before reading the weight. The first variant is retained internally at `variants/sourdough-dose-weighing-v1.png`.
 
-Verified review: four 672 × 448 WebPs, 109,712 bytes combined. All four loaded on 1280px desktop and 390px mobile, useful captions, zero links and no horizontal overflow. Alpha and smooth surfaces inspected on light and dark backgrounds. Evidence: `verification.json`, `gallery-desktop-light.png`, `gallery-desktop-dark.png`, `gallery-mobile.png` in the output directory. No app source, existing artwork or live deployment was changed.
+Verified review: four 672 × 448 WebPs, 109,712 bytes combined. All four loaded on 1280px desktop and 390px mobile, useful captions, zero links and no horizontal overflow. Alpha and smooth surfaces inspected on light and dark backgrounds. Evidence: `verification.json`, `gallery-desktop-light.png`, `gallery-desktop-dark.png`, `gallery-mobile.png` in the output directory. The review-stage evidence above is separate from the application release. Existing artwork is preserved.
+
+Integration: new visuals beside yeast dose, starter dose, Aw and preheating notes; the stone/steel pair replaces the wood-oven visual only in the conductivity note. The wood-oven artwork remains in its glossary position. Captions are localized in seven languages; all photographic inspiration stays in the internal registry and batch manifest. No recipe calculation, scientific formula or threshold is changed.
+
+Local application verification: typecheck, 136 test files (1770 passed, 1 skipped), repository guards and production build passed. Worst-language JavaScript is 568.9/570 KiB gzip; product imagery is 33.6/38 MB. All five placements loaded on desktop (1280px) and mobile (390px), with captions, no inspiration links and no horizontal overflow. Final WebPs match the four approved hashes.

@@ -1,5 +1,9 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.yeastPrecisionWeighing": "Pèse la levure dans le petit récipient taré, avec une balance adaptée à la dose demandée par la recette.",
+  "learn.visual.sourdoughDoseWeighing": "Transfère le levain dans le récipient taré, retire la spatule et lis le poids. Le poids ne mesure pas la force du levain.",
+  "learn.visual.stoneSteelSurfaces": "Pierre à gauche, acier à droite : deux surfaces qui soutiennent la pizza et transmettent la chaleur à sa base. Préchauffage et utilisation dépendent de la surface et de la recette.",
+  "learn.visual.waterActivitySample": "L’échantillon est placé dans la coupelle de l’appareil, puis la chambre est fermée pour mesurer l’activité de l’eau. L’estimation de {brand} ne remplace pas cette mesure.",
   "learn.visual.poolishFinalMix": "Ajoute le poolish déjà mélangé au reste de l’eau à la farine de la pâte finale. Racle le récipient avec une spatule.",
   "learn.visual.autolyseFinalIncorporation": "Après le repos d’autolyse, incorpore les ingrédients prévus par le procédé. La main presse et replie la pâte dans le bol.",
   "learn.visual.handBackStretching": "Le dos des mains soutient la pâte pendant son élargissement et répartit son poids sans enfoncer les doigts au centre. Si elle résiste, pose-la et laisse-la reposer.",

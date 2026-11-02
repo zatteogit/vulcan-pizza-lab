@@ -1,3 +1,7 @@
+import yeastPrecisionWeighing from "../../../assets/learn/yeast-precision-weighing.webp";
+import sourdoughDoseWeighing from "../../../assets/learn/sourdough-dose-weighing.webp";
+import stoneSteelSurfaces from "../../../assets/learn/stone-steel-surfaces.webp";
+import waterActivitySample from "../../../assets/learn/water-activity-sample.webp";
 import poolishFinalMix from "../../../assets/learn/poolish-final-mix.webp";
 import autolyseFinalIncorporation from "../../../assets/learn/autolyse-final-incorporation.webp";
 import handBackStretching from "../../../assets/learn/hand-back-stretching.webp";
@@ -65,6 +69,11 @@ import { LearningDiagram, isLearningDiagramId, type LearningDiagramId } from "./
 import { uiMessage } from "../../i18n/ui-messages";
 
 const LEARNING_ARTWORK = {
+  "yeast-precision-weighing": { src: yeastPrecisionWeighing, caption: () => uiMessage("learn.visual.yeastPrecisionWeighing"), cc: false },
+  "sourdough-dose-weighing": { src: sourdoughDoseWeighing, caption: () => uiMessage("learn.visual.sourdoughDoseWeighing"), cc: false },
+  "stone-steel-surfaces": { src: stoneSteelSurfaces, caption: () => uiMessage("learn.visual.stoneSteelSurfaces"), cc: false },
+  "water-activity-sample": { src: waterActivitySample, caption: () => uiMessage("learn.visual.waterActivitySample"), cc: false },
+
   "poolish-final-mix": { src: poolishFinalMix, caption: () => uiMessage("learn.visual.poolishFinalMix"), cc: false },
   "autolyse-final-incorporation": { src: autolyseFinalIncorporation, caption: () => uiMessage("learn.visual.autolyseFinalIncorporation"), cc: false },
   "hand-back-stretching": { src: handBackStretching, caption: () => uiMessage("learn.visual.handBackStretching"), cc: false },

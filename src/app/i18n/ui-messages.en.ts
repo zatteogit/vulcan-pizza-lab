@@ -1,5 +1,9 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.yeastPrecisionWeighing": "Weigh the yeast in the small tared dish, using a scale suitable for the dose required by the recipe.",
+  "learn.visual.sourdoughDoseWeighing": "Transfer the starter into the tared container, remove the spatula and read the weight. Weight does not measure starter strength.",
+  "learn.visual.stoneSteelSurfaces": "Stone on the left, steel on the right: two surfaces that support the pizza and transfer heat to its base. Preheating and use depend on the surface and the recipe.",
+  "learn.visual.waterActivitySample": "The sample goes into the instrument’s cup, then the chamber is closed to measure water activity. {brand}’s estimate does not replace this measurement.",
   "learn.visual.poolishFinalMix": "Add the poolish already mixed with the remaining water to the flour for the final dough. Scrape it from its container with a spatula.",
   "learn.visual.autolyseFinalIncorporation": "After the autolyse rest, incorporate the ingredients called for by the method. The hand squeezes and folds the dough in the bowl.",
   "learn.visual.handBackStretching": "The backs of the hands support the dough as it widens, spreading its weight without pressing fingertips into the centre. If it resists, set it down and let it rest.",
