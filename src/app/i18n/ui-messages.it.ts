@@ -3,6 +3,9 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.saltBeforeFlour": "Nel procedimento della Napoletana STG il sale si scioglie nell’acqua prima di aggiungere la farina. La scena mostra l’aggiunta del sale, senza indicare una dose.",
+  "learn.visual.rectangularPanMeasuring": "Per la teglia rettangolare servono le due misure interne: lato lungo e lato corto, senza includere il bordo esterno. Qui è mostrata la misura del lato lungo.",
+  "learn.visual.roundPanMeasuring": "Per una teglia tonda misura il diametro interno passando per il centro. Il bordo esterno non fa parte della superficie utile; la riga non mostra un valore da copiare.",
   "learn.visual.doughTearPinching": "Se si apre un piccolo buco, avvicina e pizzica i bordi per richiuderlo. Poi copri il panetto e lascialo riposare prima di riprovare.",
   "learn.visual.gentleBubblePress": "Prima della stesura, premi delicatamente le bolle più grandi del panetto. Negli stili con cornicione, lascia il bordo libero dalla pressione.",
   "learn.visual.plainParbakedBase": "Una base precotta, ancora senza condimento. Quando la ricetta prevede la precottura, aggiungi il topping e completa la cottura secondo il metodo.",

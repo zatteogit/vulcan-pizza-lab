@@ -1,8 +1,8 @@
 # Impara · Lotto 17
 
-Tre proposte locali per Metodo e fonti e la spiegazione del thickness factor. **Non ancora integrate o pubblicate.** Base aggiornata a GitHub `origin/main`, commit `d958ecb356538bcaefbe178f9701c36e86a784a4` (PR #200).
+Tre tavole per Metodo e fonti e la spiegazione del thickness factor. Approvate da Matteo il 2026-11-02 e integrate in Metodo e fonti e Glossario. Le prove del rilascio sono in `/Users/matteo/dev/Vulcan/output/learn-illustration-release-17-2026-11-02/`. Base aggiornata a GitHub `origin/main`, commit `d958ecb356538bcaefbe178f9701c36e86a784a4` (PR #200).
 
-| Tavola | Collocazione proposta | Utilità |
+| Tavola | Collocazione | Utilità |
 | --- | --- | --- |
 | `salt-before-flour` | Metodo · Il sale nella Napoletana STG | Rendere visibile l’aggiunta del sale all’acqua prima della farina |
 | `rectangular-pan-measuring` | Metodo / Glossario · Thickness factor | Misura interna del lato lungo; la didascalia richiede anche il lato corto |
@@ -33,10 +33,16 @@ La prima versione del sale produceva filamenti bianchi poco credibili; le revisi
 
 Allineamento del checkout prima del nuovo lotto: HEAD e `origin/main` coincidono a `d958ecb3`, differenza dei file versionati nulla, vecchio ramo del lotto 16 conservato e cinque PNG locali non versionati preservati. L’app locale è stata ricostruita da quel commit: build e budget superati; la pagina `/learn/metodo#versione` mostra `d958ecb3`. Prove: `local-alignment-build.log`, `local-aligned-version.png` e `alignment.json` nell’output.
 
-Le tre immagini sono caricate a larghezza naturale 672 nella galleria su desktop 1280px e mobile 390px, sia su chiaro sia su scuro; didascalie presenti, zero link e nessun overflow orizzontale. Alpha, composizione e materiali controllati sui due sfondi. Prove in `verification.json` e `gallery-{desktop,mobile}-{light,dark}.png`. Nessun asset precedente o codice prodotto modificato dal nuovo lotto.
+Le tre immagini sono caricate a larghezza naturale 672 nella galleria su desktop 1280px e mobile 390px, sia su chiaro sia su scuro; didascalie presenti, zero link e nessun overflow orizzontale. Alpha, composizione e materiali controllati sui due sfondi. Prove in `verification.json` e `gallery-{desktop,mobile}-{light,dark}.png`. Queste prove appartengono alla fase di revisione, prima dell’integrazione. Gli asset precedenti sono conservati.
 
 Per ricostruire gli export e la galleria:
 
 ```sh
 python3 design-assets/learn-illustrations-batch-17/build.py
 ```
+
+## Integrazione
+
+`salt-before-flour` accompagna `stg-salt-timing` in Metodo e fonti. Le due misure interne accompagnano la pesatura preesistente in `thickness-factor` e nella voce di Glossario `thickness_factor`. Didascalie nelle sette lingue; riferimento fotografico interno. Nessuna modifica a ricette, formule, soglie o fonti scientifiche.
+
+Verifica locale dell’integrazione: `npm run verify` (136 file, 1770 test superati, 1 saltato), build e budget superati. JS massimo per utente 569,9/570 kB gzip, CSS 73,1/74 kB, immagini 33,8/38 MB. Dieci controlli UI sui cinque inserimenti a 1280px e 390px: immagini caricate, didascalie presenti, nessun link fotografico nelle figure e nessun overflow. La pesatura precedente resta visibile accanto alle misure delle teglie. Prove in `local-checks.json` e screenshot nella cartella del rilascio.

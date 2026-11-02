@@ -2,7 +2,7 @@
   "batch": 17,
   "date": "2026-11-02",
   "base_commit": "d958ecb356538bcaefbe178f9701c36e86a784a4",
-  "status": "Three review proposals, not integrated or published",
+  "status": "Approved 2026-11-02 and integrated into Metodo e fonti and glossary; release evidence recorded separately",
   "mode": "built-in Imagegen, one distinct call per asset",
   "export": "Pillow resize/format conversion only; generated alpha preserved",
   "edits": "edits.json",
@@ -93,5 +93,20 @@
       ],
       "recomposition_and_limits": "Riferimento reale di Janice Lawandi: riga lungo il diametro di una teglia tonda. Si semplificano teglia e riga, eliminando marchi, doppia scala e numeri; la teglia generica ha pareti dritte e bordo basso. Nessun diametro prescritto o calcolo dell’area incorporato nel raster."
     }
-  ]
+  ],
+  "placements": {
+    "method:stg-salt-timing": [
+      "salt-before-flour"
+    ],
+    "method:thickness-factor": [
+      "portion-weighing",
+      "rectangular-pan-measuring",
+      "round-pan-measuring"
+    ],
+    "glossary:thickness_factor": [
+      "portion-weighing",
+      "rectangular-pan-measuring",
+      "round-pan-measuring"
+    ]
+  }
 }

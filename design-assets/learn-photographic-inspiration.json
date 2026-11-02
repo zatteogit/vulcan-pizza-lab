@@ -302,6 +302,18 @@
     "fried-piece-interior": {
       "source": "https://www.cookist.it/la-ricetta-pizza-fritta/",
       "author": "Elpidio / Cookist"
+    },
+    "salt-before-flour": {
+      "source": "https://www.cucinabyelena.com/authentic-neapolitan-pizza-dough/",
+      "author": "Elena Davis / Cucina by Elena"
+    },
+    "rectangular-pan-measuring": {
+      "source": "https://bakeschool.com/how-to-measure-cake-pan-sizes/",
+      "author": "Janice Lawandi / The Bake School"
+    },
+    "round-pan-measuring": {
+      "source": "https://bakeschool.com/how-to-measure-cake-pan-sizes/",
+      "author": "Janice Lawandi / The Bake School"
     }
   }
 }

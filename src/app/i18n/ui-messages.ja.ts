@@ -1,5 +1,8 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.saltBeforeFlour": "ナポレターナSTGの製法では、粉を加える前に塩を水に溶かします。図は塩を加える場面で、分量は示していません。",
+  "learn.visual.rectangularPanMeasuring": "長方形の天板は、外縁を除いた内側の縦と横を測ります。図では長辺を測っています。",
+  "learn.visual.roundPanMeasuring": "丸い天板は中心を通る内径を測ります。外縁は有効面積に含めません。定規の数値を写す図ではありません。",
   "learn.visual.doughTearPinching": "小さな穴が開いたら、周囲の生地を寄せてつまみ、閉じます。その後、生地を覆って休ませてから、もう一度広げます。",
   "learn.visual.gentleBubblePress": "広げる前に、生地の大きな気泡をやさしく押さえます。縁を膨らませるスタイルでは、縁を押さえないようにします。",
   "learn.visual.plainParbakedBase": "トッピングをのせる前の下焼きした生地です。レシピで下焼きが指定されている場合は、具材をのせて、その手順どおりに焼き上げます。",
