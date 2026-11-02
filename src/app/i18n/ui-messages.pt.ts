@@ -1,5 +1,9 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "learn.visual.doughTearPinching": "Se abrir um pequeno furo, junta as bordas e aperta-as para o fechar. Depois cobre a massa e deixa-a repousar antes de tentar novamente.",
+  "learn.visual.gentleBubblePress": "Antes de esticar, pressiona suavemente as bolhas maiores da massa. Nos estilos com borda alta, evita pressionar a borda.",
+  "learn.visual.plainParbakedBase": "Uma base pré-cozida, ainda sem cobertura. Quando a receita prevê pré-cozedura, junta a cobertura e termina a cozedura segundo o método.",
+  "learn.visual.friedPieceInterior": "Abre uma peça de teste e verifica também a massa no interior: a cor exterior, por si só, não basta. Para as peças seguintes, segue a temperatura prevista na receita.",
   "learn.visual.yeastPrecisionWeighing": "Pesa o fermento no pequeno recipiente tarado, com uma balança adequada à dose pedida pela receita.",
   "learn.visual.sourdoughDoseWeighing": "Transfere a massa-mãe para o recipiente tarado, retira a espátula e lê o peso. O peso não mede a força da massa-mãe.",
   "learn.visual.stoneSteelSurfaces": "Pedra à esquerda, aço à direita: duas superfícies que sustentam a pizza e transferem calor para a base. O pré-aquecimento e o uso dependem da superfície e da receita.",

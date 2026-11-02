@@ -1,5 +1,9 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "learn.visual.doughTearPinching": "Si un petit trou se forme, rapproche les bords et pince-les pour le refermer. Couvre ensuite la pâte et laisse-la reposer avant de réessayer.",
+  "learn.visual.gentleBubblePress": "Avant d’étaler, presse délicatement les plus grosses bulles de la pâte. Pour les styles à bord gonflé, évite d’appuyer sur le bord.",
+  "learn.visual.plainParbakedBase": "Une base précuite, encore sans garniture. Lorsque la recette prévoit une précuisson, ajoute la garniture et termine la cuisson selon la méthode.",
+  "learn.visual.friedPieceInterior": "Ouvre une pièce d’essai et vérifie aussi la pâte à l’intérieur : la couleur extérieure ne suffit pas. Pour les pièces suivantes, respecte la température prévue par la recette.",
   "learn.visual.yeastPrecisionWeighing": "Pèse la levure dans le petit récipient taré, avec une balance adaptée à la dose demandée par la recette.",
   "learn.visual.sourdoughDoseWeighing": "Transfère le levain dans le récipient taré, retire la spatule et lis le poids. Le poids ne mesure pas la force du levain.",
   "learn.visual.stoneSteelSurfaces": "Pierre à gauche, acier à droite : deux surfaces qui soutiennent la pizza et transmettent la chaleur à sa base. Préchauffage et utilisation dépendent de la surface et de la recette.",

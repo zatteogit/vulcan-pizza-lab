@@ -1,5 +1,9 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "learn.visual.doughTearPinching": "If a small hole opens, bring the edges together and pinch them closed. Then cover the dough and let it rest before trying again.",
+  "learn.visual.gentleBubblePress": "Before stretching, gently press the largest bubbles in the dough. For styles with a raised rim, keep pressure away from the edge.",
+  "learn.visual.plainParbakedBase": "A parbaked base, still without toppings. When the recipe calls for parbaking, add the toppings and finish baking according to the method.",
+  "learn.visual.friedPieceInterior": "Open a test piece and check the dough inside too: the outside colour alone is not enough. For the next pieces, follow the temperature specified by the recipe.",
   "learn.visual.yeastPrecisionWeighing": "Weigh the yeast in the small tared dish, using a scale suitable for the dose required by the recipe.",
   "learn.visual.sourdoughDoseWeighing": "Transfer the starter into the tared container, remove the spatula and read the weight. Weight does not measure starter strength.",
   "learn.visual.stoneSteelSurfaces": "Stone on the left, steel on the right: two surfaces that support the pizza and transfer heat to its base. Preheating and use depend on the surface and the recipe.",

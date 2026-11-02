@@ -3,6 +3,10 @@
  * Le chiavi sono stabili: namespace + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "learn.visual.doughTearPinching": "Se si apre un piccolo buco, avvicina e pizzica i bordi per richiuderlo. Poi copri il panetto e lascialo riposare prima di riprovare.",
+  "learn.visual.gentleBubblePress": "Prima della stesura, premi delicatamente le bolle più grandi del panetto. Negli stili con cornicione, lascia il bordo libero dalla pressione.",
+  "learn.visual.plainParbakedBase": "Una base precotta, ancora senza condimento. Quando la ricetta prevede la precottura, aggiungi il topping e completa la cottura secondo il metodo.",
+  "learn.visual.friedPieceInterior": "Apri un pezzo di prova e controlla anche l’impasto all’interno: il colore esterno, da solo, non basta. Per i pezzi successivi, segui la temperatura prevista dalla ricetta.",
   "learn.visual.yeastPrecisionWeighing": "Pesa il lievito nel piccolo recipiente tarato, usando una bilancia adatta alla dose richiesta dalla ricetta.",
   "learn.visual.sourdoughDoseWeighing": "Trasferisci la madre nel recipiente tarato, togli la spatola e leggi il peso. Il peso non misura la forza del lievito madre.",
   "learn.visual.stoneSteelSurfaces": "Pietra a sinistra, acciaio a destra: due superfici che sostengono la pizza e trasferiscono calore al fondo. Preriscaldamento e uso dipendono dalla superficie e dalla ricetta.",

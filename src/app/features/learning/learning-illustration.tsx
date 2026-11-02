@@ -1,3 +1,7 @@
+import doughTearPinching from "../../../assets/learn/dough-tear-pinching.webp";
+import gentleBubblePress from "../../../assets/learn/gentle-bubble-press.webp";
+import plainParbakedBase from "../../../assets/learn/plain-parbaked-base.webp";
+import friedPieceInterior from "../../../assets/learn/fried-piece-interior.webp";
 import yeastPrecisionWeighing from "../../../assets/learn/yeast-precision-weighing.webp";
 import sourdoughDoseWeighing from "../../../assets/learn/sourdough-dose-weighing.webp";
 import stoneSteelSurfaces from "../../../assets/learn/stone-steel-surfaces.webp";
@@ -69,6 +73,11 @@ import { LearningDiagram, isLearningDiagramId, type LearningDiagramId } from "./
 import { uiMessage } from "../../i18n/ui-messages";
 
 const LEARNING_ARTWORK = {
+  "dough-tear-pinching": { src: doughTearPinching, caption: () => uiMessage("learn.visual.doughTearPinching"), cc: false },
+  "gentle-bubble-press": { src: gentleBubblePress, caption: () => uiMessage("learn.visual.gentleBubblePress"), cc: false },
+  "plain-parbaked-base": { src: plainParbakedBase, caption: () => uiMessage("learn.visual.plainParbakedBase"), cc: false },
+  "fried-piece-interior": { src: friedPieceInterior, caption: () => uiMessage("learn.visual.friedPieceInterior"), cc: false },
+
   "yeast-precision-weighing": { src: yeastPrecisionWeighing, caption: () => uiMessage("learn.visual.yeastPrecisionWeighing"), cc: false },
   "sourdough-dose-weighing": { src: sourdoughDoseWeighing, caption: () => uiMessage("learn.visual.sourdoughDoseWeighing"), cc: false },
   "stone-steel-surfaces": { src: stoneSteelSurfaces, caption: () => uiMessage("learn.visual.stoneSteelSurfaces"), cc: false },
@@ -171,14 +180,14 @@ export const GLOSSARY_VISUALS: Readonly<Partial<Record<string, LearningIllustrat
 
 /** These illustrate a gesture in the advice, never a visual diagnosis. */
 export const TROUBLESHOOTING_VISUALS: Readonly<Partial<Record<string, readonly LearningIllustrationId[]>>> = {
-  P01: ["folds"], P02: ["stretching", "hand-back-stretching"], P03: ["poke-test", "dough-volume-comparison"], P07: ["stretching", "covered-rest"],
+  P01: ["folds"], P02: ["dough-tear-pinching", "stretching", "hand-back-stretching"], P03: ["poke-test", "dough-volume-comparison"], P07: ["stretching", "covered-rest"],
   P16: ["stretching", "hand-back-stretching"], P19: ["stretching", "covered-rest"], P23: ["ball-shaping"],
   P04: ["dough-temperature", "yeast-freshness-check"], P05: ["covered-storage", "dough-volume-comparison"], P21: ["covered-storage", "fridge-shelf-temperature"],
-  P08: ["stretching"],
+  P08: ["gentle-bubble-press"],
   P11: ["home-oven"], P17: ["pizza-serving"],
-  P09: ["home-oven"], P10: ["stone-temperature"], P22: ["peel-prep"],
+  P09: ["home-oven", "plain-parbaked-base"], P10: ["stone-temperature"], P22: ["peel-prep"],
   FR02: ["frying-drain"], FR03: ["frying-seal"], P15: ["base-check", "stone-brushing"],
-  FR01: ["oil-temperature"], P18: ["mozzarella-drying", "sauce-dosing"], P14: ["pizza-turning"],
+  FR01: ["oil-temperature", "fried-piece-interior"], P18: ["plain-parbaked-base", "mozzarella-drying", "sauce-dosing"], P14: ["pizza-turning"],
 };
 
 export function LearningIllustration({ id, decorative = false }: {

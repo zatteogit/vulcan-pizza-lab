@@ -1,5 +1,9 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "learn.visual.doughTearPinching": "Wenn ein kleines Loch entsteht, führe die Ränder zusammen und drücke sie zu. Decke den Teig anschließend ab und lass ihn ruhen, bevor du es erneut versuchst.",
+  "learn.visual.gentleBubblePress": "Drücke vor dem Ausziehen die größten Blasen im Teig vorsichtig flach. Bei Stilen mit erhöhtem Rand bleibt dieser ohne Druck.",
+  "learn.visual.plainParbakedBase": "Ein vorgebackener Boden, noch ohne Belag. Wenn das Rezept Vorbacken vorsieht, belege den Boden und backe ihn nach der angegebenen Methode fertig.",
+  "learn.visual.friedPieceInterior": "Öffne ein Probestück und prüfe auch den Teig im Inneren: Die äußere Farbe allein reicht nicht aus. Halte bei den nächsten Stücken die im Rezept vorgesehene Temperatur ein.",
   "learn.visual.yeastPrecisionWeighing": "Wiege die Hefe im kleinen tarierten Gefäß ab, mit einer für die Rezeptmenge geeigneten Waage.",
   "learn.visual.sourdoughDoseWeighing": "Gib den Sauerteig in das tarierte Gefäß, nimm den Teigschaber heraus und lies das Gewicht ab. Das Gewicht misst nicht die Triebkraft des Sauerteigs.",
   "learn.visual.stoneSteelSurfaces": "Links Stein, rechts Stahl: zwei Oberflächen, die die Pizza tragen und Wärme an den Boden abgeben. Vorheizen und Verwendung hängen von der Oberfläche und dem Rezept ab.",

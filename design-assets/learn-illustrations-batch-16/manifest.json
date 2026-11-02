@@ -2,7 +2,7 @@
   "batch": 16,
   "date": "2026-11-02",
   "base_commit": "37c88d0c66ba029d467eb7d2cc37d1918ee52107",
-  "status": "Four review proposals, not integrated or published",
+  "status": "Approved 2026-11-02 and integrated into Problemi e soluzioni; release evidence recorded separately",
   "mode": "built-in Imagegen, one distinct call per asset",
   "export": "Pillow resize/format conversion only; generated alpha preserved",
   "edits": "edits.json",
@@ -147,5 +147,12 @@
       ],
       "recomposition_and_limits": "Ricomposizione della foto reale Cookist di pizza fritta tagliata, con struttura e farcia visibili. Nessun confronto crudo/cotto, spessore numerico o dichiarazione di sicurezza desunti dal colore. Coltello a riposo e tagliere sono contesto ordinario del controllo, non si inventa un taglio in corso."
     }
-  ]
+  ],
+  "placements": {
+    "P02": "dough-tear-pinching",
+    "P08": "gentle-bubble-press",
+    "P09": "plain-parbaked-base",
+    "P18": "plain-parbaked-base",
+    "FR01": "fried-piece-interior"
+  }
 }

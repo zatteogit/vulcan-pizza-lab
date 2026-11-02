@@ -1,6 +1,6 @@
 # Impara · Lotto 16
 
-Quattro illustrazioni nuove per gesti ancora poco illustrati in **Problemi e soluzioni**, preparate dal main `37c88d0c66ba029d467eb7d2cc37d1918ee52107`. Sono proposte locali, non integrate o pubblicate.
+Quattro illustrazioni nuove per gesti ancora poco illustrati in **Problemi e soluzioni**, preparate dal main `37c88d0c66ba029d467eb7d2cc37d1918ee52107`. Approvate da Matteo il 2026-11-02 e integrate in Problemi e soluzioni. Le prove del rilascio sono separate dalla galleria in `/Users/matteo/dev/Vulcan/output/learn-illustration-release-16-2026-11-02/`.
 
 | Tavola | Collocazione proposta | Che cosa chiarisce |
 | --- | --- | --- |
@@ -29,10 +29,16 @@ Generazione con il tool integrato **Imagegen**, una chiamata distinta per tavola
 
 ## Verifica
 
-Tutte le quattro immagini sono caricate a larghezza naturale 672 nella galleria a 1280px e 390px, su chiaro e scuro; didascalie presenti, nessun collegamento ai riferimenti e nessun overflow orizzontale. Prove in `verification.json` e `gallery-desktop-{light,dark}.png`, `gallery-mobile-{light,dark}.png` nella cartella output. Nessun codice prodotto o asset precedente modificato; nessun deploy effettuato per questo lotto.
+Tutte le quattro immagini sono caricate a larghezza naturale 672 nella galleria a 1280px e 390px, su chiaro e scuro; didascalie presenti, nessun collegamento ai riferimenti e nessun overflow orizzontale. Prove in `verification.json` e `gallery-desktop-{light,dark}.png`, `gallery-mobile-{light,dark}.png` nella cartella output. Questa verifica della galleria precede l’integrazione. Gli asset precedenti sono conservati.
 
 Per ricostruire:
 
 ```sh
 python3 design-assets/learn-illustrations-batch-16/build.py
 ```
+
+## Integrazione e verifiche locali
+
+Le quattro tavole sono inserite in P02, P08, P09, P18 e FR01, con didascalie nelle sette lingue. Le scene di stesura, forno, sgocciolatura e dosaggio della salsa restano disponibili nei rispettivi consigli; in P08 la pressione locale prende il posto della stesura generica, conservata negli altri punti. Nessuna modifica a ricette, formule o soglie.
+
+Typecheck, 136 file di test (1770 passati, 1 saltato), guard del repository, build e budget superati. JS massimo 569.5/570 KiB gzip e immagini 33.7/38 MB. I cinque inserimenti sono caricati a 1280px e 390px, con didascalie, nessun link d’ispirazione e nessun overflow. I WebP coincidono con gli hash approvati.

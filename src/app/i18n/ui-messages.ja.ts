@@ -1,5 +1,9 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "learn.visual.doughTearPinching": "小さな穴が開いたら、周囲の生地を寄せてつまみ、閉じます。その後、生地を覆って休ませてから、もう一度広げます。",
+  "learn.visual.gentleBubblePress": "広げる前に、生地の大きな気泡をやさしく押さえます。縁を膨らませるスタイルでは、縁を押さえないようにします。",
+  "learn.visual.plainParbakedBase": "トッピングをのせる前の下焼きした生地です。レシピで下焼きが指定されている場合は、具材をのせて、その手順どおりに焼き上げます。",
+  "learn.visual.friedPieceInterior": "試し揚げした一つを開き、中の生地も確認します。表面の色だけでは判断できません。次に揚げる分も、レシピで指定された油温に従います。",
   "learn.visual.yeastPrecisionWeighing": "レシピの分量を量れるはかりを使い、小さな容器を風袋引きしてからイーストを量ります。",
   "learn.visual.sourdoughDoseWeighing": "風袋引きした容器に発酵種を移し、へらを取り出してから重さを読みます。重さは発酵種の力を示すものではありません。",
   "learn.visual.stoneSteelSurfaces": "左は石、右は鋼板。どちらもピザを支え、底に熱を伝える焼成面です。予熱と使い方は、素材とレシピによって異なります。",
