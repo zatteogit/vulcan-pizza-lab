@@ -7,6 +7,7 @@ import {
   recommendStyles,
   suggestedTimeSlot,
   generateRecipe,
+  optimizeRecipe,
   type UserConstraints,
 } from "./pizza-engine";
 import { IT_LOCALE } from "../features/cms/locales/it";
@@ -310,5 +311,23 @@ describe("D-070: fasi esplicite solo con i tempi della fonte", () => {
     const r = generateRecipe(style, homeKitchen, { customFermentationHours: 9, customFermentationTempC: 22, usePreFerment: true });
     expect(r.declared_phases).toBeUndefined();
     expect(r.timeline.some((s) => s.temp_c !== undefined)).toBe(false);
+  });
+});
+
+/* D-070 (decisione di Matteo del 31/10/2026, «Regola generale: mai fuori
+ * stile»): il tetto d'idratazione per livello non porta mai la proposta sotto
+ * il minimo dello stile. Per chi comincia la proposta resta a quel minimo; la
+ * difficoltà la dice «Impasto esigente». Test completo (1.380 ricette) in
+ * use-cases/mai-fuori-stile.test.ts. */
+describe("D-070: il tetto per livello non esce dallo stile", () => {
+  it("ogni stile, ogni livello: l'ottimizzatore resta sopra il minimo dello stile", () => {
+    for (const skill_level of [1, 2, 3, 4] as const) for (const style of Object.values(STYLES_DB)) {
+      const r = optimizeRecipe(style, { ...homeKitchen, skill_level }).recipe;
+      const [a, b] = r.style.dough.hydration_pct_range;
+      expect(r.hydration_pct, `${style.id} · livello ${skill_level}`).toBeGreaterThanOrEqual(Math.min(a, b));
+    }
+  });
+  it("teglia romana per chi comincia: 75 %, non 68", () => {
+    expect(optimizeRecipe(STYLES_DB.teglia_romana, homeKitchen).recipe.hydration_pct).toBe(75);
   });
 });

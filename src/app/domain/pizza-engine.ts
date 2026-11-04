@@ -3211,14 +3211,19 @@ export function optimizeRecipe(
   // si sanno lavorare a mano; un impasto mescolato col cucchiaio e allargato
   // nella teglia unta non si lavora (isUnworkedPanDough), quindi resta
   // nell'intervallo dello stile.
+  // D-070 (decisione di Matteo del 31/10/2026, «mai fuori stile»): il tetto
+  // di livello non porta mai l'idratazione FINALE sotto il minimo dello stile
+  // (o della versione); per chi comincia la proposta resta a quel minimo e la
+  // difficoltà la dice l'avviso «Impasto esigente».
+  const styleFloorBase = hMin - hydrationDelta;
   const skillCeilBase = isUnworkedPanDough(style)
     ? Infinity
-    : _hydrationCeilingForSkill(constraints.skill_level) - hydrationDelta;
+    : Math.max(_hydrationCeilingForSkill(constraints.skill_level) - hydrationDelta, styleFloorBase);
   const skillCeilingBinding = skillCeilBase < hSearchMax;
   const hCeil = Math.min(hSearchMax, skillCeilBase);
   const hLo = Math.min(hSearchMin, hCeil);
   const hydrCands = _uniqRounded(
-    _uniqRounded([hLo, (hLo + hCeil) / 2, hCeil], 0).map((h) => Math.min(h, hCeil)),
+    _uniqRounded([hLo, (hLo + hCeil) / 2, hCeil], 0).map((h) => Math.min(Math.max(h, styleFloorBase), hCeil)),
     1,
   );
 

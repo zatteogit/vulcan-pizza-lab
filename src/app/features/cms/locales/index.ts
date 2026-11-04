@@ -147,9 +147,12 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *       sua fonte (topping.sauceSeasoning), caratteristica della teglia in
  *       giornata, passo della margherita senza appretto in teglia
  *       (toppingI18n, description_no_pan_proof).
+ *  60 → «mai fuori stile» (D-070, decisione di Matteo del 31/10): il tetto
+ *       d'acqua per livello non scende sotto il minimo dello stile
+ *       (profile.skillEffectRule).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 59;
+export const LOCALE_BUNDLE_REV = 60;
 
 /* 52 resta: l'italiano diventa un bundle lazy (30/10/2026) ma la forma dei
  * bundle e degli snapshot salvati non cambia; l'italiano non ha snapshot. */

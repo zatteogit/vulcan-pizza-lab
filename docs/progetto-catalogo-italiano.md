@@ -1179,9 +1179,10 @@ mescolato nella teglia unta, resta senza segnali (97).
 Invariata: parte dal riferimento (Benedetta) entro le tolleranze; per tutti i
 livelli resta nello stile (77 %, W 280, 6 h a 22 °C col forno di casa; test).
 «Ottimizza per me» partendo da Adriano segue la regola generale: per il
-principiante il tetto di livello porta l'acqua al 68 % (fuori dai 75–82 %
-dello stile), 12 h senza preimpasto. **Non cambiato** (punto 4 qui sotto): la
-regola generale sposterebbe proposte di stili esistenti.
+principiante il tetto di livello portava l'acqua al 68 % (fuori dai 75–82 %
+dello stile), 12 h senza preimpasto. Dal 04/11, con la decisione di Matteo
+del 31/10 (punto 4 qui sotto), l'acqua resta al 75 %, il minimo dello stile;
+ancora 12 h senza preimpasto.
 
 #### MCP e voce
 
@@ -1235,8 +1236,18 @@ Margine per la B4: 7,6 kB di codice e 3,7 kB per utente.
 3. **Lievito della fonte legato al pre-fermento**: tolto, aggiunto o cambiato
    (tipo o quota) torna la dose del modello, come per ore e temperatura (test
    in `teglia-in-giornata-adriano.test.ts` e guardia D-070).
-4. **«Ottimizza per me» sempre dentro lo stile: non applicato, da decidere.**
-   La regola generale (il tetto d'idratazione per livello non scende sotto il
+4. **«Ottimizza per me» sempre dentro lo stile: deciso da Matteo il 31/10,
+   «Regola generale: mai fuori stile», applicato il 04/11** (ramo
+   `mai-fuori-stile`; D-070, `docs/motore-correzioni-2026-10-22.md` con la
+   tabella prima/dopo). Il tetto per livello non porta mai sotto il minimo
+   dello stile o della versione; per chi comincia la proposta resta a quel
+   minimo e «Impasto esigente» dice la difficoltà; con l'acqua già al minimo
+   la card dice «Acqua già al minimo dello stile» invece di «Abbassa
+   l'idratazione». Applicata così cambiano 122 ricette su 1.380 (110 di
+   livello 1, 12 di livello 2), alla finale esatta (teglia romana 75 %, non
+   74,9): le 8 in più rispetto alla misura qui sotto restavano 0,1–0,3 punti
+   sotto il minimo per l'arrotondamento. Misura del 31/10, prima della
+   decisione: la regola generale (il tetto d'idratazione per livello non scende sotto il
    minimo dello stile) cambia proposte di stili esistenti. Misura su 30 stili
    × 4 livelli × 3 cucine (casa 24 h, casa 72 h, legna), proposta su misura e
    «Ottimizza per me» dal riferimento, da ogni versione e da ogni versione
@@ -1250,7 +1261,7 @@ Margine per la B4: 7,6 kB di codice e 3,7 kB per utente.
    75 % (ma resta senza preimpasto, 12 h). Le alternative: (a) la regola
    generale con questi cambi dichiarati; (b) solo per le versioni d'autore
    (tipo `autore`), che però non è una regola generale; (c) lasciare il tetto
-   com'è e dire nella proposta che esce dallo stile.
+   com'è e dire nella proposta che esce dallo stile. Scelta: (a).
 5. **Testi veri per ogni versione**: caratteristica «Teglia di casa, unta o
    con la semola» (7 lingue); i due suggerimenti W↔idratazione di Crea
    («W consigliato ≥ …», «idratazione massima ~…») non compaiono se una

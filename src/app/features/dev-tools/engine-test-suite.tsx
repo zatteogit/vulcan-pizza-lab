@@ -1273,6 +1273,8 @@ function runOptimizer(): TestResult[] {
   }
 
   // T13-04: rispetta il tetto d'idratazione per principiante (skill 1 → ≤68%).
+  // D-070 («mai fuori stile», Matteo 31/10/2026): il tetto non scende sotto il
+  // minimo dello stile; la proposta resta fra quel minimo e max(68, minimo).
   // B2 (seguito): l'impasto mescolato e allargato in teglia non si lavora a
   // mano: niente tetto, ma resta nell'intervallo dello stile.
   {
@@ -1286,10 +1288,13 @@ function runOptimizer(): TestResult[] {
           if (o.params.hydration_base < hMin || o.params.hydration_base > hMax) errs.push(`${s.id}: H=${o.params.hydration_base}% fuori ${hMin}–${hMax}%`);
           continue;
         }
-        if (o.recipe.hydration_pct > 68) errs.push(`${s.id}: H=${o.recipe.hydration_pct}% > 68%`);
+        const styleMin = Math.min(...o.recipe.style.dough.hydration_pct_range);
+        const ceiling = Math.max(68, styleMin);
+        if (o.recipe.hydration_pct > ceiling) errs.push(`${s.id}: H=${o.recipe.hydration_pct}% > ${ceiling}%`);
+        if (o.recipe.hydration_pct < styleMin) errs.push(`${s.id}: H=${o.recipe.hydration_pct}% < minimo ${styleMin}%`);
       }
     });
-    results.push({ id: "T13-04", name: "Tetto idratazione principiante (≤68%)", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : "Principiante mai oltre 68%", ms });
+    results.push({ id: "T13-04", name: "Tetto idratazione principiante (≤68%, mai sotto lo stile)", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : "Principiante mai oltre 68% né sotto il minimo dello stile", ms });
   }
 
   // T13-05: alternative ordinate desc, distinte dalla scelta

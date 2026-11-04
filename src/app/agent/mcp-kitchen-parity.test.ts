@@ -39,6 +39,19 @@ describe("MCP kitchen → browser recipe parity", () => {
     }
   });
 
+  /* D-070 («mai fuori stile», decisione di Matteo del 31/10/2026): per chi
+     comincia la proposta adapted è quella di Crea e resta nello stile. */
+  it("beginner adapted recipes match Create and never go below the style minimum", () => {
+    const beginner={...kitchen,oven_type:"home" as const,oven_max_temp_c:250,skill_level:1 as const,available_hours:24};
+    for (const style of Object.values(STYLES_DB)) {
+      const data=call("generate_recipe",{...beginner,style_id:style.id,recipe_mode:"adapted"}).structuredContent;
+      sameRecipe(data,tailoredRecipeEntry(style,beginner,weights).recipe,`${style.id}/beginner`);
+      const [a,b]=data.parameter_ranges.hydration_pct as [number,number];
+      expect(data.hydration_pct,style.id).toBeGreaterThanOrEqual(Math.min(a,b));
+    }
+    expect(call("generate_recipe",{...beginner,style_id:"teglia_romana",recipe_mode:"adapted"}).structuredContent.hydration_pct).toBe(75);
+  });
+
   it("every preset and signature retains the browser defaults and score", () => {
     for (const style of Object.values(STYLES_DB)) {
       for (const v of getVersions(style.id)) {

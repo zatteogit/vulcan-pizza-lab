@@ -757,3 +757,233 @@ senso: la parità MCP confronta anche `temp_c` dei passi e, per «Ottimizza per
 me» da una versione d'autore, usa lo stile col condimento della versione (come
 fa Crea con `styleWithSelectedTopping`); `authorVersionRecipe` passa la
 versione a `presetOvenTemp`.
+
+## D-070 · «Mai fuori stile»: il tetto per livello non scende sotto il minimo dello stile (04/11/2026)
+
+**Decisione di Matteo (31/10/2026): «Regola generale: mai fuori stile».** Il
+tetto d'idratazione per livello non può mai portare fuori dagli intervalli
+dello stile. Per chi comincia la proposta resta al minimo dello stile (teglia
+romana 75 %, pala 75 %, pinsa 72 %); la difficoltà la dice l'avviso già
+esistente «Impasto esigente». Era il punto 4, aperto, di D-070
+(`docs/progetto-catalogo-italiano.md` §9.12).
+
+**Dove stava il tetto.** Solo in `optimizeRecipe` (`domain/pizza-engine.ts`),
+cioè nella proposta su misura di Crea (`tailoredRecipeEntry`), in «Ottimizza
+per me» (`optimizeSelectedRecipe`), nella tacca «ottimale» degli slider e
+nell'MCP `recipe_mode: "adapted"` (e quindi nella voce). `generateRecipe` e i
+preset (riferimento, versioni, versioni d'autore) non lo applicano. Prima:
+`hCeil = min(hMax, tetto − compensazione)` e `hLo = min(hMin, hCeil)`: con
+tetto 68 % e uno stile 75–85 % la ricerca scendeva a 68 − compensazione e la
+proposta usciva dallo stile (teglia romana 67,9 % col forno di casa).
+
+**Come è vincolato.** Il tetto, che vale sull'idratazione **finale**, non
+scende sotto il minimo dell'intervallo effettivo (stile, impasto e versione):
+`skillCeilBase = max(tetto − compensazione, hMin − compensazione)`; i candidati
+arrotondati all'intero non scendono sotto `hMin − compensazione`, così la
+finale è esattamente il minimo (75, non 74,9). Tutto il resto è invariato:
+spazio di ricerca, compensazione del forno, pre-fermento, ore, W, regola
+`isUnworkedPanDough`, livelli 3 e 4 (nessuna ricetta cambia).
+
+**Misura.** 30 stili × 4 livelli × 3 cucine (casa 250 °C 24 h, casa 72 h,
+legna 450 °C 72 h), proposta su misura e «Ottimizza per me» dal riferimento,
+da ogni versione e da ogni versione d'autore: 1.380 ricette, pesi di Crea
+(`DEFAULT_UI_SCORE_WEIGHTS`). **Cambiano 122 ricette**, tutte solo perché
+l'idratazione sale al minimo dello stile o della versione: 110 per chi
+comincia, 12 per il livello 2 (versioni con un minimo sopra il 78 %:
+`teglia_alta`, `spaccata_bonci`, l'impasto di Bonci); 21 proposte su misura e
+101 «Ottimizza per me». Dopo, nessuna delle 1.380 è sotto il minimo.
+
+| Stile | Ricette | Su misura, livello 1, casa 24 h |
+|---|---|---|
+| Teglia romana | 34 | 67,9 → 75 % (82 → 87/100) |
+| Pizza baciata | 19 | 67,7 → 75 % (impasto 75–85 %; resta bloccata dal forno) |
+| Pala romana | 18 | 68 → 75 % (resta bloccata dal forno di casa) |
+| Pinsa romana | 15 | 68 → 72 % (78 → 82/100) |
+| Pizza spaccata | 15 | 67,7 → 75 % (impasto 75–85 %; resta bloccata dal forno) |
+| Detroit | 9 | 68 → 70 % (86/100) |
+| Focaccia barese | 6 | 68 → 70 % (89 → 92/100) |
+| Napoletana a canotto | 3 | solo da `canotto_estremo`: 68 → 72 % |
+| Teglia in giornata | 3 | solo da Adriano: 68 → 75 % (ancora senza preimpasto, 12 h) |
+
+La misura del 31/10 (§9.12) contava 114 ricette: la regola provata allora
+fermava la base al minimo e l'arrotondamento lasciava la finale a 74,9 o
+74,7 %. Le 8 in più sono ricette che restavano 0,1–0,3 punti sotto il minimo
+(`teglia_sottile` 67,9 → 68 %, l'impasto di Bonci 77,7–77,9 → 78 % al
+livello 2): con «mai fuori stile» salgono anche loro.
+
+**Altri numeri cambiati** (oltre all'idratazione; W, ore, temperatura,
+pre-fermento, forno, cottura ed esito invariati in tutte le 122):
+
+- farina e acqua seguono l'idratazione (121 e 119 ricette; per la teglia
+  romana da casa 1.387 → 1.332 g di farina, 942 → 999 g d'acqua);
+- lievito: 53 ricette, −0,1 g (49) o −0,2 g (4);
+- punteggio: 75 ricette, 72 salgono (l'acqua dello stile vale più autenticità
+  di quanto costi in facilità) e 3 scendono: «Ottimizza per me» dalla versione
+  d'autore di Ken Forkish (teglia romana, livello 1) 84 → 81 in casa e 90 → 87
+  a legna;
+- avviso di abilità: 18 ricette passano da «Idratazione media-alta per
+  principiante» a «Idratazione >75 % sconsigliata per principianti» (versioni
+  al 78–82 %); in tutte le 110 di livello 1 resta «Impasto esigente».
+
+`recipes.golden.json` e `preset-numbers.regression.json` sono identici: usano
+`generateRecipe` e i preset, che il tetto non tocca. Nuovo test
+`use-cases/mai-fuori-stile.test.ts` (le 1.380 ricette sopra il minimo e,
+sopra il massimo, solo per la compensazione del forno dichiarata; teglia
+romana, pala e pinsa al minimo con «Impasto esigente»); guardia D-070 in
+`decision-guards.test.ts`; parità MCP per chi comincia
+(`mcp-kitchen-parity.test.ts`); aggiornati i test che fissavano il vecchio
+comportamento (`setting-effects`, proprietà ENG-6, T13-04 della suite di
+dev-tools).
+
+**Testi.** La regola del Profilo (`profile.skillEffectRule`, 7 lingue) diceva
+«Se lo stile chiede più acqua del tetto, la proposta scende sotto il suo
+intervallo tipico»; ora «…la proposta resta al minimo dello stile»
+(`LOCALE_BUNDLE_REV` 60). Nella card della compatibilità, con l'avviso di
+abilità e l'acqua già al minimo dello stile (a meno di un punto,
+`hydrationAtStyleMinimum` in `verdict-summary.ts`), al posto del bottone
+«Abbassa l'idratazione» c'è la nota «Acqua già al minimo dello stile.»
+(`verdict.hydrationAtStyleMin`, 7 lingue): abbassarla porterebbe fuori stile.
+Il bottone resta quando c'è margine (per esempio la scheda di riferimento
+all'80 %, o la versione «Sottile», 68–78 %, al 75 %).
+
+**Nel browser** (`vite preview`, it, 390 px, livello 1, forno di casa
+250 °C): Crea, Teglia romana su misura 80 → 75 %, 87/100, «Impasto esigente»,
+«Acqua già al minimo dello stile.»; la lista di Crea mostra teglia romana 87,
+pinsa 82, Detroit 86 e focaccia barese 92 con «Impasto esigente». La pala col
+forno di casa resta «Per ora non si può fare» (serve ≥ 330 °C), quindi senza
+avvisi di abilità; con un forno elettrico da 450 °C: su misura 78 → 75 %,
+90/100, «Impasto esigente» e la nota. La scheda (`/recipe/teglia_romana`)
+per chi comincia apre la versione «Sottile» (75 %, intervallo 68–78 %) col
+bottone «Abbassa l'idratazione», corretto perché resta nella versione.
+
+**Budget** (gzip, `npm run build && npm run check:budget`, byte esatti):
+codice senza lingue 467.009 → 467.096 B (+87), lingua giapponese 116.078 →
+116.111 B (+33); per utente 583.548 → 583.668 B su 583.680 (570 kB): passa
+con 12 byte di margine.
+
+### Tutte le ricette cambiate
+
+| Stile | Livello | Cucina | Ricetta | Intervallo | Idratazione | Altri numeri |
+|---|---|---|---|---|---|---|
+| detroit | 1 | casa 24 h | su misura | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| detroit | 1 | casa 24 h | «Ottimizza» da detroit_classica | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| detroit | 1 | casa 24 h | «Ottimizza» da riferimento | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| detroit | 1 | casa 72 h | su misura | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| detroit | 1 | casa 72 h | «Ottimizza» da detroit_classica | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| detroit | 1 | casa 72 h | «Ottimizza» da riferimento | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| detroit | 1 | legna | su misura | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| detroit | 1 | legna | «Ottimizza» da detroit_classica | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| detroit | 1 | legna | «Ottimizza» da riferimento | 70–75 % | 68 → 70 % | farina 1386 → 1370 g, acqua 942 → 959 g |
+| focaccia_barese | 1 | casa 24 h | su misura | 70–80 % | 68 → 70 % | farina 1148 → 1135 g, acqua 781 → 795 g; punteggio 89 → 92 |
+| focaccia_barese | 1 | casa 24 h | «Ottimizza» da riferimento | 70–80 % | 68 → 70 % | farina 1148 → 1135 g, acqua 781 → 795 g; punteggio 89 → 92 |
+| focaccia_barese | 1 | casa 72 h | su misura | 70–80 % | 68 → 70 % | farina 1148 → 1135 g, acqua 781 → 795 g; punteggio 89 → 92 |
+| focaccia_barese | 1 | casa 72 h | «Ottimizza» da riferimento | 70–80 % | 68 → 70 % | farina 1148 → 1135 g, acqua 781 → 795 g; punteggio 89 → 92 |
+| focaccia_barese | 1 | legna | su misura | 70–80 % | 68 → 70 % | farina 1148 → 1135 g, acqua 781 → 795 g; punteggio 89 → 92 |
+| focaccia_barese | 1 | legna | «Ottimizza» da riferimento | 70–80 % | 68 → 70 % | farina 1148 → 1135 g, acqua 781 → 795 g; punteggio 89 → 92 |
+| napoletana_canotto | 1 | casa 24 h | «Ottimizza» da canotto_estremo | 72–80 % | 68 → 72 % | farina 633 → 618 g, acqua 430 → 445 g; punteggio 32 → 34 |
+| napoletana_canotto | 1 | casa 72 h | «Ottimizza» da canotto_estremo | 72–80 % | 68 → 72 % | farina 633 → 619 g, acqua 430 → 446 g; punteggio 32 → 34 |
+| napoletana_canotto | 1 | legna | «Ottimizza» da canotto_estremo | 72–80 % | 68 → 72 % | farina 703 → 687 g, acqua 478 → 495 g; punteggio 86 → 90 |
+| pala_romana | 1 | casa 24 h | su misura | 75–82 % | 68 → 75 % | farina 739 → 710 g, acqua 503 → 533 g |
+| pala_romana | 1 | casa 24 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 68 → 78 % | farina 737 → 697 g, acqua 501 → 544 g; avviso media → alta |
+| pala_romana | 1 | casa 24 h | «Ottimizza» da bosco_aria_di_pane | 75–82 % | 68 → 75 % | farina 739 → 710 g, acqua 503 → 533 g |
+| pala_romana | 1 | casa 24 h | «Ottimizza» da pala_bilanciata | 70–76 % | 68 → 70 % | farina 739 → 731 g, acqua 503 → 512 g |
+| pala_romana | 1 | casa 24 h | «Ottimizza» da pala_pro | 75–82 % | 68 → 75 % | farina 739 → 710 g, acqua 503 → 533 g |
+| pala_romana | 1 | casa 24 h | «Ottimizza» da riferimento | 75–82 % | 68 → 75 % | farina 739 → 710 g, acqua 503 → 533 g |
+| pala_romana | 1 | casa 72 h | su misura | 75–82 % | 68 → 75 % | farina 739 → 711 g, acqua 503 → 533 g; lievito 0,8 g fresco → 0,7 g fresco |
+| pala_romana | 1 | casa 72 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 68 → 78 % | farina 737 → 697 g, acqua 501 → 544 g; avviso media → alta |
+| pala_romana | 1 | casa 72 h | «Ottimizza» da bosco_aria_di_pane | 75–82 % | 68 → 75 % | farina 739 → 711 g, acqua 503 → 533 g; lievito 0,8 g fresco → 0,7 g fresco |
+| pala_romana | 1 | casa 72 h | «Ottimizza» da pala_bilanciata | 70–76 % | 68 → 70 % | farina 739 → 731 g, acqua 503 → 512 g |
+| pala_romana | 1 | casa 72 h | «Ottimizza» da pala_pro | 75–82 % | 68 → 75 % | farina 739 → 711 g, acqua 503 → 533 g; lievito 0,8 g fresco → 0,7 g fresco |
+| pala_romana | 1 | casa 72 h | «Ottimizza» da riferimento | 75–82 % | 68 → 75 % | farina 739 → 711 g, acqua 503 → 533 g; lievito 0,8 g fresco → 0,7 g fresco |
+| pala_romana | 1 | legna | su misura | 75–82 % | 68 → 75 % | farina 739 → 711 g, acqua 503 → 533 g; lievito 0,8 g fresco → 0,7 g fresco; punteggio 85 → 90 |
+| pala_romana | 1 | legna | «Ottimizza» da bonci_pizzarium | 78–90 % | 68 → 78 % | farina 737 → 697 g, acqua 501 → 544 g; lievito 0,8 g fresco → 0,7 g fresco; punteggio 89 → 91; avviso media → alta |
+| pala_romana | 1 | legna | «Ottimizza» da bosco_aria_di_pane | 75–82 % | 68 → 75 % | farina 739 → 711 g, acqua 503 → 533 g; lievito 0,8 g fresco → 0,7 g fresco; punteggio 85 → 87 |
+| pala_romana | 1 | legna | «Ottimizza» da pala_bilanciata | 70–76 % | 68 → 70 % | farina 739 → 731 g, acqua 503 → 512 g |
+| pala_romana | 1 | legna | «Ottimizza» da pala_pro | 75–82 % | 68 → 75 % | farina 739 → 711 g, acqua 503 → 533 g; lievito 0,8 g fresco → 0,7 g fresco; punteggio 85 → 90 |
+| pala_romana | 1 | legna | «Ottimizza» da riferimento | 75–82 % | 68 → 75 % | farina 739 → 711 g, acqua 503 → 533 g; lievito 0,8 g fresco → 0,7 g fresco; punteggio 85 → 90 |
+| pinsa_romana | 1 | casa 24 h | su misura | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 78 → 82 |
+| pinsa_romana | 1 | casa 24 h | «Ottimizza» da bosco_aria_di_pane | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 74 → 75 |
+| pinsa_romana | 1 | casa 24 h | «Ottimizza» da pinsa_moderna | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 78 → 82 |
+| pinsa_romana | 1 | casa 24 h | «Ottimizza» da pinsa_tradizionale | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 78 → 82 |
+| pinsa_romana | 1 | casa 24 h | «Ottimizza» da riferimento | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 78 → 82 |
+| pinsa_romana | 1 | casa 72 h | su misura | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 78 → 82 |
+| pinsa_romana | 1 | casa 72 h | «Ottimizza» da bosco_aria_di_pane | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 76 → 77 |
+| pinsa_romana | 1 | casa 72 h | «Ottimizza» da pinsa_moderna | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 78 → 82 |
+| pinsa_romana | 1 | casa 72 h | «Ottimizza» da pinsa_tradizionale | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 78 → 82 |
+| pinsa_romana | 1 | casa 72 h | «Ottimizza» da riferimento | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 78 → 82 |
+| pinsa_romana | 1 | legna | su misura | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 88 → 92 |
+| pinsa_romana | 1 | legna | «Ottimizza» da bosco_aria_di_pane | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 86 → 88 |
+| pinsa_romana | 1 | legna | «Ottimizza» da pinsa_moderna | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 88 → 92 |
+| pinsa_romana | 1 | legna | «Ottimizza» da pinsa_tradizionale | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 88 → 92 |
+| pinsa_romana | 1 | legna | «Ottimizza» da riferimento | 72–80 % | 68 → 72 % | farina 561 → 548 g, acqua 381 → 395 g; punteggio 88 → 92 |
+| pizza_baciata | 1 | casa 24 h | su misura | 75–85 % | 67,7 → 75 % | farina 1851 → 1776 g, acqua 1253 → 1332 g; lievito 3 g fresco → 2,9 g fresco |
+| pizza_baciata | 1 | casa 24 h | «Ottimizza» da baciata_bonci | 78–90 % | 67,7 → 78 % | farina 1846 → 1742 g, acqua 1250 → 1359 g; lievito 3 g fresco → 2,8 g fresco; avviso media → alta |
+| pizza_baciata | 1 | casa 24 h | «Ottimizza» da baciata_tradizionale | 75–85 % | 67,7 → 75 % | farina 1851 → 1776 g, acqua 1253 → 1332 g; lievito 3 g fresco → 2,9 g fresco |
+| pizza_baciata | 1 | casa 24 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 67,7 → 78 % | farina 1846 → 1742 g, acqua 1250 → 1359 g; lievito 3 g fresco → 2,8 g fresco; avviso media → alta |
+| pizza_baciata | 1 | casa 24 h | «Ottimizza» da riferimento | 75–85 % | 67,7 → 75 % | farina 1851 → 1776 g, acqua 1253 → 1332 g; lievito 3 g fresco → 2,9 g fresco |
+| pizza_baciata | 1 | casa 72 h | su misura | 75–85 % | 67,7 → 75 % | farina 1852 → 1777 g, acqua 1254 → 1333 g; lievito 2,3 g fresco → 2,2 g fresco |
+| pizza_baciata | 1 | casa 72 h | «Ottimizza» da baciata_bonci | 78–90 % | 67,7 → 78 % | farina 1847 → 1743 g, acqua 1250 → 1360 g; avviso media → alta |
+| pizza_baciata | 1 | casa 72 h | «Ottimizza» da baciata_tradizionale | 75–85 % | 67,7 → 75 % | farina 1852 → 1777 g, acqua 1254 → 1333 g; lievito 2,3 g fresco → 2,2 g fresco |
+| pizza_baciata | 1 | casa 72 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 67,7 → 78 % | farina 1847 → 1743 g, acqua 1250 → 1360 g; avviso media → alta |
+| pizza_baciata | 1 | casa 72 h | «Ottimizza» da riferimento | 75–85 % | 67,7 → 75 % | farina 1852 → 1777 g, acqua 1254 → 1333 g; lievito 2,3 g fresco → 2,2 g fresco |
+| pizza_baciata | 1 | legna | su misura | 75–85 % | 68 → 75 % | farina 1848 → 1777 g, acqua 1257 → 1333 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 89 → 94 |
+| pizza_baciata | 1 | legna | «Ottimizza» da baciata_bonci | 78–90 % | 68 → 78 % | farina 1844 → 1743 g, acqua 1254 → 1360 g; punteggio 89 → 90; avviso media → alta |
+| pizza_baciata | 1 | legna | «Ottimizza» da baciata_tradizionale | 75–85 % | 68 → 75 % | farina 1848 → 1777 g, acqua 1257 → 1333 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 89 → 94 |
+| pizza_baciata | 1 | legna | «Ottimizza» da bonci_pizzarium | 78–90 % | 68 → 78 % | farina 1843 → 1743 g, acqua 1253 → 1360 g; lievito 1,9 g fresco → 1,8 g fresco; punteggio 89 → 91; avviso media → alta |
+| pizza_baciata | 1 | legna | «Ottimizza» da riferimento | 75–85 % | 68 → 75 % | farina 1848 → 1777 g, acqua 1257 → 1333 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 89 → 94 |
+| pizza_baciata | 2 | casa 24 h | «Ottimizza» da baciata_bonci | 78–90 % | 77,7 → 78 % | farina 1745 → 1742 g, acqua 1356 → 1359 g |
+| pizza_baciata | 2 | casa 24 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 77,7 → 78 % | farina 1745 → 1742 g, acqua 1356 → 1359 g |
+| pizza_baciata | 2 | casa 72 h | «Ottimizza» da baciata_bonci | 78–90 % | 77,7 → 78 % | farina 1746 → 1743 g, acqua 1357 → 1360 g |
+| pizza_baciata | 2 | casa 72 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 77,7 → 78 % | farina 1746 → 1743 g, acqua 1357 → 1360 g |
+| pizza_spaccata | 1 | casa 24 h | su misura | 75–85 % | 67,7 → 75 % | farina 1620 → 1554 g, acqua 1097 → 1166 g; lievito 2,6 g fresco → 2,5 g fresco |
+| pizza_spaccata | 1 | casa 24 h | «Ottimizza» da riferimento | 75–85 % | 67,7 → 75 % | farina 1620 → 1554 g, acqua 1097 → 1166 g; lievito 2,6 g fresco → 2,5 g fresco |
+| pizza_spaccata | 1 | casa 24 h | «Ottimizza» da spaccata_bonci | 80–88 % | 67,7 → 80 % | farina 1615 → 1508 g, acqua 1093 → 1206 g; lievito 2,6 g fresco → 2,5 g fresco; avviso media → alta |
+| pizza_spaccata | 1 | casa 24 h | «Ottimizza» da spaccata_tradizionale | 75–85 % | 67,7 → 75 % | farina 1620 → 1554 g, acqua 1097 → 1166 g; lievito 2,6 g fresco → 2,5 g fresco |
+| pizza_spaccata | 1 | casa 72 h | su misura | 75–85 % | 67,7 → 75 % | farina 1620 → 1554 g, acqua 1097 → 1166 g; lievito 2 g fresco → 1,9 g fresco |
+| pizza_spaccata | 1 | casa 72 h | «Ottimizza» da riferimento | 75–85 % | 67,7 → 75 % | farina 1620 → 1554 g, acqua 1097 → 1166 g; lievito 2 g fresco → 1,9 g fresco |
+| pizza_spaccata | 1 | casa 72 h | «Ottimizza» da spaccata_bonci | 80–88 % | 67,7 → 80 % | farina 1616 → 1509 g, acqua 1094 → 1207 g; lievito 1,3 g fresco → 1,2 g fresco; avviso media → alta |
+| pizza_spaccata | 1 | casa 72 h | «Ottimizza» da spaccata_tradizionale | 75–85 % | 67,7 → 75 % | farina 1620 → 1554 g, acqua 1097 → 1166 g; lievito 2 g fresco → 1,9 g fresco |
+| pizza_spaccata | 1 | legna | su misura | 75–85 % | 68 → 75 % | farina 1617 → 1554 g, acqua 1100 → 1166 g; lievito 2 g fresco → 1,9 g fresco; punteggio 89 → 94 |
+| pizza_spaccata | 1 | legna | «Ottimizza» da riferimento | 75–85 % | 68 → 75 % | farina 1617 → 1554 g, acqua 1100 → 1166 g; lievito 2 g fresco → 1,9 g fresco; punteggio 89 → 94 |
+| pizza_spaccata | 1 | legna | «Ottimizza» da spaccata_bonci | 80–88 % | 68 → 80 % | farina 1613 → 1509 g, acqua 1097 → 1207 g; lievito 1,3 g fresco → 1,2 g fresco; punteggio 89 → 92; avviso media → alta |
+| pizza_spaccata | 1 | legna | «Ottimizza» da spaccata_tradizionale | 75–85 % | 68 → 75 % | farina 1617 → 1554 g, acqua 1100 → 1166 g; lievito 2 g fresco → 1,9 g fresco; punteggio 89 → 94 |
+| pizza_spaccata | 2 | casa 24 h | «Ottimizza» da spaccata_bonci | 80–88 % | 77,7 → 80 % | farina 1527 → 1508 g, acqua 1186 → 1206 g |
+| pizza_spaccata | 2 | casa 72 h | «Ottimizza» da spaccata_bonci | 80–88 % | 77,7 → 80 % | farina 1528 → 1509 g, acqua 1187 → 1207 g |
+| pizza_spaccata | 2 | legna | «Ottimizza» da spaccata_bonci | 80–88 % | 78 → 80 % | farina 1525 → 1509 g, acqua 1190 → 1207 g; punteggio 95 → 98 |
+| teglia_in_giornata | 1 | casa 24 h | «Ottimizza» da adriano_continisio | 75–82 % | 68 → 75 % | farina 1284 → 1234 g, acqua 873 → 926 g; lievito 1,6 g fresco → 1,5 g fresco; punteggio 86 → 88 |
+| teglia_in_giornata | 1 | casa 72 h | «Ottimizza» da adriano_continisio | 75–82 % | 68 → 75 % | farina 1284 → 1234 g, acqua 873 → 926 g; lievito 1,6 g fresco → 1,5 g fresco; punteggio 86 → 88 |
+| teglia_in_giornata | 1 | legna | «Ottimizza» da adriano_continisio | 75–82 % | 68 → 75 % | farina 1284 → 1234 g, acqua 873 → 926 g; lievito 1,6 g fresco → 1,5 g fresco; punteggio 86 → 88 |
+| teglia_romana | 1 | casa 24 h | su misura | 75–85 % | 67,9 → 75 % | farina 1387 → 1332 g, acqua 942 → 999 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 82 → 87 |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da apiter_teglia | 75–85 % | 67,9 → 75 % | farina 1387 → 1332 g, acqua 942 → 999 g; lievito 2,6 g fresco → 2,5 g fresco; punteggio 81 → 83 |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 67,9 → 78 % | farina 1383 → 1307 g, acqua 939 → 1019 g; lievito 2,3 g fresco → 2,1 g fresco; punteggio 80 → 82; avviso media → alta |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da bosco_aria_di_pane | 75–85 % | 67,9 → 75 % | farina 1387 → 1332 g, acqua 942 → 999 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 80 → 82 |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da forkish_portland | 75–85 % | 67,9 → 75 % | farina 1387 → 1332 g, acqua 942 → 999 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 84 → 81 |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da riferimento | 75–85 % | 67,9 → 75 % | farina 1387 → 1332 g, acqua 942 → 999 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 82 → 87 |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da teglia_alta | 82–92 % | 67,9 → 82 % | farina 1387 → 1282 g, acqua 942 → 1051 g; lievito 2,3 g fresco → 2,1 g fresco; punteggio 82 → 86; avviso media → alta |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da teglia_casalinga | 72–82 % | 67,9 → 72 % | farina 1387 → 1355 g, acqua 942 → 976 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 83 → 87 |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da teglia_classica | 75–85 % | 67,9 → 75 % | farina 1387 → 1332 g, acqua 942 → 999 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 82 → 87 |
+| teglia_romana | 1 | casa 24 h | «Ottimizza» da teglia_sottile | 68–78 % | 67,9 → 68 % | farina 1387 → 1386 g, acqua 942 → 942 g; punteggio 85 → 87 |
+| teglia_romana | 1 | casa 72 h | su misura | 75–85 % | 67,9 → 75 % | farina 1387 → 1333 g, acqua 942 → 1000 g; punteggio 82 → 87 |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da apiter_teglia | 75–85 % | 67,9 → 75 % | farina 1387 → 1332 g, acqua 942 → 999 g; lievito 2,1 g fresco → 2 g fresco; punteggio 82 → 85 |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 67,9 → 78 % | farina 1383 → 1307 g, acqua 939 → 1019 g; lievito 1,4 g fresco → 1,3 g fresco; punteggio 82 → 84; avviso media → alta |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da bosco_aria_di_pane | 75–85 % | 67,9 → 75 % | farina 1387 → 1333 g, acqua 942 → 1000 g; punteggio 82 → 85 |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da forkish_portland | 75–85 % | 67,9 → 75 % | farina 1387 → 1332 g, acqua 942 → 999 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 84 → 81 |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da riferimento | 75–85 % | 67,9 → 75 % | farina 1387 → 1333 g, acqua 942 → 1000 g; punteggio 82 → 87 |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da teglia_alta | 82–92 % | 67,9 → 82 % | farina 1387 → 1283 g, acqua 942 → 1052 g; lievito 1,4 g fresco → 1,3 g fresco; punteggio 82 → 86; avviso media → alta |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da teglia_casalinga | 72–82 % | 67,9 → 72 % | farina 1387 → 1355 g, acqua 942 → 976 g; punteggio 83 → 87 |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da teglia_classica | 75–85 % | 67,9 → 75 % | farina 1387 → 1333 g, acqua 942 → 1000 g; punteggio 82 → 87 |
+| teglia_romana | 1 | casa 72 h | «Ottimizza» da teglia_sottile | 68–78 % | 67,9 → 68 % | farina 1387 → 1386 g, acqua 942 → 942 g; punteggio 85 → 87 |
+| teglia_romana | 1 | legna | su misura | 75–85 % | 68 → 75 % | farina 1386 → 1333 g, acqua 942 → 1000 g; punteggio 89 → 94 |
+| teglia_romana | 1 | legna | «Ottimizza» da apiter_teglia | 75–85 % | 68 → 75 % | farina 1386 → 1332 g, acqua 942 → 999 g; lievito 2,1 g fresco → 2 g fresco; punteggio 89 → 92 |
+| teglia_romana | 1 | legna | «Ottimizza» da bonci_pizzarium | 78–90 % | 68 → 78 % | farina 1382 → 1307 g, acqua 940 → 1019 g; lievito 1,4 g fresco → 1,3 g fresco; punteggio 89 → 91; avviso media → alta |
+| teglia_romana | 1 | legna | «Ottimizza» da bosco_aria_di_pane | 75–85 % | 68 → 75 % | farina 1386 → 1333 g, acqua 942 → 1000 g; punteggio 89 → 92 |
+| teglia_romana | 1 | legna | «Ottimizza» da forkish_portland | 75–85 % | 68 → 75 % | farina 1386 → 1332 g, acqua 942 → 999 g; lievito 2,3 g fresco → 2,2 g fresco; punteggio 90 → 87 |
+| teglia_romana | 1 | legna | «Ottimizza» da riferimento | 75–85 % | 68 → 75 % | farina 1386 → 1333 g, acqua 942 → 1000 g; punteggio 89 → 94 |
+| teglia_romana | 1 | legna | «Ottimizza» da teglia_alta | 82–92 % | 68 → 82 % | farina 1386 → 1283 g, acqua 942 → 1052 g; lievito 1,4 g fresco → 1,3 g fresco; punteggio 89 → 92; avviso media → alta |
+| teglia_romana | 1 | legna | «Ottimizza» da teglia_casalinga | 72–82 % | 68 → 72 % | farina 1386 → 1355 g, acqua 942 → 976 g; punteggio 89 → 94 |
+| teglia_romana | 1 | legna | «Ottimizza» da teglia_classica | 75–85 % | 68 → 75 % | farina 1386 → 1333 g, acqua 942 → 1000 g; punteggio 89 → 94 |
+| teglia_romana | 2 | casa 24 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 77,9 → 78 % | farina 1307 → 1307 g, acqua 1018 → 1019 g |
+| teglia_romana | 2 | casa 24 h | «Ottimizza» da teglia_alta | 82–92 % | 77,9 → 82 % | farina 1311 → 1282 g, acqua 1021 → 1051 g; punteggio 87 → 91 |
+| teglia_romana | 2 | casa 72 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 77,9 → 78 % | farina 1308 → 1307 g, acqua 1019 → 1019 g; punteggio 89 → 90 |
+| teglia_romana | 2 | casa 72 h | «Ottimizza» da teglia_alta | 82–92 % | 77,9 → 82 % | farina 1311 → 1283 g, acqua 1021 → 1052 g; punteggio 87 → 91 |
+| teglia_romana | 2 | legna | «Ottimizza» da teglia_alta | 82–92 % | 78 → 82 % | farina 1311 → 1283 g, acqua 1023 → 1052 g; punteggio 92 → 98 |

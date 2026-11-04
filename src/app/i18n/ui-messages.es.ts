@@ -573,6 +573,7 @@ export const UI_MESSAGES_ES: Record<string, string> = {
   "recipe.matchDetails.aids": "Te ayudaría (opcional)",
   "recipe.matchDetails.score": "Cómo se calcula la puntuación",
   "verdict.lowerHydration": "Baja la hidratación",
+  "verdict.hydrationAtStyleMin": "Agua ya en el mínimo del estilo.",
   "verdict.why": "Por qué",
   "explore.forKitchen": "Adecuados para tu cocina",
   "verdict.changeOven": "Cambia el horno",
