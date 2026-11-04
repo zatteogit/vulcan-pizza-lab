@@ -65,3 +65,16 @@ export function referenceEyebrow(input: ReferenceLabelInput): string {
     ? uiMessage("recipe.referenceLabel.onYourOven")
     : input.referenceLabel;
 }
+
+/** «Prima di iniziare»: si parte da una versione d'autore o da un preset che
+ *  non è il riferimento dello stile (il riferimento-fonte, come Benedetta per
+ *  la teglia in giornata, resta «il riferimento»). */
+export function startsFromNonReference(
+  styleId: string,
+  interpretation: { id: string } | null | undefined,
+  version: { id: string } | null | undefined,
+): boolean {
+  const reference = getStyleReference(styleId);
+  if (interpretation) return interpretation.id !== reference.referenceInterpretationId;
+  return Boolean(version && version.id !== reference.referenceVersionId);
+}

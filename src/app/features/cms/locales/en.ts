@@ -537,6 +537,8 @@ export const EN_LOCALE: CmsContent = {
     startBlockedReason: "You can’t start this recipe just yet. {requirement}",
     preCookAdapt: "Adapt it to my kitchen",
     preCookStart: "Use the reference",
+    preCookBodyVersion: "You’re about to cook the version “{name}” as it is, with no changes for your kitchen.",
+    preCookStartVersion: "Use this version",
     matchTones: {
       t90: {
         title: "Excellent match",
@@ -1136,6 +1138,7 @@ export const EN_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "The source does not say how long every phase lasts: where it doesn't, the hours are an estimate by {app} from the recipe's timings. Wait for the dough to double, not for the clock.",
     "timeline.bake.lowThenHigh": "Static oven: bake at the bottom, then move the tray to the top to finish baking, as the source says.",
     "timeline.shape.unoiledPan": "Turn the dough out onto a counter dusted with semolina, press it with your fingertips and stretch it without knocking the air out. Put it in the ungreased tray, dusted with semolina, and finish stretching it.",
+    "timeline.shape.semolinaBench": "Turn the dough ball out onto a counter dusted with semolina, press it with your fingertips and stretch it without knocking the air out. Put it in the tray and finish stretching it into the corners.",
     "fermentation.sourceFridge": "The source wants the dough in the fridge at {temp}, in its least cold part: the yeast dose is for that temperature. In a colder fridge the dough rises more slowly.",
     "source.dekracapProcess": "What the source does: out of the fridge between 2 hours and half an hour before baking (the {app} schedule counts 2 hours); stretch on semolina and bake straight away.",
     "timeline.folds.restFirst": "First let the dough rest, covered, for about {rest}, as the source does.",

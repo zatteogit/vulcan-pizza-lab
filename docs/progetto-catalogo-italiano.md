@@ -1575,7 +1575,7 @@ la B5 aveva lasciato alla B4. Versione d'autore della `teglia_in_giornata`
   lievitato, Cottura «Forno ventilato o funzione pizza…». In giapponese
   「生地玉を休ませる」, 大麦モルト, ポテトフレーク (お好みで), 一粒小麦（エンキール）;
   nessuna chiave grezza, nessun errore in console.
-- **Da sapere (non di questo pacchetto)**: la pagina della ricetta apre la
+- **Da sapere (non di questo pacchetto; risolto in §9.16)**: la pagina della ricetta apre la
   versione sulla teglia dello stile (35×35, 967 g), non sulla teglia della
   fonte (30×40, 573 g): succede anche con Adriano (35×35 invece di 30×35) ed
   è la stessa famiglia del difetto «`?interpretation=` apre il riferimento».
@@ -1636,6 +1636,32 @@ utente in giapponese 540,8 → 541,1 kB (limite 570), CSS invariato (73,1 kB).
 
 #### Restano
 
-- La stesura della teglia romana dice «teglia oliata»; la fonte di Dekracap
-  stende sulla semola (lo dice la nota). Da valutare con la teglia della
-  pagina ricetta (§9.14, «Da sapere»).
+- ~~La stesura della teglia romana dice «teglia oliata»; la fonte di Dekracap
+  stende sulla semola.~~ Fatto in §9.16.
+
+### 9.16 Dopo il deploy del 04/11: teglia della pagina, «Prima di iniziare», semola
+
+Il controllo della produzione (`b691364`) ha trovato tre difetti; Matteo:
+«sì affronta per priorità».
+
+1. **Teglia della pagina della ricetta.** Il link `?interpretation=` apriva la
+   versione sulla teglia dello stile (Paoletta 35×35 da 967 g invece di 30×40
+   da 573 g; Adriano 35×35 invece di 30×35) e la ricetta risultava già
+   «modificata». Ora la teglia di partenza è quella della versione
+   (`canonicalRecipeEntry(...).options.panConfig`), la stessa di Crea, di
+   `applyPreset` e dell'MCP. Era questo il difetto «`?interpretation=` apre il
+   riferimento»: la versione si apriva, la teglia no.
+2. **«Prima di iniziare»** diceva «il riferimento» e «Usa il riferimento»
+   anche con una versione d'autore. Con una versione che non è il
+   riferimento dello stile (`startsFromNonReference`) dice «Stai per cucinare
+   la versione «Ispirata a Paoletta» così com'è…» e «Usa questa versione»
+   (`cooking.preCookBodyVersion`, `cooking.preCookStartVersion`, 7 lingue). Il
+   riferimento-fonte (Benedetta) resta «il riferimento».
+3. **Stesura di Dekracap sulla semola** (`semolina_stretch`, passo
+   `timeline.shape.semolinaBench`, 7 lingue): il panetto si allarga sul banco
+   con la semola, poi va nella teglia. La fonte non dice se la teglia va unta:
+   il testo non lo dice.
+4. **MCP 1.8.2**: nel riassunto testuale un facoltativo spento si legge
+   «potato_flakes 8 g (optional, not included)», come nei dati strutturati.
+
+`LOCALE_BUNDLE_REV` 64. Golden e `preset-numbers.regression.json` invariati.

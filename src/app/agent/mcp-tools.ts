@@ -55,7 +55,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.8.1" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.8.2" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -555,7 +555,9 @@ export const MCP_TOOLS: McpTool[] = [
       const alternatives = dietaryRecipeAlternatives(recipe, constraints, s => recipeForInput(s,constraints,{...args,topping_id:s.default_topping_ref}).recipe);
       const data = { ...recipeData(recipe), constraints, dietary_alternatives:alternatives.map(a => ({topping_id:a.topping_id, omitted_conflicts:a.omitted_conflicts,removed:a.removed,added:a.added,recipe:recipeData(a.recipe)})), selection: {recipe_mode:resolved.mode,version_id:resolved.version_id,interpretation_id:resolved.interpretation_id},
         effective_options: resolved.options };
-      const grams = data.ingredients.map((i) => `${i.name} ${i.grams} g`).join(", ");
+      // B4: un facoltativo spento (fiocchi di patate) non è nel totale: il testo
+      // lo dice, come i dati strutturati (optional, included).
+      const grams = data.ingredients.map((i) => `${i.name} ${i.grams} g${"optional" in i && i.optional && !("included" in i && i.included) ? " (optional, not included)" : ""}`).join(", ");
       return {
         summary: `${data.style.name}, ${recipe.dough_balls} × ${recipe.ball_weight_g} g (${recipe.verdict.outcome}): ${grams}. Fermentation ${recipe.fermentation_hours} h at ${recipe.fermentation_temp_c} °C, oven ${recipe.oven_temp_c} °C.`,
         data,

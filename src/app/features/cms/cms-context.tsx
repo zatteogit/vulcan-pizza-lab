@@ -908,6 +908,9 @@ export interface CmsContent {
     startBlockedReason: string;
     preCookAdapt: string;
     preCookStart: string;
+    /** La partenza è una versione d'autore o un preset, non il riferimento: {name} = etichetta della versione. */
+    preCookBodyVersion: string;
+    preCookStartVersion: string;
     /** Match card — tono relazionale per fascia di punteggio (≥90/75/60/40/resto). */
     matchTones: {
       t90: { title: string; canonical: string; adapted: string };

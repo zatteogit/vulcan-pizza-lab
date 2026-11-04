@@ -964,6 +964,7 @@ export const PT_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "A fonte não diz quanto dura cada fase: onde falta, as horas são uma estimativa do {app} a partir dos horários da receita. Espere a massa dobrar de volume, não o relógio.",
     "timeline.bake.lowThenHigh": "Forno estático: asse na parte de baixo e depois passe a assadeira para a parte de cima para terminar, como diz a fonte.",
     "timeline.shape.unoiledPan": "Vire a massa na bancada polvilhada com sêmola, pressione com a ponta dos dedos e abra sem tirar o ar. Coloque na assadeira sem untar, polvilhada com sêmola, e termine de abrir.",
+    "timeline.shape.semolinaBench": "Vire a bola de massa na bancada polvilhada com sêmola, pressione com a ponta dos dedos e abra sem tirar o ar. Coloque na assadeira e termine de abrir até os cantos.",
     "fermentation.sourceFridge": "A fonte quer a massa na geladeira a {temp}, na parte menos fria: a dose de fermento é para essa temperatura. Em uma geladeira mais fria a massa cresce mais devagar.",
     "source.dekracapProcess": "O que a fonte faz: fora da geladeira entre 2 horas e meia hora antes de assar (o cronograma do {app} conta 2 horas); abertura sobre semolina e forno em seguida.",
     "timeline.folds.restFirst": "Primeiro deixe a massa descansar coberta por cerca de {rest}, como faz a fonte.",
@@ -1714,6 +1715,8 @@ export const PT_LOCALE: CmsContent = {
     startBlockedReason: "Por enquanto não dá para começar esta receita. {requirement}",
     preCookAdapt: "Adaptar \u00E0 minha cozinha",
     preCookStart: "Usar a referência",
+    preCookBodyVersion: "Vai preparar a versão «{name}» tal como está, sem alterações para a sua cozinha.",
+    preCookStartVersion: "Usar esta versão",
     matchTones: {
       t90: {
         title: "Excelente compatibilidade",

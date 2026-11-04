@@ -1,7 +1,7 @@
 import { encodePan } from "../features/recipe/pan-url";
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
-import { referenceEyebrow } from "../features/recipe/reference-label";
+import { referenceEyebrow, startsFromNonReference } from "../features/recipe/reference-label";
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified, presetOvenTemp, presetIdealOvenC } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { Bookmark, ChevronRight, Heart, Sparkles } from "lucide-react";
@@ -1350,6 +1350,7 @@ export function HomePage() {
                   ? cms.cooking.tabRecipe
                   : cms.cooking.tabRecipeTailored
               }
+              startsFromVersion={startsFromNonReference(selectedStyle.id, createOrigin, activeVersion)}
               eyebrow={referenceEyebrow({
                 styleId: selectedStyle.id,
                 tailored: createDirty || Boolean(resolvedRecipeName),

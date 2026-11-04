@@ -281,6 +281,9 @@ export interface MethodProcessProfile {
   topping_after_proof?: true;
   /** B3: la teglia non si unge; l'impasto si stende su un velo di semola. */
   unoiled_pan?: boolean;
+  /** Dekracap: «semola per la stesura»: il panetto si allarga sul banco con
+   *  la semola e poi va nella teglia (la fonte non dice se ungerla). */
+  semolina_stretch?: boolean;
   /** B5: pieghe della fonte (numero, intervallo, riposo prima del primo
    *  giro), al posto di quelle dello stile (profileFolds). */
   folds?: FoldPlan;
@@ -809,7 +812,7 @@ export interface TimelineStep {
   };
   /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. «stir»:
    *  l'impasto si mescola senza impastare (B2), niente incordatura né pieghe. */
-  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan" | "stir" | "unoiled" | "to_fridge" | "fridge";
+  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan" | "stir" | "unoiled" | "semolina" | "to_fridge" | "fridge";
   /** B3: temperatura della fase scritta dalla fonte (prefermento, puntata,
    *  appretto con le fasi esplicite); assente = quella della ricetta. */
   temp_c?: number;
@@ -4216,11 +4219,14 @@ function generateTimeline(
   // B3: teglia non unta, stesura su un velo di semola (Adriano Continisio).
   const unoiledPan = Boolean(style.method_profile?.unoiled_pan) && layout.type === "single";
   if (unoiledPan) shapeMsg = em("timeline.shape.unoiledPan", METHOD_MESSAGES_IT["timeline.shape.unoiledPan"]);
+  // Dekracap: stesura sulla semola, sul banco, poi nella teglia.
+  const semolinaStretch = !unoiledPan && Boolean(style.method_profile?.semolina_stretch) && layout.type === "single";
+  if (semolinaStretch) shapeMsg = em("timeline.shape.semolinaBench", METHOD_MESSAGES_IT["timeline.shape.semolinaBench"]);
   if (!proofInPan) steps.push(
     keyedStep(
       {
         id: "shape",
-        ...(unoiledPan ? { variant: "unoiled" as const } : {}),
+        ...(unoiledPan ? { variant: "unoiled" as const } : semolinaStretch ? { variant: "semolina" as const } : {}),
         duration_minutes: layout.type === "folded_layers" ? 10 : 5,
         icon: "expand",
         timing_label: layout.type === "folded_layers" ? "10 min" : "5 min",

@@ -555,7 +555,7 @@ function localizeStepBase(
       if (recipe.style.method_profile?.id === "apiter_teglia") return formatRawStep(step);
       // Audit totale n. 7: stesura in teglia prima dell'appretto, testo del motore.
       // B3: teglia non unta, su un velo di semola (testo del motore).
-      if (step.variant === "pan" || step.variant === "unoiled") return formatRawStep(step);
+      if (step.variant === "pan" || step.variant === "unoiled" || step.variant === "semolina") return formatRawStep(step);
       // Con layout speciale, motore già genera desc specifica per il tipo di stesura
       if (hasSpecialLayout) return formatRawStep(step);
       entry = isThin ? (labels.shape_thin || labels.shape) : (isRect && labels.shape?.descAlt) ? labels.shape : labels.shape;

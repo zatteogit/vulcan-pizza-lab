@@ -236,6 +236,16 @@ describe("MCP", () => {
       included_optional_ingredients: ["fiocchi di patate"] });
     expect(flakes.ingredients.find((i: { name: string }) => i.name === "potato_flakes")).toMatchObject({ included: true });
   });
+  it("il riassunto testuale dice che i fiocchi sono facoltativi e fuori dal totale", () => {
+    const text = (args: Record<string, unknown>) => {
+      const response = handleMcpMessage({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "generate_recipe", arguments: args } });
+      return ((response as { result: { content: { text: string }[] } }).result.content[0].text);
+    };
+    const base = { style_id: "teglia_in_giornata", interpretation_id: "paoletta", oven_type: "home", oven_max_temp_c: 250, dough_balls: 2 };
+    expect(text(base)).toMatch(/potato_flakes \d+ g \(optional, not included\)/);
+    expect(text(base)).not.toMatch(/malt_syrup \d+ g \(optional/);
+    expect(text({ ...base, included_optional_ingredients: ["fiocchi di patate"] })).not.toMatch(/not included/);
+  });
 });
 
 /* D-070, «mai fuori stile»: con Paoletta, «Ottimizza per me» resta negli

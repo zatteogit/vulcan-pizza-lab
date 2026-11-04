@@ -6,7 +6,7 @@ import {
 import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { SKILL_WARNING_KEYS } from "../domain/verdict-summary";
 import { getAllInterpretations, getInterpretationById, getInterpretationsForStyle, interpretationFermentTempC, verifiedSourceBacksHydrationW } from "../data/interpretation-library";
-import { referenceEyebrow, startsWithVowel } from "../features/recipe/reference-label";
+import { referenceEyebrow, startsFromNonReference, startsWithVowel } from "../features/recipe/reference-label";
 import { UI_MESSAGES_FR } from "../i18n/ui-messages.fr";
 import { UI_MESSAGES_IT } from "../i18n/ui-messages.it";
 import { getImpasto } from "../data/impasto-library";
@@ -307,5 +307,25 @@ describe("testi che valgono anche per Adriano (decisione 5 di Matteo, 31/10/2026
     // Più acqua della fonte, o una farina più debole: il suggerimento resta.
     expect(verifiedSourceBacksHydrationW(style.id, 82, 250)).toBe(false);
     expect(verifiedSourceBacksHydrationW("napoletana_stg", 60, 200)).toBe(false);
+  });
+});
+
+/* «Prima di iniziare» e teglia della pagina della ricetta (04/11/2026): con
+ * una versione d'autore che non è il riferimento il dialogo nomina la
+ * versione, e la pagina apre la teglia della versione (Adriano 30×35,
+ * Paoletta 30×40), la stessa di Crea e dell'MCP. */
+describe("partenza da una versione d'autore", () => {
+  it("il riferimento-fonte resta il riferimento; Adriano e Paoletta sono versioni", () => {
+    const ids = ["benedetta_rossi", "adriano_continisio", "paoletta"];
+    expect(ids.map((id) => startsFromNonReference(style.id, getInterpretationById(id), null))).toEqual([false, true, true]);
+    expect(startsFromNonReference(style.id, null, null)).toBe(false);
+    expect(startsFromNonReference("teglia_romana", getInterpretationById("dekracap"), null)).toBe(true);
+  });
+  it("la teglia di partenza è quella della versione", () => {
+    const pan = (id: string) => {
+      const p = canonicalRecipeEntry(style, undefined, getInterpretationById(id)!, null).options.panConfig!;
+      return `${p.panLength}×${p.panWidth}`;
+    };
+    expect([pan("adriano_continisio"), pan("paoletta")].map((p) => p.split("×").map(Number).sort((a, b) => a - b).join("×"))).toEqual(["30×35", "30×40"]);
   });
 });

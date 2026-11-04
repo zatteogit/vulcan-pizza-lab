@@ -79,6 +79,9 @@ interface RecipeViewProps {
   /** "Ricetta su misura" (Crea) vs "Ricetta" (Scopri) */
   recipeTabLabel?: string;
   eyebrow?: string;
+  /** Si parte da una versione d'autore o da un preset che non è il
+   *  riferimento: «Prima di iniziare» nomina l'eyebrow, non il riferimento. */
+  startsFromVersion?: boolean;
   /** Firma d'origine (redesign lug 2026): l'eyebrow è l'UNICA dichiarazione
    *  di origine della scheda, con identità cromatica fissa — salvia = su
    *  misura (il colore dell'ottimizzatore), terracotta = canonica. Al
@@ -134,6 +137,7 @@ export function RecipeView({
   back,
   recipeTabLabel = "Ricetta",
   eyebrow = "Ricetta",
+  startsFromVersion = false,
   eyebrowTone = "canonical",
   matchSlot,
   introExtraSlot,
@@ -635,6 +639,7 @@ export function RecipeView({
               mealTargetAt={mealTargetAt}
               isPersonalized={isPersonalized}
               referenceLabel={eyebrowIsTailored ? undefined : heroEyebrow}
+              preCookVersionName={eyebrowIsTailored || !startsFromVersion ? undefined : heroEyebrow}
               onRequestPersonalization={onRequestPersonalization}
               matchSlot={matchSlot}
             />
