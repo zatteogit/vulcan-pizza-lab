@@ -21,14 +21,14 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 
 | Build | Oggi | Budget (`npm run check:budget`) |
 |---|---|---|
-| Chunk JS più grande (gzip) | 79,8 kB (catalogo `ja`, 30/10/2026) | 100 kB |
-| JS senza i cataloghi delle lingue, italiano compreso (gzip) | 448,0 kB (30/10/2026, italiano come le altre lingue) | 500 kB |
-| JS per utente: codice + la lingua più pesante (gzip) | 551,1 kB (con `ja`, 103,1 kB; in italiano 497,9) | 600 kB |
-| JS emesso in tutto, 7 lingue (gzip) | 974 kB in 73 chunk | solo informazione (D-059) |
+| Chunk JS più grande (gzip) | 95,5 kB (`vendor-ui`, 04/11/2026) | 100 kB |
+| JS senza i cataloghi delle lingue, italiano compreso (gzip) | 423,5 kB (04/11/2026, testi italiani dei dati come le altre lingue) | 465 kB |
+| JS per utente: codice + la lingua più pesante (gzip) | 536,8 kB (con `ja`, 113,4 kB; in italiano 511,5) | 570 kB |
+| JS emesso in tutto, 7 lingue (gzip) | 1.143 kB in 60 chunk (04/11/2026) | solo informazione (D-059) |
 | CSS (gzip) | 72,2 kB (516 kB non compresso, 30/10/2026) | 75 kB |
 | Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
 | Video totali | 2,6 MB (6 file; erano 48,6) | 3 MB |
-| Immagini totali | 32,4 MB (291 file; era 42,0 il 31/10/2026) | 38 MB |
+| Immagini totali | 33,8 MB (345 file, 04/11/2026; era 42,0 il 31/10/2026) | 38 MB |
 
 Il controllo gira in CI dopo la build (`.github/workflows/verify.yml`). I limiti
 sono un cricchetto: si abbassano quando si migliora, non si alzano per far
@@ -560,6 +560,221 @@ bruciacchiato e verdure lucide non mostrano differenze riconoscibili. Miniature
 prossime foto del catalogo (circa 23 condimenti nuovi a 240 kB tra grande e
 piccola). Un condimento nuovo con originale va messo in
 `design-assets/originali/toppings/` e prende da solo la 75 e la 320.
+
+## I testi italiani dei dati come le altre lingue (31/10/2026, ramo `dati-italiano`)
+
+Il passo 4 del piano del 30/10. Main a 33a0b81: **456,5 kB senza lingue,
+565,5 kB per utente** (ja), it 508,0 kB (misure di questa build; la
+descrizione del compito citava 458,6 / 568,3). Le altre lingue avevano già i
+testi dei dati nei loro cataloghi, sovrapposti all'italiano scritto nel
+codice: chi usa l'app in un'altra lingua scaricava l'italiano per niente, e
+ogni testo nuovo pesava due volte.
+
+**Come si verifica che nulla cambi.** Per ogni fase: `verify`, `lint`, build
+e `check:budget` verdi; un'istantanea di tutte le risposte del server
+(`tools/list`, `list_styles`, `get_guide`, `list_pantry_items`, glossario in
+it/en/ja per ogni voce, `recommend_styles`, `get_style` e `generate_recipe`
+per ogni stile in due cucine e due modi e per ogni condimento, la timeline del
+motore per ogni coppia stile × condimento, Siri e Alexa su otto domande)
+identica **byte per byte** a main; il testo di 30 pagine (anche quello dei
+pannelli chiusi) e della modalità cottura in it, en-GB e ja, con l'orologio
+fermo, identico a quello della build di main; nessun errore in console,
+nessuna chiave grezza.
+
+### Fase 1: condimenti
+
+`topping-library.ts` tiene struttura, dosi e i nomi che fanno da chiave (i
+nomi degli ingredienti danno gli id di dispensa, allergeni e diete; il nome
+italiano del concetto resta cercabile, «è quello scritto sui menu»). Le
+descrizioni dei concetti, i nomi delle varianti, le note degli ingredienti e
+della cottura, titoli, testi, varianti per le cotture brevi e consigli dei
+184 passi vanno in `topping-i18n/it.ts` (chunk `it-toppings`, nel bundle `it`
+come gli altri `<lingua>-toppings`).
+
+- **Segnaposto.** Nei letterali il testo è `T` (il consiglio `TIP`): dice
+  quali testi esistono (la variante per le cotture brevi, il consiglio, la
+  nota di cottura), tiene i tipi invariati e l'ordine delle chiavi delle
+  risposte MCP (le note degli ingredienti escono con lo spread). Al
+  caricamento la libreria li trasforma in getter sul catalogo.
+- **Registro** (`topping-i18n/registry.ts`), come il catalogo uiMessage: il
+  `CmsProvider` registra i testi della lingua attiva (`cms.toppingI18n`)
+  prima di rendere i figli, `primeLocaleBundle()` quelli del bundle (test,
+  design system), il server (`agent/mcp-server.ts`, da cui passano anche
+  Siri e Alexa) l'italiano. Il motore non cambia: legge `step.title` come
+  prima e trova l'italiano sul server, la lingua attiva nel browser (dove le
+  funzioni di `localize.ts` lo traducevano comunque per id: ora sono
+  idempotenti).
+- **Test** (`topping-i18n.test.ts`): ogni segnaposto ha il suo testo in ogni
+  lingua, italiano compreso (anche variante breve e consigli, prima non
+  controllati); nessun testo semplice resta nei dati; con l'italiano
+  registrato nessun segnaposto arriva al lettore; id dei passi unici.
+
+| Misura (gzip) | main 33a0b81 | fase 1 | differenza |
+|---|---|---|---|
+| JS senza lingue | 456,5 kB | **439,9 kB** | −16,6 |
+| JS per utente, ja | 565,5 kB | **548,9 kB** | −16,6 |
+| de / fr / es / pt / en | 559,5 / 558,9 / 555,2 / 554,9 / 550,9 | 542,9 / 542,3 / 538,6 / 538,3 / 534,3 | −16,6 |
+| it | 508,0 kB (lingua 51,5) | 510,1 kB (lingua 70,2) | +2,1 |
+
+L'italiano paga circa 2 kB (il catalogo per id, gzip separato dal codice);
+chi parte in italiano riceve `it-toppings` nel `modulepreload` della lingua
+di avvio insieme a `it` (`localePreloadPlugin`), quindi nessun giro di rete
+in più. Chi aggiunge un condimento ora scrive la struttura con `T`/`TIP` nella
+libreria e i testi in `it.ts` come nelle altre sei lingue: il test indica
+ogni testo mancante.
+
+### Fase 2: problemi (troubleshooting)
+
+`ISSUES_DB` tiene id, fase e gravità; sintomo, causa, verifica, rimedio e
+prevenzione dei 24 problemi sono scritti in `TROUBLESHOOTING_I18N_DEFAULTS`
+(`domain-i18n-defaults.ts`, bundle `it`), che prima li derivava dai dati.
+Il server non li legge; nel browser passano tutti da `getLocalizedIssue()`,
+che ora prende i testi solo dal catalogo della lingua (tipo
+`TroubleshootingIssueData` per i dati). Test: ogni catalogo, italiano
+compreso, ha i cinque testi di ogni problema e nessun id in più.
+
+| Misura (gzip) | fase 1 | fase 2 | differenza |
+|---|---|---|---|
+| JS senza lingue | 439,9 kB | **435,8 kB** | −4,1 |
+| JS per utente, ja | 548,9 kB | **544,9 kB** | −4,0 |
+| it | 510,1 kB | 509,2 kB | −0,9 |
+
+Anche l'italiano scende: il chunk condiviso `troubleshooting-data` è
+sparito (era importato dal bundle `it` e dal codice; ora è codice puro e si
+fonde col resto).
+
+### Fase 3: glossario
+
+Definizioni semplici, definizioni e «perché» delle 44 voci sono scritti in
+`GLOSSARY_TEXT_IT` (`domain-i18n-defaults.ts`, bundle `it`, con il nome del
+prodotto come token); `data/glossary-copy.ts` non c'è più. Nei dati
+(`glossary-terms.ts`) restano nome (lo usano Siri e Alexa per riconoscere la
+voce), simbolo, unità, formula, fasce e collegamenti, e al posto dei testi il
+segnaposto `GLOSSARY_TEXT`, che tiene la presenza del campo e l'ordine delle
+chiavi della risposta MCP `glossary`. `getLocalizedTerm()` prende i testi
+solo dal catalogo; il server MCP usa già il catalogo italiano
+(`GLOSSARY_TERMS_DEFAULTS`), quindi non cambia nulla. Test: ogni catalogo,
+italiano compreso, ha ogni testo che i dati segnano, e nessun segnaposto
+arriva al lettore.
+
+| Misura (gzip) | fase 2 | fase 3 | differenza |
+|---|---|---|---|
+| JS senza lingue | 435,8 kB | **429,4 kB** | −6,4 |
+| JS per utente, ja | 544,9 kB | **538,4 kB** | −6,5 |
+| it | 509,2 kB | 508,2 kB | −1,0 |
+
+### Fase 4: messaggi del motore
+
+I 133 testi italiani di `METHOD_MESSAGES_IT` (metodo, cambi «prima → ora»,
+raccomandazioni, sostenibilità) erano nel chunk d'ingresso. Ora sono in
+`data/method-messages.it.ts`, che caricano il bundle `it` (dentro
+`engineMessages`, come prima) e il server. `METHOD_MESSAGES_IT` resta il
+nome che il motore legge per il testo di riserva dei messaggi
+(`EngineMsg.fallback`), senza toccare `pizza-engine.ts`: è un oggetto che si
+riempie alla registrazione (`registerMethodMessages`). Il server registra
+l'italiano; nel browser il `CmsProvider` e `primeLocaleBundle()` registrano gli
+`engineMessages` della lingua attiva, che hanno le stesse chiavi (la UI
+risolve comunque i messaggi per chiave, quindi lo schermo non cambia).
+
+- **Letture al caricamento.** Sul server i dati si caricano prima della
+  registrazione: i tre dati che leggevano un testo al caricamento del modulo
+  (`formula_variant` della focaccia barese in `styles-db.ts`, `source_note` e
+  `method_note` in `topping-library.ts`) ora hanno un getter. Il test
+  `method-messages.test.ts` carica i dati con il registro vuoto, registra
+  l'italiano e controlla ogni messaggio del motore scritto nei dati
+  (verificato che fallisce se si toglie un getter).
+- `STEP_COPY_IT` (staglio e appretto, 0,5 kB) resta nel codice: nel CMS sta
+  sotto chiavi diverse, non basta registrarlo.
+
+| Misura (gzip) | fase 3 | fase 4 | differenza |
+|---|---|---|---|
+| JS senza lingue | 429,4 kB | **423,9 kB** | −5,5 |
+| JS per utente, ja | 538,4 kB | **533,0 kB** | −5,4 |
+| it | 508,2 kB | 507,7 kB | −0,5 |
+
+### Dopo il rebase su main cd71a4f (04/11/2026)
+
+Main è andato avanti (#186–#201: tranche B3, illustrazioni di Impara,
+immagini). Sul ramo riportato sopra main le PR nuove toccavano tre testi che
+ricadono nello spostamento, ora nel catalogo italiano anche loro: la variante
+`description_no_pan_proof` del passo della margherita della teglia in
+giornata (B3, nuovo segnaposto `T` e getter), la prevenzione di P15 (testo
+cambiato) e i quattro messaggi nuovi del motore (`fermentation.roomTemp`,
+`fermentation.hoursAssumed`, `timeline.bake.lowThenHigh`,
+`timeline.shape.unoiledPan`; `topping.sauceSeasoning` ora con l’autore) in
+`method-messages.it.ts`. Misure di ogni commit di fase sopra main attuale:
+
+| Misura (gzip) | main cd71a4f | fase 1 | fase 2 | fase 3 | fase 4 | totale |
+|---|---|---|---|---|---|---|
+| JS senza lingue | 456,5 | 440,0 | 436,0 | 429,3 | **423,5** | −33,0 |
+| per utente ja | 569,9 | 553,4 | 549,4 | 542,7 | **536,8** | −33,1 |
+| per utente de | 564,0 | 547,5 | 543,5 | 536,9 | 531,0 | −33,0 |
+| per utente en | 554,8 | 538,3 | 534,2 | 527,6 | 521,7 | −33,1 |
+| per utente it | 511,9 | 514,2 | 513,4 | 512,1 | 511,5 | −0,4 |
+
+fr 563,2 → 530,2, es 559,3 → 526,3, pt 559,0 → 526,0 kB. Immagini 33,8 MB
+su 38 (le immagini non cambiano). Risposte del server identiche a main
+cd71a4f byte per byte; testo delle 30 pagine e della cottura identico in it,
+en-GB e ja; cambio lingua it → ja → it senza ricaricare corretto.
+Primo caricamento (stesse condizioni della sezione seguente, mediane di 7):
+it `/explore` render/LCP 5157/5772 → 5014/5532 ms, it ricetta
+5315/5576 → 5120/5816 ms, ja `/explore` 5218/5928 → 5075/5648 ms: nel
+rumore.
+
+### Primo caricamento
+
+Build di produzione, `vite preview`, 390×844, 4G lento (1,6 Mbit/s, 150 ms)
+e CPU ×4, a freddo, mediane di 7 prove alternate main/ramo (primo render =
+`#root` con contenuto):
+
+| Pagina | main (render / LCP) | ramo (render / LCP) |
+|---|---|---|
+| it `/explore` | 4689 / 5408 ms | 4470 / 5116 ms |
+| it `/recipe/napoletana_stg` | 5299 / 5620 ms | 5140 / 5728 ms |
+| ja `/explore` | 4669 / 5304 ms | 4655 / 5164 ms |
+
+Nel rumore, nessun peggioramento visibile: il bundle `it` cresce (51,5 →
+83,8 kB con `it-toppings`) ma il codice d'ingresso cala, e
+`localePreloadPlugin` chiede `it` e `it-toppings` con `modulepreload`
+insieme al chunk d'ingresso.
+
+### Cosa resta
+
+Italiano ancora nel codice (stima: gzip dei letterali di testo per file):
+
+- **`pizza-engine.ts`** (~2,5 kB: titoli e testi dei passi scritti come
+  testo di riserva in linea). Basterebbe dare loro una chiave in
+  `method-messages.it.ts`: il meccanismo di registrazione c'è già. Non
+  toccato perché il file è in lavorazione (B3/B5).
+- **`interpretation-library.ts`** (~2,8 kB) e **`impasto-library.ts`**
+  (~1,3 kB): stessa ragione.
+- **`styles-db.ts`** (~2,6 kB: descrizioni e caratteristiche, che il bundle
+  `it` deriva dai dati e che MCP `get_style` e l'editor degli stili leggono):
+  stesso schema del glossario (segnaposto + catalogo), da fare insieme a chi
+  cura gli stili e l'editor.
+- **`parametric-databases.ts`** (~5,3 kB di `note` per stile): sono mostrate
+  nei consigli dei passi (`recipe-output-format.ts`) **senza traduzione**,
+  anche a chi usa un'altra lingua. Prima di spostarle vanno tradotte: è una
+  decisione di contenuto, non di budget.
+- Piccoli: `STEP_COPY_IT` (0,5), messaggi di allergeni e diete (~0,9),
+  `style-versions` (~0,8), etichette di `AUTHENTICITY_META` e delle
+  categorie del glossario, occasioni dei condimenti (parole di ricerca).
+- **Restano apposta**: i nomi degli ingredienti (~3,6 kB, sono gli id di
+  dispensa, allergeni e diete), i nomi dei concetti (cercabili in italiano) e
+  delle voci del glossario (Siri e Alexa li riconoscono).
+
+**Rischi.** I registri (`topping-i18n/registry.ts`,
+`registerMethodMessages`) sono stato globale come il catalogo uiMessage: nel
+browser contengono la lingua attiva, quindi il testo di riserva del motore
+(`step.title`, `EngineMsg.fallback`) è nella lingua attiva e non più sempre
+in italiano; lo schermo non cambia perché la UI risolve per chiave, ma codice
+nuovo non deve confrontare quei testi. Un dato che legge
+`METHOD_MESSAGES_IT` al caricamento del modulo prende `undefined` sul server
+(il test lo segnala). Chi aggiunge condimenti, voci, problemi o messaggi
+scrive il testo italiano nel catalogo (`topping-i18n/it.ts`,
+`GLOSSARY_TEXT_IT`, `TROUBLESHOOTING_I18N_DEFAULTS`, `method-messages.it.ts`)
+e nei dati solo `T`/`TIP`/`GLOSSARY_TEXT`: i test indicano ogni testo
+mancante.
 
 ## Interventi consigliati, in ordine di resa
 

@@ -3,8 +3,10 @@ import type { ToppingTranslation } from "./types";
 import type { ToppingBakeLength } from "../../domain/step-thresholds";
 
 /* Applica una traduzione (I18N-2) a concetti, varianti e passi della libreria
-   condimenti. Funzioni pure: restituiscono copie, l'italiano resta la fonte e
-   il fallback di ogni campo mancante. */
+   condimenti. Funzioni pure: restituiscono copie; un campo mancante resta
+   quello della libreria (dal 31/10/2026 i suoi testi vengono dal catalogo
+   registrato, registry.ts: con il catalogo della lingua attiva queste
+   funzioni non cambiano nulla). */
 
 export function localizeToppingConcept<T extends Pick<ToppingConcept, "name" | "description">>(
   id: string,

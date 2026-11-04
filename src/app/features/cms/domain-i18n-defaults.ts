@@ -1,6 +1,4 @@
-import { ISSUES_DB } from "../../data/troubleshooting-data";
 import { GLOSSARY_TERMS, LOCALIZED_FORMULA_TERMS } from "../../data/glossary-terms";
-import { BRAND } from "../../config/brand";
 /* === DOMAIN DATA i18n — Italian defaults === */
 /* Pre-ferment guide, dietary data, troubleshooting, glossary terms */
 /* Separated from cms-context.tsx for maintainability */
@@ -126,9 +124,179 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
     baking: "Cottura",
     false_positive: "Falsi allarmi",
   },
-  /* FW-05 (S13-A-01/B-01, D-I): un solo testo italiano, in ISSUES_DB; prima
-   * le due copie divergevano (accenti, P21 assente qui). */
-  issues: Object.fromEntries(ISSUES_DB.map(({ id, symptom, cause, testRapido, fixImmediate, prevention }) => [id, { symptom, cause, testRapido, fixImmediate, prevention }])),
+  /* FW-05 (S13-A-01/B-01, D-I): un solo testo italiano; prima le due copie
+   * divergevano (accenti, P21 assente qui). Budget D-059 (31/10/2026): è
+   * questo, e ISSUES_DB tiene solo fase e gravità, come per le altre lingue. */
+  issues: {
+    P01: {
+      symptom: "Impasto appiccicoso persistente",
+      cause: "Più acqua di quanta la farina riesca ad assorbire",
+      testRapido: "L'idratazione della ricetta supera l'assorbimento indicato sulla scheda della farina?",
+      fixImmediate: "Aggiungi poca farina alla volta (2–3%) e incorpora con pieghe delicate",
+      prevention: "Resta vicino all'assorbimento dichiarato dal mulino; se non lo conosci, parti dal basso dell'idratazione dello stile",
+    },
+    P02: {
+      symptom: "L'impasto si strappa o si buca durante la stesura",
+      cause: "Glutine poco sviluppato o non ancora rilassato, impasto ancora freddo dal frigo, centro tirato troppo sottile; a volte una farina poco estensibile (P/L alto) o un impasto andato oltre",
+      testRapido: "Allunga piano un lembo: si strappa subito invece di allungarsi, o si apre un buco al centro mentre il bordo è ancora spesso?",
+      fixImmediate: "Se si è aperto un buco, pizzica i bordi per chiuderlo; poi copri il panetto e lascialo riposare a temperatura ambiente 30–60 min prima di riprovare",
+      prevention: "Rispetta i tempi della ricetta, togli i panetti dal frigo per tempo, allarga spingendo dal centro verso il bordo e lascia il centro non troppo sottile e usa una farina con il P/L indicato dallo stile",
+    },
+    P03: {
+      symptom: "L'impasto collassa quando lo tocchi",
+      cause: "Lievitazione andata oltre: troppo tempo, troppo caldo o troppo lievito",
+      testRapido: "Premi con un dito: se il segno torna su subito è ancora indietro, se torna piano è pronto, se resta e l'impasto si sgonfia è andato oltre",
+      fixImmediate: "Ripallalo e lascialo riprendere 1–2 h (sarà meno alveolato), oppure stendilo con delicatezza e cuocilo subito",
+      prevention: "Controlla l'impasto dall'ultimo terzo del tempo previsto, non solo l'orologio",
+    },
+    P04: {
+      symptom: "L'impasto non cresce nel tempo previsto",
+      cause: "Lievito poco attivo o scaduto, oppure impasto più freddo del previsto. In frigo crescere poco è normale",
+      testRapido: "Era in frigo? È normale. Altrimenti sciogli un pizzico del lievito in acqua tiepida con un po' di zucchero: dopo 10–15 min fa schiuma?",
+      fixImmediate: "Prima mettilo al caldo (24–28 °C) per 1–2 h. Se non riparte, il lievito è inattivo: rifai l'impasto con lievito nuovo",
+      prevention: "Controlla la scadenza del lievito e la temperatura della stanza",
+    },
+    P05: {
+      symptom: "Lievitazione troppo rapida (raddoppio in <3h)",
+      cause: "Troppo lievito (>1.5%) o temperatura ambiente >28°C",
+      testRapido: "L'impasto ha raddoppiato in meno di 3 ore?",
+      fixImmediate: "Metti l’impasto in frigorifero per rallentare la fermentazione; il freddo non la blocca subito.",
+      prevention: "Usa la dose di lievito calcolata per le tue ore e la tua temperatura (a 18 °C per 24 h circa 0,1% di lievito fresco)",
+    },
+    P06: {
+      symptom: "Sapore troppo acido/acetico",
+      cause: "Maturazione troppo lunga o troppo calda: i batteri lattici producono acidi (succede di più con il lievito madre)",
+      testRapido: "Annusa e assaggia un pezzetto crudo: l'acido è pungente, come di aceto?",
+      fixImmediate: "Si può mangiare; la prossima volta accorcia la maturazione a temperatura ambiente",
+      prevention: "Scegli tempo, temperatura e lievito secondo il metodo; controlla lo sviluppo senza una soglia oraria universale.",
+    },
+    P21: {
+      symptom: "Fermentazione incostante tra un impasto e l'altro (frigo di casa)",
+      cause: "Il frigo domestico non ha temperatura stabile: sbrinamenti, aperture e ripiani diversi fanno oscillare la maturazione a freddo, a differenza di una cella professionale",
+      testRapido: "Stesso stile, stessa dose di lievito: la lievitazione cambia parecchio tra una volta e l'altra?",
+      fixImmediate: "Sposta l'impasto sul ripiano più basso/centrale (più stabile) e valuta lo stesso panetto a vista, non solo a orologio",
+      prevention: "Misura la temperatura sul ripiano usato e osserva lo sviluppo dell’impasto. Lo zucchero non corregge gli sbalzi del frigo.",
+    },
+    P07: {
+      symptom: "Il panetto torna elastico dopo la stesura ('effetto molla')",
+      cause: "Glutine non sufficientemente rilassato",
+      testRapido: "Stendi a 30cm — torna a 25cm dopo 30 secondi?",
+      fixImmediate: "Riposo aggiuntivo 15min coperto, stesura in 2 fasi",
+      prevention: "Estrai panetti dal frigo 60-90min prima della stesura",
+    },
+    P08: {
+      symptom: "Buchi giganti irregolari nella pizza",
+      cause: "Bolle grandi rimaste nel panetto e stesura molto delicata",
+      testRapido: "Le bolle grandi sono sparse anche al centro, non solo nel cornicione?",
+      fixImmediate: "Pressa leggermente il panetto prima della stesura per redistribuire il gas",
+      prevention: "Prima di stendere sgonfia con delicatezza le bolle più grandi; nella napoletana e nel canotto qualche alveolo grande nel cornicione è voluto",
+    },
+    P22: {
+      symptom: "La pizza si attacca alla pala",
+      cause: "Impasto umido a contatto diretto con la pala, pizza condita e lasciata ferma sulla pala, oppure pala senza farina o semola",
+      testRapido: "Scuoti piano la pala prima di infornare: la pizza scivola?",
+      fixImmediate: "Solleva il bordo, soffia sotto o spolvera un po' di semola e scuoti di nuovo prima di infornare",
+      prevention: "Infarina la pala, condisci in fretta direttamente sulla pala e inforna subito, senza lasciarla ferma",
+    },
+    P23: {
+      symptom: "Il panetto si allarga e non tiene la forma",
+      cause: "Più acqua di quanta la farina regga, lievitazione andata oltre, cucina calda o pirlatura poco tesa",
+      testRapido: "Il panetto si appiattisce prima del previsto e, se lo premi, il segno non torna su?",
+      fixImmediate: "Stendilo subito con poca farina sul banco; non provare a ripirlarlo",
+      prevention: "Pirla i panetti più tesi e segui idratazione e tempi della ricetta; se la cucina è calda, controlla l'impasto prima",
+    },
+    P09: {
+      symptom: "Base cruda ma cornicione bruciato",
+      cause: "Sbilanciamento termico: troppo calore dal cielo, poco dalla platea",
+      testRapido: "Contrasto colore estremo tra sopra e sotto?",
+      fixImmediate: "Cuoci più vicino alla platea calda e più lontano dal cielo; se il forno non supera i 300 °C puoi precuocere la base 2–3 min senza condimento",
+      prevention: "Bilancia il calore: pietra o acciaio ben preriscaldati sotto, meno calore dall'alto",
+    },
+    P10: {
+      symptom: "Crosta pallida, nessuna doratura",
+      cause: "Forno o platea poco caldi per lo stile, oppure pochi zuccheri rimasti dopo una maturazione molto lunga",
+      testRapido: "Il forno arriva alla temperatura indicata dallo stile? La maturazione è stata molto lunga?",
+      fixImmediate: "Negli ultimi 1–2 minuti usa il grill, se il forno lo ha",
+      prevention: "Porta il forno al massimo con pietra o acciaio ben preriscaldati; fuori dalle ricette STG, che non ammettono zucchero né malto, puoi aggiungere 0,5–1% di zucchero o malto",
+    },
+    P11: {
+      symptom: "Pizza gommosa, non croccante",
+      cause: "Cottura troppo breve o troppo bassa per lo spessore, oppure più acqua di quanta ne preveda lo stile",
+      testRapido: "Al taglio il cuore è ancora umido e appiccicoso?",
+      fixImmediate: "Prolunga la cottura di qualche minuto; se il forno ha ancora margine, alza la temperatura",
+      prevention: "Resta nell'idratazione dello stile e cuoci per il tempo indicato dalla ricetta",
+    },
+    P16: {
+      symptom: "Cornicione basso e piatto",
+      cause: "Degassaggio eccessivo, farina troppo debole per lo stile, o uso del mattarello",
+      testRapido: "Altezza cornicione <1cm?",
+      fixImmediate: "Stesura più delicata, non schiacciare i bordi",
+      prevention: "Usa una farina nella forza indicata dallo stile e niente mattarello sugli stili con cornicione",
+    },
+    P17: {
+      symptom: "Pizza troppo secca",
+      cause: "Meno acqua di quella prevista dallo stile o cottura più lunga del tempo della ricetta",
+      testRapido: "Idratazione e tempo di cottura sono quelli della ricetta?",
+      fixImmediate: "Servila appena sfornata; la prossima volta accorcia la cottura",
+      prevention: "Resta nell'idratazione dello stile e non superare il tempo di cottura indicato",
+    },
+    P18: {
+      symptom: "Centro della pizza acquoso",
+      cause: "Topping troppo liquido o cottura troppo breve",
+      testRapido: "Quantità di salsa per pizza? Mozzarella molto umida?",
+      fixImmediate: "Precuoci la base 2–3 min, poi aggiungi il condimento",
+      prevention: "Max 80ml salsa per pizza 30cm, sgocciola bene la mozzarella",
+    },
+    P19: {
+      symptom: "Impossibile stendere il panetto",
+      cause: "Farina molto più forte di quanto preveda lo stile: impasto troppo tenace",
+      testRapido: "La W della tua farina supera di molto quella indicata dallo stile?",
+      fixImmediate: "Lascia riposare il panetto coperto 20–30 min e riprova; nel prossimo impasto taglia la farina con una più debole",
+      prevention: "Usa una farina nella forza e nel P/L indicati dallo stile",
+    },
+    P20: {
+      symptom: "Odore 'chimico' (alcol, solvente) nell'impasto",
+      cause: "Fermentazione andata oltre (alcol ed esteri) o troppo lievito; più di rado il cloro dell'acqua",
+      testRapido: "Odore di alcol o di acetone e impasto molle che non risale?",
+      fixImmediate: "Se è molle e non risale, trattalo come un impasto andato oltre: ripallalo o cuocilo subito",
+      prevention: "La prossima volta meno lievito o più fresco. Se l'acqua di rubinetto sa di cloro usane un'altra: il riposo all'aria non elimina le clorammine",
+    },
+    P14: {
+      symptom: "Macchie leopardate sul cornicione (leopard spotting)",
+      cause: "Bolle sottili del cornicione che si scuriscono col calore molto forte del forno (imbrunimento e bruciatura localizzati)",
+      testRapido: "Le macchie sono amare al gusto?",
+      fixImmediate: "NON è un problema! È la caratteristica desiderata della pizza napoletana",
+      prevention: "Se troppo marcate: ruota pizza ogni 20s durante cottura",
+    },
+    P15: {
+      symptom: "Fondo pizza scuro/nero sotto",
+      cause: "Platea più calda di quanto serve allo stile, oppure farina o semola bruciata sulla pietra",
+      testRapido: "Assaggia: sapore amaro?",
+      fixImmediate: "Se amaro = problema (abbassa temp). Se saporito = NORMALE",
+      prevention: "Tieni la platea alla temperatura dello stile e rimuovi i residui con attrezzi e modalità di pulizia previsti dal produttore.",
+    },
+    FR01: {
+      symptom: "Dorata fuori, cruda dentro",
+      cause: "Olio troppo caldo o impasto troppo spesso.",
+      testRapido: "Apri un pezzo di prova e controlla il centro.",
+      fixImmediate: "Riduci il calore per i pezzi successivi; non basarti solo sul colore.",
+      prevention: "Controlla l’olio con un termometro e segui la temperatura della ricetta.",
+    },
+    FR02: {
+      symptom: "Troppo unta e poco croccante",
+      cause: "Olio troppo freddo o raffreddato da troppi pezzi insieme.",
+      testRapido: "Controlla la temperatura dell’olio fra un turno e l’altro.",
+      fixImmediate: "Lascia tornare l’olio alla temperatura prevista; friggi pochi pezzi e scola bene.",
+      prevention: "Evita di sovraccaricare il recipiente e controlla la temperatura durante i turni.",
+    },
+    FR03: {
+      symptom: "Il ripieno fuoriesce nell’olio",
+      cause: "Bordi poco sigillati, fori o ripieno sui bordi.",
+      testRapido: "Controlla la chiusura dei pezzi ancora crudi.",
+      fixImmediate: "Sigilla meglio i pezzi successivi; non aggiungere acqua nell’olio caldo.",
+      prevention: "Tieni puliti i bordi, dosa il ripieno e chiudi senza forare l’impasto.",
+    },
+  },
   contextual: {
     sticky_dough: {
       message: "Idratazione {h}% con W {w}: rischio impasto appiccicoso",
@@ -168,15 +336,202 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
 /* FW-05 (S12-B-14): una sola fonte per i testi italiani del glossario.
  * Prima i range e i «perché» erano copiati qui e in glossary-data.ts, e due
  * copie divergevano (Arrhenius, Q₁₀, TF). Le formule entrano nel catalogo solo
- * se hanno parole da tradurre; i range derivati dagli stili non sono testo. */
-/* Nel catalogo il nome del prodotto torna token, come in ogni testo del CMS. */
-const brandToken = (text: string) => text.split(BRAND.name).join("{brand}");
+ * se hanno parole da tradurre; i range derivati dagli stili non sono testo.
+ * Budget D-059 (31/10/2026): definizioni e «perché» sono scritti qui (prima
+ * in data/glossary-copy.ts e nei dati, che ogni lingua scaricava), con il
+ * nome del prodotto come token come in ogni testo del CMS; nome, formula e
+ * fasce vengono dai dati. Revisione dei testi e fonti:
+ * docs/ricerca/dietary-audit-2026-10-26.md. */
+export const GLOSSARY_TEXT_IT: Record<string, { plainDefinition?: string; definition: string; whyImportant?: string }> = {
+  w_alveograph: {
+    plainDefinition: "La forza della farina: più è alta, più a lungo l’impasto regge la lievitazione. Spesso è scritta sul sacco (per esempio W 280).",
+    definition: "Energia totale necessaria per espandere un alveolo di impasto fino a rottura. Misura la forza complessiva della farina.",
+    whyImportant: "W descrive la forza complessiva della farina. Tenacità ed estensibilità si valutano con P, L e P/L: una W alta non implica da sola un impasto più tenace. Le fasce sono quelle che {brand} usa in tutta l'app; ogni stile indica la sua forbice di W.",
+  },
+  p_tenacity: {
+    plainDefinition: "Quanto l’impasto resiste quando lo tiri.",
+    definition: "Resistenza massima alla deformazione. Picco della curva alveografica — quanto l'impasto resiste allo stiramento.",
+    whyImportant: "P alto: impasto 'duro', tiene forma in cottura. P basso: impasto 'molle', facile stendere, può collassare.",
+  },
+  l_extensibility: {
+    plainDefinition: "Quanto l’impasto si allunga prima di strapparsi.",
+    definition: "Lunghezza massima raggiunta dall'alveolo prima di rottura. Misura quanto l'impasto si può allungare.",
+    whyImportant: "L alto: impasto estensibile, facile stendere senza strappi. L basso: impasto corto, si strappa.",
+  },
+  pl_ratio: {
+    plainDefinition: "Dice se l’impasto tende a tornare indietro (valore alto) o ad allungarsi facilmente (valore basso).",
+    definition: "Rapporto tra la resistenza dell’impasto alla deformazione e la sua capacità di allungarsi.",
+    whyImportant: "Descrive un equilibrio reologico: il valore adatto dipende da farina, idratazione e metodo, non garantisce altezza o consistenza della pizza. Gli esempi sono gli intervalli degli stili di {brand}; il P/L della tua farina è sulla scheda tecnica del mulino.",
+  },
+  falling_number: {
+    plainDefinition: "Dice quanto sono attivi gli enzimi della farina che trasformano l’amido in zuccheri.",
+    definition: "Tempo impiegato da un'asta a cadere attraverso una sospensione di farina riscaldata. Misura l'attività amilasica.",
+    whyImportant: "FN basso (<250): fermentazione rapida ma impasto instabile. FN alto (>300): stabile per lunghe maturazioni.",
+  },
+  hydration: {
+    plainDefinition: "Quanta acqua c’è nell’impasto rispetto alla farina: con il 65% metti 65 g d’acqua ogni 100 g di farina.",
+    definition: "Percentuale in peso di acqua rispetto alla farina nell'impasto.",
+    whyImportant: "Più acqua rende l'impasto più morbido e più difficile da gestire, e chiede una farina più forte. La croccantezza dipende soprattutto da cottura e spessore: anche una teglia molto idratata può essere croccante. Gli esempi sono gli intervalli degli stili di {brand}.",
+  },
+  absorption: {
+    definition: "Massima quantità d'acqua che una farina può assorbire mantenendo consistenza lavorabile. Dipende da proteine, amido danneggiato, fibre.",
+  },
+  stability: {
+    definition: "Quanto a lungo l’impasto mantiene la sua consistenza durante la lavorazione. Si misura con il farinografo.",
+    whyImportant: "Stabilità bassa (<5 min): degrada se overmixed. Alta (>10 min): tollera errori operativi.",
+  },
+  yeast: {
+    definition: "Un fungo unicellulare che fermenta gli zuccheri, producendo anidride carbonica, alcol e composti aromatici.",
+    whyImportant: "L’attività dipende da ceppo, dose, temperatura e impasto. Il freddo rallenta la fermentazione; non esiste una soglia universale di arresto immediato. La dose giusta dipende da ore e temperatura: la ricetta la calcola per te.",
+  },
+  lab: {
+    plainDefinition: "I batteri del lievito madre che danno all’impasto il sapore acidulo.",
+    definition: "Batteri che fermentano zuccheri producendo acido lattico (e acetico). Presenti nel lievito madre.",
+    whyImportant: "Possono modificare acidità e fruttani secondo ceppi, farina e processo. La loro presenza non certifica un impasto low FODMAP.",
+  },
+  q10: {
+    plainDefinition: "Di quante volte accelera la lievitazione quando fa {tenDegrees} più caldo.",
+    definition: "Fattore moltiplicativo della velocità di reazione biochimica per ogni aumento di 10°C.",
+    whyImportant: "Con Q₁₀ = {q10ComAbove} la velocità si moltiplica per {q10ComAbove} ogni {tenDegrees}: {q10ExampleRefHours} a {q10RefTemp} ≈ {q10ExampleWarmHours} a {q10ExampleWarmTemp}. I valori di questa voce sono stime del modello di {brand}.",
+  },
+  arrhenius: {
+    definition: "Lega la velocità di una reazione alla temperatura assoluta (in kelvin) attraverso un'energia di attivazione.",
+    whyImportant: "{brand} non usa questa equazione. Il motore applica un Q₁₀ a tratti riferito a {q10RefTemp}: {q10ComAbove} sopra e {q10ComBelow} sotto {q10ComBreak} per il lievito commerciale, {q10SdAbove} sopra e {q10SdBelow} fino a {q10SdBreak} per il lievito madre. Sono stime del modello, non valori misurati.",
+  },
+  biga: {
+    definition: "Prefermento asciutto di farina, {bigaHydration} d'acqua (fino al 50% con farine integrali) e circa l'1% di lievito fresco sulla farina della biga, maturato circa 16 h a 18–20 °C; la biga lunga fa 24 h a 4–5 °C più 24 h a 18–20 °C.",
+    whyImportant: "Porta aroma e struttura all'impasto finale. Di solito il 30–40% della farina totale: {brand} parte dal {bigaFlourPct}. Non è ammessa nella Napoletana STG, che è a impasto diretto.",
+  },
+  poolish: {
+    definition: "Prefermento liquido: farina e acqua in parti uguali con poco lievito, maturato 12–16 h a 20–22 °C (0,1% di lievito per 15–16 h, 0,3% per 10–12 h).",
+    whyImportant: "Matura più in fretta della biga e rende l'impasto estensibile. Di solito il 30–50% della farina totale: {brand} parte dal {poolishFlourPct}. È pronto quando la superficie è piena di bollicine e il centro comincia a cedere.",
+  },
+  autolysis: {
+    definition: "Riposo di farina e acqua, senza lievito né sale, per 20–60 minuti prima dell'impasto (R. Calvel, 1974). Non è un prefermento.",
+    whyImportant: "L'impasto diventa più estensibile e più facile da lavorare.",
+  },
+  bulk_fermentation: {
+    definition: "Prima lievitazione, in massa unica, dopo l'impasto e prima dello staglio. Secondo lo stile dura da meno di un'ora a più di un giorno in frigo: la durata giusta è quella del procedimento.",
+    whyImportant: "Il glutine si rilassa, la fermentazione parte e l'impasto prende aroma.",
+  },
+  ball_fermentation: {
+    definition: "Seconda lievitazione, dopo lo staglio: in panetti o, per gli stili in teglia, direttamente in teglia. Dura secondo stile, temperatura e lievito: la durata giusta è quella del procedimento.",
+    whyImportant: "Porta i panetti al volume giusto per stendere e infornare.",
+  },
+  maillard: {
+    definition: "Insieme di reazioni non enzimatiche tra composti amminici e zuccheri riducenti, favorite dal riscaldamento.",
+    whyImportant: "Contribuisce al colore e agli aromi della crosta. Intensità e velocità dipendono da temperatura della superficie, tempo, umidità e ingredienti; la temperatura del forno non coincide con quella dell’alimento.",
+  },
+  caramelization: {
+    definition: "Trasformazioni degli zuccheri durante il riscaldamento, distinte dalle reazioni di Maillard e senza richiedere composti amminici.",
+    whyImportant: "Può contribuire a colore e aromi tostati. L’effetto dipende dagli zuccheri presenti, dall’umidità, dal tempo e dalla temperatura della superficie.",
+  },
+  starch_gelatinization: {
+    definition: "Con acqua e calore i granuli di amido si idratano, si rigonfiano e perdono parte della struttura cristallina. L’intervallo dipende dall’amido e dalla formulazione.",
+    whyImportant: "Contribuisce alla struttura della mollica e alla trasformazione dell’amido. Una singola temperatura al cuore non certifica da sola cottura completa o digeribilità individuale.",
+  },
+  retrogradation: {
+    definition: "Ricristallizzazione dell'amido gelatinizzato durante conservazione. Massima a 4°C (frigo).",
+    whyImportant: "Mollica diventa dura e 'stantia'. Ritardare con: grassi 2-3%, zuccheri 1-2%, fermentazione lunga, idratazione alta.",
+  },
+  thermal_conductivity: {
+    definition: "Capacità di un materiale di condurre calore.",
+    whyImportant: "Più alta è k, più in fretta la superficie passa calore alla base: per questo l'acciaio aiuta i forni di casa, che scaldano meno. Sulla platea conta anche quanto calore il materiale accumula: i forni a legna usano mattone refrattario o biscotto.",
+  },
+  fodmap: {
+    definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Carboidrati a catena corta fermentabili (fruttani 1-3% nel grano).",
+    whyImportant: "La fermentazione può modificare i FODMAP, ma il risultato dipende da farine, microrganismi, processo e porzione. Le sole ore non permettono di calcolare una riduzione o attestare una ricetta low FODMAP.",
+  },
+  histamine: {
+    definition: "Ammina biogena da decarbossilazione dell'istidina. Prodotta da LAB durante fermentazione, presente in formaggi stagionati e salumi.",
+    whyImportant: "Il contenuto dipende da microrganismi, ingredienti, processo e conservazione. Non è calcolabile con un tasso fisso per ora; una fermentazione breve non ne garantisce l'assenza.",
+  },
+  gluten: {
+    definition: "Complesso di gliadina e glutenina che, con acqua e lavorazione, forma una rete elastica ed estensibile nell’impasto.",
+    whyImportant: "Elasticità da glutenine (legami S-S), viscosità da gliadine (legami H). Una proteolisi lunga rende l’impasto più estensibile, ma il glutine resta: lievitazioni lunghe o con lievito madre non rendono la pizza adatta a chi è celiaco. Allergie e intolleranze si impostano nel Profilo.",
+  },
+  proteolysis: {
+    definition: "Gli enzimi proteasi scompongono le proteine dell’impasto in molecole più piccole, come peptidi e amminoacidi.",
+    whyImportant: "Può modificare estensibilità e tenuta dell’impasto. Dipende da farina, microrganismi, temperatura e processo: non esiste una durata ottimale universale e non misura la digeribilità individuale.",
+  },
+  thickness_factor: {
+    plainDefinition: "Quanto impasto serve per ogni centimetro quadrato di pizza: più è alto, più la pizza è spessa.",
+    definition: "Quantità di impasto per unità di superficie: indica quanti grammi servono per ogni cm² di pizza.",
+    whyImportant: "Metrica diffusa nei calcolatori d'impasto nordamericani (in oz/in²; 1 oz/in² ≈ 4,39 g/cm²). {brand} la esprime in g/cm² per dimensionare i panetti; insieme al forno orienta tempo di cottura e croccantezza. Gli esempi sono calcolati dal peso del panetto e dalla forma di ogni stile.",
+  },
+  friction_factor: {
+    definition: "Gradi in più che l'impastatrice aggiunge all'impasto mentre lavora.",
+    whyImportant: "Impastare scalda l'impasto e fa partire prima la lievitazione: per questo l'acqua va più fredda quando usi una macchina.",
+  },
+  rule_of_55: {
+    definition: "Calcola a che temperatura mettere l'acqua perché l'impasto arrivi alla temperatura voluta.",
+    whyImportant: "Somma delle tre temperature (cucina, farina, acqua) = 3 × impasto voluto − attrito; con un prefermento entra anche la sua temperatura e la somma dei quattro termini diventa 4 × impasto voluto − attrito. In pizzeria si dice anche «regola del 55»: con la somma fissa a 55 l'impasto viene intorno ai 18 °C (55 ÷ 3); qui l'impasto voluto è 22 °C se l'impasto matura in frigo, 24 °C altrimenti.",
+  },
+  a_score: {
+    definition: "Punteggio da 0 a 100 sulla vicinanza al riferimento dello stile. Non certifica la conformità a un disciplinare.",
+    whyImportant: "I pesi sono una scelta di {brand}, non una misura. Regole di prodotto: se il forno non è quello previsto dallo stile (legna o carbone) e non arriva alla sua temperatura minima, il punteggio non supera {authFuelCap}; sotto la temperatura minima dello stile si riduce in proporzione.",
+  },
+  f_score: {
+    definition: "Punteggio da 0 a 100 sulla facilità di preparazione con forno, farina ed esperienza disponibili. I requisiti che bloccano la ricetta sono valutati a parte.",
+    whyImportant: "I pesi sono una scelta di {brand}, non una misura. Se la ricetta non si può fare con la tua cucina, la compatibilità non supera {nonFeasibleCeiling}, qualunque siano gli altri punteggi.",
+  },
+  d_score: {
+    definition: "Stima del modello basata su tempi, temperature, lievito e prefermenti. Non misura la digeribilità personale e non permette di calcolare i FODMAP.",
+  },
+  dough_division: {
+    definition: "Dividere la massa dell’impasto in pezzi dello stesso peso, uno per pizza, e chiuderli a palla.",
+    whyImportant: "Panetti dello stesso peso lievitano e cuociono allo stesso modo. Il peso di ogni panetto è indicato nella ricetta.",
+  },
+  ball_shaping: {
+    definition: "Il gesto che chiude il pezzo d’impasto in una palla liscia e tesa: lo fai girare su se stesso, sul piano o tra le mani, finché la superficie è tirata.",
+    whyImportant: "Una superficie tesa trattiene il gas durante l’appretto e dà un panetto che si stende in tondo. Se la pasta si strappa hai tirato troppo: lasciala riposare qualche minuto.",
+  },
+  gluten_development: {
+    definition: "Il punto in cui l’impasto diventa liscio ed elastico e smette di attaccarsi alle mani o alla ciotola: la maglia del glutine si è formata.",
+    whyImportant: "Un impasto incordato trattiene il gas della lievitazione. Prova pratica: allarga un pezzetto tra le dita; se diventa una pellicola sottile senza strapparsi subito, è pronto. Impastare troppo a lungo con la macchina invece scalda e indebolisce l’impasto.",
+  },
+  folds: {
+    definition: "Stiri un lembo d’impasto e lo ripieghi sopra il resto, giri la massa e ripeti su ogni lato. Si fanno a intervalli durante il riposo, invece di impastare più a lungo.",
+    whyImportant: "Rinforzano la maglia del glutine senza scaldare l’impasto: servono soprattutto negli impasti molto idratati. Lo «slap & fold» è una variante: sollevi l’impasto, lo sbatti sul piano e lo ripieghi su se stesso.",
+  },
+  poke_test: {
+    definition: "Premi il panetto con un dito infarinato per circa un centimetro e guarda come risale.",
+    whyImportant: "Se il segno risale piano e ne resta un po’, il panetto è pronto. Se risale subito, serve ancora tempo. Se resta sfondato e il panetto si sgonfia, ha lievitato troppo. È un’indicazione pratica, non una misura.",
+  },
+  cornicione: {
+    definition: "Il bordo della pizza, più alto e gonfio del centro: in cottura il gas dell’impasto si espande e lo solleva.",
+    whyImportant: "Per averlo, quando stendi spingi l’aria dal centro verso il bordo senza schiacciarlo. Altezza e alveoli dipendono da stile, idratazione, lievitazione e calore del forno.",
+  },
+  oven_floor_dome: {
+    definition: "La platea è il piano del forno su cui poggia la pizza; il cielo è la volta sopra. La platea cuoce il fondo per contatto, il cielo cuoce condimento e bordo con il calore che irraggia.",
+    whyImportant: "Se il fondo brucia e il condimento resta crudo, la platea è troppo calda rispetto al cielo; se succede il contrario, è troppo fredda. Nel forno di casa la pietra o l’acciaio fanno da platea e il grill da cielo.",
+  },
+  pre_ferment: {
+    definition: "Una parte della farina e dell’acqua impastata con il lievito ore prima dell’impasto finale e lasciata maturare. I più usati sono la biga (asciutta) e il poolish (liquido).",
+    whyImportant: "Porta aroma e cambia la lavorabilità dell’impasto finale. Nella ricetta è una fase a parte, e le sue dosi fanno parte del totale: non si aggiungono. L’autolisi non è un prefermento, perché non contiene lievito.",
+  },
+  sourdough: {
+    definition: "Un impasto di farina e acqua in cui vivono lieviti selvatici e batteri lattici, mantenuto con rinfreschi di farina e acqua. Una parte si usa al posto del lievito di birra.",
+    whyImportant: "Lievita più lentamente del lievito di birra e dà un sapore leggermente acidulo. Quanto è attivo dipende da come lo rinfreschi: per questo la dose con lievito madre è un’ipotesi del modello, da adattare al tuo.",
+  },
+  flour_type: {
+    definition: "In Italia il tipo dice quanto è raffinata la farina di grano tenero: la 00 è la più bianca, poi 0, 1, 2 e integrale, che contiene tutto il chicco. Si stabilisce dalle ceneri, cioè dai minerali che restano bruciando la farina.",
+    whyImportant: "Il tipo non dice quanto è forte la farina: una 00 può essere debole o molto forte. La forza è la W, se è scritta sul sacco. Quando non la indichi, il modello assume un intervallo tipico per quel tipo.",
+  },
+  manitoba: {
+    definition: "Farina di grano tenero ricca di proteine, in origine da grani nordamericani (il nome viene dalla provincia canadese del Manitoba). Oggi in commercio indica una farina molto forte.",
+    whyImportant: "Si usa per lievitazioni lunghe o in miscela con una 00 per alzare la forza. Da sola dà un impasto tenace, più difficile da stendere.",
+  },
+  semola_rimacinata: {
+    definition: "Semola di grano duro macinata una seconda volta, più fine della semola normale: gialla e granulosa al tatto.",
+    whyImportant: "Si usa per spolverare banco e pala, perché fa scorrere la pizza e brucia meno della farina, e in piccola parte nell’impasto di alcuni stili. Il glutine del grano duro è meno estensibile di quello del grano tenero.",
+  },
+};
+
 export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
   terms: Object.fromEntries(GLOSSARY_TERMS.map((term) => [term.id, {
     name: term.name,
-    ...(term.plainDefinition !== undefined ? { plainDefinition: brandToken(term.plainDefinition) } : {}),
-    definition: brandToken(term.definition),
-    ...(term.whyImportant !== undefined ? { whyImportant: brandToken(term.whyImportant) } : {}),
+    ...GLOSSARY_TEXT_IT[term.id],
     ...((LOCALIZED_FORMULA_TERMS as readonly string[]).includes(term.id) && term.formula ? { formula: term.formula } : {}),
     ...(term.ranges ? { ranges: term.ranges.map(({ label, value, note }) => (note ? { label, value, note } : { label, value })) } : {}),
   }])),

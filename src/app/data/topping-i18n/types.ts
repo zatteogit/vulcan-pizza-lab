@@ -1,8 +1,9 @@
 /* ═══ I18N-2 — traduzioni della libreria condimenti ═══
- * La libreria (topping-library.ts) resta in italiano ed è la fonte: un file
- * per lingua aggiunge solo i testi tradotti, indicizzati per id. Il motore non
- * cambia (resta neutrale rispetto alla lingua): la UI applica la traduzione
- * con le funzioni di localize.ts. Una voce mancante ricade sull'italiano. */
+ * La libreria (topping-library.ts) tiene struttura, dosi e nomi; un file per
+ * lingua, italiano compreso dal 31/10/2026 (budget D-059), ha i testi
+ * indicizzati per id. Il motore non cambia: legge i testi dalla libreria, che
+ * li prende dal catalogo registrato (registry.ts). La UI applica comunque la
+ * traduzione con le funzioni di localize.ts. */
 
 export interface ToppingStepTranslation {
   title?: string;

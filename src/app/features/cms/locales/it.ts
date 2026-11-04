@@ -1,12 +1,14 @@
 import type { CmsContent } from "../cms-context";
 import { STYLES_DB } from "../../../domain/styles-db";
-import { METHOD_MESSAGES_IT, STEP_COPY_IT } from "../../../data/method-messages";
+import { STEP_COPY_IT } from "../../../data/method-messages";
+import { METHOD_MESSAGES_IT_TEXT } from "../../../data/method-messages.it";
 import { ALLERGEN_MESSAGES_IT } from "../../../data/allergen-data";
 import { DIETARY_MESSAGES_IT } from "../../../data/dietary-data";
 /* FW-06 · D-E: i pesi del punteggio non sono testo, li dà il motore. */
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../../../domain/recipe-score";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import { UI_MESSAGES_IT } from "../../../i18n/ui-messages.it";
+import { TOPPING_I18N_IT } from "../../../data/topping-i18n/it";
 import {
   PRE_FERMENT_DEFAULTS,
   TROUBLESHOOTING_I18N_DEFAULTS,
@@ -36,6 +38,8 @@ export const IT_LOCALE: CmsContent = {
     name: "Italiano",
   },
   messages: UI_MESSAGES_IT,
+  /* Budget D-059 (31/10/2026): i testi dei condimenti, come nelle altre lingue. */
+  toppingI18n: TOPPING_I18N_IT,
   ui: {
     scoreTipOriginal: "Riferimento dello stile, sulla tua cucina.",
     scoreTipTailored: "Versione con gli adattamenti proposti.",
@@ -840,7 +844,7 @@ export const IT_LOCALE: CmsContent = {
     "timeline.fry.title": "Frittura",
     "timeline.fry.desc": "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
     "timeline.mix.title": "Impasto",
-    ...METHOD_MESSAGES_IT,
+    ...METHOD_MESSAGES_IT_TEXT,
     "timeline.divide.title": "Staglio",
     "timeline.stack.title": "Sovrapposizione",
     "timeline.fillClosed.title": "Ripieno e chiusura",

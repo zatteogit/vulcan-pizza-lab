@@ -11,12 +11,21 @@ import { MCP_INSTRUCTIONS } from "./mcp-guide";
 import { MCP_SERVER_INFO, MCP_TOOLS, ToolInputError } from "./mcp-tools";
 import { registerUiMessages } from "../i18n/ui-messages";
 import { UI_MESSAGES_IT } from "../i18n/ui-messages.it";
+import { registerToppingTexts } from "../data/topping-i18n/registry";
+import { TOPPING_I18N_IT } from "../data/topping-i18n/it";
+import { registerMethodMessages } from "../data/method-messages";
+import { METHOD_MESSAGES_IT_TEXT } from "../data/method-messages.it";
 
 /* Budget D-059 (30/10/2026): nell'app il catalogo uiMessage italiano arriva
  * con il bundle della lingua; il server (MCP, e la voce che passa da qui)
  * lo registra da sé, perché i18n/format.ts lo usa per orari, elenchi e
  * combustibili. */
 registerUiMessages("it", UI_MESSAGES_IT);
+/* Budget D-059 (31/10/2026): lo stesso per i testi dei condimenti (passi,
+ * note, varianti), che la libreria legge dal catalogo della lingua. */
+registerToppingTexts("it", TOPPING_I18N_IT);
+/* E i testi italiani dei messaggi del motore (passi, cambi, raccomandazioni). */
+registerMethodMessages(METHOD_MESSAGES_IT_TEXT);
 
 export const MCP_PROTOCOL_VERSION = "2025-06-18";
 const SUPPORTED_VERSIONS = new Set(["2025-06-18", "2025-03-26", "2024-11-05"]);
