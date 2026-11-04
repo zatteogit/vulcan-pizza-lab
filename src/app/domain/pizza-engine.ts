@@ -31,7 +31,7 @@ import { BRAND } from "../config/brand";
 import { maxPreFermentFlourPct, PRE_FERMENT_TARGET_HOURS, preFermentMaturationTempC, rule55Sum } from "./pre-ferment-split";
 import { roundForDisplay } from "./dose-rounding";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
-import { assessAllergens, allergenWarnings, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
+import { assessAllergens, allergenWarnings, ingredientAllergens, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
 import { flourWText } from "./flour-w-display";
 import {
   assemblyStepBake,
@@ -98,8 +98,38 @@ export interface DoughParameters {
    *  i componenti senza `w` sono senza glutine. L'output mostra il breakdown in
    *  grammi con la W di ciascuna farina; la forza efficace dell'impasto è la
    *  media delle W di frumento pesata sulle quote. Modificabile dall'utente. VPL-B2. */
-  flour_blend?: { name: string; pct: number; w?: number }[];
+  flour_blend?: FlourBlendComponent[];
+  /** B4 (M4): ingredienti dell'impasto oltre a farina, acqua, sale, grasso,
+   *  zucchero e lievito (malto, fiocchi di patate), in % sulla farina. I
+   *  facoltativi (`optional`) restano fuori dal totale e dagli ingredienti
+   *  richiesti finché la ricetta non li sceglie (included_optional_ingredients,
+   *  per nome o per id). */
+  extra_ingredients?: ExtraDoughIngredient[];
 }
+
+/** Componente di un mix di farine. `w`: farina di frumento con la sua forza,
+ *  che entra nella W media del mix. `gluten` (B4): farina con glutine senza W
+ *  dichiarata (semola rimacinata, enkir): non entra nella W media ma non la
+ *  diluisce come una farina senza glutine, ed è glutine per diete e allergeni.
+ *  `id`: chiave del nome tradotto (uiMessage `flourBlend.<id>`); `name` resta
+ *  l'identità italiana per allergeni e dispensa. */
+export interface FlourBlendComponent { name: string; pct: number; w?: number; gluten?: true; id?: string }
+
+/** Il mix della ricetta senza i grammi, per rimetterlo nelle opzioni (B4:
+ *  senza perdere `gluten` e `id`). */
+export function blendWithoutGrams(blend?: readonly (FlourBlendComponent & { grams?: number })[]): FlourBlendComponent[] | undefined {
+  return blend?.map(({ name, pct, w, gluten, id }) => ({ name, pct, w, ...(gluten ? { gluten } : {}), ...(id ? { id } : {}) }));
+}
+
+/** B4 (M4): ingredienti aggiuntivi dell'impasto conosciuti dal motore. Il
+ *  nome è l'identità (allergeni, diete, dispensa), il testo tradotto è in
+ *  uiMessage `dough.extra.<id>`. */
+export const EXTRA_DOUGH_INGREDIENTS = {
+  malt_syrup: { name: "Malto d'orzo" },
+  potato_flakes: { name: "Fiocchi di patate" },
+} as const;
+export type ExtraDoughIngredientId = keyof typeof EXTRA_DOUGH_INGREDIENTS;
+export interface ExtraDoughIngredient { id: ExtraDoughIngredientId; pct: number; optional?: true }
 
 export interface ShapeParameters {
   shape_type: ShapeType;
@@ -243,7 +273,12 @@ export interface MethodProcessProfile {
   phases?: DeclaredPhases;
   /** B3: cottura della versione (forno ideale e tempo), dentro gli intervalli
    *  dello stile: sostituisce l'ideale dello stile (profileStyle). */
-  bake?: { temp_c: number; cook_time_sec: number; racks?: "low_then_high" };
+  bake?: { temp_c: number; cook_time_sec: number; racks?: "low_then_high";
+    /** B4: forno ventilato o funzione pizza (testo del passo «Cottura»). */
+    fan?: true };
+  /** B4 (Paoletta): il condimento va sull'impasto dopo l'appretto in teglia,
+   *  subito prima di infornare (testo `description_after_pan_proof`). */
+  topping_after_proof?: true;
   /** B3: la teglia non si unge; l'impasto si stende su un velo di semola. */
   unoiled_pan?: boolean;
   /** B5: pieghe della fonte (numero, intervallo, riposo prima del primo
@@ -269,11 +304,12 @@ export interface DeclaredPhase {
  *  panetti secondo `proof_in_pan`. Le ore sommate sono le ore della ricetta e
  *  la temperatura della puntata è la sua temperatura: finché sono quelle
  *  valgono le fasi, cambiate torna il modello delle quote (fermentationPhases).
- *  Un riposo dei panetti prima dell'appretto in teglia (B4, Paoletta) si
- *  aggiungerà come chiave in più. */
+ *  `rest` (B4, Paoletta): riposo dei panetti dopo lo staglio (pieghe di
+ *  sovrapposizione e arrotondamento), prima della stesura e dell'appretto. */
 export interface DeclaredPhases {
   preferment?: DeclaredPhase & { flour_pct?: number };
   bulk: DeclaredPhase;
+  rest?: DeclaredPhase;
   proof: DeclaredPhase;
 }
 
@@ -287,7 +323,7 @@ export function declaredPhases(
 ): DeclaredPhases | undefined {
   const p = profile?.phases;
   if (!p || fermentationTempC === undefined || Boolean(p.preferment) !== hasPreFerment) return undefined;
-  const hours = (p.preferment?.hours ?? 0) + p.bulk.hours + p.proof.hours;
+  const hours = (p.preferment?.hours ?? 0) + p.bulk.hours + (p.rest?.hours ?? 0) + p.proof.hours;
   return Math.abs(hours - fermentationHours) < 1 / 60 && Math.abs(p.bulk.temp_c - fermentationTempC) < 1e-6 ? p : undefined;
 }
 
@@ -639,7 +675,11 @@ export interface GeneratedRecipe {
   flour_pl: number; // P/L stimato
   /** VPL-B2 — mix di farine risolto (con grammi per componente). Presente solo
    * per le ricette a blend (es. Pinsa, Bonci). */
-  flour_blend?: { name: string; pct: number; w?: number; grams: number }[];
+  flour_blend?: (FlourBlendComponent & { grams: number })[];
+  /** B4 (M4): ingredienti aggiuntivi risolti. `included`: un facoltativo
+   *  scelto (conta nel totale). I facoltativi non scelti hanno i grammi per
+   *  chi li aggiunge, ma restano fuori dal totale dell'impasto. */
+  extra_ingredients?: { id: ExtraDoughIngredientId; name: string; pct: number; grams: number; optional?: true; included?: true }[];
   /** VPL-B2 — forza glutinica efficace del mix (W frumento diluita dalla quota
    * senza glutine). Informativa; presente solo per blend con farine prive di W. */
   effective_gluten_w?: number;
@@ -775,7 +815,7 @@ export interface TimelineStep {
   /** B3 (decisione 2 di Matteo, 31/10/2026): passo del condimento «prima
    *  dell'appretto» spostato dopo la stesura, perché la ricetta non fa
    *  l'appretto in teglia: testo `description_no_pan_proof`. */
-  topping_variant?: "no_pan_proof";
+  topping_variant?: "no_pan_proof" | "after_pan_proof";
   /** D-050: quante volte si ripete la cottura (una pizza o teglia alla volta);
    *  duration_minutes è già il totale. */
   rounds?: number;
@@ -1771,9 +1811,11 @@ export function fermentationPhases(
   profile?: MethodProcessProfile,
   /** B3: temperatura della ricetta, per riconoscere le fasi della fonte. */
   fermentationTempC?: number,
-): { preferment: number; bulk: number; proof: number } {
+): { preferment: number; bulk: number; proof: number; rest?: number } {
   const declared = declaredPhases(profile, fermentationHours, fermentationTempC, hasPreFerment);
-  if (declared) return { preferment: declared.preferment?.hours ?? 0, bulk: declared.bulk.hours, proof: declared.proof.hours };
+  // B4: il riposo dei panetti c'è solo se la fonte lo scrive.
+  if (declared) return { preferment: declared.preferment?.hours ?? 0, bulk: declared.bulk.hours,
+    ...(declared.rest ? { rest: declared.rest.hours } : {}), proof: declared.proof.hours };
   if (!hasPreFerment) {
     const proof = Math.min(fermentationHours, profile?.proof_hours ?? fermentationHours * 0.4);
     return { preferment: 0, bulk: fermentationHours - proof, proof };
@@ -1810,7 +1852,7 @@ export function equivalentFermentationHours(
   const declared = declaredPhases(profile, fermentationHours, fermentationTempC, hasPreFerment);
   if (declared) {
     const bulkSpeed = fermentationSpeedRatio(yeastType, fermentationTempC);
-    return [declared.preferment, declared.bulk, declared.proof]
+    return [declared.preferment, declared.bulk, declared.rest, declared.proof]
       .reduce((sum, phase) => sum + (phase ? phase.hours * fermentationSpeedRatio(yeastType, phase.temp_c) / bulkSpeed : 0), 0);
   }
   if (fermentationTempC >= PROOF_MIN_TEMP_C || fermentationHours <= 0) return fermentationHours;
@@ -2002,7 +2044,7 @@ export interface GenerateRecipeOptions {
    * Disciplinare/Community) è attiva. */
   interpretationCenter?: AuthenticityCenter;
   /** VPL-B2 — mix di farine modificato dall'utente (quote/W per componente). */
-  customFlourBlend?: { name: string; pct: number; w?: number }[];
+  customFlourBlend?: FlourBlendComponent[];
   /** ENG-6 — applica la compensazione d'idratazione del forno ANCHE sopra
    *  customHydration (usato dall'ottimizzatore sui suoi candidati). Senza
    *  questo flag un valore custom è la scelta finale dell'utente. */
@@ -2143,11 +2185,13 @@ export function generateRecipe(
     const totalPct = flourBlend.reduce((s, c) => s + c.pct, 0) || 100;
     const wheat = flourBlend.filter((c) => c.w != null && c.pct > 0);
     const wheatPct = wheat.reduce((s, c) => s + c.pct, 0);
+    // B4: semola ed enkir (gluten senza W) non diluiscono la forza come il riso.
+    const glutenPct = wheatPct + flourBlend.filter((c) => c.w == null && c.gluten && c.pct > 0).reduce((s, c) => s + c.pct, 0);
     if (wheatPct > 0) {
       flourW = Math.round(
         wheat.reduce((s, c) => s + (c.w as number) * c.pct, 0) / wheatPct,
       );
-      effectiveGlutenW = Math.round((flourW * wheatPct) / totalPct);
+      effectiveGlutenW = Math.round((flourW * glutenPct) / totalPct);
     }
   }
 
@@ -2362,7 +2406,7 @@ export function generateRecipe(
   if (preFermentDroppedForSourdough) hasPreFerment = false;
   // B3: fasi della fonte, finché ore, temperatura e pre-fermento sono i suoi.
   const sourcePhases = declaredPhases(style.method_profile, fermentationHours, fermentationTempC, hasPreFerment);
-  const sourcePhaseList = sourcePhases ? [sourcePhases.preferment, sourcePhases.bulk, sourcePhases.proof] : [];
+  const sourcePhaseList = sourcePhases ? [sourcePhases.preferment, sourcePhases.bulk, sourcePhases.rest, sourcePhases.proof] : [];
 
   // M-11: la correzione personale («la mia cucina lievita più veloce»)
   // divide la dose: più veloce → meno lievito per le stesse ore.
@@ -2409,14 +2453,24 @@ export function generateRecipe(
       : Math.round(baseBallWeight * ovenCompensations.thickness_factor);
   const totalDough = ballWeight * doughBalls;
 
-  // Total dough = flour × (1 + H/100 + salt/100 + oil/100 + sugar/100 + yeast/100)
+  // B4 (M4): ingredienti aggiuntivi; i facoltativi contano solo se scelti.
+  const selectedOptional = new Set(constraints.included_optional_ingredients ?? []);
+  const extraIngredients = (style.dough.extra_ingredients ?? []).map((x) => {
+    const name = EXTRA_DOUGH_INGREDIENTS[x.id].name;
+    const included = !x.optional || selectedOptional.has(x.id) || selectedOptional.has(pantryIngredientId(name));
+    return { ...x, name, included };
+  });
+  const extraPct = extraIngredients.filter((x) => x.included).reduce((s, x) => s + x.pct, 0);
+
+  // Total dough = flour × (1 + H/100 + salt/100 + oil/100 + sugar/100 + yeast/100 + extra/100)
   const totalPct =
     1 +
     hydration / 100 +
     effectiveSaltPct / 100 +
     effectiveOilPct / 100 +
     effectiveSugarPct / 100 +
-    yeastPct / 100;
+    yeastPct / 100 +
+    extraPct / 100;
 
   const flourG = Math.round(totalDough / totalPct);
   const waterG = Math.round((flourG * hydration) / 100);
@@ -2791,17 +2845,20 @@ export function generateRecipe(
     {name:"Acqua",section:"dough"},{name:"Sale",section:"dough"},
     ...(fatG>0&&fatLabel?[{name:fatLabel,section:"dough" as const}]:[]),
     ...(effectiveSugarPct>0?[{name:"Zucchero",section:"dough" as const}]:[]),
+    ...extraIngredients.map(x=>({name:x.name,section:"dough" as const,...(x.included?{}:{optional:true})})),
     ...(!style.dough.unleavened&&yeastG>0?[{name:YEAST_LABELS[yeastType],section:"dough" as const}]:[]),
     ...(defaultTopping?.ingredients.filter(i=>i.amount.value>0).map(i=>({...i,section:"topping" as const}))??[]),
     ...(isFriedStyle(style)?[{name:"Olio per frittura",section:"cooking" as const}]:[]),
   ],constraints.allergens_avoid,constraints.included_optional_ingredients,constraints.allergen_labels);
   const dietaryWarnings = [...getDietaryWarnings(constraints.dietary_filters, [
     ...(flourG > 0 ? (flourBlend?.length
-      ? flourBlend.filter(c => c.pct > 0).map(c => ({ name: c.name, gluten: c.w !== undefined }))
+      ? flourBlend.filter(c => c.pct > 0).map(c => ({ name: c.name, gluten: c.w !== undefined || Boolean(c.gluten) }))
       : [{ name: "Farina di grano", gluten: true }]) : []),
     { name: "Acqua" }, { name: "Sale" },
     ...(fatG > 0 && fatLabel ? [{ name: fatLabel }] : []),
     ...(effectiveSugarPct > 0 ? [{ name: "Zucchero" }] : []),
+    // Il malto d'orzo è glutine anche per il filtro «senza glutine».
+    ...extraIngredients.map(x => ({ name: x.name, gluten: ingredientAllergens(x.name).contains.includes("gluten"), ...(x.included ? {} : { optional: true }) })),
     ...(defaultTopping?.ingredients.filter(i => i.amount.value > 0) ?? []),
   ]), ...allergenWarnings(allergens)];
   const referenceRef = STYLES_DB[style.id]?.default_topping_ref;
@@ -2819,14 +2876,15 @@ export function generateRecipe(
   const blockers: RecipeBlocker[] = dietaryWarnings.filter(w => w.severity === "critical").map(w => ({
     kind: "dietary_conflict", filter_id: w.filterId, ingredients: w.ingredients, message: w.message,
   }));
-  const requiredIngredients: {name:string;components?:string[]}[] = [{name:"Acqua"}, {name:"Sale"}, ...(fatG > 0 && fatLabel ? [{name:fatLabel}] : []), ...(effectiveSugarPct > 0 ? [{name:"Zucchero"}] : []), ...(defaultTopping?.ingredients ?? [])];
+  const requiredExtras = extraIngredients.filter(x => x.included).map(x => ({ name: x.name }));
+  const requiredIngredients: {name:string;components?:string[]}[] = [{name:"Acqua"}, {name:"Sale"}, ...(fatG > 0 && fatLabel ? [{name:fatLabel}] : []), ...(effectiveSugarPct > 0 ? [{name:"Zucchero"}] : []), ...requiredExtras, ...(defaultTopping?.ingredients ?? [])];
   const excludedIngredientIds = new Set(constraints.excluded_ingredients ?? []);
   const excludedNames = requiredIngredients.flatMap(ingredient => pantryIngredientReferences(ingredient.name,ingredient.components).filter(row => excludedIngredientIds.has(row.id)).map(row => row.name));
   if (!style.dough.unleavened && (constraints.excluded_yeasts ?? []).includes(yeastType)) excludedNames.push(yeastType);
   for (const name of new Map(excludedNames.map(name => [pantryIngredientId(name), name])).values()) blockers.push({kind:"resource_excluded",resource:"ingredient",message:em("need.excludedIngredient",METHOD_MESSAGES_IT["need.excludedIngredient"],{ingredient:name})});
   if (constraints.pantry_ingredients_complete) {
     const present = new Set(constraints.pantry_ingredients ?? []);
-    for (const name of [...new Map((defaultTopping?.ingredients ?? []).filter(ingredient => !ingredient.optional).map(ingredient => [pantryIngredientId(ingredient.name), ingredient.name])).values()]) {
+    for (const name of [...new Map([...requiredExtras, ...(defaultTopping?.ingredients ?? []).filter(ingredient => !ingredient.optional)].map(ingredient => [pantryIngredientId(ingredient.name), ingredient.name])).values()]) {
       if (!present.has(pantryIngredientId(name)) && !excludedIngredientIds.has(pantryIngredientId(name))) prerequisites.push({kind:"ingredient",status:"missing",acquisition:"ingredient",message:em("need.ingredient","Serve: {ingredient}",{ingredient:name})});
     }
   }
@@ -2978,6 +3036,12 @@ export function generateRecipe(
       effectiveGlutenW != null && effectiveGlutenW !== flourW
         ? effectiveGlutenW
         : undefined,
+    ...(extraIngredients.length > 0
+      ? { extra_ingredients: extraIngredients.map(({ id, name, pct, optional, included }) => ({
+          id, name, pct, grams: roundForDisplay("sugar", (flourG * pct) / 100),
+          ...(optional ? { optional } : {}), ...(optional && included ? { included: true as const } : {}),
+        })) }
+      : {}),
     fermentation_hours: fermentationHours,
     fermentation_temp_c: fermentationTempC,
     ...(sourcePhases ? { declared_phases: sourcePhases } : {}),
@@ -3708,7 +3772,7 @@ function generateTimeline(
   // Helper per iniettare assembly_steps del topping in un certo punto.
   // Restituisce true se uno step "replaces_generic" è già stato iniettato
   // (così la pipeline non aggiunge anche il suo step generico).
-  const injectToppingAt = (point: TimelineInsertPoint, noPanProof = false): boolean => {
+  const injectToppingAt = (point: TimelineInsertPoint, noPanProof = false, afterPanProof = false): boolean => {
     if (!topping?.assembly_steps) return false;
     let replacedGeneric = false;
     topping.assembly_steps
@@ -3717,7 +3781,9 @@ function generateTimeline(
         // G3-WP-03 (S09-A-13, D-G3-02): un solo comando per il basilico.
         const bake = assemblyStepBake(s, effectiveCookSec);
         // B3: senza appretto in teglia, il testo senza «lascialo lievitare».
-        const variant = noPanProof && s.description_no_pan_proof ? "no_pan_proof" as const : undefined;
+        // B4: dopo l'appretto in teglia, il testo sull'impasto già lievitato.
+        const variant = afterPanProof && s.description_after_pan_proof ? "after_pan_proof" as const
+          : noPanProof && s.description_no_pan_proof ? "no_pan_proof" as const : undefined;
         steps.push({
           id: s.id,
           title: s.title,
@@ -3826,15 +3892,19 @@ function generateTimeline(
     ? 15
     : ovenTempForPreheat >= 400 ? 60 : ovenTempForPreheat >= 300 ? 45 : 30;
   const preheatDuringProof = proofMinutes - idealPreheat >= 15;
-  const borrowedFromBulk = preheatDuringProof
-    ? 0
-    : Math.min(bulkMinutesFull, Math.max(0, idealPreheat - proofMinutes));
+  // B4: con il riposo dei panetti della fonte i minuti mancanti si tolgono
+  // prima dalla fine del riposo, poi dalla puntata (senza riposo: come prima).
+  const restMinutesFull = Math.round((phases.rest ?? 0) * 60);
+  const borrowNeeded = preheatDuringProof ? 0 : Math.max(0, idealPreheat - proofMinutes);
+  const borrowedFromRest = Math.min(restMinutesFull, borrowNeeded);
+  const borrowedFromBulk = Math.min(bulkMinutesFull, borrowNeeded - borrowedFromRest);
+  const restMinutes = restMinutesFull - borrowedFromRest;
   // FW-19: le pieghe sono un passo ricavato dall'inizio della puntata (stessa
   // soglia del calcolo del lievito, equivalentFermentationHours).
   const foldPlan = isUnleavened ? undefined : profileFolds(style);
   const foldMinutes = foldWindowMinutes(phases.bulk * 60, foldPlan);
   const bulkMinutes = bulkMinutesFull - borrowedFromBulk - foldMinutes;
-  const preheatMinutes = preheatDuringProof ? idealPreheat : proofMinutes + borrowedFromBulk;
+  const preheatMinutes = preheatDuringProof ? idealPreheat : proofMinutes + borrowedFromBulk + borrowedFromRest;
   const proofStepMinutes = preheatDuringProof ? proofMinutes - idealPreheat : 0;
   const speedFactorLabel = fermentationSpeedRatio(yeastType, fermentTemp).toFixed(1);
 
@@ -3971,6 +4041,20 @@ function generateTimeline(
       : { beginner: STEP_COPY_IT.divide.tipBeginner, nerd: STEP_COPY_IT.divide.tipNerd },
   });
 
+  /* B4 (Paoletta): riposo dei panetti scritto dalla fonte, dopo lo staglio e
+   * prima della stesura: pieghe di sovrapposizione, arrotondamento, coperti
+   * a campana, alla temperatura della fase. */
+  if (declared?.rest && restMinutes > 0) {
+    steps.push(
+      keyedStep(
+        { id: "rest", duration_minutes: restMinutes, icon: "timer", timing_label: formatDuration(Math.round(restMinutes / 60)),
+          temp_c: declared.rest.temp_c },
+        em("timeline.rest.title", METHOD_MESSAGES_IT["timeline.rest.title"]),
+        [em("timeline.rest.desc", METHOD_MESSAGES_IT["timeline.rest.desc"], { temp: declared.rest.temp_c })],
+      ),
+    );
+  }
+
   /* ─── APPRETTO + PRERISCALDO (audit roleplay giugno 2026, ENG-5) ───
    * Nessuna timeline diceva di ACCENDERE IL FORNO: si infornava a freddo.
    * Il preriscaldo corre in parallelo al riposo dei panetti (piano sopra):
@@ -3992,7 +4076,8 @@ function generateTimeline(
    * lieviti. Se la ricetta fa l'appretto a panetti (una versione d'autore con
    * `proof_in_pan` falso, come Adriano Continisio con la margherita dello
    * stile) il passo va dopo la stesura, col suo testo senza lievitazione. */
-  const toppingBeforeProof = proofInPan ? injectToppingAt("before_proof") : false;
+  const toppingAfterProof = proofInPan && Boolean(style.method_profile?.topping_after_proof);
+  const toppingBeforeProof = proofInPan && !toppingAfterProof ? injectToppingAt("before_proof") : false;
   const proofMessage = style.method_profile?.id === "apiter_teglia" ? em("timeline.proof.apiter", METHOD_MESSAGES_IT["timeline.proof.apiter"]) : undefined;
   const proofTempC = declared?.proof.temp_c ?? Math.max(fermentTemp, PROOF_MIN_TEMP_C);
   if (proofStepMinutes > 0) {
@@ -4130,7 +4215,9 @@ function generateTimeline(
 
   // Topping step in after_shape (es. condimento margherita classica)
   const toppingAfterShape = injectToppingAt("after_shape");
-  const toppingMovedAfterShape = !proofInPan && injectToppingAt("before_proof", true);
+  const toppingMovedAfterShape = !proofInPan
+    ? injectToppingAt("before_proof", true)
+    : toppingAfterProof && injectToppingAt("before_proof", false, true);
   const toppingReplacesGenericTop = toppingAfterShape || toppingMovedAfterShape;
 
   // ─── FARCITURA / ASSEMBLAGGIO (layout-aware) ───
@@ -4280,7 +4367,9 @@ function generateTimeline(
           ? em("timeline.homeTray.bake", METHOD_MESSAGES_IT["timeline.homeTray.bake"])
           // B3: la fonte sposta la teglia dal basso all'alto (forno di casa).
           : style.method_profile?.bake?.racks === "low_then_high" && HOME_OVENS.has(equipment?.ovenType ?? "home")
-            ? em("timeline.bake.lowThenHigh", METHOD_MESSAGES_IT["timeline.bake.lowThenHigh"])
+            ? style.method_profile.bake.fan
+              ? em("timeline.bake.lowThenHighFan", METHOD_MESSAGES_IT["timeline.bake.lowThenHighFan"])
+              : em("timeline.bake.lowThenHigh", METHOD_MESSAGES_IT["timeline.bake.lowThenHigh"])
             : ovenBakeSetup(equipment, ovenTempLabel)],
         {
           beginner: em("timeline.bake.tipBeginner", METHOD_MESSAGES_IT["timeline.bake.tipBeginner"]),

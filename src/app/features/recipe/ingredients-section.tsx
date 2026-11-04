@@ -13,7 +13,7 @@ import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { CtaButton, Stepper } from "../../components/ds/index";
 import { Disclosure } from "../../components/ds/Disclosure";
-import { buildRecipePhases, type DoughIngredientId } from "../../domain/recipe-phases";
+import { buildRecipePhases, type PhaseIngredientId } from "../../domain/recipe-phases";
 import {
   type GeneratedRecipe,
   type UserConstraints,
@@ -29,7 +29,8 @@ import {
   getServingUnitLabel,
   normalizeMeasureUnitSuffixes,
   phaseBakerPctText,
-  phaseIngredientLabel,
+  phaseRowLabel,
+  flourBlendName,
   yeastDilutionText,
   yeastPracticalHint,
   yeastBakerPctText,
@@ -91,7 +92,7 @@ export function IngredientsSection({
   const phases = buildRecipePhases(recipe);
   /* Baker's % (layer nerd accanto ai grammi): le stesse righe dei totali e lo
      stesso formato della stampa, così i due numeri non divergono (S08-A-09). */
-  const bakerPct = (id: DoughIngredientId) => {
+  const bakerPct = (id: PhaseIngredientId) => {
     const row = phases.totals.find((r) => r.id === id);
     return row ? phaseBakerPctText(row, bcp47) : undefined;
   };
@@ -268,7 +269,7 @@ export function IngredientsSection({
               {recipe.flour_blend.map((c) => (
                 <div key={c.name} className="ingredients-blend__row">
                   <span className="type-body ingredients-blend__name">
-                    ↳ {c.name}{" "}
+                    ↳ {flourBlendName(c)}{" "}
                     <span className="type-numeric">
                       {c.pct}%{c.w ? uiMessage("features.recipe.ingredients-section.f84aef04", [c.w]) : ""}
                     </span>
@@ -377,6 +378,15 @@ export function IngredientsSection({
               amount={fmt.grams(recipe.sugar_g)}
             />
           )}
+          {/* B4 (M4): malto, fiocchi di patate; il facoltativo lo dice. */}
+          {phases.totals.filter((row) => row.id === "malt_syrup" || row.id === "potato_flakes").map((row) => (
+            <IngRow
+              key={row.id}
+              name={phaseRowLabel(row, recipe, cms)}
+              detail={isNerd ? bakerPct(row.id) : undefined}
+              amount={fmt.grams(row.grams)}
+            />
+          ))}
         </div>
 
         {/* FW-17 (S08-B-02): il totale subito sotto la lista, prima dello scorporo. */}
@@ -416,7 +426,7 @@ export function IngredientsSection({
                       .filter((ing) => ing.grams > 0 || ing.note === "allInPreferment")
                       .map((ing) => (
                         <li key={ing.id}>
-                          {phaseIngredientLabel(ing.id, recipe, cms, phases.preFerment!.name)}:{" "}
+                          {phaseRowLabel(ing, recipe, cms, phases.preFerment!.name)}:{" "}
                           {ing.note === "allInPreferment" ? (
                             uiMessage("recipe.phases.waterAllInPreferment")
                           ) : (

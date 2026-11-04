@@ -87,6 +87,12 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
       story: "Dekracap es miembro del foro La Confraternita della Pizza. Su receta abre el «WeekEnd della Pizza in Teglia No Knead»: la publica Notturno Italiano en el primer mensaje, el 6/10/2014 (modificado el 14/10/2015). El original se ha borrado y se lee en la copia de Wayback Machine. En la nevera el autor cuenta la levadura seca igual que la fresca; aquí la conversión usa 1 a 3.",
       badge: "Confraternita della Pizza",
     },
+    paoletta: {
+      signature_name: "Inspirada en la pizza rápida de Paoletta",
+      technique_signature: "Harina de fuerza con sémola remolida y escanda menor, agua al 80%, mucha levadura fresca y malta de cebada, amasada en batidora hasta que quede lisa y elástica. Dos horas en un lugar cálido, pliegues y una hora bajo un bol, media hora en la bandeja aceitada y luego el horno al máximo, de abajo arriba.",
+      story: "Paola Sersante, Paoletta para todos, publicó esta pizza primero en su grupo de Facebook; hoy está en el blog Anice & Cannella, y Pan per Focaccia ya la hacía en 2014. Se hace en una tarde: masa a las 16:30 y al horno poco antes de las 21:00.",
+      badge: "Anice & Cannella",
+    },
     da_michele_napoli: {
       signature_name: "Margherita y Marinara, y poco más",
       technique_signature: "Carta reducida al mínimo: durante décadas solo Margherita y Marinara, hoy cuatro pizzas. Horno de leña y nada de florituras.",

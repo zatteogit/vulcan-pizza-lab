@@ -1053,3 +1053,25 @@ Con «mai fuori stile» (D-070, sezione sopra) la versione di Dekracap aggiunge
 12 ricette alla misura di `use-cases/mai-fuori-stile.test.ts` (1.380 → 1.392):
 «Ottimizza per me» dalla versione sta fra 75 e 85 % a ogni livello, e per chi
 comincia resta al minimo dello stile, 75 % (test in `dekracap-teglia.test.ts`).
+
+## Tranche B4 · riposo dei panetti, ingredienti aggiuntivi, Paoletta (04/11/2026)
+
+Dettagli e scelte in `docs/progetto-catalogo-italiano.md` §9.14 (D-072).
+
+- **Fase `rest`** nelle fasi della fonte (`DeclaredPhases.rest`): ore,
+  temperatura, passo `rest` fra staglio e stesura, stima del lievito alla sua
+  temperatura. Il preriscaldo che supera l'appretto prende i minuti prima dal
+  riposo, poi dalla puntata. Senza `rest`: `fermentationPhases` restituisce
+  la stessa forma di prima (`{preferment, bulk, proof}`).
+- **Ingredienti aggiuntivi** (`DoughParameters.extra_ingredients`): totale
+  impasto = farina × (1 + acqua + sale + grasso + zucchero + lievito +
+  aggiuntivi scelti). I facoltativi non scelti hanno i grammi ma restano
+  fuori dal totale, dagli ingredienti richiesti e dalla dispensa.
+- **Mix con glutine senza W** (`gluten`): forza efficace = W media ×
+  (quota con glutine / totale). Prima: (quota con W / totale).
+  Paoletta (75 % W 330 + 25 % semola ed enkir): 330, non 248.
+- **Misure prima/dopo**: le righe di `preset-numbers.regression.json`
+  esistenti sono invariate (+3 righe Paoletta: casa 4×573 g, F1198 W958,
+  lievito fresco 30 g 2,5 %, 3,5 h a 26 °C, 250 °C 750 s; solo secco 10 g
+  0,83 %; legna come casa, 329 min). «Mai fuori stile»: 1.404 ricette nello
+  stile (1.392 + 12 Paoletta). Test: `use-cases/paoletta-teglia.test.ts`.

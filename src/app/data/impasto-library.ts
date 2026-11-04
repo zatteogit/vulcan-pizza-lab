@@ -279,6 +279,40 @@ const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
     compatible_styles: ["teglia_romana"],
   },
 
+  /* ═══ Tranche B4 · Paoletta, versione bassa ═══
+   * Paola Sersante («Paoletta»), «Pizza di Paoletta da fare in fretta»,
+   * Anice & Cannella, 05/02/2018 (docs/progetto-catalogo-italiano.md §9.2,
+   * §9.14). Dose della fonte ×1,5 per 2 teglie 30×40: 450 g di farina W 330,
+   * 75 g di semola rimacinata, 75 g di enkir (decisione 10 di Matteo: la terza
+   * farina), 480 g d'acqua, 15 g di lievito fresco, 12 g di sale, 30 g d'olio
+   * EVO, 1,5 cucchiaini di malto d'orzo (sciroppo, ≈ 10,5 g) e 1,5 cucchiai di
+   * fiocchi di patate (≈ 8,1 g, facoltativi, spenti). Malto e fiocchi: dosi
+   * convertite da Vulcan (D-066, §9.3). Sale 2 %, olio 5 %, niente zucchero. */
+  paoletta: {
+    id: "paoletta",
+    name: "Impasto da fare in fretta (Paoletta)",
+    short_name: "Paoletta",
+    description: "Farina forte con semola ed enkir, acqua all'80%, molto lievito fresco e malto d'orzo, impastata in planetaria.",
+    emoji: "⏱️",
+    dough_overrides: {
+      salt_pct: 2.0,
+      oil_pct: 5.0,
+      fat_type: "oil",
+      sugar_pct: 0,
+      flour_blend: [
+        { id: "wheat", name: "Farina di frumento", pct: 75, w: 330 },
+        { id: "semola", name: "Semola rimacinata di grano duro", pct: 12.5, gluten: true },
+        { id: "enkir", name: "Farina di farro monococco", pct: 12.5, gluten: true },
+      ],
+      extra_ingredients: [
+        { id: "malt_syrup", pct: 1.75 },
+        { id: "potato_flakes", pct: 1.35, optional: true },
+      ],
+    },
+    kneading_method: "direct_short",
+    compatible_styles: ["teglia_in_giornata"],
+  },
+
   /* ═══ IMPASTI SPECIALI — Audit motore 2026-05 (dietetici/salutisti) ═══
    * Applicabili a più stili tramite default_impasto_ref o version.impasto_ref.
    * compatible_styles omesso → generici (filtro UI li mostra ovunque). */

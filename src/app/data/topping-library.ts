@@ -181,6 +181,10 @@ export interface ToppingAssemblyStep {
    *  Adriano Continisio). Il motore sposta allora un passo `before_proof` dopo
    *  la stesura e usa questo testo, senza «lascialo lievitare in teglia». */
   description_no_pan_proof?: string;
+  /** B4: testo per quando la versione mette il condimento sull'impasto già
+   *  lievitato in teglia, subito prima di infornare (Paoletta,
+   *  MethodProcessProfile.topping_after_proof). */
+  description_after_pan_proof?: string;
   insert_at: TimelineInsertPoint;
   duration_minutes: number;
   /** Se true, sostituisce lo step generico (es. "Farcitura" generica) al posto di aggiungersi. */
@@ -1078,6 +1082,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       title: T,
       description: T,
       description_no_pan_proof: T,
+      description_after_pan_proof: T,
       insert_at: "before_proof",
       duration_minutes: 3,
       replaces_generic: true,
@@ -4275,12 +4280,13 @@ function bindText<O extends object>(obj: O, key: string, read: (texts: ToppingTr
   });
 }
 
-function bindStepTexts(step: { id: string; title: string; description: string; description_short_bake?: string; description_no_pan_proof?: string; tip?: { beginner: string; nerd: string } }): void {
+function bindStepTexts(step: { id: string; title: string; description: string; description_short_bake?: string; description_no_pan_proof?: string; description_after_pan_proof?: string; tip?: { beginner: string; nerd: string } }): void {
   const st = (texts: ToppingTranslation) => texts.steps[step.id];
   if (step.title === T) bindText(step, "title", (x) => st(x)?.title);
   if (step.description === T) bindText(step, "description", (x) => st(x)?.description);
   if (step.description_short_bake === T) bindText(step, "description_short_bake", (x) => st(x)?.description_short_bake);
   if (step.description_no_pan_proof === T) bindText(step, "description_no_pan_proof", (x) => st(x)?.description_no_pan_proof);
+  if (step.description_after_pan_proof === T) bindText(step, "description_after_pan_proof", (x) => st(x)?.description_after_pan_proof);
   if (step.tip === TIP) {
     Object.defineProperty(step, "tip", {
       enumerable: true,

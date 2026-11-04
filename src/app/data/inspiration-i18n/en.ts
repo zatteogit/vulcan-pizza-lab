@@ -87,6 +87,12 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
       story: "Dekracap is a member of the La Confraternita della Pizza forum. Dekracap’s recipe opens the “WeekEnd della Pizza in Teglia No Knead”: Notturno Italiano published it in the first post, on 6/10/2014 (edited on 14/10/2015). The original has been deleted and can be read in the Wayback Machine copy. In the fridge the author counts dry yeast the same as fresh; here the conversion uses 1 to 3.",
       badge: "Confraternita della Pizza",
     },
+    paoletta: {
+      signature_name: "Inspired by Paoletta’s quick pizza",
+      technique_signature: "Strong flour with re-milled semolina and einkorn, 80% water, plenty of fresh yeast and barley malt, kneaded in a stand mixer until smooth and elastic. Two hours somewhere warm, folds and an hour under a bowl, half an hour in the oiled tray, then the oven at full heat, from the bottom to the top.",
+      story: "Paola Sersante, known to everyone as Paoletta, first shared this pizza in her Facebook group; today it is on the blog Anice & Cannella, and Pan per Focaccia was already making it in 2014. It takes one afternoon: dough at 16:30, in the oven a little before 21:00.",
+      badge: "Anice & Cannella",
+    },
     da_michele_napoli: {
       signature_name: "Margherita and Marinara, and little else",
       technique_signature: "A bare-bones menu: for decades only Margherita and Marinara, four pizzas today. Wood-fired oven, no frills.",

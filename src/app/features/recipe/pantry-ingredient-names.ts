@@ -1,6 +1,8 @@
 import { TOPPING_LIBRARY } from "../../data/topping-library";
 import { pantryIngredientId } from "../../domain/pantry-ingredients";
 import type { CmsContent } from "../cms/cms-context";
+import { EXTRA_DOUGH_INGREDIENTS, type ExtraDoughIngredientId } from "../../domain/pizza-engine";
+import { extraIngredientName } from "./extra-ingredient-names";
 
 /** Persisted identities stay in the source language; only labels are localized.
  * Reuse the topping catalog's ingredient translations, including qualifiers. */
@@ -14,6 +16,8 @@ export function pantryIngredientNames(cms: CmsContent): Map<string, string> {
     [pantryIngredientId("Acqua"), cms.ui.water],
     /* FW-11 (S08-B-08): «Lievito madre» negli allergeni e nelle etichette. */
     [pantryIngredientId("Lievito madre"), cms.yeastLabels.sourdough],
+    /* B4: ingredienti aggiuntivi dell'impasto (allergeni, dispensa). */
+    ...Object.entries(EXTRA_DOUGH_INGREDIENTS).map(([id, x]) => [pantryIngredientId(x.name), extraIngredientName(id as ExtraDoughIngredientId)] as [string, string]),
   ]);
   for (const recipe of Object.values(TOPPING_LIBRARY)) {
     const translated = cms.toppingI18n?.recipes[recipe.id]?.ingredients;

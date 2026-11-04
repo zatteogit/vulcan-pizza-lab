@@ -155,9 +155,14 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *       (source.dekracapProcess), riposo prima delle pieghe
  *       (timeline.folds.restFirst), «8 °C frigo» in Crea e titolo della
  *       finestra delle versioni (misc.inspirationModalTitle).
+ *  62 → tranche B4: Paoletta (inspirationI18n), riposo dei panetti
+ *       (timeline.rest.title/desc), cottura ventilata dal basso all'alto
+ *       (timeline.bake.lowThenHighFan), dosi della versione bassa
+ *       (source.paolettaDoses), margherita dopo l'appretto in teglia
+ *       (toppingI18n, description_after_pan_proof).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 61;
+export const LOCALE_BUNDLE_REV = 62;
 
 /* 52 resta: l'italiano diventa un bundle lazy (30/10/2026) ma la forma dei
  * bundle e degli snapshot salvati non cambia; l'italiano non ha snapshot. */

@@ -1,4 +1,5 @@
 import { passiveActivityMessage, toppingBakeThresholdMsg } from "../../domain/pizza-engine";
+import { extraIngredientName } from "./extra-ingredient-names";
 /* ═══ RECIPE OUTPUT — helper puri (estratti dall'audit lug 2026) ═══
  * Formattazione, clock, ottimizzatore comodità, localizzazione step.
  * Nessun JSX: solo funzioni pure riusate da recipe-output e dalle sue sezioni. */
@@ -801,7 +802,37 @@ export function phaseIngredientLabel(
       return fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
     }
     case "preferment": return preFermentName;
+    // B4: ingredienti aggiuntivi dell'impasto (malto, fiocchi di patate).
+    case "malt_syrup":
+    case "potato_flakes":
+      return extraIngredientName(id);
   }
+}
+
+/* Nomi tradotti dei componenti del mix di farine (B4), per id. */
+const FLOUR_BLEND_NAMES: Record<string, () => string> = {
+  wheat: () => uiMessage("flourBlend.wheat"),
+  soy: () => uiMessage("flourBlend.soy"),
+  rice: () => uiMessage("flourBlend.rice"),
+  semola: () => uiMessage("flourBlend.semola"),
+  enkir: () => uiMessage("flourBlend.enkir"),
+};
+
+/** Nome visibile di un componente del mix di farine (B4: tradotto per id;
+ *  senza id resta il nome dei dati). */
+export function flourBlendName(c: { name: string; id?: string }): string {
+  return (c.id && FLOUR_BLEND_NAMES[c.id]?.()) || c.name;
+}
+
+/** B4: nome della riga, col «facoltativo» per l'ingrediente non scelto. */
+export function phaseRowLabel(
+  row: Pick<PhaseIngredient, "id" | "optional">,
+  recipe: GeneratedRecipe,
+  cms: CmsContent,
+  preFermentName = "",
+): string {
+  const label = phaseIngredientLabel(row.id, recipe, cms, preFermentName);
+  return row.optional ? `${label} (${uiMessage("dough.extra.optional")})` : label;
 }
 
 /** Spiegazione della Regola 55 (tip della temperatura dell'acqua) con i numeri
@@ -874,7 +905,7 @@ export function stepQuantities(
     const rows: StepQuantity[] = phase.ingredients
       .filter((ing) => ing.grams > 0 || ing.note === "allInPreferment")
       .map((ing) => ({
-        label: phaseIngredientLabel(ing.id, recipe, cms, preName),
+        label: phaseRowLabel(ing, recipe, cms, preName),
         value: ing.note === "allInPreferment" ? uiMessage("recipe.phases.waterAllInPreferment") : fmt.grams(ing.grams),
         ...(ing.id === "yeast" && dilution && dilution.phase === phaseId
           ? { hint: yeastDilutionText(dilution, fmt).body.slice(0, 2).join(" ") }

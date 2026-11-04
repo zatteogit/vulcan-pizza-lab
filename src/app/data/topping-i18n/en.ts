@@ -1544,6 +1544,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       title: "Sauce now, mozzarella at the end",
       description: "Spread the warm sauce over the freshly stretched dough, right to the edges, and let it rise in the tray. Bake; in the last 5 minutes of baking, open the oven, scatter the diced mozzarella and finish baking.",
       description_no_pan_proof: "Spread the warm sauce over the dough you have just stretched in the tray, right to the edges, and bake straight away. In the last 5 minutes of baking, open the oven, scatter the diced mozzarella and finish baking.",
+      description_after_pan_proof: "Spread the warm sauce over the risen dough in the tray, right to the edges, without pressing it down, and bake straight away. In the last 5 minutes of baking, open the oven, scatter the diced mozzarella and finish baking.",
     },
     spread_margherita_us: {
       title: "American Margherita topping",

@@ -44,6 +44,11 @@ export const METHOD_MESSAGES_IT_TEXT: Record<string, string> = {
   "source.dekracapProcess": "Come fa la fonte: staglio dopo circa 24 ore e di nuovo in frigo; fuori dal frigo da 2 ore a mezz'ora prima di cuocere; stesura sulla semola e cottura subito. La tabella di marcia di {app} fa lo staglio all'uscita dal frigo; le ore totali sono le stesse.",
   // B5: riposo della fonte prima delle pieghe (FoldPlan.restBeforeMin).
   "timeline.folds.restFirst": "Prima lascia riposare l'impasto coperto per circa {rest}, come fa la fonte.",
+  // B4 (Paoletta): riposo dei panetti, cottura ventilata dal basso all'alto, dosi convertite.
+  "timeline.rest.title": "Riposo dei panetti",
+  "timeline.rest.desc": "Fai le pieghe di sovrapposizione, arrotonda l'impasto e lascialo riposare coperto a campana, sotto una ciotola capovolta, a {temp}.",
+  "timeline.bake.lowThenHighFan": "Forno ventilato o funzione pizza: inforna sul ripiano più basso finché il cornicione si colora, poi sposta la teglia in alto per finire la cottura, come dice la fonte.",
+  "source.paolettaDoses": "Dosi della versione bassa della fonte, con gli ingredienti aumentati del 50% per due teglie 30×40. Il malto (in cucchiaini) e i fiocchi di patate (in cucchiai) sono convertiti in grammi da {app}, con un margine di circa il 25%.",
   "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
   "topping.geometry": "Superficie {area} cm² · riferimento {reference} cm² · dosi ×{scale}.",
   "auth.layoutChanged": "Formato diverso dal riferimento: la variante modifica la struttura della ricetta",

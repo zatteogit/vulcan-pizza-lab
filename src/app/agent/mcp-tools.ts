@@ -55,7 +55,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.7.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.8.0" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -285,6 +285,9 @@ function recipeData(recipe: GeneratedRecipe) {
     { name: "salt", grams: recipe.salt_g },
     { name: `yeast_${recipe.yeast_type}`, grams: recipe.yeast_g },
     { name: "sugar", grams: recipe.sugar_g },
+    // B4 (M4): ingredienti aggiuntivi per id; il facoltativo dice se è scelto.
+    ...(recipe.extra_ingredients ?? []).map((x) => ({ name: x.id, grams: x.grams,
+      ...(x.optional ? { optional: true, included: Boolean(x.included) } : {}) })),
     { name: "fat", grams: recipe.fat_g },
   ]
     .filter((row) => row.grams > 0)

@@ -69,7 +69,7 @@ const RULES: [AllergenId,RegExp][] = [
 ];
 // Single-ingredient identities: knowing intrinsic allergens never proves that
 // the product/working area has no accidental contamination.
-const SIMPLE = /^(acqua|sale|fior di sale|olio (evo|extra\s?vergine|d.oliva|di oliva)|zucchero|lievito fresco|farina|frumento|grano|riso|mais|soia|semola|manitoba|integrale|burro|strutto|latte|uov[oa]|pomodor\w*|pelati|aglio|cipoll\w*|basilico|origano|pepe|rosmarino|patate|funghi|porcini|champignon|rucola|scarola|friarielli|zucchin\w*|melanzan\w*|peperon[ei]|olive|capperi|ananas|aneto|mentuccia|pere|spinaci|jalapeños|coriandolo|limone|granella di pistacchio|nocciole|mandorle|noci|pistacchi|arachidi|sesamo|lupini|lievito di birra)\b/;
+const SIMPLE = /^(acqua|sale|fior di sale|olio (evo|extra\s?vergine|d.oliva|di oliva)|zucchero|lievito fresco|farina|frumento|grano|riso|mais|soia|semola|manitoba|integrale|burro|strutto|latte|uov[oa]|pomodor\w*|pelati|aglio|cipoll\w*|basilico|origano|pepe|rosmarino|patate|funghi|porcini|champignon|rucola|scarola|friarielli|zucchin\w*|melanzan\w*|peperon[ei]|olive|capperi|ananas|aneto|mentuccia|pere|spinaci|jalapeños|coriandolo|limone|granella di pistacchio|nocciole|mandorle|noci|pistacchi|arachidi|sesamo|lupini|lievito di birra|malto d.orzo)\b/;
 const DAIRY = /^(mozzarella|ricotta|crescenza|stracchino|robiola|burrata|stracciatella|provol\w*|pecorino|parmigiano|grana padano|gorgonzola|caciocavallo|fontina|feta|cheddar|gouda|fior di latte|caciotta)\b/;
 
 /** Classify declared words/identities only; never reconstruct a sauce or read

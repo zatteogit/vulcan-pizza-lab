@@ -6,7 +6,7 @@ import { resolveTopping, getToppingForStyle } from "../data/topping-library";
 import { STYLES_DB, defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
   type GeneratedRecipe, type GenerateRecipeOptions, type PanConfig, type PizzaStyle,
   type PreFermentChoice, type ScoreWeightsOverride, type UserConstraints, type VersionRangeOverrides,
-  type AuthenticityCenter,
+  type AuthenticityCenter, type FlourBlendComponent, blendWithoutGrams,
 } from "../domain/pizza-engine";
 
 /** Stile con il condimento scelto dall'utente, come lo riceve il motore:
@@ -47,7 +47,7 @@ export interface RecipeBuildParams {
   activeVersion: StyleVersion | null;
   activeInterpretationId: string | null;
   selectedToppingConcept: string | null;
-  customFlourBlend?: { name: string; pct: number; w?: number }[];
+  customFlourBlend?: FlourBlendComponent[];
   optimizedHydration?: OptimizedHydration | null;
 }
 
@@ -314,7 +314,7 @@ export function tailoredRecipeEntry(style: PizzaStyle, constraints: UserConstrai
     customFermentationTempC: r.fermentation_temp_c,
     usePreFerment: r.has_pre_ferment,
     customSalt: r.baker_pcts?.salt ?? r.style.dough.salt_pct,
-    customFlourBlend: r.flour_blend?.map(({ name, pct, w }) => ({ name, pct, w })),
+    customFlourBlend: blendWithoutGrams(r.flour_blend),
     panConfig,
     scoreWeights,
   };
@@ -382,7 +382,7 @@ export interface RecipeParameters {
   hydration: number; flourW: number; flourPL: number; salt: number;
   fermentHours: number; fermentTemp: number; usePreFerment: boolean;
   preFerment?: PreFermentChoice; panConfig?: PanConfig; toppingConcept?: string | null;
-  flourBlend?: { name: string; pct: number; w?: number }[];
+  flourBlend?: FlourBlendComponent[];
 }
 
 /** Source identity remains selected after editing; only values decide whether
