@@ -21,10 +21,10 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 
 | Build | Oggi | Budget (`npm run check:budget`) |
 |---|---|---|
-| Chunk JS più grande (gzip) | 79,8 kB (catalogo `ja`, 30/10/2026) | 100 kB |
-| JS senza i cataloghi delle lingue, italiano compreso (gzip) | 448,0 kB (30/10/2026, italiano come le altre lingue) | 500 kB |
-| JS per utente: codice + la lingua più pesante (gzip) | 551,1 kB (con `ja`, 103,1 kB; in italiano 497,9) | 600 kB |
-| JS emesso in tutto, 7 lingue (gzip) | 974 kB in 73 chunk | solo informazione (D-059) |
+| Chunk JS più grande (gzip) | 82,4 kB (catalogo `ja`, 31/10/2026) | 100 kB |
+| JS senza i cataloghi delle lingue, italiano compreso (gzip) | 423,9 kB (31/10/2026, testi italiani dei dati come le altre lingue) | 465 kB |
+| JS per utente: codice + la lingua più pesante (gzip) | 533,0 kB (con `ja`, 109,0 kB; in italiano 507,7) | 570 kB |
+| JS emesso in tutto, 7 lingue (gzip) | 1.114 kB in 70 chunk (31/10/2026) | solo informazione (D-059) |
 | CSS (gzip) | 72,2 kB (516 kB non compresso, 30/10/2026) | 75 kB |
 | Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
 | Video totali | 2,6 MB (6 file; erano 48,6) | 3 MB |
@@ -691,6 +691,61 @@ risolve comunque i messaggi per chiave, quindi lo schermo non cambia).
 | JS senza lingue | 429,4 kB | **423,9 kB** | −5,5 |
 | JS per utente, ja | 538,4 kB | **533,0 kB** | −5,4 |
 | it | 508,2 kB | 507,7 kB | −0,5 |
+
+### Primo caricamento
+
+Build di produzione, `vite preview`, 390×844, 4G lento (1,6 Mbit/s, 150 ms)
+e CPU ×4, a freddo, mediane di 7 prove alternate main/ramo (primo render =
+`#root` con contenuto):
+
+| Pagina | main (render / LCP) | ramo (render / LCP) |
+|---|---|---|
+| it `/explore` | 4689 / 5408 ms | 4470 / 5116 ms |
+| it `/recipe/napoletana_stg` | 5299 / 5620 ms | 5140 / 5728 ms |
+| ja `/explore` | 4669 / 5304 ms | 4655 / 5164 ms |
+
+Nel rumore, nessun peggioramento visibile: il bundle `it` cresce (51,5 →
+83,8 kB con `it-toppings`) ma il codice d'ingresso cala, e
+`localePreloadPlugin` chiede `it` e `it-toppings` con `modulepreload`
+insieme al chunk d'ingresso.
+
+### Cosa resta
+
+Italiano ancora nel codice (stima: gzip dei letterali di testo per file):
+
+- **`pizza-engine.ts`** (~2,5 kB: titoli e testi dei passi scritti come
+  testo di riserva in linea). Basterebbe dare loro una chiave in
+  `method-messages.it.ts`: il meccanismo di registrazione c'è già. Non
+  toccato perché il file è in lavorazione (B3/B5).
+- **`interpretation-library.ts`** (~2,8 kB) e **`impasto-library.ts`**
+  (~1,3 kB): stessa ragione.
+- **`styles-db.ts`** (~2,6 kB: descrizioni e caratteristiche, che il bundle
+  `it` deriva dai dati e che MCP `get_style` e l'editor degli stili leggono):
+  stesso schema del glossario (segnaposto + catalogo), da fare insieme a chi
+  cura gli stili e l'editor.
+- **`parametric-databases.ts`** (~5,3 kB di `note` per stile): sono mostrate
+  nei consigli dei passi (`recipe-output-format.ts`) **senza traduzione**,
+  anche a chi usa un'altra lingua. Prima di spostarle vanno tradotte: è una
+  decisione di contenuto, non di budget.
+- Piccoli: `STEP_COPY_IT` (0,5), messaggi di allergeni e diete (~0,9),
+  `style-versions` (~0,8), etichette di `AUTHENTICITY_META` e delle
+  categorie del glossario, occasioni dei condimenti (parole di ricerca).
+- **Restano apposta**: i nomi degli ingredienti (~3,6 kB, sono gli id di
+  dispensa, allergeni e diete), i nomi dei concetti (cercabili in italiano) e
+  delle voci del glossario (Siri e Alexa li riconoscono).
+
+**Rischi.** I registri (`topping-i18n/registry.ts`,
+`registerMethodMessages`) sono stato globale come il catalogo uiMessage: nel
+browser contengono la lingua attiva, quindi il testo di riserva del motore
+(`step.title`, `EngineMsg.fallback`) è nella lingua attiva e non più sempre
+in italiano; lo schermo non cambia perché la UI risolve per chiave, ma codice
+nuovo non deve confrontare quei testi. Un dato che legge
+`METHOD_MESSAGES_IT` al caricamento del modulo prende `undefined` sul server
+(il test lo segnala). Chi aggiunge condimenti, voci, problemi o messaggi
+scrive il testo italiano nel catalogo (`topping-i18n/it.ts`,
+`GLOSSARY_TEXT_IT`, `TROUBLESHOOTING_I18N_DEFAULTS`, `method-messages.it.ts`)
+e nei dati solo `T`/`TIP`/`GLOSSARY_TEXT`: i test indicano ogni testo
+mancante.
 
 ## Interventi consigliati, in ordine di resa
 
