@@ -287,8 +287,10 @@ export interface MethodProcessProfile {
 }
 
 /** B3: una fase scritta dalla fonte. `temp_assumed`: la fonte non dice i
- *  gradi della puntata («a temperatura ambiente») e `temp_c` è una scelta di
- *  Vulcan, dichiarata nella ricetta (nota `fermentation.roomTemp`). */
+ *  gradi («a temperatura ambiente», «fuori dal frigo») e `temp_c` è una
+ *  scelta di Vulcan; per la puntata la ricetta lo dichiara (nota
+ *  `fermentation.roomTemp`), per l'appretto è quello del motore
+ *  (PROOF_MIN_TEMP_C). */
 export interface DeclaredPhase {
   hours: number;
   temp_c: number;
@@ -305,7 +307,9 @@ export interface DeclaredPhase {
  *  la temperatura della puntata è la sua temperatura: finché sono quelle
  *  valgono le fasi, cambiate torna il modello delle quote (fermentationPhases).
  *  `rest` (B4, Paoletta): riposo dei panetti dopo lo staglio (pieghe di
- *  sovrapposizione e arrotondamento), prima della stesura e dell'appretto. */
+ *  sovrapposizione e arrotondamento), prima della stesura e dell'appretto.
+ *  Alla temperatura del frigo (Dekracap: staglio a metà, panetti di nuovo in
+ *  frigo) il passo dice di rimetterli in frigo. */
 export interface DeclaredPhases {
   preferment?: DeclaredPhase & { flour_pct?: number };
   bulk: DeclaredPhase;
@@ -805,7 +809,7 @@ export interface TimelineStep {
   };
   /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. «stir»:
    *  l'impasto si mescola senza impastare (B2), niente incordatura né pieghe. */
-  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan" | "stir" | "unoiled";
+  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan" | "stir" | "unoiled" | "to_fridge" | "fridge";
   /** B3: temperatura della fase scritta dalla fonte (prefermento, puntata,
    *  appretto con le fasi esplicite); assente = quella della ricetta. */
   temp_c?: number;
@@ -1852,8 +1856,13 @@ export function equivalentFermentationHours(
   const declared = declaredPhases(profile, fermentationHours, fermentationTempC, hasPreFerment);
   if (declared) {
     const bulkSpeed = fermentationSpeedRatio(yeastType, fermentationTempC);
-    return [declared.preferment, declared.bulk, declared.rest, declared.proof]
-      .reduce((sum, phase) => sum + (phase ? phase.hours * fermentationSpeedRatio(yeastType, phase.temp_c) / bulkSpeed : 0), 0);
+    const sum = [declared.preferment, declared.bulk, declared.rest, declared.proof]
+      .reduce((total, phase) => total + (phase ? phase.hours * fermentationSpeedRatio(yeastType, phase.temp_c) / bulkSpeed : 0), 0);
+    // Con la puntata al fresco o in frigo le pieghe si fanno prima, fuori:
+    // come nel modello delle quote, quei minuti contano all'appretto.
+    if (declared.bulk.temp_c >= PROOF_MIN_TEMP_C) return sum;
+    const foldHours = foldWindowMinutes(declared.bulk.hours * 60, fold) / 60;
+    return sum + foldHours * (fermentationSpeedRatio(yeastType, PROOF_MIN_TEMP_C) / bulkSpeed - 1);
   }
   if (fermentationTempC >= PROOF_MIN_TEMP_C || fermentationHours <= 0) return fermentationHours;
   const phases = fermentationPhases(fermentationHours, hasPreFerment, preFermentType, profile);
@@ -4043,14 +4052,28 @@ function generateTimeline(
 
   /* B4 (Paoletta): riposo dei panetti scritto dalla fonte, dopo lo staglio e
    * prima della stesura: pieghe di sovrapposizione, arrotondamento, coperti
-   * a campana, alla temperatura della fase. */
+   * a campana, alla temperatura della fase. Alla temperatura del frigo
+   * (Dekracap: staglio a metà della maturazione) lo staglio si fa all'uscita
+   * dal frigo e i panetti ci tornano subito (varianti «to_fridge»/«fridge»). */
+  const restInFridge = Boolean(declared?.rest) && isFridgeTempC(declared!.rest!.temp_c, sourceFridge);
+  if (restInFridge && restMinutes > 0) {
+    const divide = steps.find((s) => s.id === "divide");
+    if (divide) {
+      divide.variant = "to_fridge";
+      divide.description = `${divide.description} ${METHOD_MESSAGES_IT["timeline.divide.backToFridge"]}`;
+    }
+  }
   if (declared?.rest && restMinutes > 0) {
     steps.push(
       keyedStep(
         { id: "rest", duration_minutes: restMinutes, icon: "timer", timing_label: formatDuration(Math.round(restMinutes / 60)),
-          temp_c: declared.rest.temp_c },
-        em("timeline.rest.title", METHOD_MESSAGES_IT["timeline.rest.title"]),
-        [em("timeline.rest.desc", METHOD_MESSAGES_IT["timeline.rest.desc"], { temp: declared.rest.temp_c })],
+          temp_c: declared.rest.temp_c, ...(restInFridge ? { variant: "fridge" as const } : {}) },
+        restInFridge
+          ? em("timeline.rest.titleFridge", METHOD_MESSAGES_IT["timeline.rest.titleFridge"])
+          : em("timeline.rest.title", METHOD_MESSAGES_IT["timeline.rest.title"]),
+        [restInFridge
+          ? em("timeline.rest.descFridge", METHOD_MESSAGES_IT["timeline.rest.descFridge"], { temp: declared.rest.temp_c })
+          : em("timeline.rest.desc", METHOD_MESSAGES_IT["timeline.rest.desc"], { temp: declared.rest.temp_c })],
       ),
     );
   }

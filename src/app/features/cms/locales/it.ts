@@ -478,6 +478,7 @@ export const IT_LOCALE: CmsContent = {
       bulkCold: "in frigo cresce poco, quindi conta il tempo di maturazione più del volume",
       proof: "gonfio e bombato; premuto piano con un dito, il segno torna su lentamente",
       preferment: "cresciuto e pieno di bolle, con un profumo leggermente acidulo o fruttato",
+      rest: "panetti un po' gonfi e rilassati: premuti piano, non si ritirano",
       default: "volume cresciuto in modo evidente",
     },
     stepDoneToast: "Fatto: {step}",

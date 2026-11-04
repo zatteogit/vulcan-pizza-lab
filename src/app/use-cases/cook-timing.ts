@@ -23,16 +23,19 @@ export function isNightHour(hour: number): boolean {
 }
 
 /** Attese lunghe e passive: l'impasto lavora da solo, l'orario della fine è
- *  una stima biologica. */
-export const FLEXIBLE_STEP_IDS: ReadonlySet<string> = new Set(["bulk", "proof", "preferment"]);
+ *  una stima biologica. B4: anche il riposo dei panetti della fonte (Paoletta
+ *  1 h a campana, Dekracap 22 h in frigo dopo lo staglio). */
+export const FLEXIBLE_STEP_IDS: ReadonlySet<string> = new Set(["bulk", "rest", "proof", "preferment"]);
 
 /** Quale criterio di prontezza mostrare prima di chiudere un'attesa in
  *  anticipo (cms.cooking.readyCriterion, S10-A-15). Una puntata in frigo
  *  (`cold`, isColdPhase) non deve raddoppiare: il motore lo dice nel suo
  *  consiglio («in frigo cresce lento»), e così il criterio («bulkCold»). */
-export type ReadyCriterionKey = "bulk" | "bulkCold" | "proof" | "preferment" | "default";
+export type ReadyCriterionKey = "bulk" | "bulkCold" | "proof" | "preferment" | "rest" | "default";
 export function readyCriterionKey(stepId: string, cold = false): ReadyCriterionKey {
   if (stepId === "bulk") return cold ? "bulkCold" : "bulk";
+  // B4: i panetti in frigo (Dekracap) crescono poco, come la puntata a freddo.
+  if (stepId === "rest") return cold ? "bulkCold" : "rest";
   return stepId === "proof" || stepId === "preferment" ? stepId : "default";
 }
 
@@ -247,7 +250,9 @@ export function phaseTemperatureC(stepId: string, fermentTempC: number): number 
 
 /** Fase in frigo (≤ FRIDGE_MAX_TEMP_C, la soglia delle tolleranze «cold»;
  *  B5: fino a 8 °C se la fonte mette l'impasto in frigo, `sourceFridge` =
- *  `recipe.fermentation_in_fridge`). L'appretto resta fuori dal frigo. */
+ *  `recipe.fermentation_in_fridge`). L'appretto resta fuori dal frigo; il
+ *  riposo dei panetti della fonte (B4) è alla temperatura della puntata in
+ *  tutte le versioni che lo hanno (Paoletta 26 °C, Dekracap 8 °C in frigo). */
 export function isColdPhase(stepId: string, fermentTempC: number, sourceFridge = false): boolean {
   return isFridgeTempC(phaseTemperatureC(stepId, fermentTempC), sourceFridge);
 }

@@ -74,7 +74,7 @@ describe("teglia 30×40, forno di casa: le dosi della fonte", () => {
     expect(r.cook_time_sec).toBe(1063);
     expect(r.verdict.outcome).not.toBe("not_feasible");
   });
-  it("le note: frigo della fonte e ciò che la tabella di marcia fa diversamente", () => {
+  it("le note: frigo della fonte e la forbice delle ore fuori dal frigo", () => {
     expect(r.source_notes?.map((n) => n.key)).toEqual(["fermentation.sourceFridge", "source.dekracapProcess"]);
     expect(r.source_notes?.[0].params).toEqual({ temp: 8 });
   });
@@ -162,6 +162,9 @@ describe("MCP", () => {
     expect(data.ingredients.find((i: { name: string }) => i.name === "flour")?.grams).toBe(SOURCE.flour);
     expect(data.ingredients.find((i: { name: string }) => i.name === "water")?.grams).toBe(SOURCE.water);
     expect(data.steps.find((s: { id: string }) => s.id === "folds")?.description).toMatch(/in frigo/);
+    // B4: le fasi della fonte, con i panetti di nuovo in frigo dopo lo staglio.
+    expect(data.declared_phases?.rest).toEqual({ hours: 22, temp_c: 8 });
+    expect(data.steps.find((s: { id: string }) => s.id === "divide")?.description).toMatch(/rimetti subito i panetti in frigo/);
   });
   it("il riferimento della teglia romana non cambia: niente frigo della fonte", () => {
     const data = call("generate_recipe", { style_id: "teglia_romana", oven_type: "home", oven_max_temp_c: 250, recipe_mode: "canonical" }).structuredContent;
@@ -207,7 +210,65 @@ describe("pieghe della fonte (decisione di Matteo: le fasi della versione)", () 
     expect(text).toMatch(/uno ogni 15\s?min/);
     expect(text).toMatch(/in frigo/);
     expect(METHOD_MESSAGES_IT["source.dekracapProcess"]).not.toMatch(/pieghe/);
-    expect(METHOD_MESSAGES_IT["source.dekracapProcess"]).toMatch(/staglio dopo circa 24 ore/);
+    // Lo staglio a metà frigo ora è nella tabella di marcia: la nota non lo
+    // dice più come differenza, resta la forbice «da 2 ore a mezz'ora».
+    expect(METHOD_MESSAGES_IT["source.dekracapProcess"]).not.toMatch(/staglio/);
+    expect(METHOD_MESSAGES_IT["source.dekracapProcess"]).toMatch(/da 2 ore a mezz'ora/);
+  });
+});
+
+/* B4 · fase `rest`: lo staglio a metà frigo della fonte («staglio dopo
+ * circa 24 ore e di nuovo in frigo», D-071) ora è nella tabella di marcia:
+ * puntata 24 h in frigo, staglio all'uscita, panetti 22 h di nuovo in frigo,
+ * 2 h fuori prima di cuocere. Le ore totali (48) e la dose della fonte non
+ * cambiano. */
+describe("staglio a metà frigo, come la fonte (fase rest)", () => {
+  const r = authorVersionRecipe(style, dekracap, home);
+  const step = (id: string) => r.timeline.find((s) => s.id === id)!;
+  it("fasi della fonte 24 + 22 + 2 h: le dichiara il motore e l'MCP", () => {
+    expect(r.declared_phases).toEqual({
+      bulk: { hours: 24, temp_c: 8 },
+      rest: { hours: 22, temp_c: 8 },
+      proof: { hours: 2, temp_c: 18, temp_assumed: true },
+    });
+    expect(r.fermentation_hours).toBe(48);
+    expect(r.yeast_source).toMatchObject({ source_pct: 0.254, converted: false });
+  });
+  it("passi in ordine: pieghe, puntata in frigo, staglio, panetti in frigo, appretto fuori", () => {
+    const ids = r.timeline.map((s) => s.id);
+    const order = ["folds", "bulk", "divide", "rest", "proof", "preheat", "shape"].map((id) => ids.indexOf(id));
+    expect(order.every((i) => i >= 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    expect(ids.indexOf("rest")).toBe(ids.indexOf("divide") + 1);
+    expect([step("bulk").temp_c, step("rest").temp_c, step("proof").temp_c]).toEqual([8, 8, 18]);
+    expect([step("divide").variant, step("rest").variant]).toEqual(["to_fridge", "fridge"]);
+  });
+  it("le ore: pieghe + puntata = 24 h, panetti 22 h, appretto + preriscaldo = 2 h; il totale non cambia", () => {
+    expect(step("folds").duration_minutes + step("bulk").duration_minutes).toBe(24 * 60);
+    expect(step("rest").duration_minutes).toBe(22 * 60);
+    expect(step("proof").duration_minutes + step("preheat").duration_minutes).toBe(120);
+    // 48 h di fermentazione + impasto, staglio, stesura, condimento e cottura, come prima di B4.
+    expect(r.timeline.reduce((n, s) => n + s.duration_minutes, 0)).toBe(2932);
+  });
+  it("i panetti sono in frigo per la Timeline comoda e per «L'impasto è già pronto?»", () => {
+    expect(isColdPhase("rest", 8, r.fermentation_in_fridge)).toBe(true);
+    expect(isColdPhase("rest", 8)).toBe(false);
+    const rest = step("rest").duration_minutes;
+    expect(Math.max(...stretchOptions(rest, isColdPhase("rest", 8, true)))).toBe(360);
+  });
+  it("in italiano: lo staglio rimanda in frigo, il riposo dice frigo e 8 °C", () => {
+    expect(localizeStep(step("divide"), r, IT_LOCALE).description).toMatch(/rimetti subito i panetti in frigo/);
+    const rest = localizeStep(step("rest"), r, IT_LOCALE);
+    expect(rest.title).toBe("Panetti in frigo");
+    expect(rest.description).toMatch(/in frigo a 8\s?°C/);
+    expect(step("rest").msg?.description?.map((m) => m.key)).toEqual(["timeline.rest.descFridge"]);
+  });
+  it("Paoletta tiene il riposo al caldo, senza frigo", () => {
+    const paoletta = getInterpretationById("paoletta")!;
+    const p = authorVersionRecipe(STYLES_DB.teglia_in_giornata, paoletta, home);
+    const rest = p.timeline.find((s) => s.id === "rest")!;
+    expect([rest.variant, rest.msg?.description?.[0]?.key]).toEqual([undefined, "timeline.rest.desc"]);
+    expect(p.timeline.find((s) => s.id === "divide")?.variant).not.toBe("to_fridge");
   });
 });
 

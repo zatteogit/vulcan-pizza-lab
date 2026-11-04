@@ -1424,8 +1424,8 @@ altre lingue e i limiti sono gli stessi): codice senza lingue 423,5 → 424,5 kB
      le pieghe dello stile, con `FoldPlan.restBeforeMin` per il riposo prima
      del primo giro; nuovo messaggio `timeline.folds.restFirst` (7 lingue).
      Ore totali, dosi e righe dei preset invariate.
-   - **Staglio a metà del frigo: non fatto**, resta la nota «Come fa la
-     fonte». Cosa manca: le fasi di B3 sono tre chiavi fisse (pre-fermento,
+   - **Staglio a metà del frigo: non fatto** in B5, resta la nota «Come fa
+     la fonte». *Fatto il 04/11 con la fase `rest` di B4, §9.15.* Cosa manca: le fasi di B3 sono tre chiavi fisse (pre-fermento,
      puntata, appretto) e la puntata è una sola, alla temperatura della
      ricetta. Lo staglio a 24 h con il ritorno in frigo chiede una quarta
      fase, i **panetti in frigo** dopo lo staglio (circa 22 h a 8 °C, poi 2 h
@@ -1452,10 +1452,10 @@ altre lingue e i limiti sono gli stessi): codice senza lingue 423,5 → 424,5 kB
 #### Rispetto a B3
 
 - Il frigo della fonte resta un attributo della ricetta (`sourceProcess`),
-  non delle fasi: Dekracap non usa `phases` perché la sua puntata è una sola
-  a 8 °C e le fasi di B3 non hanno ancora i panetti in frigo (sopra).
+  non delle fasi. Dal 04/11 Dekracap usa anche `phases` (puntata, panetti
+  in frigo, appretto: §9.15).
 - Le note sul processo (`Interpretation.source_notes`) restano per ciò che
-  la tabella non dice ancora (lo staglio a metà del frigo).
+  la tabella non dice (dal 04/11: la forbice delle ore fuori dal frigo).
 
 ### 9.14 Stato di B4 (04/11/2026)
 
@@ -1589,7 +1589,53 @@ utente in giapponese 538,5 → 540,8 kB (limite 570), CSS invariato
 
 #### Restano
 
-- Dekracap: lo staglio a metà del frigo con la chiave `rest` (riposo dei
-  panetti in frigo, poi fuori), al posto della nota «Come fa la fonte».
+- ~~Dekracap: lo staglio a metà del frigo con la chiave `rest`~~: fatto,
+  §9.15.
 - La versione alta (placca del forno senza misura) non c'è.
 - Voce: legge farina, acqua, sale, lievito, grassi e zucchero, non il malto.
+
+### 9.15 Dekracap: staglio a metà frigo (04/11/2026)
+
+Il via di Matteo («poi Dekracap», 04/11). La fonte (§9.13, D-071): staglio
+dopo circa 24 ore e di nuovo in frigo, fuori da 2 ore a mezz'ora prima di
+cuocere, stesura sulla semola e cottura subito.
+
+- **Fasi della versione** (`process_profile.phases`): puntata 24 h a 8 °C,
+  riposo dei panetti 22 h a 8 °C, appretto 2 h. Le 2 h fuori sono la scelta
+  di Matteo del 31/10; la temperatura dell'appretto (18 °C) è quella del
+  motore, la fonte dice solo «fuori dal frigo» (`temp_assumed`, nessuna nota
+  nuova: era già così). Ore totali 48, dosi e lievito della fonte invariati.
+- **Tabella di marcia**: Impasto, Pieghe (riposo e 3 giri, poi in frigo),
+  Puntata 22 h 25 min a 8 °C, **Staglio** («Fallo appena l'impasto esce dal
+  frigo e rimetti subito i panetti in frigo, coperti»), **Panetti in frigo**
+  22 h a 8 °C, Appretto 2 h a 18 °C (l'ultima mezz'ora col preriscaldo),
+  Stesura, Condimento, Cottura. Totale 2932 minuti, come prima.
+- **Timeline comoda e modalità cottura**: il riposo è un'attesa flessibile;
+  i panetti in frigo hanno le tolleranze del freddo e il criterio «in frigo
+  cresce poco». Il riposo al caldo di Paoletta ha un criterio suo
+  (`cooking.readyCriterion.rest`, 7 lingue: «panetti un po' gonfi e
+  rilassati»), prima un'attesa a tempo senza criterio.
+- **Nota della fonte** (`source.dekracapProcess`, 7 lingue): non parla più
+  dello staglio; resta la forbice «da 2 ore a mezz'ora» (la tabella conta 2
+  ore) e la stesura sulla semola.
+- **MCP 1.8.1**: `declared_phases` di Dekracap non è più null; il passo
+  `divide` lo dice; la guida spiega il riposo in frigo. **Voce**: invariata
+  («48 ore a 8 gradi, in frigo»).
+- **Storia di Paoletta** in ordine di date (gruppo Facebook, Pan per
+  Focaccia 2014, Anice & Cannella 2018), 7 lingue, richiesta di Matteo del
+  04/11. `LOCALE_BUNDLE_REV` 63.
+- **Prova nel browser** (`vite preview`, 390 px, it e ja):
+  `/recipe/teglia_romana?interpretation=dekracap` mostra staglio con il
+  ritorno in frigo, «Panetti in frigo» / 「生地玉を冷蔵庫で」 22 h a 8 °C, nota
+  della fonte nuova; nessuna chiave grezza, nessun errore in console.
+
+#### Budget (gzip)
+
+Sopra main `79d54dc`: codice senza lingue 426,2 → 426,4 kB (limite 465), per
+utente in giapponese 540,8 → 541,1 kB (limite 570), CSS invariato (73,1 kB).
+
+#### Restano
+
+- La stesura della teglia romana dice «teglia oliata»; la fonte di Dekracap
+  stende sulla semola (lo dice la nota). Da valutare con la teglia della
+  pagina ricetta (§9.14, «Da sapere»).

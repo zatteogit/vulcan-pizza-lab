@@ -438,10 +438,15 @@ export function localizeStep(
   const localized = step.bake_length && base.tip
     ? { ...base, tip: { ...base.tip, nerd: `${base.tip.nerd} ${engineMsgTexts([toppingBakeThresholdMsg()], cms, fmt?.bcp47 ?? "it-IT")[0]}` } }
     : base;
+  // B4 (Dekracap): lo staglio a metà frigo si fa all'uscita e i panetti
+  // tornano subito in frigo; il testo dello staglio resta quello della forma.
+  const withFridge = step.id === "divide" && step.variant === "to_fridge"
+    ? { ...localized, description: `${localized.description} ${engineMessage(cms, "timeline.divide.backToFridge")}` }
+    : localized;
   const activity = passiveActivityMessage(step);
-  if (!activity) return localized;
+  if (!activity) return withFridge;
   const note = engineMsgTexts([activity], cms, fmt?.bcp47 ?? "it-IT")[0];
-  return { ...localized, description: `${localized.description} ${note}` };
+  return { ...withFridge, description: `${withFridge.description} ${note}` };
 }
 
 function localizeStepBase(

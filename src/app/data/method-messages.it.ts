@@ -39,14 +39,18 @@ export const METHOD_MESSAGES_IT_TEXT: Record<string, string> = {
   "timeline.bake.lowThenHigh": "Forno statico: inforna nella parte bassa, poi sposta la teglia nella parte alta per finire la cottura, come dice la fonte.",
   "timeline.shape.unoiledPan": "Rovescia l'impasto sul banco spolverato di semola, premilo con la punta delle dita e allargalo senza far uscire l'aria. Mettilo nella teglia non unta, con un velo di semola, e finisci di stenderlo.",
   // B5: frigo della fonte sopra la soglia di Vulcan (Dekracap, 8 °C) e ciò che
-  // la tabella di marcia non sa ancora dire (staglio a metà del frigo).
+  // la tabella di marcia non dice (la forbice delle ore fuori dal frigo).
   "fermentation.sourceFridge": "La fonte vuole l'impasto in frigo a {temp}, nella zona meno fredda: la dose di lievito è per quella temperatura. In un frigo più freddo l'impasto cresce più piano.",
-  "source.dekracapProcess": "Come fa la fonte: staglio dopo circa 24 ore e di nuovo in frigo; fuori dal frigo da 2 ore a mezz'ora prima di cuocere; stesura sulla semola e cottura subito. La tabella di marcia di {app} fa lo staglio all'uscita dal frigo; le ore totali sono le stesse.",
+  "source.dekracapProcess": "Come fa la fonte: fuori dal frigo da 2 ore a mezz'ora prima di cuocere (la tabella di marcia di {app} conta 2 ore); stesura sulla semola e cottura subito.",
   // B5: riposo della fonte prima delle pieghe (FoldPlan.restBeforeMin).
   "timeline.folds.restFirst": "Prima lascia riposare l'impasto coperto per circa {rest}, come fa la fonte.",
-  // B4 (Paoletta): riposo dei panetti, cottura ventilata dal basso all'alto, dosi convertite.
+  // B4 (Paoletta): riposo dei panetti, cottura ventilata dal basso all'alto, dosi convertite;
+  // in frigo (Dekracap): staglio all'uscita dal frigo e panetti di nuovo in frigo.
   "timeline.rest.title": "Riposo dei panetti",
   "timeline.rest.desc": "Fai le pieghe di sovrapposizione, arrotonda l'impasto e lascialo riposare coperto a campana, sotto una ciotola capovolta, a {temp}.",
+  "timeline.divide.backToFridge": "Fallo appena l'impasto esce dal frigo e rimetti subito i panetti in frigo, coperti.",
+  "timeline.rest.titleFridge": "Panetti in frigo",
+  "timeline.rest.descFridge": "Tieni i panetti coperti in frigo a {temp}, come per la puntata: maturano lì finché non li tiri fuori per l'appretto.",
   "timeline.bake.lowThenHighFan": "Forno ventilato o funzione pizza: inforna sul ripiano più basso finché il cornicione si colora, poi sposta la teglia in alto per finire la cottura, come dice la fonte.",
   "source.paolettaDoses": "Dosi della versione bassa della fonte, con gli ingredienti aumentati del 50% per due teglie 30×40. Il malto (in cucchiaini) e i fiocchi di patate (in cucchiai) sono convertiti in grammi da {app}, con un margine di circa il 25%.",
   "diet.singleBase": "Base unica con tutta la massa: cipolla in superficie, senza secondo disco né chiusura.",
