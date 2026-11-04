@@ -12,6 +12,8 @@ export interface ToppingStepTranslation {
   description_short_bake?: string;
   /** B3: testo senza appretto in teglia (vedi ToppingAssemblyStep). */
   description_no_pan_proof?: string;
+  /** B4: testo dopo l'appretto in teglia (vedi ToppingAssemblyStep). */
+  description_after_pan_proof?: string;
   tip_beginner?: string;
   tip_nerd?: string;
 }

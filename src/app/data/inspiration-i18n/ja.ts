@@ -87,6 +87,12 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
       story: "Dekracapはフォーラム「La Confraternita della Pizza」のメンバーです。そのレシピは「WeekEnd della Pizza in Teglia No Knead」の最初の投稿で、2014年10月6日にNotturno Italianoが公開しました（2015年10月14日に修正）。元の投稿は削除されていて、Wayback Machineの保存版で読めます。冷蔵庫ではドライイーストを生イーストと同じに数えると作者は書いていますが、ここでは1対3で換算します。",
       badge: "Confraternita della Pizza",
     },
+    paoletta: {
+      signature_name: "Paolettaの「急いで作るピザ」に着想を得て",
+      technique_signature: "強力粉に細挽きのデュラムセモリナと一粒小麦（エンキール）、水分80%、たっぷりの生イーストと大麦モルト。スタンドミキサーでなめらかに弾力が出るまでこねます。暖かい場所で2時間、折りたたんでボウルをかぶせて1時間、油を塗った天板で30分。最後は最高温度のオーブンで、下段から上段へ。",
+      story: "Paola Sersante、通称Paolettaは、このピザを最初に自分のFacebookグループで紹介しました。今はブログ「Anice & Cannella」に載っていて、Pan per Focacciaも2014年にすでに作っています。午後だけでできます。16時30分に生地をこね、21時少し前にオーブンへ。",
+      badge: "Anice & Cannella",
+    },
     da_michele_napoli: {
       signature_name: "マルゲリータとマリナーラ、ほぼそれだけ",
       technique_signature: "メニューは最小限。何十年もマルゲリータとマリナーラだけで、現在は4種類。薪窯で、飾り気なし。",

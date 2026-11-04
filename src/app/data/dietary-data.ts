@@ -59,7 +59,7 @@ export function ingredientDietaryStatus(name: string, filter: "vegan" | "lactose
     if (agedDairy.test(n) || /prosciutto cotto|salsiccia|salame|pepperoni|bacon|speck|mortadella|cicoli|ciccioli|nduja|pollo.*barbecue/.test(n)) return "unverified";
     if (animal) return "compatible";
   }
-  if (/^(acqua|sale|olio|olive oil|farina|lievito|zucchero|aglio|ananas|aneto|basilico|capperi|carciof|champignon|cipoll|composta di pomodoro|coriandolo|crema di zucca|crema di zucchine|fette di patate|fior di sale|friarielli|funghi|giardiniera|granella di pistacchio|jalapeños|mais|melanzane|mentuccia|olive|origano|passata|patate|pelati|pepe|peperon|pere|polpa di pomodoro|pomodor|porcini|rosmarino|rucola|salamoia|salsa (densa di pomodoro|di pomodoro|marinara)|scarola|spinaci|zest|zucchin)/.test(n)) return "compatible";
+  if (/^(acqua|sale|olio|olive oil|farina|lievito|zucchero|aglio|ananas|aneto|basilico|capperi|carciof|champignon|cipoll|composta di pomodoro|coriandolo|crema di zucca|crema di zucchine|fette di patate|fior di sale|friarielli|funghi|giardiniera|granella di pistacchio|jalapeños|mais|malto d.orzo|melanzane|mentuccia|olive|origano|passata|patate|pelati|pepe|peperon|pere|polpa di pomodoro|pomodor|porcini|rosmarino|rucola|salamoia|salsa (densa di pomodoro|di pomodoro|marinara)|scarola|semola|spinaci|zest|zucchin)/.test(n)) return "compatible";
   return "unverified";
 }
 

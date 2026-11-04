@@ -281,9 +281,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       fermentation_temp_c: 4,
       // VPL-B2: mix multicereale tipico della pinsa (non una farina "W305" singola)
       flour_blend: [
-        { name: "Farina di frumento", pct: 70, w: 290 },
-        { name: "Farina di soia", pct: 15 },
-        { name: "Farina di riso", pct: 15 },
+        { id: "wheat", name: "Farina di frumento", pct: 70, w: 290 },
+        { id: "soy", name: "Farina di soia", pct: 15 },
+        { id: "rice", name: "Farina di riso", pct: 15 },
       ],
     },
     shape: {

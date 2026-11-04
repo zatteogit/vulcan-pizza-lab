@@ -1456,3 +1456,140 @@ altre lingue e i limiti sono gli stessi): codice senza lingue 423,5 → 424,5 kB
   a 8 °C e le fasi di B3 non hanno ancora i panetti in frigo (sopra).
 - Le note sul processo (`Interpretation.source_notes`) restano per ciò che
   la tabella non dice ancora (lo staglio a metà del frigo).
+
+### 9.14 Stato di B4 (04/11/2026)
+
+**Fatto** (ramo `claude/vulcan-review-l8ge34`, sopra main `b7af252`; D-072 in
+`docs/autorialita.md`). Pacchetto M4 (§9.4 punto 4) più la fase `rest` che
+la B5 aveva lasciato alla B4. Versione d'autore della `teglia_in_giornata`
+(§9.5), nessuno stile nuovo, nessun preset nuovo.
+
+#### Versione «Ispirata a Paoletta» (`paoletta`)
+
+- **Fonte** (tipo `autore`, stato **verificato**): Paola Sersante
+  («Paoletta»), «Pizza di Paoletta da fare in fretta», Anice & Cannella,
+  05/02/2018, aggiornata il 09/07/2025,
+  https://www.aniceecannella.com/la-pizza-di-paoletta-da-fare-in-fretta/
+  (`url` e `source_url`). Pan per Focaccia (Cristina Lionetti, 31/01/2014)
+  la riprende ×1,5 con «15 g lievito di birra fresco»: conferma il tipo di
+  lievito; `year_codified` 2014 per questo.
+- **Scelte di Matteo** (decisione 10, §9.7–9.8): versione **bassa**
+  (ingredienti +50 %, 2 teglie 30×40 ben oliate), **W 330**, **enkir** come
+  terza farina, **malto in sciroppo** dichiarato, **fiocchi di patate
+  facoltativi spenti** di default; «luogo caldo» a 26 °C (decisione 7).
+- **Intervalli dello stile**: nessuno da allargare (idratazione 80 % in
+  75–82 %, W 330 in 250–330, 3 h 30 in 2–12 h; cottura 250 °C × 750 s in
+  200–280 °C e 720–1800 s).
+- **Dosi**, 2 teglie 30×40, forno di casa 250 °C (test in
+  `use-cases/paoletta-teglia.test.ts`). Impasto `paoletta`: sale 2 %, olio
+  5 %, niente zucchero, mix e ingredienti aggiuntivi.
+
+  | | Fonte ×1,5 | % sulla farina | Motore (2 teglie) |
+  |---|---|---|---|
+  | Farina W 330 | 450 | 75 | 449 |
+  | Semola rimacinata di grano duro | 75 | 12,5 | 75 |
+  | Enkir (farro monococco) | 75 | 12,5 | 75 |
+  | Acqua | 480 | 80 | 479 |
+  | Lievito di birra fresco | 15 | 2,5 | 15 |
+  | Sale | 12 | 2,0 | 12 |
+  | Olio EVO | 30 | 5,0 | 30 |
+  | Malto d'orzo (1,5 cucchiaini, sciroppo) | ≈ 10,5 | 1,75 | 10 |
+  | Fiocchi di patate (1,5 cucchiai), facoltativi | ≈ 8,1 | 1,35 | 8, fuori dal totale |
+  | Totale | 1.147,5 | | 1.146 (573 × 2) |
+
+  Per teglia 573,75 g su 1.200 cm² = **0,478 g/cm²**; il motore arrotonda il
+  peso della teglia a 573 g (come Adriano, 562 invece di 562,5), quindi
+  farina e acqua −1 g. Malto e fiocchi sono **dosi convertite da Vulcan**
+  (D-066, §9.3), dichiarate nella nota `source.paolettaDoses` insieme alla
+  versione bassa (la nota generale `source.convertedDoses` parla di
+  millilitri e bustine, che qui non ci sono).
+- **Lievito della fonte** (B1): fresco 2,5 % con 3 h 30 a 26 °C; con solo
+  secco 0,83 % (1:3, dichiarato). Con altre ore torna il modello.
+- **Fasi della fonte** (B3 con la chiave nuova `rest`): puntata 2 h nella
+  ciotola unta e coperta; staglio; **riposo dei panetti 1 h** («pieghe di
+  sovrapposizione, arrotondare, 1 h coperto a campana»); stesura nella teglia
+  oliata; appretto 30 minuti in teglia, che con il forno di casa a 250 °C
+  coincide con il preriscaldo (30 minuti); condimento; cottura. Tutte a
+  26 °C, nota `fermentation.warmPlace` (niente `temp_assumed`: la nota del
+  luogo caldo lo dice già). Ore della timeline: 2 h + 1 h + 30 min = 3 h 30.
+- **Condimento**: la margherita dello stile (Benedetta), ma **dopo
+  l'appretto in teglia**, come fa la fonte (pomodoro alle 20.50, dopo i 30
+  minuti in teglia): `MethodProcessProfile.topping_after_proof`, testo
+  `description_after_pan_proof` in 7 lingue («sull'impasto lievitato nella
+  teglia, senza schiacciarlo, e inforna subito»). Mozzarella negli ultimi
+  5 minuti (la fonte: 4–5 minuti con l'olio).
+- **Cottura**: «ventilato o funzione pizza al massimo» (250–280 °C):
+  **250 °C × 750 s**, scelta di Vulcan (il forno di casa più comune, dentro la
+  forbice della fonte; 8 + 4–5 minuti ≈ 12 min 30). Dal ripiano basso
+  all'alto con il testo ventilato (`bake.fan`, `timeline.bake.lowThenHighFan`;
+  quello di Adriano dice «forno statico» e non cambia).
+- **Testi** in 7 lingue: firma, tecnica, storia (due frasi), badge «Anice &
+  Cannella»; messaggi `timeline.rest.title/desc`,
+  `timeline.bake.lowThenHighFan`, `source.paolettaDoses`; nomi `dough.extra.*`
+  e `flourBlend.*`. `LOCALE_BUNDLE_REV` 62, MCP 1.8.0.
+
+#### Motore: cosa c'è di nuovo
+
+- **Fase `rest`** (`DeclaredPhases.rest`): conta nelle ore della versione
+  (`declaredPhases`), in `fermentationPhases` (chiave presente solo se la
+  fonte la scrive: senza, la forma resta `{preferment, bulk, proof}`), nella
+  stima del lievito alla sua temperatura (`equivalentFermentationHours`), nei
+  passi (`rest` dopo lo staglio e prima della stesura, con `temp_c`; glossario
+  «Pirlatura», «Appretto»; figura dell'appretto). Con il preriscaldo più lungo
+  dell'appretto i minuti mancanti si tolgono prima dalla fine del riposo, poi
+  dalla puntata (senza riposo: come prima). Non è un'attesa «flessibile» della
+  modalità cottura: niente «L'impasto è già pronto?» per un riposo a tempo.
+  MCP: `declared_phases.rest`, passi con `rest@26`.
+- **Ingredienti aggiuntivi** (`DoughParameters.extra_ingredients`, catalogo
+  `EXTRA_DOUGH_INGREDIENTS`: malto d'orzo, fiocchi di patate; il miele non
+  serve ancora): nel totale dell'impasto (i facoltativi solo se scelti con
+  `included_optional_ingredients`, per nome o per id), nella lista e nello
+  scorporo (`recipe-phases`, «(facoltativo)»), nella stampa, nell'MCP
+  (`ingredients`, con `optional` e `included`), negli allergeni (malto d'orzo
+  = glutine, identità semplice; fiocchi di patate da leggere in etichetta),
+  nelle diete (malto e semola compatibili con vegano), nella dispensa («Non
+  usare» il malto blocca, i fiocchi facoltativi no; con la dispensa completa
+  il malto «serve»).
+- **Mix con glutine senza W** (`FlourBlendComponent.gluten`): semola ed
+  enkir non entrano nella W media (che resta 330) e non diluiscono la forza
+  efficace come il riso della pinsa; sono glutine per diete e allergeni. Il
+  mix si rimette nelle opzioni senza perdere `gluten` e `id`
+  (`blendWithoutGrams`, prima tre copie che tenevano solo nome, quota e W).
+- **Nomi del mix tradotti** (`FlourBlendComponent.id`, `flourBlendName`):
+  anche la pinsa (frumento, soia, riso), che in giapponese mostrava i nomi
+  italiani.
+- **Senza `rest` e senza ingredienti aggiuntivi nulla cambia**: le righe di
+  `preset-numbers.regression.json` restano tutte identiche, se ne aggiungono
+  tre (Paoletta); «mai fuori stile» passa da 1.392 a 1.404 ricette (le 12 di
+  Paoletta), tutte negli intervalli.
+
+#### Cosa vede l'utente (prova nel browser, `vite preview`, 390 px)
+
+- `/recipe/teglia_in_giornata?interpretation=paoletta&mode=canonical` (it,
+  ja): note «luogo caldo», «versione bassa» e salsa della margherita; mix
+  «Farina di frumento 75 % · W330 / Semola rimacinata di grano duro 12,5 % /
+  Enkir (farro monococco) 12,5 %», malto d'orzo, «Fiocchi di patate
+  (facoltativo)»; allergeni «Cereali con glutine · Latte». Procedimento:
+  Impasto, Puntata 2 h a 26 °C, Staglio, **Riposo dei panetti** 1 h a 26 °C,
+  Stesura, Preriscalda (con l'appretto in teglia), Condimento sull'impasto
+  lievitato, Cottura «Forno ventilato o funzione pizza…». In giapponese
+  「生地玉を休ませる」, 大麦モルト, ポテトフレーク (お好みで), 一粒小麦（エンキール）;
+  nessuna chiave grezza, nessun errore in console.
+- **Da sapere (non di questo pacchetto)**: la pagina della ricetta apre la
+  versione sulla teglia dello stile (35×35, 967 g), non sulla teglia della
+  fonte (30×40, 573 g): succede anche con Adriano (35×35 invece di 30×35) ed
+  è la stessa famiglia del difetto «`?interpretation=` apre il riferimento».
+  Crea e l'MCP usano la teglia della fonte.
+
+#### Budget (gzip)
+
+Sopra main `b7af252`: codice senza lingue 424,5 → 426,2 kB (limite 465), per
+utente in giapponese 538,5 → 540,8 kB (limite 570), CSS invariato
+(73,1 kB). Nessun limite cambiato.
+
+#### Restano
+
+- Dekracap: lo staglio a metà del frigo con la chiave `rest` (riposo dei
+  panetti in frigo, poi fuori), al posto della nota «Come fa la fonte».
+- La versione alta (placca del forno senza misura) non c'è.
+- Voce: legge farina, acqua, sale, lievito, grassi e zucchero, non il malto.

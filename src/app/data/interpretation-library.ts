@@ -598,6 +598,63 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     skill_required: 2,
   },
 
+  /* Tranche B4. Paola Sersante («Paoletta»), «Pizza di Paoletta da fare in
+   * fretta», Anice & Cannella, 05/02/2018, aggiornata il 09/07/2025
+   * (verificata, docs/progetto-catalogo-italiano.md §9.2); l'autrice l'ha
+   * pubblicata prima nel suo gruppo Facebook e Pan per Focaccia (Cristina
+   * Lionetti, 31/01/2014) la riprende ×1,5 con «15 g lievito di birra
+   * fresco». Versione bassa (decisione 10 di Matteo): ingredienti +50 %,
+   * 2 teglie 30×40 ben oliate; impasto `paoletta`. Per teglia 300 g di
+   * farine, 240 d'acqua, 7,5 di lievito, 6 di sale, 15 d'olio, 5,25 di malto:
+   * 573,75 g su 1200 cm² = 0,478 g/cm² (senza i fiocchi, spenti). Fasi della
+   * fonte: 2 h nella ciotola unta e coperta, pieghe di sovrapposizione e
+   * arrotondamento, 1 h «coperto a campana», 30 minuti nella teglia; «luogo
+   * caldo» senza gradi per tutte e tre: 26 °C (WARM_PLACE, decisione 7).
+   * Cottura: ventilato o funzione pizza al massimo (250–280 °C), prima tacca
+   * con pomodoro e sale finché il cornicione colora (circa 8 minuti), poi
+   * mozzarella e olio in alto per 4–5: 250 °C e 750 s, scelta di Vulcan
+   * (il forno di casa più comune, dentro la forbice della fonte). Il
+   * condimento va dopo l'appretto in teglia (topping_after_proof). */
+  paoletta: {
+    id: "paoletta",
+    process_profile: {
+      id: "paoletta", direct_only: true, proof_in_pan: true,
+      phases: {
+        bulk: { hours: 2, temp_c: WARM_PLACE.calcC },
+        rest: { hours: 1, temp_c: WARM_PLACE.calcC },
+        proof: { hours: 0.5, temp_c: WARM_PLACE.calcC },
+      },
+      bake: { temp_c: 250, cook_time_sec: 750, racks: "low_then_high", fan: true },
+      topping_after_proof: true,
+      source_url: "https://www.aniceecannella.com/la-pizza-di-paoletta-da-fare-in-fretta/",
+    },
+    type: "autore",
+    author: "Paoletta",
+    year_codified: 2014,
+    base_style_id: "teglia_in_giornata",
+    parameter_overrides: {
+      hydration_pct: 80,
+      flour_w: 330,
+      fermentation_hours: 3.5,
+      warm_place: true,
+      use_pre_ferment: false,
+      impasto_ref: "paoletta",
+      pan: { length_cm: 40, width_cm: 30, g_per_cm2: 0.478 },
+    },
+    source_yeast: { type: "fresh", pct: 2.5 },
+    source_status: "verified",
+    source_notes: [
+      { key: "source.paolettaDoses", get fallback() { return METHOD_MESSAGES_IT["source.paolettaDoses"]; }, params: { app: BRAND.name } },
+    ],
+    signature_name: "Ispirata alla pizza di Paoletta da fare in fretta",
+    technique_signature: "Farina forte con semola rimacinata ed enkir, acqua all'80%, molto lievito di birra fresco e malto d'orzo, impastata in planetaria fino all'incordatura. Due ore al caldo, pieghe e un'ora a campana, mezz'ora nella teglia unta, poi forno al massimo dal basso all'alto.",
+    story: "Paola Sersante, per tutti Paoletta, ha pubblicato questa pizza nel suo gruppo Facebook; oggi è sul blog Anice & Cannella, e Pan per Focaccia la riprende già nel 2014. Si fa in un pomeriggio: impasto alle 16.30, in forno poco prima delle 21.",
+    url: "https://www.aniceecannella.com/la-pizza-di-paoletta-da-fare-in-fretta/",
+    emoji: "⏱️",
+    badge: "Anice & Cannella",
+    skill_required: 2,
+  },
+
 };
 
 /* ═══ API ═══ */

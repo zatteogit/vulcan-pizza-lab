@@ -10,7 +10,9 @@ const CORE: Record<string, StepVisual> = {
   preferment: "preferment", mix: "mix", bulk: "bulk", divide: "divide",
   // FW-19: le pieghe sono lavoro di mani, come l'impasto.
   folds: "mix",
-  proof: "proof", shape: "shape", top: "top", top_post: "top_post",
+  proof: "proof", shape: "shape",
+  // B4: i panetti riposano coperti, come nell'appretto.
+  rest: "proof", top: "top", top_post: "top_post",
   after_bake_top: "top_post", preheat: "preheat", bake: "bake", bake2: "bake",
   stack: "stack", fill_internal: "fill_internal", split_fill: "split_fill",
 };

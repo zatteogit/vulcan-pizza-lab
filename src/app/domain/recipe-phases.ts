@@ -14,12 +14,13 @@
  *    hydration_pct, baker_pcts), uguali a schermo e in stampa.
  * Modulo puro: nessun testo, nessun React. */
 
-import type { GeneratedRecipe } from "./pizza-engine";
+import type { ExtraDoughIngredientId, GeneratedRecipe } from "./pizza-engine";
 import { computePreFermentSplit } from "./pre-ferment-split";
 
 export type DoughIngredientId = "flour" | "water" | "yeast" | "salt" | "sugar" | "fat";
-/** «preferment» è il prefermento maturo che entra nell'impasto finale. */
-export type PhaseIngredientId = DoughIngredientId | "preferment";
+/** «preferment» è il prefermento maturo che entra nell'impasto finale; B4:
+ *  gli ingredienti aggiuntivi (malto, fiocchi di patate) con il loro id. */
+export type PhaseIngredientId = DoughIngredientId | ExtraDoughIngredientId | "preferment";
 
 export interface PhaseIngredient {
   id: PhaseIngredientId;
@@ -29,6 +30,8 @@ export interface PhaseIngredient {
   /** allInPreferment: acqua 0 g perché è già tutta nel prefermento.
    *  allYeast: tutto il lievito della ricetta. */
   note?: "allInPreferment" | "allYeast";
+  /** B4: facoltativo non scelto, fuori dal totale dell'impasto. */
+  optional?: true;
 }
 
 export interface RecipePhase {
@@ -85,7 +88,7 @@ export type PhaseRecipe = Pick<
   | "flour_g" | "water_g" | "salt_g" | "sugar_g" | "fat_g" | "yeast_g" | "yeast_type"
   | "hydration_pct" | "baker_pcts" | "total_dough_g" | "has_pre_ferment" | "pre_ferment_type"
   | "pre_ferment_flour_pct" | "water_temp_c" | "pre_ferment_water_temp_c" | "flour_blend"
-  | "effective_gluten_w"
+  | "effective_gluten_w" | "extra_ingredients"
 >;
 
 /* ── Diluizione (D-O) ──
@@ -144,6 +147,14 @@ export function yeastDilution(
 
 const pctOf = (grams: number, flourG: number) => (flourG > 0 ? (grams / flourG) * 100 : 0);
 
+/** B4: righe degli ingredienti aggiuntivi, nell'impasto finale (anche con il
+ *  prefermento); il facoltativo non scelto resta segnato. */
+function extraRows(recipe: PhaseRecipe): PhaseIngredient[] {
+  return (recipe.extra_ingredients ?? []).map((x) => ({
+    id: x.id, grams: x.grams, bakerPct: x.pct, ...(x.optional && !x.included ? { optional: true as const } : {}),
+  }));
+}
+
 export function buildRecipePhases(recipe: PhaseRecipe): RecipePhases {
   const flourG = recipe.flour_g;
   const totals: PhaseIngredient[] = [
@@ -152,6 +163,7 @@ export function buildRecipePhases(recipe: PhaseRecipe): RecipePhases {
     { id: "salt" as const, grams: recipe.salt_g, bakerPct: recipe.baker_pcts?.salt ?? pctOf(recipe.salt_g, flourG) },
     { id: "yeast" as const, grams: recipe.yeast_g, bakerPct: pctOf(recipe.yeast_g, flourG) },
     { id: "sugar" as const, grams: recipe.sugar_g, bakerPct: recipe.baker_pcts?.sugar ?? pctOf(recipe.sugar_g, flourG) },
+    ...extraRows(recipe),
     { id: "fat" as const, grams: recipe.fat_g, bakerPct: recipe.baker_pcts?.fat ?? pctOf(recipe.fat_g, flourG) },
   ].filter((row) => row.id === "flour" || row.id === "water" || row.grams > 0);
 
@@ -199,6 +211,7 @@ export function buildRecipePhases(recipe: PhaseRecipe): RecipePhases {
       row("water", split.mainWaterG, split.mainWaterG === 0 ? "allInPreferment" : undefined),
       ...(recipe.salt_g > 0 ? [row("salt", recipe.salt_g)] : []),
       ...(recipe.sugar_g > 0 ? [row("sugar", recipe.sugar_g)] : []),
+      ...extraRows(recipe).filter((x) => x.grams > 0),
       ...(recipe.fat_g > 0 ? [row("fat", recipe.fat_g)] : []),
     ],
     waterTempC: split.mainWaterG > 0 ? recipe.water_temp_c : null,

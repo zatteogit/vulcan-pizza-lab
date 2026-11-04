@@ -16,7 +16,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import type { CmsContent } from "../cms/cms-context";
 import type { createFormatter } from "../cms/i18n";
 import type { CookSessionStep } from "../cooking/cook-session";
-import { phaseBakerPctText, phaseIngredientLabel, formatToppingAmountForLocale, yeastDilutionText } from "./recipe-output-format";
+import { flourBlendName, phaseBakerPctText, phaseIngredientLabel, phaseRowLabel, formatToppingAmountForLocale, yeastDilutionText } from "./recipe-output-format";
 import { flourWText } from "../../domain/flour-w-display";
 
 /* ═══ D-043 — Scheda di produzione stampabile ═══
@@ -77,7 +77,7 @@ export function PrintSheet({
   const dilution = model.yeastDilution ? yeastDilutionText(model.yeastDilution, fmt) : null;
   /* Righe dello scorporo: un ingrediente per riga, una colonna per fase. */
   const splitIds = model.preFerment
-    ? (["preferment", "flour", "water", "yeast", "salt", "sugar", "fat"] as const).filter((id) =>
+    ? (["preferment", "flour", "water", "yeast", "salt", "sugar", "malt_syrup", "potato_flakes", "fat"] as const).filter((id) =>
         model.phases.some((p) => p.ingredients.some((i) => i.id === id)),
       )
     : [];
@@ -133,7 +133,7 @@ export function PrintSheet({
             <tbody>
               {model.totals.map((row) => (
                 <tr key={row.id}>
-                  <td>{label(row.id)}</td>
+                  <td>{phaseRowLabel(row, recipe, cms, preName)}</td>
                   <td className="print-sheet__num">{fmt.grams(row.grams)}</td>
                   <td className="print-sheet__num">{phaseBakerPctText(row, bcp47)}</td>
                 </tr>
@@ -146,7 +146,7 @@ export function PrintSheet({
                       ...model.flourBlend.map((c) => (
                         <tr key={`blend-${c.name}`} className="print-sheet__sub">
                           <td>
-                            ↳ {c.name} {c.pct}%
+                            ↳ {flourBlendName(c)} {c.pct}%
                             {c.w ? uiMessage("features.recipe.ingredients-section.f84aef04", [c.w]) : ""}
                           </td>
                           <td className="print-sheet__num">{fmt.grams(c.grams)}</td>

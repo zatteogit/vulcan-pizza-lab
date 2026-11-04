@@ -632,6 +632,7 @@ export const TOPPING_I18N_IT: ToppingTranslation = {
       title: "Salsa ora, mozzarella a fine cottura",
       description: "Distribuisci la salsa tiepida sull'impasto appena steso, fino ai bordi, e lascialo lievitare in teglia. Inforna; negli ultimi 5 minuti di cottura apri il forno, distribuisci la mozzarella a dadini e finisci la cottura.",
       description_no_pan_proof: "Distribuisci la salsa tiepida sull'impasto appena steso nella teglia, fino ai bordi, e inforna subito. Negli ultimi 5 minuti di cottura apri il forno, distribuisci la mozzarella a dadini e finisci la cottura.",
+      description_after_pan_proof: "Distribuisci la salsa tiepida sull'impasto lievitato nella teglia, fino ai bordi, senza schiacciarlo, e inforna subito. Negli ultimi 5 minuti di cottura apri il forno, distribuisci la mozzarella a dadini e finisci la cottura.",
     },
     spread_margherita_us: {
       title: "Condimento Margherita americana",

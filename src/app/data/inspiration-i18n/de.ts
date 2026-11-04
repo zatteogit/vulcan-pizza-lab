@@ -87,6 +87,12 @@ export const INSPIRATION_I18N_DE: InspirationTranslation = {
       story: "Dekracap ist Mitglied des Forums La Confraternita della Pizza. Das Rezept eröffnet das „WeekEnd della Pizza in Teglia No Knead“: Notturno Italiano veröffentlichte es im ersten Beitrag, am 6.10.2014 (geändert am 14.10.2015). Das Original wurde gelöscht und ist in der Kopie der Wayback Machine zu lesen. Im Kühlschrank zählt der Autor Trockenhefe wie frische Hefe; hier rechnet die Umrechnung 1 zu 3.",
       badge: "Confraternita della Pizza",
     },
+    paoletta: {
+      signature_name: "Inspiriert von Paolettas schneller Pizza",
+      technique_signature: "Starkes Mehl mit fein gemahlenem Hartweizengrieß und Einkorn, Wasser zu 80%, viel frische Hefe und Gerstenmalz, in der Küchenmaschine geknetet, bis der Teig glatt und elastisch ist. Zwei Stunden an einem warmen Ort, Falten und eine Stunde unter einer Schüssel, eine halbe Stunde im geölten Blech, dann der Ofen auf höchster Stufe, von unten nach oben.",
+      story: "Paola Sersante, für alle Paoletta, hat diese Pizza zuerst in ihrer Facebook-Gruppe geteilt; heute steht sie im Blog Anice & Cannella, und Pan per Focaccia backte sie schon 2014 nach. Sie gelingt an einem Nachmittag: Teig um 16:30 Uhr, kurz vor 21 Uhr in den Ofen.",
+      badge: "Anice & Cannella",
+    },
     da_michele_napoli: {
       signature_name: "Margherita und Marinara, und wenig mehr",
       technique_signature: "Aufs Nötigste reduzierte Karte: jahrzehntelang nur Margherita und Marinara, heute vier Pizzen. Holzofen und kein Schnickschnack.",

@@ -15,6 +15,8 @@ const STEP_TERMS: Record<string, readonly string[]> = {
   bulk: ["bulk_fermentation"],
   divide: ["dough_division", "ball_shaping"],
   proof: ["ball_fermentation", "poke_test"],
+  /* B4: riposo dei panetti scritto dalla fonte (Paoletta). */
+  rest: ["ball_shaping", "ball_fermentation"],
   shape: ["cornicione"],
   preheat: ["oven_floor_dome"],
   bake: ["oven_floor_dome", "maillard"],

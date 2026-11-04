@@ -5,7 +5,7 @@ import {
 } from "../domain/pizza-engine";
 import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { SKILL_WARNING_KEYS } from "../domain/verdict-summary";
-import { getAllInterpretations, getInterpretationById, getInterpretationsForStyle, verifiedSourceBacksHydrationW } from "../data/interpretation-library";
+import { getAllInterpretations, getInterpretationById, getInterpretationsForStyle, interpretationFermentTempC, verifiedSourceBacksHydrationW } from "../data/interpretation-library";
 import { referenceEyebrow, startsWithVowel } from "../features/recipe/reference-label";
 import { UI_MESSAGES_FR } from "../i18n/ui-messages.fr";
 import { UI_MESSAGES_IT } from "../i18n/ui-messages.it";
@@ -45,7 +45,7 @@ describe("dati della versione", () => {
     expect([adriano.type, adriano.source_status, adriano.base_style_id]).toEqual(["autore", "verified", "teglia_in_giornata"]);
     expect(adriano.url).toBe("http://profumodilievito.blogspot.com/2009/11/la-pizza-in-teglia-croccante.html");
     expect(adriano.source_yeast).toEqual({ type: "fresh", pct: 0.5 });
-    expect(getInterpretationsForStyle(style.id).map((it) => it.id)).toEqual(["benedetta_rossi", "adriano_continisio"]);
+    expect(getInterpretationsForStyle(style.id).map((it) => it.id)).toEqual(["benedetta_rossi", "adriano_continisio", "paoletta"]);
     // Sale e olio dall'impasto della libreria (§9.11), niente zucchero.
     expect(getImpasto(adriano.parameter_overrides!.impasto_ref!)?.dough_overrides).toMatchObject({ salt_pct: 2, oil_pct: 5, sugar_pct: 0 });
   });
@@ -55,9 +55,10 @@ describe("dati della versione", () => {
       const p = it.process_profile;
       if (p?.phases) {
         const o = it.parameter_overrides!;
-        const sum = (p.phases.preferment?.hours ?? 0) + p.phases.bulk.hours + p.phases.proof.hours;
+        const sum = (p.phases.preferment?.hours ?? 0) + p.phases.bulk.hours + (p.phases.rest?.hours ?? 0) + p.phases.proof.hours;
         expect(sum, it.id).toBe(o.fermentation_hours);
-        expect(p.phases.bulk.temp_c, it.id).toBe(o.fermentation_temp_c);
+        // B4: col «luogo caldo» la temperatura della versione è WARM_PLACE.calcC.
+        expect(p.phases.bulk.temp_c, it.id).toBe(interpretationFermentTempC(it));
         expect(Boolean(p.phases.preferment), it.id).toBe(Boolean(o.use_pre_ferment));
       }
       const base = STYLES_DB[it.base_style_id];

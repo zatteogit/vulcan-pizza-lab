@@ -24,6 +24,8 @@ import {
   type PreFermentChoice,
   type ScoreWeightsOverride,
   type UserConstraints,
+  type FlourBlendComponent,
+  blendWithoutGrams,
 } from "../domain/pizza-engine";
 import {
   getVersions,
@@ -47,7 +49,7 @@ export interface RecipeInitialState {
   preFerment?: PreFermentChoice;
   panConfig?: PanConfig;
   toppingConcept?: string | null;
-  flourBlend?: { name: string; pct: number; w?: number }[];
+  flourBlend?: FlourBlendComponent[];
   optimizedHydration?: OptimizedHydration | null;
 }
 
@@ -261,7 +263,7 @@ export function useRecipeState({
     string | null
   >(resolvedInitial?.selectedToppingConcept ?? null);
   const [customFlourBlend, setCustomFlourBlend] = useState<
-    { name: string; pct: number; w?: number }[] | undefined
+    FlourBlendComponent[] | undefined
   >(resolvedInitial?.customFlourBlend);
   const [optimizedHydration, setOptimizedHydration] =
     useState<OptimizedHydration | null>(initial?.optimizedHydration ?? null);
@@ -360,7 +362,7 @@ export function useRecipeState({
       setCustomFlourPL(result.recipe.flour_pl);
       setCustomSalt(result.recipe.baker_pcts?.salt ?? result.recipe.style.dough.salt_pct);
       setPreFermentChoice({});
-      setCustomFlourBlend(result.recipe.flour_blend?.map(({name,pct,w}) => ({name,pct,w})));
+      setCustomFlourBlend(blendWithoutGrams(result.recipe.flour_blend));
       setCustomFermentHours(result.params.fermentation_hours);
       setCustomFermentTemp(result.params.fermentation_temp_c);
       setUsePreFerment(result.params.use_pre_ferment);
@@ -488,9 +490,9 @@ export function useRecipeState({
     setActiveInterpretationId: Dispatch<SetStateAction<string | null>>;
     selectedToppingConcept: string | null;
     setSelectedToppingConcept: Dispatch<SetStateAction<string | null>>;
-    customFlourBlend: { name: string; pct: number; w?: number }[] | undefined;
+    customFlourBlend: FlourBlendComponent[] | undefined;
     setCustomFlourBlend: Dispatch<
-      SetStateAction<{ name: string; pct: number; w?: number }[] | undefined>
+      SetStateAction<FlourBlendComponent[] | undefined>
     >;
     styleVersions: StyleVersion[];
     applyVersionToState: (version: StyleVersion) => void;

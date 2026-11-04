@@ -49,6 +49,8 @@ type PizzaStyle,
 type SkillLevel,
 type UserConstraints,
 saltRangePct,
+type FlourBlendComponent,
+blendWithoutGrams,
 } from "../domain/pizza-engine";
 import { styleWithSelectedTopping } from "../hooks/use-recipe-state";
 import {
@@ -286,7 +288,7 @@ function RecipeContent({
   );
   /* VPL-B2 — mix di farine editabile (quote/W per componente). Copia dallo stile. */
   const [customFlourBlend, setCustomFlourBlend] = useState<
-    { name: string; pct: number; w?: number }[] | undefined
+    FlourBlendComponent[] | undefined
   >(() => initialOptions.customFlourBlend);
   const [customFlourPL, setCustomFlourPL] = useState(
     useTailoredUrlParams ? numParam(searchParams, "pl", plDefault, 0.2, 1.5) : plDefault,
@@ -650,7 +652,7 @@ function RecipeContent({
     setCustomFlourW(o.params.flour_w);
     setCustomFlourPL(o.recipe.flour_pl);
     setCustomSalt(o.recipe.baker_pcts?.salt ?? o.recipe.style.dough.salt_pct);
-    setCustomFlourBlend(o.recipe.flour_blend?.map(({name,pct,w})=>({name,pct,w})));
+    setCustomFlourBlend(blendWithoutGrams(o.recipe.flour_blend));
     setPreFermentChoice({});
     setCustomFermentHours(o.params.fermentation_hours);
     setCustomFermentTemp(o.params.fermentation_temp_c);
