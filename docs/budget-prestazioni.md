@@ -21,14 +21,14 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 
 | Build | Oggi | Budget (`npm run check:budget`) |
 |---|---|---|
-| Chunk JS più grande (gzip) | 82,4 kB (catalogo `ja`, 31/10/2026) | 100 kB |
-| JS senza i cataloghi delle lingue, italiano compreso (gzip) | 423,9 kB (31/10/2026, testi italiani dei dati come le altre lingue) | 465 kB |
-| JS per utente: codice + la lingua più pesante (gzip) | 533,0 kB (con `ja`, 109,0 kB; in italiano 507,7) | 570 kB |
-| JS emesso in tutto, 7 lingue (gzip) | 1.114 kB in 70 chunk (31/10/2026) | solo informazione (D-059) |
+| Chunk JS più grande (gzip) | 95,5 kB (`vendor-ui`, 04/11/2026) | 100 kB |
+| JS senza i cataloghi delle lingue, italiano compreso (gzip) | 423,5 kB (04/11/2026, testi italiani dei dati come le altre lingue) | 465 kB |
+| JS per utente: codice + la lingua più pesante (gzip) | 536,8 kB (con `ja`, 113,4 kB; in italiano 511,5) | 570 kB |
+| JS emesso in tutto, 7 lingue (gzip) | 1.143 kB in 60 chunk (04/11/2026) | solo informazione (D-059) |
 | CSS (gzip) | 72,2 kB (516 kB non compresso, 30/10/2026) | 75 kB |
 | Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
 | Video totali | 2,6 MB (6 file; erano 48,6) | 3 MB |
-| Immagini totali | 32,4 MB (291 file; era 42,0 il 31/10/2026) | 38 MB |
+| Immagini totali | 33,8 MB (345 file, 04/11/2026; era 42,0 il 31/10/2026) | 38 MB |
 
 Il controllo gira in CI dopo la build (`.github/workflows/verify.yml`). I limiti
 sono un cricchetto: si abbassano quando si migliora, non si alzano per far
@@ -691,6 +691,35 @@ risolve comunque i messaggi per chiave, quindi lo schermo non cambia).
 | JS senza lingue | 429,4 kB | **423,9 kB** | −5,5 |
 | JS per utente, ja | 538,4 kB | **533,0 kB** | −5,4 |
 | it | 508,2 kB | 507,7 kB | −0,5 |
+
+### Dopo il rebase su main cd71a4f (04/11/2026)
+
+Main è andato avanti (#186–#201: tranche B3, illustrazioni di Impara,
+immagini). Sul ramo riportato sopra main le PR nuove toccavano tre testi che
+ricadono nello spostamento, ora nel catalogo italiano anche loro: la variante
+`description_no_pan_proof` del passo della margherita della teglia in
+giornata (B3, nuovo segnaposto `T` e getter), la prevenzione di P15 (testo
+cambiato) e i quattro messaggi nuovi del motore (`fermentation.roomTemp`,
+`fermentation.hoursAssumed`, `timeline.bake.lowThenHigh`,
+`timeline.shape.unoiledPan`; `topping.sauceSeasoning` ora con l’autore) in
+`method-messages.it.ts`. Misure di ogni commit di fase sopra main attuale:
+
+| Misura (gzip) | main cd71a4f | fase 1 | fase 2 | fase 3 | fase 4 | totale |
+|---|---|---|---|---|---|---|
+| JS senza lingue | 456,5 | 440,0 | 436,0 | 429,3 | **423,5** | −33,0 |
+| per utente ja | 569,9 | 553,4 | 549,4 | 542,7 | **536,8** | −33,1 |
+| per utente de | 564,0 | 547,5 | 543,5 | 536,9 | 531,0 | −33,0 |
+| per utente en | 554,8 | 538,3 | 534,2 | 527,6 | 521,7 | −33,1 |
+| per utente it | 511,9 | 514,2 | 513,4 | 512,1 | 511,5 | −0,4 |
+
+fr 563,2 → 530,2, es 559,3 → 526,3, pt 559,0 → 526,0 kB. Immagini 33,8 MB
+su 38 (le immagini non cambiano). Risposte del server identiche a main
+cd71a4f byte per byte; testo delle 30 pagine e della cottura identico in it,
+en-GB e ja; cambio lingua it → ja → it senza ricaricare corretto.
+Primo caricamento (stesse condizioni della sezione seguente, mediane di 7):
+it `/explore` render/LCP 5157/5772 → 5014/5532 ms, it ricetta
+5315/5576 → 5120/5816 ms, ja `/explore` 5218/5928 → 5075/5648 ms: nel
+rumore.
 
 ### Primo caricamento
 
