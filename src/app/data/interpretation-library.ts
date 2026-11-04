@@ -648,7 +648,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     ],
     signature_name: "Ispirata alla pizza di Paoletta da fare in fretta",
     technique_signature: "Farina forte con semola rimacinata ed enkir, acqua all'80%, molto lievito di birra fresco e malto d'orzo, impastata in planetaria fino all'incordatura. Due ore al caldo, pieghe e un'ora a campana, mezz'ora nella teglia unta, poi forno al massimo dal basso all'alto.",
-    story: "Paola Sersante, per tutti Paoletta, ha pubblicato questa pizza nel suo gruppo Facebook; oggi è sul blog Anice & Cannella, e Pan per Focaccia la riprende già nel 2014. Si fa in un pomeriggio: impasto alle 16.30, in forno poco prima delle 21.",
+    story: "Paola Sersante, per tutti Paoletta, ha pubblicato questa pizza prima nel suo gruppo Facebook. Nel 2014 la riprende il blog Pan per Focaccia, dal 2018 è sul blog Anice & Cannella. Si fa in un pomeriggio: impasto alle 16.30, in forno poco prima delle 21.",
     url: "https://www.aniceecannella.com/la-pizza-di-paoletta-da-fare-in-fretta/",
     emoji: "⏱️",
     badge: "Anice & Cannella",

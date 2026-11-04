@@ -90,7 +90,7 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
     paoletta: {
       signature_name: "Inspirada en la pizza rápida de Paoletta",
       technique_signature: "Harina de fuerza con sémola remolida y escanda menor, agua al 80%, mucha levadura fresca y malta de cebada, amasada en batidora hasta que quede lisa y elástica. Dos horas en un lugar cálido, pliegues y una hora bajo un bol, media hora en la bandeja aceitada y luego el horno al máximo, de abajo arriba.",
-      story: "Paola Sersante, Paoletta para todos, publicó esta pizza primero en su grupo de Facebook; hoy está en el blog Anice & Cannella, y Pan per Focaccia ya la hacía en 2014. Se hace en una tarde: masa a las 16:30 y al horno poco antes de las 21:00.",
+      story: "Paola Sersante, Paoletta para todos, publicó esta pizza primero en su grupo de Facebook. En 2014 la recogió el blog Pan per Focaccia y desde 2018 está en el blog Anice & Cannella. Se hace en una tarde: masa a las 16:30 y al horno poco antes de las 21:00.",
       badge: "Anice & Cannella",
     },
     da_michele_napoli: {
