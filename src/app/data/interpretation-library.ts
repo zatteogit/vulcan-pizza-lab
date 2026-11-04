@@ -115,10 +115,11 @@ export interface Interpretation {
    *  (nota `source.convertedDoses`). Le conversioni sono nel §9.3 di
    *  docs/progetto-catalogo-italiano.md. */
   converted_doses?: true;
-  /** B5: ciò che la fonte fa e la tabella di marcia di Vulcan non sa ancora
-   *  dire (per Dekracap lo staglio a metà del frigo: le fasi esplicite di B3
-   *  non hanno ancora i panetti in frigo, §9.13). Note della ricetta, con le
-   *  ore e la temperatura della versione, come il lievito della fonte. */
+  /** B5: ciò che la fonte fa e la tabella di marcia di Vulcan non dice (per
+   *  Dekracap la forbice «da 2 ore a mezz'ora» fuori dal frigo, di cui la
+   *  tabella usa 2 ore; lo staglio a metà frigo ora è una fase, §9.13). Note
+   *  della ricetta, con le ore e la temperatura della versione, come il
+   *  lievito della fonte. */
   source_notes?: EngineMsg[];
 
   /* ─── Narrativa ─── */
@@ -568,6 +569,16 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       // Pieghe della fonte: quasi un'ora di riposo (50 min, lettura di
       // Vulcan), poi tre giri a 15 minuti l'uno dall'altro, poi in frigo.
       folds: { count: 3, intervalMin: 15, restBeforeMin: 50 },
+      // Fasi della fonte (B4, fase `rest`): puntata in frigo, staglio a
+      // circa 24 h e panetti di nuovo in frigo, 2 h fuori prima di cuocere
+      // (D-071). La fonte dice «fuori dal frigo» senza gradi: 18 °C è
+      // l'appretto del motore (PROOF_MIN_TEMP_C), come prima di B4.
+      // `proof_hours` resta per il modello delle quote (ore cambiate).
+      phases: {
+        bulk: { hours: 24, temp_c: 8 },
+        rest: { hours: 22, temp_c: 8 },
+        proof: { hours: 2, temp_c: 18, temp_assumed: true },
+      },
       source_url: DEKRACAP_ARCHIVE_URL,
     },
     type: "autore",
@@ -648,7 +659,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     ],
     signature_name: "Ispirata alla pizza di Paoletta da fare in fretta",
     technique_signature: "Farina forte con semola rimacinata ed enkir, acqua all'80%, molto lievito di birra fresco e malto d'orzo, impastata in planetaria fino all'incordatura. Due ore al caldo, pieghe e un'ora a campana, mezz'ora nella teglia unta, poi forno al massimo dal basso all'alto.",
-    story: "Paola Sersante, per tutti Paoletta, ha pubblicato questa pizza nel suo gruppo Facebook; oggi è sul blog Anice & Cannella, e Pan per Focaccia la riprende già nel 2014. Si fa in un pomeriggio: impasto alle 16.30, in forno poco prima delle 21.",
+    story: "Paola Sersante, per tutti Paoletta, ha pubblicato questa pizza prima nel suo gruppo Facebook. Nel 2014 la riprende il blog Pan per Focaccia, dal 2018 è sul blog Anice & Cannella. Si fa in un pomeriggio: impasto alle 16.30, in forno poco prima delle 21.",
     url: "https://www.aniceecannella.com/la-pizza-di-paoletta-da-fare-in-fretta/",
     emoji: "⏱️",
     badge: "Anice & Cannella",

@@ -1075,3 +1075,29 @@ Dettagli e scelte in `docs/progetto-catalogo-italiano.md` §9.14 (D-072).
   lievito fresco 30 g 2,5 %, 3,5 h a 26 °C, 250 °C 750 s; solo secco 10 g
   0,83 %; legna come casa, 329 min). «Mai fuori stile»: 1.404 ricette nello
   stile (1.392 + 12 Paoletta). Test: `use-cases/paoletta-teglia.test.ts`.
+
+## Dekracap · staglio a metà frigo con la fase `rest` (04/11/2026)
+
+Dettagli in `docs/progetto-catalogo-italiano.md` §9.15 (D-071, seguito).
+
+- **Fasi della fonte** nel profilo `dekracap`: puntata 24 h a 8 °C, `rest`
+  22 h a 8 °C (panetti di nuovo in frigo), appretto 2 h a 18 °C
+  (`temp_assumed`: la fonte dice «fuori dal frigo», 18 °C è
+  `PROOF_MIN_TEMP_C`, come prima). `proof_hours: 2` resta per il modello
+  delle quote quando l'utente cambia ore o temperatura.
+- **Stima del lievito con le fasi della fonte e la puntata fredda**: le
+  pieghe fatte fuori dal frigo prima della puntata contano a 18 °C, come
+  nel modello delle quote (`equivalentFermentationHours`). Con la puntata a
+  18 °C o più (Adriano, Paoletta) nulla cambia.
+- **Riposo in frigo** (`isFridgeTempC` della fase, con il frigo della fonte):
+  passo `rest` variante `fridge` («Panetti in frigo»), staglio variante
+  `to_fridge` («Fallo appena l'impasto esce dal frigo e rimetti subito i
+  panetti in frigo»). Il riposo è un'attesa flessibile (`FLEXIBLE_STEP_IDS`):
+  in frigo ha le tolleranze del freddo (fino a +6 h) e il criterio
+  `bulkCold`; al caldo (Paoletta) il criterio nuovo `rest`.
+- **Misure prima/dopo** (casa, 1 teglia 30×40): totale della tabella 2932
+  min prima e dopo; lievito della fonte 0,254 % (0,9 g), `model_pct` 0,112 %
+  fresco e 0,037 % secco, punteggio 89, acqua a 24 °C: invariati. Puntata
+  43 h 45 min → 22 h 25 min, nuovo riposo 22 h. Righe di
+  `preset-numbers.regression.json` e `recipes.golden.json`: tutte
+  identiche (l'impronta non contiene i passi).

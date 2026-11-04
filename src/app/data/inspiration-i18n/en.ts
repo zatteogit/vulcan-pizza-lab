@@ -90,7 +90,7 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
     paoletta: {
       signature_name: "Inspired by Paoletta’s quick pizza",
       technique_signature: "Strong flour with re-milled semolina and einkorn, 80% water, plenty of fresh yeast and barley malt, kneaded in a stand mixer until smooth and elastic. Two hours somewhere warm, folds and an hour under a bowl, half an hour in the oiled tray, then the oven at full heat, from the bottom to the top.",
-      story: "Paola Sersante, known to everyone as Paoletta, first shared this pizza in her Facebook group; today it is on the blog Anice & Cannella, and Pan per Focaccia was already making it in 2014. It takes one afternoon: dough at 16:30, in the oven a little before 21:00.",
+      story: "Paola Sersante, known to everyone as Paoletta, first shared this pizza in her Facebook group. In 2014 the blog Pan per Focaccia picked it up, and since 2018 it has been on the blog Anice & Cannella. It takes one afternoon: dough at 16:30, in the oven a little before 21:00.",
       badge: "Anice & Cannella",
     },
     da_michele_napoli: {

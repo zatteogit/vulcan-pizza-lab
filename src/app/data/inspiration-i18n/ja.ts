@@ -90,7 +90,7 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
     paoletta: {
       signature_name: "Paolettaの「急いで作るピザ」に着想を得て",
       technique_signature: "強力粉に細挽きのデュラムセモリナと一粒小麦（エンキール）、水分80%、たっぷりの生イーストと大麦モルト。スタンドミキサーでなめらかに弾力が出るまでこねます。暖かい場所で2時間、折りたたんでボウルをかぶせて1時間、油を塗った天板で30分。最後は最高温度のオーブンで、下段から上段へ。",
-      story: "Paola Sersante、通称Paolettaは、このピザを最初に自分のFacebookグループで紹介しました。今はブログ「Anice & Cannella」に載っていて、Pan per Focacciaも2014年にすでに作っています。午後だけでできます。16時30分に生地をこね、21時少し前にオーブンへ。",
+      story: "Paola Sersante、通称Paolettaは、このピザを最初に自分のFacebookグループで紹介しました。2014年にブログ「Pan per Focaccia」が取り上げ、2018年からはブログ「Anice & Cannella」に載っています。午後だけでできます。16時30分に生地をこね、21時少し前にオーブンへ。",
       badge: "Anice & Cannella",
     },
     da_michele_napoli: {

@@ -969,7 +969,7 @@ export interface CmsContent {
     skipConfirmYes: string;
     skipConfirmNo: string;
     /** Criterio di prontezza per fase (dai longDesc delle fasi). */
-    readyCriterion: { bulk: string; bulkCold: string; proof: string; preferment: string; default: string };
+    readyCriterion: { bulk: string; bulkCold: string; proof: string; preferment: string; rest: string; default: string };
     /** Toast dopo un completamento, con «Annulla». */
     stepDoneToast: string;
     undo: string;

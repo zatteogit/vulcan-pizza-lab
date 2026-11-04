@@ -52,7 +52,9 @@ describe("D-070 · mai fuori stile", () => {
     // 1.380 ricette con la regola (04/11), più le 12 della versione di Dekracap
     // (B5) e le 12 di Paoletta (B4).
     expect(checked).toBe(1404);
-  });
+    // 1.404 ottimizzazioni: da sola ~3,5 s, con la suite intera in parallelo
+    // supera i 5 s di default di Vitest (04/11). Il controllo resta intero.
+  }, 30_000);
 
   it("per chi comincia: al minimo dello stile, con «Impasto esigente» e senza invito a scendere", () => {
     for (const [id, min] of [["teglia_romana", 75], ["pala_romana", 75], ["pinsa_romana", 72]] as const) {

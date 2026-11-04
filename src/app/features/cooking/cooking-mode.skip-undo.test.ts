@@ -76,7 +76,9 @@ describe("«L'impasto è già pronto?» — anteprima per la conferma", () => {
       expect(readyCriterionKey(id)).toBe(id);
       expect(IT_LOCALE.cooking.readyCriterion[readyCriterionKey(id)]).toBeTruthy();
     }
-    expect(readyCriterionKey("rest")).toBe("default");
+    // B4: il riposo dei panetti della fonte è un'attesa flessibile col suo criterio.
+    expect(readyCriterionKey("rest")).toBe("rest");
+    expect(readyCriterionKey("shape")).toBe("default");
     expect(IT_LOCALE.cooking.finishedEarly).toBe("L'impasto è già pronto?");
     expect(IT_LOCALE.cooking.waitingReadyAt).toContain("impasto pronto {eta}");
   });
@@ -102,11 +104,13 @@ describe("«L'impasto è già pronto?» — puntata in frigo (S13-B-02)", () => 
     expect(IT_LOCALE.cooking.readyCriterion[key]).not.toMatch(/raddoppi/);
   });
 
-  it("solo la puntata cambia: appretto e prefermento freddi restano coi loro criteri", () => {
+  it("solo la puntata e i panetti in frigo cambiano: appretto e prefermento freddi restano coi loro criteri", () => {
     expect(readyCriterionKey("bulk", false)).toBe("bulk");
     expect(readyCriterionKey("bulk")).toBe("bulk");
     expect(readyCriterionKey("proof", true)).toBe("proof");
-    expect(readyCriterionKey("rest", true)).toBe("default");
+    // B4 (Dekracap): i panetti tornano in frigo dopo lo staglio, crescono poco.
+    expect(readyCriterionKey("rest", true)).toBe("bulkCold");
+    expect(readyCriterionKey("rest", false)).toBe("rest");
   });
 });
 

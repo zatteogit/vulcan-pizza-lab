@@ -90,7 +90,7 @@ export const INSPIRATION_I18N_PT: InspirationTranslation = {
     paoletta: {
       signature_name: "Inspirada na pizza rápida da Paoletta",
       technique_signature: "Farinha forte com sêmola remoída e einkorn, água a 80%, muito fermento fresco e malte de cevada, sovada na batedeira até ficar lisa e elástica. Duas horas em lugar quente, dobras e uma hora sob uma tigela, meia hora na assadeira untada e depois o forno no máximo, de baixo para cima.",
-      story: "Paola Sersante, a Paoletta para todos, publicou esta pizza primeiro no seu grupo do Facebook; hoje ela está no blog Anice & Cannella, e o Pan per Focaccia já a fazia em 2014. Fica pronta numa tarde: massa às 16h30 e no forno pouco antes das 21h.",
+      story: "Paola Sersante, a Paoletta para todos, publicou esta pizza primeiro no seu grupo do Facebook. Em 2014 o blog Pan per Focaccia retomou-a, e desde 2018 ela está no blog Anice & Cannella. Fica pronta numa tarde: massa às 16h30 e no forno pouco antes das 21h.",
       badge: "Anice & Cannella",
     },
     da_michele_napoli: {
