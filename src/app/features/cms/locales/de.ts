@@ -953,6 +953,7 @@ export const DE_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "Die Quelle sagt nicht, wie lange jede Phase dauert: Wo die Angabe fehlt, schätzt {app} die Stunden aus den Uhrzeiten des Rezepts. Warte, bis sich der Teig verdoppelt hat, statt auf die Uhr zu schauen.",
     "timeline.bake.lowThenHigh": "Ober- und Unterhitze: Schieb das Blech zuerst unten ein und dann nach oben, um fertig zu backen, wie es die Quelle sagt.",
     "timeline.shape.unoiledPan": "Stürze den Teig auf die mit Hartweizengrieß bestreute Arbeitsfläche, drücke ihn mit den Fingerspitzen an und zieh ihn auseinander, ohne die Luft herauszudrücken. Leg ihn in das ungefettete, mit etwas Grieß bestreute Blech und zieh ihn fertig aus.",
+    "timeline.shape.semolinaBench": "Stürze den Teigling auf die mit Hartweizengrieß bestreute Arbeitsfläche, drücke ihn mit den Fingerspitzen an und zieh ihn auseinander, ohne die Luft herauszudrücken. Leg ihn ins Blech und zieh ihn bis in die Ecken aus.",
     "fermentation.sourceFridge": "Die Quelle will den Teig bei {temp} im Kühlschrank, im am wenigsten kalten Bereich: Die Hefemenge gilt für diese Temperatur. In einem kälteren Kühlschrank geht der Teig langsamer auf.",
     "source.dekracapProcess": "So macht es die Quelle: zwischen 2 Stunden und einer halben Stunde vor dem Backen aus dem Kühlschrank nehmen (der Zeitplan von {app} rechnet mit 2 Stunden); auf Hartweizengrieß ausbreiten und sofort backen.",
     "timeline.folds.restFirst": "Lass den Teig zuerst etwa {rest} abgedeckt ruhen, wie es die Quelle macht.",
@@ -1700,6 +1701,8 @@ export const DE_LOCALE: CmsContent = {
     startBlockedReason: "Dieses Rezept kannst du im Moment noch nicht starten. {requirement}",
     preCookAdapt: "An meine K\u00FCche anpassen",
     preCookStart: "Referenz verwenden",
+    preCookBodyVersion: "Du kochst gleich die Version „{name}“, so wie sie ist, ohne Anpassungen an deine Küche.",
+    preCookStartVersion: "Diese Version verwenden",
     matchTones: {
       t90: {
         title: "Sehr gute Übereinstimmung",

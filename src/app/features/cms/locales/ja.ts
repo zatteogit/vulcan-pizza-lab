@@ -1022,6 +1022,7 @@ export const JA_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "出典には各工程の時間がすべて書かれているわけではありません。書かれていない部分は、レシピの時刻から{app}が見積もった時間です。時計ではなく、生地が2倍に膨らむのを待ってください。",
     "timeline.bake.lowThenHigh": "上下ヒーター：出典どおり、まず下段で焼き、仕上げは天板を上段に移します。",
     "timeline.shape.unoiledPan": "セモリナをふった台に生地を出し、指先で押して、空気を抜かないように広げます。油を塗らずにセモリナを薄くふった天板に移し、最後まで広げてください。",
+    "timeline.shape.semolinaBench": "セモリナをふった台に生地玉を出し、指先で押して、空気を抜かないように広げます。天板に移し、角まで広げてください。",
     "fermentation.sourceFridge": "出典では、生地を冷蔵庫のいちばん冷えにくい場所で{temp}に保ちます。イーストの量はその温度に合わせたものです。もっと冷たい冷蔵庫では、生地はゆっくり膨らみます。",
     "source.dekracapProcess": "出典のやり方：焼く2時間前から30分前のあいだに冷蔵庫から出します（{app}のタイムテーブルは2時間で計算します）。セモリナの上で広げてすぐに焼きます。",
     "timeline.folds.restFirst": "出典どおり、まず生地を覆って約{rest}休ませます。",
@@ -1840,6 +1841,8 @@ export const JA_LOCALE: CmsContent = {
     startBlockedReason: "このレシピは今はまだ開始できません。{requirement}",
     preCookAdapt: "\u81EA\u5206\u306E\u30AD\u30C3\u30C1\u30F3\u306B\u5408\u308F\u305B\u308B",
     preCookStart: "基準レシピを使う",
+    preCookBodyVersion: "「{name}」をそのまま作ります。あなたのキッチンに合わせた変更はありません。",
+    preCookStartVersion: "このバージョンを使う",
     matchTones: {
       t90: {
         title: "よく合っています",

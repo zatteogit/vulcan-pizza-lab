@@ -263,6 +263,13 @@ describe("staglio a metà frigo, come la fonte (fase rest)", () => {
     expect(rest.description).toMatch(/in frigo a 8\s?°C/);
     expect(step("rest").msg?.description?.map((m) => m.key)).toEqual(["timeline.rest.descFridge"]);
   });
+  it("stesura sulla semola, come la fonte: sul banco, poi nella teglia", () => {
+    expect(step("shape").variant).toBe("semolina");
+    expect(step("shape").msg?.description?.map((m) => m.key)).toEqual(["timeline.shape.semolinaBench"]);
+    const shape = localizeStep(step("shape"), r, IT_LOCALE).description;
+    expect(shape).toMatch(/semola/);
+    expect(shape).not.toMatch(/oliata|\bunta\b/);
+  });
   it("Paoletta tiene il riposo al caldo, senza frigo", () => {
     const paoletta = getInterpretationById("paoletta")!;
     const p = authorVersionRecipe(STYLES_DB.teglia_in_giornata, paoletta, home);

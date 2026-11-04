@@ -966,6 +966,7 @@ export const ES_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "La fuente no dice cuánto dura cada fase: donde falta, las horas son una estimación de {app} a partir de los horarios de la receta. Espera a que la masa doble su volumen, no a la hora del reloj.",
     "timeline.bake.lowThenHigh": "Horno estático: hornea en la parte baja y luego sube la bandeja a la parte alta para terminar la cocción, como dice la fuente.",
     "timeline.shape.unoiledPan": "Vuelca la masa sobre la mesa espolvoreada con sémola, presiónala con la punta de los dedos y estírala sin sacarle el aire. Ponla en la bandeja sin engrasar, con un velo de sémola, y termina de estirarla.",
+    "timeline.shape.semolinaBench": "Vuelca el bollo sobre la mesa espolvoreada con sémola, presiónalo con la punta de los dedos y estíralo sin sacarle el aire. Ponlo en la bandeja y termina de estirarlo hasta las esquinas.",
     "fermentation.sourceFridge": "La fuente quiere la masa en la nevera a {temp}, en la zona menos fría: la dosis de levadura es para esa temperatura. En una nevera más fría la masa crece más despacio.",
     "source.dekracapProcess": "Lo que hace la fuente: fuera de la nevera entre 2 horas y media hora antes de hornear (el plan de {app} cuenta 2 horas); estirado sobre sémola y horneado enseguida.",
     "timeline.folds.restFirst": "Primero deja reposar la masa tapada unos {rest}, como hace la fuente.",
@@ -1719,6 +1720,8 @@ export const ES_LOCALE: CmsContent = {
     startBlockedReason: "Por ahora no puedes empezar esta receta. {requirement}",
     preCookAdapt: "Ad\u00E1ptala a mi cocina",
     preCookStart: "Usar la referencia",
+    preCookBodyVersion: "Vas a preparar la versión «{name}» tal cual, sin cambios para tu cocina.",
+    preCookStartVersion: "Usar esta versión",
     matchTones: {
       t90: {
         title: "Compatibilidad excelente",

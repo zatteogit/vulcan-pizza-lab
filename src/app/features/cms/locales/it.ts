@@ -402,6 +402,8 @@ export const IT_LOCALE: CmsContent = {
     startBlockedReason: "Per ora non si può iniziare. {requirement}",
     preCookAdapt: "Adattala alla mia cucina",
     preCookStart: "Usa il riferimento",
+    preCookBodyVersion: "Stai per cucinare la versione «{name}» così com'è, senza modifiche per la tua cucina.",
+    preCookStartVersion: "Usa questa versione",
     matchTones: {
       t90: {
         title: "Ottima compatibilità",

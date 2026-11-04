@@ -38,6 +38,7 @@ export const METHOD_MESSAGES_IT_TEXT: Record<string, string> = {
   "fermentation.hoursAssumed": "La fonte non dice quanto dura ogni fase: dove manca, le ore sono una stima di {app} dagli orari della ricetta. Aspetta che l'impasto raddoppi, non l'ora sull'orologio.",
   "timeline.bake.lowThenHigh": "Forno statico: inforna nella parte bassa, poi sposta la teglia nella parte alta per finire la cottura, come dice la fonte.",
   "timeline.shape.unoiledPan": "Rovescia l'impasto sul banco spolverato di semola, premilo con la punta delle dita e allargalo senza far uscire l'aria. Mettilo nella teglia non unta, con un velo di semola, e finisci di stenderlo.",
+  "timeline.shape.semolinaBench": "Rovescia il panetto sul banco spolverato di semola, premilo con la punta delle dita e allargalo senza far uscire l'aria. Mettilo nella teglia e finisci di stenderlo fino agli angoli.",
   // B5: frigo della fonte sopra la soglia di Vulcan (Dekracap, 8 °C) e ciò che
   // la tabella di marcia non dice (la forbice delle ore fuori dal frigo).
   "fermentation.sourceFridge": "La fonte vuole l'impasto in frigo a {temp}, nella zona meno fredda: la dose di lievito è per quella temperatura. In un frigo più freddo l'impasto cresce più piano.",

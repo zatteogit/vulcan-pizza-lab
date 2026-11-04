@@ -966,6 +966,7 @@ export const FR_LOCALE: CmsContent = {
     "fermentation.hoursAssumed": "La source ne dit pas combien de temps dure chaque phase : là où elle ne le dit pas, les heures sont une estimation de {app} à partir des horaires de la recette. Attendez que la pâte double de volume, pas l'heure indiquée par la montre.",
     "timeline.bake.lowThenHigh": "Four statique : enfournez en bas, puis montez la plaque en haut pour finir la cuisson, comme le dit la source.",
     "timeline.shape.unoiledPan": "Renversez la pâte sur le plan saupoudré de semoule, appuyez du bout des doigts et étirez-la sans chasser l'air. Posez-la dans la plaque non huilée, saupoudrée de semoule, et finissez de l'étaler.",
+    "timeline.shape.semolinaBench": "Renversez le pâton sur le plan saupoudré de semoule, appuyez du bout des doigts et étirez-le sans chasser l'air. Posez-le dans la plaque et finissez de l'étaler jusqu'aux coins.",
     "fermentation.sourceFridge": "La source veut la pâte au frigo à {temp}, dans la zone la moins froide : la dose de levure est prévue pour cette température. Dans un frigo plus froid, la pâte lève plus lentement.",
     "source.dekracapProcess": "Ce que fait la source : sortie du frigo entre 2 heures et une demi-heure avant la cuisson (le planning de {app} compte 2 heures) ; étalage sur la semoule et cuisson aussitôt.",
     "timeline.folds.restFirst": "Laissez d'abord reposer la pâte couverte environ {rest}, comme le fait la source.",
@@ -1717,6 +1718,8 @@ export const FR_LOCALE: CmsContent = {
     startBlockedReason: "Vous ne pouvez pas encore commencer cette recette. {requirement}",
     preCookAdapt: "L'adapter \u00E0 ma cuisine",
     preCookStart: "Utiliser la référence",
+    preCookBodyVersion: "Vous allez préparer la version « {name} » telle quelle, sans modifications pour votre cuisine.",
+    preCookStartVersion: "Utiliser cette version",
     matchTones: {
       t90: {
         title: "Très bonne compatibilité",

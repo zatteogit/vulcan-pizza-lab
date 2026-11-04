@@ -60,6 +60,9 @@ interface RecipeOutputProps {
   /** FW-14: nome del riferimento come nell'eyebrow («Disciplinare AVPN»,
    *  «Ispirata a…»); senza, la pill dice «Riferimento». */
   referenceLabel?: string;
+  /** Si parte da una versione d'autore o da un preset, non dal riferimento:
+   *  «Prima di iniziare» nomina la versione invece del riferimento. */
+  preCookVersionName?: string;
   onRequestPersonalization?: () => void;
   /** Nasconde la capsula flottante in alto a destra (Inizia + condividi):
    *  usato nella sezione Crea, dove la shell ha già il pulsante Profilo lì e
@@ -106,6 +109,7 @@ export function RecipeOutput({
   onTabChange,
   isPersonalized = true,
   referenceLabel,
+  preCookVersionName,
   onRequestPersonalization,
 }: RecipeOutputProps) {
   const reduceMotion = useReducedMotion();
@@ -689,7 +693,7 @@ export function RecipeOutput({
         emphasis="brand"
         size="md"
         title={cms.cooking.preCookTitle}
-        body={confirmPersonalize && blocked ? startBlockedText(recipe, cms, bcp47) : cms.cooking.preCookBody}
+        body={confirmPersonalize && blocked ? startBlockedText(recipe, cms, bcp47) : preCookVersionName ? t(cms.cooking.preCookBodyVersion, { name: preCookVersionName }) : cms.cooking.preCookBody}
         initialFocusAction={blocked ? 1 : undefined}
         actions={blocked ? [
           { label: cms.cooking.startShort, onClick: confirmStartCooking, variant: "primary", disabled: true },
@@ -705,7 +709,7 @@ export function RecipeOutput({
               ]
             : []),
           {
-            label: cms.cooking.preCookStart,
+            label: preCookVersionName ? cms.cooking.preCookStartVersion : cms.cooking.preCookStart,
             onClick: confirmStartCooking,
             variant: "secondary" as const,
           },

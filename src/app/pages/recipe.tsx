@@ -1,6 +1,6 @@
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
-import { referenceEyebrow } from "../features/recipe/reference-label";
+import { referenceEyebrow, startsFromNonReference } from "../features/recipe/reference-label";
 import { buildGeneratedRecipe, recipeFromEntry, canonicalRecipeEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified, presetIdealOvenC, presetOvenTemp } from "../use-cases/recipe-entry";
 import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 /* === RECIPE PAGE — VPL-058 + VPL-064 ===
@@ -311,7 +311,10 @@ function RecipeContent({
     return useTailoredUrlParams && pf !== null ? pf === "1" : preFermentDefault;
   });
   const [panConfig, setPanConfig] = useState<PanConfig>(() => {
-    const base: PanConfig = {
+    /* La teglia della versione scelta (Adriano 30×35, Paoletta 30×40), come
+       fa applyPreset quando la si sceglie dalla pagina: senza, il link
+       ?interpretation= apriva la teglia dello stile (35×35, 967 g). */
+    const base: PanConfig = initialOptions.panConfig ?? {
       panShape: defaultPanShape(style),
       panLength: style.shape.length_cm,
       panWidth: style.shape.width_cm,
@@ -949,6 +952,7 @@ function RecipeContent({
         back={{ label: (cms.pages as any).navExplore || cms.pages.recipeBackToStyles, onClick: handleBack }}
         recipeTabLabel={cms.cooking.tabRecipe}
         eyebrow={recipeTabLabel}
+        startsFromVersion={recipeMode !== "lab" && startsFromNonReference(style.id, originInterpretation, activeVersion)}
         eyebrowTone={isDirty || resolvedRecipeName ? "tailored" : "canonical"}
         shareUrl={shareUrl}
         showStickyHeader={false}

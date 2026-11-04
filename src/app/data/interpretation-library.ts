@@ -565,7 +565,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
   dekracap: {
     id: "dekracap",
     process_profile: {
-      id: "dekracap", direct_only: true, proof_hours: 2, proof_in_pan: false,
+      id: "dekracap", direct_only: true, semolina_stretch: true, proof_hours: 2, proof_in_pan: false,
       // Pieghe della fonte: quasi un'ora di riposo (50 min, lettura di
       // Vulcan), poi tre giri a 15 minuti l'uno dall'altro, poi in frigo.
       folds: { count: 3, intervalMin: 15, restBeforeMin: 50 },
