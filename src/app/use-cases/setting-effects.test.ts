@@ -70,20 +70,22 @@ describe("FW-16 · effetti delle impostazioni", () => {
   });
 
   /* FW-16/FW-08: le frasi del livello dicono dove vale il tetto. Il tetto è in
-   * optimizeRecipe (hCeil = min(hMax, tetto), hLo = min(hMin, hCeil)): vale per
-   * le ricette adattate (Crea, modalità adattata) e può scendere sotto
-   * l'intervallo dello stile; generateRecipe (scheda di riferimento) non lo applica. */
-  it("Principiante: il tetto porta l'acqua proposta sotto l'intervallo dello stile, la scheda di riferimento no", () => {
+   * optimizeRecipe: vale per le ricette adattate (Crea, modalità adattata);
+   * generateRecipe (scheda di riferimento) non lo applica. D-070 (decisione
+   * di Matteo del 31/10/2026, «mai fuori stile»): il tetto non scende mai sotto
+   * il minimo dello stile, quindi per chi comincia la teglia romana resta al 75 %. */
+  it("Principiante: il tetto non porta mai l'acqua proposta sotto l'intervallo dello stile", () => {
     const below = Object.values(STYLES_DB).filter((style) => {
-      const proposed = optimizeRecipe(style, { ...kitchen, skill_level: 1 }).recipe.hydration_pct;
-      return proposed < style.dough.hydration_pct_range[0];
+      const recipe = optimizeRecipe(style, { ...kitchen, skill_level: 1 }).recipe;
+      return recipe.hydration_pct < Math.min(...recipe.style.dough.hydration_pct_range);
     });
-    expect(below.map((style) => style.id)).toContain("teglia_romana");
+    expect(below.map((style) => style.id)).toEqual([]);
     const teglia = STYLES_DB.teglia_romana;
-    expect(optimizeRecipe(teglia, { ...kitchen, skill_level: 1 }).recipe.hydration_pct).toBeLessThanOrEqual(68);
+    expect(optimizeRecipe(teglia, { ...kitchen, skill_level: 1 }).recipe.hydration_pct).toBe(teglia.dough.hydration_pct_range[0]);
     expect(generateRecipe(teglia, { ...kitchen, skill_level: 1 }).hydration_pct).toBeGreaterThan(68);
-    // Il testo non promette più «sempre dentro l'intervallo dello stile».
-    expect(IT_LOCALE.profile.skillEffectRule).not.toMatch(/sempre dentro/);
+    // Il testo dice la regola: la proposta resta al minimo dello stile.
+    expect(IT_LOCALE.profile.skillEffectRule).toMatch(/la proposta resta al minimo dello stile/);
+    expect(IT_LOCALE.profile.skillEffectRule).not.toMatch(/sotto il suo intervallo tipico/);
   });
 
   /* FW-10: «Senza glutine» blocca ogni ricetta (glutenConflict o glutenUnsupported

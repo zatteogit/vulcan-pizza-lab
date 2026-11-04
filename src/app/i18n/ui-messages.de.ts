@@ -573,6 +573,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "recipe.matchDetails.aids": "Würde helfen (optional)",
   "recipe.matchDetails.score": "So wird die Bewertung berechnet",
   "verdict.lowerHydration": "Hydration senken",
+  "verdict.hydrationAtStyleMin": "Wasser schon am Minimum des Stils.",
   "verdict.why": "Warum",
   "explore.forKitchen": "Passend zu deiner Küche",
   "verdict.changeOven": "Ofen ändern",

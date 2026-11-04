@@ -1243,7 +1243,7 @@ export const IT_LOCALE: CmsContent = {
     ftuSkipMessage: "Nessuna scelta? Va bene: premi Avanti.",
     // FW-16 — effetto delle impostazioni
     skillEffectSummary: "Cosa cambia per ogni livello",
-    skillEffectRule: "Regola del modello, non legge fisica: il tetto vale sull’acqua che ti proponiamo nelle ricette adattate a te, compensazione del forno compresa. Se lo stile chiede più acqua del tetto, la proposta scende sotto il suo intervallo tipico. Gli stili che richiedono un prefermento lo tengono a ogni livello.",
+    skillEffectRule: "Regola del modello, non legge fisica: il tetto vale sull’acqua che ti proponiamo nelle ricette adattate a te, compensazione del forno compresa. Se lo stile chiede più acqua del tetto, la proposta resta al minimo dello stile. Gli stili che richiedono un prefermento lo tengono a ogni livello.",
     skillEffectHydration: "acqua fino al {h}",
     skillEffectNoCeiling: "nessun tetto all’acqua",
     skillEffectPreFerment: "anche biga o poolish quando aiutano",

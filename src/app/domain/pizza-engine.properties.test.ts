@@ -489,8 +489,17 @@ describe("compensazioni dichiarate = applicate (ENG-6)", () => {
             if (result.params.hydration_base < hMin || result.params.hydration_base > hMaxStyle) {
               errors.push(`${label}: base ${result.params.hydration_base} fuori dall'intervallo dello stile`);
             }
-          } else if (recipe.hydration_pct > ceilings[skill] + 1e-9) {
-            errors.push(`${label}: idratazione ${recipe.hydration_pct} oltre il tetto ${ceilings[skill]}`);
+          } else {
+            // D-070 («mai fuori stile», Matteo 31/10/2026): il tetto non
+            // scende sotto il minimo dello stile, e la proposta non va sotto.
+            const styleMin = Math.min(...recipe.style.dough.hydration_pct_range);
+            const ceiling = Math.max(ceilings[skill], styleMin);
+            if (recipe.hydration_pct > ceiling + 1e-9) {
+              errors.push(`${label}: idratazione ${recipe.hydration_pct} oltre il tetto ${ceiling}`);
+            }
+            if (recipe.hydration_pct < styleMin - 1e-9) {
+              errors.push(`${label}: idratazione ${recipe.hydration_pct} sotto il minimo dello stile ${styleMin}`);
+            }
           }
           const [, hMax] = recipe.style.dough.hydration_pct_range;
           const declared = recipe.science.compensations.some((c) => c.type === "hydration");

@@ -162,3 +162,10 @@ export function summarizeVerdict(
     showScoreLimit: verdict.outcome !== "not_feasible",
   };
 }
+
+/** D-070 (decisione di Matteo del 31/10/2026, «mai fuori stile»): l'acqua è
+ *  già al minimo dello stile (o della versione), a meno di un punto. Allora
+ *  «Abbassa l'idratazione» porterebbe fuori stile: la card dice che il minimo
+ *  è quello dello stile e suggerisce uno stile meno idratato. */
+export const hydrationAtStyleMinimum = (r: { hydration_pct: number; style: { dough: { hydration_pct_range: [number, number] } } }): boolean =>
+  r.hydration_pct < Math.min(...r.style.dough.hydration_pct_range) + 1;

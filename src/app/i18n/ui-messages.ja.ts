@@ -573,6 +573,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "recipe.matchDetails.aids": "あると役立つもの（任意）",
   "recipe.matchDetails.score": "スコアの計算方法",
   "verdict.lowerHydration": "加水率を下げる",
+  "verdict.hydrationAtStyleMin": "水はすでにスタイルの最小値です。",
   "verdict.why": "理由",
   "explore.forKitchen": "あなたのキッチンに合うスタイル",
   "verdict.changeOven": "オーブンを変更",

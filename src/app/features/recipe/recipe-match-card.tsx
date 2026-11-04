@@ -8,7 +8,7 @@ import { motionSpring } from "../../components/ds/motion";
 import { ArrowUpRight, Bookmark, ChevronDown, Droplets, Sparkles, TriangleAlert, WandSparkles } from "lucide-react";
 import type { GeneratedRecipe, RecipeScores, UserConstraints } from "../../domain/pizza-engine";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
-import { summarizeVerdict } from "../../domain/verdict-summary";
+import { hydrationAtStyleMinimum, summarizeVerdict } from "../../domain/verdict-summary";
 import { ScoreExplainer, scoreAriaLabel, scoreLimitLine } from "./score-explainer";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
@@ -417,12 +417,16 @@ export function RecipeMatchCard({
             {!notFeasible && verdictRecipe && <RecipeConditionChips recipe={verdictRecipe} compact />}
             {/* FW-10 (S07-A-06): l'idratazione alta per chi comincia è ciò che fa
                 fallire la pizza: la chip la dice al livello 1, qui l'azione. */}
-            {summary?.skillWarning && onPersonalize && (
+            {/* D-070 («mai fuori stile»): con l'acqua già al minimo dello stile
+                non si invita a scendere sotto, si dice il minimo. */}
+            {summary?.skillWarning && (hydrationAtStyleMinimum(verdictRecipe!) ? (
+              <p className="match-notice match-notice--limit">{uiMessage("verdict.hydrationAtStyleMin")}</p>
+            ) : onPersonalize && (
               <button type="button" className="match-notice__action" onClick={onPersonalize}>
                 <Droplets size={14} aria-hidden="true" />
                 {uiMessage("verdict.lowerHydration")}
               </button>
-            )}
+            ))}
             {!notFeasible && (verdictRecipe?.dietary_warnings ?? []).map((warning, i) => (
               <p key={`${warning.filterId}-${i}`} className="match-notice match-notice--warn">
                 {engineMsgTexts([warning.message], cms, bcp47)[0]}
