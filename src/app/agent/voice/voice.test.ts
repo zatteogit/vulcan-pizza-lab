@@ -3,7 +3,7 @@ import { getDefaultDoughBalls, isFriedStyle, STYLES_DB } from "../../domain/pizz
 import { GLOSSARY_TERMS } from "../../data/glossary-data";
 import { callMcpTool, recognizeStyle, recognizeTerm, understand, voiceCatalog, voiceReply } from ".";
 import { recognizeBalls, recognizeHours, recognizeKitchen, wordToNumber } from "./understand";
-import { neededHours, quickestBlocked } from "./answer";
+import { neededHours, quickestBlocked, spokenInFridge } from "./answer";
 import { speechify, spokenGrams, spokenHours, toSsml, wordCount } from "./speech";
 
 /* D-061: la voce attinge dall'MCP. Si controlla che capisca l'italiano
@@ -310,5 +310,24 @@ describe("risposte", () => {
     siri("ricetta napoletana per quattro panetti");
     // Misurato: 60–200 ms su un portatile; il margine evita falsi allarmi in CI.
     expect(performance.now() - start).toBeLessThan(2000);
+  });
+});
+
+/* B5 (decisione di Matteo): la voce dice «in frigo» con la regola del motore,
+ * fino a 6 °C, oppure fino a 8 °C solo col frigo della fonte. */
+describe("«in frigo» come la tabella di marcia", () => {
+  it("6 °C sì, 8 °C solo con la fonte, 9 °C mai", () => {
+    expect(spokenInFridge({ fermentation_temp_c: 4 })).toBe(true);
+    expect(spokenInFridge({ fermentation_temp_c: 6 })).toBe(true);
+    expect(spokenInFridge({ fermentation_temp_c: 8 })).toBe(false);
+    expect(spokenInFridge({ fermentation_temp_c: 8, fermentation_in_fridge: true })).toBe(true);
+    expect(spokenInFridge({ fermentation_temp_c: 9, fermentation_in_fridge: true })).toBe(false);
+  });
+  it("coincide con l'MCP di Dekracap (8 °C, frigo della fonte) e senza fonte", () => {
+    const base = { style_id: "teglia_romana", oven_type: "home", oven_max_temp_c: 250, dough_balls: 1, available_hours: 72 };
+    const dekracap = callMcpTool("generate_recipe", { ...base, interpretation_id: "dekracap" });
+    expect([dekracap.fermentation_temp_c, spokenInFridge(dekracap)]).toEqual([8, true]);
+    const plain = callMcpTool("generate_recipe", { ...base, fermentation_hours: 48, fermentation_temp_c: 8 });
+    expect([plain.fermentation_temp_c, spokenInFridge(plain)]).toEqual([8, false]);
   });
 });

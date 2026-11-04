@@ -273,7 +273,12 @@ interface EquipmentCompat {
 const EQUIPMENT_DB: EquipmentCompat[] = [
   { styleId: "napoletana_stg", mixerRequired: false, mixerType: "manuale", mixingTime_min: 20, surfaceType: "pietra_refrattaria", specialEquipment: ["Forno a legna/gas >430°C", "Pala da forno", "Piano refrattario"], note: "Tradizione: impasto a mano. Planetaria accettabile ma non necessaria." },
   { styleId: "napoletana_canotto", mixerRequired: false, mixerType: "planetaria", mixingTime_min: 15, surfaceType: "pietra_refrattaria", specialEquipment: ["Forno elettrico >400°C", "Pietra/acciaio refrattario"], note: "Planetaria consigliata per alta idratazione." },
-  { styleId: "teglia_romana", mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 25, surfaceType: "teglia", specialEquipment: ["Teglia alluminio/acciaio", "Pietra refrattaria (opzionale)"], note: "Il metodo no-knead con pieghe dello stile si esegue anche a mano." },
+  { styleId: "teglia_romana", mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 25, surfaceType: "teglia", specialEquipment: ["Teglia in ferro blu o acciaio/lamiera", "Pietra refrattaria (opzionale)"], note: "Il metodo no-knead con pieghe dello stile si esegue anche a mano." },
+  // B5 (decisione di Matteo, 31/10/2026): teglia dalle fonti dello stile. Il
+  // disciplinare della Confraternita (2016) dice «apposita teglia di ferro blu»;
+  // Alfè 2020 «la classica teglia in ferro blu» («in mancanza» le teglie
+  // ordinarie); nessuna fonte dello stile cita l'alluminio (prima: «Teglia
+  // alluminio/acciaio», senza fonte).
   { styleId: "tonda_romana", mixerRequired: false, mixerType: "manuale", mixingTime_min: 15, surfaceType: "pietra_refrattaria", specialEquipment: ["Pietra refrattaria o acciaio", "Mattarello"], note: "Bassa idratazione, facile a mano. Mattarello per stesura sottile." },
   { styleId: "pinsa_romana", mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 20, surfaceType: "pietra_refrattaria", specialEquipment: ["Pietra refrattaria o teglia capovolta nel metodo domestico", "Pala da forno"], note: "Il metodo originale illustrato da Marco Montuori prevede impasto a mano; impastatrice opzionale. Fonte: PinsaRomana.it 2022, verificata 25/10/2026." },
   { styleId: "pala_romana", mixerRequired: true, mixerType: "planetaria", mixingTime_min: 18, surfaceType: "pala", specialEquipment: ["Pala da forno", "Pietra refrattaria"], note: "Impasto ad alta idratazione, cottura su pala." },

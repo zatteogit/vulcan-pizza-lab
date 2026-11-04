@@ -24,10 +24,12 @@
  * migrato qui (Audit motore 2026-05). Questa libreria è l'unica fonte di
  * verità per maestri, pizzerie, disciplinari e community.
  */
-import type { MethodProcessProfile, PizzaStyle, SkillLevel } from "../domain/pizza-engine";
+import type { EngineMsg, MethodProcessProfile, PizzaStyle, SkillLevel } from "../domain/pizza-engine";
 import type { SourceStatus } from "../domain/science/types";
 import type { CommercialYeast } from "../domain/source-yeast";
 import { WARM_PLACE } from "../domain/fermentation-constants";
+import { BRAND } from "../config/brand";
+import { METHOD_MESSAGES_IT } from "./method-messages";
 import { STYLES_DB } from "../domain/styles-db";
 import { getImpasto, mergeImpastoIntoDough } from "./impasto-library";
 
@@ -55,6 +57,12 @@ interface InterpretationParameterOverrides {
    *  di Vulcan con la finestra 24–28 °C «al raddoppio». Esclude
    *  `fermentation_temp_c`. */
   warm_place?: true;
+  /** B5: la fonte mette l'impasto in frigo a `fermentation_temp_c`, anche
+   *  sopra FRIDGE_MAX_TEMP_C (6 °C) e fino a SOURCE_FRIDGE_MAX_C (8 °C,
+   *  test): Dekracap tiene l'impasto a 8 °C, nella zona meno fredda del frigo.
+   *  Con le ore e la temperatura della versione la tabella di marcia dice «in
+   *  frigo» e la ricetta lo dichiara (nota `fermentation.sourceFridge`). */
+  fridge?: true;
   use_pre_ferment?: boolean;
   dough_weight_g?: number;
   /** Override impasto (link a IMPASTO_LIBRARY). */
@@ -107,6 +115,11 @@ export interface Interpretation {
    *  (nota `source.convertedDoses`). Le conversioni sono nel §9.3 di
    *  docs/progetto-catalogo-italiano.md. */
   converted_doses?: true;
+  /** B5: ciò che la fonte fa e la tabella di marcia di Vulcan non sa ancora
+   *  dire (per Dekracap lo staglio a metà del frigo: le fasi esplicite di B3
+   *  non hanno ancora i panetti in frigo, §9.13). Note della ricetta, con le
+   *  ore e la temperatura della versione, come il lievito della fonte. */
+  source_notes?: EngineMsg[];
 
   /* ─── Narrativa ─── */
   /** Nome firma (es. "Margherita Sbagliata"). Visibile prominentemente. */
@@ -128,8 +141,13 @@ export interface Interpretation {
   verified_canonical?: boolean;
 }
 
-/* ═══ LIBRERIA — 14 voci, testi verificati sulle fonti il 24/10/2026 (Adriano Continisio il 31/10/2026, Benedetta
- * Rossi il 30/10/2026) ═══
+/** Copia d'archivio della ricetta di Dekracap: l'originale
+ *  (https://laconfraternitadellapizza.forumfree.it/?t=69617704) è cancellato. */
+const DEKRACAP_ARCHIVE_URL = "https://web.archive.org/web/20171112155246/http://laconfraternitadellapizza.forumfree.it:80/?t=69617704";
+
+/* ═══ LIBRERIA — 15 voci, testi verificati sulle fonti il 24/10/2026 (Benedetta
+ * Rossi il 30/10/2026, Adriano Continisio il 31/10/2026, Dekracap il 31/10/2026
+ * sulla copia d'archivio) ═══
  * Registro e fonti: docs/fonti-dati.md §5. Le ricette dei maestri sono
  * «Ispirata a…» (C-5, D-027): ricostruzioni da fonti pubbliche. */
 const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
@@ -436,7 +454,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     verified_canonical: true,
   },
 
-  /* ─── AUTORI (2) ─── Tranche B2 e B3 (docs/progetto-catalogo-italiano.md §9) */
+  /* ─── AUTORI (3) ─── Tranche B2, B3 e B5 (docs/progetto-catalogo-italiano.md §9) */
   /* Benedetta Rossi, «Pizza in teglia in collaborazione con Paneangeli»,
    * pagina ufficiale verificata col browser di Matteo il 30/10/2026 (§9.9):
    * 250 g di manitoba e 250 g di 00, 400 ml d'acqua tiepida, 50 ml d'olio,
@@ -526,6 +544,58 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     emoji: "🥖",
     badge: "Profumo di lievito",
     skill_required: 3,
+  },
+
+  /* Tranche B5. «Ricetta di Dekracap», pubblicata da Notturno Italiano nel
+   * primo post del «WeekEnd della Pizza in Teglia No Knead», La Confraternita
+   * della Pizza, 6/10/2014 (modificato il 14/10/2015). L'originale
+   * (?t=69617704) è cancellato: si legge la copia di Wayback Machine del
+   * 12/11/2017 (docs/ricerca/confraternita-2026-10-30.md §1). Versione 48 h,
+   * per 1 L d'acqua: farina W 350/400 1180 g, acqua 1000, lievito di birra 3
+   * (preferibilmente fresco), sale 25, olio EVO 20; teglia 30×40:
+   * 350/296/1/7,5/6 g, 660 g. Idratazione 84,7 %, lievito 0,254 %, sale
+   * 2,12 %, olio 1,69 % (impasto `dekracap_48h`). Puntata in frigo con
+   * l'impasto a 8 °C (Dekracap, 23/9/2014 e 19/3/2017: `fridge`), staglio a
+   * circa 24 h e di nuovo in frigo, fuori da 2 h a mezz'ora prima, forno al
+   * massimo. Decise da Matteo (D-071): W 380, il più vicino al «meglio circa
+   * 400» della fonte dentro la forbice dello stile (300–380, che non cambia);
+   * 2 h fuori dal frigo, il limite alto della fonte. Scelta di Vulcan: minuti
+   * di cottura del motore (la fonte non li dice). */
+  dekracap: {
+    id: "dekracap",
+    process_profile: {
+      id: "dekracap", direct_only: true, proof_hours: 2, proof_in_pan: false,
+      // Pieghe della fonte: quasi un'ora di riposo (50 min, lettura di
+      // Vulcan), poi tre giri a 15 minuti l'uno dall'altro, poi in frigo.
+      folds: { count: 3, intervalMin: 15, restBeforeMin: 50 },
+      source_url: DEKRACAP_ARCHIVE_URL,
+    },
+    type: "autore",
+    author: "Dekracap",
+    year_codified: 2014,
+    base_style_id: "teglia_romana",
+    parameter_overrides: {
+      hydration_pct: 84.7,
+      flour_w: 380,
+      fermentation_hours: 48,
+      fermentation_temp_c: 8,
+      fridge: true,
+      use_pre_ferment: false,
+      dough_weight_g: 660,
+      impasto_ref: "dekracap_48h",
+    },
+    source_yeast: { type: "fresh", pct: 0.254 },
+    source_status: "verified",
+    source_notes: [
+      { key: "source.dekracapProcess", get fallback() { return METHOD_MESSAGES_IT["source.dekracapProcess"]; }, params: { app: BRAND.name } },
+    ],
+    signature_name: "Ispirata alla teglia no knead a 48 ore di Dekracap",
+    technique_signature: "Farina forte (W 350–400), acqua all'85% e pochissimo lievito di birra fresco. Si mescola senza impastare, si fanno le pieghe e si lascia 48 ore in frigo a 8 °C, con lo staglio a metà. Teglia di ferro blu o di lamiera, niente antiaderente né alluminio.",
+    story: "Dekracap è un iscritto del forum La Confraternita della Pizza. La sua ricetta apre il «WeekEnd della Pizza in Teglia No Knead»: la pubblica Notturno Italiano nel primo post, il 6/10/2014 (modificato il 14/10/2015). L'originale è stato cancellato e si legge nella copia di Wayback Machine. In frigo l'autore conta il lievito secco come il fresco; qui la conversione usa 1 a 3.",
+    url: DEKRACAP_ARCHIVE_URL,
+    emoji: "🧊",
+    badge: "Confraternita della Pizza",
+    skill_required: 2,
   },
 
 };

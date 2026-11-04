@@ -58,12 +58,16 @@ type LinkedValues,
 export interface SourceTiming {
   yeastFromSource: boolean;
   warmPlace: boolean;
+  /** B5: l'impasto sta nel frigo della fonte sopra i 6 °C (Dekracap, 8 °C,
+   *  nota fermentation.sourceFridge): la scelta rapida dice «Frigo · 8 °C». */
+  sourceFridge?: true;
 }
 
 export function sourceTiming(recipe: Pick<GeneratedRecipe, "yeast_source" | "source_notes">): SourceTiming {
   return {
     yeastFromSource: Boolean(recipe.yeast_source),
     warmPlace: Boolean(recipe.source_notes?.some((note) => note.key === "fermentation.warmPlace")),
+    ...(recipe.source_notes?.some((note) => note.key === "fermentation.sourceFridge") ? { sourceFridge: true as const } : {}),
   };
 }
 
@@ -848,6 +852,8 @@ export function RecipeConfigurator({
                   };
                   const otherLabel = timing?.warmPlace
                     ? uiMessage("features.recipe.recipe-configurator.tempWarmPlace", [fmt.celsius(customFermentTemp)])
+                    : timing?.sourceFridge
+                    ? uiMessage("features.recipe.recipe-configurator.tempSourceFridge", [fmt.celsius(customFermentTemp)])
                     : customFermentTemp === optimumTemp
                     ? fmt.celsius(customFermentTemp)
                     : uiMessage("features.recipe.recipe-configurator.tempManual", [fmt.celsius(customFermentTemp)]);

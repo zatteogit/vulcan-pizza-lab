@@ -258,6 +258,27 @@ const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
     compatible_styles: ["teglia_in_giornata"],
   },
 
+  /* ═══ Tranche B5 · sale e olio di una versione d'autore ═══
+   * Le versioni non hanno override di sale e olio (§9.11, «Per la B3»): la
+   * strada pronta è un impasto che cambia solo quelli, senza toccare gli
+   * intervalli dello stile. Dekracap, versione 48 h (docs/ricerca/
+   * confraternita-2026-10-30.md §1): 25 g di sale e 20 g d'olio EVO su
+   * 1180 g di farina (2,12 % e 1,69 %). */
+  dekracap_48h: {
+    id: "dekracap_48h",
+    name: "Teglia no knead 48 h (Dekracap)",
+    short_name: "Dekracap",
+    description: "Sale e olio EVO della ricetta di Dekracap, 48 h in frigo.",
+    emoji: "📐",
+    dough_overrides: {
+      salt_pct: 2.12,
+      oil_pct: 1.69,
+      fat_type: "oil",
+    },
+    kneading_method: "no_knead_folds",
+    compatible_styles: ["teglia_romana"],
+  },
+
   /* ═══ IMPASTI SPECIALI — Audit motore 2026-05 (dietetici/salutisti) ═══
    * Applicabili a più stili tramite default_impasto_ref o version.impasto_ref.
    * compatible_styles omesso → generici (filtro UI li mostra ovunque). */

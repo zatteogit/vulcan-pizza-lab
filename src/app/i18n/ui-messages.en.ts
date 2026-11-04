@@ -396,6 +396,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "features.recipe.recipe-configurator.flourUnknownHint": "Look for the W on the bag: it makes the recipe more precise.",
   "features.recipe.recipe-configurator.tempManual": "{0} (manual)",
   "features.recipe.recipe-configurator.tempWarmPlace": "Warm place · {0}",
+  "features.recipe.recipe-configurator.tempSourceFridge": "{0} fridge",
   "features.recipe.recipe-configurator.rangeOutsideTrack": "For this style: {0}–{1}, beyond your oven",
   "features.recipe.recipe-configurator.rangeOutsideScale": "For this style: {0}–{1}, partly off the scale",
   "features.recipe.recipe-configurator.a88f9d1e": "Strong",

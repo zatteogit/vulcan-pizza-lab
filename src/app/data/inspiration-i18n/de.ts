@@ -81,6 +81,12 @@ export const INSPIRATION_I18N_DE: InspirationTranslation = {
       story: "Adriano Continisio schreibt in seinem Blog „Profumo di lievito“ über selbst gebackenes Brot und Pizza. Seine knusprige Blechpizza von 2009 entsteht an einem Tag: Vorteig am frühen Morgen, Teigstücke gegen 16 Uhr und Backen im Haushaltsofen bei 250 °C.",
       badge: "Profumo di lievito",
     },
+    dekracap: {
+      signature_name: "Inspiriert von Dekracaps No-Knead-Blechpizza mit 48 Stunden",
+      technique_signature: "Starkes Mehl (W 350–400), Wasser zu 85% und sehr wenig frische Hefe. Ohne Kneten verrührt, gefaltet und 48 Stunden bei 8 °C im Kühlschrank, nach der Hälfte der Zeit geteilt. Blech aus Blaustahl oder Eisenblech, keine Antihaftbeschichtung und kein Aluminium.",
+      story: "Dekracap ist Mitglied des Forums La Confraternita della Pizza. Das Rezept eröffnet das „WeekEnd della Pizza in Teglia No Knead“: Notturno Italiano veröffentlichte es im ersten Beitrag, am 6.10.2014 (geändert am 14.10.2015). Das Original wurde gelöscht und ist in der Kopie der Wayback Machine zu lesen. Im Kühlschrank zählt der Autor Trockenhefe wie frische Hefe; hier rechnet die Umrechnung 1 zu 3.",
+      badge: "Confraternita della Pizza",
+    },
     da_michele_napoli: {
       signature_name: "Margherita und Marinara, und wenig mehr",
       technique_signature: "Aufs Nötigste reduzierte Karte: jahrzehntelang nur Margherita und Marinara, heute vier Pizzen. Holzofen und kein Schnickschnack.",

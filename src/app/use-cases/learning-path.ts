@@ -39,7 +39,7 @@ export interface LearningPathPreview {
 export function learningPathPreview(recipe: GeneratedRecipe): LearningPathPreview {
   return {
     totalMinutes: totalPlannedMinutes(recipe.timeline),
-    coldMinutes: recipe.timeline.reduce((n, s) => n + (FLEXIBLE_STEP_IDS.has(s.id) && isColdPhase(s.id, recipe.fermentation_temp_c) ? s.duration_minutes : 0), 0),
+    coldMinutes: recipe.timeline.reduce((n, s) => n + (FLEXIBLE_STEP_IDS.has(s.id) && isColdPhase(s.id, recipe.fermentation_temp_c, recipe.fermentation_in_fridge) ? s.duration_minutes : 0), 0),
     equipment: (recipe.verdict.conditions ?? []).filter((c) => c.kind === "pan" || c.kind === "deck").map((c) => c.message),
   };
 }

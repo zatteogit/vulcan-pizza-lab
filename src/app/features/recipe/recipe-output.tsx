@@ -313,8 +313,8 @@ export function RecipeOutput({
   const [comfortToggled, setComfortToggled] = React.useState(false);
   const preComfortStart = React.useRef<Date | null>(null);
   const currentComfortPlan = React.useMemo(
-    () => optimizeComfort(recipe.timeline, startTime, recipe.fermentation_temp_c),
-    [recipe.timeline, startTime, recipe.fermentation_temp_c],
+    () => optimizeComfort(recipe.timeline, startTime, recipe.fermentation_temp_c, undefined, recipe.fermentation_in_fridge),
+    [recipe.timeline, startTime, recipe.fermentation_temp_c, recipe.fermentation_in_fridge],
   );
 
   React.useEffect(() => {
@@ -380,7 +380,7 @@ export function RecipeOutput({
           startMs: (stepTimes[i]?.start ?? startTime).getTime(),
           endMs: (stepTimes[i]?.end ?? startTime).getTime(),
           flexible: FLEXIBLE_STEP_IDS.has(step.id),
-          ...(isColdPhase(step.id, recipe.fermentation_temp_c) ? { cold: true } : {}),
+          ...(isColdPhase(step.id, recipe.fermentation_temp_c, recipe.fermentation_in_fridge) ? { cold: true } : {}),
           ...(step.round_seconds
             ? {
                 rounds: step.rounds ?? 1,

@@ -81,6 +81,12 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
       story: "Adriano Continisio escribe sobre pan y pizza caseros en su blog «Profumo di lievito». Su pizza en bandeja crujiente, de 2009, se hace en el día: prefermento a primera hora de la mañana, piezas hacia las 16 y horneado en el horno de casa a 250 °C.",
       badge: "Profumo di lievito",
     },
+    dekracap: {
+      signature_name: "Inspirada en la pizza en bandeja sin amasado de 48 horas de Dekracap",
+      technique_signature: "Harina de fuerza (W 350–400), agua al 85% y muy poca levadura fresca. Se mezcla sin amasar, se pliega y reposa 48 horas en la nevera a 8 °C, con la división a mitad de camino. Bandeja de hierro azul o de chapa, nada de antiadherente ni aluminio.",
+      story: "Dekracap es miembro del foro La Confraternita della Pizza. Su receta abre el «WeekEnd della Pizza in Teglia No Knead»: la publica Notturno Italiano en el primer mensaje, el 6/10/2014 (modificado el 14/10/2015). El original se ha borrado y se lee en la copia de Wayback Machine. En la nevera el autor cuenta la levadura seca igual que la fresca; aquí la conversión usa 1 a 3.",
+      badge: "Confraternita della Pizza",
+    },
     da_michele_napoli: {
       signature_name: "Margherita y Marinara, y poco más",
       technique_signature: "Carta reducida al mínimo: durante décadas solo Margherita y Marinara, hoy cuatro pizzas. Horno de leña y nada de florituras.",

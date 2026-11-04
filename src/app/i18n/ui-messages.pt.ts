@@ -396,6 +396,7 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "features.recipe.recipe-configurator.flourUnknownHint": "Procure o W na embalagem: a receita fica mais precisa.",
   "features.recipe.recipe-configurator.tempManual": "{0} (manual)",
   "features.recipe.recipe-configurator.tempWarmPlace": "Lugar quente · {0}",
+  "features.recipe.recipe-configurator.tempSourceFridge": "{0} geladeira",
   "features.recipe.recipe-configurator.rangeOutsideTrack": "Para este estilo: {0}–{1}, além do seu forno",
   "features.recipe.recipe-configurator.rangeOutsideScale": "Para este estilo: {0}–{1}, em parte fora da escala",
   "features.recipe.recipe-configurator.a88f9d1e": "Forte",

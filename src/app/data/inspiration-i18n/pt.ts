@@ -81,6 +81,12 @@ export const INSPIRATION_I18N_PT: InspirationTranslation = {
       story: "Adriano Continisio escreve sobre pão e pizza caseiros no blog “Profumo di lievito”. A pizza de assadeira crocante dele, de 2009, fica pronta no mesmo dia: pré-fermento logo cedo, pedaços por volta das 16h e forno de casa a 250 °C.",
       badge: "Profumo di lievito",
     },
+    dekracap: {
+      signature_name: "Inspirada na pizza de assadeira sem sova de 48 horas de Dekracap",
+      technique_signature: "Farinha forte (W 350–400), água a 85% e pouquíssimo fermento fresco. A massa é misturada sem sovar, recebe dobras e passa 48 horas na geladeira a 8 °C, com a divisão na metade do tempo. Assadeira de ferro azul ou de chapa, nada de antiaderente nem alumínio.",
+      story: "Dekracap é membro do fórum La Confraternita della Pizza. A receita abre o “WeekEnd della Pizza in Teglia No Knead”: Notturno Italiano a publicou no primeiro post, em 6/10/2014 (editado em 14/10/2015). O original foi apagado e pode ser lido na cópia da Wayback Machine. Na geladeira, o autor conta o fermento seco igual ao fresco; aqui a conversão usa 1 para 3.",
+      badge: "Confraternita della Pizza",
+    },
     da_michele_napoli: {
       signature_name: "Margherita e Marinara, e pouco mais",
       technique_signature: "Cardápio reduzido ao essencial: por décadas só Margherita e Marinara, hoje quatro pizzas. Forno a lenha e nada de firulas.",

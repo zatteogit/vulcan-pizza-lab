@@ -10,6 +10,7 @@ import { formatDuration, formatMass, formatPercent, formatTemp as formatTempLoca
 import { getScienceNote } from "../../data/science-notes";
 import { roundForEvidence } from "../../domain/science/evidence";
 import { getActiveUiLocale, uiMessage } from "../../i18n/ui-messages";
+import { isFridgeTempC } from "../../domain/fermentation-constants";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { preFermentMaturationTempC, rule55Sum } from "../../domain/pre-ferment-split";
 import { buildRecipePhases, KITCHEN_SCALE_ERROR_G, type PhaseIngredient, type PhaseIngredientId, type YeastDilution } from "../../domain/recipe-phases";
@@ -468,7 +469,8 @@ function localizeStepBase(
   if (!labels) return formatRawStep(step);
 
   const isNoKnead = recipe.style.dough.process_type.includes("no_knead");
-  const isCold = recipe.fermentation_temp_c <= 6;
+  // B5: fino a 8 °C se la fonte mette l'impasto in frigo (Dekracap).
+  const isCold = isFridgeTempC(recipe.fermentation_temp_c, recipe.fermentation_in_fridge);
   const isRect = recipe.style.shape.shape_type === "rectangular";
   const isThin = recipe.style.crust_type === "crispy_thin";
   // Audit motore 2026-05: lo step "Cottura" deve riflettere la temperatura
@@ -639,7 +641,9 @@ function localizeStepBase(
   const vars: Record<string, string | number> = {
     temp: formatTemp(step.temp_c ?? (step.id === "proof" ? proofTemp : fermTemp)),
     refTemp: formatTemp(18),
-    fridgeTemp: formatTemp(4),
+    // La temperatura del frigo è quella della puntata (4 °C se non è in frigo:
+    // il testo bulk_cold, l'unico che la usa, vale solo in frigo).
+    fridgeTemp: formatTemp(isCold ? fermTemp : 4),
     type: prefType,
     factor: fermFactor,
     /* Durata del passo dalla timeline; temperatura e idratazione del tipo di

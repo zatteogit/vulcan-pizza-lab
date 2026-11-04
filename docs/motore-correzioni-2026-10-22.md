@@ -726,6 +726,15 @@ Adriano; nessuno stile del catalogo li ha, test):
 - **Note della fonte**: `fermentation.roomTemp` (fase con `temp_assumed`) e
   `fermentation.hoursAssumed` (fase con `hours_assumed`).
 
+Misure: `preset-numbers.regression.json` ha solo le tre righe nuove di
+Adriano (casa, solo secco, legna), nessun numero cambiato; `recipes.golden.json`
+identico; `mcp-kitchen-parity`, `recipe-entry` e i test di proprietà verdi.
+Due test sono stati allineati al comportamento del browser senza cambiarne il
+senso: la parità MCP confronta anche `temp_c` dei passi e, per «Ottimizza per
+me» da una versione d'autore, usa lo stile col condimento della versione (come
+fa Crea con `styleWithSelectedTopping`); `authorVersionRecipe` passa la
+versione a `presetOvenTemp`.
+
 Seguito con le decisioni di Matteo (ramo `b3-final`, §9.12):
 
 - **Pre-fermento della fonte** (decisione 3). `generateRecipe` confronta il
@@ -987,3 +996,60 @@ con 12 byte di margine.
 | teglia_romana | 2 | casa 72 h | «Ottimizza» da bonci_pizzarium | 78–90 % | 77,9 → 78 % | farina 1308 → 1307 g, acqua 1019 → 1019 g; punteggio 89 → 90 |
 | teglia_romana | 2 | casa 72 h | «Ottimizza» da teglia_alta | 82–92 % | 77,9 → 82 % | farina 1311 → 1283 g, acqua 1021 → 1052 g; punteggio 87 → 91 |
 | teglia_romana | 2 | legna | «Ottimizza» da teglia_alta | 82–92 % | 78 → 82 % | farina 1311 → 1283 g, acqua 1023 → 1052 g; punteggio 92 → 98 |
+
+## Tranche B5 · Dekracap e il frigo a 8 °C (31/10/2026)
+
+Versione d'autore `dekracap` della teglia romana
+(`docs/progetto-catalogo-italiano.md` §9.13). La fonte tiene l'impasto in
+frigo a 8 °C, sopra la soglia del motore (`FRIDGE_MAX_TEMP_C` = 6 °C, che
+resta). Prima, una ricetta a 8 °C era sempre «fresco, non in frigo»: pieghe
+con «rimetti il contenitore a 8 °C, non in frigo», tolleranze «room» della
+Timeline comoda, testo della puntata e consiglio da temperatura ambiente,
+acqua per un impasto a 24 °C. Una correzione generale, attiva solo per i dati
+che la dichiarano:
+
+- **Frigo della fonte** (`parameter_overrides.fridge`,
+  `GenerateRecipeOptions.sourceProcess`, `domain/source-process.ts`). Con le
+  ore e la temperatura della versione e fra 7 e 8 °C (`SOURCE_FRIDGE_MAX_C`,
+  uguale a `COLD_RETARD_MAX_C` dei problemi) la ricetta ha
+  `fermentation_in_fridge`; `isFridgeTempC` decide «in frigo» per le pieghe
+  (`timeline.folds.descCool` → `descCold`), il consiglio della puntata, il
+  testo `bulk_cold` (con la temperatura vera del frigo: «frigorifero (8 °C)»),
+  `isColdPhase` (tolleranze della Timeline comoda: fino a +6 h invece di
+  +2 h sulla puntata, `learning-path`, modalità cottura) e la regola 55
+  (impasto a 22 °C come per il frigo a 4 °C: acqua 30 → 24 °C con la cucina
+  a 21 °C). L'appretto resta fuori dal frigo. Nota `fermentation.sourceFridge`.
+  Cambiate ore o temperatura, tutto torna come prima (test).
+- **Note sul processo della fonte** (`Interpretation.source_notes`, nella
+  stessa `sourceProcess`): ciò che la tabella di marcia non sa dire. Per
+  Dekracap lo staglio a circa 24 ore con l'impasto diviso di nuovo in frigo:
+  il motore lo fa all'uscita dal frigo finché le fasi esplicite della B3 non
+  lo permettono.
+- **Sale e olio della versione** con un impasto (`dekracap_48h`, solo
+  `salt_pct` e `oil_pct`), la strada già pronta del §9.11.
+- **Pieghe della versione** (`b5-final`, decisione di Matteo):
+  `MethodProcessProfile.folds` e `profileFolds(style)` al posto di
+  `stylePlanFolds(style.id)` (timeline e due chiamate di
+  `equivalentFermentationHours`); `FoldPlan.restBeforeMin` allunga il passo
+  «Pieghe» del riposo prima del primo giro (`foldWindowMinutes`) e aggiunge
+  il messaggio `timeline.folds.restFirst`. Dekracap: 3 × 45 min dello stile
+  → 50 min + 3 × 15 min; puntata 43 h 45 → 44 h 25; totale e dosi uguali
+  (la dose è della fonte; cambia solo `yeast_source.model_pct`, il
+  confronto). Gli stili e le altre versioni non dichiarano `folds`: golden e
+  preset invariati.
+- **Voce** (`spokenInFridge`): «in frigo» con `isFridgeTempC` e
+  `fermentation_in_fridge`, come la tabella di marcia (prima: fino a 8 °C
+  sempre). Nessuno stile è a 7–8 °C: le risposte di oggi non cambiano.
+
+Misure: `preset-numbers.regression.json` ha solo tre righe nuove
+(`teglia_romana · dekracap` su tre cucine), `recipes.golden.json` identico.
+Nessuna ricetta di stili, versioni o versioni d'autore di prima ha
+`fermentation_in_fridge` (test su tutti gli stili). Fuori da quest'uso
+cambia solo il testo `bulk_cold` delle ricette in frigo a 1–6 °C diverse da
+4 °C (temperatura personalizzata): ora dice la temperatura scelta invece di
+«4 °C».
+
+Con «mai fuori stile» (D-070, sezione sopra) la versione di Dekracap aggiunge
+12 ricette alla misura di `use-cases/mai-fuori-stile.test.ts` (1.380 → 1.392):
+«Ottimizza per me» dalla versione sta fra 75 e 85 % a ogni livello, e per chi
+comincia resta al minimo dello stile, 75 % (test in `dekracap-teglia.test.ts`).

@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { STYLES_DB, type UserConstraints } from "../domain/pizza-engine";
 import { canonicalRecipeEntry, recipeFromEntry } from "../use-cases/recipe-entry";
 import { getAllInterpretations, getInterpretationsForStyle, INSPIRED_BY_TYPES, interpretationFermentTempC, isBlockedByStyle, relatedAuthorVersions } from "./interpretation-library";
+import { SOURCE_FRIDGE_MAX_C } from "../domain/fermentation-constants";
+import { METHOD_MESSAGES_IT } from "./method-messages";
 
 /* FW-14 (S07-A-01, decisione B del 28/10/2026): sotto la Napoletana STG non
  * si offrono come versioni le ricette canotto (Pepe, Capuano): contraddicono il
@@ -74,7 +76,7 @@ describe("relatedAuthorVersions", () => {
   });
   it("sulla teglia la versione di Forkish arriva dal New York ed è in coda", () => {
     expect(ids("teglia_romana")).toEqual([
-      "apiter_teglia:base", "bonci_pizzarium:base", "bosco_aria_di_pane:base", "forkish_portland:compatible",
+      "apiter_teglia:base", "bonci_pizzarium:base", "bosco_aria_di_pane:base", "dekracap:base", "forkish_portland:compatible",
     ]);
   });
   it("ogni voce è dello stile o compatibile, le stesse di getInterpretationsForStyle", () => {
@@ -132,5 +134,26 @@ describe("B1 · tipo `autore`, lievito della fonte, temperature", () => {
     expect(isBlockedByStyle(warm, STYLES_DB.pinsa_romana)).toBe(true);
     expect(STYLES_DB.focaccia_genovese.dough.fermentation_temp_c).toBeUndefined();
     expect(isBlockedByStyle(warm, STYLES_DB.focaccia_genovese)).toBe(false);
+  });
+});
+
+/* Tranche B5: il frigo della fonte e le note sul processo. */
+describe("B5 · frigo della fonte e note sul processo", () => {
+  it("`fridge` ha una temperatura scritta, fino a SOURCE_FRIDGE_MAX_C, e le ore", () => {
+    const fridge = getAllInterpretations().filter((i) => i.parameter_overrides?.fridge);
+    expect(fridge.map((i) => i.id)).toEqual(["dekracap"]);
+    for (const it of fridge) {
+      const o = it.parameter_overrides!;
+      expect(o.fermentation_temp_c, it.id).toBeDefined();
+      expect(o.fermentation_temp_c!, it.id).toBeLessThanOrEqual(SOURCE_FRIDGE_MAX_C);
+      expect(o.warm_place, it.id).toBeUndefined();
+      expect(o.fermentation_hours, it.id).toBeGreaterThan(0);
+    }
+  });
+  it("le note sul processo esistono nei messaggi del motore e hanno le ore della versione", () => {
+    for (const it of getAllInterpretations().filter((i) => i.source_notes?.length)) {
+      expect(it.parameter_overrides?.fermentation_hours, it.id).toBeGreaterThan(0);
+      for (const note of it.source_notes!) expect(METHOD_MESSAGES_IT[note.key], `${it.id} · ${note.key}`).toBe(note.fallback);
+    }
   });
 });

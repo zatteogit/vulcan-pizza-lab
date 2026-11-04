@@ -55,7 +55,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.6.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.7.0" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -317,6 +317,9 @@ function recipeData(recipe: GeneratedRecipe) {
     fermentation_temp_c: recipe.fermentation_temp_c,
     // B3: fasi scritte dalla fonte (ore e temperatura ciascuna); null = quote del modello.
     declared_phases: recipe.declared_phases ?? null,
+    // B5: la fonte della versione mette la puntata in frigo sopra i 6 °C
+    // (Dekracap, 8 °C). Assente = soglia del motore (in frigo fino a 6 °C).
+    ...(recipe.fermentation_in_fridge ? { fermentation_in_fridge: true } : {}),
     pre_ferment: preFermentData(recipe),
     oven_temp_c: recipe.oven_temp_c,
     cook_time_sec: recipe.cook_time_sec,
