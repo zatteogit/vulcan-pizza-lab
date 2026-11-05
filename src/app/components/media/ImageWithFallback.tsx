@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getPublishedPhoto, usePublishedMediaRevision } from "./published-media";
 import { getResponsiveImage, IMAGE_SIZES } from "./responsive-images";
 
@@ -60,7 +60,15 @@ export function ImageWithFallback(props: ImageWithFallbackProps) {
   usePublishedMediaRevision();
   const published = getPublishedPhoto(src);
   const effectiveSrc = published?.src ?? src;
-  useEffect(() => { setDidError(false); setLoaded(false); }, [effectiveSrc]);
+  const imgRef = useRef<HTMLImageElement>(null);
+  /* Al cambio di src si riparte dallo scheletro. Ma un'immagine già in cache può
+     finire di caricarsi prima di questo effetto: il suo onLoad è già passato e,
+     senza il controllo su complete, resterebbe invisibile (opacity 0) per sempre. */
+  useEffect(() => {
+    setDidError(false);
+    const img = imgRef.current;
+    setLoaded(Boolean(img?.complete && img.naturalWidth > 0));
+  }, [effectiveSrc]);
   const responsive = srcSet ? undefined : getResponsiveImage(src);
   const resolvedLoading = loading ?? (priority ? "eager" : "lazy");
   /* fetchpriority in minuscolo: React 18.2 non conosce ancora fetchPriority. */
@@ -113,6 +121,7 @@ export function ImageWithFallback(props: ImageWithFallbackProps) {
         src={effectiveSrc}
         alt={alt}
         {...rest}
+        ref={imgRef}
         onError={() => setDidError(true)}
         onLoad={(e) => {
           setLoaded(true);

@@ -32,6 +32,7 @@ signatureRecipeLink,
 type SignatureRecipe,
 } from "../data/signature-recipes";
 import { canonicalRecipeEntry, recipeFromEntry } from "../use-cases/recipe-entry";
+import { showcasePreview } from "../use-cases/explore-showcase";
 import { stgDepartures } from "../domain/recipe-reference";
 import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
@@ -307,13 +308,16 @@ export function ExplorePage() {
       ?? showcase.find((r) => !r.blocked)?.item
       ?? showcase[0]?.item
       ?? SIGNATURE_RECIPES[0];
+    /* Vetrina solo con ciò che si fa (decisione di Matteo, 05/11): le anteprime
+     * non si riempiono più con card grigie; possono averne meno di quattro. */
     return {
-      styles: stylesRanked.slice(0, 4),
+      styles: showcasePreview(stylesRanked, 4),
       featured,
-      recipes: showcase.filter((r) => r.item !== featured).slice(0, 4).map((r) => r.item),
+      recipes: showcasePreview(showcase, 4, featured),
+      previewForKitchen: stylesRanked.some((entry) => !entry.blocked),
     };
   }, [styles, effectiveStyles, profileConstraints, cms]);
-  const previewForKitchen = kitchenRank.styles.some((entry) => !entry.blocked);
+  const previewForKitchen = kitchenRank.previewForKitchen;
 
   const filteredStyles = useMemo(() => {
     if (activeFamily === "all") return styles;
@@ -430,7 +434,7 @@ export function ExplorePage() {
                     {uiMessage("pages.explore.allRecipes", [SIGNATURE_RECIPES.length])} <ArrowRight size={12} />
                   </button>
                 </div>
-                <div data-region="collection" className="explore-grid--preview">
+                {kitchenRank.recipes.length > 0 && <div data-region="collection" className="explore-grid--preview">
                   {kitchenRank.recipes.map((recipe, i) => (
                     <SignatureRecipeCard
                       key={recipe.id}
@@ -442,7 +446,7 @@ export function ExplorePage() {
                       constraints={profileConstraints}
                     />
                   ))}
-                </div>
+                </div>}
               </section>
 
               {/* 3. Anteprima Stili Tradizionali */}
@@ -460,7 +464,7 @@ export function ExplorePage() {
                   </button>
                 </div>
                 <div data-region="collection" className="explore-grid--preview">
-                  {kitchenRank.styles.map(({ item: style }, i) => (
+                  {kitchenRank.styles.map((style, i) => (
                     <StyleCatalogCard
                       key={style.id}
                       style={style}
