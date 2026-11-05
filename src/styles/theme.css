@@ -3331,6 +3331,128 @@
     margin-block: var(--space-4);
   }
 
+  /* «Servono più gradi» (decisione di Matteo, 05/11/2026): in fondo a una
+     famiglia, chi non si fa con la tua cucina, in una riga senza card. */
+  .explore-family-blocked {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: var(--border-width-thin) solid var(--container-divider);
+  }
+
+  .explore-family-blocked__line {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .explore-family-blocked__line + .explore-family-blocked__line {
+    margin-top: var(--space-1);
+  }
+
+  .explore-family-blocked__link,
+  .explore-blocked__action {
+    color: var(--primary);
+    font-weight: var(--weight-semibold);
+  }
+
+  .explore-family-blocked__link:hover,
+  .explore-blocked__action:hover {
+    text-decoration: underline;
+  }
+
+  /* In fondo alle viste complete: raggruppati per la temperatura che serve,
+     card compatte a colori (il grigio non serve più, lo dice la sezione). */
+  .explore-blocked {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: var(--border-width-thin) solid var(--container-divider);
+  }
+
+  .explore-blocked__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    margin-bottom: var(--space-6);
+  }
+
+  .explore-blocked__title {
+    font-family: var(--font-serif);
+    color: var(--text-default);
+    font-size: var(--font-size-2-5xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-snug);
+    margin: 0;
+  }
+
+  .explore-blocked__lead,
+  .explore-blocked__hint {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .explore-blocked__band + .explore-blocked__band {
+    margin-top: var(--space-8);
+  }
+
+  .explore-blocked__band-title {
+    margin: 0 0 var(--space-1);
+    color: var(--text-default);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-semibold);
+  }
+
+  .explore-blocked__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--space-60), 1fr));
+    gap: var(--gap-sm);
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .explore-blocked__item {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    padding: var(--space-2);
+    border: var(--border-width-thin) solid var(--container-border);
+    border-radius: var(--radius-md);
+    background: var(--container-card);
+    color: var(--text-default);
+  }
+
+  .explore-blocked__item:hover {
+    border-color: var(--primary);
+  }
+
+  .explore-blocked__thumb {
+    flex: none;
+    width: var(--space-14);
+    height: var(--space-14);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .explore-blocked__thumb .image-fallback-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .explore-blocked__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .explore-blocked__name {
+    font-weight: var(--weight-semibold);
+  }
+
+  .explore-blocked__note {
+    color: var(--text-muted);
+  }
+
   .explore-feature {
     display: flex;
     flex-direction: column;

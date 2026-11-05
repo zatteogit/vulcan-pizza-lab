@@ -33,6 +33,9 @@ type SignatureRecipe,
 } from "../data/signature-recipes";
 import { canonicalRecipeEntry, recipeFromEntry } from "../use-cases/recipe-entry";
 import { showcasePreview } from "../use-cases/explore-showcase";
+import { groupBlocked } from "../use-cases/explore-blocked";
+import { ExploreBlocked, FamilyBlockedLine, type BlockedItem } from "../features/explore/explore-blocked";
+import type { RecipeVerdict } from "../domain/pizza-engine";
 import { stgDepartures } from "../domain/recipe-reference";
 import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
@@ -221,7 +224,7 @@ export function ExplorePage() {
   const { effectiveStyles } = useStylesOverride();
   // Fase 4: Scopri è il polo CANONICO. Le card mostrano il match canonico sul tuo
   // forno (M_c) e, quando il margine è reale, la pill "M_c% → M_o%" col soffitto ottimizzabile.
-  const { constraints: profileConstraints } = useProfileDefaults();
+  const { constraints: profileConstraints, kitchen } = useProfileDefaults();
   const [searchParams, setSearchParams] = useSearchParams();
   const urlFilter = searchParams.get("view");
   const activeFilter: ExploreFilter = isExploreFilter(urlFilter) ? urlFilter : "all";
@@ -318,6 +321,58 @@ export function ExplorePage() {
     };
   }, [styles, effectiveStyles, profileConstraints, cms]);
   const previewForKitchen = kitchenRank.previewForKitchen;
+
+  /* «Servono più gradi» (decisione di Matteo, 05/11): nelle viste complete le
+   * voci non fattibili escono dalla griglia e vanno in fondo, raggruppate per
+   * il motivo. Stesso calcolo delle card (referenceCompatibility). */
+  const blocked = useMemo(() => {
+    const weights = scoreWeightsFromCms(cms);
+    const verdictOf = (style: PizzaStyle): RecipeVerdict | null => {
+      try {
+        return referenceCompatibility(style, profileConstraints, weights).recipe.verdict;
+      } catch {
+        return null;
+      }
+    };
+    const db = effectiveStyles ?? STYLES_DB;
+    const styleVerdicts = new Map(styles.map((style) => [style.id, verdictOf(style)]));
+    const recipeVerdicts = new Map(SIGNATURE_RECIPES.map((recipe) => {
+      const base = db[recipe.style_id];
+      return [recipe.id, base ? verdictOf(styleWithSelectedTopping(base, recipe.topping_concept_id)) : null] as const;
+    }));
+    const styleItem = (style: PizzaStyle): BlockedItem => ({
+      id: style.id,
+      name: style.name,
+      photo: cms.media?.stylePhotos?.[style.id] || STYLE_PHOTOS[style.id] || FALLBACK,
+      to: `/recipe/${style.id}?mode=canonical`,
+    });
+    const recipeItem = (raw: SignatureRecipe): BlockedItem => {
+      const recipe = localizeSignatureRecipe(raw, cms.inspirationI18n);
+      return {
+        id: recipe.id,
+        name: signatureCardText(recipe, db[recipe.style_id]?.name ?? recipe.style_id).title,
+        photo: recipe.photo || cms.media?.stylePhotos?.[recipe.style_id] || STYLE_PHOTOS[recipe.style_id] || FALLBACK,
+        to: signatureRecipeLink(recipe),
+      };
+    };
+    const isStyleBlocked = (style: PizzaStyle) => styleVerdicts.get(style.id)?.outcome === "not_feasible";
+    const isRecipeBlocked = (recipe: SignatureRecipe) => recipeVerdicts.get(recipe.id)?.outcome === "not_feasible";
+    const styleGroups = (list: readonly PizzaStyle[]) => groupBlocked(list.flatMap((style) => {
+      const verdict = styleVerdicts.get(style.id);
+      return verdict ? [{ item: styleItem(style), verdict }] : [];
+    }));
+    return {
+      isStyleBlocked,
+      styleGroups,
+      feasibleRecipes: SIGNATURE_RECIPES.filter((recipe) => !isRecipeBlocked(recipe)),
+      recipeGroups: groupBlocked(SIGNATURE_RECIPES.flatMap((recipe) => {
+        const verdict = recipeVerdicts.get(recipe.id);
+        return verdict ? [{ item: recipeItem(recipe), verdict }] : [];
+      })),
+    };
+  }, [styles, effectiveStyles, profileConstraints, cms]);
+  const ovenAssumed = kitchen.oven.source === "default";
+  const ovenC = profileConstraints.oven_max_temp_c;
 
   const filteredStyles = useMemo(() => {
     if (activeFamily === "all") return styles;
@@ -488,8 +543,8 @@ export function ExplorePage() {
               exit={{ opacity: 0, y: -12 }}
               transition={motionSpring.sectionEnter}
             >
-              <div data-region="collection" className="explore-grid">
-                {SIGNATURE_RECIPES.map((recipe, i) => (
+              {blocked.feasibleRecipes.length > 0 && <div data-region="collection" className="explore-grid">
+                {blocked.feasibleRecipes.map((recipe, i) => (
                   <SignatureRecipeCard
                     key={recipe.id}
                     recipe={recipe}
@@ -500,7 +555,8 @@ export function ExplorePage() {
                     constraints={profileConstraints}
                   />
                 ))}
-              </div>
+              </div>}
+              <ExploreBlocked kind="recipes" groups={blocked.recipeGroups} ovenC={ovenC} ovenAssumed={ovenAssumed} exploreBackTo={exploreBackTo} />
             </motion.div>
           )}
 
@@ -569,8 +625,8 @@ export function ExplorePage() {
                               ({familyStyles.length})
                             </span>
                           </div>
-                          <div data-region="collection" className="explore-grid">
-                            {familyStyles.map((style, i) => (
+                          {familyStyles.some((style) => !blocked.isStyleBlocked(style)) && <div data-region="collection" className="explore-grid">
+                            {familyStyles.filter((style) => !blocked.isStyleBlocked(style)).map((style, i) => (
                               <StyleCatalogCard
                                 key={style.id}
                                 style={style}
@@ -584,7 +640,8 @@ export function ExplorePage() {
                                   : undefined}
                               />
                             ))}
-                          </div>
+                          </div>}
+                          <FamilyBlockedLine groups={blocked.styleGroups(familyStyles)} exploreBackTo={exploreBackTo} />
                         </div>
                       );
                     })
@@ -604,8 +661,8 @@ export function ExplorePage() {
                     <h2 className="sr-only">
                       {cms.families[activeFamily as FamilyId]?.name || PIZZA_FAMILIES[activeFamily as FamilyId]?.name}
                     </h2>
-                    <div data-region="collection" className="explore-grid">
-                      {filteredStyles.map((style, i) => (
+                    {filteredStyles.some((style) => !blocked.isStyleBlocked(style)) && <div data-region="collection" className="explore-grid">
+                      {filteredStyles.filter((style) => !blocked.isStyleBlocked(style)).map((style, i) => (
                         <StyleCatalogCard
                           key={style.id}
                           style={style}
@@ -616,11 +673,20 @@ export function ExplorePage() {
                           constraints={profileConstraints}
                         />
                       ))}
-                    </div>
+                    </div>}
+                    <FamilyBlockedLine groups={blocked.styleGroups(filteredStyles)} exploreBackTo={exploreBackTo} />
                     </>
                   )}
                 </motion.div>
               </AnimatePresence>
+              <ExploreBlocked
+                kind="styles"
+                groups={blocked.styleGroups(activeFamily === "all" ? styles : filteredStyles)}
+                summaryOnly
+                ovenC={ovenC}
+                ovenAssumed={ovenAssumed}
+                exploreBackTo={exploreBackTo}
+              />
             </motion.div>
           )}
         </AnimatePresence>
