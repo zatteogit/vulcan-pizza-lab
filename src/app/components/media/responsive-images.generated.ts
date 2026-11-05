@@ -74,8 +74,6 @@ import img_signatures_signature_ny_pepperoni from "../../../assets/signatures/si
 import img_signatures_signature_ny_pepperoni_640 from "../../../assets/signatures/signature_ny_pepperoni-640.webp";
 import img_signatures_signature_salsiccia_friarielli from "../../../assets/signatures/signature_salsiccia_friarielli.webp";
 import img_signatures_signature_salsiccia_friarielli_640 from "../../../assets/signatures/signature_salsiccia_friarielli-640.webp";
-import img_signatures_signature_sfincione_bianco from "../../../assets/signatures/signature_sfincione_bianco.webp";
-import img_signatures_signature_sfincione_bianco_640 from "../../../assets/signatures/signature_sfincione_bianco-640.webp";
 import img_toppings_topping_4formaggi from "../../../assets/toppings/topping_4formaggi.webp";
 import img_toppings_topping_4formaggi_320 from "../../../assets/toppings/topping_4formaggi-320.webp";
 import img_toppings_topping_4stagioni from "../../../assets/toppings/topping_4stagioni.webp";
@@ -308,7 +306,6 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_signatures_signature_marinara_avpn, img_signatures_signature_marinara_avpn_640, 1280, 853, 640, 427],
   [img_signatures_signature_ny_pepperoni, img_signatures_signature_ny_pepperoni_640, 1280, 853, 640, 427],
   [img_signatures_signature_salsiccia_friarielli, img_signatures_signature_salsiccia_friarielli_640, 1280, 960, 640, 480],
-  [img_signatures_signature_sfincione_bianco, img_signatures_signature_sfincione_bianco_640, 1280, 853, 640, 427],
   [img_toppings_topping_4formaggi, img_toppings_topping_4formaggi_320, 1254, 1254, 320, 320],
   [img_toppings_topping_4stagioni, img_toppings_topping_4stagioni_320, 1254, 1254, 320, 320],
   [img_toppings_topping_bbqchicken, img_toppings_topping_bbqchicken_320, 1254, 1254, 320, 320],
