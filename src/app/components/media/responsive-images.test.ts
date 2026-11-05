@@ -11,7 +11,7 @@ describe("immagini responsive (BUN-1)", () => {
     const photos = [
       // B2: "placeholder" è il segnaposto di ImageWithFallback, non un file.
       ...Object.values(STYLE_PHOTOS).filter((photo) => photo !== "placeholder"),
-      ...SIGNATURE_RECIPES.map((recipe) => recipe.photo).filter((photo): photo is string => Boolean(photo)),
+      ...SIGNATURE_RECIPES.map((recipe) => recipe.photo).filter((photo): photo is string => Boolean(photo) && photo !== "placeholder"),
       ...Object.values(TOPPING_LIBRARY)
         .map((recipe) => getToppingThumbnail(recipe))
         .filter((thumbnail): thumbnail is string => Boolean(thumbnail)),

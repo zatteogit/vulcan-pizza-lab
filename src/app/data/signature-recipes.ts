@@ -23,7 +23,6 @@ import signatureDetroitPepperoni from "../../assets/signatures/signature_detroit
 import signatureMarinaraAvpn from "../../assets/signatures/signature_marinara_avpn.webp";
 import signatureNyPepperoni from "../../assets/signatures/signature_ny_pepperoni.webp";
 import signatureSalsicciaFriarielli from "../../assets/signatures/signature_salsiccia_friarielli.webp";
-import signatureSfincioneBianco from "../../assets/signatures/signature_sfincione_bianco.webp";
 
 export interface SignatureRecipe {
   id: string;
@@ -37,7 +36,9 @@ export interface SignatureRecipe {
   };
   description: string;
   emoji?: string;
-  /** Foto override; se omesso, eredita STYLE_PHOTOS[style_id]. */
+  /** Foto override; se omesso, eredita STYLE_PHOTOS[style_id].
+   *  "placeholder" = foto giusta non ancora pronta: card col segnaposto e ricetta
+   *  fuori dalla vetrina di Scopri (primo piano e anteprima, vedi inShowcase). */
   photo?: string;
 
   /** Style "parent" della ricetta. */
@@ -174,7 +175,9 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     name: "Sfincione in bianco",
     description: "L'impasto alto e soffice dello sfincione palermitano, solo con olio extravergine, rosmarino e sale. Non è lo sfincione bianco di Bagheria, che porta ricotta e tuma.",
     emoji: "🏺",
-    photo: signatureSfincioneBianco,
+    /* La foto di prima mostrava il condimento di Bagheria (acciughe, cipolla,
+       mollica): segnaposto finché non arriva quella giusta (lotto 4 delle immagini). */
+    photo: "placeholder",
     style_id: "sfincione",
     topping_concept_id: "bianca",
     family: "regionale",
@@ -232,4 +235,10 @@ export function signatureRecipeLink(recipe: Pick<SignatureRecipe, "style_id" | "
   params.set("topping", recipe.topping_concept_id);
   if (recipe.interpretation_id) params.set("interpretation", recipe.interpretation_id);
   return `/recipe/${recipe.style_id}?${params.toString()}`;
+}
+
+/** Può stare nella vetrina di Scopri (primo piano e anteprima): ha una foto vera.
+ *  Senza foto propria eredita quella dello stile, che c'è sempre. */
+export function inShowcase(recipe: Pick<SignatureRecipe, "photo">): boolean {
+  return recipe.photo !== "placeholder";
 }

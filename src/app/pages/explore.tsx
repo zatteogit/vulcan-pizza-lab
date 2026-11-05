@@ -27,6 +27,7 @@ import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
 SIGNATURE_RECIPES,
+inShowcase,
 signatureRecipeLink,
 type SignatureRecipe,
 } from "../data/signature-recipes";
@@ -299,13 +300,17 @@ export function ExplorePage() {
         return false;
       }
     };
-    const featured = recipesRanked.find((r) => !r.blocked && opensAsPromised(r.item))?.item
-      ?? recipesRanked.find((r) => !r.blocked)?.item
+    /* Senza foto vera (segnaposto) una ricetta resta nell'elenco completo ma non
+     * va in vetrina: né in primo piano né nell'anteprima. */
+    const showcase = recipesRanked.filter((r) => inShowcase(r.item));
+    const featured = showcase.find((r) => !r.blocked && opensAsPromised(r.item))?.item
+      ?? showcase.find((r) => !r.blocked)?.item
+      ?? showcase[0]?.item
       ?? SIGNATURE_RECIPES[0];
     return {
       styles: stylesRanked.slice(0, 4),
       featured,
-      recipes: recipesRanked.filter((r) => r.item !== featured).slice(0, 4).map((r) => r.item),
+      recipes: showcase.filter((r) => r.item !== featured).slice(0, 4).map((r) => r.item),
     };
   }, [styles, effectiveStyles, profileConstraints, cms]);
   const previewForKitchen = kitchenRank.styles.some((entry) => !entry.blocked);
