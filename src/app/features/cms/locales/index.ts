@@ -169,9 +169,11 @@ const LOCALE_LOADERS: Record<LocaleId, () => Promise<CmsContent>> = {
  *  64 → stesura di Dekracap sulla semola (timeline.shape.semolinaBench);
  *       «Prima di iniziare» nomina la versione d'autore di partenza
  *       (cooking.preCookBodyVersion, cooking.preCookStartVersion).
+ *  65 → Scopri, «Servono più gradi»: le voci non fattibili raggruppate per la
+ *       temperatura che serve (explore.blocked.*).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 64;
+export const LOCALE_BUNDLE_REV = 65;
 
 /* 52 resta: l'italiano diventa un bundle lazy (30/10/2026) ma la forma dei
  * bundle e degli snapshot salvati non cambia; l'italiano non ha snapshot. */
